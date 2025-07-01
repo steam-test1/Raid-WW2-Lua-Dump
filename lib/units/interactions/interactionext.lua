@@ -505,6 +505,12 @@ function BaseInteractionExt:interact(player)
 	self._tweak_data_at_interact_start = nil
 
 	self:_post_event(player, "sound_done")
+
+	local weap_base = managers.player:get_current_state()._equipped_unit:base()
+
+	if weap_base.name_id == "dp28" then
+		weap_base:set_magazine_pos_based_on_ammo()
+	end
 end
 
 function BaseInteractionExt:can_interact(player)

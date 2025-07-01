@@ -1354,14 +1354,17 @@ function WeaponSelectionGui:_show_unit(weapon_id)
 
 	self._spawned_unit_position = camera:screen_to_world(Vector3(sx, sy, 200)) + direction_left * display_offset
 	self._spawned_unit_position_temp = Vector3(0, 0, 0)
-	self._spawned_unit = World:spawn_unit(unit_path, self._spawned_unit_position_temp, Rotation(-90, 0, 0))
+
+	local start_rot
+
+	if weapon_tweak_data.gui and weapon_tweak_data.gui.initial_rotation then
+		start_rot = Rotation(weapon_tweak_data.gui.initial_rotation.yaw or -90, weapon_tweak_data.gui.initial_rotation.pitch or 0, weapon_tweak_data.gui.initial_rotation.roll or 0)
+	end
+
+	self._spawned_unit = World:spawn_unit(unit_path, self._spawned_unit_position_temp, start_rot or Rotation(-90, 0, 0))
 	self._spawned_unit_offset = direction_forward * rotation_offset
 
 	self._spawned_unit:set_position(self._spawned_unit_position)
-
-	if weapon_tweak_data.gui and weapon_tweak_data.gui.initial_rotation then
-		self._spawned_unit:set_rotation(Rotation(weapon_tweak_data.gui.initial_rotation.yaw or -90, weapon_tweak_data.gui.initial_rotation.pitch or 0, weapon_tweak_data.gui.initial_rotation.roll or 0))
-	end
 
 	self._spawned_unit_screen_offset = direction_forward * distance_offset + direction_up * height_offset
 

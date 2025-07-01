@@ -916,6 +916,25 @@ function HUDManager:_create_teammates_panel(hud)
 	}
 end
 
+function HUDManager:_fix_peer_warcry_icons()
+	for i = 1, #self._hud.name_labels do
+		local peer_name_label = self._hud.name_labels[i]
+		local peer_id = peer_name_label._peer_id
+		local warcry = peer_name_label.warcry
+
+		if peer_name_label and peer_id then
+			for j = 1, #self._teammate_panels do
+				local teammate_panel = self._teammate_panels[j]
+
+				if teammate_panel._peer_id == peer_id then
+					print(inspect(teammate_panel))
+					teammate_panel:set_active_warcry(warcry)
+				end
+			end
+		end
+	end
+end
+
 function HUDManager:_create_weapons_panel(hud)
 	hud = hud or managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT)
 

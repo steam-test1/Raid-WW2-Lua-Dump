@@ -2016,7 +2016,7 @@ function MissionSelectionGui:set_difficulty_stepper_data(difficulty_available, d
 end
 
 function MissionSelectionGui:_check_difficulty_warning()
-	if tweak_data.operations.missions[self._selected_job_id].consumable then
+	if self._selected_job_id and tweak_data.operations.missions[self._selected_job_id].consumable then
 		self._difficulty_warning_panel:get_engine_panel():stop()
 		self._difficulty_warning_panel:get_engine_panel():animate(callback(self, self, "_animate_slide_out_difficulty_warning_message"))
 		self._raid_start_button:enable()

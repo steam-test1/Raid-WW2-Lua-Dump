@@ -123,7 +123,7 @@ function ChallengeCardsGui:_layout()
 		card_w = 272,
 		card_x = 0,
 		card_y = 0,
-		h = 480,
+		h = 544,
 		name = "card_deatils",
 		visible = true,
 		w = 892,

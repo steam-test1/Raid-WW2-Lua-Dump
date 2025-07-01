@@ -91,7 +91,9 @@ function DP28RaycastWeaponBase:set_magazine_pos_based_on_ammo(count_max)
 			percent_of_anim = self:get_ammo_total() > self:get_ammo_max_per_clip() and 0 or 1 - (0 + self:get_ammo_total()) / (0 + self:get_ammo_max_per_clip())
 		end
 
-		self:set_magazine_time_stamp(percent_of_anim * self.length)
+		self._magazine_time_stamp = percent_of_anim * self.length
+
+		self:set_magazine_time_stamp(self._magazine_time_stamp)
 	end
 end
 

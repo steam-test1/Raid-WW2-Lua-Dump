@@ -282,7 +282,7 @@ function ProgressionManager:_unlock_all_missions()
 
 			local mission_tweak_data = tweak_data.operations.missions[mission_id]
 
-			if mission_tweak_data.control_brief_video then
+			if mission_tweak_data and mission_tweak_data.control_brief_video then
 				for video_index, video_path in pairs(mission_tweak_data.control_brief_video) do
 					local chosen_video_unlock_id = tweak_data.intel:get_control_video_by_path(video_path)
 
@@ -295,6 +295,8 @@ function ProgressionManager:_unlock_all_missions()
 						})
 					end
 				end
+			else
+				debug_pause("[ProgressionManager:_unlock_all_missions] Tried to unlock a map that doesn't exist, call programmers, level:" .. mission_id)
 			end
 		end
 	end

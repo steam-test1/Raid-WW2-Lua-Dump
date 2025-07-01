@@ -10,6 +10,7 @@ HUDNotification.GREED_ITEM = "greed_item_pickup"
 HUDNotification.DOG_TAG = "dog_tag"
 HUDNotification.WEAPON_CHALLENGE = "weapon_challenge"
 HUDNotification.CONSUMABLE_MISSION_PICKED_UP = "consumable_mission_picked_up"
+HUDNotification.ACTIVE_DUTY_BONUS = "active_duty_bonus"
 HUDNotification.ANIMATION_MOVE_X_DISTANCE = 30
 HUDNotification.DEFAULT_DISTANCE_FROM_BOTTOM = 130
 
@@ -30,6 +31,8 @@ function HUDNotification.create(notification_data)
 		return HUDNotificationWeaponChallenge:new(notification_data)
 	elseif notification_data.notification_type == HUDNotification.CONSUMABLE_MISSION_PICKED_UP then
 		return HUDNotificationConsumablePickup:new(notification_data)
+	elseif notification_data.notification_type == HUDNotification.ACTIVE_DUTY_BONUS then
+		return HUDNotificationActiveDuty:new(notification_data)
 	end
 end
 
@@ -1315,6 +1318,144 @@ function HUDNotificationWeaponChallenge:_fit_size()
 	self._title:set_bottom(self._description:y() - HUDNotificationWeaponChallenge.TITLE_DISTANCE_FROM_DESCRIPTION)
 	self._tier:set_center_y(self._title:center_y())
 	self._object:set_bottom(self._object:parent():h() - HUDNotification.DEFAULT_DISTANCE_FROM_BOTTOM)
+end
+
+HUDNotificationActiveDuty = HUDNotificationActiveDuty or class(HUDNotification)
+HUDNotificationActiveDuty.BOTTOM = 800
+HUDNotificationActiveDuty.WIDTH = 500
+HUDNotificationActiveDuty.FONT = tweak_data.gui.fonts.din_compressed_outlined_24
+HUDNotificationActiveDuty.FONT_SIZE = tweak_data.gui.font_sizes.size_24
+HUDNotificationActiveDuty.DESRIPTION_COLOR = tweak_data.gui.colors.raid_dirty_white
+HUDNotificationActiveDuty.FONT_TITLE = tweak_data.gui.fonts.din_compressed_outlined_32
+HUDNotificationActiveDuty.FONT_TITLE_SIZE = tweak_data.gui.font_sizes.size_32
+HUDNotificationActiveDuty.TITLE_COLOR = tweak_data.gui.colors.raid_red
+HUDNotificationActiveDuty.BACKGROUND_IMAGE = "backgrounds_chat_bg"
+
+function HUDNotificationActiveDuty:init(notification_data)
+	self:_create_panel()
+	self:_create_image(notification_data.amount)
+	self:_create_description(notification_data.amount, notification_data.consecutive, notification_data.total)
+
+	self._sound_effect = "daily_login_reward"
+	self._sound_delay = 0.4
+
+	self:_fit_size()
+
+	self._initial_right_x = self._object:right()
+
+	self._object:animate(callback(self, self, "_animate_show"))
+
+	self._progress = 0
+end
+
+function HUDNotificationActiveDuty:hide()
+	self._object:stop()
+	self._object:animate(callback(self, self, "_animate_hide"))
+end
+
+function HUDNotificationActiveDuty:destroy()
+	self._object:stop()
+	self._object:clear()
+
+	self = nil
+end
+
+function HUDNotificationActiveDuty:_create_panel()
+	local hud = managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT)
+	local hud_panel = managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT).panel:root()
+	local panel_params = {
+		name = "notification_active_duty",
+		visible = true,
+		w = HUDNotificationActiveDuty.WIDTH,
+	}
+
+	self._object = hud.panel:panel(panel_params)
+
+	self._object:set_right(hud.panel:w())
+
+	self._initial_right_x = self._object:right()
+
+	local background_params = {
+		halign = "scale",
+		valign = "scale",
+		h = self._object:h(),
+		texture = tweak_data.gui.icons[HUDNotificationRaidUnlocked.BACKGROUND_IMAGE].texture,
+		texture_rect = tweak_data.gui.icons[HUDNotificationRaidUnlocked.BACKGROUND_IMAGE].texture_rect,
+		w = self._object:w(),
+	}
+
+	self._object:bitmap(background_params)
+end
+
+function HUDNotificationActiveDuty:_create_image(amount)
+	local icon = RaidGUIControlGoldBarRewardDetails.REWARD_ICON_SINGLE
+
+	if amount > 1 then
+		icon = RaidGUIControlGoldBarRewardDetails.REWARD_ICON_FEW
+	end
+
+	local image_params = {
+		height = 352,
+		layer = 3,
+		name = "notification_active_duty_gold_image",
+		width = 352,
+		texture = tweak_data.gui.icons[icon].texture,
+		texture_rect = {
+			0,
+			0,
+			512,
+			512,
+		},
+	}
+
+	self._image = self._object:bitmap(image_params)
+
+	self._image:set_right(self._object:w())
+end
+
+function HUDNotificationActiveDuty:_create_description(amount, consecutive, total)
+	local text = ""
+
+	text = utf8.to_upper(managers.localization:text("hud_active_duty_bonus"))
+	text = text .. " (" .. consecutive .. "/" .. total .. "): "
+
+	if amount == 1 then
+		text = text .. utf8.to_upper(managers.localization:text("menu_loot_screen_gold_bars_single"))
+	else
+		text = text .. (amount or 0) .. " " .. utf8.to_upper(managers.localization:text("menu_loot_screen_gold_bars"))
+	end
+
+	local description_params = {
+		align = "right",
+		layer = 3,
+		name = "notification_raid_unlocked_description",
+		vertical = "center",
+		wrap = true,
+		color = HUDNotificationActiveDuty.DESCRIPTION_COLOR,
+		font = HUDNotificationActiveDuty.FONT,
+		font_size = HUDNotificationActiveDuty.FONT_SIZE,
+		text = text,
+		w = self._object:w() - 64,
+	}
+
+	self._description = self._object:text(description_params)
+
+	local _, _, _, h = self._description:text_rect()
+
+	self._description:set_h(h)
+	self._description:set_right(self._object:w() - 32)
+end
+
+function HUDNotificationActiveDuty:_fit_size()
+	local top_padding = 32
+	local middle_padding = 32
+	local bottom_padding = 32
+	local notification_h = top_padding + self._image:h() + middle_padding + self._description:h() + bottom_padding
+
+	self._object:set_h(notification_h)
+	self._image:set_y(top_padding)
+	self._description:set_y(self._image:y() + self._image:h() + middle_padding - bottom_padding)
+	self._object:set_bottom(HUDNotificationActiveDuty.BOTTOM)
 end
 
 function HUDNotification:_animate_show(panel)

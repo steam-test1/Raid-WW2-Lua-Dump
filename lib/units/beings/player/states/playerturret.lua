@@ -7,6 +7,10 @@ end
 function PlayerTurret:enter(state_data, enter_data)
 	PlayerTurret.super.enter(self, state_data, enter_data)
 
+	self._weapon_index = managers.player:get_current_state()._unit:inventory()._selected_primary
+
+	managers.player:get_current_state()._unit:inventory():equip_selection(4, true)
+
 	self._turret_unit = managers.player:get_turret_unit()
 	self._turret_weapon = self._turret_unit:weapon()
 	self._turret_overheated = false
@@ -143,6 +147,13 @@ function PlayerTurret:exit(state_data, new_state_name)
 	})
 	self._turret_weapon:enable_automatic_SO(true)
 	self:_show_hud_prompts()
+	managers.player:get_current_state()._unit:inventory():equip_selection(self._weapon_index, true)
+
+	local weap_base = self._equipped_unit:base()
+
+	if weap_base._name_id == "dp28" then
+		weap_base:set_magazine_pos_based_on_ammo()
+	end
 end
 
 function PlayerTurret:_husk_turret_data()

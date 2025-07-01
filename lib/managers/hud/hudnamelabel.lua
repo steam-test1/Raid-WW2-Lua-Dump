@@ -56,6 +56,15 @@ function HUDNameLabel:init(hud, params)
 	self._active_states = {}
 
 	self:_add_active_state(self._displayed_state.id)
+
+	for peer_id, peer in pairs(managers.network:session():all_peers()) do
+		if peer._name == self._name then
+			self._peer_id = peer_id
+			self.class = peer._class
+			self.warcry = WarcryManager.CLASS_TO_WARCRY[self.class]
+		end
+	end
+
 	self:_create_panel(hud)
 	self:_create_name()
 	self:_create_timer()

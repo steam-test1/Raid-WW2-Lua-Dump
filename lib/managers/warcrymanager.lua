@@ -1,5 +1,11 @@
 WarcryManager = WarcryManager or class()
 WarcryManager.WARCRY_READY_MESSAGE_DURATION = 6
+WarcryManager.CLASS_TO_WARCRY = {
+	assault = "berserk",
+	demolitions = "clustertruck",
+	infiltrator = "ghost",
+	recon = "sharpshooter",
+}
 
 function WarcryManager.get_instance()
 	if not Global.warcry_manager then

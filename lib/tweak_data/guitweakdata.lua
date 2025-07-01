@@ -2104,10 +2104,18 @@ function GuiTweakData:_setup_icons()
 		56,
 		56,
 	}
+	self.icons.missions_silo = {}
+	self.icons.missions_silo.texture = "ui/atlas/raid_atlas_missions"
+	self.icons.missions_silo.texture_rect = {
+		370,
+		68,
+		56,
+		56,
+	}
 	self.icons.missions_spies = {}
 	self.icons.missions_spies.texture = "ui/atlas/raid_atlas_missions"
 	self.icons.missions_spies.texture_rect = {
-		370,
+		428,
 		68,
 		56,
 		56,
@@ -2115,15 +2123,15 @@ function GuiTweakData:_setup_icons()
 	self.icons.missions_tank_depot = {}
 	self.icons.missions_tank_depot.texture = "ui/atlas/raid_atlas_missions"
 	self.icons.missions_tank_depot.texture_rect = {
-		428,
-		68,
+		196,
+		126,
 		56,
 		56,
 	}
 	self.icons.missions_tutorial = {}
 	self.icons.missions_tutorial.texture = "ui/atlas/raid_atlas_missions"
 	self.icons.missions_tutorial.texture_rect = {
-		196,
+		254,
 		126,
 		56,
 		56,
@@ -7155,11 +7163,19 @@ function GuiTweakData:_setup_xp_icons()
 		392,
 		392,
 	}
+	self.icons.xp_events_missions_silo = {}
+	self.icons.xp_events_missions_silo.texture = "ui/atlas/raid_atlas_xp"
+	self.icons.xp_events_missions_silo.texture_rect = {
+		1578,
+		396,
+		392,
+		392,
+	}
 	self.icons.xp_events_missions_spies = {}
 	self.icons.xp_events_missions_spies.texture = "ui/atlas/raid_atlas_xp"
 	self.icons.xp_events_missions_spies.texture_rect = {
-		1578,
-		396,
+		790,
+		790,
 		392,
 		392,
 	}
@@ -7167,7 +7183,7 @@ function GuiTweakData:_setup_xp_icons()
 	self.icons.xp_events_missions_tank_depot.texture = "ui/atlas/raid_atlas_xp"
 	self.icons.xp_events_missions_tank_depot.texture_rect = {
 		790,
-		790,
+		1184,
 		392,
 		392,
 	}
