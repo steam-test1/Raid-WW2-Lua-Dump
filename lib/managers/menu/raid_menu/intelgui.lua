@@ -66,6 +66,7 @@ function IntelGui:_layout_list()
 		item_font = tweak_data.gui.fonts.lato,
 		item_font_size = tweak_data.gui.font_sizes.size_24,
 		item_h = 62,
+		loop_items = true,
 		name = "category_items_list",
 		on_item_clicked_callback = callback(self, self, "on_item_clicked_category_items_list"),
 		on_item_selected_callback = callback(self, self, "on_item_selected_category_items_list"),

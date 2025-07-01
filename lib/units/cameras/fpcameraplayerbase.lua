@@ -1048,18 +1048,6 @@ function FPCameraPlayerBase:_steampad_look_function(stick_input, stick_input_mul
 	return 0, 0
 end
 
-local function get_look_setting(a, b, c, t)
-	if t < 0.5 then
-		return math.lerp(a, b, t / 0.5)
-	end
-
-	return math.lerp(b, c, (t - 0.5) / 0.5)
-end
-
-local function get_look_setting_x_y(a, b, c, x, y)
-	return get_look_setting(a, b, c, x), get_look_setting(a, b, c, y)
-end
-
 function FPCameraPlayerBase:_get_look_speed(stick_input, stick_input_multiplier, dt)
 	if self._parent_unit:movement()._current_state:in_steelsight() then
 		return self._tweak_data.look_speed_steel_sight

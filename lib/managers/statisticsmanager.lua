@@ -1099,10 +1099,6 @@ function StatisticsManager:publish_to_steam(session, success, completion)
 					type = "int",
 					value = weapon_data.total,
 				}
-				stats["weapon_hits_" .. weapon_name] = {
-					type = "int",
-					value = weapon_data.hits,
-				}
 			end
 		end
 

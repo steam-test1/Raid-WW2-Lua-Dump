@@ -123,6 +123,7 @@ function LevelsTweakData:init()
 				x = 105,
 				y = 220,
 			},
+			pin_scale = 0.5,
 			texture = "map_zone_germany",
 			world_borders = {
 				down = -28846,
@@ -157,6 +158,7 @@ function LevelsTweakData:init()
 				x = 105,
 				y = 220,
 			},
+			pin_scale = 0.5,
 			texture = "map_zone_germany",
 			world_borders = {
 				down = -28846,
@@ -191,6 +193,7 @@ function LevelsTweakData:init()
 				x = 105,
 				y = 220,
 			},
+			pin_scale = 0.5,
 			texture = "map_zone_germany",
 			world_borders = {
 				down = -28846,
@@ -225,6 +228,7 @@ function LevelsTweakData:init()
 				x = 105,
 				y = 220,
 			},
+			pin_scale = 0.5,
 			texture = "map_zone_germany",
 			world_borders = {
 				down = -28846,
@@ -259,6 +263,7 @@ function LevelsTweakData:init()
 				x = 105,
 				y = 220,
 			},
+			pin_scale = 0.5,
 			texture = "map_zone_germany",
 			world_borders = {
 				down = -28846,

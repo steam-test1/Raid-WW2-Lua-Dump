@@ -162,6 +162,7 @@ function StatisticsTweakData:statistics_table()
 		"fury_railway",
 		"silo",
 		"kelly",
+		"forest_bunker",
 	}
 	local job_list = {
 		"clear_skies",

@@ -85,7 +85,7 @@ function NetworkPeer:init(name, rpc, id, loading, synced, in_lobby, character, u
 	end
 
 	self._profile = {
-		editor = nil,
+		key = nil,
 		outfit_string = "",
 	}
 	self._handshakes = {}

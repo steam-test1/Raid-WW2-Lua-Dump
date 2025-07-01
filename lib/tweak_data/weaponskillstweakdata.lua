@@ -4937,7 +4937,7 @@ function WeaponSkillsTweakData:_init_browning_skill_tree(tweak_data)
 			},
 			cost = 2,
 			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
-			value = 1,
+			value = 6,
 			weapon_parts = {
 				"wpn_fps_sho_browning_m_extended",
 			},
@@ -5037,7 +5037,7 @@ function WeaponSkillsTweakData:_init_browning_skill_tree(tweak_data)
 			},
 			cost = 4,
 			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
-			value = 2,
+			value = 7,
 			weapon_parts = {
 				"wpn_fps_sho_browning_m_long",
 			},

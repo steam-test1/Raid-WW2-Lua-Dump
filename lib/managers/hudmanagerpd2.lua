@@ -1101,7 +1101,7 @@ function HUDManager:trigger_comm_wheel_option(option_id)
 end
 
 function HUDManager:hide_comm_wheel(quiet)
-	if self._hud_comm_wheel then
+	if self._hud_comm_wheel and self._hud_comm_wheel:is_visible() then
 		self._hud_comm_wheel:hide(quiet)
 	end
 end
@@ -1577,6 +1577,12 @@ end
 function HUDManager:set_map_location(location_id)
 	if self._tab_screen then
 		self._tab_screen:set_map_location(location_id)
+	end
+end
+
+function HUDManager:clear_map()
+	if self._tab_screen then
+		self._tab_screen:clear_map()
 	end
 end
 

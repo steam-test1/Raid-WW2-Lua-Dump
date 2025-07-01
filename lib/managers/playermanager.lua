@@ -188,7 +188,7 @@ end
 function PlayerManager:soft_reset()
 	self._listener_holder = EventListenerHolder:new()
 	self._equipment = {
-		position = nil,
+		add_coroutine = nil,
 		selections = {},
 		specials = {},
 	}
@@ -204,7 +204,7 @@ end
 
 function PlayerManager:_setup()
 	self._equipment = {
-		position = nil,
+		add_coroutine = nil,
 		selections = {},
 		specials = {},
 	}
@@ -1342,21 +1342,11 @@ function PlayerManager:equiptment_upgrade_value(category, upgrade, default)
 end
 
 function PlayerManager:upgrade_level(category, upgrade, default)
-	if not self._global.upgrades[category] then
-		return default or 0
-	end
-
-	if not self._global.upgrades[category][upgrade] then
-		return default or 0
-	end
-
-	local level = self._global.upgrades[category][upgrade]
-
-	return level
+	return self._global.upgrades[category] and self._global.upgrades[category][upgrade] or default or 0
 end
 
 function PlayerManager:upgrade_value_by_level(category, upgrade, level, default)
-	return tweak_data.upgrades.values[category][upgrade][level] or default or 0
+	return tweak_data.upgrades.values[category] and tweak_data.upgrades.values[category][upgrade] and tweak_data.upgrades.values[category][upgrade][level] or default or 0
 end
 
 function PlayerManager:equipped_upgrade_value(equipped, category, upgrade)
@@ -4350,9 +4340,13 @@ function PlayerManager:_move_to_next_seat(vehicle, peer_id, player, seat, previo
 end
 
 function PlayerManager:disable_view_movement()
-	self:player_unit():camera():camera_unit():base():set_limits(0.01, 0.01)
+	local player_unit = self:player_unit()
 
-	self._view_disabled = true
+	if player_unit and alive(player_unit) then
+		player_unit:camera():camera_unit():base():set_limits(0.01, 0.01)
+
+		self._view_disabled = true
+	end
 end
 
 function PlayerManager:enable_view_movement()

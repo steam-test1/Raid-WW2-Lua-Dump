@@ -721,7 +721,7 @@ function PlayerStandard:_find_pickups(t)
 	local pickups = World:find_units_quick("sphere", self._unit:movement():m_pos(), self._pickup_area, self._slotmask_pickups)
 
 	for _, pickup in ipairs(pickups) do
-		if pickup:pickup():get_automatic_pickup() then
+		if pickup:pickup().get_automatic_pickup and pickup:pickup():get_automatic_pickup() then
 			local pickup_type = pickup:pickup():get_pickup_type()
 
 			if pickup_type then
@@ -2955,7 +2955,7 @@ function PlayerStandard:_start_action_use_item(t)
 	})
 
 	managers.hud:show_progress_timer({
-		follow_me = nil,
+		idx = nil,
 		text = text,
 	})
 
@@ -3762,34 +3762,36 @@ function PlayerStandard:_check_action_equip(t, input)
 end
 
 function PlayerStandard:_check_comm_wheel(t, input)
-	local action_forbidden = self:chk_action_forbidden("comm_wheel") or self._unit:base():stats_screen_visible() or self:_interacting() or self._ext_movement:has_carry_restriction() or self:is_deploying() or self:_is_throwing_projectile() or self:_is_meleeing() or self:_on_zipline() or self:_is_comm_wheel_active() or self:_mantling()
+	local action_forbidden = self:chk_action_forbidden("comm_wheel") or self._unit:base():stats_screen_visible() or self:_interacting() or self._ext_movement:has_carry_restriction() or self:is_deploying() or self:_is_throwing_projectile() or self:_is_meleeing() or self:_on_zipline() or self:_mantling()
 
-	if not action_forbidden and input.btn_comm_wheel_press then
-		managers.hud:show_comm_wheel()
+	if action_forbidden then
+		return
 	end
 
-	if input.btn_comm_wheel_release then
+	local wheel_active = self:_is_comm_wheel_active()
+
+	if not wheel_active and input.btn_comm_wheel_press then
+		managers.hud:show_comm_wheel()
+	elseif wheel_active and input.btn_comm_wheel_release then
 		managers.hud:hide_comm_wheel()
 	end
 
-	if not action_forbidden then
-		if input.btn_comm_wheel_yes_press then
-			managers.hud:trigger_comm_wheel_option("yes")
-		elseif input.btn_comm_wheel_no_press then
-			managers.hud:trigger_comm_wheel_option("no")
-		elseif input.btn_comm_wheel_found_it_press then
-			managers.hud:trigger_comm_wheel_option("found_it")
-		elseif input.btn_comm_wheel_wait_press then
-			managers.hud:trigger_comm_wheel_option("wait")
-		elseif input.btn_comm_wheel_not_here_press then
-			managers.hud:trigger_comm_wheel_option("not_here")
-		elseif input.btn_comm_wheel_follow_me_press then
-			managers.hud:trigger_comm_wheel_option("follow_me")
-		elseif input.btn_comm_wheel_assistance_press then
-			managers.hud:trigger_comm_wheel_option("assistance")
-		elseif input.btn_comm_wheel_enemy_press then
-			managers.hud:trigger_comm_wheel_option("enemy")
-		end
+	if input.btn_comm_wheel_yes_press then
+		managers.hud:trigger_comm_wheel_option("yes")
+	elseif input.btn_comm_wheel_no_press then
+		managers.hud:trigger_comm_wheel_option("no")
+	elseif input.btn_comm_wheel_found_it_press then
+		managers.hud:trigger_comm_wheel_option("found_it")
+	elseif input.btn_comm_wheel_wait_press then
+		managers.hud:trigger_comm_wheel_option("wait")
+	elseif input.btn_comm_wheel_not_here_press then
+		managers.hud:trigger_comm_wheel_option("not_here")
+	elseif input.btn_comm_wheel_follow_me_press then
+		managers.hud:trigger_comm_wheel_option("follow_me")
+	elseif input.btn_comm_wheel_assistance_press then
+		managers.hud:trigger_comm_wheel_option("assistance")
+	elseif input.btn_comm_wheel_enemy_press then
+		managers.hud:trigger_comm_wheel_option("enemy")
 	end
 end
 
@@ -3824,18 +3826,6 @@ function PlayerStandard:_check_fullscreen_switch(t, dt, input)
 		managers.raid_menu:toggle_fullscreen_raid()
 
 		self._alt_enter_fullscreen_switch_timer = 0
-	end
-end
-
-function PlayerStandard:_check_special_interaction(t, input)
-	local action_forbidden = self:chk_action_forbidden("special_interaction") or self._unit:base():stats_screen_visible() or self:_interacting() or self._ext_movement:has_carry_restriction() or self:is_deploying() or self:_is_throwing_projectile() or self:_is_meleeing() or self:_on_zipline() or self:_is_special_interaction_active()
-
-	if not action_forbidden and input.btn_comm_wheel_press then
-		managers.hud:show_comm_wheel()
-	end
-
-	if input.btn_comm_wheel_release then
-		managers.hud:hide_comm_wheel()
 	end
 end
 

@@ -69,6 +69,7 @@ function CharacterSelectionGui:_layout()
 		h = 480,
 		item_class = RaidGUIControlListItemCharacterSelect,
 		item_h = 94,
+		loop_items = true,
 		name = "characters_list",
 		on_item_clicked_callback = callback(self, self, "_on_item_click"),
 		on_item_double_clicked_callback = callback(self, self, "_on_item_double_click"),
@@ -108,6 +109,7 @@ function CharacterSelectionGui:_layout()
 		x = 1308,
 		y = 0,
 	}, {
+		World = nil,
 		class = nil,
 	})
 

@@ -174,6 +174,7 @@ function MissionSelectionGui:_layout_lists()
 	local raid_list_params = {
 		data_source_callback = callback(self, self, "_raid_list_data_source"),
 		item_class = RaidGUIControlListItemRaids,
+		loop_items = true,
 		name = "raid_list",
 		on_item_clicked_callback = callback(self, self, "_on_raid_clicked"),
 		on_item_double_clicked_callback = callback(self, self, "_on_mission_list_double_clicked"),
@@ -185,8 +186,6 @@ function MissionSelectionGui:_layout_lists()
 		selection_enabled = true,
 		vertical_spacing = 2,
 		w = self._raid_list_panel:w(),
-		x = 0,
-		y = 0,
 	}
 
 	self._raid_list = self._raid_list_panel:get_panel():list(raid_list_params)
@@ -218,6 +217,7 @@ function MissionSelectionGui:_layout_slot_list()
 		data_source_callback = callback(self, self, "_slot_list_data_source"),
 		h = self._slot_list_panel:h(),
 		item_class = RaidGUIControlListItemSaveSlots,
+		loop_items = true,
 		name = "slot_list",
 		on_item_clicked_callback = callback(self, self, "_on_slot_clicked"),
 		on_item_double_clicked_callback = callback(self, self, "_on_slot_double_clicked"),
@@ -248,6 +248,7 @@ function MissionSelectionGui:_layout_operations_list()
 	local operations_list_params = {
 		data_source_callback = callback(self, self, "_operation_list_data_source"),
 		item_class = RaidGUIControlListItemOperations,
+		loop_items = true,
 		name = "operation_list",
 		on_item_clicked_callback = callback(self, self, "_on_operation_selected"),
 		on_item_double_clicked_callback = callback(self, self, "_on_mission_list_double_clicked"),
@@ -1451,9 +1452,24 @@ function MissionSelectionGui:_on_raid_selected(raid_data)
 end
 
 function MissionSelectionGui:_on_mission_list_double_clicked(raid_data)
-	local difficulty_available = managers.progression:get_mission_progression(tweak_data.operations.missions[raid_data.value].job_type, raid_data.value)
+	if not Network:is_server() then
+		return
+	end
 
-	if managers.progression:mission_unlocked(tweak_data.operations.missions[raid_data.value].job_type, raid_data.value) and difficulty_available >= tweak_data:difficulty_to_index(self._difficulty_stepper:get_value()) and Network:is_server() or tweak_data.operations.missions[raid_data.value].debug then
+	local mission_availble = false
+
+	if raid_data.consumable then
+		mission_availble = managers.consumable_missions:is_mission_unlocked(raid_data.value)
+	else
+		local mission_tweak = tweak_data.operations.missions[raid_data.value]
+		local job_type = mission_tweak.job_type
+		local difficulty_available = managers.progression:get_mission_progression(job_type, raid_data.value)
+		local current_difficulty = tweak_data:difficulty_to_index(self._difficulty_stepper:get_value())
+
+		mission_availble = managers.progression:mission_unlocked(job_type, raid_data.value) and current_difficulty <= difficulty_available or mission_tweak.debug
+	end
+
+	if mission_availble then
 		self:_on_start_button_click()
 	end
 end
@@ -2291,6 +2307,7 @@ function MissionSelectionGui:_raid_list_data_source()
 							mission_name,
 						},
 					},
+					consumable = true,
 					icon = item_icon,
 					selected_color = tweak_data.gui.colors.raid_gold,
 					text = item_text,

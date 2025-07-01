@@ -243,8 +243,8 @@ function GroupAIStateBase:_init_misc_data(clean_up)
 	self:_init_team_tables()
 
 	self._phalanx_data = {
-		is_safe = nil,
 		minions = {},
+		stand = nil,
 	}
 end
 
@@ -3644,7 +3644,7 @@ function GroupAIStateBase:chk_say_teamAI_combat_chatter(unit)
 	end
 
 	managers.dialog:queue_dialog("player_gen_battle_celebration", {
-		[""] = nil,
+		done_cbk = nil,
 		skip_idle_check = true,
 	})
 end

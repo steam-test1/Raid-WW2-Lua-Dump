@@ -52,8 +52,8 @@ function SavefileManager:init()
 
 	if not Global.savefile_manager then
 		Global.savefile_manager = {
+			_compare_sort_list = nil,
 			meta_data_list = {},
-			progress_wrong_user = nil,
 		}
 	end
 

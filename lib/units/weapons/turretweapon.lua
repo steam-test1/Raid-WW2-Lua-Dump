@@ -320,8 +320,18 @@ function TurretWeapon:set_turret_rot(dt)
 end
 
 function TurretWeapon:deactivate()
-	self._unit:brain():switch_off(true)
-	self._unit:movement():set_active(false)
+	if self._unit:brain() then
+		self._unit:brain():switch_off(true)
+	else
+		Application:debug_pause_unit(self._unit, "Could not disable turret brain, does not have one")
+	end
+
+	if self._unit:movement() then
+		self._unit:movement():set_active(false)
+	else
+		Application:debug_pause_unit(self._unit, "Could not disable turret movement, does not have one")
+	end
+
 	self:set_active(false)
 	self:stop_autofire()
 

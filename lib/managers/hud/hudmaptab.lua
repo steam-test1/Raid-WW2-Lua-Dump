@@ -294,7 +294,9 @@ function HUDMapTab:_get_current_player_level()
 	local current_job = managers.raid_job:current_job()
 
 	if not current_job or managers.raid_job:is_camp_loaded() then
-		return nil
+		local camp = managers.raid_job:camp()
+
+		return camp.level_id
 	end
 
 	if current_job.job_type == OperationsTweakData.JOB_TYPE_OPERATION then
@@ -335,6 +337,12 @@ function HUDMapTab:_set_level(level, location)
 		self._current_location = nil
 		self._tweak_data = nil
 	end
+end
+
+function HUDMapTab:clear()
+	self._current_level = nil
+	self._current_location = nil
+	self._tweak_data = nil
 end
 
 function HUDMapTab:_scale_pins(scale)

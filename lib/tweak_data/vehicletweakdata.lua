@@ -26,7 +26,7 @@ function VehicleTweakData:_init_data_jeep_willy()
 		broken_engine = "kubel_engine_break",
 		bump = "car_bumper_01",
 		bump_locator = "anim_tire_front_left",
-		bump_rtpc = "car_bump_vel",
+		bump_rtpc = "TRD_bump",
 		bump_treshold = 8,
 		door_close = "car_door_open",
 		engine_rpm_rtpc = "car_falcogini_rpm",
@@ -34,9 +34,9 @@ function VehicleTweakData:_init_data_jeep_willy()
 		engine_speed_rtpc = "car_falcogini_speed",
 		engine_start = "muscle_engine_start",
 		gear_shift = "gear_shift",
-		hit = "car_hit_gen_01",
+		hit = "car_hits_something",
 		hit_enemy = "car_hit_body_01",
-		hit_rtpc = "car_hit_vel",
+		hit_rtpc = "TRD_hit",
 		horn_start = "kubel_horn_start",
 		horn_stop = "kubel_horn_stop",
 		lateral_slip_treshold = 0.35,
@@ -209,42 +209,43 @@ function VehicleTweakData:_init_data_kubelwagen()
 end
 
 function VehicleTweakData:_init_data_truck()
-	self.truck = {}
-	self.truck.unit = "units/vanilla/vehicles/fps_vehicle_truck_02/fps_vehicle_truck_02"
-	self.truck.name = "hud_vehicle_truck"
-	self.truck.hud_label_offset = 250
-	self.truck.waypoint_hud_icon = "waypoint_special_vehicle_truck"
-	self.truck.waypoint_map_icon = "map_waypoint_map_truck"
-	self.truck.animations = {
-		driver = "drive_truck_driver",
-		passenger_back_left = "drive_truck_back_left",
-		passenger_back_right = "drive_truck_back_right",
-		passenger_front = "drive_truck_passanger",
-		vehicle_id = "truck",
-	}
-	self.truck.sound = {
-		broken_engine = "kubel_engine_break",
-		bump = "car_bumper_01",
-		bump_locator = "anim_tire_front_left",
-		bump_rtpc = "TRD",
-		bump_treshold = 8,
-		door_close = "car_door_open",
-		engine_rpm_rtpc = "TRD",
-		engine_sound_event = "truck_engine_event",
-		engine_speed_rtpc = "TRD_speed",
-		engine_start = "truck_1p_engine_start",
-		engine_stop = "truck_1p_engine_stop",
-		gear_shift = "gear_shift",
-		hit = "car_hit_gen_01",
-		hit_enemy = "car_hit_body_01",
-		hit_rtpc = "TRD",
-		horn_start = "kubel_horn_start",
-		horn_stop = "kubel_horn_stop",
-		lateral_slip_treshold = 0.35,
-		longitudal_slip_treshold = 0.8,
-		slip = "car_skid_01",
-		slip_locator = "anim_tire_front_left",
-		slip_stop = "car_skid_stop_01",
+	self.truck = {
+		animations = {
+			driver = "drive_truck_driver",
+			passenger_back_left = "drive_truck_back_left",
+			passenger_back_right = "drive_truck_back_right",
+			passenger_front = "drive_truck_passanger",
+			vehicle_id = "truck",
+		},
+		hud_label_offset = 250,
+		name = "hud_vehicle_truck",
+		sound = {
+			broken_engine = "kubel_engine_break",
+			bump = "car_bumper_01",
+			bump_locator = "anim_tire_front_left",
+			bump_rtpc = "TRD_bump",
+			bump_treshold = 8,
+			door_close = "car_door_open",
+			engine_rpm_rtpc = "TRD",
+			engine_sound_event = "truck_engine_event",
+			engine_speed_rtpc = "TRD_speed",
+			engine_start = "truck_1p_engine_start",
+			engine_stop = "truck_1p_engine_stop",
+			gear_shift = "gear_shift",
+			hit = "car_hits_something",
+			hit_enemy = "car_hit_body_01",
+			hit_rtpc = "TRD_hit",
+			horn_start = "kubel_horn_start",
+			horn_stop = "kubel_horn_stop",
+			lateral_slip_treshold = 0.35,
+			longitudal_slip_treshold = 0.8,
+			slip = "car_skid_01",
+			slip_locator = "anim_tire_front_left",
+			slip_stop = "car_skid_stop_01",
+		},
+		unit = "units/vanilla/vehicles/fps_vehicle_truck_02/fps_vehicle_truck_02",
+		waypoint_hud_icon = "waypoint_special_vehicle_truck",
+		waypoint_map_icon = "map_waypoint_map_truck",
 	}
 	self.truck.seats = {
 		driver = {

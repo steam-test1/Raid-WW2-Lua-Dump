@@ -559,10 +559,17 @@ function EventCompleteState:job_data()
 end
 
 function EventCompleteState:on_server_left(message)
-	local dialog_data = {}
-
-	dialog_data.title = managers.localization:text("dialog_returning_to_main_menu")
-	dialog_data.text = managers.localization:text("dialog_server_left")
+	local loc = managers.localization
+	local dialog_data = {
+		button_list = {
+			{
+				callback_func = MenuCallbackHandler._dialog_end_game_yes,
+				text = loc:text("dialog_ok"),
+			},
+		},
+		text = loc:text("dialog_server_left"),
+		title = loc:text("dialog_returning_to_main_menu"),
+	}
 
 	if not self._awarded_rewards.loot and managers.raid_job:is_at_last_event() and self:is_success() then
 		managers.lootdrop._cards_already_rejected = true
@@ -576,33 +583,46 @@ function EventCompleteState:on_server_left(message)
 		end
 
 		if dropped_loot.reward_type == LootDropTweakData.REWARD_CUSTOMIZATION then
-			dialog_data.text = dialog_data.text .. managers.localization:text("menu_server_left_loot_outfit", {
-				OUTFIT = tostring(managers.localization:text(dropped_loot.character_customization.name)),
+			local outfit = loc:text(dropped_loot.character_customization.name)
+
+			dialog_data.text = dialog_data.text .. loc:text("menu_server_left_loot_outfit", {
+				OUTFIT = outfit,
 			})
 		elseif dropped_loot.reward_type == LootDropTweakData.REWARD_GOLD_BARS then
-			dialog_data.text = dialog_data.text .. managers.localization:text("menu_server_left_loot_gold", {
-				GOLD = tostring(dropped_loot.awarded_gold_bars),
+			local gold = managers.gold_economy:gold_string(dropped_loot.awarded_gold_bars)
+
+			dialog_data.text = dialog_data.text .. loc:text("menu_server_left_loot_gold", {
+				GOLD = gold,
 			})
 		elseif dropped_loot.reward_type == LootDropTweakData.REWARD_MELEE_WEAPON then
-			dialog_data.text = dialog_data.text .. managers.localization:text("menu_server_left_loot_melee", {
-				MELEE = tostring(managers.localization:text(tweak_data.blackmarket.melee_weapons[dropped_loot.weapon_id].name_id)),
-			})
+			local melee_tweak = tweak_data.blackmarket.melee_weapons[dropped_loot.weapon_id]
+
+			if melee_tweak then
+				local melee = loc:text(melee_tweak.name_id)
+
+				dialog_data.text = dialog_data.text .. loc:text("menu_server_left_loot_melee", {
+					MELEE = melee,
+				})
+			end
 		end
 	end
 
 	if not self._awarded_rewards.xp then
 		local base_xp = self:calculate_xp()
+		local xp = managers.experience:experience_string(self._awarded_xp)
+
+		dialog_data.text = dialog_data.text .. "\n" .. loc:text("menu_server_left_loot_xp", {
+			XP = xp,
+		})
 
 		self:award_xp(base_xp)
-
-		dialog_data.text = dialog_data.text .. "\n" .. managers.localization:text("menu_server_left_loot_xp", {
-			XP = tostring(self._awarded_xp),
-		})
 	end
 
 	if not self._awarded_rewards.greed_gold and managers.greed:acquired_gold_in_mission() and self:is_success() then
-		dialog_data.text = dialog_data.text .. "\n" .. managers.localization:text("menu_server_left_loot_greed_gold", {
-			GOLD = tostring(managers.greed._gold_awarded_in_mission),
+		local gold = managers.gold_economy:gold_string(managers.greed._gold_awarded_in_mission)
+
+		dialog_data.text = dialog_data.text .. "\n" .. loc:text("menu_server_left_loot_greed_gold", {
+			GOLD = gold,
 		})
 
 		managers.greed:award_gold_picked_up_in_mission()
@@ -613,14 +633,6 @@ function EventCompleteState:on_server_left(message)
 	if managers.game_play_central then
 		managers.game_play_central:stop_the_game()
 	end
-
-	local ok_button = {}
-
-	ok_button.text = managers.localization:text("dialog_ok")
-	ok_button.callback_func = MenuCallbackHandler._dialog_end_game_yes
-	dialog_data.button_list = {
-		ok_button,
-	}
 
 	managers.system_menu:show(dialog_data)
 

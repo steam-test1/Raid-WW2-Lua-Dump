@@ -258,6 +258,7 @@ function WeaponSelectionGui:_layout_lists()
 		data_source_callback = callback(self, self, "data_source_weapon_list"),
 		item_class = RaidGUIControlListItemWeapons,
 		item_h = 62,
+		loop_items = true,
 		name = "weapon_list",
 		on_item_clicked_callback = callback(self, self, "on_item_clicked_weapon_list"),
 		on_item_double_clicked_callback = callback(self, self, "on_item_double_click"),
@@ -277,6 +278,7 @@ end
 
 function WeaponSelectionGui:_layout_weapon_stats()
 	local weapon_stats_params = {
+		data_source_callback = nil,
 		label_class = RaidGUIControlLabelNamedValueWithDelta,
 		name = "weapon_stats",
 		selection_enabled = false,
@@ -289,6 +291,7 @@ function WeaponSelectionGui:_layout_weapon_stats()
 	self._weapon_stats = self._root_panel:create_custom_control(RaidGUIControlWeaponStats, weapon_stats_params)
 
 	local melee_weapon_stats_params = {
+		data_source_callback = nil,
 		label_class = RaidGUIControlLabelNamedValue,
 		name = "melee_weapon_stats",
 		selection_enabled = false,
@@ -301,6 +304,7 @@ function WeaponSelectionGui:_layout_weapon_stats()
 	self._melee_weapon_stats = self._root_panel:create_custom_control(RaidGUIControlMeleeWeaponStats, melee_weapon_stats_params)
 
 	local grenade_weapon_stats_params = {
+		data_source_callback = nil,
 		label_class = RaidGUIControlLabelNamedValue,
 		name = "grenade_weapon_stats",
 		selection_enabled = false,
@@ -1764,6 +1768,7 @@ end
 
 function WeaponSelectionGui:_on_apply_weapon_skills_click()
 	self:on_apply_button_click()
+	self:bind_controller_inputs_upgrade_weapon_upgrade_forbiden()
 
 	return true, nil
 end

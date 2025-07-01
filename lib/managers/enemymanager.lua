@@ -836,6 +836,10 @@ function EnemyManager:on_enemy_died(dead_unit, damage_info)
 end
 
 function EnemyManager:_detach_network_enemy(unit)
+	if Network:is_server() then
+		return
+	end
+
 	Network:detach_unit(unit)
 
 	for _, ext_name in ipairs(unit:extensions()) do
@@ -1216,7 +1220,7 @@ function EnemyManager:load(data)
 				end
 
 				if self:is_corpse_disposal_enabled() then
-					self:_detach_network_enemy(dead_unit)
+					self:_detach_network_enemy(corpse)
 				end
 			else
 				Application:warn("[EnemyManager:load] Tried to use a unit that was not alive(), skipping this corpse", corpse)

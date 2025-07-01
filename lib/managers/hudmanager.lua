@@ -328,6 +328,7 @@ end
 function HUDManager:on_loading_screen_faded_to_black()
 	self:hide_comm_wheel(true)
 	self:hide_stats_screen()
+	self:clear_map()
 	self:reset_player_panel_states()
 	self._hud_chat:clear()
 	self._hud_chat:hide()

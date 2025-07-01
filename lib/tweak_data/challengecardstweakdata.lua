@@ -715,9 +715,9 @@ function ChallengeCardsTweakData:_init_cards(tweak_data)
 	self.cards.ra_helmet_shortage.tradable = true
 	self.cards.ra_helmet_shortage.effects = {
 		{
-			name = BuffEffectManager.EFFECT_PLAYER_HEADSHOT_AUTO_KILL,
+			name = BuffEffectManager.EFFECT_PLAYER_HEADSHOT_DAMAGE,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
-			value = true,
+			value = 3,
 		},
 		{
 			name = BuffEffectManager.EFFECT_PLAYER_HEALTH,
@@ -726,7 +726,10 @@ function ChallengeCardsTweakData:_init_cards(tweak_data)
 		},
 	}
 	self.cards.ra_helmet_shortage.positive_description = {
-		desc_id = "effect_headshots_are_instakills",
+		desc_id = "effect_headshots_damage_increased",
+		desc_params = {
+			EFFECT_VALUE_1 = "300%",
+		},
 	}
 	self.cards.ra_helmet_shortage.negative_description = {
 		desc_id = "effect_player_health_reduced",
@@ -871,7 +874,7 @@ function ChallengeCardsTweakData:_init_cards(tweak_data)
 	self.cards.ra_pumpkin_pie.positive_description = {
 		desc_id = "effect_headshots_damage_increased",
 		desc_params = {
-			EFFECT_VALUE_1 = "100%",
+			EFFECT_VALUE_1 = "300%",
 		},
 	}
 	self.cards.ra_pumpkin_pie.negative_description = {

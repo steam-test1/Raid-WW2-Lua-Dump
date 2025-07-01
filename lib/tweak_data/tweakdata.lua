@@ -1000,15 +1000,21 @@ function TweakData:init()
 	self.pickups.grenade_big = {
 		unit = Idstring("units/vanilla/pickups/pku_new_munitions/grenades/pku_grenade_stack_big"),
 	}
-	self.pickups.grenade_big_beam = deep_clone(self.pickups.grenade_big)
+	self.pickups.grenade_big_beam = {
+		unit = Idstring("units/vanilla/pickups/pku_new_munitions/grenades/pku_grenade_stack_big_drop"),
+	}
 	self.pickups.grenade_medium = {
 		unit = Idstring("units/vanilla/pickups/pku_new_munitions/grenades/pku_grenade_stack_medium"),
 	}
-	self.pickups.grenade_medium_beam = deep_clone(self.pickups.grenade_medium)
+	self.pickups.grenade_medium_beam = {
+		unit = Idstring("units/vanilla/pickups/pku_new_munitions/grenades/pku_grenade_stack_medium_drop"),
+	}
 	self.pickups.grenade_small = {
 		unit = Idstring("units/vanilla/pickups/pku_new_munitions/grenades/pku_grenade_stack_small"),
 	}
-	self.pickups.grenade_small_beam = deep_clone(self.pickups.grenade_small)
+	self.pickups.grenade_small_beam = {
+		unit = Idstring("units/vanilla/pickups/pku_new_munitions/grenades/pku_grenade_stack_small_drop"),
+	}
 	self.pickups.gold_bar_small = {
 		unit = Idstring("units/vanilla/pickups/pku_gold_bars/pku_gold_bar"),
 	}

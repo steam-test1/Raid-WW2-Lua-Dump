@@ -514,7 +514,11 @@ end
 
 function CoreMissionElement:_on_toolbar_add_element()
 	local function f(unit)
-		return unit:type() == Idstring("mission_element") and unit ~= self._unit
+		if unit:type() == Idstring("mission_element") and unit ~= self._unit and managers.editor:current_continent() and unit:unit_data().continent and managers.editor:current_continent() == unit:unit_data().continent then
+			return true
+		end
+
+		return false
 	end
 
 	local dialog = SelectUnitByNameModal:new("Add/Remove element", f)

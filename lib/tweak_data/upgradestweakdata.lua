@@ -2160,6 +2160,8 @@ function UpgradesTweakData:_primary_weapon_definitions()
 		12,
 		15,
 		32,
+		1,
+		3,
 	}
 
 	self:_create_definition_levels("primary_weapon_magazine_upgrade", UpgradesTweakData.DEF_CAT_FEATURE, "magazine_upgrade", "primary_weapon", false, self.values.primary_weapon.magazine_upgrade)

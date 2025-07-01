@@ -102,7 +102,7 @@ function CoreRandomUnitElement:_build_panel(panel, panel_sizer)
 	})
 	self:_build_value_number(panel, panel_sizer, "amount", {
 		floats = 0,
-		min = 1,
+		min = 0,
 	}, "Specifies the amount of elements to be executed")
 	self:_build_value_number(panel, panel_sizer, "amount_random", {
 		floats = 0,

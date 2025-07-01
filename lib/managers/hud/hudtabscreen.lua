@@ -1211,6 +1211,10 @@ function HUDTabScreen:set_map_location(location_id)
 	self._map:set_location(location_id)
 end
 
+function HUDTabScreen:clear_map(location_id)
+	self._map:clear(location_id)
+end
+
 function HUDTabScreen:is_shown()
 	return self._object:visible()
 end

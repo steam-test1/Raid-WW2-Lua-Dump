@@ -32,9 +32,9 @@ function GreedTweakData:_init_item_values()
 	self.item_value = {}
 	self.item_value.complete_gold_bar = 1000
 	self.item_value.rare_commodity = 700
-	self.item_value.high_end = 350
-	self.item_value.mid_end = 150
-	self.item_value.low_end = 50
+	self.item_value.high_end = 400
+	self.item_value.mid_end = 250
+	self.item_value.low_end = 100
 	self.item_value.carry_painting = 1000
 	self.item_value.carry_painting_cheap = 350
 	self.item_value.carry_gold = 1500
