@@ -2,7 +2,7 @@ TextBoxGui = TextBoxGui or class()
 TextBoxGui.PRESETS = {}
 TextBoxGui.PRESETS.system_menu = {
 	h = 270,
-	w = 600,
+	w = 800,
 }
 TextBoxGui.PRESETS.weapon_stats = {
 	bottom = 620,
@@ -78,6 +78,14 @@ function TextBoxGui:recreate_text_box(...)
 	self._thread = self._panel:animate(self._update, self)
 end
 
+function TextBoxGui:get_osk_title()
+	return self._osk_title or ""
+end
+
+function TextBoxGui:get_osk_text()
+	return self._osk_text or ""
+end
+
 function TextBoxGui:_create_text_box(ws, title, text, content_data, config)
 	self._ws = ws
 	self._init_layer = self._ws:panel():layer()
@@ -89,6 +97,8 @@ function TextBoxGui:_create_text_box(ws, title, text, content_data, config)
 	end
 
 	self._text_box_focus_button = nil
+	self._osk_title = title or ""
+	self._osk_text = text or ""
 
 	local scaled_size = managers.gui_data:scaled_size()
 	local type = config and config.type
@@ -674,6 +684,8 @@ function TextBoxGui:_setup_textbox(has_textbox, texbox_value)
 		y = 0,
 		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.small),
 		h = textbox_panel:h(),
+		osk_text = self._osk_text,
+		osk_title = self._osk_title,
 		text = texbox_value,
 		text_changed_callback = callback(self, self, "_input_field_text_changed"),
 		w = textbox_panel:w(),
@@ -760,6 +772,36 @@ function TextBoxGui:change_focus_button(change)
 	end
 
 	self:set_focus_button(focus_button)
+end
+
+function TextBoxGui:scroll_down()
+	if self._input_field then
+		self._input_field:_loose_focus()
+	else
+		return
+	end
+
+	self:set_focus_button(self._default_button)
+end
+
+function TextBoxGui:scroll_up()
+	if self._input_field then
+		self._input_field:on_click_rect()
+	else
+		return
+	end
+
+	local button_count = #self._buttons
+
+	for button = 1, button_count do
+		self:unfocus_button(button)
+	end
+end
+
+function TextBoxGui:focus_textbox()
+	if self._input_field then
+		self._input_field:show_onscreen_keyboard()
+	end
 end
 
 function TextBoxGui:get_focus_button()

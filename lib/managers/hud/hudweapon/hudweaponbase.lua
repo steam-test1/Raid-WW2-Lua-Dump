@@ -68,7 +68,23 @@ function HUDWeaponBase:set_max(max)
 	return
 end
 
+function HUDWeaponBase:set_no_ammo(empty)
+	return
+end
+
 function HUDWeaponBase:set_selected(selected)
+	if self._index and managers.queued_tasks:has_task("hud_weapon_animate_" .. self._index) then
+		managers.queued_tasks:unqueue("hud_weapon_animate_" .. self._index)
+	end
+
+	if selected and self._index then
+		managers.queued_tasks:queue("hud_weapon_animate_" .. self._index, self.animate_alpha, self, selected, 0.01, nil)
+	else
+		self:animate_alpha(selected)
+	end
+end
+
+function HUDWeaponBase:animate_alpha(selected)
 	self._object:stop()
 	self._object:animate(callback(self, self, "_animate_alpha"), selected and HUDWeaponBase.ALPHA_WHEN_SELECTED or HUDWeaponBase.ALPHA_WHEN_UNSELECTED)
 end

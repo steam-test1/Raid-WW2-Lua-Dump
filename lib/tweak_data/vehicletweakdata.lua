@@ -1,5 +1,7 @@
 VehicleTweakData = VehicleTweakData or class()
 VehicleTweakData.AI_TELEPORT_DISTANCE = 20
+VehicleTweakData.FADE_DISTANCE = 2400
+VehicleTweakData.FADE_DISTANCE_START = 2400
 
 function VehicleTweakData:init(tweak_data)
 	self:_init_data_jeep_willy()
@@ -181,6 +183,12 @@ function VehicleTweakData:_init_data_kubelwagen()
 			name = "loot",
 		},
 	}
+	self.kubelwagen.secure_loot = false
+	self.kubelwagen.loot_filter = {
+		german_spy = true,
+		gold = true,
+	}
+	self.kubelwagen.allow_only_filtered = true
 	self.kubelwagen.repair_point = "v_repair_engine"
 	self.kubelwagen.trunk_point = "interact_trunk"
 	self.kubelwagen.damage = {
@@ -191,7 +199,7 @@ function VehicleTweakData:_init_data_kubelwagen()
 	self.kubelwagen.loot_drop_point = "v_repair_engine"
 	self.kubelwagen.max_loot_bags = 8
 	self.kubelwagen.interact_distance = 350
-	self.kubelwagen.driver_camera_offset = Vector3(0, 0.2, 15.5)
+	self.kubelwagen.driver_camera_offset = Vector3(0, 0.5, 15.5)
 	self.kubelwagen.skins = {}
 	self.kubelwagen.skins.special_edition = {
 		sequence = "state_collector_edition_skin",
@@ -296,7 +304,7 @@ function VehicleTweakData:_init_data_truck()
 	self.truck.damage = {
 		max_health = 250,
 	}
-	self.truck.max_speed = 80
+	self.truck.max_speed = 85
 	self.truck.max_rpm = 5000
 	self.truck.loot_drop_point = "v_loot_drop"
 	self.truck.max_loot_bags = 200

@@ -95,6 +95,11 @@ function RaidGUIControlStepper:_create_stepper_controls()
 	})
 end
 
+function RaidGUIControlStepper:set_selected(value)
+	RaidGUIControlStepper.super.set_selected(self, value)
+	self._stepper:set_selected(value)
+end
+
 function RaidGUIControlStepper:set_disabled_items(data)
 	self._stepper:set_disabled_items(data)
 end
@@ -193,34 +198,6 @@ end
 
 function RaidGUIControlStepper:_select_control(value)
 	return
-end
-
-function RaidGUIControlStepper:move_down()
-	if self._selected then
-		return self.super.move_down(self)
-	end
-end
-
-function RaidGUIControlStepper:move_up()
-	if self._selected then
-		return self.super.move_up(self)
-	end
-end
-
-function RaidGUIControlStepper:scroll_left()
-	if self._selected then
-		self._stepper:on_left_arrow_clicked()
-
-		return true
-	end
-end
-
-function RaidGUIControlStepper:scroll_right()
-	if self._selected then
-		self._stepper:on_right_arrow_clicked()
-
-		return true
-	end
 end
 
 function RaidGUIControlStepper:_animate_highlight_on()

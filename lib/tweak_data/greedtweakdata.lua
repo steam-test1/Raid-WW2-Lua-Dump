@@ -1,23 +1,23 @@
 GreedTweakData = GreedTweakData or class()
-GreedTweakData.HIGH_END_ITEM_VALUE = 80
-GreedTweakData.MID_END_ITEM_VALUE = 55
-GreedTweakData.LOW_END_ITEM_VALUE = 30
+GreedTweakData.HIGH_END_ITEM_VALUE = 200
+GreedTweakData.MID_END_ITEM_VALUE = 75
+GreedTweakData.LOW_END_ITEM_VALUE = 35
 
 function GreedTweakData:init()
 	self.points_needed_for_gold_bar = 1000
-	self.points_spawned_on_level_default = 800
+	self.points_spawned_on_level_default = 850
 	self.difficulty_level_point_multipliers = {
-		0.8,
-		1,
-		1.2,
-		1.4,
+		1.5,
+		2,
+		3.4,
+		4.5,
 	}
-	self.cache_base_spawn_chance = 0.25
+	self.cache_base_spawn_chance = 0.2
 	self.difficulty_cache_chance_multipliers = {
-		0.8,
 		1,
-		1.2,
-		1.4,
+		1.3,
+		1.5,
+		1.75,
 	}
 
 	self:_init_greed_items()
@@ -26,8 +26,6 @@ end
 
 function GreedTweakData:_init_greed_items()
 	self.greed_items = {}
-	self.greed_items.egg_decoration = {}
-	self.greed_items.egg_decoration.value = GreedTweakData.HIGH_END_ITEM_VALUE
 	self.greed_items.eagle_statue = {}
 	self.greed_items.eagle_statue.value = GreedTweakData.HIGH_END_ITEM_VALUE
 	self.greed_items.jewelry_box = {}
@@ -35,11 +33,13 @@ function GreedTweakData:_init_greed_items()
 	self.greed_items.coin_collection = {}
 	self.greed_items.coin_collection.value = GreedTweakData.HIGH_END_ITEM_VALUE
 	self.greed_items.chocolate_box = {}
-	self.greed_items.chocolate_box.value = GreedTweakData.MID_END_ITEM_VALUE
+	self.greed_items.chocolate_box.value = GreedTweakData.HIGH_END_ITEM_VALUE
 	self.greed_items.cigar_box = {}
-	self.greed_items.cigar_box.value = GreedTweakData.MID_END_ITEM_VALUE
+	self.greed_items.cigar_box.value = GreedTweakData.HIGH_END_ITEM_VALUE
 	self.greed_items.wine_box = {}
-	self.greed_items.wine_box.value = GreedTweakData.MID_END_ITEM_VALUE
+	self.greed_items.wine_box.value = GreedTweakData.HIGH_END_ITEM_VALUE
+	self.greed_items.egg_decoration = {}
+	self.greed_items.egg_decoration.value = GreedTweakData.MID_END_ITEM_VALUE
 	self.greed_items.golden_inkwell = {}
 	self.greed_items.golden_inkwell.value = GreedTweakData.MID_END_ITEM_VALUE
 	self.greed_items.golden_medal = {}
@@ -51,7 +51,7 @@ function GreedTweakData:_init_greed_items()
 	self.greed_items.globe = {}
 	self.greed_items.globe.value = GreedTweakData.MID_END_ITEM_VALUE
 	self.greed_items.lighter = {}
-	self.greed_items.lighter.value = GreedTweakData.MID_END_ITEM_VALUE
+	self.greed_items.lighter.value = GreedTweakData.LOW_END_ITEM_VALUE
 	self.greed_items.letter_opener = {}
 	self.greed_items.letter_opener.value = GreedTweakData.LOW_END_ITEM_VALUE
 	self.greed_items.kaleidoscope = {}
@@ -65,15 +65,15 @@ end
 function GreedTweakData:_init_cache_items()
 	self.cache_items = {}
 	self.cache_items.regular_cache_box = {}
-	self.cache_items.regular_cache_box.value = 1300
-	self.cache_items.regular_cache_box.single_interaction_value = 100
-	self.cache_items.regular_cache_box.interaction_timer = 0.8
+	self.cache_items.regular_cache_box.value = 3500
+	self.cache_items.regular_cache_box.single_interaction_value = 450
+	self.cache_items.regular_cache_box.interaction_timer = 0.6
 	self.cache_items.regular_cache_box.lockpick = {
 		number_of_circles = 3,
 		circle_difficulty = {
 			0.9,
-			0.93,
-			0.96,
+			0.925,
+			0.95,
 		},
 		circle_rotation_direction = {
 			1,

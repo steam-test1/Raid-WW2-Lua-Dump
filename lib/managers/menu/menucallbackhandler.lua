@@ -41,11 +41,11 @@ function MenuCallbackHandler:has_all_dlcs()
 end
 
 function MenuCallbackHandler:is_overlay_enabled()
-	return SystemInfo:platform() == Idstring("WIN32") and Steam:overlay_enabled() or false
+	return _G.IS_PC and Steam:overlay_enabled() or false
 end
 
 function MenuCallbackHandler:is_installed()
-	if SystemInfo:platform() == Idstring("WIN32") then
+	if _G.IS_PC then
 		return true
 	end
 
@@ -146,7 +146,7 @@ function MenuCallbackHandler:is_level_50()
 end
 
 function MenuCallbackHandler:is_win32()
-	return SystemInfo:platform() == Idstring("WIN32")
+	return _G.IS_PC
 end
 
 function MenuCallbackHandler:is_fullscreen()
@@ -162,7 +162,7 @@ function MenuCallbackHandler:customize_controller_enabled()
 end
 
 function MenuCallbackHandler:is_win32_not_lan()
-	return SystemInfo:platform() == Idstring("WIN32") and not Global.game_settings.playing_lan
+	return _G.IS_PC and not Global.game_settings.playing_lan
 end
 
 function MenuCallbackHandler:is_console()
@@ -170,19 +170,19 @@ function MenuCallbackHandler:is_console()
 end
 
 function MenuCallbackHandler:is_ps3()
-	return SystemInfo:platform() == Idstring("PS3")
+	return _G.IS_PS3
 end
 
 function MenuCallbackHandler:is_ps4()
-	return SystemInfo:platform() == Idstring("PS4")
+	return _G.IS_PS4
 end
 
 function MenuCallbackHandler:is_x360()
-	return SystemInfo:platform() == Idstring("X360")
+	return _G.IS_XB360
 end
 
 function MenuCallbackHandler:is_xb1()
-	return SystemInfo:platform() == Idstring("XB1")
+	return _G.IS_XB1
 end
 
 function MenuCallbackHandler:is_not_x360()
@@ -284,7 +284,7 @@ function MenuCallbackHandler:hidden()
 end
 
 function MenuCallbackHandler:chat_visible()
-	return SystemInfo:platform() == Idstring("WIN32")
+	return _G.IS_PC
 end
 
 function MenuCallbackHandler:is_pc_controller()
@@ -555,10 +555,16 @@ function MenuCallbackHandler:toggle_subtitle(item)
 	managers.user:set_setting("subtitle", subtitle)
 end
 
-function MenuCallbackHandler:toggle_hit_indicator(item)
+function MenuCallbackHandler:choose_hit_indicator(item)
+	local value = item:value()
+
+	managers.user:set_setting("hit_indicator", value)
+end
+
+function MenuCallbackHandler:toggle_motion_dot(item)
 	local on = item:value() == "on"
 
-	managers.user:set_setting("hit_indicator", on)
+	managers.user:set_setting("motion_dot", on)
 end
 
 function MenuCallbackHandler:toggle_objective_reminder(item)
@@ -927,15 +933,19 @@ end
 function MenuCallbackHandler:choice_choose_texture_quality(item)
 	RenderSettings.texture_quality_default = item:value()
 
-	MenuCallbackHandler:apply_and_save_render_settings()
-	self:_refresh_brightness()
+	if _G.IS_PC then
+		MenuCallbackHandler:apply_and_save_render_settings()
+		self:_refresh_brightness()
+	end
 end
 
 function MenuCallbackHandler:choice_choose_shadow_quality(item)
 	RenderSettings.shadow_quality_default = item:value()
 
-	MenuCallbackHandler:apply_and_save_render_settings()
-	self:_refresh_brightness()
+	if _G.IS_PC then
+		MenuCallbackHandler:apply_and_save_render_settings()
+		self:_refresh_brightness()
+	end
 end
 
 function MenuCallbackHandler:toggle_gpu_flush_setting(item)
@@ -1006,8 +1016,8 @@ function MenuCallbackHandler:set_detail_distance(item)
 
 	managers.user:set_setting("detail_distance", detail_distance)
 
-	local min_maps = 0.01
-	local max_maps = 0.04
+	local min_maps = 0.005
+	local max_maps = 0.15
 	local maps = min_maps * detail_distance + max_maps * (1 - detail_distance)
 
 	World:set_min_allowed_projected_size(maps)
@@ -1236,6 +1246,8 @@ function MenuCallbackHandler:connect_to_lobby(item)
 end
 
 function MenuCallbackHandler:stop_multiplayer()
+	Application:debug("[MenuCallbackHandler:stop_multiplayer()]")
+
 	Global.game_settings.single_player = false
 
 	if managers.network:session() and managers.network:session():local_peer():id() == 1 then
@@ -1329,7 +1341,7 @@ end
 
 function MenuCallbackHandler:mute_ps4_player(item)
 	if managers.network.voice_chat then
-		managers.network.voice_chat:mute_player(item:value() == "on", item:parameters().peer)
+		managers.network.voice_chat:mute_player(item:parameters().peer, item:value() == "on")
 		item:parameters().peer:set_muted(item:value() == "on")
 	end
 end
@@ -1419,6 +1431,11 @@ function MenuCallbackHandler:start_the_game()
 	if Global.boot_invite then
 		Global.boot_invite.used = true
 		Global.boot_invite.pending = false
+	end
+
+	if Global.boot_play_together then
+		Global.boot_play_together.used = true
+		Global.boot_play_together.pending = false
 	end
 
 	local mission = Global.game_settings.mission ~= "none" and Global.game_settings.mission or nil
@@ -1551,6 +1568,8 @@ function MenuCallbackHandler:is_current_resolution(item)
 end
 
 function MenuCallbackHandler:end_game()
+	print(" MenuCallbackHandler:end_game() ")
+
 	local dialog_data = {}
 
 	dialog_data.title = managers.localization:text("dialog_warning_title")
@@ -2134,21 +2153,19 @@ function MenuCallbackHandler:start_job(job_data)
 		managers.network:session():send_to_peers("sync_game_settings", job_id_index, level_id_index, difficulty_index)
 		managers.network.matchmake:set_server_attributes(matchmake_attributes)
 		managers.menu_component:on_job_updated()
-		managers.menu:active_menu().logic:navigate_back(true)
-		managers.menu:active_menu().logic:refresh_node("lobby", true)
+
+		local active_menu = managers.menu:active_menu()
+
+		if active_menu and active_menu.logic then
+			active_menu.logic:navigate_back(true)
+			active_menu.logic:refresh_node("lobby", true)
+		end
 	else
 		managers.network.matchmake:create_lobby(matchmake_attributes)
 	end
 
 	if job_data.job_id == OperationsTweakData.ENTRY_POINT_LEVEL then
-		local mission
-
-		if managers.raid_job:played_tutorial() then
-			mission = tweak_data.operations:mission_data(RaidJobManager.CAMP_ID)
-		else
-			mission = tweak_data.operations:mission_data(RaidJobManager.TUTORIAL_ID)
-		end
-
+		local mission = tweak_data.operations:mission_data(managers.raid_job:played_tutorial() and RaidJobManager.CAMP_ID or RaidJobManager.TUTORIAL_ID)
 		local data = {}
 
 		data.background = mission.loading.image

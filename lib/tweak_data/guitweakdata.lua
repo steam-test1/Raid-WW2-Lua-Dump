@@ -16,6 +16,7 @@ function GuiTweakData:init()
 	self:_setup_menu_elements_icons()
 	self:_setup_radial_icons()
 	self:_setup_hud_icons()
+	self:_setup_hud_accessibility_icons()
 	self:_setup_hud_waypoint_icons()
 	self:_setup_hud_reticles()
 	self:_setup_map_icons()
@@ -30,6 +31,22 @@ function GuiTweakData:init()
 	self:_setup_old_tweak_data()
 end
 
+function GuiTweakData:get_full_gui_data(icon)
+	local texture = self.icons[icon].texture
+	local texture_rect = self.icons[icon].texture_rect
+	local color = self.icons[icon].color or Color(1, 1, 1)
+
+	return texture, texture_rect, color
+end
+
+function GuiTweakData:icon_w(icon)
+	return self.icons[icon].texture_rect[3]
+end
+
+function GuiTweakData:icon_h(icon)
+	return self.icons[icon].texture_rect[4]
+end
+
 function GuiTweakData:_setup_layers()
 	self.PLAYER_PANELS_LAYER = 1300
 	self.SAVEFILE_LAYER = 1500
@@ -42,6 +59,7 @@ function GuiTweakData:_setup_colors()
 	self.colors.raid_debug = Color("deaf3e")
 	self.colors.raid_red = Color("de4a3e")
 	self.colors.raid_dark_red = Color("c04236")
+	self.colors.raid_brown_red = Color("802b24")
 	self.colors.raid_light_red = Color("b8392e")
 	self.colors.raid_white = Color("d7d7d7")
 	self.colors.raid_dirty_white = Color("d3d3d3")
@@ -72,10 +90,12 @@ function GuiTweakData:_setup_hud_colors()
 	self.colors.progress_yellow = Color("dd9a38")
 	self.colors.progress_orange = Color("dd5c23")
 	self.colors.progress_red = Color("b8392e")
+	self.colors.progress_dark_red = Color("81271f")
 	self.colors.toast_notification_border = Color("222222")
 	self.colors.turret_overheat = Color("b8392e")
 	self.colors.chat_border = Color("222222")
 	self.colors.light_grey = Color("ECECEC")
+	self.colors.dark_grey = Color("808080")
 	self.colors.chat_player_message = self.colors.raid_dirty_white
 	self.colors.chat_peer_message = self.colors.raid_dirty_white
 	self.colors.chat_system_message = self.colors.raid_red
@@ -115,6 +135,16 @@ function GuiTweakData:_setup_hud_colors()
 		{
 			start_percentage = 0.25,
 			color = self.colors.light_grey,
+		},
+	}
+	self.colors.ammo_clip_spent_colors = {
+		{
+			start_percentage = 0,
+			color = self.colors.progress_dark_red,
+		},
+		{
+			start_percentage = 0.25,
+			color = self.colors.dark_grey,
 		},
 	}
 	self.colors.turret_heat_colors = {
@@ -1264,6 +1294,30 @@ function GuiTweakData:_setup_icons()
 		30,
 		30,
 	}
+	self.icons.list_btn_ico_shirt = {}
+	self.icons.list_btn_ico_shirt.texture = "ui/atlas/raid_atlas_menu_2"
+	self.icons.list_btn_ico_shirt.texture_rect = {
+		1,
+		1,
+		30,
+		30,
+	}
+	self.icons.list_btn_ico_rename = {}
+	self.icons.list_btn_ico_rename.texture = "ui/atlas/raid_atlas_menu_2"
+	self.icons.list_btn_ico_rename.texture_rect = {
+		33,
+		1,
+		30,
+		30,
+	}
+	self.icons.list_btn_ico_globe = {}
+	self.icons.list_btn_ico_globe.texture = "ui/atlas/raid_atlas_menu_2"
+	self.icons.list_btn_ico_globe.texture_rect = {
+		1,
+		33,
+		30,
+		30,
+	}
 	self.icons.list_btn_ico_plus = {}
 	self.icons.list_btn_ico_plus.texture = "ui/atlas/raid_atlas_menu"
 	self.icons.list_btn_ico_plus.texture_rect = {
@@ -1320,9 +1374,9 @@ function GuiTweakData:_setup_icons()
 		56,
 		56,
 	}
-	self.icons.loot_rarity_haloween = {}
-	self.icons.loot_rarity_haloween.texture = "ui/atlas/raid_atlas_menu"
-	self.icons.loot_rarity_haloween.texture_rect = {
+	self.icons.loot_rarity_halloween = {}
+	self.icons.loot_rarity_halloween.texture = "ui/atlas/raid_atlas_menu"
+	self.icons.loot_rarity_halloween.texture_rect = {
 		98,
 		842,
 		57,
@@ -1445,6 +1499,14 @@ function GuiTweakData:_setup_icons()
 	self.icons.rewards_extra_loot_frame.texture_rect = {
 		372,
 		432,
+		112,
+		96,
+	}
+	self.icons.rewards_extra_loot_fill = {}
+	self.icons.rewards_extra_loot_fill.texture = "ui/atlas/rewards_extra_loot_fill"
+	self.icons.rewards_extra_loot_fill.texture_rect = {
+		8,
+		16,
 		112,
 		96,
 	}
@@ -1760,54 +1822,107 @@ function GuiTweakData:_setup_icons()
 		52,
 		52,
 	}
-	self.icons.wpn_skill_accuracy = {}
-	self.icons.wpn_skill_accuracy.texture = "ui/atlas/raid_atlas_menu"
-	self.icons.wpn_skill_accuracy.texture_rect = {
-		706,
-		820,
-		40,
-		54,
+	self.icons.wpn_skill_selected = {}
+	self.icons.wpn_skill_selected.texture = "ui/atlas/raid_atlas_wpn_upg"
+	self.icons.wpn_skill_selected.texture_rect = {
+		0,
+		0,
+		80,
+		108,
 	}
+
+	local wpnskl_x = 40
+
 	self.icons.wpn_skill_blank = {}
-	self.icons.wpn_skill_blank.texture = "ui/atlas/raid_atlas_menu"
+	self.icons.wpn_skill_blank.texture = "ui/atlas/raid_atlas_wpn_upg"
 	self.icons.wpn_skill_blank.texture_rect = {
-		708,
-		876,
+		wpnskl_x * 2,
+		0,
 		40,
 		54,
 	}
-	self.icons.wpn_skill_damage = {}
-	self.icons.wpn_skill_damage.texture = "ui/atlas/raid_atlas_menu"
-	self.icons.wpn_skill_damage.texture_rect = {
-		748,
-		820,
-		40,
-		54,
-	}
+	self.icons.wpn_skill_blank_part = deep_clone(self.icons.wpn_skill_blank)
+	self.icons.wpn_skill_blank_part.texture_rect[2] = 54
 	self.icons.wpn_skill_locked = {}
-	self.icons.wpn_skill_locked.texture = "ui/atlas/raid_atlas_menu"
+	self.icons.wpn_skill_locked.texture = "ui/atlas/raid_atlas_wpn_upg"
 	self.icons.wpn_skill_locked.texture_rect = {
-		742,
-		932,
+		wpnskl_x * 3,
+		0,
 		40,
 		54,
 	}
+	self.icons.wpn_skill_locked_part = deep_clone(self.icons.wpn_skill_locked)
+	self.icons.wpn_skill_locked_part.texture_rect[2] = 54
+	self.icons.wpn_skill_unknown = {}
+	self.icons.wpn_skill_unknown.texture = "ui/atlas/raid_atlas_wpn_upg"
+	self.icons.wpn_skill_unknown.texture_rect = {
+		wpnskl_x * 4,
+		0,
+		40,
+		54,
+	}
+	self.icons.wpn_skill_unknown_part = deep_clone(self.icons.wpn_skill_unknown)
+	self.icons.wpn_skill_unknown_part.texture_rect[2] = 54
 	self.icons.wpn_skill_mag_size = {}
-	self.icons.wpn_skill_mag_size.texture = "ui/atlas/raid_atlas_menu"
+	self.icons.wpn_skill_mag_size.texture = "ui/atlas/raid_atlas_wpn_upg"
 	self.icons.wpn_skill_mag_size.texture_rect = {
-		750,
-		876,
+		wpnskl_x * 5,
+		0,
 		40,
 		54,
 	}
+	self.icons.wpn_skill_mag_size_part = deep_clone(self.icons.wpn_skill_mag_size)
+	self.icons.wpn_skill_mag_size_part.texture_rect[2] = 54
+	self.icons.wpn_skill_accuracy = {}
+	self.icons.wpn_skill_accuracy.texture = "ui/atlas/raid_atlas_wpn_upg"
+	self.icons.wpn_skill_accuracy.texture_rect = {
+		wpnskl_x * 6,
+		0,
+		40,
+		54,
+	}
+	self.icons.wpn_skill_accuracy_part = deep_clone(self.icons.wpn_skill_accuracy)
+	self.icons.wpn_skill_accuracy_part.texture_rect[2] = 54
+	self.icons.wpn_skill_damage = {}
+	self.icons.wpn_skill_damage.texture = "ui/atlas/raid_atlas_wpn_upg"
+	self.icons.wpn_skill_damage.texture_rect = {
+		wpnskl_x * 7,
+		0,
+		40,
+		54,
+	}
+	self.icons.wpn_skill_damage_part = deep_clone(self.icons.wpn_skill_damage)
+	self.icons.wpn_skill_damage_part.texture_rect[2] = 54
 	self.icons.wpn_skill_stability = {}
-	self.icons.wpn_skill_stability.texture = "ui/atlas/raid_atlas_menu"
+	self.icons.wpn_skill_stability.texture = "ui/atlas/raid_atlas_wpn_upg"
 	self.icons.wpn_skill_stability.texture_rect = {
-		784,
-		932,
+		wpnskl_x * 8,
+		0,
 		40,
 		54,
 	}
+	self.icons.wpn_skill_stability_part = deep_clone(self.icons.wpn_skill_stability)
+	self.icons.wpn_skill_stability_part.texture_rect[2] = 54
+	self.icons.wpn_skill_gold = {}
+	self.icons.wpn_skill_gold.texture = "ui/atlas/raid_atlas_wpn_upg"
+	self.icons.wpn_skill_gold.texture_rect = {
+		wpnskl_x * 9,
+		0,
+		40,
+		54,
+	}
+	self.icons.wpn_skill_gold_part = deep_clone(self.icons.wpn_skill_gold)
+	self.icons.wpn_skill_gold_part.texture_rect[2] = 54
+	self.icons.wpn_skill_spread = {}
+	self.icons.wpn_skill_spread.texture = "ui/atlas/raid_atlas_wpn_upg"
+	self.icons.wpn_skill_spread.texture_rect = {
+		wpnskl_x * 10,
+		0,
+		40,
+		54,
+	}
+	self.icons.wpn_skill_spread_part = deep_clone(self.icons.wpn_skill_spread)
+	self.icons.wpn_skill_spread_part.texture_rect[2] = 54
 	self.icons.screen_1 = {}
 	self.icons.screen_1.texture = "ui/atlas/wip/raid_atlas_spec_hud"
 	self.icons.screen_1.texture_rect = {
@@ -1960,9 +2075,9 @@ function GuiTweakData:_setup_icons()
 		56,
 		56,
 	}
-	self.icons.missions_consumable_forest = {}
-	self.icons.missions_consumable_forest.texture = "ui/atlas/raid_atlas_missions"
-	self.icons.missions_consumable_forest.texture_rect = {
+	self.icons.missions_menu_consumable_forest = {}
+	self.icons.missions_menu_consumable_forest.texture = "ui/atlas/raid_atlas_missions"
+	self.icons.missions_menu_consumable_forest.texture_rect = {
 		2,
 		432,
 		56,
@@ -2132,6 +2247,14 @@ function GuiTweakData:_setup_icons()
 	self.icons.missions_kelly.texture = "ui/atlas/raid_atlas_missions"
 	self.icons.missions_kelly.texture_rect = {
 		312,
+		126,
+		56,
+		56,
+	}
+	self.icons.missions_fury_railway = {}
+	self.icons.missions_fury_railway.texture = "ui/atlas/raid_atlas_missions"
+	self.icons.missions_fury_railway.texture_rect = {
+		368,
 		126,
 		56,
 		56,
@@ -2651,6 +2774,14 @@ function GuiTweakData:_setup_menu_elements_icons()
 		1024,
 		512,
 	}
+	self.icons.outlaw_raid_hud_item = {}
+	self.icons.outlaw_raid_hud_item.texture = "ui/elements/outlaw_raid_hud"
+	self.icons.outlaw_raid_hud_item.texture_rect = {
+		0,
+		0,
+		512,
+		512,
+	}
 end
 
 function GuiTweakData:_setup_radial_icons()
@@ -2702,6 +2833,14 @@ function GuiTweakData:_setup_radial_icons()
 		0,
 		128,
 		128,
+	}
+	self.icons.objective_timer_watch = {}
+	self.icons.objective_timer_watch.texture = "ui/hud/parts/objective_timer_watch"
+	self.icons.objective_timer_watch.texture_rect = {
+		0,
+		0,
+		64,
+		64,
 	}
 	self.icons.teammate_circle_fill_large = {}
 	self.icons.teammate_circle_fill_large.texture = "ui/hud/parts/meters_downed_fill_hud"
@@ -2762,6 +2901,70 @@ function GuiTweakData:_setup_radial_icons()
 end
 
 function GuiTweakData:_setup_hud_icons()
+	self.icons.backgrounds_skill_desc_1 = {}
+	self.icons.backgrounds_skill_desc_1.texture = "ui/atlas/raid_atlas_skill_desc_bg"
+	self.icons.backgrounds_skill_desc_1.texture_rect = {
+		0,
+		0,
+		256,
+		64,
+	}
+	self.icons.backgrounds_skill_desc_2 = {}
+	self.icons.backgrounds_skill_desc_2.texture = "ui/atlas/raid_atlas_skill_desc_bg"
+	self.icons.backgrounds_skill_desc_2.texture_rect = {
+		0,
+		64,
+		256,
+		64,
+	}
+	self.icons.backgrounds_skill_desc_3 = {}
+	self.icons.backgrounds_skill_desc_3.texture = "ui/atlas/raid_atlas_skill_desc_bg"
+	self.icons.backgrounds_skill_desc_3.texture_rect = {
+		0,
+		128,
+		256,
+		64,
+	}
+	self.icons.backgrounds_skill_desc_4 = {}
+	self.icons.backgrounds_skill_desc_4.texture = "ui/atlas/raid_atlas_skill_desc_bg"
+	self.icons.backgrounds_skill_desc_4.texture_rect = {
+		0,
+		192,
+		256,
+		64,
+	}
+	self.icons.backgrounds_skill_desc_5 = {}
+	self.icons.backgrounds_skill_desc_5.texture = "ui/atlas/raid_atlas_skill_desc_bg"
+	self.icons.backgrounds_skill_desc_5.texture_rect = {
+		0,
+		256,
+		256,
+		64,
+	}
+	self.icons.backgrounds_skill_desc_6 = {}
+	self.icons.backgrounds_skill_desc_6.texture = "ui/atlas/raid_atlas_skill_desc_bg"
+	self.icons.backgrounds_skill_desc_6.texture_rect = {
+		0,
+		320,
+		256,
+		64,
+	}
+	self.icons.backgrounds_skill_desc_7 = {}
+	self.icons.backgrounds_skill_desc_7.texture = "ui/atlas/raid_atlas_skill_desc_bg"
+	self.icons.backgrounds_skill_desc_7.texture_rect = {
+		0,
+		384,
+		256,
+		64,
+	}
+	self.icons.backgrounds_skill_desc_8 = {}
+	self.icons.backgrounds_skill_desc_8.texture = "ui/atlas/raid_atlas_skill_desc_bg"
+	self.icons.backgrounds_skill_desc_8.texture_rect = {
+		0,
+		448,
+		256,
+		64,
+	}
 	self.icons.aa_gun_bg = {}
 	self.icons.aa_gun_bg.texture = "ui/atlas/raid_atlas_hud"
 	self.icons.aa_gun_bg.texture_rect = {
@@ -3395,35 +3598,67 @@ function GuiTweakData:_setup_hud_icons()
 		56,
 	}
 	self.icons.nationality_small_american = {}
-	self.icons.nationality_small_american.texture = "ui/atlas/raid_atlas_hud"
+	self.icons.nationality_small_american.texture = "ui/atlas/raid_atlas_hud_nations"
 	self.icons.nationality_small_american.texture_rect = {
-		787,
-		1751,
+		0,
+		0,
 		32,
 		32,
 	}
 	self.icons.nationality_small_british = {}
-	self.icons.nationality_small_british.texture = "ui/atlas/raid_atlas_hud"
+	self.icons.nationality_small_british.texture = "ui/atlas/raid_atlas_hud_nations"
 	self.icons.nationality_small_british.texture_rect = {
-		787,
-		1785,
+		0,
+		32,
 		32,
 		32,
 	}
 	self.icons.nationality_small_german = {}
-	self.icons.nationality_small_german.texture = "ui/atlas/raid_atlas_hud"
+	self.icons.nationality_small_german.texture = "ui/atlas/raid_atlas_hud_nations"
 	self.icons.nationality_small_german.texture_rect = {
-		959,
-		1791,
+		0,
+		96,
 		32,
 		32,
 	}
 	self.icons.nationality_small_russian = {}
-	self.icons.nationality_small_russian.texture = "ui/atlas/raid_atlas_hud"
+	self.icons.nationality_small_russian.texture = "ui/atlas/raid_atlas_hud_nations"
 	self.icons.nationality_small_russian.texture_rect = {
-		787,
-		1819,
+		0,
+		64,
 		32,
+		32,
+	}
+	self.icons.nationality_small_dr_reinhardt = {}
+	self.icons.nationality_small_dr_reinhardt.texture = "ui/atlas/raid_atlas_hud_nations"
+	self.icons.nationality_small_dr_reinhardt.texture_rect = {
+		32,
+		0,
+		32,
+		32,
+	}
+	self.icons.voice_chat_talking_icon = {}
+	self.icons.voice_chat_talking_icon.texture = "ui/hud/atlas/ico_voice_chat_hud"
+	self.icons.voice_chat_talking_icon.texture_rect = {
+		0,
+		0,
+		32,
+		32,
+	}
+	self.icons.voice_chat_muted_icon = {}
+	self.icons.voice_chat_muted_icon.texture = "ui/hud/atlas/ico_voice_chat_hud"
+	self.icons.voice_chat_muted_icon.texture_rect = {
+		32,
+		0,
+		32,
+		32,
+	}
+	self.icons.voice_chat_bg_black_icon = {}
+	self.icons.voice_chat_bg_black_icon.texture = "ui/hud/atlas/voice_chat_bg_black_hud"
+	self.icons.voice_chat_bg_black_icon.texture_rect = {
+		0,
+		0,
+		256,
 		32,
 	}
 	self.icons.notification_consumable = {}
@@ -3535,6 +3770,47 @@ function GuiTweakData:_setup_hud_icons()
 	self.icons.player_panel_host_indicator.texture_rect = {
 		959,
 		1825,
+		32,
+		32,
+	}
+	self.icons.player_panel_lives_indicator_1 = {}
+	self.icons.player_panel_lives_indicator_1.texture = "ui/atlas/raid_atlas_hud"
+	self.icons.player_panel_lives_indicator_1.texture_rect = {
+		864,
+		2016,
+		32,
+		32,
+	}
+	self.icons.player_panel_lives_indicator_1.color = self.colors.raid_light_red
+	self.icons.player_panel_lives_indicator_2 = {}
+	self.icons.player_panel_lives_indicator_2.texture = "ui/atlas/raid_atlas_hud"
+	self.icons.player_panel_lives_indicator_2.texture_rect = {
+		896,
+		2016,
+		32,
+		32,
+	}
+	self.icons.player_panel_lives_indicator_3 = {}
+	self.icons.player_panel_lives_indicator_3.texture = "ui/atlas/raid_atlas_hud"
+	self.icons.player_panel_lives_indicator_3.texture_rect = {
+		928,
+		2016,
+		32,
+		32,
+	}
+	self.icons.player_panel_lives_indicator_4 = {}
+	self.icons.player_panel_lives_indicator_4.texture = "ui/atlas/raid_atlas_hud"
+	self.icons.player_panel_lives_indicator_4.texture_rect = {
+		960,
+		2016,
+		32,
+		32,
+	}
+	self.icons.player_panel_lives_indicator_5 = {}
+	self.icons.player_panel_lives_indicator_5.texture = "ui/atlas/raid_atlas_hud"
+	self.icons.player_panel_lives_indicator_5.texture_rect = {
+		992,
+		2016,
 		32,
 		32,
 	}
@@ -3754,6 +4030,126 @@ function GuiTweakData:_setup_hud_icons()
 		18,
 		18,
 	}
+	self.icons.weapon_panel_indicator_shell_loaded = {}
+	self.icons.weapon_panel_indicator_shell_loaded.texture = "ui/hud/atlas/ammo_icons"
+	self.icons.weapon_panel_indicator_shell_loaded.texture_rect = {
+		0,
+		0,
+		32,
+		32,
+	}
+	self.icons.weapon_panel_indicator_shell_spent = {}
+	self.icons.weapon_panel_indicator_shell_spent.texture = "ui/hud/atlas/ammo_icons"
+	self.icons.weapon_panel_indicator_shell_spent.texture_rect = {
+		32,
+		0,
+		32,
+		32,
+	}
+	self.icons.weapon_panel_indicator_shell_small_loaded = {}
+	self.icons.weapon_panel_indicator_shell_small_loaded.texture = "ui/hud/atlas/ammo_icons"
+	self.icons.weapon_panel_indicator_shell_small_loaded.texture_rect = {
+		32,
+		48,
+		16,
+		16,
+	}
+	self.icons.weapon_panel_indicator_shell_small_spent = {}
+	self.icons.weapon_panel_indicator_shell_small_spent.texture = "ui/hud/atlas/ammo_icons"
+	self.icons.weapon_panel_indicator_shell_small_spent.texture_rect = {
+		48,
+		48,
+		16,
+		16,
+	}
+	self.icons.weapon_panel_indicator_rifle_loaded = {}
+	self.icons.weapon_panel_indicator_rifle_loaded.texture = "ui/hud/atlas/ammo_icons"
+	self.icons.weapon_panel_indicator_rifle_loaded.texture_rect = {
+		0,
+		32,
+		8,
+		32,
+	}
+	self.icons.weapon_panel_indicator_rifle_spent = {}
+	self.icons.weapon_panel_indicator_rifle_spent.texture = "ui/hud/atlas/ammo_icons"
+	self.icons.weapon_panel_indicator_rifle_spent.texture_rect = {
+		8,
+		32,
+		8,
+		32,
+	}
+	self.icons.weapon_panel_indicator_9mm_loaded = {}
+	self.icons.weapon_panel_indicator_9mm_loaded.texture = "ui/hud/atlas/ammo_icons"
+	self.icons.weapon_panel_indicator_9mm_loaded.texture_rect = {
+		16,
+		48,
+		8,
+		16,
+	}
+	self.icons.weapon_panel_indicator_9mm_spent = {}
+	self.icons.weapon_panel_indicator_9mm_spent.texture = "ui/hud/atlas/ammo_icons"
+	self.icons.weapon_panel_indicator_9mm_spent.texture_rect = {
+		24,
+		48,
+		8,
+		16,
+	}
+	self.icons.weapon_panel_indicator_9mm_loaded_thin = {}
+	self.icons.weapon_panel_indicator_9mm_loaded_thin.texture = "ui/hud/atlas/ammo_icons"
+	self.icons.weapon_panel_indicator_9mm_loaded_thin.texture_rect = {
+		32,
+		32,
+		4,
+		16,
+	}
+	self.icons.weapon_panel_indicator_9mm_spent_thin = {}
+	self.icons.weapon_panel_indicator_9mm_spent_thin.texture = "ui/hud/atlas/ammo_icons"
+	self.icons.weapon_panel_indicator_9mm_spent_thin.texture_rect = {
+		36,
+		32,
+		4,
+		16,
+	}
+	self.icons.weapon_panel_indicator_drum_fg_ring = {}
+	self.icons.weapon_panel_indicator_drum_fg_ring.texture = "ui/hud/atlas/ammo_icons_drum_fg"
+	self.icons.weapon_panel_indicator_drum_fg_ring.texture_rect = {
+		0,
+		0,
+		32,
+		32,
+	}
+	self.icons.weapon_panel_indicator_drum_bg_ring = {}
+	self.icons.weapon_panel_indicator_drum_bg_ring.texture = "ui/hud/atlas/ammo_icons_drum_bg"
+	self.icons.weapon_panel_indicator_drum_bg_ring.texture_rect = {
+		0,
+		0,
+		32,
+		32,
+	}
+	self.icons.weapon_panel_indicator_drum_ooa_ring = {}
+	self.icons.weapon_panel_indicator_drum_ooa_ring.texture = "ui/hud/atlas/ammo_icons"
+	self.icons.weapon_panel_indicator_drum_ooa_ring.texture_rect = {
+		16,
+		32,
+		16,
+		16,
+	}
+	self.icons.weapon_panel_indicator_revolver_bullet = {}
+	self.icons.weapon_panel_indicator_revolver_bullet.texture = "ui/hud/atlas/ammo_icons"
+	self.icons.weapon_panel_indicator_revolver_bullet.texture_rect = {
+		40,
+		40,
+		8,
+		8,
+	}
+	self.icons.weapon_panel_indicator_revolver_cyl6 = {}
+	self.icons.weapon_panel_indicator_revolver_cyl6.texture = "ui/hud/atlas/ammo_icons_revolver_6"
+	self.icons.weapon_panel_indicator_revolver_cyl6.texture_rect = {
+		0,
+		0,
+		32,
+		32,
+	}
 	self.icons.weapon_panel_lmg_dp28 = {}
 	self.icons.weapon_panel_lmg_dp28.texture = "ui/atlas/raid_atlas_hud"
 	self.icons.weapon_panel_lmg_dp28.texture_rect = {
@@ -3970,6 +4366,56 @@ function GuiTweakData:_setup_hud_icons()
 		42,
 		42,
 	}
+	self.icons.weapons_panel_gre_betty = {}
+	self.icons.weapons_panel_gre_betty.texture = "ui/atlas/raid_atlas_new_items"
+	self.icons.weapons_panel_gre_betty.texture_rect = {
+		96,
+		0,
+		42,
+		42,
+	}
+	self.icons.missions_consumable_fury_railway = {}
+	self.icons.missions_consumable_fury_railway.texture = "ui/atlas/raid_atlas_hud_raids_mini"
+	self.icons.missions_consumable_fury_railway.texture_rect = {
+		4,
+		4,
+		56,
+		56,
+	}
+end
+
+function GuiTweakData:_setup_hud_accessibility_icons()
+	local common_motion_dot_size = {
+		0,
+		0,
+		32,
+		32,
+	}
+
+	self.icons.motion_dot = {}
+	self.icons.motion_dot.texture = "ui/ingame/textures/hud/access_motion_dot"
+	self.icons.motion_dot.texture_rect = common_motion_dot_size
+	self.icons.motion_dot_contour = {}
+	self.icons.motion_dot_contour.texture = "ui/ingame/textures/hud/access_motion_dot_contour"
+	self.icons.motion_dot_contour.texture_rect = common_motion_dot_size
+	self.icons.motion_dot_outline = {}
+	self.icons.motion_dot_outline.texture = "ui/ingame/textures/hud/access_motion_dot_outline"
+	self.icons.motion_dot_outline.texture_rect = common_motion_dot_size
+	self.icons.motion_dot_inline = {}
+	self.icons.motion_dot_inline.texture = "ui/ingame/textures/hud/access_motion_dot"
+	self.icons.motion_dot_inline.texture_rect = common_motion_dot_size
+	self.icons.motion_plus = {}
+	self.icons.motion_plus.texture = "ui/ingame/textures/hud/access_motion_plus"
+	self.icons.motion_plus.texture_rect = common_motion_dot_size
+	self.icons.motion_plus_contour = {}
+	self.icons.motion_plus_contour.texture = "ui/ingame/textures/hud/access_motion_plus_contour"
+	self.icons.motion_plus_contour.texture_rect = common_motion_dot_size
+	self.icons.motion_plus_outline = {}
+	self.icons.motion_plus_outline.texture = "ui/ingame/textures/hud/access_motion_plus_outline"
+	self.icons.motion_plus_outline.texture_rect = common_motion_dot_size
+	self.icons.motion_plus_inline = {}
+	self.icons.motion_plus_inline.texture = "ui/ingame/textures/hud/access_motion_plus"
+	self.icons.motion_plus_inline.texture_rect = common_motion_dot_size
 end
 
 function GuiTweakData:_setup_hud_waypoint_icons()
@@ -4018,6 +4464,30 @@ function GuiTweakData:_setup_hud_waypoint_icons()
 	self.icons.indicator_hit.texture_rect = {
 		281,
 		512,
+		32,
+		32,
+	}
+	self.icons.indicator_pellet = {}
+	self.icons.indicator_pellet.texture = "ui/hud/atlas/raid_atlas_waypoints"
+	self.icons.indicator_pellet.texture_rect = {
+		0,
+		992,
+		32,
+		32,
+	}
+	self.icons.indicator_pellet_head = {}
+	self.icons.indicator_pellet_head.texture = "ui/hud/atlas/raid_atlas_waypoints"
+	self.icons.indicator_pellet_head.texture_rect = {
+		32,
+		992,
+		32,
+		32,
+	}
+	self.icons.indicator_pellet_crit = {}
+	self.icons.indicator_pellet_crit.texture = "ui/hud/atlas/raid_atlas_waypoints"
+	self.icons.indicator_pellet_crit.texture_rect = {
+		64,
+		992,
 		32,
 		32,
 	}
@@ -4197,6 +4667,42 @@ function GuiTweakData:_setup_hud_waypoint_icons()
 		72,
 		72,
 	}
+	self.icons.waypoint_special_mark_flamer = {}
+	self.icons.waypoint_special_mark_flamer.texture = "ui/hud/atlas/waypoint_atlas_02"
+	self.icons.waypoint_special_mark_flamer.texture_rect = {
+		1,
+		1,
+		46,
+		46,
+	}
+	self.icons.waypoint_special_mark_flamer.color = Color(1, 0.25, 0.1)
+	self.icons.waypoint_special_mark_spotter = {}
+	self.icons.waypoint_special_mark_spotter.texture = "ui/hud/atlas/waypoint_atlas_02"
+	self.icons.waypoint_special_mark_spotter.texture_rect = {
+		49,
+		1,
+		46,
+		46,
+	}
+	self.icons.waypoint_special_mark_spotter.color = Color(1, 0.25, 0.1)
+	self.icons.waypoint_special_mark_officer = {}
+	self.icons.waypoint_special_mark_officer.texture = "ui/hud/atlas/waypoint_atlas_02"
+	self.icons.waypoint_special_mark_officer.texture_rect = {
+		1,
+		49,
+		46,
+		46,
+	}
+	self.icons.waypoint_special_mark_officer.color = Color(1, 0.25, 0.1)
+	self.icons.waypoint_special_mark_sniper = {}
+	self.icons.waypoint_special_mark_sniper.texture = "ui/hud/atlas/waypoint_atlas_02"
+	self.icons.waypoint_special_mark_sniper.texture_rect = {
+		49,
+		49,
+		46,
+		46,
+	}
+	self.icons.waypoint_special_mark_sniper.color = Color(1, 0.25, 0.1)
 	self.icons.waypoint_special_aim = {}
 	self.icons.waypoint_special_aim.texture = "ui/hud/atlas/raid_atlas_waypoints"
 	self.icons.waypoint_special_aim.texture_rect = {
@@ -4540,6 +5046,14 @@ function GuiTweakData:_setup_hud_waypoint_icons()
 		479,
 		38,
 		38,
+	}
+	self.icons.waypoint_special_camp_mission_raid = {}
+	self.icons.waypoint_special_camp_mission_raid.texture = "ui/hud/atlas/raid_atlas_waypoints"
+	self.icons.waypoint_special_camp_mission_raid.texture_rect = {
+		1,
+		491,
+		32,
+		32,
 	}
 end
 
@@ -5876,9 +6390,9 @@ function GuiTweakData:_setup_skill_big_icons()
 	self.icons.weapon_gre_concrete_large = {}
 	self.icons.weapon_gre_concrete_large.texture = "ui/atlas/raid_atlas_experience_3"
 	self.icons.weapon_gre_concrete_large.texture_rect = {
-		1232,
+		1266,
 		1026,
-		306,
+		240,
 		126,
 	}
 	self.icons.weapon_gre_decoy_coin_large = {}
@@ -5892,17 +6406,17 @@ function GuiTweakData:_setup_skill_big_icons()
 	self.icons.weapon_gre_d343_large = {}
 	self.icons.weapon_gre_d343_large.texture = "ui/atlas/raid_atlas_experience_3"
 	self.icons.weapon_gre_d343_large.texture_rect = {
-		766,
+		856,
 		770,
-		306,
+		126,
 		126,
 	}
 	self.icons.weapon_gre_mills_large = {}
 	self.icons.weapon_gre_mills_large.texture = "ui/atlas/raid_atlas_experience_3"
 	self.icons.weapon_gre_mills_large.texture_rect = {
-		766,
+		856,
 		898,
-		306,
+		126,
 		126,
 	}
 	self.icons.weapon_hdm = {}
@@ -6232,6 +6746,14 @@ function GuiTweakData:_setup_skill_big_icons()
 		766,
 		380,
 		380,
+	}
+	self.icons.weapon_gre_betty_large = {}
+	self.icons.weapon_gre_betty_large.texture = "ui/atlas/raid_atlas_new_items"
+	self.icons.weapon_gre_betty_large.texture_rect = {
+		0,
+		0,
+		96,
+		128,
 	}
 end
 
@@ -7165,6 +7687,38 @@ function GuiTweakData:_setup_mission_photos()
 		100,
 		100,
 	}
+	self.mission_photos.intel_fury_railway_01 = {}
+	self.mission_photos.intel_fury_railway_01.texture = "ui/missions/fury_railway/raid_atlas_photos_fury_railway"
+	self.mission_photos.intel_fury_railway_01.texture_rect = {
+		2,
+		2,
+		416,
+		288,
+	}
+	self.mission_photos.intel_fury_railway_02 = {}
+	self.mission_photos.intel_fury_railway_02.texture = "ui/missions/fury_railway/raid_atlas_photos_fury_railway"
+	self.mission_photos.intel_fury_railway_02.texture_rect = {
+		2,
+		290,
+		416,
+		288,
+	}
+	self.mission_photos.intel_fury_railway_03 = {}
+	self.mission_photos.intel_fury_railway_03.texture = "ui/missions/fury_railway/raid_atlas_photos_fury_railway"
+	self.mission_photos.intel_fury_railway_03.texture_rect = {
+		2,
+		578,
+		416,
+		288,
+	}
+	self.mission_photos.intel_fury_railway_04 = {}
+	self.mission_photos.intel_fury_railway_04.texture = "ui/missions/fury_railway/raid_atlas_photos_fury_railway"
+	self.mission_photos.intel_fury_railway_04.texture_rect = {
+		418,
+		2,
+		416,
+		288,
+	}
 end
 
 function GuiTweakData:_setup_optical_flares()
@@ -7363,6 +7917,14 @@ function GuiTweakData:_setup_xp_icons()
 		392,
 		392,
 	}
+	self.icons.xp_events_missions_fury_railway = {}
+	self.icons.xp_events_missions_fury_railway.texture = "ui/atlas/raid_atlas_xp"
+	self.icons.xp_events_missions_fury_railway.texture_rect = {
+		1182,
+		790,
+		392,
+		392,
+	}
 end
 
 function GuiTweakData:_setup_paper_icons()
@@ -7408,14 +7970,6 @@ function GuiTweakData:_setup_paper_icons()
 	}
 end
 
-function GuiTweakData:icon_w(icon)
-	return self.icons[icon].texture_rect[3]
-end
-
-function GuiTweakData:icon_h(icon)
-	return self.icons[icon].texture_rect[4]
-end
-
 function GuiTweakData:_setup_old_tweak_data()
 	self.content_updates = {
 		choice_id = "menu_content_updates_previous",
@@ -7423,15 +7977,15 @@ function GuiTweakData:_setup_old_tweak_data()
 		title_id = "menu_content_updates",
 	}
 
-	if SystemInfo:platform() == Idstring("WIN32") then
+	if _G.IS_PC then
 		self.content_updates.item_list = {}
-	elseif SystemInfo:platform() == Idstring("PS3") then
+	elseif _G.IS_PS3 then
 		self.content_updates.item_list = {}
-	elseif SystemInfo:platform() == Idstring("PS4") then
+	elseif _G.IS_PS4 then
 		self.content_updates.item_list = {}
-	elseif SystemInfo:platform() == Idstring("XB1") then
+	elseif _G.IS_XB1 then
 		self.content_updates.item_list = {}
-	elseif SystemInfo:platform() == Idstring("X360") then
+	elseif _G.IS_XB360 then
 		self.content_updates.item_list = {}
 	end
 

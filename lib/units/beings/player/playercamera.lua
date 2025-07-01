@@ -242,12 +242,16 @@ function PlayerCamera:set_rotation(rot)
 
 	local angle_delta = math.abs(self._sync_dir.yaw - sync_yaw) + math.abs(self._sync_dir.pitch - sync_pitch)
 
-	if sync_dt > 1 and angle_delta > 0 or angle_delta > 5 then
-		self._unit:network():send("set_look_dir", sync_yaw, sync_pitch)
+	if tweak_data.network then
+		local update_network = sync_dt > tweak_data.network.camera.network_sync_delta_t and angle_delta > 0 or angle_delta > tweak_data.network.camera.network_angle_delta
 
-		self._sync_dir.yaw = sync_yaw
-		self._sync_dir.pitch = sync_pitch
-		self._last_sync_t = t
+		if update_network then
+			self._unit:network():send("set_look_dir", sync_yaw, sync_pitch)
+
+			self._sync_dir.yaw = sync_yaw
+			self._sync_dir.pitch = sync_pitch
+			self._last_sync_t = t
+		end
 	end
 end
 

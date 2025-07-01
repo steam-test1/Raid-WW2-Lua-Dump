@@ -60,7 +60,7 @@ function RaidGUIControlTopStatSmall:_create_stat_info()
 		align = "right",
 		layer = 3,
 		name = "stat_name_label",
-		text = "Most specials killed",
+		text = "Most things done well",
 		vertical = "center",
 		word_wrap = true,
 		wrap = true,

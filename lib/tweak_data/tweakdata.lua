@@ -39,6 +39,8 @@ require("lib/tweak_data/WeaponInventoryTweakData")
 require("lib/tweak_data/SubtitlesTweakData")
 require("lib/tweak_data/InputTweakData")
 require("lib/tweak_data/IntelTweakData")
+require("lib/tweak_data/NetworkTweakData")
+require("lib/tweak_data/LinkPrefabsTweakData")
 
 TweakData = TweakData or class()
 TweakData.RELOAD = true
@@ -332,6 +334,8 @@ function TweakData:init()
 	self.input = InputTweakData:new(self)
 	self.intel = IntelTweakData:new(self)
 	self.greed = GreedTweakData:new()
+	self.network = NetworkTweakData:new(self)
+	self.link_prefabs = LinkPrefabsTweakData:new()
 	self.criminals = {}
 	self.criminals.character_names = {
 		"russian",
@@ -546,6 +550,26 @@ function TweakData:init()
 	self.dialog.DEFAULT_PRIORITY = 1
 	self.dialog.MINIMUM_DURATION = 2
 	self.dialog.DURATION_PER_CHAR = 0.07
+	self.motion_dot_modes = {
+		"off",
+		"single",
+		"double_hor",
+		"double_ver",
+		"quad_diag",
+		"quad_plus",
+	}
+	self.motion_dot_sizes = {
+		"tiny",
+		"small",
+		"medium",
+		"large",
+		"huge",
+	}
+	self.hit_indicator_modes = {
+		"off",
+		"on",
+		"track",
+	}
 	self.hud = {}
 
 	self:set_hud_values()
@@ -556,10 +580,10 @@ function TweakData:init()
 	self.gui.MENU_LAYER = 200
 	self.gui.MENU_COMPONENT_LAYER = 300
 	self.gui.ATTRACT_SCREEN_LAYER = 400
-	self.gui.LOADING_SCREEN_LAYER = 1000
-	self.gui.CRIMENET_CHAT_LAYER = 1000
-	self.gui.DIALOG_LAYER = 1100
-	self.gui.MOUSE_LAYER = 1200
+	self.gui.LOADING_SCREEN_LAYER = 3000
+	self.gui.CRIMENET_CHAT_LAYER = 3000
+	self.gui.DIALOG_LAYER = 3100
+	self.gui.MOUSE_LAYER = 3200
 	self.overlay_effects = {}
 	self.overlay_effects.spectator = {
 		blend_mode = "normal",
@@ -795,21 +819,24 @@ function TweakData:init()
 	self.screen = {}
 	self.screen.fadein_delay = 1
 	self.experience_manager = {}
-	self.experience_manager.level_failed_multiplier = 0.1
+	self.experience_manager.level_failed_multiplier = 0.075
 	self.experience_manager.human_player_multiplier = {
 		1,
-		1.2,
-		1.3,
-		1.4,
+		1.25,
+		1.35,
+		1.5,
 	}
 	self.experience_manager.level_diff_max_multiplier = 2
 	self.experience_manager.difficulty_multiplier = {}
-	self.experience_manager.difficulty_multiplier[TweakData.DIFFICULTY_1] = 2
-	self.experience_manager.difficulty_multiplier[TweakData.DIFFICULTY_2] = 4
-	self.experience_manager.difficulty_multiplier[TweakData.DIFFICULTY_3] = 8
-	self.experience_manager.difficulty_multiplier[TweakData.DIFFICULTY_4] = 15
+	self.experience_manager.difficulty_multiplier[TweakData.DIFFICULTY_1] = 1
+	self.experience_manager.difficulty_multiplier[TweakData.DIFFICULTY_2] = 1.5
+	self.experience_manager.difficulty_multiplier[TweakData.DIFFICULTY_3] = 3
+	self.experience_manager.difficulty_multiplier[TweakData.DIFFICULTY_4] = 4.5
+	self.experience_manager.escort_survived_bonus = 1.25
+	self.experience_manager.side_quest_bonus = 1.5
+	self.experience_manager.extra_objectives_bonus = 1.2
+	self.experience_manager.tiny_objectives_bonus = 1.01
 
-	local multiplier = 1
 	local level_xp_requirements = {}
 
 	level_xp_requirements[1] = 0
@@ -852,6 +879,9 @@ function TweakData:init()
 	level_xp_requirements[38] = 121744
 	level_xp_requirements[39] = 140006
 	level_xp_requirements[40] = 161007
+
+	local multiplier = 1
+
 	self.experience_manager.levels = {}
 
 	for i = 1, #level_xp_requirements do
@@ -910,15 +940,6 @@ function TweakData:init()
 	self.pickups.ammo_small_beam = {
 		unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_ammo_small_beam"),
 	}
-	self.pickups.grenade_big_beam = {
-		unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_granade_big_beam"),
-	}
-	self.pickups.grenade_medium_beam = {
-		unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_granade_medium_beam"),
-	}
-	self.pickups.grenade_small_beam = {
-		unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_granade_small_beam"),
-	}
 	self.pickups.health_big = {
 		unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_health_big"),
 	}
@@ -938,14 +959,18 @@ function TweakData:init()
 		unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_ammo_small"),
 	}
 	self.pickups.grenade_big = {
-		unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_granade_big"),
+		unit = Idstring("units/vanilla/pickups/pku_new_munitions/grenades/pku_grenade_stack_max5"),
 	}
+	self.pickups.grenade_big_beam = deep_clone(self.pickups.grenade_big)
 	self.pickups.grenade_medium = {
-		unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_granade_medium"),
+		unit = Idstring("units/vanilla/pickups/pku_new_munitions/grenades/pku_grenade_stack_max3"),
 	}
+	self.pickups.grenade_medium_beam = deep_clone(self.pickups.grenade_medium)
 	self.pickups.grenade_small = {
-		unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_granade_small"),
+		position_offset = Vector3(0, 2.5, 0),
+		unit = Idstring("units/vanilla/pickups/pku_new_munitions/grenades/pku_grenade_stack_max3"),
 	}
+	self.pickups.grenade_small_beam = deep_clone(self.pickups.grenade_small)
 	self.pickups.gold_bar_small = {
 		unit = Idstring("units/vanilla/pickups/pku_gold_bars/pku_gold_bar"),
 	}
@@ -1074,13 +1099,13 @@ function TweakData:init()
 	self.music.default = deep_clone(self.music.flakturm)
 	self.music.soundbank_list = {}
 	self.voiceover = {}
-	self.voiceover.idle_delay = 5
-	self.voiceover.idle_rnd_delay = 60
+	self.voiceover.idle_delay = 10
+	self.voiceover.idle_rnd_delay = 50
 	self.voiceover.idle_cooldown = 30
 	self.voting = {}
 	self.voting.timeout = 30
 	self.voting.cooldown = 50
-	self.voting.restart_delay = 5
+	self.voting.restart_delay = 3
 	self.dot_types = {}
 	self.dot_types.poison = {
 		damage_class = "PoisonBulletBase",
@@ -1537,7 +1562,7 @@ function TweakData:get_controller_help_coords()
 		vehicle = {},
 	}
 
-	if SystemInfo:platform() == Idstring("PS3") then
+	if _G.IS_PS3 then
 		coords.normal.left_thumb = {
 			align = "right",
 			id = "menu_button_sprint",
@@ -1760,7 +1785,7 @@ function TweakData:get_controller_help_coords()
 			x = 0,
 			y = 87,
 		}
-	elseif SystemInfo:platform() == Idstring("PS4") then
+	elseif _G.IS_PS4 then
 		coords.normal.left_thumb = {
 			align = "right",
 			id = "menu_button_sprint",
@@ -1983,7 +2008,7 @@ function TweakData:get_controller_help_coords()
 			x = 0,
 			y = 181,
 		}
-	elseif SystemInfo:platform() == Idstring("XB1") then
+	elseif _G.IS_XB1 then
 		coords.normal.left_thumb = {
 			align = "right",
 			id = "menu_button_sprint",
@@ -2319,7 +2344,7 @@ function TweakData:get_controller_help_coords()
 			y = 256,
 		}
 
-		if SystemInfo:platform() == Idstring("WIN32") then
+		if _G.IS_PC then
 			coords.normal.d_up = {
 				align = "right",
 				id = "menu_button_push_to_talk",
@@ -2441,7 +2466,7 @@ function TweakData:get_controller_help_coords()
 			y = 256,
 		}
 
-		if SystemInfo:platform() == Idstring("WIN32") then
+		if _G.IS_PC then
 			coords.vehicle.d_up = {
 				align = "right",
 				id = "menu_button_unassigned",

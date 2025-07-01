@@ -371,21 +371,28 @@ function SpecialObjectiveGroupElement:_build_panel(panel, panel_sizer)
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
 
+	local tooltip = ""
+
+	tooltip = tooltip .. "RANDOMIZER: Assigns SOs to instigators.\n"
+	tooltip = tooltip .. "PATROL GROUP: Assigns random SO in a way that will repeat the same path from this group.\n"
+	tooltip = tooltip .. "FORCED SPAWN: Will spawn a new group of choice.\n"
+	tooltip = tooltip .. "RECURRING: Spawns new group. After failure, a new group will be spawned with a delay.\n"
+
 	local mode_params = {
 		ctrlr_proportions = 2,
 		name = "Mode:",
 		name_proportions = 1,
 		sorted = false,
-		tooltip = "Randomizer: assigns SOs to instigators. Forced Spawn: Will spawn a new group of choice. Recurring: Spawns new group. After failure, a new group will be spawned with a delay.",
 		options = {
 			"randomizer",
+			"patrol_group",
 			"forced_spawn",
 			"recurring_cloaker_spawn",
 			"recurring_spawn_1",
-			"patrol_group",
 		},
 		panel = panel,
 		sizer = panel_sizer,
+		tooltip = tooltip,
 		value = self._hed.mode,
 	}
 	local mode = CoreEws.combobox(mode_params)
@@ -411,7 +418,7 @@ function SpecialObjectiveGroupElement:_build_panel(panel, panel_sizer)
 		min = 0,
 		name = "Base chance:",
 		name_proportions = 1,
-		tooltip = "Used to specify chance to happen (1==absolutely!)",
+		tooltip = "Used to specify chance to happen (1.0 == 100%)",
 		panel = panel,
 		sizer = panel_sizer,
 		value = self._hed.base_chance,

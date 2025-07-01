@@ -148,3 +148,19 @@ end
 function NetworkVoiceChatSTEAM:is_muted(peer)
 	return self.handler:is_voice_receiver_muted(peer:id())
 end
+
+function NetworkVoiceChatSTEAM:soft_disable()
+	return
+end
+
+function NetworkVoiceChatSTEAM:soft_enable()
+	return
+end
+
+function NetworkVoiceChatSTEAM:trc_check_mute()
+	return
+end
+
+function NetworkVoiceChatSTEAM:trc_check_unmute()
+	return
+end

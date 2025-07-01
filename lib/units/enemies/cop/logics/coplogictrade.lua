@@ -38,7 +38,7 @@ function CopLogicTrade.hostage_trade(unit, enable, trade_success)
 		managers.hud:add_waypoint(wp_id, {
 			icon = "wp_trade",
 			waypoint_type = "hostage_trade",
-			distance = SystemInfo:platform() == Idstring("WIN32"),
+			distance = _G.IS_PC,
 			position = unit:movement():m_pos(),
 			text = text,
 		})

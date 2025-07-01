@@ -8,6 +8,8 @@ RaidGUIControlListItemRaids.LOCK_ICON = "ico_locker"
 RaidGUIControlListItemRaids.LOCK_ICON_CENTER_DISTANCE_FROM_RIGHT = 43
 RaidGUIControlListItemRaids.LOCKED_COLOR = tweak_data.gui.colors.raid_dark_grey
 RaidGUIControlListItemRaids.UNLOCKED_COLOR = tweak_data.gui.colors.raid_dirty_white
+RaidGUIControlListItemRaids.DEBUG_LOCKED_COLOR = Color(0.2, 0.5, 0.2)
+RaidGUIControlListItemRaids.DEBUG_UNLOCKED_COLOR = Color(0.4, 1, 0.4)
 
 function RaidGUIControlListItemRaids:init(parent, params, data)
 	RaidGUIControlListItemRaids.super.init(self, parent, params)
@@ -21,11 +23,26 @@ function RaidGUIControlListItemRaids:init(parent, params, data)
 	self._on_double_click_callback = params.on_double_click_callback
 	self._data = data
 	self._is_consumable = tweak_data.operations.missions[data.value].consumable ~= nil
-	self._color = params.color or tweak_data.gui.colors.raid_white
-	self._selected_color = params.selected_color or tweak_data.gui.colors.raid_red
+	self._is_debug = tweak_data.operations.missions[data.value].debug ~= nil
 	self._unlocked = data.unlocked or managers.progression:mission_unlocked(OperationsTweakData.JOB_TYPE_RAID, data.value)
 	self._mouse_over_sound = params.on_mouse_over_sound_event
 	self._mouse_click_sound = params.on_mouse_click_sound_event
+	self._color = params.color or tweak_data.gui.colors.raid_white
+	self._selected_color = params.selected_color or tweak_data.gui.colors.raid_red
+
+	if self._is_debug then
+		self._color = RaidGUIControlListItemRaids.DEBUG_UNLOCKED_COLOR
+
+		if self._unlocked then
+			self._color_type = RaidGUIControlListItemRaids.DEBUG_UNLOCKED_COLOR
+		else
+			self._color_type = RaidGUIControlListItemRaids.DEBUG_LOCKED_COLOR
+		end
+	elseif self._unlocked then
+		self._color_type = RaidGUIControlListItemRaids.UNLOCKED_COLOR
+	else
+		self._color_type = RaidGUIControlListItemRaids.LOCKED_COLOR
+	end
 
 	self:_layout_panel(params)
 	self:_layout_background(params)
@@ -33,12 +50,12 @@ function RaidGUIControlListItemRaids:init(parent, params, data)
 	self:_layout_icon(params, data)
 	self:_layout_raid_name(params, data)
 
-	if not self._is_consumable then
+	if self._is_consumable then
+		self:_layout_consumable_mission_label()
+	else
 		self:_layout_difficulty_locked()
 		self:_layout_difficulty()
 		self:_layout_lock_icon()
-	else
-		self:_layout_consumable_mission_label()
 	end
 
 	self._selectable = self._data.selectable
@@ -97,7 +114,7 @@ end
 
 function RaidGUIControlListItemRaids:_layout_icon(params, data)
 	local icon_params = {
-		color = tweak_data.gui.colors.raid_dirty_white,
+		color = self._is_consumable and tweak_data.gui.colors.raid_gold or tweak_data.gui.colors.raid_dirty_white,
 		name = "list_item_icon_" .. self._name,
 		texture = data.icon.texture,
 		texture_rect = data.icon.texture_rect,
@@ -213,8 +230,6 @@ function RaidGUIControlListItemRaids:_apply_progression_layout()
 		self._lock_icon:hide()
 		self._difficulty_locked_indicator:hide()
 		self._difficulty_indicator:show()
-		self._item_icon:set_color(RaidGUIControlListItemRaids.UNLOCKED_COLOR)
-		self._item_label:set_color(RaidGUIControlListItemRaids.UNLOCKED_COLOR)
 
 		local difficulty_available, difficulty_completed = managers.progression:get_mission_progression(OperationsTweakData.JOB_TYPE_RAID, self._data.value)
 
@@ -225,9 +240,10 @@ function RaidGUIControlListItemRaids:_apply_progression_layout()
 		self._lock_icon:show()
 		self._difficulty_locked_indicator:show()
 		self._difficulty_indicator:hide()
-		self._item_icon:set_color(RaidGUIControlListItemRaids.LOCKED_COLOR)
-		self._item_label:set_color(RaidGUIControlListItemRaids.LOCKED_COLOR)
 	end
+
+	self._item_icon:set_color(self._color)
+	self._item_label:set_color(self._color_type)
 end
 
 function RaidGUIControlListItemRaids:on_mouse_released(button)
@@ -295,7 +311,7 @@ function RaidGUIControlListItemRaids:unselect()
 	self._item_background:hide()
 
 	if self._unlocked then
-		self._item_label:set_color(self._color)
+		self._item_label:set_color(self._color_type)
 	end
 
 	self._item_highlight_marker:hide()
@@ -319,7 +335,7 @@ function RaidGUIControlListItemRaids:highlight_on()
 	if self._selected then
 		self._item_label:set_color(self._selected_color)
 	else
-		self._item_label:set_color(self._color)
+		self._item_label:set_color(self._color_type)
 	end
 end
 

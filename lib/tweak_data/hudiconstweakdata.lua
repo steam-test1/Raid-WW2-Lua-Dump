@@ -603,12 +603,6 @@ function HudIconsTweakData:init()
 			32,
 			32,
 		},
-		texture_rect = {
-			206,
-			344,
-			32,
-			32,
-		},
 	}
 	self.wp_powercord = {
 		texture = "guis/textures/hud_icons",

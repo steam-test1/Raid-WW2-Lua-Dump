@@ -54,11 +54,6 @@ function EquipmentsTweakData:init()
 		sync_possession = true,
 		text_id = "hud_equipment_dynamite",
 	}
-	self.specials.thermite = {
-		icon = "equipment_panel_cvy_thermite",
-		sync_possession = true,
-		text_id = "hud_equipment_thermite",
-	}
 	self.specials.dynamite_x5 = {
 		icon = "equipment_panel_dynamite_stick",
 		max_quantity = 5,
@@ -81,10 +76,20 @@ function EquipmentsTweakData:init()
 		sync_possession = true,
 		text_id = "hud_equipment_dynamite",
 	}
+	self.specials.dynamite_bag = {
+		icon = "equipment_panel_dynamite",
+		sync_possession = true,
+		text_id = "hud_equipment_dynamite_bag",
+	}
 	self.specials.tank_grenade = {
 		icon = "equipment_dynamite",
 		sync_possession = true,
 		text_id = "hud_equipment_tank_grenade",
+	}
+	self.specials.thermite = {
+		icon = "equipment_panel_cvy_thermite",
+		sync_possession = true,
+		text_id = "hud_equipment_thermite",
 	}
 	self.specials.repair_tools = {
 		icon = "equipment_panel_tools",
@@ -95,6 +100,14 @@ function EquipmentsTweakData:init()
 		icon = "equipment_panel_fuel_full",
 		sync_possession = true,
 		text_id = "hud_equipment_gas_tank",
+	}
+	self.specials.gas_x4 = {
+		icon = "equipment_panel_fuel_full",
+		max_quantity = 4,
+		quantity = 1,
+		sync_possession = true,
+		text_id = "hud_equipment_fuel_canister",
+		transfer_quantity = 4,
 	}
 	self.specials.safe_key = {
 		icon = "equipment_panel_sto_safe_key",
@@ -216,11 +229,6 @@ function EquipmentsTweakData:init()
 		sync_possession = true,
 		text_id = "hud_equipment_parachute",
 	}
-	self.specials.dynamite_bag = {
-		icon = "equipment_panel_dynamite",
-		sync_possession = true,
-		text_id = "hud_equipment_dynamite_bag",
-	}
 	self.specials.landmine = {
 		icon = "equipment_panel_cvy_landimine",
 		max_quantity = 4,
@@ -261,14 +269,6 @@ function EquipmentsTweakData:init()
 		icon = "equipment_panel_code_device",
 		sync_possession = true,
 		text_id = "hud_equipment_enigma",
-	}
-	self.specials.gas_x4 = {
-		icon = "equipment_panel_fuel_full",
-		max_quantity = 4,
-		quantity = 1,
-		sync_possession = true,
-		text_id = "hud_equipment_fuel_canister",
-		transfer_quantity = 4,
 	}
 	self.specials.empty_bucket = {
 		icon = "equipment_files",

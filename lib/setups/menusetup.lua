@@ -258,7 +258,7 @@ function MenuSetup:init_finalize()
 		managers.network:init_finalize()
 	end
 
-	if SystemInfo:platform() == Idstring("PS3") then
+	if _G.IS_PS3 then
 		if not Global.hdd_space_checked then
 			managers.savefile:check_space_required()
 
@@ -268,7 +268,7 @@ function MenuSetup:init_finalize()
 		end
 	end
 
-	if SystemInfo:platform() == Idstring("PS4") then
+	if _G.IS_PS4 then
 		managers.achievment:chk_install_trophies()
 	end
 
@@ -286,7 +286,7 @@ function MenuSetup:update_wait_for_savegame_info(t, dt)
 	if managers.savefile:fetch_savegame_hdd_space_required() then
 		Application:check_sufficient_hdd_space_to_launch(managers.savefile:fetch_savegame_hdd_space_required(), managers.dlc:has_full_game())
 
-		if SystemInfo:platform() == Idstring("PS3") or SystemInfo:platform() == Idstring("PS4") then
+		if _G.IS_PS3 or _G.IS_PS4 then
 			Trophies:set_translation_text(managers.localization:text("err_load"), managers.localization:text("err_ins"), managers.localization:text("err_disk"))
 			managers.achievment:chk_install_trophies()
 		end

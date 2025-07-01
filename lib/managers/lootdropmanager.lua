@@ -3,6 +3,14 @@ LootDropManager.EVENT_PEER_LOOT_RECEIVED = "peer_loot_received"
 LootDropManager.LOOT_VALUE_TYPE_SMALL = "small"
 LootDropManager.LOOT_VALUE_TYPE_MEDIUM = "medium"
 LootDropManager.LOOT_VALUE_TYPE_BIG = "big"
+LootDropManager.LOOT_VALUE_TYPE_DOGTAG = "dogtag"
+LootDropManager.LOOT_VALUE_TYPE_DOGTAG_BIG = "dogtag_big"
+LootDropManager._REGISTER_LOOT_CONVERTER = {}
+LootDropManager._REGISTER_LOOT_CONVERTER[LootDropManager.LOOT_VALUE_TYPE_SMALL] = LootDropTweakData.LOOT_VALUE_TYPE_SMALL_AMOUNT
+LootDropManager._REGISTER_LOOT_CONVERTER[LootDropManager.LOOT_VALUE_TYPE_MEDIUM] = LootDropTweakData.LOOT_VALUE_TYPE_MEDIUM_AMOUNT
+LootDropManager._REGISTER_LOOT_CONVERTER[LootDropManager.LOOT_VALUE_TYPE_BIG] = LootDropTweakData.LOOT_VALUE_TYPE_BIG_AMOUNT
+LootDropManager._REGISTER_LOOT_CONVERTER[LootDropManager.LOOT_VALUE_TYPE_DOGTAG] = LootDropTweakData.LOOT_VALUE_TYPE_DOGTAG_AMOUNT
+LootDropManager._REGISTER_LOOT_CONVERTER[LootDropManager.LOOT_VALUE_TYPE_DOGTAG_BIG] = LootDropTweakData.LOOT_VALUE_TYPE_DOGTAG_BIG_AMOUNT
 
 function LootDropManager:init()
 	self:_setup()
@@ -62,6 +70,11 @@ function LootDropManager:produce_consumable_mission_drop()
 		loot_secured = managers.loot:get_secured()
 	end
 
+	local difficulty = Global.game_settings and Global.game_settings.difficulty or Global.DEFAULT_DIFFICULTY
+	local difficulty_index = tweak_data:difficulty_to_index(difficulty)
+
+	gold_bars_earned = math.ceil(gold_bars_earned * tweak_data.operations.consumable_missions.difficulty_reward_multiplier[difficulty_index])
+
 	local drop = {
 		gold_bars_max = gold_bars_earned,
 		gold_bars_min = gold_bars_earned,
@@ -74,12 +87,14 @@ end
 function LootDropManager:produce_loot_drop(loot_value, use_reroll_drop_tables, forced_loot_group)
 	local loot_group = self:_get_loot_group(loot_value, use_reroll_drop_tables, forced_loot_group)
 	local loot_category = self:get_random_item_weighted(loot_group)
-	local loot = self:get_random_item_weighted(loot_category)
+	local drop = self:get_random_item_weighted(loot_category)
 
-	return loot
+	return drop
 end
 
 function LootDropManager:_get_loot_group(loot_value, use_reroll_drop_tables, forced_loot_group)
+	Application:debug("[LootDropManager:_get_loot_group] get loot:", loot_value, use_reroll_drop_tables, forced_loot_group)
+
 	local loot_group
 	local data_source = tweak_data.lootdrop.loot_groups
 
@@ -91,9 +106,34 @@ function LootDropManager:_get_loot_group(loot_value, use_reroll_drop_tables, for
 		data_source = tweak_data.lootdrop.loot_groups_doubles_fallback
 	end
 
-	for _, group in pairs(data_source) do
-		if loot_value > group.min_loot_value and loot_value <= group.max_loot_value then
-			loot_group = group
+	for ii, group in pairs(data_source) do
+		Application:debug("[LootDropManager:_get_loot_group] data_source grp:", ii, group)
+
+		if group.min_loot_value or loot_value > 0 and loot_value <= (group.max_loot_value or 0) then
+			loot_group = deep_clone(group)
+
+			for k, v in pairs(loot_group) do
+				Application:debug("[LootDropManager:_get_loot_group] loot group parts:", k)
+
+				if type(v) == "table" and v.conditions then
+					Application:debug("[LootDropManager:_get_loot_group] has conditions", k, v.conditions)
+
+					local conditions_met = true
+
+					for _, condition in ipairs(v.conditions) do
+						if condition == LootDropTweakData.DROP_CONDITION_BELOW_MAX_LEVEL and managers.experience:reached_level_cap() then
+							conditions_met = false
+
+							Application:debug("[LootDropManager:_get_loot_group] DROP_CONDITION_BELOW_MAX_LEVEL failed")
+						end
+					end
+
+					if not conditions_met then
+						Application:debug("[LootDropManager:_get_loot_group] conditions failed removing", k)
+						table.remove(loot_group, k)
+					end
+				end
+			end
 
 			break
 		end
@@ -199,57 +239,6 @@ function LootDropManager:give_loot_to_player(loot_value, use_reroll_drop_tables,
 	self:on_loot_dropped_for_player()
 end
 
-function LootDropManager:debug_drop_card_pack()
-	local loot_list = {
-		{
-			amount = 1,
-			bonus = false,
-			category = "challenge_card",
-			def_id = 150002,
-			entry = "op_war_weary",
-			instance_id = 1.5012326827715203e+18,
-		},
-		{
-			amount = 1,
-			bonus = false,
-			category = "challenge_card",
-			def_id = 100005,
-			entry = "ra_b_walk_it_off",
-			instance_id = 1.5012326827715203e+18,
-		},
-		{
-			amount = 1,
-			bonus = false,
-			category = "challenge_card",
-			def_id = 100011,
-			entry = "op_b_recycle_for_victory",
-			instance_id = 1.5012326827715203e+18,
-		},
-		{
-			amount = 1,
-			bonus = false,
-			category = "challenge_card",
-			def_id = 100003,
-			entry = "ra_helmet_shortage",
-			instance_id = 1.5012326827715203e+18,
-		},
-		{
-			amount = 1,
-			bonus = false,
-			category = "challenge_card",
-			def_id = 100008,
-			entry = "ra_no_second_chances",
-			instance_id = 1.5012326827715203e+18,
-		},
-	}
-
-	managers.challenge_cards:set_temp_steam_loot(loot_list)
-	self:on_loot_dropped_for_player()
-	managers.network:session():send_to_peers_synched("sync_loot_to_peers", LootDropTweakData.REWARD_CARD_PACK, "", self._card_drop_pack_type, managers.network:session():local_peer():id())
-
-	self._card_drop_pack_type = nil
-end
-
 function LootDropManager:card_drop_callback(error, loot_list)
 	if not loot_list then
 		managers.challenge_cards:set_temp_steam_loot(nil)
@@ -287,6 +276,27 @@ function LootDropManager:redeem_dropped_loot_for_xp()
 	elseif drop.reward_type == LootDropTweakData.REWARD_HALLOWEEN_2017 then
 		managers.weapon_inventory:remove_melee_weapon_as_drop(drop)
 		managers.experience:add_loot_redeemed_xp(drop.redeemed_xp)
+	end
+end
+
+function LootDropManager:redeem_dropped_loot_for_goldbars()
+	local drop = self._dropped_loot
+	local drop_redeemed_gold = drop.redeemed_gold or 5
+
+	Application:trace("[LootDropManager:redeem_dropped_loot_for_goldbars]        loot: ", inspect(drop))
+
+	if drop.reward_type == LootDropTweakData.REWARD_CUSTOMIZATION then
+		managers.character_customization:remove_character_customization_from_inventory(drop.character_customization_key)
+		self:_give_gold_bars_to_player(drop_redeemed_gold)
+	elseif drop.reward_type == LootDropTweakData.REWARD_WEAPON_POINT then
+		managers.weapon_skills:remove_weapon_skill_points_as_drops(1)
+		self:_give_gold_bars_to_player(drop_redeemed_gold)
+	elseif drop.reward_type == LootDropTweakData.REWARD_MELEE_WEAPON then
+		managers.weapon_inventory:remove_melee_weapon_as_drop(drop)
+		self:_give_gold_bars_to_player(drop_redeemed_gold)
+	elseif drop.reward_type == LootDropTweakData.REWARD_HALLOWEEN_2017 then
+		managers.weapon_inventory:remove_melee_weapon_as_drop(drop)
+		self:_give_gold_bars_to_player(drop_redeemed_gold)
 	end
 end
 
@@ -412,16 +422,14 @@ function LootDropManager:clear_dropped_loot()
 	self._card_drop_pack_type = nil
 end
 
-function LootDropManager:register_loot(unit, value_type, world_id)
-	local value
+function LootDropManager:convert_loot_register_value(id)
+	return not not LootDropManager._REGISTER_LOOT_CONVERTER[id] and LootDropManager._REGISTER_LOOT_CONVERTER[id] or false
+end
 
-	if value_type == LootDropManager.LOOT_VALUE_TYPE_SMALL then
-		value = LootDropTweakData.LOOT_VALUE_TYPE_SMALL_AMOUNT
-	elseif value_type == LootDropManager.LOOT_VALUE_TYPE_MEDIUM then
-		value = LootDropTweakData.LOOT_VALUE_TYPE_MEDIUM_AMOUNT
-	elseif value_type == LootDropManager.LOOT_VALUE_TYPE_BIG then
-		value = LootDropTweakData.LOOT_VALUE_TYPE_BIG_AMOUNT
-	else
+function LootDropManager:register_loot(unit, value_type, world_id)
+	local value = self:convert_loot_register_value(value_type)
+
+	if not value then
 		debug_pause("[LootDropManager:register_loot] Unknown loot value size!", value_type)
 
 		return
@@ -464,14 +472,14 @@ function LootDropManager:plant_loot_on_level(world_id, total_value, job_id)
 		return
 	end
 
-	print("[LootDropManager:plant_loot_on_level()] Planting loot on level, loot value (value, mission):", total_value, job_id)
+	Application:debug("[LootDropManager:plant_loot_on_level()] Planting loot on level, loot value (value, mission):", total_value, job_id)
 
 	self._loot_spawned_current_leg = 0
 	self._registered_loot_units[world_id] = self._registered_loot_units[world_id] or {}
 	self._active_loot_units = {}
 
 	if #self._registered_loot_units[world_id] == 0 then
-		print("[LootDropManager:plant_loot_on_level()] no loot units registered on the level")
+		Application:debug("[LootDropManager:plant_loot_on_level()] no loot units registered on the level")
 
 		return
 	end

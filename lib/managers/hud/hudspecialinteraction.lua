@@ -65,6 +65,9 @@ function HUDSpecialInteraction:init(hud, params)
 		texture_rect = tweak_data.gui.backgrounds.secondary_menu.texture_rect,
 		w = res_x * 1.2,
 	})
+
+	self._background_texture:set_center_x(self._bg_panel:w() / 2)
+
 	self._lockpick_texture = self._hud_panel:bitmap({
 		layer = 2,
 		name = "_lockpick_texture",

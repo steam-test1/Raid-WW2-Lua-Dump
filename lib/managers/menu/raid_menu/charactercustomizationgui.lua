@@ -115,66 +115,16 @@ function CharacterCustomizationGui:_layout()
 	}
 
 	self._character_customizations_grid = self._customization_grid_scrollable_area:get_panel():grid_active(customization_grid_params)
-	self._profile_name_label = self._root_panel:label({
-		align = "right",
-		h = 32,
-		name = "profile_name_label",
-		text = "",
-		w = 356,
-		x = 1376,
-		y = 96,
-		color = tweak_data.gui.colors.raid_white,
-		font = tweak_data.gui.fonts.din_compressed,
-		font_size = tweak_data.gui.font_sizes.large,
-	})
-
-	self._profile_name_label:set_right(self._root_panel:right())
-
-	self._character_name_label = self._root_panel:label({
-		align = "right",
-		h = 32,
-		name = "character_name_label",
-		text = "",
-		w = 356,
-		x = 1376,
-		y = 128,
-		color = tweak_data.gui.colors.raid_grey,
-		font = tweak_data.gui.fonts.din_compressed,
-		font_size = tweak_data.gui.font_sizes.small,
-	})
-
-	self._character_name_label:set_right(self._root_panel:right())
-
-	self._right_side_info = self._root_panel:create_custom_control(RaidGUIControlCharacterDescription, {
-		h = 640,
-		name = "right_side_info_panel",
-		w = 356,
-		x = 1376,
-		y = 192,
-		mode = RaidGUIControlCharacterDescription.MODE_CUSTOMIZATION,
-	}, {})
-
-	self._right_side_info:set_right(self._root_panel:right())
-
-	local nationality = PlayerManager:get_character_profile_nation()
-	local class_name = managers.skilltree._global.character_profile_base_class
-	local level = Application:digest_value(managers.experience._global.level, false)
-
-	self._right_side_info:set_data({
-		class_name = class_name,
-		level = level,
-		nationality = nationality,
-	})
 
 	local icon_data = self:get_icon_data_for_body_part(self._selected_filter_body_part)
 
 	self._body_part_icon = self._root_panel:image({
+		y = 300,
 		h = icon_data.texture_rect[4],
 		texture = icon_data.texture,
 		texture_rect = icon_data.texture_rect,
 		w = icon_data.texture_rect[3],
-		x = self._right_side_info:x(),
-		y = self._right_side_info:y() + 176,
+		x = self._root_panel:right() - 520,
 	})
 
 	local body_part_data = self._all_customizations[self._selected_upper_name]
@@ -644,7 +594,7 @@ function CharacterCustomizationGui:spawn_character_unit()
 
 		local unit_name = CharacterCustomizationTweakData.CRIMINAL_MENU_SELECT_UNIT
 		local position = self._character_spawn_location:position() or Vector3(0, 0, 0)
-		local rotation = Rotation(0, 0, 0)
+		local rotation = self._character_spawn_location:rotation() or Rotation(0, 0, 0)
 
 		self._spawned_character_unit = World:spawn_unit(Idstring(unit_name), position, rotation)
 	end
@@ -768,12 +718,19 @@ function CharacterCustomizationGui:bind_controller_inputs_equip()
 
 	self:set_controller_bindings(bindings, true)
 
+	local equipped_item_data = self._character_customizations_grid:get_active_item():get_data()
+	local selected_item_data = self._character_customizations_grid:selected_grid_item():get_data()
+	local controller_legend = {
+		"menu_legend_back",
+		"menu_legend_character_customization_shoulder",
+	}
+
+	if selected_item_data.key_name ~= equipped_item_data.key_name then
+		table.insert(controller_legend, "menu_legend_character_customization_equip")
+	end
+
 	local legend = {
-		controller = {
-			"menu_legend_back",
-			"menu_legend_character_customization_shoulder",
-			"menu_legend_character_customization_equip",
-		},
+		controller = controller_legend,
 		keyboard = {
 			{
 				key = "footer_back",

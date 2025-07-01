@@ -116,11 +116,7 @@ function VehicleDamage:damage_bullet(attack_data)
 		},
 	}
 
-	if Global.god_mode and (not (attack_data.damage > 0) or true) then
-		self:_call_listeners(damage_info)
-
-		return
-	elseif self:is_invulnerable() then
+	if self._god_mode or Global.god_mode or self:is_invulnerable() then
 		self:_call_listeners(damage_info)
 
 		return
@@ -254,7 +250,7 @@ function VehicleDamage:damage_explosion(attack_data)
 		},
 	}
 
-	if self._god_mode or self._invulnerable then
+	if self._god_mode or Global.god_mode or self:is_invulnerable() then
 		self:_call_listeners(damage_info)
 
 		return
@@ -396,7 +392,7 @@ function VehicleDamage:damage_fire(attack_data)
 		},
 	}
 
-	if self._god_mode or self._invulnerable then
+	if self._god_mode or Global.god_mode or self:is_invulnerable() then
 		self:_call_listeners(damage_info)
 
 		return
@@ -610,7 +606,6 @@ end
 
 function VehicleDamage:_revive()
 	self:set_health(self:_max_health())
-	self._unit:vehicle_driving():set_state(VehicleDrivingExt.STATE_DRIVING, false)
 
 	if self._unit:damage():has_sequence(VehicleDrivingExt.SEQUENCE_REPAIRED) then
 		self._unit:damage():run_sequence_simple(VehicleDrivingExt.SEQUENCE_REPAIRED)

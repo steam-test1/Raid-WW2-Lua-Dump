@@ -7,7 +7,7 @@ require("lib/tweak_data/blackmarket/MasksTweakData")
 require("lib/tweak_data/blackmarket/MeleeWeaponsTweakData")
 require("lib/tweak_data/blackmarket/WeaponSkinsTweakData")
 
-local is_nextgen_console = SystemInfo:platform() == Idstring("PS4") or SystemInfo:platform() == Idstring("XB1")
+local is_nextgen_console = _G.IS_PS4 or _G.IS_XB1
 
 function BlackMarketTweakData:init(tweak_data)
 	self:_init_colors()
@@ -205,7 +205,7 @@ function BlackMarketTweakData:_init_cash()
 	self.cash.cash_preorder.value_id = "cash_preorder"
 	self.cash.cash_preorder.multiplier = 1.2
 
-	if SystemInfo:platform() == Idstring("XB1") then
+	if _G.IS_XB1 then
 		self.cash.xone_bonus = {}
 		self.cash.xone_bonus.name_id = "bm_csh_cash_xone"
 		self.cash.xone_bonus.value_id = "xone_bonus"

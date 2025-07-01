@@ -34,12 +34,16 @@ function SkillTreeTweakData:_create_class_warcry_data()
 
 		for level, skilltree_data in pairs(self.skill_trees[class_name]) do
 			for _, skill_data in pairs(skilltree_data) do
-				local aquires_field = self.skills[skill_data.skill_name].acquires
+				local aquires_field = self.skills[skill_data.skill_name] and self.skills[skill_data.skill_name].acquires
 
-				for _, acquires_item in pairs(aquires_field) do
-					if acquires_item.warcry then
-						self.class_warcry_data[class_name] = acquires_item.warcry
+				if aquires_field then
+					for _, acquires_item in pairs(aquires_field) do
+						if acquires_item.warcry then
+							self.class_warcry_data[class_name] = acquires_item.warcry
+						end
 					end
+				else
+					Application:debug("[SkillTreeTweakData:_create_class_warcry_data] no aquires_field")
 				end
 			end
 		end
@@ -278,7 +282,7 @@ function SkillTreeTweakData:_init_skill_list()
 		desc_id = "skill_warcry_level_increase_desc",
 		icon = "skills_warcry_recon_sharpshooter",
 		icon_large = "skills_warcry_recon_sharpshooter_large",
-		name_id = "skill_warcry_level_increase_name",
+		name_id = "skill_warcry_sharpshooter_level_increase_name",
 		acquires = {
 			{
 				warcry_level = 1,
@@ -313,7 +317,7 @@ function SkillTreeTweakData:_init_skill_list()
 		desc_id = "skill_warcry_level_increase_desc",
 		icon = "skills_warcry_assault_berserk",
 		icon_large = "skills_warcry_assault_berserk_large",
-		name_id = "skill_warcry_level_increase_name",
+		name_id = "skill_warcry_berserk_level_increase_name",
 		acquires = {
 			{
 				warcry_level = 1,
@@ -348,7 +352,7 @@ function SkillTreeTweakData:_init_skill_list()
 		desc_id = "skill_warcry_level_increase_desc",
 		icon = "skills_warcry_infilitrator_invisibility",
 		icon_large = "skills_warcry_infilitrator_invisibility_large",
-		name_id = "skill_warcry_level_increase_name",
+		name_id = "skill_warcry_ghost_level_increase_name",
 		acquires = {
 			{
 				warcry_level = 1,
@@ -383,7 +387,7 @@ function SkillTreeTweakData:_init_skill_list()
 		desc_id = "skill_warcry_level_increase_desc",
 		icon = "skills_warcry_demolition_cluster_truck",
 		icon_large = "skills_warcry_demolition_cluster_truck_large",
-		name_id = "skill_warcry_level_increase_name",
+		name_id = "skill_warcry_clustertruck_level_increase_name",
 		acquires = {
 			{
 				warcry_level = 1,
@@ -400,7 +404,9 @@ function SkillTreeTweakData:_init_skill_list()
 		icon = "warcry_common_upgrade_duration_lvl1",
 		icon_large = "skills_warcry_common_upgrade_duration_lvl1_large",
 		name_id = "skill_warcry_duration_increase_name",
-		acquires = {},
+		acquires = {
+			{},
+		},
 		icon_xy = {
 			1,
 			1,
@@ -414,7 +420,9 @@ function SkillTreeTweakData:_init_skill_list()
 		icon = "warcry_common_upgrade_duration_lvl2",
 		icon_large = "skills_warcry_common_upgrade_duration_lvl2_large",
 		name_id = "skill_warcry_duration_increase_name",
-		acquires = {},
+		acquires = {
+			{},
+		},
 		icon_xy = {
 			1,
 			1,
@@ -428,7 +436,9 @@ function SkillTreeTweakData:_init_skill_list()
 		icon = "warcry_common_upgrade_duration_lvl3",
 		icon_large = "skills_warcry_common_upgrade_duration_lvl3_large",
 		name_id = "skill_warcry_duration_increase_name",
-		acquires = {},
+		acquires = {
+			{},
+		},
 		icon_xy = {
 			1,
 			1,
@@ -442,7 +452,9 @@ function SkillTreeTweakData:_init_skill_list()
 		icon = "warcry_common_upgrade_duration_lvl4",
 		icon_large = "skills_warcry_common_upgrade_duration_lvl4_large",
 		name_id = "skill_warcry_duration_increase_name",
-		acquires = {},
+		acquires = {
+			{},
+		},
 		icon_xy = {
 			1,
 			1,
@@ -456,7 +468,9 @@ function SkillTreeTweakData:_init_skill_list()
 		icon = "warcry_recon_sharpshooter_upgrade_increased_damage",
 		icon_large = "skills_warcry_recon_sharpshooter_upgrade_increased_damage_large",
 		name_id = "skill_warcry_team_damage_buff_name",
-		acquires = {},
+		acquires = {
+			{},
+		},
 		icon_xy = {
 			1,
 			1,
@@ -470,7 +484,9 @@ function SkillTreeTweakData:_init_skill_list()
 		icon = "warcry_recon_sharpshooter_upgrade_increased_damage",
 		icon_large = "skills_warcry_recon_sharpshooter_upgrade_increased_damage_large",
 		name_id = "skill_warcry_team_damage_buff_name",
-		acquires = {},
+		acquires = {
+			{},
+		},
 		icon_xy = {
 			1,
 			1,
@@ -484,7 +500,9 @@ function SkillTreeTweakData:_init_skill_list()
 		icon = "warcry_recon_sharpshooter_upgrade_increased_damage",
 		icon_large = "skills_warcry_recon_sharpshooter_upgrade_increased_damage_large",
 		name_id = "skill_warcry_team_damage_buff_name",
-		acquires = {},
+		acquires = {
+			{},
+		},
 		icon_xy = {
 			1,
 			1,
@@ -498,7 +516,9 @@ function SkillTreeTweakData:_init_skill_list()
 		icon = "warcry_recon_sharpshooter_upgrade_increased_damage",
 		icon_large = "skills_warcry_recon_sharpshooter_upgrade_increased_damage_large",
 		name_id = "skill_warcry_team_damage_buff_name",
-		acquires = {},
+		acquires = {
+			{},
+		},
 		icon_xy = {
 			1,
 			1,
@@ -512,7 +532,9 @@ function SkillTreeTweakData:_init_skill_list()
 		icon = "warcry_recon_sharpshooter_upgrade_headshot",
 		icon_large = "skills_warcry_recon_sharpshooter_upgrade_headshot_large",
 		name_id = "skill_warcry_headshot_bonus_name",
-		acquires = {},
+		acquires = {
+			{},
+		},
 		icon_xy = {
 			1,
 			1,
@@ -526,7 +548,9 @@ function SkillTreeTweakData:_init_skill_list()
 		icon = "warcry_recon_sharpshooter_upgrade_headshot",
 		icon_large = "skills_warcry_recon_sharpshooter_upgrade_headshot_large",
 		name_id = "skill_warcry_headshot_bonus_name",
-		acquires = {},
+		acquires = {
+			{},
+		},
 		icon_xy = {
 			1,
 			1,
@@ -540,7 +564,9 @@ function SkillTreeTweakData:_init_skill_list()
 		icon = "warcry_recon_sharpshooter_upgrade_long_range",
 		icon_large = "skills_warcry_recon_sharpshooter_upgrade_long_range_large",
 		name_id = "skill_warcry_long_range_bonus_name",
-		acquires = {},
+		acquires = {
+			{},
+		},
 		icon_xy = {
 			1,
 			1,
@@ -554,7 +580,9 @@ function SkillTreeTweakData:_init_skill_list()
 		icon = "warcry_recon_sharpshooter_upgrade_long_range",
 		icon_large = "skills_warcry_recon_sharpshooter_upgrade_long_range_large",
 		name_id = "skill_warcry_long_range_bonus_name",
-		acquires = {},
+		acquires = {
+			{},
+		},
 		icon_xy = {
 			1,
 			1,
@@ -568,7 +596,9 @@ function SkillTreeTweakData:_init_skill_list()
 		icon = "warcry_assault_berserk_upgrade_increased_team_heal",
 		icon_large = "skills_warcry_assault_berserk_upgrade_increased_team_heal_large",
 		name_id = "skill_warcry_team_heal_buff_name",
-		acquires = {},
+		acquires = {
+			{},
+		},
 		icon_xy = {
 			1,
 			1,
@@ -582,7 +612,9 @@ function SkillTreeTweakData:_init_skill_list()
 		icon = "warcry_assault_berserk_upgrade_increased_team_heal",
 		icon_large = "skills_warcry_assault_berserk_upgrade_increased_team_heal_large",
 		name_id = "skill_warcry_team_heal_buff_name",
-		acquires = {},
+		acquires = {
+			{},
+		},
 		icon_xy = {
 			1,
 			1,
@@ -596,7 +628,9 @@ function SkillTreeTweakData:_init_skill_list()
 		icon = "warcry_assault_berserk_upgrade_increased_team_heal",
 		icon_large = "skills_warcry_assault_berserk_upgrade_increased_team_heal_large",
 		name_id = "skill_warcry_team_heal_buff_name",
-		acquires = {},
+		acquires = {
+			{},
+		},
 		icon_xy = {
 			1,
 			1,
@@ -610,7 +644,9 @@ function SkillTreeTweakData:_init_skill_list()
 		icon = "warcry_assault_berserk_upgrade_increased_team_heal",
 		icon_large = "skills_warcry_assault_berserk_upgrade_increased_team_heal_large",
 		name_id = "skill_warcry_team_heal_buff_name",
-		acquires = {},
+		acquires = {
+			{},
+		},
 		icon_xy = {
 			1,
 			1,
@@ -624,7 +660,9 @@ function SkillTreeTweakData:_init_skill_list()
 		icon = "warcry_assault_berserk_upgrade_dismemberment",
 		icon_large = "skills_warcry_assault_berserk_upgrade_dismemberment_large",
 		name_id = "skill_warcry_dismemberment_bonus_name",
-		acquires = {},
+		acquires = {
+			{},
+		},
 		icon_xy = {
 			1,
 			1,
@@ -638,7 +676,9 @@ function SkillTreeTweakData:_init_skill_list()
 		icon = "warcry_assault_berserk_upgrade_dismemberment",
 		icon_large = "skills_warcry_assault_berserk_upgrade_dismemberment_large",
 		name_id = "skill_warcry_dismemberment_bonus_name",
-		acquires = {},
+		acquires = {
+			{},
+		},
 		icon_xy = {
 			1,
 			1,
@@ -652,7 +692,9 @@ function SkillTreeTweakData:_init_skill_list()
 		icon = "warcry_assault_berserk_upgrade_low_health",
 		icon_large = "skills_warcry_assault_berserk_upgrade_low_health_large",
 		name_id = "skill_warcry_low_health_bonus_name",
-		acquires = {},
+		acquires = {
+			{},
+		},
 		icon_xy = {
 			1,
 			1,
@@ -666,7 +708,9 @@ function SkillTreeTweakData:_init_skill_list()
 		icon = "warcry_assault_berserk_upgrade_low_health",
 		icon_large = "skills_warcry_assault_berserk_upgrade_low_health_large",
 		name_id = "skill_warcry_low_health_bonus_name",
-		acquires = {},
+		acquires = {
+			{},
+		},
 		icon_xy = {
 			1,
 			1,
@@ -680,7 +724,9 @@ function SkillTreeTweakData:_init_skill_list()
 		icon = "warcry_insurgent_untouchable_upgrade_increased_move_speed",
 		icon_large = "skills_warcry_insurgent_untouchable_upgrade_increased_move_speed_large",
 		name_id = "skill_warcry_team_movement_speed_buff_name",
-		acquires = {},
+		acquires = {
+			{},
+		},
 		icon_xy = {
 			1,
 			1,
@@ -694,7 +740,9 @@ function SkillTreeTweakData:_init_skill_list()
 		icon = "warcry_insurgent_untouchable_upgrade_increased_move_speed",
 		icon_large = "skills_warcry_insurgent_untouchable_upgrade_increased_move_speed_large",
 		name_id = "skill_warcry_team_movement_speed_buff_name",
-		acquires = {},
+		acquires = {
+			{},
+		},
 		icon_xy = {
 			1,
 			1,
@@ -708,7 +756,9 @@ function SkillTreeTweakData:_init_skill_list()
 		icon = "warcry_insurgent_untouchable_upgrade_increased_move_speed",
 		icon_large = "skills_warcry_insurgent_untouchable_upgrade_increased_move_speed_large",
 		name_id = "skill_warcry_team_movement_speed_buff_name",
-		acquires = {},
+		acquires = {
+			{},
+		},
 		icon_xy = {
 			1,
 			1,
@@ -722,7 +772,9 @@ function SkillTreeTweakData:_init_skill_list()
 		icon = "warcry_insurgent_untouchable_upgrade_increased_move_speed",
 		icon_large = "skills_warcry_insurgent_untouchable_upgrade_increased_move_speed_large",
 		name_id = "skill_warcry_team_movement_speed_buff_name",
-		acquires = {},
+		acquires = {
+			{},
+		},
 		icon_xy = {
 			1,
 			1,
@@ -736,7 +788,9 @@ function SkillTreeTweakData:_init_skill_list()
 		icon = "warcry_insurgent_untouchable_upgrade_melee",
 		icon_large = "skills_warcry_insurgent_untouchable_upgrade_melee_large",
 		name_id = "skill_warcry_melee_bonus_name",
-		acquires = {},
+		acquires = {
+			{},
+		},
 		icon_xy = {
 			1,
 			1,
@@ -750,7 +804,9 @@ function SkillTreeTweakData:_init_skill_list()
 		icon = "warcry_insurgent_untouchable_upgrade_melee",
 		icon_large = "skills_warcry_insurgent_untouchable_upgrade_melee_large",
 		name_id = "skill_warcry_melee_bonus_name",
-		acquires = {},
+		acquires = {
+			{},
+		},
 		icon_xy = {
 			1,
 			1,
@@ -764,7 +820,9 @@ function SkillTreeTweakData:_init_skill_list()
 		icon = "warcry_insurgent_untouchable_short_range_bonus",
 		icon_large = "skills_warcry_insurgent_untouchable_short_range_bonus_large",
 		name_id = "skill_warcry_short_range_bonus_name",
-		acquires = {},
+		acquires = {
+			{},
+		},
 		icon_xy = {
 			1,
 			1,
@@ -778,7 +836,9 @@ function SkillTreeTweakData:_init_skill_list()
 		icon = "warcry_insurgent_untouchable_short_range_bonus",
 		icon_large = "skills_warcry_insurgent_untouchable_short_range_bonus_large",
 		name_id = "skill_warcry_short_range_bonus_name",
-		acquires = {},
+		acquires = {
+			{},
+		},
 		icon_xy = {
 			1,
 			1,
@@ -792,7 +852,9 @@ function SkillTreeTweakData:_init_skill_list()
 		icon = "warcry_demolition_cluster_truck_damage_resist",
 		icon_large = "skills_warcry_demolition_cluster_truck_damage_resist_large",
 		name_id = "skill_warcry_team_damage_reduction_buff_name",
-		acquires = {},
+		acquires = {
+			{},
+		},
 		icon_xy = {
 			1,
 			1,
@@ -806,7 +868,9 @@ function SkillTreeTweakData:_init_skill_list()
 		icon = "warcry_demolition_cluster_truck_damage_resist",
 		icon_large = "skills_warcry_demolition_cluster_truck_damage_resist_large",
 		name_id = "skill_warcry_team_damage_reduction_buff_name",
-		acquires = {},
+		acquires = {
+			{},
+		},
 		icon_xy = {
 			1,
 			1,
@@ -820,7 +884,9 @@ function SkillTreeTweakData:_init_skill_list()
 		icon = "warcry_demolition_cluster_truck_damage_resist",
 		icon_large = "skills_warcry_demolition_cluster_truck_damage_resist_large",
 		name_id = "skill_warcry_team_damage_reduction_buff_name",
-		acquires = {},
+		acquires = {
+			{},
+		},
 		icon_xy = {
 			1,
 			1,
@@ -834,7 +900,9 @@ function SkillTreeTweakData:_init_skill_list()
 		icon = "warcry_demolition_cluster_truck_damage_resist",
 		icon_large = "skills_warcry_demolition_cluster_truck_damage_resist_large",
 		name_id = "skill_warcry_team_damage_reduction_buff_name",
-		acquires = {},
+		acquires = {
+			{},
+		},
 		icon_xy = {
 			1,
 			1,
@@ -848,7 +916,9 @@ function SkillTreeTweakData:_init_skill_list()
 		icon = "warcry_demolition_cluster_truck_granade",
 		icon_large = "skills_warcry_demolition_cluster_truck_granade_large",
 		name_id = "skill_warcry_explosion_bonus_name",
-		acquires = {},
+		acquires = {
+			{},
+		},
 		icon_xy = {
 			1,
 			1,
@@ -862,7 +932,9 @@ function SkillTreeTweakData:_init_skill_list()
 		icon = "warcry_demolition_cluster_truck_granade",
 		icon_large = "skills_warcry_demolition_cluster_truck_granade_large",
 		name_id = "skill_warcry_explosion_bonus_name",
-		acquires = {},
+		acquires = {
+			{},
+		},
 		icon_xy = {
 			1,
 			1,
@@ -876,7 +948,9 @@ function SkillTreeTweakData:_init_skill_list()
 		icon = "warcry_demolition_cluster_truck_kill_streak",
 		icon_large = "skills_warcry_demolition_cluster_truck_kill_streak_large",
 		name_id = "skill_warcry_killstreak_bonus_name",
-		acquires = {},
+		acquires = {
+			{},
+		},
 		icon_xy = {
 			1,
 			1,
@@ -890,7 +964,9 @@ function SkillTreeTweakData:_init_skill_list()
 		icon = "warcry_demolition_cluster_truck_kill_streak",
 		icon_large = "skills_warcry_demolition_cluster_truck_kill_streak_large",
 		name_id = "skill_warcry_killstreak_bonus_name",
-		acquires = {},
+		acquires = {
+			{},
+		},
 		icon_xy = {
 			1,
 			1,
@@ -2311,7 +2387,11 @@ function SkillTreeTweakData:_init_skill_list()
 		icon_large = "skills_weapons_switch_faster_large",
 		name_id = "skill_swap_speed_multiplier_name",
 		stat_desc_id = "skill_swap_speed_multiplier_stat_line",
-		acquires = {},
+		acquires = {
+			{
+				player_swap_speed_multiplier = 1,
+			},
+		},
 		icon_xy = {
 			1,
 			1,
@@ -2769,18 +2849,6 @@ function SkillTreeTweakData:_init_skill_list()
 			"garand",
 		},
 	}
-	self.skills.weapon_unlock_garand_golden = {
-		desc_id = "skill_weapon_unlock_garand_golden_desc",
-		name_id = "skill_weapon_unlock_garand_golden_name",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"garand_golden",
-		},
-	}
 	self.skills.weapon_unlock_winchester = {
 		desc_id = "skill_weapon_unlock_winchester_desc",
 		name_id = "skill_weapon_unlock_winchester_name",
@@ -2925,6 +2993,18 @@ function SkillTreeTweakData:_init_skill_list()
 			"decoy_coin",
 		},
 	}
+	self.skills.weapon_unlock_grenade_betty = {
+		desc_id = "skill_weapon_unlock_grenade_betty_desc",
+		name_id = "skill_weapon_unlock_grenade_betty_name",
+		acquires = {},
+		icon_xy = {
+			1,
+			1,
+		},
+		upgrades = {
+			"betty",
+		},
+	}
 	self.skills.weapon_unlock_dp28 = {
 		desc_id = "skill_weapon_unlock_dp28_desc",
 		name_id = "skill_weapon_unlock_dp28_name",
@@ -3033,6 +3113,40 @@ function SkillTreeTweakData:_init_skill_list()
 			"shotty",
 		},
 	}
+	self.skills.primary_group_damage_multiplier = {
+		desc_id = "skill_primary_group_damage_multiplier_desc",
+		icon = "skills_dealing_damage_assault_rifle_multiplier",
+		icon_large = "skills_dealing_damage_assault_rifle_multiplier_large",
+		name_id = "skill_primary_group_damage_multiplier_name",
+		stat_desc_id = "skill_primary_group_damage_multiplier_stat_line",
+		acquires = {
+			{
+				primary_weapon_damage_multiplier = 1,
+			},
+		},
+		icon_xy = {
+			1,
+			1,
+		},
+		upgrades = {},
+	}
+	self.skills.secondary_group_damage_multiplier = {
+		desc_id = "skill_secondary_group_damage_multiplier_desc",
+		icon = "skills_dealing_damage_pistol_multiplier",
+		icon_large = "skills_dealing_damage_pistol_multiplier_large",
+		name_id = "skill_secondary_group_damage_multiplier_name",
+		stat_desc_id = "skill_secondary_group_damage_multiplier_stat_line",
+		acquires = {
+			{
+				secondary_weapon_damage_multiplier = 1,
+			},
+		},
+		icon_xy = {
+			1,
+			1,
+		},
+		upgrades = {},
+	}
 	self.skills.pistol_damage_multiplier_1 = {
 		desc_id = "skill_pistol_damage_multiplier_desc",
 		icon = "skills_dealing_damage_pistol_multiplier",
@@ -3048,20 +3162,17 @@ function SkillTreeTweakData:_init_skill_list()
 			"pistol_damage_multiplier_1",
 		},
 	}
-	self.skills.pistol_damage_multiplier_2 = {
-		desc_id = "skill_pistol_damage_multiplier_desc",
-		icon = "skills_dealing_damage_pistol_multiplier",
-		icon_large = "skills_dealing_damage_pistol_multiplier_large",
-		name_id = "skill_pistol_damage_multiplier_name",
-		stat_desc_id = "skill_pistol_damage_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"pistol_damage_multiplier_2",
-		},
+	self.skills.pistol_damage_multiplier_2 = deep_clone(self.skills.pistol_damage_multiplier_1)
+	self.skills.pistol_damage_multiplier_2.upgrades = {
+		"pistol_damage_multiplier_2",
+	}
+	self.skills.pistol_damage_multiplier_3 = deep_clone(self.skills.pistol_damage_multiplier_1)
+	self.skills.pistol_damage_multiplier_3.upgrades = {
+		"pistol_damage_multiplier_3",
+	}
+	self.skills.pistol_damage_multiplier_4 = deep_clone(self.skills.pistol_damage_multiplier_1)
+	self.skills.pistol_damage_multiplier_4.upgrades = {
+		"pistol_damage_multiplier_4",
 	}
 	self.skills.shotgun_damage_multiplier_1 = {
 		desc_id = "skill_shotgun_damage_multiplier_desc",
@@ -3078,35 +3189,13 @@ function SkillTreeTweakData:_init_skill_list()
 			"shotgun_damage_multiplier_1",
 		},
 	}
-	self.skills.shotgun_damage_multiplier_2 = {
-		desc_id = "skill_shotgun_damage_multiplier_desc",
-		icon = "skills_dealing_damage_shotgun_multiplier",
-		icon_large = "skills_dealing_damage_shotgun_multiplier_large",
-		name_id = "skill_shotgun_damage_multiplier_name",
-		stat_desc_id = "skill_shotgun_damage_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"shotgun_damage_multiplier_2",
-		},
+	self.skills.shotgun_damage_multiplier_2 = deep_clone(self.skills.shotgun_damage_multiplier_1)
+	self.skills.shotgun_damage_multiplier_2.upgrades = {
+		"shotgun_damage_multiplier_2",
 	}
-	self.skills.shotgun_damage_multiplier_3 = {
-		desc_id = "skill_shotgun_damage_multiplier_desc",
-		icon = "skills_dealing_damage_shotgun_multiplier",
-		icon_large = "skills_dealing_damage_shotgun_multiplier_large",
-		name_id = "skill_shotgun_damage_multiplier_name",
-		stat_desc_id = "skill_shotgun_damage_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"shotgun_damage_multiplier_3",
-		},
+	self.skills.shotgun_damage_multiplier_3 = deep_clone(self.skills.shotgun_damage_multiplier_1)
+	self.skills.shotgun_damage_multiplier_3.upgrades = {
+		"shotgun_damage_multiplier_3",
 	}
 	self.skills.smg_damage_multiplier_1 = {
 		desc_id = "skill_smg_damage_multiplier_desc",
@@ -3123,35 +3212,13 @@ function SkillTreeTweakData:_init_skill_list()
 			"smg_damage_multiplier_1",
 		},
 	}
-	self.skills.smg_damage_multiplier_2 = {
-		desc_id = "skill_smg_damage_multiplier_desc",
-		icon = "skills_dealing_damage_smg_multiplier",
-		icon_large = "skills_dealing_damage_smg_multiplier_large",
-		name_id = "skill_smg_damage_multiplier_name",
-		stat_desc_id = "skill_smg_damage_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"smg_damage_multiplier_2",
-		},
+	self.skills.smg_damage_multiplier_2 = deep_clone(self.skills.smg_damage_multiplier_1)
+	self.skills.smg_damage_multiplier_2.upgrades = {
+		"smg_damage_multiplier_2",
 	}
-	self.skills.smg_damage_multiplier_3 = {
-		desc_id = "skill_smg_damage_multiplier_desc",
-		icon = "skills_dealing_damage_smg_multiplier",
-		icon_large = "skills_dealing_damage_smg_multiplier_large",
-		name_id = "skill_smg_damage_multiplier_name",
-		stat_desc_id = "skill_smg_damage_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"smg_damage_multiplier_3",
-		},
+	self.skills.smg_damage_multiplier_3 = deep_clone(self.skills.smg_damage_multiplier_1)
+	self.skills.smg_damage_multiplier_3.upgrades = {
+		"smg_damage_multiplier_3",
 	}
 	self.skills.assault_rifle_damage_multiplier_1 = {
 		desc_id = "skill_assault_rifle_damage_multiplier_desc",
@@ -3168,35 +3235,13 @@ function SkillTreeTweakData:_init_skill_list()
 			"assault_rifle_damage_multiplier_1",
 		},
 	}
-	self.skills.assault_rifle_damage_multiplier_2 = {
-		desc_id = "skill_assault_rifle_damage_multiplier_desc",
-		icon = "skills_dealing_damage_assault_rifle_multiplier",
-		icon_large = "skills_dealing_damage_assault_rifle_multiplier_large",
-		name_id = "skill_assault_rifle_damage_multiplier_name",
-		stat_desc_id = "skill_assault_rifle_damage_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"assault_rifle_damage_multiplier_2",
-		},
+	self.skills.assault_rifle_damage_multiplier_2 = deep_clone(self.skills.assault_rifle_damage_multiplier_1)
+	self.skills.assault_rifle_damage_multiplier_2.upgrades = {
+		"assault_rifle_damage_multiplier_2",
 	}
-	self.skills.assault_rifle_damage_multiplier_3 = {
-		desc_id = "skill_assault_rifle_damage_multiplier_desc",
-		icon = "skills_dealing_damage_assault_rifle_multiplier",
-		icon_large = "skills_dealing_damage_assault_rifle_multiplier_large",
-		name_id = "skill_assault_rifle_damage_multiplier_name",
-		stat_desc_id = "skill_assault_rifle_damage_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"assault_rifle_damage_multiplier_3",
-		},
+	self.skills.assault_rifle_damage_multiplier_3 = deep_clone(self.skills.assault_rifle_damage_multiplier_1)
+	self.skills.assault_rifle_damage_multiplier_3.upgrades = {
+		"assault_rifle_damage_multiplier_3",
 	}
 	self.skills.lmg_damage_multiplier_1 = {
 		desc_id = "skill_lmg_damage_multiplier_desc",
@@ -3213,35 +3258,13 @@ function SkillTreeTweakData:_init_skill_list()
 			"lmg_damage_multiplier_1",
 		},
 	}
-	self.skills.lmg_damage_multiplier_2 = {
-		desc_id = "skill_lmg_damage_multiplier_desc",
-		icon = "skills_dealing_damage_heavy_multiplier",
-		icon_large = "skills_dealing_damage_heavy_multiplier_large",
-		name_id = "skill_lmg_damage_multiplier_name",
-		stat_desc_id = "skill_lmg_damage_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"lmg_damage_multiplier_2",
-		},
+	self.skills.lmg_damage_multiplier_2 = deep_clone(self.skills.lmg_damage_multiplier_1)
+	self.skills.lmg_damage_multiplier_2.upgrades = {
+		"lmg_damage_multiplier_2",
 	}
-	self.skills.lmg_damage_multiplier_3 = {
-		desc_id = "skill_lmg_damage_multiplier_desc",
-		icon = "skills_dealing_damage_heavy_multiplier",
-		icon_large = "skills_dealing_damage_heavy_multiplier_large",
-		name_id = "skill_lmg_damage_multiplier_name",
-		stat_desc_id = "skill_lmg_damage_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"lmg_damage_multiplier_3",
-		},
+	self.skills.lmg_damage_multiplier_3 = deep_clone(self.skills.lmg_damage_multiplier_1)
+	self.skills.lmg_damage_multiplier_3.upgrades = {
+		"lmg_damage_multiplier_3",
 	}
 	self.skills.sniper_damage_multiplier_1 = {
 		desc_id = "skill_sniper_damage_multiplier_desc",
@@ -3258,35 +3281,13 @@ function SkillTreeTweakData:_init_skill_list()
 			"snp_damage_multiplier_1",
 		},
 	}
-	self.skills.sniper_damage_multiplier_2 = {
-		desc_id = "skill_sniper_damage_multiplier_desc",
-		icon = "skills_dealing_damage_snp_multiplier",
-		icon_large = "skills_dealing_damage_snp_multiplier_large",
-		name_id = "skill_sniper_damage_multiplier_name",
-		stat_desc_id = "skill_sniper_damage_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"snp_damage_multiplier_2",
-		},
+	self.skills.sniper_damage_multiplier_2 = deep_clone(self.skills.sniper_damage_multiplier_1)
+	self.skills.sniper_damage_multiplier_2.upgrades = {
+		"snp_damage_multiplier_2",
 	}
-	self.skills.sniper_damage_multiplier_3 = {
-		desc_id = "skill_sniper_damage_multiplier_desc",
-		icon = "skills_dealing_damage_snp_multiplier",
-		icon_large = "skills_dealing_damage_snp_multiplier_large",
-		name_id = "skill_sniper_damage_multiplier_name",
-		stat_desc_id = "skill_sniper_damage_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"snp_damage_multiplier_3",
-		},
+	self.skills.sniper_damage_multiplier_3 = deep_clone(self.skills.sniper_damage_multiplier_1)
+	self.skills.sniper_damage_multiplier_3.upgrades = {
+		"snp_damage_multiplier_3",
 	}
 	self.skills.grenade_quantity_1 = {
 		desc_id = "skill_grenade_quantity_desc",
@@ -5333,117 +5334,122 @@ function SkillTreeTweakData:get_weapon_unlock_level(weapon_id, class_name)
 end
 
 function SkillTreeTweakData:_init_recon_unlock_progression()
-	self.automatic_unlock_progressions.recon = {}
-	self.automatic_unlock_progressions.recon[1] = {
-		weapons = {
-			"weapon_unlock_springfield",
-			"weapon_unlock_carbine",
-			"weapon_unlock_c96",
+	self.automatic_unlock_progressions.recon = {
+		{
+			weapons = {
+				"weapon_unlock_springfield",
+				"weapon_unlock_carbine",
+				"weapon_unlock_c96",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.recon[3] = {
-		weapons = {
-			"weapon_unlock_sten",
+		[3] = {
+			weapons = {
+				"weapon_unlock_sten",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.recon[5] = {
-		weapons = {
-			"weapon_unlock_tt33",
+		[5] = {
+			weapons = {
+				"weapon_unlock_tt33",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.recon[7] = {
-		weapons = {
-			"weapon_unlock_decoy_coin",
+		[7] = {
+			weapons = {
+				"weapon_unlock_decoy_coin",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.recon[8] = {
-		weapons = {
-			"weapon_unlock_grenade_concrete",
+		[8] = {
+			weapons = {
+				"weapon_unlock_grenade_concrete",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.recon[10] = {
-		weapons = {
-			"weapon_unlock_kar_98k",
+		[10] = {
+			weapons = {
+				"weapon_unlock_kar_98k",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.recon[11] = {
-		weapons = {
-			"weapon_unlock_shotty",
+		[11] = {
+			weapons = {
+				"weapon_unlock_shotty",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.recon[13] = {
-		weapons = {
-			"weapon_unlock_garand",
-			"weapon_unlock_garand_golden",
+		[12] = {
+			weapons = {
+				"weapon_unlock_grenade_betty",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.recon[15] = {
-		unlocks = {
-			"weapon_tier_unlocked_2",
+		[13] = {
+			weapons = {
+				"weapon_unlock_garand",
+			},
 		},
-		weapons = {
-			"weapon_unlock_thompson",
+		[15] = {
+			unlocks = {
+				"weapon_tier_unlocked_2",
+			},
+			weapons = {
+				"weapon_unlock_thompson",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.recon[18] = {
-		weapons = {
-			"weapon_unlock_webley",
+		[18] = {
+			weapons = {
+				"weapon_unlock_webley",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.recon[19] = {
-		weapons = {
-			"weapon_unlock_welrod",
+		[19] = {
+			weapons = {
+				"weapon_unlock_welrod",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.recon[21] = {
-		weapons = {
-			"weapon_unlock_grenade_d343",
+		[21] = {
+			weapons = {
+				"weapon_unlock_grenade_d343",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.recon[23] = {
-		weapons = {
-			"weapon_unlock_mosin",
+		[23] = {
+			weapons = {
+				"weapon_unlock_mosin",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.recon[25] = {
-		unlocks = {
-			"weapon_tier_unlocked_3",
+		[25] = {
+			unlocks = {
+				"weapon_tier_unlocked_3",
+			},
+			weapons = {
+				"weapon_unlock_mp38",
+			},
 		},
-		weapons = {
-			"weapon_unlock_mp38",
+		[30] = {
+			weapons = {
+				"weapon_unlock_m1911",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.recon[30] = {
-		weapons = {
-			"weapon_unlock_m1911",
+		[31] = {
+			weapons = {
+				"weapon_unlock_grenade_mills",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.recon[31] = {
-		weapons = {
-			"weapon_unlock_grenade_mills",
+		[33] = {
+			weapons = {
+				"weapon_unlock_lee_enfield",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.recon[33] = {
-		weapons = {
-			"weapon_unlock_lee_enfield",
+		[35] = {
+			unlocks = {
+				"recon_tier_4_unlocked",
+				"assault_tier_4_unlocked",
+				"infiltrator_tier_4_unlocked",
+				"demolitions_tier_4_unlocked",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.recon[35] = {
-		unlocks = {
-			"recon_tier_4_unlocked",
-			"assault_tier_4_unlocked",
-			"infiltrator_tier_4_unlocked",
-			"demolitions_tier_4_unlocked",
+		[38] = {
+			weapons = {
+				"weapon_unlock_sterling",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.recon[38] = {
-		weapons = {
-			"weapon_unlock_sterling",
-		},
-	}
-	self.automatic_unlock_progressions.recon[40] = {
-		weapons = {
-			"weapon_unlock_mp44",
+		[40] = {
+			weapons = {
+				"weapon_unlock_mp44",
+			},
 		},
 	}
 	self.default_weapons.recon = {}
@@ -5452,118 +5458,118 @@ function SkillTreeTweakData:_init_recon_unlock_progression()
 end
 
 function SkillTreeTweakData:_init_assault_unlock_progression()
-	self.automatic_unlock_progressions.assault = {}
-	self.automatic_unlock_progressions.assault[1] = {
-		weapons = {
-			"weapon_unlock_carbine",
-			"weapon_unlock_sten",
-			"weapon_unlock_c96",
+	self.automatic_unlock_progressions.assault = {
+		{
+			weapons = {
+				"weapon_unlock_carbine",
+				"weapon_unlock_sten",
+				"weapon_unlock_c96",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.assault[3] = {
-		weapons = {
-			"weapon_unlock_bar",
+		[3] = {
+			weapons = {
+				"weapon_unlock_bar",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.assault[5] = {
-		weapons = {
-			"weapon_unlock_tt33",
+		[5] = {
+			weapons = {
+				"weapon_unlock_tt33",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.assault[8] = {
-		weapons = {
-			"weapon_unlock_grenade_concrete",
+		[8] = {
+			weapons = {
+				"weapon_unlock_grenade_concrete",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.assault[10] = {
-		weapons = {
-			"weapon_unlock_garand",
-			"weapon_unlock_garand_golden",
+		[10] = {
+			weapons = {
+				"weapon_unlock_garand",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.assault[11] = {
-		weapons = {
-			"weapon_unlock_shotty",
+		[11] = {
+			weapons = {
+				"weapon_unlock_thompson",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.assault[13] = {
-		weapons = {
-			"weapon_unlock_thompson",
+		[15] = {
+			unlocks = {
+				"weapon_tier_unlocked_2",
+			},
+			weapons = {
+				"weapon_unlock_dp28",
+				"weapon_unlock_decoy_coin",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.assault[15] = {
-		unlocks = {
-			"weapon_tier_unlocked_2",
+		[17] = {
+			weapons = {
+				"weapon_unlock_webley",
+			},
 		},
-		weapons = {
-			"weapon_unlock_dp28",
-			"weapon_unlock_decoy_coin",
+		[19] = {
+			weapons = {
+				"weapon_unlock_shotty",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.assault[18] = {
-		weapons = {
-			"weapon_unlock_webley",
+		[20] = {
+			weapons = {
+				"weapon_unlock_grenade_betty",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.assault[19] = {
-		weapons = {
-			"weapon_unlock_shotty",
+		[21] = {
+			weapons = {
+				"weapon_unlock_grenade_d343",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.assault[21] = {
-		weapons = {
-			"weapon_unlock_grenade_d343",
+		[22] = {
+			weapons = {
+				"weapon_unlock_welrod",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.assault[22] = {
-		weapons = {
-			"weapon_unlock_welrod",
+		[25] = {
+			unlocks = {
+				"weapon_tier_unlocked_3",
+			},
+			weapons = {
+				"weapon_unlock_bren",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.assault[25] = {
-		unlocks = {
-			"weapon_tier_unlocked_3",
+		[28] = {
+			weapons = {
+				"weapon_unlock_mp38",
+			},
 		},
-		weapons = {
-			"weapon_unlock_bren",
+		[30] = {
+			weapons = {
+				"weapon_unlock_m1911",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.assault[28] = {
-		weapons = {
-			"weapon_unlock_mp38",
+		[31] = {
+			weapons = {
+				"weapon_unlock_grenade_mills",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.assault[30] = {
-		weapons = {
-			"weapon_unlock_m1911",
+		[33] = {
+			weapons = {
+				"weapon_unlock_mp44",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.assault[31] = {
-		weapons = {
-			"weapon_unlock_grenade_mills",
+		[35] = {
+			unlocks = {
+				"recon_tier_4_unlocked",
+				"assault_tier_4_unlocked",
+				"infiltrator_tier_4_unlocked",
+				"demolitions_tier_4_unlocked",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.assault[33] = {
-		weapons = {
-			"weapon_unlock_mp44",
+		[38] = {
+			weapons = {
+				"weapon_unlock_mg42",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.assault[35] = {
-		unlocks = {
-			"recon_tier_4_unlocked",
-			"assault_tier_4_unlocked",
-			"infiltrator_tier_4_unlocked",
-			"demolitions_tier_4_unlocked",
-		},
-	}
-	self.automatic_unlock_progressions.assault[38] = {
-		weapons = {
-			"weapon_unlock_mg42",
-		},
-	}
-	self.automatic_unlock_progressions.assault[40] = {
-		weapons = {
-			"weapon_unlock_sterling",
+		[40] = {
+			weapons = {
+				"weapon_unlock_sterling",
+			},
 		},
 	}
 	self.default_weapons.assault = {}
@@ -5572,111 +5578,112 @@ function SkillTreeTweakData:_init_assault_unlock_progression()
 end
 
 function SkillTreeTweakData:_init_infiltrator_unlock_progression()
-	self.automatic_unlock_progressions.infiltrator = {}
-	self.automatic_unlock_progressions.infiltrator[1] = {
-		weapons = {
-			"weapon_unlock_sten",
-			"weapon_unlock_winchester",
-			"weapon_unlock_c96",
+	self.automatic_unlock_progressions.infiltrator = {
+		{
+			weapons = {
+				"weapon_unlock_sten",
+				"weapon_unlock_winchester",
+				"weapon_unlock_c96",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.infiltrator[3] = {
-		weapons = {
-			"weapon_unlock_carbine",
+		[3] = {
+			weapons = {
+				"weapon_unlock_carbine",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.infiltrator[5] = {
-		weapons = {
-			"weapon_unlock_tt33",
+		[5] = {
+			weapons = {
+				"weapon_unlock_tt33",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.infiltrator[7] = {
-		weapons = {
-			"weapon_unlock_grenade_concrete",
+		[7] = {
+			weapons = {
+				"weapon_unlock_grenade_concrete",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.infiltrator[10] = {
-		weapons = {
-			"weapon_unlock_thompson",
+		[10] = {
+			weapons = {
+				"weapon_unlock_thompson",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.infiltrator[11] = {
-		weapons = {
-			"weapon_unlock_shotty",
-			"weapon_unlock_decoy_coin",
+		[11] = {
+			weapons = {
+				"weapon_unlock_shotty",
+				"weapon_unlock_decoy_coin",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.infiltrator[13] = {
-		weapons = {
-			"weapon_unlock_geco",
+		[13] = {
+			weapons = {
+				"weapon_unlock_geco",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.infiltrator[15] = {
-		unlocks = {
-			"weapon_tier_unlocked_2",
+		[15] = {
+			unlocks = {
+				"weapon_tier_unlocked_2",
+			},
+			weapons = {
+				"weapon_unlock_garand",
+			},
 		},
-		weapons = {
-			"weapon_unlock_garand",
-			"weapon_unlock_garand_golden",
+		[18] = {
+			weapons = {
+				"weapon_unlock_webley",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.infiltrator[18] = {
-		weapons = {
-			"weapon_unlock_webley",
+		[20] = {
+			weapons = {
+				"weapon_unlock_grenade_d343",
+				"weapon_unlock_welrod",
+				"weapon_unlock_grenade_betty",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.infiltrator[20] = {
-		weapons = {
-			"weapon_unlock_grenade_d343",
-			"weapon_unlock_welrod",
+		[23] = {
+			weapons = {
+				"weapon_unlock_mp38",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.infiltrator[23] = {
-		weapons = {
-			"weapon_unlock_mp38",
+		[25] = {
+			unlocks = {
+				"weapon_tier_unlocked_3",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.infiltrator[25] = {
-		unlocks = {
-			"weapon_tier_unlocked_3",
+		[28] = {
+			weapons = {
+				"weapon_unlock_ithaca",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.infiltrator[28] = {
-		weapons = {
-			"weapon_unlock_ithaca",
+		[30] = {
+			weapons = {
+				"weapon_unlock_m1911",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.infiltrator[30] = {
-		weapons = {
-			"weapon_unlock_m1911",
+		[31] = {
+			weapons = {
+				"weapon_unlock_grenade_mills",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.infiltrator[31] = {
-		weapons = {
-			"weapon_unlock_grenade_mills",
+		[33] = {
+			weapons = {
+				"weapon_unlock_sterling",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.infiltrator[33] = {
-		weapons = {
-			"weapon_unlock_sterling",
+		[35] = {
+			unlocks = {
+				"recon_tier_4_unlocked",
+				"assault_tier_4_unlocked",
+				"infiltrator_tier_4_unlocked",
+				"demolitions_tier_4_unlocked",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.infiltrator[35] = {
-		unlocks = {
-			"recon_tier_4_unlocked",
-			"assault_tier_4_unlocked",
-			"infiltrator_tier_4_unlocked",
-			"demolitions_tier_4_unlocked",
+		[38] = {
+			weapons = {
+				"weapon_unlock_mp44",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.infiltrator[38] = {
-		weapons = {
-			"weapon_unlock_mp44",
-		},
-	}
-	self.automatic_unlock_progressions.infiltrator[40] = {
-		weapons = {
-			"weapon_unlock_browning",
+		[40] = {
+			weapons = {
+				"weapon_unlock_browning",
+			},
 		},
 	}
 	self.default_weapons.infiltrator = {}
@@ -5685,116 +5692,112 @@ function SkillTreeTweakData:_init_infiltrator_unlock_progression()
 end
 
 function SkillTreeTweakData:_init_demolitions_unlock_progression()
-	self.automatic_unlock_progressions.demolitions = {}
-	self.automatic_unlock_progressions.demolitions[1] = {
-		weapons = {
-			"weapon_unlock_winchester",
-			"weapon_unlock_bar",
-			"weapon_unlock_c96",
+	self.automatic_unlock_progressions.demolitions = {
+		{
+			weapons = {
+				"weapon_unlock_winchester",
+				"weapon_unlock_bar",
+				"weapon_unlock_c96",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.demolitions[3] = {
-		weapons = {
-			"weapon_unlock_carbine",
+		[3] = {
+			weapons = {
+				"weapon_unlock_carbine",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.demolitions[5] = {
-		weapons = {
-			"weapon_unlock_tt33",
+		[5] = {
+			weapons = {
+				"weapon_unlock_tt33",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.demolitions[6] = {
-		weapons = {
-			"weapon_unlock_grenade_concrete",
+		[6] = {
+			weapons = {
+				"weapon_unlock_grenade_concrete",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.demolitions[6] = {
-		weapons = {
-			"weapon_unlock_grenade_concrete",
+		[8] = {
+			weapons = {
+				"weapon_unlock_shotty",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.demolitions[8] = {
-		weapons = {
-			"weapon_unlock_shotty",
+		[10] = {
+			weapons = {
+				"weapon_unlock_geco",
+				"weapon_unlock_grenade_betty",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.demolitions[10] = {
-		weapons = {
-			"weapon_unlock_geco",
+		[13] = {
+			weapons = {
+				"weapon_unlock_dp28",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.demolitions[13] = {
-		weapons = {
-			"weapon_unlock_dp28",
+		[15] = {
+			unlocks = {
+				"weapon_tier_unlocked_2",
+			},
+			weapons = {
+				"weapon_unlock_garand",
+				"weapon_unlock_decoy_coin",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.demolitions[15] = {
-		unlocks = {
-			"weapon_tier_unlocked_2",
+		[18] = {
+			weapons = {
+				"weapon_unlock_webley",
+			},
 		},
-		weapons = {
-			"weapon_unlock_garand",
-			"weapon_unlock_garand_golden",
-			"weapon_unlock_decoy_coin",
+		[19] = {
+			weapons = {
+				"weapon_unlock_grenade_d343",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.demolitions[18] = {
-		weapons = {
-			"weapon_unlock_webley",
+		[23] = {
+			weapons = {
+				"weapon_unlock_ithaca",
+				"weapon_unlock_welrod",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.demolitions[19] = {
-		weapons = {
-			"weapon_unlock_grenade_d343",
+		[25] = {
+			unlocks = {
+				"weapon_tier_unlocked_3",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.demolitions[23] = {
-		weapons = {
-			"weapon_unlock_ithaca",
-			"weapon_unlock_welrod",
+		[28] = {
+			weapons = {
+				"weapon_unlock_bren",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.demolitions[25] = {
-		unlocks = {
-			"weapon_tier_unlocked_3",
+		[30] = {
+			weapons = {
+				"weapon_unlock_m1911",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.demolitions[28] = {
-		weapons = {
-			"weapon_unlock_bren",
+		[31] = {
+			weapons = {
+				"weapon_unlock_grenade_mills",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.demolitions[30] = {
-		weapons = {
-			"weapon_unlock_m1911",
+		[33] = {
+			weapons = {
+				"weapon_unlock_browning",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.demolitions[31] = {
-		weapons = {
-			"weapon_unlock_grenade_mills",
+		[35] = {
+			unlocks = {
+				"recon_tier_4_unlocked",
+				"assault_tier_4_unlocked",
+				"infiltrator_tier_4_unlocked",
+				"demolitions_tier_4_unlocked",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.demolitions[33] = {
-		weapons = {
-			"weapon_unlock_browning",
+		[38] = {
+			weapons = {
+				"weapon_unlock_mp44",
+			},
 		},
-	}
-	self.automatic_unlock_progressions.demolitions[35] = {
-		unlocks = {
-			"recon_tier_4_unlocked",
-			"assault_tier_4_unlocked",
-			"infiltrator_tier_4_unlocked",
-			"demolitions_tier_4_unlocked",
-		},
-	}
-	self.automatic_unlock_progressions.demolitions[38] = {
-		weapons = {
-			"weapon_unlock_mp44",
-		},
-	}
-	self.automatic_unlock_progressions.demolitions[40] = {
-		weapons = {
-			"weapon_unlock_mg42",
+		[40] = {
+			weapons = {
+				"weapon_unlock_mg42",
+			},
 		},
 	}
 	self.default_weapons.demolitions = {}

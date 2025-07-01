@@ -451,10 +451,6 @@ function RaidMenuSceneManager:first_login_check()
 
 	if managers.savefile:get_active_characters_count() == 0 then
 		local success = managers.raid_menu:open_menu("profile_creation_menu")
-
-		if success then
-			-- block empty
-		end
 	elseif managers.raid_job._tutorial_spawned then
 		Application:debug("[RaidMenuSceneManager:first_login_check()] managers.global_state:fire_event(GlobalStateManager.EVENT_CHARACTER_CREATED)")
 

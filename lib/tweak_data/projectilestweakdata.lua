@@ -15,9 +15,11 @@ function ProjectilesTweakData:init(tweak_data)
 	self.m24.expire_t = 1.1
 	self.m24.repeat_expire_t = 1.5
 	self.m24.is_a_grenade = true
+	self.m24.can_airburst = true
 	self.m24.damage = 950
 	self.m24.player_damage = 20
 	self.m24.range = 500
+	self.m24.enemy_proximity_range = self.m24.range * 0.6
 	self.m24.killzone_range = 0.75
 	self.m24.init_timer = 4.5
 	self.m24.animations = {}
@@ -46,9 +48,11 @@ function ProjectilesTweakData:init(tweak_data)
 	self.concrete.expire_t = 1.1
 	self.concrete.repeat_expire_t = 1.5
 	self.concrete.is_a_grenade = true
+	self.concrete.can_airburst = true
 	self.concrete.damage = 850
 	self.concrete.player_damage = 24
 	self.concrete.range = 750
+	self.concrete.enemy_proximity_range = self.concrete.range * 0.6
 	self.concrete.killzone_range = 0.75
 	self.concrete.init_timer = 4.5
 	self.concrete.animations = {}
@@ -77,9 +81,11 @@ function ProjectilesTweakData:init(tweak_data)
 	self.d343.expire_t = 1.1
 	self.d343.repeat_expire_t = 1.5
 	self.d343.is_a_grenade = true
+	self.d343.can_airburst = true
 	self.d343.damage = 950
 	self.d343.player_damage = 28
 	self.d343.range = 500
+	self.d343.enemy_proximity_range = self.d343.range * 0.6
 	self.d343.killzone_range = 0.75
 	self.d343.init_timer = 4.5
 	self.d343.animations = {}
@@ -108,9 +114,11 @@ function ProjectilesTweakData:init(tweak_data)
 	self.mills.expire_t = 1.1
 	self.mills.repeat_expire_t = 1.5
 	self.mills.is_a_grenade = true
+	self.mills.can_airburst = true
 	self.mills.damage = 850
 	self.mills.player_damage = 24
 	self.mills.range = 1000
+	self.mills.enemy_proximity_range = self.mills.range * 0.6
 	self.mills.killzone_range = 0.75
 	self.mills.init_timer = 4.5
 	self.mills.animations = {}
@@ -126,6 +134,41 @@ function ProjectilesTweakData:init(tweak_data)
 	self.mills.gui.initial_rotation.yaw = -90
 	self.mills.gui.initial_rotation.pitch = 60
 	self.mills.gui.initial_rotation.roll = 0
+	self.betty = {}
+	self.betty.name_id = "bm_grenade_betty"
+	self.betty.unit = "units/upd_021/weapons/wpn_fps_gre_betty/wpn_fps_gre_betty"
+	self.betty.unit_hand = "units/upd_021/weapons/wpn_fps_gre_betty/wpn_fps_gre_betty_hand"
+	self.betty.unit_dummy = "units/upd_021/weapons/wpn_fps_gre_betty/wpn_fps_gre_betty_husk"
+	self.betty.icon = "frag_grenade"
+	self.betty.throwable = true
+	self.betty.instant_throw = true
+	self.betty.max_amount = 2
+	self.betty.anim_global_param = "projectile_frag"
+	self.betty.throw_allowed_expire_t = 0.13333333333333333
+	self.betty.expire_t = 0.5
+	self.betty.repeat_expire_t = 1
+	self.betty.is_a_grenade = true
+	self.betty.damage = 950
+	self.betty.player_damage = 35
+	self.betty.range = 500
+	self.betty.killzone_range = 0.75
+	self.betty.init_timer = 3
+	self.betty.animations = {}
+	self.betty.animations.equip_id = "equip_welrod"
+	self.betty.sound_event = "mills_grenade_explode"
+	self.betty.launch_speed = 150
+	self.betty.enemy_proximity_range = 200
+	self.betty.enemy_proximity_delay = 0.4
+	self.betty.jumpmine_velocity = 540
+	self.betty.gui = {}
+	self.betty.gui.rotation_offset = 0
+	self.betty.gui.distance_offset = -120
+	self.betty.gui.height_offset = -8
+	self.betty.gui.display_offset = 16
+	self.betty.gui.initial_rotation = {}
+	self.betty.gui.initial_rotation.yaw = -90
+	self.betty.gui.initial_rotation.pitch = 60
+	self.betty.gui.initial_rotation.roll = 0
 	self.cluster = {}
 	self.cluster.name_id = "bm_grenade_frag"
 	self.cluster.unit = "units/vanilla/dev/dev_shrapnel/dev_shrapnel"
@@ -180,7 +223,7 @@ function ProjectilesTweakData:init(tweak_data)
 	self.molotov.is_a_grenade = true
 	self.molotov.init_timer = 10
 	self.molotov.damage = 30
-	self.molotov.player_damage = 2
+	self.molotov.player_damage = 5
 	self.molotov.fire_dot_data = {
 		dot_damage = 10,
 		dot_length = 3,
@@ -191,7 +234,7 @@ function ProjectilesTweakData:init(tweak_data)
 	self.molotov.range = 75
 	self.molotov.killzone_range = 0
 	self.molotov.burn_duration = 20
-	self.molotov.burn_tick_period = 0.5
+	self.molotov.burn_tick_period = 0.665
 	self.molotov.sound_event_impact_duration = 4
 	self.molotov.alert_radius = 1500
 	self.molotov.fire_alert_radius = 1500
@@ -203,14 +246,16 @@ function ProjectilesTweakData:init(tweak_data)
 	self.decoy_coin.unit_hand = "units/vanilla/weapons/wpn_fps_decoy_coin_peace/wpn_decoy_coin_peace_husk"
 	self.decoy_coin.unit_dummy = "units/vanilla/weapons/wpn_fps_decoy_coin_peace/wpn_decoy_coin_peace_husk"
 	self.decoy_coin.icon = "frag_grenade"
-	self.decoy_coin.max_amount = 15
+	self.decoy_coin.max_amount = 9
+	self.decoy_coin.per_pickup = math.ceil(self.decoy_coin.max_amount / 3)
 	self.decoy_coin.throwable = true
+	self.decoy_coin.instant_throw = true
 	self.decoy_coin.anim_global_param = "projectile_molotov"
-	self.decoy_coin.throw_allowed_expire_t = 0.1
-	self.decoy_coin.expire_t = 1.1
-	self.decoy_coin.repeat_expire_t = 1.5
+	self.decoy_coin.throw_allowed_expire_t = 0.13333333333333333
+	self.decoy_coin.expire_t = 0.5
+	self.decoy_coin.repeat_expire_t = 1
 	self.decoy_coin.is_a_grenade = true
-	self.decoy_coin.range = 3000
+	self.decoy_coin.range = 1000
 	self.decoy_coin.animations = {}
 	self.decoy_coin.animations.equip_id = "equip_welrod"
 	self.decoy_coin.launch_speed = 200
@@ -234,9 +279,9 @@ function ProjectilesTweakData:init(tweak_data)
 	self.mortar_shell.adjust_z = 0
 	self.mortar_shell.push_at_body_index = 0
 	self.mortar_shell.init_timer = 5
-	self.mortar_shell.damage = 150
-	self.mortar_shell.player_damage = 10
-	self.mortar_shell.range = 1000
+	self.mortar_shell.damage = 80
+	self.mortar_shell.player_damage = 15
+	self.mortar_shell.range = 1200
 	self.mortar_shell.killzone_range = 0
 	self.mortar_shell.init_timer = 15
 	self.mortar_shell.effect_name = "effects/vanilla/explosions/exp_artillery_explosion_001"
@@ -258,6 +303,7 @@ function ProjectilesTweakData:init(tweak_data)
 		"d343",
 		"mills",
 		"decoy_coin",
+		"betty",
 	}
 
 	self:_add_desc_from_name_macro(self)

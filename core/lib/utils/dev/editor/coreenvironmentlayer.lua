@@ -392,7 +392,7 @@ end
 
 function EnvironmentLayer:_build_environment_combobox_and_list()
 	local ctrlr, combobox_params = CoreEws.combobox_and_list({
-		name = "Default",
+		name = "World Default:",
 		options = managers.database:list_entries_of_type("environment"),
 		panel = self._env_panel,
 		sizer = self._environment_sizer,
@@ -446,7 +446,7 @@ function EnvironmentLayer:build_panel(notebook)
 	self._environment_area_ctrls = {}
 
 	local ctrlr, combobox_params = CoreEws.combobox_and_list({
-		name = "Area:",
+		name = "Area Environment:",
 		options = managers.database:list_entries_of_type("environment"),
 		panel = self._env_panel,
 		sizer = self._environment_sizer,
@@ -469,7 +469,7 @@ function EnvironmentLayer:build_panel(notebook)
 	transition:connect("EVT_CHAR", callback(nil, _G, "verify_number"), transition)
 	transition:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_transition_time"), nil)
 	transition:connect("EVT_KILL_FOCUS", callback(self, self, "set_transition_time"), nil)
-	transition_prio_sizer:add_spacer(10, 0)
+	transition_prio_sizer:add_spacer(5, 0)
 	transition_prio_sizer:add(EWS:StaticText(self._env_panel, "Prio (1=highest): ", "", ""), 0, 0, "ALIGN_CENTER_VERTICAL")
 
 	local default_prio_text = tostring(managers.environment_area:default_prio())

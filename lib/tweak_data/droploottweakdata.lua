@@ -20,6 +20,7 @@ end
 function DropLootTweakData:_init_pickups_properties()
 	self.health_big = {}
 	self.health_big.health_restored = 100
+	self.health_big.restore_down = true
 	self.health_big.player_voice_over = "player_gain_huge_health"
 	self.health_medium = {}
 	self.health_medium.health_restored = 50
@@ -365,11 +366,11 @@ function DropLootTweakData:_init_basic_crate_tier()
 	self.basic_crate_tier.units.health.drop_rate = 40
 	self.basic_crate_tier.units.health.subtypes = {}
 	self.basic_crate_tier.units.health.subtypes.large = {
-		drop_rate = 25,
+		drop_rate = 10,
 		unit = "health_big",
 	}
 	self.basic_crate_tier.units.health.subtypes.medium = {
-		drop_rate = 25,
+		drop_rate = 40,
 		unit = "health_medium",
 	}
 	self.basic_crate_tier.units.health.subtypes.small = {
@@ -423,11 +424,11 @@ function DropLootTweakData:_init_lockpick_crate_tier()
 	self.lockpick_crate_tier.units.health.drop_rate = 45
 	self.lockpick_crate_tier.units.health.subtypes = {}
 	self.lockpick_crate_tier.units.health.subtypes.large = {
-		drop_rate = 34,
+		drop_rate = 15,
 		unit = "health_big",
 	}
 	self.lockpick_crate_tier.units.health.subtypes.medium = {
-		drop_rate = 67,
+		drop_rate = 85,
 		unit = "health_medium",
 	}
 	self.lockpick_crate_tier.units.health.subtypes.small = {
@@ -481,11 +482,11 @@ function DropLootTweakData:_init_crowbar_crate_tier()
 	self.crowbar_crate_tier.units.health.drop_rate = 45
 	self.crowbar_crate_tier.units.health.subtypes = {}
 	self.crowbar_crate_tier.units.health.subtypes.large = {
-		drop_rate = 80,
+		drop_rate = 60,
 		unit = "health_big",
 	}
 	self.crowbar_crate_tier.units.health.subtypes.medium = {
-		drop_rate = 20,
+		drop_rate = 40,
 		unit = "health_medium",
 	}
 	self.crowbar_crate_tier.units.health.subtypes.small = {
@@ -555,11 +556,11 @@ function DropLootTweakData:_init_basic_shelf_tier()
 	self.basic_shelf_tier.units.health.drop_rate = 20
 	self.basic_shelf_tier.units.health.subtypes = {}
 	self.basic_shelf_tier.units.health.subtypes.large = {
-		drop_rate = 10,
+		drop_rate = 5,
 		unit = "health_big",
 	}
 	self.basic_shelf_tier.units.health.subtypes.medium = {
-		drop_rate = 30,
+		drop_rate = 35,
 		unit = "health_medium",
 	}
 	self.basic_shelf_tier.units.health.subtypes.small = {
@@ -613,15 +614,15 @@ function DropLootTweakData:_init_camp_shelf_tier()
 	self.camp_shelf_tier.units.health.drop_rate = 40
 	self.camp_shelf_tier.units.health.subtypes = {}
 	self.camp_shelf_tier.units.health.subtypes.large = {
-		drop_rate = 70,
+		drop_rate = 50,
 		unit = "health_big",
 	}
 	self.camp_shelf_tier.units.health.subtypes.medium = {
-		drop_rate = 20,
+		drop_rate = 30,
 		unit = "health_medium",
 	}
 	self.camp_shelf_tier.units.health.subtypes.small = {
-		drop_rate = 10,
+		drop_rate = 20,
 		unit = "health_small",
 	}
 	self.camp_shelf_tier.units.grenade = {}

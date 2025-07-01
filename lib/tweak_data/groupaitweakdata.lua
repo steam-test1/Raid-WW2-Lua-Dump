@@ -28,6 +28,13 @@ function GroupAITweakData:init(tweak_data)
 	self:_init_chatter_data()
 	self:_init_unit_categories(difficulty_index)
 	self:_init_enemy_spawn_groups(difficulty_index)
+
+	self.normally_forbidden_groups = {
+		"commander_squad",
+		"ss_flankers",
+		"ss_rifle_range",
+		"ss_chargers",
+	}
 end
 
 function GroupAITweakData:_init_chatter_data()
@@ -185,8 +192,8 @@ local access_type_all = {
 function GroupAITweakData:_init_unit_categories(difficulty_index)
 	if difficulty_index <= TweakData.DIFFICULTY_1 then
 		self.special_unit_spawn_limits = {
-			commander = 1,
-			flamer = 1,
+			commander = 0,
+			flamer = 0,
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_2 then
 		self.special_unit_spawn_limits = {
@@ -530,9 +537,6 @@ function GroupAITweakData:_init_enemy_spawn_groups(difficulty_index)
 			"flank",
 		},
 		commander = {
-			"ranged_fire",
-		},
-		commander = {
 			"flank",
 		},
 		defend = {
@@ -619,19 +623,33 @@ end
 function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 	self.enemy_spawn_groups.german = {}
 
+	local amount_easy = {
+		2,
+		2,
+	}
+	local amount_norm = {
+		2,
+		3,
+	}
+	local amount_hard = {
+		2,
+		3,
+	}
+	local amount_vhrd = {
+		3,
+		3,
+	}
+
 	if difficulty_index <= TweakData.DIFFICULTY_1 then
 		self.enemy_spawn_groups.german.grunt_chargers = {
-			amount = {
-				3,
-				4,
-			},
+			amount = amount_easy,
 			spawn = {
 				{
 					amount_max = 1,
 					amount_min = 0,
 					freq = 1,
 					rank = 3,
-					unit = "german_grunt_mid_shotgun",
+					unit = "german_grunt_light_shotgun",
 					tactics = self._tactics.grunt_chargers,
 				},
 				{
@@ -644,7 +662,7 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					amount_min = 0,
-					freq = 4,
+					freq = 3,
 					rank = 1,
 					unit = "german_grunt_light",
 					tactics = self._tactics.grunt_chargers,
@@ -653,50 +671,44 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_2 then
 		self.enemy_spawn_groups.german.grunt_chargers = {
-			amount = {
-				4,
-				4,
-			},
+			amount = amount_norm,
 			spawn = {
 				{
-					amount_min = 0,
-					freq = 1,
+					amount_min = 1,
+					freq = 2,
 					rank = 2,
 					unit = "german_grunt_mid",
 					tactics = self._tactics.grunt_chargers,
 				},
 				{
 					amount_min = 0,
-					freq = 1,
+					freq = 2,
 					rank = 1,
 					unit = "german_grunt_light_mp38",
 					tactics = self._tactics.grunt_chargers,
 				},
 				{
 					amount_min = 0,
-					freq = 2,
+					freq = 1,
 					rank = 1,
-					unit = "german_grunt_light_shotgun",
+					unit = "german_grunt_mid_shotgun",
 					tactics = self._tactics.grunt_chargers,
 				},
 			},
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_3 then
 		self.enemy_spawn_groups.german.grunt_chargers = {
-			amount = {
-				4,
-				4,
-			},
+			amount = amount_hard,
 			spawn = {
 				{
-					amount_min = 2,
+					amount_min = 1,
 					freq = 1,
 					rank = 2,
 					unit = "german_grunt_mid_shotgun",
 					tactics = self._tactics.grunt_chargers,
 				},
 				{
-					amount_min = 1,
+					amount_min = 2,
 					freq = 2,
 					rank = 2,
 					unit = "german_grunt_mid",
@@ -713,13 +725,10 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_4 then
 		self.enemy_spawn_groups.german.grunt_chargers = {
-			amount = {
-				4,
-				4,
-			},
+			amount = amount_vhrd,
 			spawn = {
 				{
-					amount_min = 2,
+					amount_min = 1,
 					freq = 1,
 					rank = 2,
 					unit = "german_grunt_heavy_shotgun",
@@ -733,7 +742,7 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 					tactics = self._tactics.grunt_chargers,
 				},
 				{
-					amount_min = 1,
+					amount_min = 2,
 					freq = 2,
 					rank = 1,
 					unit = "german_grunt_heavy_mp38",
@@ -745,10 +754,7 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 
 	if difficulty_index <= TweakData.DIFFICULTY_1 then
 		self.enemy_spawn_groups.german.grunt_flankers = {
-			amount = {
-				3,
-				4,
-			},
+			amount = amount_easy,
 			spawn = {
 				{
 					amount_max = 1,
@@ -777,10 +783,7 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_2 then
 		self.enemy_spawn_groups.german.grunt_flankers = {
-			amount = {
-				4,
-				4,
-			},
+			amount = amount_norm,
 			spawn = {
 				{
 					amount_min = 0,
@@ -807,10 +810,7 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_3 then
 		self.enemy_spawn_groups.german.grunt_flankers = {
-			amount = {
-				4,
-				4,
-			},
+			amount = amount_hard,
 			spawn = {
 				{
 					amount_min = 1,
@@ -837,10 +837,7 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_4 then
 		self.enemy_spawn_groups.german.grunt_flankers = {
-			amount = {
-				4,
-				4,
-			},
+			amount = amount_vhrd,
 			spawn = {
 				{
 					amount_min = 1,
@@ -869,10 +866,7 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 
 	if difficulty_index <= TweakData.DIFFICULTY_1 then
 		self.enemy_spawn_groups.german.grunt_support_range = {
-			amount = {
-				3,
-				4,
-			},
+			amount = amount_easy,
 			spawn = {
 				{
 					amount_max = 1,
@@ -901,10 +895,7 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_2 then
 		self.enemy_spawn_groups.german.grunt_support_range = {
-			amount = {
-				4,
-				4,
-			},
+			amount = amount_norm,
 			spawn = {
 				{
 					amount_min = 0,
@@ -931,10 +922,7 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_3 then
 		self.enemy_spawn_groups.german.grunt_support_range = {
-			amount = {
-				4,
-				4,
-			},
+			amount = amount_hard,
 			spawn = {
 				{
 					amount_min = 0,
@@ -961,10 +949,7 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_4 then
 		self.enemy_spawn_groups.german.grunt_support_range = {
-			amount = {
-				4,
-				4,
-			},
+			amount = amount_vhrd,
 			spawn = {
 				{
 					amount_min = 0,
@@ -993,10 +978,7 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 
 	if difficulty_index <= TweakData.DIFFICULTY_1 then
 		self.enemy_spawn_groups.german.gerbish_chargers = {
-			amount = {
-				3,
-				4,
-			},
+			amount = amount_easy,
 			spawn = {
 				{
 					amount_max = 2,
@@ -1024,10 +1006,7 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_2 then
 		self.enemy_spawn_groups.german.gerbish_chargers = {
-			amount = {
-				4,
-				4,
-			},
+			amount = amount_norm,
 			spawn = {
 				{
 					amount_min = 0,
@@ -1054,10 +1033,7 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_3 then
 		self.enemy_spawn_groups.german.gerbish_chargers = {
-			amount = {
-				4,
-				4,
-			},
+			amount = amount_hard,
 			spawn = {
 				{
 					amount_min = 0,
@@ -1084,10 +1060,7 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_4 then
 		self.enemy_spawn_groups.german.gerbish_chargers = {
-			amount = {
-				4,
-				4,
-			},
+			amount = amount_vhrd,
 			spawn = {
 				{
 					amount_min = 0,
@@ -1109,10 +1082,7 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 
 	if difficulty_index <= TweakData.DIFFICULTY_1 then
 		self.enemy_spawn_groups.german.gerbish_rifle_range = {
-			amount = {
-				4,
-				4,
-			},
+			amount = amount_easy,
 			spawn = {
 				{
 					amount_min = 1,
@@ -1139,10 +1109,7 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_2 then
 		self.enemy_spawn_groups.german.gerbish_rifle_range = {
-			amount = {
-				4,
-				4,
-			},
+			amount = amount_norm,
 			spawn = {
 				{
 					amount_min = 0,
@@ -1169,10 +1136,7 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_3 then
 		self.enemy_spawn_groups.german.gerbish_rifle_range = {
-			amount = {
-				4,
-				4,
-			},
+			amount = amount_hard,
 			spawn = {
 				{
 					amount_min = 0,
@@ -1199,10 +1163,7 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_4 then
 		self.enemy_spawn_groups.german.gerbish_rifle_range = {
-			amount = {
-				4,
-				4,
-			},
+			amount = amount_vhrd,
 			spawn = {
 				{
 					amount_min = 2,
@@ -1224,10 +1185,7 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 
 	if difficulty_index <= TweakData.DIFFICULTY_1 then
 		self.enemy_spawn_groups.german.gerbish_flankers = {
-			amount = {
-				3,
-				4,
-			},
+			amount = amount_easy,
 			spawn = {
 				{
 					amount_max = 1,
@@ -1254,10 +1212,7 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_2 then
 		self.enemy_spawn_groups.german.gerbish_flankers = {
-			amount = {
-				4,
-				4,
-			},
+			amount = amount_norm,
 			spawn = {
 				{
 					amount_min = 0,
@@ -1284,10 +1239,7 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_3 then
 		self.enemy_spawn_groups.german.gerbish_flankers = {
-			amount = {
-				4,
-				4,
-			},
+			amount = amount_hard,
 			spawn = {
 				{
 					amount_min = 0,
@@ -1314,10 +1266,7 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_4 then
 		self.enemy_spawn_groups.german.gerbish_flankers = {
-			amount = {
-				4,
-				4,
-			},
+			amount = amount_vhrd,
 			spawn = {
 				{
 					amount_min = 2,
@@ -1346,10 +1295,7 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 
 	if difficulty_index <= TweakData.DIFFICULTY_1 then
 		self.enemy_spawn_groups.german.fallschirm_charge = {
-			amount = {
-				4,
-				4,
-			},
+			amount = amount_easy,
 			spawn = {
 				{
 					amount_min = 2,
@@ -1360,7 +1306,7 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					amount_min = 1,
-					freq = 2,
+					freq = 1,
 					rank = 1,
 					unit = "german_grunt_light_shotgun",
 					tactics = self._tactics.grunt_chargers,
@@ -1376,10 +1322,7 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_2 then
 		self.enemy_spawn_groups.german.fallschirm_charge = {
-			amount = {
-				4,
-				4,
-			},
+			amount = amount_norm,
 			spawn = {
 				{
 					amount_min = 2,
@@ -1390,14 +1333,14 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					amount_min = 2,
-					freq = 1,
+					freq = 2,
 					rank = 2,
 					unit = "german_fallschirmjager_light",
 					tactics = self._tactics.grunt_chargers,
 				},
 				{
 					amount_min = 1,
-					freq = 2,
+					freq = 1,
 					rank = 1,
 					unit = "german_grunt_mid_shotgun",
 					tactics = self._tactics.grunt_chargers,
@@ -1406,21 +1349,18 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_3 then
 		self.enemy_spawn_groups.german.fallschirm_charge = {
-			amount = {
-				4,
-				4,
-			},
+			amount = amount_hard,
 			spawn = {
 				{
 					amount_min = 0,
-					freq = 2,
+					freq = 1,
 					rank = 2,
 					unit = "german_fallschirmjager_light_shotgun",
 					tactics = self._tactics.grunt_chargers,
 				},
 				{
 					amount_min = 0,
-					freq = 1,
+					freq = 2,
 					rank = 1,
 					unit = "german_fallschirmjager_light",
 					tactics = self._tactics.grunt_chargers,
@@ -1436,14 +1376,11 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_4 then
 		self.enemy_spawn_groups.german.fallschirm_charge = {
-			amount = {
-				4,
-				4,
-			},
+			amount = amount_vhrd,
 			spawn = {
 				{
 					amount_min = 0,
-					freq = 2,
+					freq = 1,
 					rank = 2,
 					unit = "german_fallschirmjager_heavy_shotgun",
 					tactics = self._tactics.grunt_chargers,
@@ -1468,10 +1405,7 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 
 	if difficulty_index <= TweakData.DIFFICULTY_1 then
 		self.enemy_spawn_groups.german.fallschirm_support = {
-			amount = {
-				4,
-				4,
-			},
+			amount = amount_easy,
 			spawn = {
 				{
 					amount_min = 2,
@@ -1482,7 +1416,7 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					amount_min = 1,
-					freq = 2,
+					freq = 1,
 					rank = 2,
 					unit = "german_grunt_light_kar98",
 					tactics = self._tactics.gerbish_rifle_range,
@@ -1498,28 +1432,25 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_2 then
 		self.enemy_spawn_groups.german.fallschirm_support = {
-			amount = {
-				4,
-				4,
-			},
+			amount = amount_norm,
 			spawn = {
 				{
 					amount_min = 2,
-					freq = 1,
+					freq = 3,
 					rank = 2,
 					unit = "german_fallschirmjager_light",
 					tactics = self._tactics.gerbish_rifle_range,
 				},
 				{
 					amount_min = 2,
-					freq = 2,
+					freq = 1,
 					rank = 1,
 					unit = "german_fallschirmjager_light_kar98",
 					tactics = self._tactics.gerbish_rifle_range,
 				},
 				{
 					amount_min = 1,
-					freq = 2,
+					freq = 1,
 					rank = 1,
 					unit = "german_grunt_mid_kar98",
 					tactics = self._tactics.gerbish_rifle_range,
@@ -1528,28 +1459,25 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_3 then
 		self.enemy_spawn_groups.german.fallschirm_support = {
-			amount = {
-				4,
-				4,
-			},
+			amount = amount_hard,
 			spawn = {
 				{
 					amount_min = 0,
-					freq = 2,
+					freq = 1,
 					rank = 1,
 					unit = "german_fallschirmjager_light_kar98",
 					tactics = self._tactics.gerbish_rifle_range,
 				},
 				{
 					amount_min = 0,
-					freq = 2,
+					freq = 1,
 					rank = 1,
 					unit = "german_fallschirmjager_heavy_kar98",
 					tactics = self._tactics.gerbish_rifle_range,
 				},
 				{
 					amount_min = 0,
-					freq = 1,
+					freq = 3,
 					rank = 2,
 					unit = "german_fallschirmjager_heavy",
 					tactics = self._tactics.gerbish_rifle_range,
@@ -1558,10 +1486,7 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_4 then
 		self.enemy_spawn_groups.german.fallschirm_support = {
-			amount = {
-				4,
-				4,
-			},
+			amount = amount_vhrd,
 			spawn = {
 				{
 					amount_min = 0,
@@ -1590,10 +1515,7 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 
 	if difficulty_index <= TweakData.DIFFICULTY_1 then
 		self.enemy_spawn_groups.german.fallschirm_flankers = {
-			amount = {
-				4,
-				4,
-			},
+			amount = amount_easy,
 			spawn = {
 				{
 					amount_min = 2,
@@ -1620,10 +1542,7 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_2 then
 		self.enemy_spawn_groups.german.fallschirm_flankers = {
-			amount = {
-				4,
-				4,
-			},
+			amount = amount_norm,
 			spawn = {
 				{
 					amount_min = 3,
@@ -1650,10 +1569,7 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_3 then
 		self.enemy_spawn_groups.german.fallschirm_flankers = {
-			amount = {
-				4,
-				4,
-			},
+			amount = amount_hard,
 			spawn = {
 				{
 					amount_min = 0,
@@ -1680,10 +1596,7 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_4 then
 		self.enemy_spawn_groups.german.fallschirm_flankers = {
-			amount = {
-				4,
-				4,
-			},
+			amount = amount_vhrd,
 			spawn = {
 				{
 					amount_min = 0,
@@ -1712,21 +1625,18 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 
 	if difficulty_index <= TweakData.DIFFICULTY_1 then
 		self.enemy_spawn_groups.german.ss_chargers = {
-			amount = {
-				4,
-				4,
-			},
+			amount = amount_easy,
 			spawn = {
 				{
 					amount_min = 2,
-					freq = 1,
+					freq = 2,
 					rank = 2,
 					unit = "german_light",
 					tactics = self._tactics.grunt_chargers,
 				},
 				{
 					amount_min = 1,
-					freq = 1,
+					freq = 2,
 					rank = 2,
 					unit = "german_grunt_light",
 					tactics = self._tactics.grunt_chargers,
@@ -1742,21 +1652,18 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_2 then
 		self.enemy_spawn_groups.german.ss_chargers = {
-			amount = {
-				4,
-				4,
-			},
+			amount = amount_norm,
 			spawn = {
 				{
 					amount_min = 2,
-					freq = 1,
+					freq = 2,
 					rank = 2,
 					unit = "german_light",
 					tactics = self._tactics.grunt_chargers,
 				},
 				{
 					amount_min = 2,
-					freq = 1,
+					freq = 2,
 					rank = 2,
 					unit = "german_light_shotgun",
 					tactics = self._tactics.grunt_chargers,
@@ -1772,21 +1679,18 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_3 then
 		self.enemy_spawn_groups.german.ss_chargers = {
-			amount = {
-				4,
-				4,
-			},
+			amount = amount_hard,
 			spawn = {
 				{
 					amount_min = 2,
-					freq = 1,
+					freq = 2,
 					rank = 2,
 					unit = "german_light",
 					tactics = self._tactics.grunt_chargers,
 				},
 				{
 					amount_min = 2,
-					freq = 1,
+					freq = 2,
 					rank = 2,
 					unit = "german_light_shotgun",
 					tactics = self._tactics.grunt_chargers,
@@ -1802,28 +1706,25 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_4 then
 		self.enemy_spawn_groups.german.ss_chargers = {
-			amount = {
-				4,
-				4,
-			},
+			amount = amount_vhrd,
 			spawn = {
 				{
 					amount_min = 0,
-					freq = 1,
+					freq = 2,
 					rank = 1,
 					unit = "german_light",
 					tactics = self._tactics.grunt_chargers,
 				},
 				{
 					amount_min = 0,
-					freq = 2,
+					freq = 1,
 					rank = 1,
 					unit = "german_light_shotgun",
 					tactics = self._tactics.grunt_chargers,
 				},
 				{
 					amount_min = 0,
-					freq = 2,
+					freq = 1,
 					rank = 2,
 					unit = "german_heavy_shotgun",
 					tactics = self._tactics.grunt_chargers,
@@ -1834,10 +1735,7 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 
 	if difficulty_index <= TweakData.DIFFICULTY_1 then
 		self.enemy_spawn_groups.german.ss_rifle_range = {
-			amount = {
-				4,
-				4,
-			},
+			amount = amount_easy,
 			spawn = {
 				{
 					amount_min = 1,
@@ -1864,16 +1762,13 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_2 then
 		self.enemy_spawn_groups.german.ss_rifle_range = {
-			amount = {
-				4,
-				4,
-			},
+			amount = amount_norm,
 			spawn = {
 				{
 					amount_min = 2,
 					freq = 1,
 					rank = 2,
-					unit = "german_light_",
+					unit = "german_light",
 					tactics = self._tactics.gerbish_rifle_range,
 				},
 				{
@@ -1894,10 +1789,7 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_3 then
 		self.enemy_spawn_groups.german.ss_rifle_range = {
-			amount = {
-				4,
-				4,
-			},
+			amount = amount_hard,
 			spawn = {
 				{
 					amount_min = 2,
@@ -1924,14 +1816,11 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_4 then
 		self.enemy_spawn_groups.german.ss_rifle_range = {
-			amount = {
-				4,
-				4,
-			},
+			amount = amount_vhrd,
 			spawn = {
 				{
-					amount_min = 0,
-					freq = 2,
+					amount_min = 1,
+					freq = 3,
 					rank = 2,
 					unit = "german_heavy",
 					tactics = self._tactics.gerbish_rifle_range,
@@ -1956,10 +1845,7 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 
 	if difficulty_index <= TweakData.DIFFICULTY_1 then
 		self.enemy_spawn_groups.german.ss_flankers = {
-			amount = {
-				4,
-				4,
-			},
+			amount = amount_easy,
 			spawn = {
 				{
 					amount_min = 1,
@@ -1977,7 +1863,7 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 				},
 				{
 					amount_min = 2,
-					freq = 1,
+					freq = 2,
 					rank = 2,
 					unit = "german_grunt_light",
 					tactics = self._tactics.gerbish_flankers,
@@ -1986,10 +1872,7 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_2 then
 		self.enemy_spawn_groups.german.ss_flankers = {
-			amount = {
-				4,
-				4,
-			},
+			amount = amount_norm,
 			spawn = {
 				{
 					amount_min = 4,
@@ -2009,10 +1892,7 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_3 then
 		self.enemy_spawn_groups.german.ss_flankers = {
-			amount = {
-				4,
-				4,
-			},
+			amount = amount_hard,
 			spawn = {
 				{
 					amount_min = 3,
@@ -2032,13 +1912,10 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_4 then
 		self.enemy_spawn_groups.german.ss_flankers = {
-			amount = {
-				4,
-				4,
-			},
+			amount = amount_vhrd,
 			spawn = {
 				{
-					amount_min = 0,
+					amount_min = 1,
 					freq = 1,
 					rank = 1,
 					unit = "german_light",
@@ -2071,73 +1948,22 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 			},
 		},
 	}
-
-	if difficulty_index <= TweakData.DIFFICULTY_1 then
-		self.enemy_spawn_groups.german.commanders = {
-			amount = {
-				1,
-				1,
+	self.enemy_spawn_groups.german.commanders = {
+		amount = {
+			1,
+			1,
+		},
+		spawn = {
+			{
+				amount_max = 1,
+				amount_min = 1,
+				freq = 1,
+				rank = 2,
+				unit = "german_commander",
+				tactics = self._tactics.commander,
 			},
-			spawn = {
-				{
-					amount_max = 1,
-					amount_min = 1,
-					freq = 1,
-					rank = 2,
-					unit = "german_commander",
-					tactics = self._tactics.commander,
-				},
-			},
-		}
-	elseif difficulty_index == TweakData.DIFFICULTY_2 then
-		self.enemy_spawn_groups.german.commanders = {
-			amount = {
-				2,
-				2,
-			},
-			spawn = {
-				{
-					amount_min = 1,
-					freq = 1,
-					rank = 2,
-					unit = "german_commander",
-					tactics = self._tactics.commander,
-				},
-			},
-		}
-	elseif difficulty_index == TweakData.DIFFICULTY_3 then
-		self.enemy_spawn_groups.german.commanders = {
-			amount = {
-				1,
-				1,
-			},
-			spawn = {
-				{
-					amount_min = 1,
-					freq = 1,
-					rank = 2,
-					unit = "german_commander",
-					tactics = self._tactics.commander,
-				},
-			},
-		}
-	elseif difficulty_index == TweakData.DIFFICULTY_4 then
-		self.enemy_spawn_groups.german.commanders = {
-			amount = {
-				1,
-				1,
-			},
-			spawn = {
-				{
-					amount_min = 1,
-					freq = 1,
-					rank = 2,
-					unit = "german_commander",
-					tactics = self._tactics.commander,
-				},
-			},
-		}
-	end
+		},
+	}
 
 	if difficulty_index <= TweakData.DIFFICULTY_1 then
 		self.enemy_spawn_groups.german.commander_squad = {
@@ -2210,10 +2036,7 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_4 then
 		self.enemy_spawn_groups.german.commander_squad = {
-			amount = {
-				3,
-				3,
-			},
+			amount = amount_norm,
 			spawn = {
 				{
 					amount_min = 1,
@@ -2234,10 +2057,7 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 	end
 
 	self.enemy_spawn_groups.german.recon_grunt_chargers = {
-		amount = {
-			3,
-			4,
-		},
+		amount = amount_hard,
 		spawn = {
 			{
 				amount_min = 2,
@@ -2256,10 +2076,7 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		},
 	}
 	self.enemy_spawn_groups.german.recon_grunt_flankers = {
-		amount = {
-			3,
-			4,
-		},
+		amount = amount_hard,
 		spawn = {
 			{
 				amount_min = 2,
@@ -2278,10 +2095,7 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		},
 	}
 	self.enemy_spawn_groups.german.recon_grunt_support_range = {
-		amount = {
-			3,
-			4,
-		},
+		amount = amount_hard,
 		spawn = {
 			{
 				amount_min = 2,
@@ -2302,9 +2116,10 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 end
 
 function GroupAITweakData:_init_task_data(difficulty_index, difficulty)
-	local is_console = SystemInfo:platform() ~= Idstring("WIN32")
-
 	self.difficulty_curve_points = {
+		0.4,
+		0.43,
+		0.46,
 		0.5,
 	}
 	self.smoke_and_flash_grenade_timeout = {

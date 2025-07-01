@@ -25,7 +25,7 @@ function RaidGUIControlListItemMenu:init(parent, params, data)
 		vertical = "center",
 		x = 32,
 		y = 0,
-		color = tweak_data.gui.colors.raid_white,
+		color = self._data.value.unlocked and tweak_data.gui.colors.raid_white or tweak_data.gui.colors.raid_dark_grey,
 		font = font,
 		font_size = font_size,
 		h = params.h,

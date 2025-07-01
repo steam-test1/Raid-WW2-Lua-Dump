@@ -77,13 +77,15 @@ function HUDWeaponGrenade:set_amount(amount)
 
 	self._amount_text:set_w(w)
 	self._amount_text:set_h(h)
-	self._amount_text:set_center_x(self._object:w() / 2 - 4)
-	self._amount_text:set_bottom(self._object:h() - 4)
+	self._amount_text:set_center_x(self._object:w() / 2)
+	self._amount_text:set_bottom(self._object:h())
 
 	if amount == 0 then
 		self._amount_text:set_color(tweak_data.gui.colors.progress_red)
+		self._icon:set_color(tweak_data.gui.colors.progress_red)
 	else
 		self._amount_text:set_color(Color.white)
+		self._icon:set_color(Color.white)
 	end
 end
 

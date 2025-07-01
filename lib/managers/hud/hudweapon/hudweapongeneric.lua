@@ -1,13 +1,13 @@
 HUDWeaponGeneric = HUDWeaponGeneric or class(HUDWeaponBase)
-HUDWeaponGeneric.W = 138
+HUDWeaponGeneric.W = 150
 HUDWeaponGeneric.H = 84
-HUDWeaponGeneric.AMMO_PANEL_X = 15
-HUDWeaponGeneric.AMMO_PANEL_W = 110
-HUDWeaponGeneric.AMMO_PANEL_H = 34
+HUDWeaponGeneric.AMMO_PANEL_W = 100
+HUDWeaponGeneric.AMMO_PANEL_H = 32
 HUDWeaponGeneric.CLIP_BACKGROUND_W = 54
 HUDWeaponGeneric.CLIP_BACKGROUND_THICKNESS = 1
 HUDWeaponGeneric.CLIP_BACKGROUND_OUTLINE_COLOR = tweak_data.gui.colors.ammo_background_outline
 HUDWeaponGeneric.CLIP_BACKGROUND_COLORS = tweak_data.gui.colors.ammo_clip_colors
+HUDWeaponGeneric.CLIP_BACKGROUND_SPENT_COLORS = tweak_data.gui.colors.ammo_clip_spent_colors
 HUDWeaponGeneric.CURRENT_CLIP_FONT = tweak_data.gui.fonts.din_compressed
 HUDWeaponGeneric.CURRENT_CLIP_FONT_SIZE = tweak_data.gui.font_sizes.size_32
 HUDWeaponGeneric.CURRENT_CLIP_TEXT_COLOR = tweak_data.gui.colors.ammo_text
@@ -22,13 +22,17 @@ HUDWeaponGeneric.FIREMODE_DISTANCE_FROM_RIGHT_EDGE = 19
 
 function HUDWeaponGeneric:init(index, weapons_panel, tweak_data)
 	HUDWeaponGeneric.super.init(self, index, weapons_panel, tweak_data)
+	self:set_max_clip(tweak_data.CLIP_AMMO_MAX)
 
 	self._index = index
 
 	self:_create_panel(weapons_panel)
 	self:_create_icon(tweak_data.hud.icon)
-	self:_create_ammo_info(weapons_panel)
+	self:_create_ammo_panel(weapons_panel)
+	self:_create_ammo_left_info(weapons_panel)
+	self:_create_clip_left_info(weapons_panel)
 	self:_create_firemodes()
+	self:set_current_clip(tweak_data.CLIP_AMMO_MAX)
 end
 
 function HUDWeaponGeneric:_create_panel(weapons_panel)
@@ -69,20 +73,22 @@ function HUDWeaponGeneric:_create_icon(icon)
 	self._icon:set_center_y(self._icon_panel:h() / 2)
 end
 
-function HUDWeaponGeneric:_create_ammo_info(weapons_panel)
+function HUDWeaponGeneric:_create_ammo_panel(weapons_panel)
 	local ammo_panel_params = {
 		halign = "center",
 		name = "ammo_panel",
 		valign = "bottom",
 		h = HUDWeaponGeneric.AMMO_PANEL_H,
 		w = HUDWeaponGeneric.AMMO_PANEL_W,
-		x = HUDWeaponGeneric.AMMO_PANEL_X,
 	}
 
 	self._ammo_panel = self._object:panel(ammo_panel_params)
 
 	self._ammo_panel:set_bottom(self._object:h())
+	self._ammo_panel:set_center_x(self._object:w() / 2)
+end
 
+function HUDWeaponGeneric:_create_clip_left_info(weapons_panel)
 	local current_clip_background_border_params = {
 		halign = "left",
 		name = "current_clip_background_border",
@@ -123,9 +129,11 @@ function HUDWeaponGeneric:_create_ammo_info(weapons_panel)
 
 	self._current_clip_text = self._ammo_panel:text(current_clip_text_params)
 
-	self:set_max_clip(1)
+	self:set_max_clip(0)
 	self:set_current_clip(0)
+end
 
+function HUDWeaponGeneric:_create_ammo_left_info(weapons_panel)
 	local ammo_left_text_params = {
 		halign = "right",
 		name = "ammo_left_amount",
@@ -180,12 +188,26 @@ function HUDWeaponGeneric:set_current_clip(current_clip)
 
 	self._current_clip_text:set_w(w)
 	self._current_clip_text:set_h(h)
-	self._current_clip_text:set_center_x(self._current_clip_background:w() / 2 + 1)
-	self._current_clip_text:set_center_y(self._current_clip_background:h() / 2 - 1)
+	self._current_clip_text:set_center_x(self._current_clip_background:w() / 2)
+	self._current_clip_text:set_center_y(self._current_clip_background:h() / 2)
 
 	local clip_percentage = self._max_clip > 0 and current_clip / self._max_clip or 0
 
 	self._current_clip_background:set_color(self:_get_color_for_percentage(HUDWeaponGeneric.CLIP_BACKGROUND_COLORS, clip_percentage))
+end
+
+function HUDWeaponGeneric:set_no_ammo(empty)
+	local col
+
+	if empty then
+		col = self:_get_color_for_percentage(HUDWeaponGeneric.CLIP_BACKGROUND_COLORS, 0)
+	else
+		col = HUDWeaponGeneric.AMMO_LEFT_TEXT_COLOR
+	end
+
+	self._icon:set_color(col)
+	self._firemode_auto:set_color(col)
+	self._firemode_single:set_color(col)
 end
 
 function HUDWeaponGeneric:set_current_left(current_left)
@@ -195,8 +217,8 @@ function HUDWeaponGeneric:set_current_left(current_left)
 
 	self._ammo_left_text:set_w(w)
 	self._ammo_left_text:set_h(h)
-	self._ammo_left_text:set_right(self._ammo_panel:w() - 6)
-	self._ammo_left_text:set_center_y(self._ammo_panel:h() / 2 - 3)
+	self._ammo_left_text:set_right(self._ammo_panel:w())
+	self._ammo_left_text:set_center_y(self._ammo_panel:h() / 2)
 
 	if current_left == 0 then
 		self._ammo_left_text:set_color(self:_get_color_for_percentage(HUDWeaponGeneric.CLIP_BACKGROUND_COLORS, 0))

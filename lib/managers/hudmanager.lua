@@ -20,6 +20,7 @@ HUDManager.OVERHEAD_Y_OFFSET = 18
 HUDManager.SUSPICION_INDICATOR_Y_OFFSET = 40
 HUDManager.DEFAULT_ALPHA = 1
 HUDManager.DIFFERENT_SUSPICION_INDICATORS_FOR_TEAMMATES = true
+HUDManager.WAYPOINT_MAX_FADE = 0.5
 HUDManager.NAME_LABEL_HEIGHT_FROM_HEAD = 50
 HUDManager.NAME_LABEL_Y_DIST_COEFF = 4
 HUDManager.NAME_LABEL_DIST_TO_ALPHA_COEFF = 0.004
@@ -614,7 +615,7 @@ function HUDManager:resolution_changed()
 	managers.gui_data:layout_corner_saferect_1280_workspace(self._saferect)
 	managers.gui_data:layout_fullscreen_workspace(self._workspace)
 	managers.gui_data:layout_workspace(self._mid_saferect)
-	managers.gui_data:layout_fullscreen_workspace(self._fullscreen_workspace)
+	managers.gui_data:layout_fullscreen_16_9_workspace(self._fullscreen_workspace)
 
 	for name, gui in pairs(self._component_map) do
 		self:layout(gui.idstring)
@@ -637,6 +638,66 @@ function HUDManager:update(t, dt)
 		if cam_pos then
 			self._debug.coord:set_text(string.format("Cam pos:   \"%.0f %.0f %.0f\" [cm]", cam_pos.x, cam_pos.y, cam_pos.z))
 		end
+
+		if not self._debugDogTagDrawData then
+			self._debugDogTagDrawData = {}
+		end
+
+		local panel = self._debug.ws:panel()
+		local dogTagData = self._debugDogTagDrawData
+		local allDogTags = {}
+
+		for k, v in pairs(managers.interaction._interactive_units) do
+			if alive(v) and v:position() and v:name() and string.find(v:name():tostring(), "dogtag") then
+				table.insert(allDogTags, v)
+				Application:draw_line(v:position(), v:position() + Vector3(0, 0, 400), 1, 1, 0)
+				Application:draw_line(v:position(), v:position() + Vector3(0, 50, 50), 1, 1, 0)
+				Application:draw_line(v:position(), v:position() + Vector3(0, -50, 50), 1, 1, 0)
+				Application:draw_line(v:position(), v:position() + Vector3(-50, 0, 50), 1, 1, 0)
+				Application:draw_line(v:position(), v:position() + Vector3(50, 0, 50), 1, 1, 0)
+
+				if dogTagData[#allDogTags] == nil then
+					dogTagData[#allDogTags] = {}
+					dogTagData[#allDogTags].unit = v
+					dogTagData[#allDogTags].textlabel = panel:text({
+						font_size = 14,
+						layer = 1,
+						name = "dogtagdebug",
+						text = "0.0",
+						color = Color(1, 1, 0),
+						font = tweak_data.gui.fonts.din_compressed_outlined_20,
+					})
+
+					dogTagData[#allDogTags].textlabel:show()
+				end
+
+				local gui_text = dogTagData[#allDogTags].textlabel
+				local unit = v
+				local camera = managers.viewport:get_current_camera()
+
+				if alive(gui_text) and alive(unit) and camera then
+					local screenPos = camera:world_to_screen(unit:position())
+
+					if screenPos.z > 0 then
+						local screen_x = (screenPos.x + 1) * 0.5 * RenderSettings.resolution.x
+						local screen_y = (screenPos.y + 1) * 0.5 * RenderSettings.resolution.y
+
+						gui_text:set_x(screen_x)
+						gui_text:set_y(screen_y)
+						gui_text:set_text(string.format("%.2f", mvector3.distance(unit:position(), cam_pos) / 100))
+					end
+				end
+			end
+		end
+
+		for i = #dogTagData, 1, -1 do
+			if not alive(dogTagData[i].unit) and alive(dogTagData[i].textlabel) then
+				panel:remove(dogTagData[i].textlabel)
+				table.remove(dogTagData, i)
+			end
+		end
+
+		self._debug.dogtagCoord:set_text(string.format("Dog Tags: %d left", #allDogTags))
 	end
 end
 
@@ -817,12 +878,15 @@ function HUDManager:_update_vehicle_name_labels(t, dt)
 		if dot < 0 or panel:outside(mvector3.x(nl_pos), mvector3.y(nl_pos)) then
 			name_label:hide()
 		else
-			name_label:panel():set_alpha(1)
+			local length = (cam_pos - pos):length() - VehicleTweakData.FADE_DISTANCE_START
+			local alpha = math.clamp(1 - length / VehicleTweakData.FADE_DISTANCE, 0, 1)
+
+			name_label:panel():set_alpha(alpha)
 			name_label:show()
 		end
 
 		if name_label:panel():visible() then
-			name_label:panel():set_center(nl_pos.x, nl_pos.y)
+			name_label:panel():set_center(nl_pos.x + name_label:panel():w() / 4, nl_pos.y)
 		end
 	end
 end
@@ -937,10 +1001,12 @@ function HUDManager:add_waypoint(id, data)
 		icon = icon,
 		id_string = id,
 		init_data = data,
+		lifetime = data.lifetime or false,
 		map_icon = data.map_icon,
 		no_sync = data.no_sync,
 		position = data.position,
-		present_timer = data.present_timer or 2,
+		position_offset_z = data.position_offset_z or nil,
+		present_timer = data.present_timer or 2.5,
 		radius = data.radius or 160,
 		rotation = data.rotation,
 		show_on_screen = data.show_on_screen or data.show_on_screen == nil and true,
@@ -969,6 +1035,7 @@ function HUDManager:add_waypoint(id, data)
 			layer = 0,
 			rotation = 360,
 			blend_mode = data.blend_mode,
+			color = data.waypoint_color or Color.white,
 			h = texture_rect[4],
 			name = "bitmap" .. id,
 			texture = icon,
@@ -1214,6 +1281,21 @@ function HUDManager:change_waypoint_icon_alpha(id, alpha)
 	end
 end
 
+function HUDManager:change_waypoint_icon_color(id, color)
+	if not self._hud.waypoints[id] then
+		Application:error("[HUDManager:change_waypoint_icon] no waypoint with id", id)
+
+		return
+	end
+
+	local wp_data = self._hud.waypoints[id]
+	local show_on_screen = wp_data.show_on_screen
+
+	if show_on_screen == true then
+		wp_data.bitmap:set_color(color:with_alpha(wp_data.bitmap:color().a))
+	end
+end
+
 function HUDManager:change_waypoint_arrow_color(id, color)
 	if not self._hud.waypoints[id] then
 		Application:error("[HUDManager:change_waypoint_icon] no waypoint with id", id)
@@ -1370,15 +1452,16 @@ function HUDManager:add_mugshot_by_unit(unit)
 	end
 
 	local character_name = unit:base():nick_name()
-	local name_label_id = managers.hud:_add_name_label({
+	local is_husk_player = unit:base().is_husk_player
+	local name_label_params = {
 		name = character_name,
 		nationality = nationality,
 		unit = unit,
-	})
+	}
+	local name_label_id = managers.hud:_add_name_label(name_label_params)
 
 	unit:unit_data().name_label_id = name_label_id
 
-	local is_husk_player = unit:base().is_husk_player
 	local character_name_id = managers.criminals:character_name_by_unit(unit)
 
 	for i, data in ipairs(self._hud.mugshots) do
@@ -1643,7 +1726,7 @@ function HUDManager:check_start_anticipation_music(t)
 end
 
 function HUDManager:sync_start_anticipation_music()
-	managers.music:raid_music_state_change("anticipation")
+	managers.music:raid_music_state_change(MusicManager.RAID_MUSIC_ANTICIPATION)
 end
 
 function HUDManager:start_assault(data)
@@ -1823,7 +1906,7 @@ function HUDManager:_update_suspicion_indicators(t, dt)
 			local parent_panel = suspicion_indicator:parent()
 			local observer_position = suspicion_indicator:observer_position()
 
-			mvector3.set(wp_pos, self._fullscreen_workspace:world_to_screen(cam, observer_position))
+			mvector3.set(wp_pos, self._workspace:world_to_screen(cam, observer_position))
 			mvector3.set(wp_dir, observer_position)
 			mvector3.subtract(wp_dir, cam_pos)
 			mvector3.set(wp_dir_normalized, wp_dir)
@@ -1950,6 +2033,17 @@ function HUDManager:_update_waypoints(t, dt)
 	for id, data in pairs(self._hud.waypoints) do
 		local show_on_screen = data.show_on_screen
 
+		if data.lifetime then
+			if data.lifetime <= 0 then
+				self:remove_waypoint(id)
+				Application:debug("[HUDManager:_update_waypoints] remove_waypoint with 0 lifetime")
+
+				return
+			else
+				data.lifetime = data.lifetime - dt
+			end
+		end
+
 		self:_upd_suspition_waypoint_state(data, show_on_screen)
 
 		if show_on_screen == true then
@@ -2009,6 +2103,10 @@ function HUDManager:_update_waypoints(t, dt)
 
 				data.position = not pos_has_external_update and data.unit and data.unit.position and data.unit:position() or data.position
 
+				if data.position_offset_z then
+					data.position = data.position:with_z(data.position.z + data.position_offset_z)
+				end
+
 				mvector3.set(wp_pos, self._saferect:world_to_screen(cam, data.position))
 				mvector3.set(wp_dir, data.position)
 				mvector3.subtract(wp_dir, cam_pos)
@@ -2027,7 +2125,7 @@ function HUDManager:_update_waypoints(t, dt)
 					if dot > 0.99 then
 						alpha = math.clamp((1 - dot) / 0.01, 0.4, alpha)
 					elseif dot < 0 then
-						alpha = 0
+						alpha = HUDManager.WAYPOINT_MAX_FADE
 					end
 
 					if data.bitmap:color().alpha ~= alpha then
@@ -2115,14 +2213,14 @@ function HUDManager:_update_waypoints(t, dt)
 						local current_alpha = math.bezier({
 							data.bitmap:alpha(),
 							data.bitmap:alpha(),
-							0,
-							0,
+							HUDManager.WAYPOINT_MAX_FADE,
+							HUDManager.WAYPOINT_MAX_FADE,
 						}, data.off_timer)
 
 						data.bitmap:set_alpha(current_alpha)
 					else
 						mvector3.set(data.current_position, target_pos)
-						data.bitmap:set_alpha(0)
+						data.bitmap:set_alpha(HUDManager.WAYPOINT_MAX_FADE)
 					end
 
 					data.bitmap:set_center(mvector3.x(data.current_position), mvector3.y(data.current_position))
@@ -2450,6 +2548,16 @@ function HUDManager:debug_show_coordinates()
 		color = Color.white,
 		font = tweak_data.gui.fonts.din_compressed_outlined_18,
 	})
+	self._debug.dogtagCoord = self._debug.panel:text({
+		font_size = 18,
+		layer = 2000,
+		name = "debug_dogtag",
+		text = "",
+		x = 14,
+		y = 32,
+		color = Color.white,
+		font = tweak_data.gui.fonts.din_compressed_outlined_20,
+	})
 end
 
 function HUDManager:debug_hide_coordinates()
@@ -2460,6 +2568,7 @@ function HUDManager:debug_hide_coordinates()
 	Overlay:newgui():destroy_workspace(self._debug.ws)
 
 	self._debug = nil
+	self._debugDogTagDrawData = nil
 end
 
 function HUDManager:save(d)

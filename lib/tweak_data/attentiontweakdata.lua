@@ -46,17 +46,35 @@ function AttentionTweakData:_init_player()
 	}
 	self.settings.pl_mask_off_foe_combatant = {
 		filter = "combatant",
-		max_range = 600,
-		notice_delay_mul = 0.3,
+		max_range = 1000,
+		notice_delay_mul = 0.35,
 		notice_requires_FOV = true,
 		reaction = "REACT_SUSPICIOUS",
 		relation = "foe",
 		release_delay = 2,
-		suspicion_duration = 4,
-		suspicion_range = 500,
+		suspicion_duration = 5,
+		suspicion_range = 900,
 		turn_around_range = 250,
-		uncover_range = 300,
+		uncover_range = 325,
 		verification_interval = 0.02,
+	}
+	self.settings.pl_mask_on_friend_combatant_whisper_mode = {
+		filter = "combatant",
+		max_range = 2000,
+		notice_delay_mul = 1,
+		notice_requires_FOV = true,
+		reaction = "REACT_CHECK",
+		relation = "friend",
+		release_delay = 3,
+		verification_interval = 4,
+		duration = {
+			2,
+			5,
+		},
+		pause = {
+			25,
+			50,
+		},
 	}
 	self.settings.pl_mask_off_foe_non_combatant = {
 		attract_chance = 0.5,
@@ -97,92 +115,51 @@ function AttentionTweakData:_init_player()
 			60,
 		},
 	}
-	self.settings.pl_mask_on_friend_combatant_whisper_mode = {
-		filter = "combatant",
-		max_range = 2000,
-		notice_delay_mul = 1,
-		notice_requires_FOV = true,
-		reaction = "REACT_CHECK",
-		relation = "friend",
-		release_delay = 3,
-		verification_interval = 4,
-		duration = {
-			2,
-			5,
-		},
-		pause = {
-			25,
-			50,
-		},
-	}
 	self.settings.pl_mask_on_friend_non_combatant_whisper_mode = self.settings.pl_mask_off_friend_non_combatant
 	self.settings.pl_mask_on_foe_combatant_whisper_mode_stand = {
 		filter = "combatant",
 		notice_clbk = "clbk_attention_notice_sneak",
-		notice_delay_mul = 1,
+		notice_delay_mul = 1.2,
 		notice_requires_FOV = true,
 		reaction = "REACT_COMBAT",
 		relation = "foe",
 		release_delay = 1,
-		uncover_range = 300,
+		uncover_range = 230,
 		verification_interval = 0.1,
 	}
-	self.settings.pl_mask_on_foe_non_combatant_whisper_mode_stand = {
-		filter = "non_combatant",
+	self.settings.pl_mask_on_foe_non_combatant_whisper_mode_stand = deep_clone(self.settings.pl_mask_on_foe_combatant_whisper_mode_stand)
+	self.settings.pl_mask_on_foe_non_combatant_whisper_mode_stand.reaction = "REACT_COMBAT"
+	self.settings.pl_mask_on_foe_non_combatant_whisper_mode_stand.filter = "non_combatant"
+	self.settings.pl_mask_on_foe_combatant_whisper_mode_crouch = {
+		filter = "combatant",
 		notice_clbk = "clbk_attention_notice_sneak",
 		notice_delay_mul = 1,
 		notice_requires_FOV = true,
+		range_mul = 0.8,
 		reaction = "REACT_COMBAT",
-		release_delay = 1,
-		uncover_range = 300,
+		relation = "foe",
+		release_delay = 0.8,
+		uncover_range = 130,
 		verification_interval = 0.1,
 	}
-	self.settings.pl_mask_on_foe_combatant_whisper_mode_crouch = {
+	self.settings.pl_mask_on_foe_non_combatant_whisper_mode_crouch = deep_clone(self.settings.pl_mask_on_foe_combatant_whisper_mode_crouch)
+	self.settings.pl_mask_on_foe_non_combatant_whisper_mode_crouch.reaction = "REACT_COMBAT"
+	self.settings.pl_mask_on_foe_non_combatant_whisper_mode_crouch.filter = "non_combatant"
+	self.settings.pl_mask_on_foe_combatant_whisper_mode_run = {
 		filter = "combatant",
 		notice_clbk = "clbk_attention_notice_sneak",
 		notice_delay_mul = 0.75,
 		notice_requires_FOV = true,
-		range_mul = 1,
+		range_mul = 1.7,
 		reaction = "REACT_COMBAT",
 		relation = "foe",
-		release_delay = 1,
-		uncover_range = 100,
-		verification_interval = 0.1,
+		release_delay = 1.3,
+		uncover_range = 300,
+		verification_interval = 0.05,
 	}
-	self.settings.pl_mask_on_foe_non_combatant_whisper_mode_crouch = {
-		filter = "non_combatant",
-		notice_clbk = "clbk_attention_notice_sneak",
-		notice_delay_mul = 0.5,
-		notice_requires_FOV = true,
-		range_mul = 0.5,
-		reaction = "REACT_COMBAT",
-		release_delay = 1,
-		uncover_range = 150,
-		verification_interval = 0.1,
-	}
-	self.settings.pl_mask_on_foe_combatant_whisper_mode_run = {
-		filter = "combatant",
-		notice_clbk = "clbk_attention_notice_sneak",
-		notice_delay_mul = 1.75,
-		notice_requires_FOV = true,
-		range_mul = 1.25,
-		reaction = "REACT_COMBAT",
-		relation = "foe",
-		release_delay = 1,
-		uncover_range = 450,
-		verification_interval = 0.1,
-	}
-	self.settings.pl_mask_on_foe_non_combatant_whisper_mode_run = {
-		filter = "non_combatant",
-		notice_clbk = "clbk_attention_notice_sneak",
-		notice_delay_mul = 2,
-		notice_requires_FOV = true,
-		range_mul = 1.5,
-		reaction = "REACT_COMBAT",
-		release_delay = 1,
-		uncover_range = 450,
-		verification_interval = 0.1,
-	}
+	self.settings.pl_mask_on_foe_non_combatant_whisper_mode_run = deep_clone(self.settings.pl_mask_on_foe_combatant_whisper_mode_run)
+	self.settings.pl_mask_on_foe_non_combatant_whisper_mode_run.reaction = "REACT_COMBAT"
+	self.settings.pl_mask_on_foe_non_combatant_whisper_mode_run.filter = "non_combatant"
 	self.settings.pl_friend_combatant_cbt = {
 		filter = "combatant",
 		max_range = 3000,
@@ -346,7 +323,8 @@ function AttentionTweakData:_init_civilian()
 		notice_requires_FOV = true,
 		reaction = "REACT_SCARED",
 		release_delay = 6,
-		uncover_range = 1000,
+		suspicion_range = 1000,
+		uncover_range = 500,
 		verification_interval = 0.1,
 	}
 	self.settings.civ_civ_cbt = {
@@ -785,21 +763,24 @@ end
 function AttentionTweakData:_init_prop()
 	self.settings.prop_carry_bag = {
 		filter = "law_enforcer",
-		max_range = 1800,
+		max_range = 1500,
 		notice_requires_FOV = true,
 		reaction = "REACT_SCARED",
 		release_delay = 1,
+		suspicion_duration = 8,
 		suspicion_range = 800,
 		uncover_range = 200,
 		verification_interval = 0.4,
 	}
 	self.settings.prop_carry_bodybag = {
 		filter = "civilians_enemies",
-		max_range = 3000,
+		max_range = 3400,
 		notice_requires_FOV = true,
 		reaction = "REACT_AIM",
 		release_delay = 1,
-		uncover_range = 1000,
+		suspicion_duration = 8,
+		suspicion_range = 1600,
+		uncover_range = 350,
 		verification_interval = 0.1,
 	}
 	self.settings.prop_civ_ene_ntl = {
@@ -807,7 +788,7 @@ function AttentionTweakData:_init_prop()
 		notice_requires_FOV = true,
 		reaction = "REACT_AIM",
 		release_delay = 1,
-		uncover_range = 500,
+		uncover_range = 150,
 		verification_interval = 0.4,
 	}
 	self.settings.prop_ene_ntl_edaycrate = {
@@ -816,7 +797,7 @@ function AttentionTweakData:_init_prop()
 		notice_requires_FOV = true,
 		reaction = "REACT_AIM",
 		release_delay = 1,
-		uncover_range = 300,
+		uncover_range = 150,
 		verification_interval = 0.4,
 	}
 	self.settings.prop_ene_ntl = {
@@ -824,7 +805,7 @@ function AttentionTweakData:_init_prop()
 		notice_requires_FOV = true,
 		reaction = "REACT_AIM",
 		release_delay = 1,
-		uncover_range = 500,
+		uncover_range = 150,
 		verification_interval = 0.4,
 	}
 	self.settings.broken_cam_ene_ntl = {

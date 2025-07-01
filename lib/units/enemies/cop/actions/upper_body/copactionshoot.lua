@@ -957,6 +957,10 @@ function CopActionShoot:anim_clbk_melee_strike()
 
 	damage = damage * (is_weapon and 1 or self._common_data.char_tweak.melee_weapon_dmg_multiplier or 1)
 
+	if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ENEMIES_MELEE_DAMAGE_INCREASE) then
+		damage = damage * managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_ENEMIES_MELEE_DAMAGE_INCREASE)
+	end
+
 	local action_data = {
 		variant = "melee",
 		attacker_unit = self._common_data.unit,

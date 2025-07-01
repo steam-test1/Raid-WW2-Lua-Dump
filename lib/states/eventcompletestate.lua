@@ -230,6 +230,8 @@ function EventCompleteState:at_enter(old_state, params)
 
 	self._old_state = old_state
 
+	local total_killed = managers.statistics:session_total_killed()
+
 	if self.is_at_last_event then
 		local is_operation = self._current_job_data.job_type == OperationsTweakData.JOB_TYPE_OPERATION
 
@@ -371,7 +373,7 @@ function EventCompleteState:drop_loot_for_player()
 	local forced_loot_group
 
 	if self._active_challenge_card ~= nil and self._active_challenge_card.key_name ~= nil and self._active_challenge_card.key_name ~= "empty" then
-		forced_loot_group = self._active_challenge_card.loot_drop_group
+		forced_loot_group = managers.challenge_cards:get_loot_drop_group(self._active_challenge_card.key_name)
 	end
 
 	managers.lootdrop:give_loot_to_player(loot_percentage, false, forced_loot_group)
@@ -428,6 +430,10 @@ end
 
 function EventCompleteState:_play_debrief_video()
 	Application:trace("[EventCompleteState:_play_debrief_video()]")
+
+	if managers.network.voice_chat then
+		managers.network.voice_chat:trc_check_mute()
+	end
 
 	local full_panel = self._full_workspace:panel()
 	local params_root_panel = {
@@ -825,6 +831,11 @@ function EventCompleteState:at_exit(next_state)
 	Application:trace("[EventCompleteState:at_exit()]")
 	managers.briefing:stop_event(true)
 	self:_clear_controller()
+
+	if managers.network.voice_chat then
+		managers.network.voice_chat:trc_check_unmute()
+	end
+
 	managers.experience:clear_loot_redeemed_xp()
 	managers.loot:clear()
 	managers.greed:clear_cache()
@@ -860,7 +871,7 @@ function EventCompleteState:at_exit(next_state)
 	managers.system_event_listener:remove_listener("event_complete_state_loot_data_ready")
 	managers.lootdrop:remove_listener(LootScreenGui.EVENT_KEY_PEER_LOOT_RECEIVED)
 	managers.music:stop()
-	managers.music:post_event("music_camp", true)
+	managers.music:post_event(MusicManager.CAMP_MUSIC, true)
 	managers.menu_component:post_event("menu_volume_reset")
 	managers.dialog:set_paused(false)
 	Overlay:gui():destroy_workspace(self._full_workspace)
@@ -915,6 +926,10 @@ function EventCompleteState:_continue()
 		end
 
 		self._active_screen = EventCompleteState.SCREEN_ACTIVE_SPECIAL_HONORS
+
+		if managers.network.voice_chat then
+			managers.network.voice_chat:trc_check_unmute()
+		end
 
 		if managers.network:session():amount_of_players() == 1 then
 			self:_continue()

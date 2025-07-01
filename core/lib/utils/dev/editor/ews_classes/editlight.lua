@@ -247,8 +247,6 @@ function EditUnitLight:init(editor)
 		sorted = false,
 		tooltip = "Select an resolution from the combobox",
 		options = {
-			16,
-			32,
 			64,
 			128,
 			256,

@@ -80,6 +80,7 @@ function EventSystemManager:on_camp_entered()
 	Global.savefile_manager.setting_changed = true
 
 	managers.savefile:save_setting(true)
+	managers.gold_economy:layout_camp()
 end
 
 function EventSystemManager:consecutive_logins()
@@ -95,20 +96,38 @@ function EventSystemManager:_fire_daily_event()
 
 	Application:debug("[EventSystemManager:_fire_daily_event()] Award daily reward!", self._consecutive_logins)
 
-	local reward = tweak_data.events.active_duty_bonus_rewards[self._consecutive_logins].reward
+	local reward_data = tweak_data.events.active_duty_bonus_rewards[self._consecutive_logins]
+	local reward = reward_data.reward
+	local notification_params = {
+		duration = 6,
+		name = "active_duty_bonus",
+		notification_type = "active_duty_bonus",
+		priority = 4,
+		consecutive = self._consecutive_logins,
+		icon = reward_data.icon,
+		total = #tweak_data.events.active_duty_bonus_rewards,
+	}
 
 	if reward == EventsTweakData.REWERD_TYPE_GOLD then
 		managers.gold_economy:add_gold(tweak_data.events.active_duty_bonus_rewards[self._consecutive_logins].amount)
 
-		local notification_params = {
-			duration = 6,
-			id = "active_duty_bonus",
-			priority = 4,
-			amount = tweak_data.events.active_duty_bonus_rewards[self._consecutive_logins].amount,
-			consecutive = self._consecutive_logins,
-			notification_type = HUDNotification.ACTIVE_DUTY_BONUS,
-			total = #tweak_data.events.active_duty_bonus_rewards,
-		}
+		notification_params.amount = tweak_data.events.active_duty_bonus_rewards[self._consecutive_logins].amount
+
+		managers.notification:add_notification(notification_params)
+	elseif reward == EventsTweakData.REWERD_TYPE_OUTLAW then
+		if not managers.consumable_missions:is_all_missions_unlocked() then
+			local outlaw_id = tweak_data.operations:get_random_consumable_raid()
+
+			managers.consumable_missions:instant_unlock_mission(outlaw_id)
+
+			notification_params.notification_type = "active_duty_bonus_outlaw"
+		else
+			local amount = EventsTweakData.REWARD_TRADE_OUTLAW
+
+			notification_params.amount = amount
+
+			managers.gold_economy:add_gold(amount)
+		end
 
 		managers.notification:add_notification(notification_params)
 	else

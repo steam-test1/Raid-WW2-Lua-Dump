@@ -4,6 +4,7 @@ function AnimatedVehicleBase:init(unit)
 	AnimatedVehicleBase.super.init(self, unit, false)
 
 	self._unit = unit
+	self._animation_lod_range = self._animation_lod_range or 6400
 
 	if unit:anim_state_machine() then
 		self:_set_anim_lod(0)
@@ -49,11 +50,11 @@ function AnimatedVehicleBase:update(unit, t, dt)
 end
 
 function AnimatedVehicleBase:_set_anim_lod(dis)
-	if dis > 9000 then
+	if dis > self._animation_lod_range then
 		if self._lod_high then
 			self._lod_high = false
 		end
-	elseif dis < 8000 and not self._lod_high then
+	elseif dis < self._animation_lod_range - 1000 and not self._lod_high then
 		self._lod_high = true
 	end
 end
@@ -146,11 +147,15 @@ function AnimatedVehicleBase:spawn_module(module_unit_name, align_obj_name, modu
 
 	if type_name(module_unit_name) == "string" then
 		if Network:is_server() then
-			local spawn_pos = align_obj:position()
-			local spawn_rot = align_obj:rotation()
+			if not self._modules or not self._modules[module_id] then
+				local spawn_pos = align_obj:position()
+				local spawn_rot = align_obj:rotation()
 
-			module_unit = safe_spawn_unit(Idstring(module_unit_name), spawn_pos, spawn_rot)
-			module_unit:unit_data().parent_unit = self._unit
+				module_unit = safe_spawn_unit(Idstring(module_unit_name), spawn_pos, spawn_rot)
+				module_unit:unit_data().parent_unit = self._unit
+			else
+				Application:error("[AnimatedVehicleBase:spawn_module] Trying to spawn a module that has already been spawned! (This will cause memory leaks and units failing to despawn!)")
+			end
 		end
 	else
 		module_unit = module_unit_name

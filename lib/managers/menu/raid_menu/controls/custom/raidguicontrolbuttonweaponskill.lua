@@ -6,19 +6,24 @@ RaidGUIControlButtonWeaponSkill.STATE_ACTIVE = "state_active"
 RaidGUIControlButtonWeaponSkill.STATE_BLOCKED = "state_blocked"
 RaidGUIControlButtonWeaponSkill.STATE_UNAVAILABLE = "state_unavailable"
 RaidGUIControlButtonWeaponSkill.STATE_HOVER = "state_hover"
+RaidGUIControlButtonWeaponSkill.STATE_INVISIBLE = "state_invisible"
 RaidGUIControlButtonWeaponSkill.TIER_MARKER_X = 33
 RaidGUIControlButtonWeaponSkill.TIER_MARKER_Y = 46
 RaidGUIControlButtonWeaponSkill.ICON = "wpn_skill_blank"
+RaidGUIControlButtonWeaponSkill.ICON_SELECTED = "wpn_skill_selected"
+RaidGUIControlButtonWeaponSkill.ICON_UNKNOWN = "wpn_skill_unknown"
 RaidGUIControlButtonWeaponSkill.ICON_LOCKED = "wpn_skill_locked"
+RaidGUIControlButtonWeaponSkill.ICON_PART_APPEND = "_part"
 RaidGUIControlButtonWeaponSkill.ROMAN_NUMERALS = {
-	" I",
-	" II",
-	" III",
-	" IV",
+	"I",
+	"II",
+	"III",
+	"IV",
+	"V",
 }
 RaidGUIControlButtonWeaponSkill.SELECTOR_TRIANGLE_W = 16
 RaidGUIControlButtonWeaponSkill.SELECTOR_TRIANGLE_H = 16
-RaidGUIControlButtonWeaponSkill.SELECTOR_SIZE_EXTENSION = 10
+RaidGUIControlButtonWeaponSkill.SELECTOR_SIZE_EXTENSION = 12
 
 function RaidGUIControlButtonWeaponSkill:init(parent, params, tier_number, line_object, left_button)
 	self:_init_state_data()
@@ -79,16 +84,19 @@ function RaidGUIControlButtonWeaponSkill:_create_selector()
 	local selector_background_params = {
 		alpha = 0,
 		halign = "scale",
+		layer = -10,
 		name = "selector_background",
 		valign = "scale",
 		x = 0,
 		y = 0,
-		color = tweak_data.gui.colors.raid_select_card_background,
-		h = self._selector_panel:h(),
-		w = self._selector_panel:w(),
+		texture = tweak_data.gui.icons[RaidGUIControlButtonWeaponSkill.ICON_SELECTED].texture,
+		texture_rect = tweak_data.gui.icons[RaidGUIControlButtonWeaponSkill.ICON_SELECTED].texture_rect,
 	}
 
-	self._selector_rect = self._selector_panel:rect(selector_background_params)
+	self._selector_rect = self._selector_panel:image(selector_background_params)
+
+	self._selector_rect:set_center_x(self._object:w() / 2)
+	self._selector_rect:set_center_y(self._object:h() / 2)
 
 	local selector_triangle_up_params = {
 		alpha = 0,
@@ -155,10 +163,14 @@ function RaidGUIControlButtonWeaponSkill:set_skill(weapon_id, skill, skill_data,
 	end
 
 	local is_pending_challenge_active = (left_skill and left_skill.active or not left_skill) and skill.challenge_unlocked and not managers.challenge:get_challenge(ChallengeManager.CATEGORY_WEAPON_UPGRADE, skill.challenge_id):completed()
-	local icon = skill_data.icon or RaidGUIControlButtonWeaponSkill.ICON
+	local icon = skill_data.icon or RaidGUIControlButtonWeaponSkill.ICON_UNKNOWN
 
 	if not self._unlocked or left_skill and not left_skill.active then
 		icon = RaidGUIControlButtonWeaponSkill.ICON_LOCKED
+	end
+
+	if skill.weapon_parts and #skill.weapon_parts > 0 then
+		icon = icon .. RaidGUIControlButtonWeaponSkill.ICON_PART_APPEND
 	end
 
 	local texture = tweak_data.gui.icons[icon]
@@ -166,8 +178,28 @@ function RaidGUIControlButtonWeaponSkill:set_skill(weapon_id, skill, skill_data,
 	self._object_image:set_image(texture.texture)
 	self._object_image:set_texture_rect(unpack(texture.texture_rect))
 
+	local function gun_parts_invis()
+		if skill.weapon_parts then
+			for _, v in ipairs(skill.weapon_parts) do
+				if managers.weapon_skills:get_hide_cosmetic_part(skill.weapon_id, v) then
+					return true
+				end
+			end
+		end
+
+		return false
+	end
+
+	local invisible = false
+
 	if skill.active then
-		self:set_state(RaidGUIControlButtonWeaponSkill.STATE_ACTIVE)
+		if gun_parts_invis() then
+			invisible = true
+
+			self:set_state(RaidGUIControlButtonWeaponSkill.STATE_INVISIBLE)
+		else
+			self:set_state(RaidGUIControlButtonWeaponSkill.STATE_ACTIVE)
+		end
 	elseif self._unlocked and left_skill and (managers.challenge:get_challenge(ChallengeManager.CATEGORY_WEAPON_UPGRADE, left_skill.challenge_id):completed() == false or managers.challenge:get_challenge(ChallengeManager.CATEGORY_WEAPON_UPGRADE, left_skill.challenge_id):completed() == true and not left_skill.active) then
 		self:set_state(RaidGUIControlButtonWeaponSkill.STATE_BLOCKED)
 	elseif not self._unlocked or left_skill and not left_skill.active then
@@ -181,6 +213,7 @@ function RaidGUIControlButtonWeaponSkill:set_skill(weapon_id, skill, skill_data,
 	self._data = {
 		i_skill = i_skill,
 		i_tier = i_tier,
+		invisible = invisible,
 		value = skill,
 	}
 
@@ -234,6 +267,8 @@ function RaidGUIControlButtonWeaponSkill:unselect_skill()
 end
 
 function RaidGUIControlButtonWeaponSkill:set_state(state)
+	Application:trace("[RaidGUIControlButtonWeaponSkill:set_state] state ", state)
+
 	if not self._unlocked and state ~= RaidGUIControlButtonWeaponSkill.STATE_UNAVAILABLE then
 		return
 	end
@@ -261,8 +296,8 @@ function RaidGUIControlButtonWeaponSkill:_init_state_data()
 	self._state_data[RaidGUIControlButtonWeaponSkill.STATE_NORMAL] = {
 		show_selector_panel_alpha = 1,
 		show_selector_triangles_alpha = 0,
-		highlight_off = tweak_data.gui.colors.raid_white,
-		highlight_on = tweak_data.gui.colors.raid_white,
+		highlight_off = tweak_data.gui.colors.raid_light_gold,
+		highlight_on = tweak_data.gui.colors.raid_light_gold,
 	}
 	self._state_data[RaidGUIControlButtonWeaponSkill.STATE_CHALLENGE_ACTIVE] = {
 		show_selector_panel_alpha = 1,
@@ -273,20 +308,26 @@ function RaidGUIControlButtonWeaponSkill:_init_state_data()
 	self._state_data[RaidGUIControlButtonWeaponSkill.STATE_BLOCKED] = {
 		show_selector_panel_alpha = 1,
 		show_selector_triangles_alpha = 0,
-		highlight_off = tweak_data.gui.colors.raid_white,
-		highlight_on = tweak_data.gui.colors.raid_white,
+		highlight_off = tweak_data.gui.colors.raid_dark_grey,
+		highlight_on = tweak_data.gui.colors.raid_dark_grey,
 	}
 	self._state_data[RaidGUIControlButtonWeaponSkill.STATE_SELECTED] = {
 		show_selector_panel_alpha = 1,
 		show_selector_triangles_alpha = 1,
-		highlight_off = tweak_data.gui.colors.raid_white,
-		highlight_on = tweak_data.gui.colors.raid_white,
+		highlight_off = tweak_data.gui.colors.raid_red,
+		highlight_on = tweak_data.gui.colors.raid_red,
 	}
 	self._state_data[RaidGUIControlButtonWeaponSkill.STATE_ACTIVE] = {
 		show_selector_panel_alpha = 1,
 		show_selector_triangles_alpha = 0,
 		highlight_off = tweak_data.gui.colors.raid_red,
 		highlight_on = tweak_data.gui.colors.raid_red,
+	}
+	self._state_data[RaidGUIControlButtonWeaponSkill.STATE_INVISIBLE] = {
+		show_selector_panel_alpha = 1,
+		show_selector_triangles_alpha = 0,
+		highlight_off = tweak_data.gui.colors.raid_brown_red,
+		highlight_on = tweak_data.gui.colors.raid_brown_red,
 	}
 	self._state_data[RaidGUIControlButtonWeaponSkill.STATE_UNAVAILABLE] = {
 		show_selector_panel_alpha = 0,
@@ -304,12 +345,16 @@ function RaidGUIControlButtonWeaponSkill:get_data()
 	return self._data
 end
 
+function RaidGUIControlButtonWeaponSkill:is_invisible()
+	return self._data.invisible == true
+end
+
 function RaidGUIControlButtonWeaponSkill:highlight_on()
 	local color = self._state_data[self._state].highlight_on
 
 	self._object_image:set_color(color)
 
-	if self._line_object then
+	if self._line_object and not self:is_invisible() then
 		self._line_object:set_color(color)
 	end
 
@@ -322,7 +367,7 @@ function RaidGUIControlButtonWeaponSkill:highlight_off()
 
 	self._object_image:set_color(color)
 
-	if self._line_object then
+	if self._line_object and not self:is_invisible() then
 		self._line_object:set_color(color)
 	end
 
@@ -331,8 +376,10 @@ end
 
 function RaidGUIControlButtonWeaponSkill:show_hover_selector()
 	if self._selector_panel then
-		self._selector_panel:set_alpha(1)
-		self._selector_rect:set_alpha(1)
+		local alpha = self._unlocked and 0.75 or 0.4
+
+		self._selector_panel:set_alpha(alpha)
+		self._selector_rect:set_alpha(alpha)
 	end
 end
 
@@ -343,8 +390,25 @@ function RaidGUIControlButtonWeaponSkill:hide_hover_selector()
 end
 
 function RaidGUIControlButtonWeaponSkill:on_mouse_released(button)
-	if self._state == RaidGUIControlButtonWeaponSkill.STATE_ACTIVE and self._data.value.active then
-		return
+	if (self._state == RaidGUIControlButtonWeaponSkill.STATE_ACTIVE or self._state == RaidGUIControlButtonWeaponSkill.STATE_INVISIBLE) and self._data.value.active then
+		if self:is_invisible() then
+			self._data.invisible = false
+
+			self:set_state(RaidGUIControlButtonWeaponSkill.STATE_ACTIVE)
+			Application:trace("[RaidGUIControlWeaponSkillRow:set_weapon_skill] STATE_ACTIVE")
+		else
+			self._data.invisible = true
+
+			self:set_state(RaidGUIControlButtonWeaponSkill.STATE_INVISIBLE)
+			Application:trace("[RaidGUIControlWeaponSkillRow:set_weapon_skill] STATE_INVISIBLE")
+		end
+
+		if self._data.value and self._data.value.weapon_id and self._data.value.weapon_parts then
+			managers.weapon_skills:set_hide_cosmetic_parts(self._data.value.weapon_id, self._data.value.weapon_parts, self:is_invisible())
+		end
+
+		managers.menu_component:post_event("weapon_increase")
+		self._on_selected_weapon_skill_callback(self, self._data)
 	elseif self._state == RaidGUIControlButtonWeaponSkill.STATE_SELECTED then
 		self:set_state(RaidGUIControlButtonWeaponSkill.STATE_NORMAL)
 		managers.menu_component:post_event("weapon_upgrade_deselect")

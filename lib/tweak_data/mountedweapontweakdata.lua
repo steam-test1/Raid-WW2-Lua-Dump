@@ -18,16 +18,16 @@ function MountedWeaponTweakData:_init_data_sherman()
 	}
 	self.sherman.turret = {
 		armor_piercing = true,
-		damage = 20,
+		damage = 25,
 		damage_radius = 1000,
 		gun_locator = "anim_gun",
 		locator = "anim_turret",
-		player_damage = 10,
+		player_damage = 15,
 		range = 20000,
 		traverse_time = 10,
 	}
 	self.sherman.main_cannon_shell_speed = 60000
-	self.sherman.main_cannon_reload_speed = 5
+	self.sherman.main_cannon_reload_speed = 10
 end
 
 function MountedWeaponTweakData:_init_data_tiger()
@@ -42,16 +42,16 @@ function MountedWeaponTweakData:_init_data_tiger()
 	}
 	self.tiger.turret = {
 		armor_piercing = true,
-		damage = 50,
+		damage = 75,
 		damage_radius = 1000,
 		gun_locator = "anim_gun",
 		locator = "anim_turret",
-		player_damage = 10,
+		player_damage = 15,
 		range = 20000,
 		traverse_time = 10,
 	}
 	self.tiger.main_cannon_shell_speed = 60000
-	self.tiger.main_cannon_reload_speed = 5
+	self.tiger.main_cannon_reload_speed = 10
 end
 
 function MountedWeaponTweakData:_init_data_luchs()
@@ -66,14 +66,14 @@ function MountedWeaponTweakData:_init_data_luchs()
 	}
 	self.luchs.turret = {
 		armor_piercing = true,
-		damage = 20,
+		damage = 35,
 		damage_radius = 1000,
 		gun_locator = "anim_turret_pitch",
 		locator = "anim_turret_heading",
-		player_damage = 10,
+		player_damage = 15,
 		range = 20000,
 		traverse_time = 10,
 	}
 	self.luchs.main_cannon_shell_speed = 60000
-	self.luchs.main_cannon_reload_speed = 5
+	self.luchs.main_cannon_reload_speed = 8
 end

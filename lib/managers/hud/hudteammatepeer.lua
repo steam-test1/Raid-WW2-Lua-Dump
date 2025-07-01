@@ -36,6 +36,7 @@ HUDTeammatePeer.MOUNTED_WEAPON_ICON = "player_panel_status_mounted_weapon"
 HUDTeammatePeer.LOCKPICK_ICON = "player_panel_status_lockpick"
 HUDTeammatePeer.DEAD_ICON = "player_panel_status_dead_ai"
 HUDTeammatePeer.HOST_ICON = "player_panel_host_indicator"
+HUDTeammatePeer.DOWN_ICON = "player_panel_lives_indicator_"
 HUDTeammatePeer.STATES = {
 	{
 		control = "dead_icon",
@@ -79,6 +80,9 @@ HUDTeammatePeer.STATES = {
 		id = "normal",
 	},
 }
+HUDTeammatePeer.CHAT_ICON_SPEAKING = "voice_chat_talking_icon"
+HUDTeammatePeer.CHAT_ICON_MUTED = "voice_chat_muted_icon"
+HUDTeammatePeer.CHAT_PANEL_W = 30
 
 function HUDTeammatePeer:init(i, teammates_panel)
 	self._id = i
@@ -105,6 +109,7 @@ function HUDTeammatePeer:init(i, teammates_panel)
 	self:_create_player_level()
 	self:_create_player_health()
 	self:_create_equipment_panel()
+	self:_create_voice_chat_indicator()
 
 	self._status_icon = self._nationality_icon
 end
@@ -408,6 +413,63 @@ function HUDTeammatePeer:_create_host_indicator()
 	host_indicator:set_bottom(warcry_panel:y() + warcry_background:y() + warcry_background:h() - 4)
 end
 
+function HUDTeammatePeer:_create_voice_chat_indicator()
+	local voice_chat_panel_params = {
+		layer = 30,
+		name = " voice_chat_panel",
+		h = HUDTeammatePeer.CHAT_PANEL_W,
+		w = HUDTeammatePeer.CHAT_PANEL_W,
+	}
+
+	self._voice_chat_panel = self._right_panel:panel(voice_chat_panel_params)
+
+	local chat_indicator_params_speaking = {
+		alpha = 0,
+		name = "chat_indicator_speaking",
+		texture = tweak_data.gui.icons[HUDTeammatePeer.CHAT_ICON_SPEAKING].texture,
+		texture_rect = tweak_data.gui.icons[HUDTeammatePeer.CHAT_ICON_SPEAKING].texture_rect,
+	}
+
+	self._chat_indicator_speaking = self._voice_chat_panel:bitmap(chat_indicator_params_speaking)
+
+	local chat_indicator_params_muted = {
+		alpha = 0,
+		name = "chat_indicator_muted",
+		texture = tweak_data.gui.icons[HUDTeammatePeer.CHAT_ICON_MUTED].texture,
+		texture_rect = tweak_data.gui.icons[HUDTeammatePeer.CHAT_ICON_MUTED].texture_rect,
+	}
+
+	self._chat_indicator_muted = self._voice_chat_panel:bitmap(chat_indicator_params_muted)
+end
+
+function HUDTeammatePeer:show_chat_indicator(chat_indicator_name)
+	local chat_indicator
+
+	if chat_indicator_name == "chat_indicator_speaking" then
+		chat_indicator = self._chat_indicator_speaking
+	elseif chat_indicator_name == "chat_indicator_muted" then
+		chat_indicator = self._chat_indicator_muted
+	end
+
+	if chat_indicator then
+		chat_indicator:set_alpha(1)
+	end
+end
+
+function HUDTeammatePeer:hide_chat_indicator(chat_indicator_name)
+	local chat_indicator
+
+	if chat_indicator_name == "chat_indicator_speaking" then
+		chat_indicator = self._chat_indicator_speaking
+	elseif chat_indicator_name == "chat_indicator_muted" then
+		chat_indicator = self._chat_indicator_muted
+	end
+
+	if chat_indicator then
+		chat_indicator:set_alpha(0)
+	end
+end
+
 function HUDTeammatePeer:_create_right_panel()
 	local right_panel_params = {
 		name = "right_panel",
@@ -431,7 +493,7 @@ function HUDTeammatePeer:_create_player_name()
 		font = tweak_data.gui.fonts[HUDTeammatePeer.PLAYER_NAME_FONT],
 		font_size = HUDTeammatePeer.PLAYER_NAME_FONT_SIZE,
 		h = HUDTeammatePeer.PLAYER_NAME_H,
-		w = self._right_panel:w() - HUDTeammatePeer.PLAYER_LEVEL_W,
+		w = self._right_panel:w() - HUDTeammatePeer.PLAYER_LEVEL_W - HUDTeammatePeer.CHAT_PANEL_W,
 	}
 
 	self._player_name = self._right_panel:text(player_name_params)
@@ -616,6 +678,12 @@ end
 
 function HUDTeammatePeer:set_name(name)
 	self._player_name:set_text(utf8.to_upper(name))
+
+	local name_w = select(3, self._player_name:text_rect())
+	local chat_x = math.min(name_w, self._player_name:w())
+
+	self._voice_chat_panel:set_left(self._player_name:x() + chat_x)
+	self._voice_chat_panel:set_top(self._player_name:y())
 end
 
 function HUDTeammatePeer:set_nationality(nationality)

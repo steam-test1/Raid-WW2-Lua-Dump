@@ -214,7 +214,7 @@ function RaidGUIControlCardBase:init(parent, params, item_data, grid_params)
 		texture_rect = tweak_data.gui.icons.card_counter_bg_large.texture_rect,
 		w = tweak_data.gui.icons.card_counter_bg_large.texture_rect[3] * image_size_multiplier,
 		x = self._card_image:w() * 0.145,
-		y = self._card_image:h() * 0.84,
+		y = self._card_image:h() * 0.8,
 	})
 	self._card_amount_label = self._card_panel:label({
 		align = "center",
@@ -294,10 +294,6 @@ function RaidGUIControlCardBase:set_card(card_data)
 			self._card_title:hide()
 		end
 
-		if rarity_definition.color then
-			-- block empty
-		end
-
 		self._card_description:set_text(self:translate(self._item_data.description))
 		self._card_description:hide()
 
@@ -315,10 +311,6 @@ function RaidGUIControlCardBase:set_card(card_data)
 			self._xp_bonus:set_visible(false)
 		else
 			self._xp_bonus:set_visible(true)
-		end
-
-		if rarity_definition.color then
-			-- block empty
 		end
 
 		if self._item_data.key_name ~= ChallengeCardsManager.CARD_PASS_KEY_NAME then
