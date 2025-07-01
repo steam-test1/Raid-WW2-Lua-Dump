@@ -1196,7 +1196,7 @@ function NewRaycastWeaponBase:_update_horizontal_gun_kick(t, dt)
 		self._gun_kick.x.velocity = view_kick_center_speed / recenter_divisor * velocity_sign_neg
 	end
 
-	if math.abs(self._gun_kick.x.velocity * dt) < 0.5 and math.abs(self._gun_kick.x.delta) < 0.2 then
+	if math.abs(self._gun_kick.x.velocity * 0.016666666666666666) < 0.5 and math.abs(self._gun_kick.x.delta) - self._gun_kick.x.velocity * dt < 0.2 then
 		self._gun_kick.x.delta = 0
 		self._gun_kick.x.velocity = 0
 	end
@@ -1230,7 +1230,7 @@ function NewRaycastWeaponBase:_update_vertical_gun_kick(t, dt)
 		self._gun_kick.y.velocity = view_kick_center_speed / recenter_divisor * velocity_sign_neg
 	end
 
-	if math.abs(self._gun_kick.y.velocity * dt) < 0.5 and math.abs(self._gun_kick.y.delta) < 0.2 then
+	if math.abs(self._gun_kick.y.velocity * 0.016666666666666666) < 0.5 and math.abs(self._gun_kick.y.delta) - self._gun_kick.y.velocity * dt < 0.2 then
 		self._gun_kick.y.delta = 0
 		self._gun_kick.y.velocity = 0
 	end

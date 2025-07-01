@@ -500,7 +500,6 @@ function ReadyUpGui:_on_player_click_callback(control, params)
 
 		self._suggest_card_button:hide()
 		self._leave_lobby_button:hide()
-		self._ready_up_button:hide()
 	else
 		if self._is_host then
 			if not params.is_current_player then
@@ -515,7 +514,7 @@ function ReadyUpGui:_on_player_click_callback(control, params)
 				self._suggest_card_button:show()
 			end
 
-			if self._leave_lobby_button:enabled() then
+			if self._leave_lobby_button:enabled() and not managers.challenge_cards:did_everyone_locked_sugested_card() then
 				self._leave_lobby_button:show()
 			end
 
@@ -528,8 +527,16 @@ function ReadyUpGui:_on_player_click_callback(control, params)
 			self._local_player_selected = true
 		else
 			self._suggest_card_button:hide()
-			self._leave_lobby_button:hide()
-			self._ready_up_button:hide()
+
+			if self._leave_lobby_button:enabled() and not managers.challenge_cards:did_everyone_locked_sugested_card() then
+				self._leave_lobby_button:show()
+			end
+
+			self._ready_up_button:show()
+
+			if self._ready then
+				self._ready_up_button:disable()
+			end
 
 			self._local_player_selected = false
 		end
@@ -1005,46 +1012,44 @@ function ReadyUpGui:bind_controller_inputs(is_current_player, can_leave)
 	if self._is_host and not is_current_player and not self._is_single_player then
 		table.insert(bindings, {
 			callback = callback(self, self, "_on_kick_button"),
-			key = Idstring("menu_controller_face_left"),
+			key = Idstring("menu_controller_face_right"),
 		})
 		table.insert(controler_legend, "menu_legend_ready_up_kick")
 	end
 
-	if is_current_player then
-		if not self._ready and (managers.raid_job:selected_job() and managers.raid_job:selected_job().job_type == OperationsTweakData.JOB_TYPE_RAID and self._raid_card_count and self._raid_card_count > 0 or managers.raid_job:selected_job() and managers.raid_job:selected_job().job_type == OperationsTweakData.JOB_TYPE_OPERATION and self._operation_card_count and self._operation_card_count > 0) then
-			table.insert(bindings, {
-				callback = callback(self, self, "_on_select_card_button"),
-				key = Idstring("menu_controller_face_top"),
-			})
+	if not self._ready and is_current_player and (managers.raid_job:selected_job() and managers.raid_job:selected_job().job_type == OperationsTweakData.JOB_TYPE_RAID and self._raid_card_count and self._raid_card_count > 0 or managers.raid_job:selected_job() and managers.raid_job:selected_job().job_type == OperationsTweakData.JOB_TYPE_OPERATION and self._operation_card_count and self._operation_card_count > 0) then
+		table.insert(bindings, {
+			callback = callback(self, self, "_on_select_card_button"),
+			key = Idstring("menu_controller_face_top"),
+		})
 
-			if not self._continuing_mission then
-				if self._is_single_player then
-					table.insert(controler_legend, "menu_legend_ready_up_select_card")
-				else
-					table.insert(controler_legend, "menu_legend_ready_up_suggest_card")
-				end
-			end
-		end
-
-		if can_leave then
-			table.insert(bindings, {
-				callback = callback(self, self, "_on_leave_lobby_button"),
-				key = Idstring("menu_controller_face_left"),
-			})
-			table.insert(controler_legend, "menu_legend_ready_up_leave")
-		end
-
-		if not self._ready then
-			table.insert(bindings, {
-				callback = callback(self, self, "_on_ready_up_button"),
-				key = Idstring("menu_controller_face_bottom"),
-			})
-
+		if not self._continuing_mission then
 			if self._is_single_player then
-				table.insert(controler_legend, "menu_legend_ready_up_start")
+				table.insert(controler_legend, "menu_legend_ready_up_select_card")
 			else
-				table.insert(controler_legend, "menu_legend_ready_up_ready")
+				table.insert(controler_legend, "menu_legend_ready_up_suggest_card")
 			end
+		end
+	end
+
+	if can_leave then
+		table.insert(bindings, {
+			callback = callback(self, self, "_on_leave_lobby_button"),
+			key = Idstring("menu_controller_face_left"),
+		})
+		table.insert(controler_legend, "menu_legend_ready_up_leave")
+	end
+
+	if not self._ready then
+		table.insert(bindings, {
+			callback = callback(self, self, "_on_ready_up_button"),
+			key = Idstring("menu_controller_face_bottom"),
+		})
+
+		if self._is_single_player then
+			table.insert(controler_legend, "menu_legend_ready_up_start")
+		else
+			table.insert(controler_legend, "menu_legend_ready_up_ready")
 		end
 	end
 

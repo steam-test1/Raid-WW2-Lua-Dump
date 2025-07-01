@@ -319,6 +319,10 @@ function TeamAILogicIdle.on_alert(data, alert_data)
 end
 
 function TeamAILogicIdle.on_long_dis_interacted(data, other_unit)
+	if data.objective and data.objective.type == "revive" then
+		return
+	end
+
 	local objective_type, objective_action, interrupt
 
 	if other_unit:base().is_local_player then

@@ -650,16 +650,30 @@ function HUDManager:hud_chat()
 end
 
 function HUDManager:_create_hud_chat()
-	local hud = managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT)
+	local hud_ingame = managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT)
+	local hud_respawn = managers.hud:script(IngameWaitingForRespawnState.GUI_SPECTATOR)
 
 	if self._hud_chat_ingame then
 		self._hud_chat_ingame:remove()
 	end
 
-	self._hud_chat_ingame = HUDChat:new(self._saferect, hud.panel, true)
-	self._hud_chat = self._hud_chat_ingame
+	self._hud_chat_ingame = HUDChat:new(self._saferect, hud_ingame.panel, true)
 
-	self._hud_chat:set_bottom(hud.panel:h() - HUDManager.CHAT_DISTANCE_FROM_BOTTOM)
+	self._hud_chat_ingame:set_bottom(hud_ingame.panel:h() - HUDManager.CHAT_DISTANCE_FROM_BOTTOM)
+	self._hud_chat_ingame:hide()
+	self._hud_chat_ingame:unregister()
+
+	if self._hud_chat_respawn then
+		self._hud_chat_respawn:remove()
+	end
+
+	self._hud_chat_respawn = HUDChat:new(self._saferect, hud_respawn.panel, true)
+
+	self._hud_chat_respawn:set_bottom(hud_respawn.panel:h() - HUDManager.CHAT_DISTANCE_FROM_BOTTOM)
+	self._hud_chat_respawn:hide()
+	self._hud_chat_respawn:unregister()
+
+	self._hud_chat = self._hud_chat_ingame
 end
 
 function HUDManager:mark_cheater(peer_id)
@@ -1901,7 +1915,7 @@ function HUDManager:set_chat_skip_first(skip_first)
 end
 
 function HUDManager:set_chat_focus(focus)
-	if not self:alive(PlayerBase.INGAME_HUD_FULLSCREEN) then
+	if not self:alive(PlayerBase.INGAME_HUD_FULLSCREEN) and not self:alive(IngameWaitingForRespawnState.GUI_SPECTATOR) then
 		return
 	end
 

@@ -84,7 +84,7 @@ function ElementPlayerSpawner:_end_transition(client)
 
 	if not managers.worldcollection:check_all_peers_synced_last_world(CoreWorldCollection.STAGE_LOAD_FINISHED) or cnt > 0 or client and not managers.player:player_unit() then
 		Application:debug("[ElementPlayerSpawner:_end_transition()] Waiting...")
-		managers.queued_tasks:queue(nil, self._end_transition, self, nil, 0.5)
+		managers.queued_tasks:queue(nil, self._end_transition, self, client, 0.5)
 
 		return
 	end

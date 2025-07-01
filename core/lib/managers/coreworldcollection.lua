@@ -467,6 +467,22 @@ function CoreWorldCollection:_check_all_peers_synced(world_id, stage)
 end
 
 function CoreWorldCollection:complete_world_loading_stage(world_id, stage)
+	local params = {
+		stage = stage,
+		world_id = world_id,
+	}
+
+	if stage == CoreWorldCollection.STAGE_DESTROY then
+		managers.queued_tasks:queue(nil, self._do_complete_world_loading_stage, self, params, 3, nil)
+	else
+		self:_do_complete_world_loading_stage(params)
+	end
+end
+
+function CoreWorldCollection:_do_complete_world_loading_stage(params)
+	local world_id = params.world_id
+	local stage = params.stage
+
 	if not managers.network:session() then
 		return
 	end

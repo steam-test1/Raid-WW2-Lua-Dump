@@ -1249,7 +1249,7 @@ function HUDNotificationWeaponChallenge:_set_challenge(challenge_data)
 
 		count = tasks[1]:current_count()
 		target = tasks[1]:target()
-		min_range = tasks[1]:min_range()
+		min_range = math.round(tasks[1]:min_range() / 100)
 	end
 
 	local skill_tweak_data = tweak_data.weapon_skills.skills[challenge_data.skill_name]
