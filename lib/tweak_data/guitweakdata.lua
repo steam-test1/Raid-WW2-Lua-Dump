@@ -149,6 +149,7 @@ function GuiTweakData:_setup_fonts()
 	self.fonts = {}
 	self.fonts.din_compressed = "din_compressed"
 	self.fonts.lato = "lato"
+	self.fonts.noto = "noto"
 	self.font_sizes = {}
 	self.font_sizes.size_84 = 84
 	self.font_sizes.size_76 = 76
@@ -185,51 +186,64 @@ end
 
 function GuiTweakData:_setup_din_compressed_font_paths()
 	self.font_paths.din_compressed = {}
-	self.font_paths.din_compressed[18] = "ui/fonts/pf_din_text_comp_pro_medium_18"
-	self.font_paths.din_compressed[20] = "ui/fonts/pf_din_text_comp_pro_medium_20"
-	self.font_paths.din_compressed[22] = "ui/fonts/pf_din_text_comp_pro_medium_22"
-	self.font_paths.din_compressed[24] = "ui/fonts/pf_din_text_comp_pro_medium_24"
-	self.font_paths.din_compressed[26] = "ui/fonts/pf_din_text_comp_pro_medium_26"
+	self.font_paths.din_compressed[18] = "ui/fonts/pf_din_text_comp_pro_medium_18_mf"
+	self.font_paths.din_compressed[20] = "ui/fonts/pf_din_text_comp_pro_medium_20_mf"
+	self.font_paths.din_compressed[22] = "ui/fonts/pf_din_text_comp_pro_medium_22_mf"
+	self.font_paths.din_compressed[24] = "ui/fonts/pf_din_text_comp_pro_medium_24_mf"
+	self.font_paths.din_compressed[26] = "ui/fonts/pf_din_text_comp_pro_medium_26_mf"
 	self.font_paths.din_compressed[32] = "ui/fonts/pf_din_text_comp_pro_medium_32_mf"
-	self.font_paths.din_compressed[38] = "ui/fonts/pf_din_text_comp_pro_medium_38"
-	self.font_paths.din_compressed[42] = "ui/fonts/pf_din_text_comp_pro_medium_42"
-	self.font_paths.din_compressed[46] = "ui/fonts/pf_din_text_comp_pro_medium_46"
-	self.font_paths.din_compressed[52] = "ui/fonts/pf_din_text_comp_pro_medium_52"
-	self.font_paths.din_compressed[56] = "ui/fonts/pf_din_text_comp_pro_medium_56"
-	self.font_paths.din_compressed[66] = "ui/fonts/pf_din_text_comp_pro_medium_66"
-	self.font_paths.din_compressed[72] = "ui/fonts/pf_din_text_comp_pro_medium_72"
-	self.font_paths.din_compressed[76] = "ui/fonts/pf_din_text_comp_pro_medium_76"
-	self.font_paths.din_compressed[84] = "ui/fonts/pf_din_text_comp_pro_medium_84"
-	self.font_paths.din_compressed.default = "ui/fonts/pf_din_text_comp_pro_medium_84"
+	self.font_paths.din_compressed[38] = "ui/fonts/pf_din_text_comp_pro_medium_38_mf"
+	self.font_paths.din_compressed[42] = "ui/fonts/pf_din_text_comp_pro_medium_42_mf"
+	self.font_paths.din_compressed[46] = "ui/fonts/pf_din_text_comp_pro_medium_46_mf"
+	self.font_paths.din_compressed[52] = "ui/fonts/pf_din_text_comp_pro_medium_52_mf"
+	self.font_paths.din_compressed[56] = "ui/fonts/pf_din_text_comp_pro_medium_56_mf"
+	self.font_paths.din_compressed[66] = "ui/fonts/pf_din_text_comp_pro_medium_66_mf"
+	self.font_paths.din_compressed[72] = "ui/fonts/pf_din_text_comp_pro_medium_72_mf"
+	self.font_paths.din_compressed[76] = "ui/fonts/pf_din_text_comp_pro_medium_76_mf"
+	self.font_paths.din_compressed[84] = "ui/fonts/pf_din_text_comp_pro_medium_84_mf"
+	self.font_paths.din_compressed.default = "ui/fonts/pf_din_text_comp_pro_medium_84_mf"
 end
 
 function GuiTweakData:_setup_din_compressed_outlined_fonts()
-	self.fonts.din_compressed_outlined_18 = "ui/fonts/pf_din_text_comp_pro_medium_outlined_18"
+	self.fonts.din_compressed_outlined_18 = "ui/fonts/pf_din_text_comp_pro_medium_outlined_18_mf"
 	self.fonts.din_compressed_outlined_20 = "ui/fonts/pf_din_text_comp_pro_medium_outlined_20_mf"
-	self.fonts.din_compressed_outlined_22 = "ui/fonts/pf_din_text_comp_pro_medium_outlined_22"
+	self.fonts.din_compressed_outlined_22 = "ui/fonts/pf_din_text_comp_pro_medium_outlined_22_mf"
 	self.fonts.din_compressed_outlined_24 = "ui/fonts/pf_din_text_comp_pro_medium_outlined_24_mf"
-	self.fonts.din_compressed_outlined_26 = "ui/fonts/pf_din_text_comp_pro_medium_outlined_26"
-	self.fonts.din_compressed_outlined_32 = "ui/fonts/pf_din_text_comp_pro_medium_outlined_32"
-	self.fonts.din_compressed_outlined_38 = "ui/fonts/pf_din_text_comp_pro_medium_outlined_38"
-	self.fonts.din_compressed_outlined_42 = "ui/fonts/pf_din_text_comp_pro_medium_outlined_42"
+	self.fonts.din_compressed_outlined_26 = "ui/fonts/pf_din_text_comp_pro_medium_outlined_26_mf"
+	self.fonts.din_compressed_outlined_32 = "ui/fonts/pf_din_text_comp_pro_medium_outlined_32_mf"
+	self.fonts.din_compressed_outlined_38 = "ui/fonts/pf_din_text_comp_pro_medium_outlined_38_mf"
+	self.fonts.din_compressed_outlined_42 = "ui/fonts/pf_din_text_comp_pro_medium_outlined_42_mf"
 end
 
 function GuiTweakData:_setup_lato_outlined_fonts()
-	self.fonts.lato_outlined_18 = "ui/fonts/lato_regular_outlined_18"
-	self.fonts.lato_outlined_20 = "ui/fonts/lato_regular_outlined_20"
+	self.fonts.lato_outlined_18 = "ui/fonts/lato_regular_outlined_18_mf"
+	self.fonts.lato_outlined_20 = "ui/fonts/lato_regular_outlined_20_mf"
 end
 
 function GuiTweakData:_setup_lato_font_paths()
 	self.font_paths.lato = {}
-	self.font_paths.lato[18] = "ui/fonts/lato_regular_18"
-	self.font_paths.lato[20] = "ui/fonts/lato_regular_20"
-	self.font_paths.lato[22] = "ui/fonts/lato_regular_22"
-	self.font_paths.lato[24] = "ui/fonts/lato_regular_24"
-	self.font_paths.lato[26] = "ui/fonts/lato_regular_26"
-	self.font_paths.lato[32] = "ui/fonts/lato_regular_32"
-	self.font_paths.lato[38] = "ui/fonts/lato_regular_38"
-	self.font_paths.lato[42] = "ui/fonts/lato_regular_42"
-	self.font_paths.lato.default = "ui/fonts/lato_regular_42"
+	self.font_paths.lato[18] = "ui/fonts/lato_regular_18_mf"
+	self.font_paths.lato[20] = "ui/fonts/lato_regular_20_mf"
+	self.font_paths.lato[22] = "ui/fonts/lato_regular_22_mf"
+	self.font_paths.lato[24] = "ui/fonts/lato_regular_24_mf"
+	self.font_paths.lato[26] = "ui/fonts/lato_regular_26_mf"
+	self.font_paths.lato[32] = "ui/fonts/lato_regular_32_mf"
+	self.font_paths.lato[38] = "ui/fonts/lato_regular_38_mf"
+	self.font_paths.lato[42] = "ui/fonts/lato_regular_42_mf"
+	self.font_paths.lato.default = "ui/fonts/lato_regular_42_mf"
+end
+
+function GuiTweakData:_setup_noto_fonts()
+	self.fonts.noto = {}
+	self.fonts.noto[18] = "ui/fonts/noto_18"
+	self.fonts.noto[20] = "ui/fonts/noto_20"
+	self.fonts.noto[22] = "ui/fonts/noto_22"
+	self.fonts.noto[24] = "ui/fonts/noto_24"
+	self.fonts.noto[26] = "ui/fonts/noto_26"
+	self.fonts.noto[32] = "ui/fonts/noto_32"
+	self.fonts.noto[38] = "ui/fonts/noto_38"
+	self.fonts.noto[42] = "ui/fonts/noto_42"
+	self.fonts.noto.default = "ui/fonts/noto_42"
 end
 
 function GuiTweakData:get_font_path(font, font_size)
@@ -3810,6 +3824,14 @@ function GuiTweakData:_setup_hud_icons()
 		839,
 		1723,
 		136,
+		42,
+	}
+	self.icons.weapons_panel_gre_concrete = {}
+	self.icons.weapons_panel_gre_concrete.texture = "ui/hud/atlas/raid_atlas"
+	self.icons.weapons_panel_gre_concrete.texture_rect = {
+		769,
+		1579,
+		102,
 		42,
 	}
 	self.icons.weapons_panel_pis_webley = {}

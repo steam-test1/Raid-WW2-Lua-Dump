@@ -832,12 +832,12 @@ function UpgradesTweakData:_create_weapon_definitions()
 
 	self:_create_definition_levels("player_weapon_tier_unlocked", "feature", "weapon_tier_unlocked", "player", false, self.values.player.weapon_tier_unlocked)
 
-	self.values.player.m24_quantity = {
+	self.values.player.grenade_quantity = {
 		1,
 		2,
 	}
 
-	self:_create_definition_levels("player_m24_quantity", "feature", "m24_quantity", "player", false, self.values.player.m24_quantity, self.description_data_types.raw_value_amount)
+	self:_create_definition_levels("player_grenade_quantity", "feature", "grenade_quantity", "player", false, self.values.player.grenade_quantity, self.description_data_types.raw_value_amount)
 
 	self.values.player.turret_m2_overheat_reduction = {
 		0.83,
@@ -997,6 +997,9 @@ end
 
 function UpgradesTweakData:_create_grenades_definitions()
 	self.definitions.m24 = {
+		category = "grenade",
+	}
+	self.definitions.concrete = {
 		category = "grenade",
 	}
 end

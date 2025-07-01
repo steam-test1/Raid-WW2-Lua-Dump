@@ -3039,7 +3039,7 @@ end
 function PlayerManager:get_max_grenades(grenade_id)
 	grenade_id = grenade_id or managers.blackmarket:equipped_grenade()
 
-	local upgrade_amount = self:upgrade_value("player", grenade_id .. "_quantity", 0)
+	local upgrade_amount = self:upgrade_value("player", "grenade_quantity", 0)
 
 	return tweak_data.projectiles[grenade_id] and (tweak_data.projectiles[grenade_id].max_amount or 0) + upgrade_amount
 end

@@ -1633,6 +1633,18 @@ function FPCameraPlayerBase:anims_enabled()
 	return self._anims_enabled
 end
 
+function FPCameraPlayerBase:anim_clbk_hide_pin(unit)
+	if alive(self._parent_unit) and alive(self._parent_unit:inventory():equipped_unit()) and self._parent_unit:inventory():equipped_unit():damage() and self._parent_unit:inventory():equipped_unit():damage():has_sequence("hide_pin") then
+		self._parent_unit:inventory():equipped_unit():damage():run_sequence_simple("hide_pin")
+	end
+end
+
+function FPCameraPlayerBase:anim_clbk_show_pin(unit)
+	if alive(self._parent_unit) and alive(self._parent_unit:inventory():equipped_unit()) and self._parent_unit:inventory():equipped_unit():damage() and self._parent_unit:inventory():equipped_unit():damage():has_sequence("show_pin") then
+		self._parent_unit:inventory():equipped_unit():damage():run_sequence_simple("show_pin")
+	end
+end
+
 function FPCameraPlayerBase:play_sound(unit, event)
 	if alive(self._parent_unit) then
 		self._parent_unit:sound():play(event)

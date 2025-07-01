@@ -1273,7 +1273,7 @@ function WeaponSelectionGui:_show_unit(weapon_id)
 		unit_path = weapon_tweak_data.unit
 	elseif self._selected_weapon_category_id == WeaponInventoryManager.BM_CATEGORY_GRENADES_ID then
 		weapon_tweak_data = tweak_data.projectiles[weapon_id]
-		unit_path = weapon_tweak_data.unit_dummy
+		unit_path = weapon_tweak_data.unit_hand
 	end
 
 	if not unit_path then

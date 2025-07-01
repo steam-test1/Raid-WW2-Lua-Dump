@@ -3343,14 +3343,11 @@ function BlackMarketManager:load(data)
 		self._global.grenades[self._defaults.grenade].equipped = false
 	end
 
-	if self._global.grenades[self._global.equipped_grenade] then
-		self._global.grenades[self._global.equipped_grenade].equipped = true
-	else
-		self._global.grenades[self._defaults.grenade].equipped = true
-	end
+	local equipped_grenade_id = self._global.equipped_grenade or self._defaults.grenade
 
 	for grenade, data in pairs(self._global.grenades) do
 		self._global.grenades[grenade].skill_based = false
+		self._global.grenades[grenade].equipped = grenade == equipped_grenade_id
 	end
 
 	self._global.equipped_grenade = nil

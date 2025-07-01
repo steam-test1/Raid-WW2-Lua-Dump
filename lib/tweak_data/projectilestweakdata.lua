@@ -21,6 +21,7 @@ function ProjectilesTweakData:init(tweak_data)
 	self.m24.init_timer = 4.5
 	self.m24.animations = {}
 	self.m24.animations.equip_id = "equip_welrod"
+	self.m24.sound_event = "grenade_explode"
 	self.m24.gui = {}
 	self.m24.gui.rotation_offset = 3
 	self.m24.gui.distance_offset = -80
@@ -28,8 +29,37 @@ function ProjectilesTweakData:init(tweak_data)
 	self.m24.gui.display_offset = 10
 	self.m24.gui.initial_rotation = {}
 	self.m24.gui.initial_rotation.yaw = -90
-	self.m24.gui.initial_rotation.pitch = -30
+	self.m24.gui.initial_rotation.pitch = 60
 	self.m24.gui.initial_rotation.roll = 0
+	self.concrete = {}
+	self.concrete.name_id = "bm_grenade_concrete"
+	self.concrete.unit = "units/upd_001/weapons/wpn_fps_gre_concrete/wpn_fps_gre_concrete"
+	self.concrete.unit_hand = "units/upd_001/weapons/wpn_fps_gre_concrete/wpn_fps_gre_concrete_hand"
+	self.concrete.unit_dummy = "units/upd_001/weapons/wpn_fps_gre_concrete/wpn_fps_gre_concrete_husk"
+	self.concrete.icon = "frag_grenade"
+	self.concrete.throwable = true
+	self.concrete.max_amount = 3
+	self.concrete.anim_global_param = "projectile_frag"
+	self.concrete.throw_allowed_expire_t = 0.1
+	self.concrete.expire_t = 1.1
+	self.concrete.repeat_expire_t = 1.5
+	self.concrete.is_a_grenade = true
+	self.concrete.damage = 600
+	self.concrete.player_damage = 10
+	self.concrete.range = 7500
+	self.concrete.init_timer = 4.5
+	self.concrete.animations = {}
+	self.concrete.animations.equip_id = "equip_welrod"
+	self.concrete.sound_event = "new_grenade_explode"
+	self.concrete.gui = {}
+	self.concrete.gui.rotation_offset = 3
+	self.concrete.gui.distance_offset = -80
+	self.concrete.gui.height_offset = -14
+	self.concrete.gui.display_offset = 10
+	self.concrete.gui.initial_rotation = {}
+	self.concrete.gui.initial_rotation.yaw = -90
+	self.concrete.gui.initial_rotation.pitch = 60
+	self.concrete.gui.initial_rotation.roll = 0
 	self.cluster = {}
 	self.cluster.name_id = "bm_grenade_frag"
 	self.cluster.unit = "units/vanilla/dev/dev_shrapnel/dev_shrapnel"
@@ -129,6 +159,7 @@ function ProjectilesTweakData:init(tweak_data)
 		"molotov",
 		"mortar_shell",
 		"flamer_death_fake",
+		"concrete",
 	}
 
 	self:_add_desc_from_name_macro(self)

@@ -361,7 +361,7 @@ function WeaponInventoryManager:get_owned_grenades()
 		for index, weapon_data in pairs(tweak_data.weapon_inventory.weapon_grenades_index) do
 			local weapon_stats = tweak_data.projectiles[weapon_data.weapon_id]
 
-			weapon_data.unlocked = true
+			weapon_data.unlocked = weapon_data.default or managers.upgrades:aquired(weapon_data.weapon_id)
 
 			if weapon_stats then
 				table.insert(result, weapon_data)

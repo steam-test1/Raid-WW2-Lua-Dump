@@ -2874,6 +2874,18 @@ function SkillTreeTweakData:_init_skill_list()
 			"geco",
 		},
 	}
+	self.skills.weapon_unlock_grenade_concrete = {
+		desc_id = "skill_weapon_unlock_grenade_concrete_desc",
+		name_id = "skill_weapon_unlock_grenade_concrete_name",
+		acquires = {},
+		icon_xy = {
+			1,
+			1,
+		},
+		upgrades = {
+			"concrete",
+		},
+	}
 	self.skills.pistol_damage_multiplier_1 = {
 		desc_id = "skill_pistol_damage_multiplier_desc",
 		icon = "skills_dealing_damage_pistol_multiplier",
@@ -3141,7 +3153,7 @@ function SkillTreeTweakData:_init_skill_list()
 			1,
 		},
 		upgrades = {
-			"player_m24_quantity_1",
+			"player_grenade_quantity_1",
 		},
 	}
 	self.skills.grenade_quantity_2 = {
@@ -3156,7 +3168,7 @@ function SkillTreeTweakData:_init_skill_list()
 			1,
 		},
 		upgrades = {
-			"player_m24_quantity_2",
+			"player_grenade_quantity_2",
 		},
 	}
 	self.skills.turret_reduced_overheat_1 = {
@@ -5187,6 +5199,11 @@ function SkillTreeTweakData:_init_recon_unlock_progression()
 			"weapon_unlock_sten",
 		},
 	}
+	self.automatic_unlock_progressions.recon[8] = {
+		weapons = {
+			"weapon_unlock_grenade_concrete",
+		},
+	}
 	self.automatic_unlock_progressions.recon[13] = {
 		weapons = {
 			"weapon_unlock_garand",
@@ -5256,6 +5273,11 @@ function SkillTreeTweakData:_init_assault_unlock_progression()
 	self.automatic_unlock_progressions.assault[3] = {
 		weapons = {
 			"weapon_unlock_bar",
+		},
+	}
+	self.automatic_unlock_progressions.assault[8] = {
+		weapons = {
+			"weapon_unlock_grenade_concrete",
 		},
 	}
 	self.automatic_unlock_progressions.assault[10] = {
@@ -5333,6 +5355,11 @@ function SkillTreeTweakData:_init_infiltrator_unlock_progression()
 			"weapon_unlock_carbine",
 		},
 	}
+	self.automatic_unlock_progressions.infiltrator[7] = {
+		weapons = {
+			"weapon_unlock_grenade_concrete",
+		},
+	}
 	self.automatic_unlock_progressions.infiltrator[10] = {
 		weapons = {
 			"weapon_unlock_thompson",
@@ -5404,6 +5431,11 @@ function SkillTreeTweakData:_init_demolitions_unlock_progression()
 	self.automatic_unlock_progressions.demolitions[3] = {
 		weapons = {
 			"weapon_unlock_carbine",
+		},
+	}
+	self.automatic_unlock_progressions.demolitions[6] = {
+		weapons = {
+			"weapon_unlock_grenade_concrete",
 		},
 	}
 	self.automatic_unlock_progressions.demolitions[10] = {
