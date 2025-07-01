@@ -943,7 +943,9 @@ function WeaponSkillsManager:recreate_weapon_blueprint(weapon_id, weapon_categor
 
 		if use_cosmetics_flag then
 			for weapon_part_type, weapon_part_name in pairs(self._temp_weapon_skills) do
-				managers.weapon_factory:change_part_blueprint_only(weapon_factory_id, weapon_part_name, new_blueprint, false)
+				if weapon_part_type ~= "scope" then
+					managers.weapon_factory:change_part_blueprint_only(weapon_factory_id, weapon_part_name, new_blueprint, false)
+				end
 			end
 		end
 	end

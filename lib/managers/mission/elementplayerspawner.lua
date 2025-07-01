@@ -122,7 +122,10 @@ function ElementPlayerSpawner:_first_login_check()
 		managers.worldcollection.first_login_check = false
 
 		managers.raid_menu:first_login_check()
-		managers.event_system:on_camp_entered()
+
+		if not managers.raid_menu:is_offline_mode() then
+			managers.event_system:on_camp_entered()
+		end
 	end
 end
 
