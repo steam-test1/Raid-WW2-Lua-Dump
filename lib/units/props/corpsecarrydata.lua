@@ -2,6 +2,10 @@ CorpseCarryData = CorpseCarryData or class(CarryData)
 
 function CorpseCarryData:init(...)
 	CorpseCarryData.super.init(self, ...)
+
+	if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ATTACK_ONLY_IN_AIR) and self._unit:damage() and self._unit:damage():has_sequence("halloween_2017") then
+		self._unit:damage():run_sequence_simple("halloween_2017")
+	end
 end
 
 function CorpseCarryData:on_thrown()

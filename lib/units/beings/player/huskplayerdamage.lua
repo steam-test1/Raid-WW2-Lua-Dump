@@ -5,6 +5,15 @@ function HuskPlayerDamage:init(unit)
 	self._spine2_obj = unit:get_object(Idstring("Spine2"))
 	self._listener_holder = EventListenerHolder:new()
 	self._mission_damage_blockers = {}
+	self._health_ratio = 1
+end
+
+function HuskPlayerDamage:set_health_ratio(value)
+	self._health_ratio = value
+end
+
+function HuskPlayerDamage:health_ratio()
+	return self._health_ratio
 end
 
 function HuskPlayerDamage:_call_listeners(damage_info)

@@ -24,6 +24,8 @@ function DropLootManager:_choose_item(current_level_table, level, multiplier)
 			drop_rate = drop_rate * managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_CHANCE_HEALTH)
 		elseif managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_CHANCE_AMMO) and u_key == "ammo" then
 			drop_rate = drop_rate * managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_CHANCE_AMMO)
+		elseif managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ONLY_MELEE_AVAILABLE) and (u_key == "ammo" or u_key == "grenade") then
+			drop_rate = 0
 		end
 
 		chance_interval.upper = chance_interval.upper + drop_rate

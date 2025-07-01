@@ -132,28 +132,30 @@ function RaidGUIControlCardSuggestedLarge:set_card(card_data)
 		})
 	end
 
-	local title_h = self._card_image:h() * RaidGUIControlCardBase.TITLE_H
-	local title_font_size = tweak_data.gui.font_sizes.medium
+	if not self._item_data.title_in_texture then
+		local title_h = self._card_image:h() * RaidGUIControlCardBase.TITLE_H
+		local title_font_size = tweak_data.gui.font_sizes.medium
 
-	self._card_title = self._challenge_card_panel:label({
-		align = "center",
-		vertical = "center",
-		wrap = true,
-		font = tweak_data.gui.fonts.din_compressed,
-		font_size = title_font_size,
-		h = title_h,
-		layer = self._card_image:layer() + 1,
-		name = "suggested_card_title_" .. self._name,
-		text = self:translate(self._item_data.name, true),
-		w = self._card_image:w() * (1 - 2 * RaidGUIControlCardBase.TITLE_PADDING),
-		x = self._card_image:x() + self._card_image:w() * RaidGUIControlCardBase.TITLE_PADDING,
-		y = self._card_image:y() + self._card_image:h() * RaidGUIControlCardBase.TITLE_Y,
-	})
+		self._card_title = self._challenge_card_panel:label({
+			align = "center",
+			vertical = "center",
+			wrap = true,
+			font = tweak_data.gui.fonts.din_compressed,
+			font_size = title_font_size,
+			h = title_h,
+			layer = self._card_image:layer() + 1,
+			name = "suggested_card_title_" .. self._name,
+			text = self:translate(self._item_data.name, true),
+			w = self._card_image:w() * (1 - 2 * RaidGUIControlCardBase.TITLE_PADDING),
+			x = self._card_image:x() + self._card_image:w() * RaidGUIControlCardBase.TITLE_PADDING,
+			y = self._card_image:y() + self._card_image:h() * RaidGUIControlCardBase.TITLE_Y,
+		})
 
-	local _, _, w, h = self._card_title:text_rect()
+		local _, _, w, h = self._card_title:text_rect()
 
-	if title_h < h then
-		self:_refit_card_title_text(title_font_size)
+		if title_h < h then
+			self:_refit_card_title_text(title_font_size)
+		end
 	end
 
 	local params_xp_bonus = {

@@ -1670,6 +1670,10 @@ function HUDManager:set_custody_can_be_trade_visible(visible)
 	self._hud_player_custody:set_can_be_trade_visible(visible)
 end
 
+function HUDManager:set_custody_pumpkin_challenge()
+	self._hud_player_custody:set_pumpkin_challenge()
+end
+
 function HUDManager:align_teammate_name_label(panel, interact, double_radius)
 	local text = panel:child("text")
 	local action = panel:child("action")

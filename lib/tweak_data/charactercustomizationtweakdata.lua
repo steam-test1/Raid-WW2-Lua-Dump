@@ -1250,6 +1250,122 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.british_highlander_jacket_lower.rarity = LootDropTweakData.RARITY_RARE
 	self.customizations.british_highlander_jacket_lower.dlc = DLCTweakData.DLC_NAME_PREORDER
 	self.customizations.british_highlander_jacket_lower.dlc_show_if_locked = false
+	self.customizations.british_ace_jacket_001_upper = {}
+	self.customizations.british_ace_jacket_001_upper.name = "character_customization_british_ace_jacket_001_upper_name"
+	self.customizations.british_ace_jacket_001_upper.description = "character_customization_british_ace_jacket_001_upper_desc"
+	self.customizations.british_ace_jacket_001_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.british_ace_jacket_001_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_BRITISH,
+	}
+	self.customizations.british_ace_jacket_001_upper.path = "units/vanilla/characters/players/british/upper/ace_jacket/player_criminal_british_ace_jacket_upper"
+	self.customizations.british_ace_jacket_001_upper.path_icon = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_upper_hud"
+	self.customizations.british_ace_jacket_001_upper.path_icon_large = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_large_upper_hud"
+	self.customizations.british_ace_jacket_001_upper.path_fps_hands = "units/vanilla/characters/players/generic/ace_jacket/player_generic_ace_jacket_fp"
+	self.customizations.british_ace_jacket_001_upper.redeem_xp = 0
+	self.customizations.british_ace_jacket_001_upper.rarity = LootDropTweakData.RARITY_HALLOWEEN_2017
+	self.customizations.british_ace_jacket_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
+	self.customizations.british_ace_jacket_001_upper.droppable = true
+	self.customizations.british_ace_jacket_001_lower = {}
+	self.customizations.british_ace_jacket_001_lower.name = "character_customization_british_ace_jacket_001_lower_name"
+	self.customizations.british_ace_jacket_001_lower.description = "character_customization_british_ace_jacket_001_lower_desc"
+	self.customizations.british_ace_jacket_001_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.british_ace_jacket_001_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_BRITISH,
+	}
+	self.customizations.british_ace_jacket_001_lower.path_long = "units/vanilla/characters/players/british/lower/ace_jacket/player_british_ace_jacket_lower"
+	self.customizations.british_ace_jacket_001_lower.path_short = "units/vanilla/characters/players/british/lower/ace_jacket/player_british_ace_jacket_lower_short"
+	self.customizations.british_ace_jacket_001_lower.path_icon = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_lower_hud"
+	self.customizations.british_ace_jacket_001_lower.path_icon_large = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_large_lower_hud"
+	self.customizations.british_ace_jacket_001_lower.redeem_xp = 0
+	self.customizations.british_ace_jacket_001_lower.rarity = LootDropTweakData.RARITY_HALLOWEEN_2017
+	self.customizations.british_ace_jacket_001_lower.droppable = true
+	self.customizations.german_ace_jacket_001_upper = {}
+	self.customizations.german_ace_jacket_001_upper.name = "character_customization_german_ace_jacket_001_upper_name"
+	self.customizations.german_ace_jacket_001_upper.description = "character_customization_german_ace_jacket_001_upper_desc"
+	self.customizations.german_ace_jacket_001_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.german_ace_jacket_001_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_GERMAN,
+	}
+	self.customizations.german_ace_jacket_001_upper.path = "units/vanilla/characters/players/german/upper/ace_jacket/player_criminal_german_ace_jacket_upper"
+	self.customizations.german_ace_jacket_001_upper.path_icon = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_upper_hud"
+	self.customizations.german_ace_jacket_001_upper.path_icon_large = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_large_upper_hud"
+	self.customizations.german_ace_jacket_001_upper.path_fps_hands = "units/vanilla/characters/players/generic/ace_jacket/player_generic_ace_jacket_fp"
+	self.customizations.german_ace_jacket_001_upper.redeem_xp = 0
+	self.customizations.german_ace_jacket_001_upper.rarity = LootDropTweakData.RARITY_HALLOWEEN_2017
+	self.customizations.german_ace_jacket_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
+	self.customizations.german_ace_jacket_001_upper.droppable = true
+	self.customizations.german_ace_jacket_001_lower = {}
+	self.customizations.german_ace_jacket_001_lower.name = "character_customization_german_ace_jacket_001_lower_name"
+	self.customizations.german_ace_jacket_001_lower.description = "character_customization_german_ace_jacket_001_lower_desc"
+	self.customizations.german_ace_jacket_001_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.german_ace_jacket_001_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_GERMAN,
+	}
+	self.customizations.german_ace_jacket_001_lower.path_long = "units/vanilla/characters/players/german/lower/ace_jacket/player_german_ace_jacket_lower"
+	self.customizations.german_ace_jacket_001_lower.path_short = "units/vanilla/characters/players/german/lower/ace_jacket/player_german_ace_jacket_lower_short"
+	self.customizations.german_ace_jacket_001_lower.path_icon = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_lower_hud"
+	self.customizations.german_ace_jacket_001_lower.path_icon_large = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_large_lower_hud"
+	self.customizations.german_ace_jacket_001_lower.redeem_xp = 0
+	self.customizations.german_ace_jacket_001_lower.rarity = LootDropTweakData.RARITY_HALLOWEEN_2017
+	self.customizations.german_ace_jacket_001_lower.droppable = true
+	self.customizations.russian_ace_jacket_001_upper = {}
+	self.customizations.russian_ace_jacket_001_upper.name = "character_customization_soviet_ace_jacket_001_upper_name"
+	self.customizations.russian_ace_jacket_001_upper.description = "character_customization_soviet_ace_jacket_001_upper_desc"
+	self.customizations.russian_ace_jacket_001_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.russian_ace_jacket_001_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_RUSSIAN,
+	}
+	self.customizations.russian_ace_jacket_001_upper.path = "units/vanilla/characters/players/soviet/upper/ace_jacket/player_criminal_soviet_ace_jacket_upper"
+	self.customizations.russian_ace_jacket_001_upper.path_icon = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_upper_hud"
+	self.customizations.russian_ace_jacket_001_upper.path_icon_large = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_large_upper_hud"
+	self.customizations.russian_ace_jacket_001_upper.path_fps_hands = "units/vanilla/characters/players/generic/ace_jacket/player_generic_ace_jacket_fp"
+	self.customizations.russian_ace_jacket_001_upper.redeem_xp = 0
+	self.customizations.russian_ace_jacket_001_upper.rarity = LootDropTweakData.RARITY_HALLOWEEN_2017
+	self.customizations.russian_ace_jacket_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
+	self.customizations.russian_ace_jacket_001_upper.droppable = true
+	self.customizations.russian_ace_jacket_001_lower = {}
+	self.customizations.russian_ace_jacket_001_lower.name = "character_customization_soviet_ace_jacket_001_lower_name"
+	self.customizations.russian_ace_jacket_001_lower.description = "character_customization_soviet_ace_jacket_001_lower_desc"
+	self.customizations.russian_ace_jacket_001_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.russian_ace_jacket_001_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_RUSSIAN,
+	}
+	self.customizations.russian_ace_jacket_001_lower.path_long = "units/vanilla/characters/players/soviet/lower/ace_jacket/player_soviet_ace_jacket_lower"
+	self.customizations.russian_ace_jacket_001_lower.path_short = "units/vanilla/characters/players/soviet/lower/ace_jacket/player_soviet_ace_jacket_lower_short"
+	self.customizations.russian_ace_jacket_001_lower.path_icon = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_lower_hud"
+	self.customizations.russian_ace_jacket_001_lower.path_icon_large = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_large_lower_hud"
+	self.customizations.russian_ace_jacket_001_lower.redeem_xp = 0
+	self.customizations.russian_ace_jacket_001_lower.rarity = LootDropTweakData.RARITY_HALLOWEEN_2017
+	self.customizations.russian_ace_jacket_001_lower.droppable = true
+	self.customizations.american_ace_jacket_001_upper = {}
+	self.customizations.american_ace_jacket_001_upper.name = "character_customization_usa_ace_jacket_001_upper_name"
+	self.customizations.american_ace_jacket_001_upper.description = "character_customization_usa_ace_jacket_001_upper_desc"
+	self.customizations.american_ace_jacket_001_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.american_ace_jacket_001_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_AMERICAN,
+	}
+	self.customizations.american_ace_jacket_001_upper.path = "units/vanilla/characters/players/usa/upper/ace_jacket/player_criminal_usa_ace_jacket_upper"
+	self.customizations.american_ace_jacket_001_upper.path_icon = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_upper_hud"
+	self.customizations.american_ace_jacket_001_upper.path_icon_large = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_large_upper_hud"
+	self.customizations.american_ace_jacket_001_upper.path_fps_hands = "units/vanilla/characters/players/generic/ace_jacket/player_generic_ace_jacket_fp"
+	self.customizations.american_ace_jacket_001_upper.redeem_xp = 0
+	self.customizations.american_ace_jacket_001_upper.rarity = LootDropTweakData.RARITY_HALLOWEEN_2017
+	self.customizations.american_ace_jacket_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
+	self.customizations.american_ace_jacket_001_upper.droppable = true
+	self.customizations.american_ace_jacket_001_lower = {}
+	self.customizations.american_ace_jacket_001_lower.name = "character_customization_usa_ace_jacket_001_lower_name"
+	self.customizations.american_ace_jacket_001_lower.description = "character_customization_usa_ace_jacket_001_lower_desc"
+	self.customizations.american_ace_jacket_001_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.american_ace_jacket_001_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_AMERICAN,
+	}
+	self.customizations.american_ace_jacket_001_lower.path_long = "units/vanilla/characters/players/usa/lower/ace_jacket/player_usa_ace_jacket_lower"
+	self.customizations.american_ace_jacket_001_lower.path_short = "units/vanilla/characters/players/usa/lower/ace_jacket/player_usa_ace_jacket_lower_short"
+	self.customizations.american_ace_jacket_001_lower.path_icon = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_lower_hud"
+	self.customizations.american_ace_jacket_001_lower.path_icon_large = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_large_lower_hud"
+	self.customizations.american_ace_jacket_001_lower.redeem_xp = 0
+	self.customizations.american_ace_jacket_001_lower.rarity = LootDropTweakData.RARITY_HALLOWEEN_2017
+	self.customizations.american_ace_jacket_001_lower.droppable = true
 	self._head_index = {
 		"american_default_head",
 		"german_default_head",
@@ -1301,6 +1417,10 @@ function CharacterCustomizationTweakData:initialization()
 		"american_highlander_jacket_upper",
 		"russian_highlander_jacket_upper",
 		"german_highlander_jacket_upper",
+		"british_ace_jacket_001_upper",
+		"german_ace_jacket_001_upper",
+		"american_ace_jacket_001_upper",
+		"russian_ace_jacket_001_upper",
 	}
 	self._lower_index = {
 		"american_default_lower",
@@ -1339,6 +1459,10 @@ function CharacterCustomizationTweakData:initialization()
 		"german_highlander_jacket_lower",
 		"russian_highlander_jacket_lower",
 		"american_highlander_jacket_lower",
+		"british_ace_jacket_001_lower",
+		"german_ace_jacket_001_lower",
+		"american_ace_jacket_001_lower",
+		"russian_ace_jacket_001_lower",
 	}
 end
 

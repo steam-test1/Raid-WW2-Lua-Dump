@@ -869,7 +869,11 @@ function ReadyUpGui:update(t, dt)
 
 	if managers.challenge_cards:did_everyone_locked_sugested_card() then
 		if not self._stinger_played then
-			managers.menu_component:post_event("ready_up_stinger")
+			if managers.challenge_cards:get_suggested_cards() and managers.challenge_cards:get_suggested_cards()[1] and managers.challenge_cards:get_suggested_cards()[1].selected_sound then
+				managers.menu_component:post_event(managers.challenge_cards:get_suggested_cards()[1].selected_sound)
+			else
+				managers.menu_component:post_event("ready_up_stinger")
+			end
 
 			self._stinger_played = true
 		end

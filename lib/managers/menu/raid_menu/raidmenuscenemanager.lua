@@ -468,10 +468,6 @@ end
 
 function RaidMenuSceneManager:system_start_raid()
 	Application:trace("[RaidMenuSceneManager:system_start_raid]")
-
-	managers.challenge_cards._suggested_cards = nil
-	managers.challenge_cards._temp_steam_loot = nil
-
 	managers.challenge_cards:activate_challenge_card()
 	managers.player:replenish_player()
 	managers.player:replenish_player_weapons()

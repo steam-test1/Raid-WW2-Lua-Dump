@@ -207,6 +207,10 @@ function CopBrain:post_init()
 	if not self._unit:contour() then
 		debug_pause_unit(self._unit, "[CopBrain:post_init] character missing contour extension", self._unit)
 	end
+
+	if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ATTACK_ONLY_IN_AIR) and self._unit:damage() and self._unit:damage():has_sequence("halloween_2017") then
+		self._unit:damage():run_sequence_simple("halloween_2017")
+	end
 end
 
 function CopBrain:set_logic_queued(data)

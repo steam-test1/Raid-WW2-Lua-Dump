@@ -853,6 +853,10 @@ function ConnectionNetworkHandler:remove_challenge_card_from_inventory(challenge
 	end
 end
 
+function ConnectionNetworkHandler:sync_activate_challenge_card()
+	managers.challenge_cards:_activate_challenge_card()
+end
+
 function ConnectionNetworkHandler:mark_active_card_as_spent()
 	managers.challenge_cards:mark_active_card_as_spent()
 end

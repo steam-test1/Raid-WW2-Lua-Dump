@@ -210,6 +210,10 @@ function SkillTreeManager:respec()
 					skill_key = skill_key,
 				})
 
+				if skill_data.acquires[1] and skill_data.acquires[1].warcry_level then
+					managers.warcry:increase_warcry_level(nil, -skill_data.acquires[1].warcry_level)
+				end
+
 				for _, upgrade in ipairs(skill_data.upgrades) do
 					managers.upgrades:unaquire(upgrade, UpgradesManager.AQUIRE_STRINGS[2])
 				end

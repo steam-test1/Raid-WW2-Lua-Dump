@@ -210,6 +210,7 @@ function StatisticsTweakData:statistics_table()
 		"bc41_knuckle_knife",
 		"km_dagger",
 		"marching_mace",
+		"lc14b",
 	}
 	local grenade_list = {
 		"m24",

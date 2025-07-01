@@ -284,6 +284,20 @@ function ChallengeCardsManager:select_challenge_card(peer_id)
 end
 
 function ChallengeCardsManager:activate_challenge_card()
+	if Network:is_server() then
+		self:_activate_challenge_card()
+		self:sync_activate_challenge_card()
+	end
+end
+
+function ChallengeCardsManager:sync_activate_challenge_card()
+	managers.network:session():send_to_peers_synched("sync_activate_challenge_card")
+end
+
+function ChallengeCardsManager:_activate_challenge_card()
+	managers.challenge_cards._suggested_cards = nil
+	managers.challenge_cards._temp_steam_loot = nil
+
 	if not self._active_card or self._active_card and self._active_card.status ~= ChallengeCardsManager.CARD_STATUS_NORMAL then
 		return
 	end
@@ -577,8 +591,20 @@ function ChallengeCardsManager:get_card_xp_label(card_key_name, hide_xp_suffix)
 	return result
 end
 
+function ChallengeCardsManager:get_loot_drop_group(card_name)
+	if not card_name then
+		return
+	end
+
+	Application:debug("[ChallengeCardsManager:get_loot_drop_group]", card_name)
+
+	local card_data = tweak_data.challenge_cards:get_card_by_key_name(card_name)
+
+	return card_data.loot_drop_group
+end
+
 function ChallengeCardsManager:get_cards_stacking_texture(card_data)
-	if card_data and card_data.steam_instance_ids and #card_data.steam_instance_ids > 1 then
+	if card_data and card_data.steam_instance_ids and #card_data.steam_instance_ids > 1 and not card_data.card_back then
 		if card_data.card_category == ChallengeCardsTweakData.CARD_CATEGORY_BOOSTER and #card_data.steam_instance_ids == 2 then
 			return tweak_data.challenge_cards.challenge_card_stackable_booster_2_texture_path, tweak_data.challenge_cards.challenge_card_stackable_booster_2_texture_rect
 		elseif card_data.card_category == ChallengeCardsTweakData.CARD_CATEGORY_BOOSTER and #card_data.steam_instance_ids > 2 then
@@ -595,7 +621,9 @@ end
 
 function ChallengeCardsManager:get_cards_back_texture(card_data)
 	if card_data then
-		if card_data.card_category == ChallengeCardsTweakData.CARD_CATEGORY_BOOSTER then
+		if card_data.card_back then
+			return tweak_data.challenge_cards[card_data.card_back].texture, tweak_data.challenge_cards[card_data.card_back].texture_rect
+		elseif card_data.card_category == ChallengeCardsTweakData.CARD_CATEGORY_BOOSTER then
 			return tweak_data.challenge_cards.card_back_boosters.texture, tweak_data.challenge_cards.card_back_boosters.texture_rect
 		else
 			return tweak_data.challenge_cards.card_back_challenge_cards.texture, tweak_data.challenge_cards.card_back_challenge_cards.texture_rect

@@ -36,6 +36,9 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.card_back_boosters = {}
 	self.card_back_boosters.texture = self.challenge_card_texture_path .. "cc_back_booster_hud"
 	self.card_back_boosters.texture_rect = self.challenge_card_texture_rect
+	self.card_back_halloween_2017 = {}
+	self.card_back_halloween_2017.texture = self.challenge_card_texture_path .. "cc_back_halloween_hud"
+	self.card_back_halloween_2017.texture_rect = self.challenge_card_texture_rect
 	self.challenge_card_stackable_2_texture_path = "ui/challenge_cards/cc_stackable_2_cards_hud"
 	self.challenge_card_stackable_2_texture_rect = {
 		0,
@@ -633,6 +636,116 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.ra_crab_people.bonus_xp_multiplier = 2.3
 	self.cards.ra_crab_people.def_id = 20015
 	self.cards.ra_crab_people.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
+	self.cards.ra_slasher_movie = {}
+	self.cards.ra_slasher_movie.name = "card_ra_slasher_movie_name_id"
+	self.cards.ra_slasher_movie.description = "card_ra_slasher_movie_desc_id"
+	self.cards.ra_slasher_movie.effects = {
+		{
+			value = 0.01666,
+			name = BuffEffectManager.EFFECT_PLAYER_HEALTH_REGEN,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+		},
+		{
+			value = 20,
+			name = BuffEffectManager.EFFECT_MELEE_DAMAGE_INCREASE,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+		},
+		{
+			value = true,
+			name = BuffEffectManager.EFFECT_ONLY_MELEE_AVAILABLE,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+		},
+		{
+			value = true,
+			name = BuffEffectManager.EFFECT_WARCRIES_DISABLED,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+		},
+	}
+	self.cards.ra_slasher_movie.positive_description = {
+		desc_id = "effect_melee_damage_increased_health_regen",
+		desc_params = {
+			EFFECT_VALUE_1 = "100%",
+		},
+	}
+	self.cards.ra_slasher_movie.negative_description = {
+		desc_id = "effect_melee_avail_warcries_disabled",
+	}
+	self.cards.ra_slasher_movie.rarity = LootDropTweakData.RARITY_RARE
+	self.cards.ra_slasher_movie.card_type = ChallengeCardsTweakData.CARD_TYPE_RAID
+	self.cards.ra_slasher_movie.texture = "cc_special_raid_slasher_movie_hud"
+	self.cards.ra_slasher_movie.achievement_id = ""
+	self.cards.ra_slasher_movie.bonus_xp_multiplier = 2.5
+	self.cards.ra_slasher_movie.def_id = 20016
+	self.cards.ra_slasher_movie.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
+	self.cards.ra_slasher_movie.card_back = "card_back_halloween_2017"
+	self.cards.ra_slasher_movie.title_in_texture = true
+	self.cards.ra_slasher_movie.loot_drop_group = "loot_group_halooween_2017"
+	self.cards.ra_slasher_movie.selected_sound = "halloween_challenge_card_chosen"
+	self.cards.ra_pumpkin_pie = {}
+	self.cards.ra_pumpkin_pie.name = "card_ra_pumpkin_pie_name_id"
+	self.cards.ra_pumpkin_pie.description = "card_ra_pumpkin_pie_desc_id"
+	self.cards.ra_pumpkin_pie.effects = {
+		{
+			value = 3,
+			name = BuffEffectManager.EFFECT_PLAYER_HEADSHOT_DAMAGE,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+		},
+		{
+			value = true,
+			name = BuffEffectManager.EFFECT_ATTACK_ONLY_IN_AIR,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+		},
+	}
+	self.cards.ra_pumpkin_pie.positive_description = {
+		desc_id = "effect_headshots_damage_increased",
+		desc_params = {
+			EFFECT_VALUE_1 = "100%",
+		},
+	}
+	self.cards.ra_pumpkin_pie.negative_description = {
+		desc_id = "effect_only_attack_in_air",
+	}
+	self.cards.ra_pumpkin_pie.rarity = LootDropTweakData.RARITY_RARE
+	self.cards.ra_pumpkin_pie.card_type = ChallengeCardsTweakData.CARD_TYPE_RAID
+	self.cards.ra_pumpkin_pie.texture = "cc_special_raid_pumpkin_pie_hud"
+	self.cards.ra_pumpkin_pie.achievement_id = ""
+	self.cards.ra_pumpkin_pie.bonus_xp_multiplier = 2.3
+	self.cards.ra_pumpkin_pie.def_id = 20017
+	self.cards.ra_pumpkin_pie.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
+	self.cards.ra_pumpkin_pie.card_back = "card_back_halloween_2017"
+	self.cards.ra_pumpkin_pie.title_in_texture = true
+	self.cards.ra_pumpkin_pie.selected_sound = "halloween_challenge_card_chosen"
+	self.cards.ra_season_of_resurrection = {}
+	self.cards.ra_season_of_resurrection.name = "card_ra_season_of_resurrection_name_id"
+	self.cards.ra_season_of_resurrection.description = "card_ra_season_of_resurrection_desc_id"
+	self.cards.ra_season_of_resurrection.effects = {
+		{
+			value = 4,
+			name = BuffEffectManager.EFFECT_PLAYER_LOW_HEALTH_DAMAGE,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+		},
+		{
+			value = true,
+			name = BuffEffectManager.EFFECT_NO_BLEEDOUT_PUMPIKIN_REVIVE,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+		},
+	}
+	self.cards.ra_season_of_resurrection.positive_description = {
+		desc_id = "effect_player_low_health_damage",
+	}
+	self.cards.ra_season_of_resurrection.negative_description = {
+		desc_id = "effect_no_bleedout_pumpkin_revive",
+	}
+	self.cards.ra_season_of_resurrection.rarity = LootDropTweakData.RARITY_RARE
+	self.cards.ra_season_of_resurrection.card_type = ChallengeCardsTweakData.CARD_TYPE_RAID
+	self.cards.ra_season_of_resurrection.texture = "cc_special_raid_season_of_resurrection_hud"
+	self.cards.ra_season_of_resurrection.achievement_id = ""
+	self.cards.ra_season_of_resurrection.bonus_xp_multiplier = 2.5
+	self.cards.ra_season_of_resurrection.def_id = 20018
+	self.cards.ra_season_of_resurrection.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
+	self.cards.ra_season_of_resurrection.card_back = "card_back_halloween_2017"
+	self.cards.ra_season_of_resurrection.title_in_texture = true
+	self.cards.ra_season_of_resurrection.selected_sound = "halloween_challenge_card_chosen"
 	self.cards.op_limited_supplies = {}
 	self.cards.op_limited_supplies.name = "card_op_limited_supplies_name_id"
 	self.cards.op_limited_supplies.description = "card_op_limited_supplies_desc_id"
@@ -1308,6 +1421,9 @@ function ChallengeCardsTweakData:init(tweak_data)
 		"op_b_recycle_for_victory",
 		"op_b_will_not_go_quietly",
 		"op_b_on_top_form",
+		"ra_slasher_movie",
+		"ra_pumpkin_pie",
+		"ra_season_of_resurrection",
 	}
 end
 

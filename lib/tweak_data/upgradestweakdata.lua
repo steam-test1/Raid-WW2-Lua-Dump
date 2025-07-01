@@ -990,6 +990,9 @@ function UpgradesTweakData:_create_melee_weapon_definitions()
 	self.definitions.marching_mace = {
 		category = "melee_weapon",
 	}
+	self.definitions.lc14b = {
+		category = "melee_weapon",
+	}
 end
 
 function UpgradesTweakData:_create_grenades_definitions()

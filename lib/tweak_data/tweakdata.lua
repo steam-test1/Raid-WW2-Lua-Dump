@@ -41,7 +41,7 @@ require("lib/tweak_data/IntelTweakData")
 
 TweakData = TweakData or class()
 TweakData.RELOAD = true
-TweakData.RESPEC_COST_CONSTANT = 2.5
+TweakData.RESPEC_COST_CONSTANT = 2
 TweakData.RESPEC_RESET = 10
 TweakData.DIFFICULTY_1 = 1
 TweakData.DIFFICULTY_2 = 2

@@ -1009,7 +1009,12 @@ function MissionJoinGui:_set_game_description_data(data)
 		self._desc_challenge_card_rarity_icon:set_image(desc_challenge_card_rarity_icon.texture, unpack(desc_challenge_card_rarity_icon.texture_rect))
 		self._desc_challenge_card_rarity_icon:set_right(self._desc_challenge_card_xp:x() - 12)
 		self._desc_challenge_card_rarity_icon:show()
-		self._desc_challenge_card_name_on_card:set_text(self:translate(card_data.name, true))
+
+		if not card_data.title_in_texture then
+			self._desc_challenge_card_name_on_card:set_text(self:translate(card_data.name, true))
+		else
+			self._desc_challenge_card_name_on_card:set_text("")
+		end
 
 		local bonus_xp_reward = managers.challenge_cards:get_card_xp_label(card_key_name)
 

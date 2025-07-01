@@ -131,7 +131,11 @@ function PlayerStandard:enter(state_data, enter_data)
 
 	managers.hud:set_ammo_amount(self._equipped_unit:base():selection_index(), self._equipped_unit:base():ammo_info())
 
-	if enter_data and enter_data.equip_weapon then
+	if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ONLY_MELEE_AVAILABLE) then
+		self:_start_action_unequip_weapon(managers.player:player_timer():time(), {
+			selection_wanted = PlayerInventory.SLOT_4,
+		})
+	elseif enter_data and enter_data.equip_weapon then
 		self:_start_action_unequip_weapon(managers.player:player_timer():time(), {
 			selection_wanted = enter_data.equip_weapon,
 		})
@@ -1700,6 +1704,10 @@ function PlayerStandard:_start_action_throw_grenade(t, input, primary)
 	local press = input.btn_primary_attack_press or input.btn_steelsight_press
 	local release = input.btn_primary_attack_release or input.btn_steelsight_release
 
+	if press and managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ATTACK_ONLY_IN_AIR) and not self._state_data.in_air then
+		return
+	end
+
 	if self._state_data.throw_high and input.btn_steelsight_release then
 		return
 	end
@@ -2012,6 +2020,10 @@ function PlayerStandard:_check_action_melee(t, input)
 end
 
 function PlayerStandard:_start_action_melee(t, input, instant)
+	if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ATTACK_ONLY_IN_AIR) and not self._state_data.in_air then
+		return
+	end
+
 	self._start_melee_t = t
 
 	self._equipped_unit:base():tweak_data_anim_stop("fire")
@@ -2262,6 +2274,12 @@ function PlayerStandard:_do_melee_damage(t, bayonet_melee, col_ray)
 			local dmg_multiplier = 1
 
 			dmg_multiplier = dmg_multiplier * managers.player:upgrade_value("player", "melee_damage_multiplier", 1)
+
+			if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_MELEE_DAMAGE_INCREASE) then
+				local mp = managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_MELEE_DAMAGE_INCREASE) or 1
+
+				dmg_multiplier = dmg_multiplier * mp
+			end
 
 			if managers.player:has_category_upgrade("melee", "stacking_hit_damage_multiplier") then
 				self._state_data.stacking_dmg_mul = self._state_data.stacking_dmg_mul or {}
@@ -2682,6 +2700,10 @@ function PlayerStandard:_interupt_action_use_item(t, input, complete)
 end
 
 function PlayerStandard:_check_change_weapon(t, input)
+	if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ONLY_MELEE_AVAILABLE) then
+		return
+	end
+
 	local new_action
 	local action_wanted = input.btn_switch_weapon_press
 
@@ -2706,6 +2728,10 @@ function PlayerStandard:_check_change_weapon(t, input)
 end
 
 function PlayerStandard:_check_action_next_weapon(t, input)
+	if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ONLY_MELEE_AVAILABLE) then
+		return
+	end
+
 	local new_action
 	local action_wanted = input.btn_next_weapon_press
 
@@ -2732,6 +2758,10 @@ function PlayerStandard:_check_action_next_weapon(t, input)
 end
 
 function PlayerStandard:_check_action_previous_weapon(t, input)
+	if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ONLY_MELEE_AVAILABLE) then
+		return
+	end
+
 	local new_action
 	local action_wanted = input.btn_previous_weapon_press
 
@@ -3416,6 +3446,10 @@ function PlayerStandard:set_weapon_selection_wanted(selection_wanted)
 end
 
 function PlayerStandard:_check_action_equip(t, input)
+	if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ONLY_MELEE_AVAILABLE) then
+		return
+	end
+
 	local new_action
 	local selection_wanted = input.btn_primary_choice or self._weapon_selection_wanted
 
@@ -4228,6 +4262,18 @@ function PlayerStandard:_check_action_primary_attack(t, input)
 				elseif self._running and not self.RUN_AND_SHOOT then
 					self:_interupt_action_running(t)
 				else
+					if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ATTACK_ONLY_IN_AIR) and not self._state_data.in_air then
+						if self._equipped_unit and (input.btn_primary_attack_press or input.btn_primary_attack_release) then
+							local weap_base = self._equipped_unit:base()
+
+							weap_base:dryfire()
+						end
+
+						self:_check_stop_shooting()
+
+						return
+					end
+
 					if not self._shooting then
 						if weap_base:start_shooting_allowed() then
 							local start = fire_mode == "single" and input.btn_primary_attack_press

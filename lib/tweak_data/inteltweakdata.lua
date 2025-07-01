@@ -31,6 +31,13 @@ function IntelTweakData:init(tweak_data)
 		288,
 	}
 	self.categories.bulletins.items[1].text = "bulletin_1_text_id"
+	self.categories.bulletins.items[2] = {}
+	self.categories.bulletins.items[2].id = "bulletin_2"
+	self.categories.bulletins.items[2].list_item_name_id = "bulletin_2_list_item_name_id"
+	self.categories.bulletins.items[2].update_date = "OCT 26 2017"
+	self.categories.bulletins.items[2].update_person = "CONTROL"
+	self.categories.bulletins.items[2].title = "bulletin_2_title_id"
+	self.categories.bulletins.items[2].text = "bulletin_2_text_id"
 	self.categories.operational_status.items = {}
 	self.categories.operational_status.items[1] = {}
 	self.categories.operational_status.items[1].id = "operational_status_1"
@@ -81,6 +88,13 @@ function IntelTweakData:init(tweak_data)
 	self.categories.operational_status.items[6].update_person = "CONTROL"
 	self.categories.operational_status.items[6].title = "operational_status_6_title_id"
 	self.categories.operational_status.items[6].text = "operational_status_6_text_id"
+	self.categories.operational_status.items[7] = {}
+	self.categories.operational_status.items[7].id = "operational_status_7"
+	self.categories.operational_status.items[7].list_item_name_id = "operational_status_7_list_item_name_id"
+	self.categories.operational_status.items[7].update_date = "OCT 26 2017"
+	self.categories.operational_status.items[7].update_person = "CONTROL"
+	self.categories.operational_status.items[7].title = "operational_status_7_title_id"
+	self.categories.operational_status.items[7].text = "operational_status_7_text_id"
 	self.categories.raid_personnel.items = {}
 	self.categories.raid_personnel.items[1] = {}
 	self.categories.raid_personnel.items[1].id = "raid_personnel_1"

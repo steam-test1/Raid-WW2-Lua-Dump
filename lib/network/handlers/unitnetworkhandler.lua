@@ -2320,6 +2320,7 @@ function UnitNetworkHandler:set_teammate_hud(unit, percent, id, sender)
 				total = 1,
 				current = percent / 100,
 			})
+			character_data.unit:character_damage():set_health_ratio(percent / 100)
 		else
 			managers.hud:set_mugshot_health(unit:unit_data().mugshot_id, percent / 100)
 		end
@@ -3727,5 +3728,16 @@ function UnitNetworkHandler:sync_camp_trophy(unit, level, sender)
 
 	if alive(unit) then
 		managers.progression:sync_trophy_level(unit, level)
+	end
+end
+
+function UnitNetworkHandler:sync_revive_pumpkin_destroyed(pumpkin, sender)
+	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
+		return
+	end
+
+	if alive(pumpkin) then
+		pumpkin:revive_pumpkin():set_should_sync(false)
+		pumpkin:set_slot(0)
 	end
 end

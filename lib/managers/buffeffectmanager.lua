@@ -41,6 +41,12 @@ BuffEffectManager.EFFECT_PLAYER_KILL_REGENERATES_HEALTH = "player_kill_regenerat
 BuffEffectManager.EFFECT_PLAYER_HEALTH_REGEN = "player_health_regen"
 BuffEffectManager.EFFECT_PLAYERS_CANT_USE_WARCRIES = "players_cant_use_warcries"
 BuffEffectManager.EFFECT_PLAYERS_CANT_EMPTY_CLIPS = "players_cant_empty_clips"
+BuffEffectManager.EFFECT_MELEE_DAMAGE_INCREASE = "players_melee_damage_increase"
+BuffEffectManager.EFFECT_ONLY_MELEE_AVAILABLE = "players_only_melee"
+BuffEffectManager.EFFECT_WARCRIES_DISABLED = "players_warcries_disabled"
+BuffEffectManager.EFFECT_ATTACK_ONLY_IN_AIR = "attack_only_in_air"
+BuffEffectManager.EFFECT_PLAYER_LOW_HEALTH_DAMAGE = "player_low_health_damage"
+BuffEffectManager.EFFECT_NO_BLEEDOUT_PUMPIKIN_REVIVE = "no_bleedout_pumpkin_revive"
 BuffEffectManager.FAIL_EFFECT_MESSAGE_PLAYER_SPENT_AMMO = "challenge_card_effect_failed_message_player_spent_all_ammo"
 BuffEffectManager.FAIL_EFFECT_MESSAGE_PLAYER_FAILED_INTERACTION_MINI_GAME = "challenge_card_effect_failed_message_player_failed_interaction_mini_game"
 BuffEffectManager.FAIL_EFFECT_MESSAGE_PLAYER_WENT_TO_BLEEDOUT = "challenge_card_effect_failed_message_player_went_to_bleedout"
@@ -77,6 +83,8 @@ function BuffEffectManager:activate_effect(effect_data)
 		managers.global_state:set_flag("card_barrage_deactivate")
 	elseif effect_data.name == BuffEffectManager.EFFECT_ALL_CHESTS_ARE_LOCKED then
 		managers.global_state:set_flag("card_all_chests_are_locked")
+	elseif effect_data.name == BuffEffectManager.EFFECT_ONLY_MELEE_AVAILABLE then
+		managers.global_state:set_flag("card_only_melee_available")
 	end
 
 	return self._effect_id_counter
@@ -102,6 +110,8 @@ function BuffEffectManager:deactivate_special_effect_and_timer(active_effect_id)
 			managers.global_state:clear_flag("card_barrage_deactivate")
 		elseif self._active_effects[active_effect_id].effect_name == BuffEffectManager.EFFECT_ALL_CHESTS_ARE_LOCKED then
 			managers.global_state:clear_flag("card_all_chests_are_locked")
+		elseif self._active_effects[active_effect_id].effect_name == BuffEffectManager.EFFECT_ONLY_MELEE_AVAILABLE then
+			managers.global_state:clear_flag("card_only_melee_available")
 		end
 	end
 end

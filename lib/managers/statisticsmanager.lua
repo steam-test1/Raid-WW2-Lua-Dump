@@ -673,7 +673,7 @@ function StatisticsManager:stop_session(data)
 	local success = data and data.success
 	local session_time = self:get_session_time_seconds()
 
-	if current_level_id then
+	if current_level_id and self._global.sessions.levels[current_level_id] then
 		self._global.sessions.levels[current_level_id].time = self._global.sessions.levels[current_level_id].time + session_time
 
 		if success then

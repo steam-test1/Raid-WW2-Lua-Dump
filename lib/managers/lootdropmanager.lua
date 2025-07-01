@@ -71,17 +71,21 @@ function LootDropManager:produce_consumable_mission_drop()
 	return drop
 end
 
-function LootDropManager:produce_loot_drop(loot_value, use_reroll_drop_tables)
-	local loot_group = self:_get_loot_group(loot_value, use_reroll_drop_tables)
+function LootDropManager:produce_loot_drop(loot_value, use_reroll_drop_tables, forced_loot_group)
+	local loot_group = self:_get_loot_group(loot_value, use_reroll_drop_tables, forced_loot_group)
 	local loot_category = self:get_random_item_weighted(loot_group)
 	local loot = self:get_random_item_weighted(loot_category)
 
 	return loot
 end
 
-function LootDropManager:_get_loot_group(loot_value, use_reroll_drop_tables)
+function LootDropManager:_get_loot_group(loot_value, use_reroll_drop_tables, forced_loot_group)
 	local loot_group
 	local data_source = tweak_data.lootdrop.loot_groups
+
+	if forced_loot_group then
+		return data_source[forced_loot_group]
+	end
 
 	if use_reroll_drop_tables then
 		data_source = tweak_data.lootdrop.loot_groups_doubles_fallback
@@ -133,16 +137,16 @@ function LootDropManager:get_dropped_loot()
 	return self._dropped_loot
 end
 
-function LootDropManager:give_loot_to_player(loot_value, use_reroll_drop_tables)
+function LootDropManager:give_loot_to_player(loot_value, use_reroll_drop_tables, forced_loot_group)
 	self._loot_value = loot_value
 
 	local need_reroll = false
 	local drop
 
-	if managers.raid_job:current_job() and managers.raid_job:current_job().consumable then
+	if game_state_machine._current_state._current_job_data and game_state_machine._current_state._current_job_data.consumable then
 		drop = self:produce_consumable_mission_drop()
 	else
-		drop = self:produce_loot_drop(self._loot_value, use_reroll_drop_tables)
+		drop = self:produce_loot_drop(self._loot_value, use_reroll_drop_tables, forced_loot_group)
 	end
 
 	self._dropped_loot = drop
@@ -178,6 +182,10 @@ function LootDropManager:give_loot_to_player(loot_value, use_reroll_drop_tables)
 		need_reroll = not result
 	elseif drop.reward_type == LootDropTweakData.REWARD_GOLD_BARS then
 		self:_give_gold_bars_to_player(drop)
+	elseif drop.reward_type == LootDropTweakData.REWARD_HALLOWEEN_2017 then
+		local result = self:_give_halloween_2017_weapon_to_player(drop)
+
+		need_reroll = not result
 	end
 
 	if need_reroll then
@@ -276,6 +284,9 @@ function LootDropManager:redeem_dropped_loot_for_xp()
 	elseif drop.reward_type == LootDropTweakData.REWARD_MELEE_WEAPON then
 		managers.weapon_inventory:remove_melee_weapon_as_drop(drop)
 		managers.experience:add_loot_redeemed_xp(drop.redeemed_xp)
+	elseif drop.reward_type == LootDropTweakData.REWARD_HALLOWEEN_2017 then
+		managers.weapon_inventory:remove_melee_weapon_as_drop(drop)
+		managers.experience:add_loot_redeemed_xp(drop.redeemed_xp)
 	end
 end
 
@@ -311,6 +322,23 @@ function LootDropManager:_give_weapon_point_to_player(drop)
 	drop.redeemed_xp = tweak_data.weapon_skills.weapon_point_reedemed_xp
 
 	managers.network:session():send_to_peers_synched("sync_loot_to_peers", drop.reward_type, "", drop.reedemed_xp, managers.network:session():local_peer():id())
+end
+
+function LootDropManager:_give_halloween_2017_weapon_to_player(drop)
+	local candidate_melee_weapon = clone(managers.weapon_inventory:get_weapon_data(WeaponInventoryManager.CATEGORY_NAME_MELEE, drop.weapon_id))
+
+	if not managers.weapon_inventory:is_melee_weapon_owned(candidate_melee_weapon.weapon_id) then
+		drop.weapon_id = candidate_melee_weapon.weapon_id
+		drop.redeemed_xp = candidate_melee_weapon.redeemed_xp
+		drop.duplicate = false
+
+		managers.weapon_inventory:add_melee_weapon_as_drop(drop)
+		managers.network:session():send_to_peers_synched("sync_loot_to_peers", drop.reward_type, drop.weapon_id, drop.reedemed_xp, managers.network:session():local_peer():id())
+
+		return true
+	else
+		return false
+	end
 end
 
 function LootDropManager:_give_melee_weapon_to_player(drop)
@@ -363,6 +391,9 @@ function LootDropManager:on_loot_dropped_for_peer(loot_type, name, value, peer_i
 		drop.awarded_gold_bars = value
 	elseif drop.reward_type == LootDropTweakData.REWARD_CARD_PACK then
 		drop.pack_type = value
+	elseif drop.reward_type == LootDropTweakData.REWARD_HALLOWEEN_2017 then
+		drop.redeemed_xp = value
+		drop.weapon_id = name
 	end
 
 	table.insert(self._loot_for_peers, drop)

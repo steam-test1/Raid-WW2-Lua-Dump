@@ -3007,7 +3007,19 @@ function CopDamage:_apply_damage_modifier(damage, attack_data)
 	local damage_modifier = 1
 
 	if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ENEMIES_RECEIVE_DAMAGE) then
-		damage_modifier = managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_ENEMIES_RECEIVE_DAMAGE) or 1
+		damage_modifier = (managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_ENEMIES_RECEIVE_DAMAGE) or 1) * damage_modifier
+	end
+
+	local health_ratio = 1
+
+	if attack_data and attack_data.attacker_unit and attack_data.attacker_unit.character_damage then
+		health_ratio = attack_data.attacker_unit:character_damage():health_ratio()
+	end
+
+	if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_PLAYER_LOW_HEALTH_DAMAGE) then
+		local multiplier = (managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_PLAYER_LOW_HEALTH_DAMAGE) or 1) + (1 - health_ratio)
+
+		damage_modifier = multiplier * damage_modifier
 	end
 
 	if attack_data and attack_data.attacker_unit == managers.player:local_player() and managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_PLAYER_PISTOL_DAMAGE) and attack_data.weapon_unit and attack_data.weapon_unit:base()._use_data and attack_data.weapon_unit:base()._use_data.player.selection_index == 1 then

@@ -1,6 +1,8 @@
 PlayerManager = PlayerManager or class()
 PlayerManager.WEAPON_SLOTS = 2
 PlayerManager.EQUIPMENT_OBTAINED_MESSAGE_DURATION = 3
+PlayerManager.EVENT_LOCAL_PLAYER_ENTER_RESPAWN = "PlayerManager.EVENT_LOCAL_PLAYER_ENTER_RESPAWN"
+PlayerManager.EVENT_LOCAL_PLAYER_EXIT_RESPAWN = "PlayerManager.EVENT_LOCAL_PLAYER_EXIT_RESPAWN"
 
 function PlayerManager:init()
 	self._coroutine_mgr = CoroutineManager:new()
@@ -355,6 +357,7 @@ function PlayerManager:need_send_player_status()
 	local warcry_meter_percentage = managers.warcry:current_meter_percentage()
 
 	player:send("set_active_warcry", active_warcry, warcry_meter_percentage, player:id())
+	player:inventory():_send_equipped_weapon()
 end
 
 function PlayerManager:_internal_load()
@@ -4077,14 +4080,21 @@ function PlayerManager:kill()
 		return
 	end
 
+	managers.player:force_drop_carry()
 	managers.statistics:downed({
 		death = true,
 	})
+	IngameFatalState.on_local_player_dead()
+	managers.warcry:deactivate_warcry()
+	player:base():set_enabled(false)
 	game_state_machine:change_state_by_name("ingame_waiting_for_respawn")
+	player:character_damage():set_invulnerable(true)
+	player:character_damage():set_health(0)
 	player:network():send("sync_player_movement_state", "dead", player:character_damage():down_time(), player:id())
 	managers.groupai:state():on_player_criminal_death(managers.network:session():local_peer():id())
 	player:base():_unregister()
 	player:base():set_slot(player, 0)
+	World:delete_unit(player)
 end
 
 function PlayerManager:destroy()

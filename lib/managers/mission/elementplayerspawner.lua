@@ -103,7 +103,7 @@ function ElementPlayerSpawner:_end_transition(client)
 end
 
 function ElementPlayerSpawner:_do_hide_loading_screen()
-	if not managers.raid_job:is_camp_loaded() and managers.player:local_player() and managers.raid_job:current_job() and managers.raid_job:current_job().start_in_stealth then
+	if not managers.raid_job:is_camp_loaded() and managers.player:local_player() and managers.raid_job:current_job() and (managers.raid_job:current_job().start_in_stealth or managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ONLY_MELEE_AVAILABLE)) then
 		managers.player:get_current_state():_start_action_unequip_weapon(managers.player:player_timer():time(), {
 			selection_wanted = PlayerInventory.SLOT_4,
 		})

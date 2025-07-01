@@ -625,6 +625,14 @@ function CopMovement:m_rot()
 end
 
 function CopMovement:get_object(object_name)
+	if self._unit == nil then
+		return nil
+	end
+
+	if not alive(self._unit) then
+		return nil
+	end
+
 	return self._unit:get_object(object_name)
 end
 

@@ -217,31 +217,25 @@ function WeaponInventoryManager:load_account_wide_info(data, version_account_wid
 
 	self._weapons[WeaponInventoryManager.CATEGORY_NAME_MELEE] = state.melee_weapons
 
+	for index, melee_weapon_data in ipairs(tweak_data.weapon_inventory.weapon_melee_index) do
+		local weapon_id = melee_weapon_data.weapon_id
+
+		if not self._weapons.melee_weapons[weapon_id] then
+			self._weapons.melee_weapons[weapon_id] = {
+				owned = true,
+				unlocked = false,
+				default = melee_weapon_data.default,
+				droppable = melee_weapon_data.droppable,
+				redeemed_xp = melee_weapon_data.redeemed_xp,
+				slot = melee_weapon_data.slot,
+			}
+
+			managers.savefile:set_resave_required()
+		end
+	end
+
 	local unlocked_melee_weapons = tweak_data.dlc:get_unlocked_melee_weapons()
 	local locked_melee_weapons = tweak_data.dlc:get_locked_melee_weapons()
-
-	if not state.version_account_wide or state.version_account_wide and state.version_account_wide ~= WeaponInventoryManager.VERSION_ACCOUNT_WIDE then
-		self.version_account_wide = WeaponInventoryManager.VERSION_ACCOUNT_WIDE
-
-		for index, melee_weapon_data in ipairs(tweak_data.weapon_inventory.weapon_melee_index) do
-			local weapon_id = melee_weapon_data.weapon_id
-
-			if not self._weapons.melee_weapons[weapon_id] then
-				self._weapons.melee_weapons[weapon_id] = {
-					owned = true,
-					unlocked = false,
-					default = melee_weapon_data.default,
-					droppable = melee_weapon_data.droppable,
-					redeemed_xp = melee_weapon_data.redeemed_xp,
-					slot = melee_weapon_data.slot,
-				}
-			end
-		end
-
-		managers.savefile:set_resave_required()
-	else
-		self.version_account_wide = state.version_account_wide or 1
-	end
 
 	for weapon_id, melee_weapon in pairs(self._weapons.melee_weapons) do
 		local weapon_tweaks = tweak_data.blackmarket.melee_weapons[weapon_id]

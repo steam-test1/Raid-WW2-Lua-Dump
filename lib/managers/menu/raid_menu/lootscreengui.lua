@@ -219,10 +219,17 @@ function LootScreenGui:_layout_loot_breakdown_items()
 
 	self._persistent_panel = self._root_panel:panel(persistent_panel_params)
 
+	local v = true
+
+	if managers.challenge_cards.forced_loot_card then
+		v = false
+	end
+
 	local loot_data_panel_params = {
 		h = 426,
 		name = "loot_screen_loot_data_panel",
 		y = 51,
+		visible = v,
 	}
 
 	self._loot_data_panel = self._persistent_panel:panel(loot_data_panel_params)
@@ -245,6 +252,7 @@ function LootScreenGui:_layout_loot_breakdown_items()
 			local loot_item = self._loot_data_panel:create_custom_control(RaidGUIControlLootBreakdownItem, loot_item_params)
 
 			loot_item:set_center_x(self._loot_data_panel:w() / 2)
+			loot_item:set_visible(v)
 			table.insert(self._loot_breakdown_items, loot_item)
 
 			self._loot_acquired = self._loot_acquired + loot_breakdown_items[loot_id].acquired
@@ -268,19 +276,34 @@ function LootScreenGui:_layout_loot_crates()
 	self._loot_crate_panel = self._root_panel:panel(loot_crate_panel_params)
 	self._crate_images = {}
 
-	for index, crate_image in ipairs(LootScreenGui.LOOT_BOXES_IMAGES) do
-		local crate_image_params = {
-			alpha = 0,
-			layer = index,
-			name = "loot_screen_crate_image_" .. index,
-			texture = tweak_data.gui.icons[crate_image].texture,
-			texture_rect = tweak_data.gui.icons[crate_image].texture_rect,
-		}
-		local crate_image = self._loot_crate_panel:bitmap(crate_image_params)
+	if not managers.challenge_cards.forced_loot_card then
+		for index, crate_image in ipairs(LootScreenGui.LOOT_BOXES_IMAGES) do
+			local crate_image_params = {
+				alpha = 0,
+				layer = index,
+				name = "loot_screen_crate_image_" .. index,
+				texture = tweak_data.gui.icons[crate_image].texture,
+				texture_rect = tweak_data.gui.icons[crate_image].texture_rect,
+			}
+			local crate_image = self._loot_crate_panel:bitmap(crate_image_params)
 
-		crate_image:set_center_x(self._loot_crate_panel:w() / 2)
-		crate_image:set_center_y(self._loot_crate_panel:h() / 2)
-		table.insert(self._crate_images, crate_image)
+			crate_image:set_center_x(self._loot_crate_panel:w() / 2)
+			crate_image:set_center_y(self._loot_crate_panel:h() / 2)
+			table.insert(self._crate_images, crate_image)
+		end
+	else
+		local card_params = {
+			item_h = 671,
+			item_w = 496,
+			name = "player_loot_card",
+			x = 64,
+		}
+		local card_control = self._loot_crate_panel:create_custom_control(RaidGUIControlCardBase, card_params)
+
+		card_control:set_card(managers.challenge_cards.forced_loot_card)
+		card_control:set_center_x(self._loot_crate_panel:w() / 2)
+		card_control:set_center_y(self._loot_crate_panel:h() / 2)
+		table.insert(self._crate_images, card_control)
 	end
 
 	if self._crate_images[1] then
@@ -570,6 +593,9 @@ function LootScreenGui:_show_local_loot_display()
 	elseif drop.reward_type == LootDropTweakData.REWARD_GOLD_BARS then
 		self._gold_bar_reward:set_gold_bar_reward(drop.awarded_gold_bars)
 		self._gold_bar_reward:show()
+	elseif drop.reward_type == LootDropTweakData.REWARD_HALLOWEEN_2017 then
+		self._melee_weapon_reward:set_melee_weapon(drop.weapon_id)
+		self._melee_weapon_reward:show()
 	end
 end
 
@@ -688,6 +714,11 @@ function LootScreenGui:on_loot_dropped_for_peer(drop)
 		slot.control = self._peer_loot_panel:create_custom_control(RaidGUIControlGoldBarPeerLoot, peer_loot_params)
 
 		slot.control:set_gold_bar_reward(drop.awarded_gold_bars)
+	elseif drop.reward_type == LootDropTweakData.REWARD_HALLOWEEN_2017 then
+		peer_loot_params.weapon_id = drop.weapon_id
+		slot.control = self._peer_loot_panel:create_custom_control(RaidGUIControlMeleeWeaponPeerLoot, peer_loot_params)
+
+		slot.control:set_melee_weapon(drop.weapon_id)
 	end
 
 	local player_name
@@ -824,7 +855,7 @@ function LootScreenGui:_animate_giving_points(panel, points_acquired, points_tot
 	self._given_points = false
 	self._started_lens_flares = false
 
-	if not managers.raid_job:current_job() or not managers.raid_job:current_job().consumable then
+	if (not managers.raid_job:current_job() or not managers.raid_job:current_job().consumable) and not managers.challenge_cards.forced_loot_card then
 		wait(0.6)
 
 		local points_given_total = 0
@@ -894,6 +925,8 @@ function LootScreenGui:_animate_giving_points(panel, points_acquired, points_tot
 		end
 
 		self._given_points = true
+	elseif managers.challenge_cards.forced_loot_card then
+		wait(1)
 	end
 
 	self:_animate_show_loot(panel)
@@ -907,13 +940,17 @@ function LootScreenGui:_finalize_giving_points()
 	for index, crate_image in ipairs(self._crate_images) do
 		if index == shown_crate_index then
 			crate_image:set_alpha(1)
-
-			local crate_w = tweak_data.gui:icon_w(LootScreenGui.LOOT_BOXES_IMAGES[index])
-			local crate_h = tweak_data.gui:icon_h(LootScreenGui.LOOT_BOXES_IMAGES[index])
-
-			crate_image:set_size(crate_w, crate_h)
 			crate_image:set_center_x(self._loot_crate_panel:w() / 2)
 			crate_image:set_center_y(self._loot_crate_panel:h() / 2)
+
+			if not managers.challenge_cards.forced_loot_card then
+				local crate_w = tweak_data.gui:icon_w(LootScreenGui.LOOT_BOXES_IMAGES[index])
+				local crate_h = tweak_data.gui:icon_h(LootScreenGui.LOOT_BOXES_IMAGES[index])
+
+				crate_image:set_size(crate_w, crate_h)
+			else
+				crate_image:show()
+			end
 		else
 			crate_image:set_alpha(0)
 		end
@@ -1041,8 +1078,14 @@ function LootScreenGui:_animate_show_loot(panel)
 		coroutine.yield()
 	end
 
-	self._crate_images[1]:stop()
-	self._crate_images[1]:animate(callback(self, self, "_animate_crate_hide"))
+	if not managers.challenge_cards.forced_loot_card then
+		self._crate_images[1]:stop()
+		self._crate_images[1]:animate(callback(self, self, "_animate_crate_hide"))
+	else
+		wait(1.5)
+		self._crate_images[1]:hide()
+	end
+
 	self._local_loot_panel:set_visible(true)
 	managers.menu_component:post_event(LootScreenGui.REWARD_SOUND_EFFECT)
 	wait(0.1)

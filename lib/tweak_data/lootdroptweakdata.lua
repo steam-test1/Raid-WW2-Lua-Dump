@@ -5,12 +5,14 @@ LootDropTweakData.REWARD_CUSTOMIZATION = "customization"
 LootDropTweakData.REWARD_WEAPON_POINT = "weapon_point"
 LootDropTweakData.REWARD_MELEE_WEAPON = "melee_weapon"
 LootDropTweakData.REWARD_GOLD_BARS = "gold_bars"
+LootDropTweakData.REWARD_HALLOWEEN_2017 = "halloween_2017"
 LootDropTweakData.RARITY_ALL = "loot_rarity_all"
 LootDropTweakData.RARITY_DEFAULT = "loot_rarity_default"
 LootDropTweakData.RARITY_COMMON = "loot_rarity_common"
 LootDropTweakData.RARITY_UNCOMMON = "loot_rarity_uncommon"
 LootDropTweakData.RARITY_RARE = "loot_rarity_rare"
 LootDropTweakData.RARITY_NONE = "loot_rarity_none"
+LootDropTweakData.RARITY_HALLOWEEN_2017 = "loot_rarity_haloween"
 LootDropTweakData.LOOT_VALUE_TYPE_SMALL_AMOUNT = 1
 LootDropTweakData.LOOT_VALUE_TYPE_MEDIUM_AMOUNT = 4
 LootDropTweakData.LOOT_VALUE_TYPE_BIG_AMOUNT = 5
@@ -80,6 +82,10 @@ function LootDropTweakData:_init_customization_rewards()
 	}
 	self.customization_rewards.rare = {
 		rarity = LootDropTweakData.RARITY_RARE,
+		reward_type = LootDropTweakData.REWARD_CUSTOMIZATION,
+	}
+	self.customization_rewards.halloween_2017 = {
+		rarity = LootDropTweakData.RARITY_HALLOWEEN_2017,
 		reward_type = LootDropTweakData.REWARD_CUSTOMIZATION,
 	}
 end
@@ -209,26 +215,43 @@ function LootDropTweakData:_init_categories()
 		chance = 50,
 		value = self.customization_rewards.rare,
 	}
+	self.loot_categories.category_custom_halloween_2017 = {}
+	self.loot_categories.category_custom_halloween_2017[1] = {
+		chance = 100,
+		value = self.customization_rewards.halloween_2017,
+	}
+	self.loot_categories.category_halloween_2017 = {}
+	self.loot_categories.category_halloween_2017[1] = {
+		chance = 100,
+		value = {
+			weapon_id = "lc14b",
+			reward_type = LootDropTweakData.REWARD_HALLOWEEN_2017,
+		},
+	}
 end
 
 function LootDropTweakData:_init_groups()
 	self.loot_groups = {}
 	self.loot_groups.loot_group_basic = {}
 	self.loot_groups.loot_group_basic[1] = {
-		chance = 55,
+		chance = 35,
 		value = self.loot_categories.category_xp_min,
 	}
 	self.loot_groups.loot_group_basic[2] = {
-		chance = 40,
+		chance = 60,
 		value = self.loot_categories.category_cards_low,
 	}
 	self.loot_groups.loot_group_basic[3] = {
 		chance = 5,
 		value = self.loot_categories.category_custom_low,
 	}
+	self.loot_groups.loot_group_basic[4] = {
+		chance = 50,
+		value = self.loot_categories.category_custom_halloween_2017,
+	}
 	self.loot_groups.loot_group_bronze = {}
 	self.loot_groups.loot_group_bronze[1] = {
-		chance = 45,
+		chance = 25,
 		value = self.loot_categories.category_xp_low,
 	}
 	self.loot_groups.loot_group_bronze[2] = {
@@ -236,7 +259,7 @@ function LootDropTweakData:_init_groups()
 		value = self.loot_categories.category_gold_low,
 	}
 	self.loot_groups.loot_group_bronze[3] = {
-		chance = 25,
+		chance = 45,
 		value = self.loot_categories.category_cards_low,
 	}
 	self.loot_groups.loot_group_bronze[4] = {
@@ -255,9 +278,13 @@ function LootDropTweakData:_init_groups()
 		chance = 2.5,
 		value = self.loot_categories.category_melee,
 	}
+	self.loot_groups.loot_group_bronze[8] = {
+		chance = 60,
+		value = self.loot_categories.category_custom_halloween_2017,
+	}
 	self.loot_groups.loot_group_silver = {}
 	self.loot_groups.loot_group_silver[1] = {
-		chance = 40,
+		chance = 20,
 		value = self.loot_categories.category_xp_mid,
 	}
 	self.loot_groups.loot_group_silver[2] = {
@@ -265,7 +292,7 @@ function LootDropTweakData:_init_groups()
 		value = self.loot_categories.category_gold_mid,
 	}
 	self.loot_groups.loot_group_silver[3] = {
-		chance = 40,
+		chance = 60,
 		value = self.loot_categories.category_cards_mid,
 	}
 	self.loot_groups.loot_group_silver[4] = {
@@ -275,6 +302,10 @@ function LootDropTweakData:_init_groups()
 	self.loot_groups.loot_group_silver[5] = {
 		chance = 3,
 		value = self.loot_categories.category_melee,
+	}
+	self.loot_groups.loot_group_silver[6] = {
+		chance = 70,
+		value = self.loot_categories.category_custom_halloween_2017,
 	}
 	self.loot_groups.loot_group_gold = {}
 	self.loot_groups.loot_group_gold[1] = {
@@ -286,7 +317,7 @@ function LootDropTweakData:_init_groups()
 		value = self.loot_categories.category_gold_high,
 	}
 	self.loot_groups.loot_group_gold[3] = {
-		chance = 15,
+		chance = 45,
 		value = self.loot_categories.category_cards_mid,
 	}
 	self.loot_groups.loot_group_gold[4] = {
@@ -304,6 +335,15 @@ function LootDropTweakData:_init_groups()
 	self.loot_groups.loot_group_gold[7] = {
 		chance = 5,
 		value = self.loot_categories.category_melee,
+	}
+	self.loot_groups.loot_group_gold[8] = {
+		chance = 80,
+		value = self.loot_categories.category_custom_halloween_2017,
+	}
+	self.loot_groups.loot_group_halooween_2017 = {}
+	self.loot_groups.loot_group_halooween_2017[1] = {
+		chance = 100,
+		value = self.loot_categories.category_halloween_2017,
 	}
 	self.loot_groups_doubles_fallback = {}
 	self.loot_groups_doubles_fallback.loot_group_basic = {}
@@ -373,6 +413,8 @@ function LootDropTweakData:_init_loot_values()
 	self.loot_groups.loot_group_silver.max_loot_value = LootDropTweakData.GOLD_POINT_REQUIREMENT
 	self.loot_groups.loot_group_gold.min_loot_value = LootDropTweakData.GOLD_POINT_REQUIREMENT
 	self.loot_groups.loot_group_gold.max_loot_value = 1000000
+	self.loot_groups.loot_group_halooween_2017.min_loot_value = -1
+	self.loot_groups.loot_group_halooween_2017.max_loot_value = -1
 	self.loot_groups_doubles_fallback.loot_group_basic.min_loot_value = self.loot_groups.loot_group_basic.min_loot_value
 	self.loot_groups_doubles_fallback.loot_group_basic.max_loot_value = self.loot_groups.loot_group_basic.max_loot_value
 	self.loot_groups_doubles_fallback.loot_group_bronze.min_loot_value = self.loot_groups.loot_group_bronze.min_loot_value

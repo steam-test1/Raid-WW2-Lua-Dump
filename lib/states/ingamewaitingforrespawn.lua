@@ -375,6 +375,16 @@ function IngameWaitingForRespawnState:at_enter()
 		managers.buff_effect:fail_effect(BuffEffectManager.EFFECT_PLAYER_DIED, managers.network:session():local_peer():id())
 	end
 
+	managers.system_event_listener:call_listeners(PlayerManager.EVENT_LOCAL_PLAYER_ENTER_RESPAWN)
+
+	if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_NO_BLEEDOUT_PUMPIKIN_REVIVE) then
+		self._pumpkin_destroyed_listener_key = "pumpkin_destroyed"
+
+		managers.system_event_listener:add_listener(self._pumpkin_destroyed_listener_key, {
+			CoreSystemEventListenerManager.SystemEventListenerManager.PUMPKIN_DESTROYED,
+		}, callback(self, self, "_begin_game_enter_transition"))
+	end
+
 	managers.hud:hide_comm_wheel(true)
 	managers.hud._hud_hit_direction:clean_up()
 	managers.player:force_drop_carry()
@@ -418,7 +428,9 @@ function IngameWaitingForRespawnState:at_enter()
 	managers.hud:set_custody_negotiating_visible(false)
 	managers.hud:set_custody_trade_delay_visible(false)
 
-	if tweak_data.player.damage.automatic_respawn_time and not Global.game_settings.single_player then
+	if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_NO_BLEEDOUT_PUMPIKIN_REVIVE) then
+		managers.hud:set_custody_pumpkin_challenge()
+	elseif tweak_data.player.damage.automatic_respawn_time and not Global.game_settings.single_player then
 		self._auto_respawn_t = Application:time() + tweak_data.player.damage.automatic_respawn_time * managers.player:upgrade_value("player", "respawn_time_multiplier", 1)
 
 		managers.hud:set_custody_timer_visibility(true)
@@ -465,6 +477,12 @@ function IngameWaitingForRespawnState:at_exit()
 	self._fade_in_overlay_eff_id = nil
 
 	managers.hud:set_player_condition("mugshot_normal", "")
+
+	if self._pumpkin_destroyed_listener_key then
+		managers.system_event_listener:remove_listener(self._pumpkin_destroyed_listener_key)
+	end
+
+	managers.system_event_listener:call_listeners(PlayerManager.EVENT_LOCAL_PLAYER_EXIT_RESPAWN)
 	managers.hud:show(PlayerBase.INGAME_HUD_SAFERECT)
 	managers.hud:show(PlayerBase.INGAME_HUD_FULLSCREEN)
 end

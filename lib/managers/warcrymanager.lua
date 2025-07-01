@@ -196,6 +196,10 @@ function WarcryManager:deactivate_warcry()
 end
 
 function WarcryManager:fill_meter_by_value(value, sync)
+	if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_WARCRIES_DISABLED) then
+		return
+	end
+
 	if self._active then
 		return
 	end

@@ -40,9 +40,9 @@ function HUDPlayerCustody:init(hud)
 		name = "timer",
 		text = "00:00",
 		vertical = "bottom",
-		w = 400,
 		font = tweak_data.gui.fonts.din_compressed_outlined_42,
 		font_size = tweak_data.gui.font_sizes.menu_list,
+		w = custody_panel:w(),
 	}
 	local timer = custody_panel:text(timer_params)
 	local _, _, w, h = timer:text_rect()
@@ -56,7 +56,18 @@ function HUDPlayerCustody:init(hud)
 	self._last_trade_delay_time = -1
 end
 
+function HUDPlayerCustody:set_pumpkin_challenge()
+	local top_text = utf8.to_upper(managers.localization:text("card_ra_season_of_resurrection_name_id"))
+
+	self._hud_panel:child("custody_panel"):child("timer_msg"):set_text(top_text)
+
+	local bottom_text = utf8.to_upper(managers.localization:text("hud_pumpkin_revive_tutorial"))
+
+	self._timer:set_text(bottom_text)
+end
+
 function HUDPlayerCustody:set_timer_visibility(visible)
+	self._hud_panel:child("custody_panel"):child("timer_msg"):set_text(utf8.to_upper(managers.localization:text("hud_respawning_in")))
 	self._timer:set_visible(visible)
 	self._hud_panel:child("custody_panel"):child("timer_msg"):set_visible(visible)
 end

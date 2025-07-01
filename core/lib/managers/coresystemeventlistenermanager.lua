@@ -16,6 +16,7 @@ SystemEventListenerManager.EVENT_STEAM_LOOT_DROPPED = "ChallengeCardsManager:_cl
 SystemEventListenerManager.PLAYER_KICKED = "ReadyUpGui:_on_peer_kicked"
 SystemEventListenerManager.PLAYER_LEFT = "ReadyUpGui:_on_peer_left"
 SystemEventListenerManager.PEER_LEVEL_UP = "UnitNetworkHandler:sync_character_level"
+SystemEventListenerManager.PUMPKIN_DESTROYED = "RevivePumpkinExt:destroy"
 
 function SystemEventListenerManager:init()
 	self._listener_holder = CoreSystemEventListenerHolder.SystemEventListenerHolder:new()

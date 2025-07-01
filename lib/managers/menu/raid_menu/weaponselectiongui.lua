@@ -121,7 +121,7 @@ function WeaponSelectionGui:_layout_left_side_panels()
 		h = 924,
 		layer = 1,
 		name = "weapon_selection_panel",
-		w = 560,
+		w = 728,
 		x = 0,
 		y = 96,
 	})

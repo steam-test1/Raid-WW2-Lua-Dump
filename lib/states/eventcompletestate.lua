@@ -177,6 +177,12 @@ function EventCompleteState:at_enter(old_state, params)
 	self._current_job_data = clone(managers.raid_job:current_job())
 	self._active_challenge_card = managers.challenge_cards:get_active_card()
 
+	if self._active_challenge_card ~= nil and self._active_challenge_card.key_name ~= nil and self._active_challenge_card.key_name ~= "empty" and self._active_challenge_card.loot_drop_group then
+		managers.challenge_cards.forced_loot_card = self._active_challenge_card
+	else
+		managers.challenge_cards.forced_loot_card = nil
+	end
+
 	self:_calculate_card_xp_bonuses()
 	self:check_complete_achievements()
 	self:set_statistics_values()
@@ -356,8 +362,13 @@ function EventCompleteState:drop_loot_for_player()
 	end
 
 	local loot_percentage = math.clamp(loot_percentage, 0, 1)
+	local forced_loot_group
 
-	managers.lootdrop:give_loot_to_player(loot_percentage)
+	if self._active_challenge_card ~= nil and self._active_challenge_card.key_name ~= nil and self._active_challenge_card.key_name ~= "empty" then
+		forced_loot_group = self._active_challenge_card.loot_drop_group
+	end
+
+	managers.lootdrop:give_loot_to_player(loot_percentage, false, forced_loot_group)
 end
 
 function EventCompleteState:on_loot_dropped_for_player()

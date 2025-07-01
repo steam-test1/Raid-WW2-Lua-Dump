@@ -190,6 +190,7 @@ require("lib/units/props/FlamerTank")
 require("lib/units/props/MetalDetector")
 require("lib/units/props/ManageSpawnedUnits")
 require("lib/units/characters/CharacterManageSpawnedUnits")
+require("lib/units/RevivePumpkinExt")
 
 GameSetup = GameSetup or class(Setup)
 

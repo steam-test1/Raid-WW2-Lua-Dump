@@ -275,19 +275,24 @@ function RaidGUIControlCardBase:set_card(card_data)
 		local card_texture = empty_slot_texture.texture
 		local card_texture_rect = empty_slot_texture.texture_rect
 
-		self._card_title:set_text(self:translate(self._item_data.name, true))
+		if not self._item_data.title_in_texture then
+			self._card_title:set_text(self:translate(self._item_data.name, true))
 
-		local title_font_size = math.ceil(RaidGUIControlCardBase.TITLE_TEXT_SIZE * (self._card_image:h() / 255))
+			local title_font_size = math.ceil(RaidGUIControlCardBase.TITLE_TEXT_SIZE * (self._card_image:h() / 255))
 
-		self._card_title:set_font_size(title_font_size)
+			self._card_title:set_font_size(title_font_size)
 
-		local _, _, w, h = self._card_title:text_rect()
+			local _, _, w, h = self._card_title:text_rect()
 
-		if h > self._card_title:h() then
-			self:_refit_card_title_text(title_font_size)
+			if h > self._card_title:h() then
+				self:_refit_card_title_text(title_font_size)
+			end
+
+			self._card_title:show()
+		else
+			self._card_title:set_text("")
+			self._card_title:hide()
 		end
-
-		self._card_title:show()
 
 		if rarity_definition.color then
 			-- block empty

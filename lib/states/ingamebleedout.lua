@@ -29,6 +29,12 @@ function IngameBleedOutState:update(t, dt)
 end
 
 function IngameBleedOutState:at_enter()
+	if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_NO_BLEEDOUT_PUMPIKIN_REVIVE) then
+		managers.player:kill()
+
+		return
+	end
+
 	local players = managers.player:players()
 
 	for k, player in ipairs(players) do
