@@ -1,4 +1,12 @@
 AIGraphUnitElement = AIGraphUnitElement or class(MissionElement)
+AIGraphUnitElement.LINK_VALUES = {
+	{
+		layer = "Ai",
+		output = true,
+		table_value = "graph_ids",
+		type = "operator",
+	},
+}
 
 function AIGraphUnitElement:init(unit)
 	EnemyPreferedRemoveUnitElement.super.init(self, unit)

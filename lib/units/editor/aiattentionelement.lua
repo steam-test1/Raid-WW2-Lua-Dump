@@ -1,4 +1,12 @@
 AIAttentionElement = AIAttentionElement or class(MissionElement)
+AIAttentionElement.LINK_VALUES = {
+	{
+		layer = "Statics",
+		output = true,
+		type = "operator",
+		value = "att_obj_u_id",
+	},
+}
 
 function AIAttentionElement:init(unit)
 	AIAttentionElement.super.init(self, unit)

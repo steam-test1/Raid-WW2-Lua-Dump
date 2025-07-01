@@ -1,4 +1,14 @@
 EscortUnitElement = EscortUnitElement or class(MissionElement)
+EscortUnitElement.LINK_VALUES = {
+	{
+		table_value = "spawn_elements",
+	},
+	{
+		layer = "next",
+		output = true,
+		table_value = "next_points",
+	},
+}
 
 function EscortUnitElement:init(unit)
 	EscortUnitElement.super.init(self, unit)

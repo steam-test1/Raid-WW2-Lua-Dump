@@ -3,14 +3,8 @@ core:import("CoreMenuCallbackHandler")
 require("lib/managers/menu/MenuInput")
 require("lib/managers/menu/MenuRenderer")
 require("lib/managers/menu/items/MenuItemColumn")
-require("lib/managers/menu/items/MenuItemLevel")
-require("lib/managers/menu/items/MenuItemMultiChoice")
-require("lib/managers/menu/items/MenuItemMultiChoiceRaid")
 require("lib/managers/menu/items/MenuItemToggle")
-require("lib/managers/menu/items/MenuItemCustomizeController")
 require("lib/managers/menu/items/MenuItemInput")
-require("lib/managers/menu/nodes/MenuNodeTable")
-require("lib/managers/menu/nodes/MenuNodeServerList")
 require("lib/managers/menu/MenuCallbackHandler")
 require("lib/managers/menu/raid_menu/RaidMenuCallbackHandler")
 core:import("CoreEvent")
@@ -36,459 +30,252 @@ function MenuManager:init(is_start_menu)
 
 	self:create_controller()
 
+	local callback_handler = MenuCallbackHandler:new()
+
 	if is_start_menu then
-		local menu_main = {
-			callback_handler = MenuCallbackHandler:new(),
+		self:register_menu({
+			callback_handler = callback_handler,
 			content_file = "gamedata/raid/menus/start_menu",
 			id = "start_menu",
 			input = "MenuInput",
 			name = "menu_main",
 			renderer = "MenuRenderer",
-		}
-
-		self:register_menu(menu_main)
-
-		local mission_join_menu = {
-			callback_handler = MenuCallbackHandler:new(),
-			content_file = "gamedata/raid/menus/mission_join_menu",
-			id = "mission_join_menu",
-			input = "MenuInput",
-			name = "mission_join_menu",
-			renderer = "MenuRenderer",
-		}
-
-		self:register_menu(mission_join_menu)
-
-		local raid_options_menu = {
-			callback_handler = MenuCallbackHandler:new(),
-			content_file = "gamedata/raid/menus/raid_options_menu",
-			id = "raid_options_menu",
-			input = "MenuInput",
-			name = "raid_options_menu",
-			renderer = "MenuRenderer",
-		}
-
-		self:register_menu(raid_options_menu)
-
-		local raid_menu_credits = {
-			callback_handler = MenuCallbackHandler:new(),
-			content_file = "gamedata/raid/menus/show_credits_menu",
-			id = "raid_credits_menu",
-			input = "MenuInput",
-			name = "raid_credits_menu",
-			renderer = "MenuRenderer",
-		}
-
-		self:register_menu(raid_menu_credits)
-
-		local raid_menu_options_controls = {
-			callback_handler = MenuCallbackHandler:new(),
-			content_file = "gamedata/raid/menus/raid_menu_options_controls",
-			id = "raid_menu_options_controls",
-			input = "MenuInput",
-			name = "raid_menu_options_controls",
-			renderer = "MenuRenderer",
-		}
-
-		self:register_menu(raid_menu_options_controls)
-
-		local raid_menu_options_controls_keybinds = {
-			callback_handler = MenuCallbackHandler:new(),
-			content_file = "gamedata/raid/menus/raid_menu_options_controls_keybinds",
-			id = "raid_menu_options_controls_keybinds",
-			input = "MenuInput",
-			name = "raid_menu_options_controls_keybinds",
-			renderer = "MenuRenderer",
-		}
-
-		self:register_menu(raid_menu_options_controls_keybinds)
-
-		local raid_menu_options_controller_mapping = {
-			callback_handler = MenuCallbackHandler:new(),
-			content_file = "gamedata/raid/menus/raid_menu_options_controller_mapping",
-			id = "raid_menu_options_controller_mapping",
-			input = "MenuInput",
-			name = "raid_menu_options_controller_mapping",
-			renderer = "MenuRenderer",
-		}
-
-		self:register_menu(raid_menu_options_controller_mapping)
-
-		local raid_menu_options_video = {
-			callback_handler = MenuCallbackHandler:new(),
-			content_file = "gamedata/raid/menus/raid_menu_options_video",
-			id = "raid_menu_options_video",
-			input = "MenuInput",
-			name = "raid_menu_options_video",
-			renderer = "MenuRenderer",
-		}
-
-		self:register_menu(raid_menu_options_video)
-
-		local raid_menu_options_video_advanced = {
-			callback_handler = MenuCallbackHandler:new(),
-			content_file = "gamedata/raid/menus/raid_menu_options_video_advanced",
-			id = "raid_menu_options_video_advanced",
-			input = "MenuInput",
-			name = "raid_menu_options_video_advanced",
-			renderer = "MenuRenderer",
-		}
-
-		self:register_menu(raid_menu_options_video_advanced)
-
-		local raid_menu_options_interface = {
-			callback_handler = MenuCallbackHandler:new(),
-			content_file = "gamedata/raid/menus/raid_menu_options_interface",
-			id = "raid_menu_options_interface",
-			input = "MenuInput",
-			name = "raid_menu_options_interface",
-			renderer = "MenuRenderer",
-		}
-
-		self:register_menu(raid_menu_options_interface)
-
-		local raid_menu_options_sound = {
-			callback_handler = MenuCallbackHandler:new(),
-			content_file = "gamedata/raid/menus/raid_menu_options_sound",
-			id = "raid_menu_options_sound",
-			input = "MenuInput",
-			name = "raid_menu_options_sound",
-			renderer = "MenuRenderer",
-		}
-
-		self:register_menu(raid_menu_options_sound)
-
-		local raid_menu_options_network = {
-			callback_handler = MenuCallbackHandler:new(),
-			content_file = "gamedata/raid/menus/raid_menu_options_network",
-			id = "raid_menu_options_network",
-			input = "MenuInput",
-			name = "raid_menu_options_network",
-			renderer = "MenuRenderer",
-		}
-
-		self:register_menu(raid_menu_options_network)
+		})
 	else
-		local mission_join_menu = {
-			callback_handler = MenuCallbackHandler:new(),
-			content_file = "gamedata/raid/menus/mission_join_menu",
-			id = "mission_join_menu",
-			input = "MenuInput",
-			name = "mission_join_menu",
-			renderer = "MenuRenderer",
-		}
-
-		self:register_menu(mission_join_menu)
-
-		local mission_selection_menu = {
-			callback_handler = MenuCallbackHandler:new(),
+		self:register_menu({
+			callback_handler = callback_handler,
 			content_file = "gamedata/raid/menus/mission_selection_menu",
 			id = "mission_selection_menu",
 			input = "MenuInput",
 			name = "mission_selection_menu",
 			renderer = "MenuRenderer",
-		}
-
-		self:register_menu(mission_selection_menu)
-
-		local mission_unlock_menu = {
-			callback_handler = MenuCallbackHandler:new(),
+		})
+		self:register_menu({
+			callback_handler = callback_handler,
 			content_file = "gamedata/raid/menus/mission_unlock_menu",
 			id = "mission_unlock_menu",
 			input = "MenuInput",
 			name = "mission_unlock_menu",
 			renderer = "MenuRenderer",
-		}
-
-		self:register_menu(mission_unlock_menu)
-
-		local profile_selection_menu = {
-			callback_handler = MenuCallbackHandler:new(),
+		})
+		self:register_menu({
+			callback_handler = callback_handler,
 			content_file = "gamedata/raid/menus/profile_selection_menu",
 			id = "profile_selection_menu",
 			input = "MenuInput",
 			name = "profile_selection_menu",
 			renderer = "MenuRenderer",
-		}
-
-		self:register_menu(profile_selection_menu)
-
-		local profile_creation_menu = {
-			callback_handler = MenuCallbackHandler:new(),
+		})
+		self:register_menu({
+			callback_handler = callback_handler,
 			content_file = "gamedata/raid/menus/profile_creation_menu",
 			id = "profile_creation_menu",
 			input = "MenuInput",
 			name = "profile_creation_menu",
 			renderer = "MenuRenderer",
-		}
-
-		self:register_menu(profile_creation_menu)
-
-		local character_customization_menu = {
-			callback_handler = MenuCallbackHandler:new(),
+		})
+		self:register_menu({
+			callback_handler = callback_handler,
 			content_file = "gamedata/raid/menus/character_customization_menu",
 			id = "character_customization_menu",
 			input = "MenuInput",
 			name = "character_customization_menu",
 			renderer = "MenuRenderer",
-		}
-
-		self:register_menu(character_customization_menu)
-
-		local raid_main_menu = {
-			callback_handler = MenuCallbackHandler:new(),
+		})
+		self:register_menu({
+			callback_handler = callback_handler,
 			content_file = "gamedata/raid/menus/raid_main_menu",
 			id = "raid_main_menu",
 			input = "MenuInput",
 			name = "raid_main_menu",
 			renderer = "MenuRenderer",
-		}
-
-		self:register_menu(raid_main_menu)
-
-		local raid_options_menu = {
-			callback_handler = MenuCallbackHandler:new(),
-			content_file = "gamedata/raid/menus/raid_options_menu",
-			id = "raid_options_menu",
-			input = "MenuInput",
-			name = "raid_options_menu",
-			renderer = "MenuRenderer",
-		}
-
-		self:register_menu(raid_options_menu)
-
-		local challenge_cards_menu = {
-			callback_handler = MenuCallbackHandler:new(),
+		})
+		self:register_menu({
+			callback_handler = callback_handler,
 			content_file = "gamedata/raid/menus/challenge_cards_menu",
 			id = "challenge_cards_menu",
 			input = "MenuInput",
 			name = "challenge_cards_menu",
 			renderer = "MenuRenderer",
-		}
-
-		self:register_menu(challenge_cards_menu)
-
-		local ready_up_menu = {
-			callback_handler = MenuCallbackHandler:new(),
+		})
+		self:register_menu({
+			callback_handler = callback_handler,
 			content_file = "gamedata/raid/menus/ready_up_menu",
 			id = "ready_up_menu",
 			input = "MenuInput",
 			name = "ready_up_menu",
 			renderer = "MenuRenderer",
-		}
-
-		self:register_menu(ready_up_menu)
-
-		local challenge_cards_view_menu = {
-			callback_handler = MenuCallbackHandler:new(),
+		})
+		self:register_menu({
+			callback_handler = callback_handler,
 			content_file = "gamedata/raid/menus/challenge_cards_view_menu",
 			id = "challenge_cards_view_menu",
 			input = "MenuInput",
 			name = "challenge_cards_view_menu",
 			renderer = "MenuRenderer",
-		}
-
-		self:register_menu(challenge_cards_view_menu)
-
-		local raid_experience_menu = {
-			callback_handler = MenuCallbackHandler:new(),
+		})
+		self:register_menu({
+			callback_handler = callback_handler,
 			content_file = "gamedata/raid/menus/xp_menu",
 			id = "raid_menu_xp",
 			input = "MenuInput",
 			name = "raid_menu_xp",
 			renderer = "MenuRenderer",
-		}
-
-		self:register_menu(raid_experience_menu)
-
-		local raid_post_game_breakdown_menu = {
-			callback_handler = MenuCallbackHandler:new(),
+		})
+		self:register_menu({
+			callback_handler = callback_handler,
 			content_file = "gamedata/raid/menus/post_game_breakdown",
 			id = "raid_menu_post_game_breakdown",
 			input = "MenuInput",
 			name = "raid_menu_post_game_breakdown",
 			renderer = "MenuRenderer",
-		}
-
-		self:register_menu(raid_post_game_breakdown_menu)
-
-		local raid_special_honors_menu = {
-			callback_handler = MenuCallbackHandler:new(),
+		})
+		self:register_menu({
+			callback_handler = callback_handler,
 			content_file = "gamedata/raid/menus/special_honors",
 			id = "raid_menu_special_honors",
 			input = "MenuInput",
 			name = "raid_menu_special_honors",
 			renderer = "MenuRenderer",
-		}
-
-		self:register_menu(raid_special_honors_menu)
-
-		local raid_loot_screen_menu = {
-			callback_handler = MenuCallbackHandler:new(),
+		})
+		self:register_menu({
+			callback_handler = callback_handler,
 			content_file = "gamedata/raid/menus/loot_screen_menu",
 			id = "raid_menu_loot_screen",
 			input = "MenuInput",
 			name = "raid_menu_loot_screen",
 			renderer = "MenuRenderer",
-		}
-
-		self:register_menu(raid_loot_screen_menu)
-
-		local raid_greed_loot_screen_menu = {
-			callback_handler = MenuCallbackHandler:new(),
+		})
+		self:register_menu({
+			callback_handler = callback_handler,
 			content_file = "gamedata/raid/menus/greed_loot_screen_menu",
 			id = "raid_menu_greed_loot_screen",
 			input = "MenuInput",
 			name = "raid_menu_greed_loot_screen",
 			renderer = "MenuRenderer",
-		}
-
-		self:register_menu(raid_greed_loot_screen_menu)
-
-		local raid_menu_weapon_select = {
-			callback_handler = MenuCallbackHandler:new(),
+		})
+		self:register_menu({
+			callback_handler = callback_handler,
 			content_file = "gamedata/raid/menus/weapon_select_menu",
 			id = "raid_menu_weapon_select",
 			input = "MenuInput",
 			name = "raid_menu_weapon_select",
 			renderer = "MenuRenderer",
-		}
-
-		self:register_menu(raid_menu_weapon_select)
-
-		local raid_menu_credits = {
-			callback_handler = MenuCallbackHandler:new(),
-			content_file = "gamedata/raid/menus/show_credits_menu",
-			id = "raid_credits_menu",
-			input = "MenuInput",
-			name = "raid_credits_menu",
-			renderer = "MenuRenderer",
-		}
-
-		self:register_menu(raid_menu_credits)
-
-		local raid_menu_options_controls = {
-			callback_handler = MenuCallbackHandler:new(),
-			content_file = "gamedata/raid/menus/raid_menu_options_controls",
-			id = "raid_menu_options_controls",
-			input = "MenuInput",
-			name = "raid_menu_options_controls",
-			renderer = "MenuRenderer",
-		}
-
-		self:register_menu(raid_menu_options_controls)
-
-		local raid_menu_options_controller_mapping = {
-			callback_handler = MenuCallbackHandler:new(),
-			content_file = "gamedata/raid/menus/raid_menu_options_controller_mapping",
-			id = "raid_menu_options_controller_mapping",
-			input = "MenuInput",
-			name = "raid_menu_options_controller_mapping",
-			renderer = "MenuRenderer",
-		}
-
-		self:register_menu(raid_menu_options_controller_mapping)
-
-		local raid_menu_options_controls_keybinds = {
-			callback_handler = MenuCallbackHandler:new(),
-			content_file = "gamedata/raid/menus/raid_menu_options_controls_keybinds",
-			id = "raid_menu_options_controls_keybinds",
-			input = "MenuInput",
-			name = "raid_menu_options_controls_keybinds",
-			renderer = "MenuRenderer",
-		}
-
-		self:register_menu(raid_menu_options_controls_keybinds)
-
-		local raid_menu_options_video = {
-			callback_handler = MenuCallbackHandler:new(),
-			content_file = "gamedata/raid/menus/raid_menu_options_video",
-			id = "raid_menu_options_video",
-			input = "MenuInput",
-			name = "raid_menu_options_video",
-			renderer = "MenuRenderer",
-		}
-
-		self:register_menu(raid_menu_options_video)
-
-		local raid_menu_options_video_advanced = {
-			callback_handler = MenuCallbackHandler:new(),
-			content_file = "gamedata/raid/menus/raid_menu_options_video_advanced",
-			id = "raid_menu_options_video_advanced",
-			input = "MenuInput",
-			name = "raid_menu_options_video_advanced",
-			renderer = "MenuRenderer",
-		}
-
-		self:register_menu(raid_menu_options_video_advanced)
-
-		local raid_menu_options_interface = {
-			callback_handler = MenuCallbackHandler:new(),
-			content_file = "gamedata/raid/menus/raid_menu_options_interface",
-			id = "raid_menu_options_interface",
-			input = "MenuInput",
-			name = "raid_menu_options_interface",
-			renderer = "MenuRenderer",
-		}
-
-		self:register_menu(raid_menu_options_interface)
-
-		local raid_menu_options_sound = {
-			callback_handler = MenuCallbackHandler:new(),
-			content_file = "gamedata/raid/menus/raid_menu_options_sound",
-			id = "raid_menu_options_sound",
-			input = "MenuInput",
-			name = "raid_menu_options_sound",
-			renderer = "MenuRenderer",
-		}
-
-		self:register_menu(raid_menu_options_sound)
-
-		local raid_menu_options_network = {
-			callback_handler = MenuCallbackHandler:new(),
-			content_file = "gamedata/raid/menus/raid_menu_options_network",
-			id = "raid_menu_options_network",
-			input = "MenuInput",
-			name = "raid_menu_options_network",
-			renderer = "MenuRenderer",
-		}
-
-		self:register_menu(raid_menu_options_network)
-
-		local gold_asset_store_menu = {
-			callback_handler = MenuCallbackHandler:new(),
+		})
+		self:register_menu({
+			callback_handler = callback_handler,
 			content_file = "gamedata/raid/menus/gold_asset_store_menu",
 			id = "gold_asset_store_menu",
 			input = "MenuInput",
 			name = "gold_asset_store_menu",
 			renderer = "MenuRenderer",
-		}
-
-		self:register_menu(gold_asset_store_menu)
-
-		local intel_menu = {
-			callback_handler = MenuCallbackHandler:new(),
+		})
+		self:register_menu({
+			callback_handler = callback_handler,
 			content_file = "gamedata/raid/menus/intel_menu",
 			id = "intel_menu",
 			input = "MenuInput",
 			name = "intel_menu",
 			renderer = "MenuRenderer",
-		}
-
-		self:register_menu(intel_menu)
-
-		local comic_book_menu = {
-			callback_handler = MenuCallbackHandler:new(),
+		})
+		self:register_menu({
+			callback_handler = callback_handler,
 			content_file = "gamedata/raid/menus/comic_book_menu",
 			id = "comic_book_menu",
 			input = "MenuInput",
 			name = "comic_book_menu",
 			renderer = "MenuRenderer",
-		}
-
-		self:register_menu(comic_book_menu)
+		})
 	end
 
+	self:register_menu({
+		callback_handler = callback_handler,
+		content_file = "gamedata/raid/menus/show_credits_menu",
+		id = "raid_credits_menu",
+		input = "MenuInput",
+		name = "raid_credits_menu",
+		renderer = "MenuRenderer",
+	})
+	self:register_menu({
+		callback_handler = callback_handler,
+		content_file = "gamedata/raid/menus/mission_join_menu",
+		id = "mission_join_menu",
+		input = "MenuInput",
+		name = "mission_join_menu",
+		renderer = "MenuRenderer",
+	})
+	self:register_menu({
+		callback_handler = callback_handler,
+		content_file = "gamedata/raid/menus/raid_options_menu",
+		id = "raid_options_menu",
+		input = "MenuInput",
+		name = "raid_options_menu",
+		renderer = "MenuRenderer",
+	})
+	self:register_menu({
+		callback_handler = callback_handler,
+		content_file = "gamedata/raid/menus/raid_menu_options_controls",
+		id = "raid_menu_options_controls",
+		input = "MenuInput",
+		name = "raid_menu_options_controls",
+		renderer = "MenuRenderer",
+	})
+	self:register_menu({
+		callback_handler = callback_handler,
+		content_file = "gamedata/raid/menus/raid_menu_options_controls_keybinds",
+		id = "raid_menu_options_controls_keybinds",
+		input = "MenuInput",
+		name = "raid_menu_options_controls_keybinds",
+		renderer = "MenuRenderer",
+	})
+	self:register_menu({
+		callback_handler = callback_handler,
+		content_file = "gamedata/raid/menus/raid_menu_options_controller_mapping",
+		id = "raid_menu_options_controller_mapping",
+		input = "MenuInput",
+		name = "raid_menu_options_controller_mapping",
+		renderer = "MenuRenderer",
+	})
+	self:register_menu({
+		callback_handler = callback_handler,
+		content_file = "gamedata/raid/menus/raid_menu_options_video",
+		id = "raid_menu_options_video",
+		input = "MenuInput",
+		name = "raid_menu_options_video",
+		renderer = "MenuRenderer",
+	})
+	self:register_menu({
+		callback_handler = callback_handler,
+		content_file = "gamedata/raid/menus/raid_menu_options_video_advanced",
+		id = "raid_menu_options_video_advanced",
+		input = "MenuInput",
+		name = "raid_menu_options_video_advanced",
+		renderer = "MenuRenderer",
+	})
+	self:register_menu({
+		callback_handler = callback_handler,
+		content_file = "gamedata/raid/menus/raid_menu_options_interface",
+		id = "raid_menu_options_interface",
+		input = "MenuInput",
+		name = "raid_menu_options_interface",
+		renderer = "MenuRenderer",
+	})
+	self:register_menu({
+		callback_handler = callback_handler,
+		content_file = "gamedata/raid/menus/raid_menu_options_sound",
+		id = "raid_menu_options_sound",
+		input = "MenuInput",
+		name = "raid_menu_options_sound",
+		renderer = "MenuRenderer",
+	})
+	self:register_menu({
+		callback_handler = callback_handler,
+		content_file = "gamedata/raid/menus/raid_menu_options_network",
+		id = "raid_menu_options_network",
+		input = "MenuInput",
+		name = "raid_menu_options_network",
+		renderer = "MenuRenderer",
+	})
 	self._controller:add_trigger("toggle_menu", callback(self, self, "toggle_menu_state"))
 	self._controller:add_trigger("toggle_hud", callback(self, self, "toggle_hud_state"))
 
@@ -510,7 +297,7 @@ function MenuManager:init(is_start_menu)
 	managers.user:add_setting_changed_callback("invert_camera_x", callback(self, self, "invert_camera_x_changed"), true)
 	managers.user:add_setting_changed_callback("invert_camera_y", callback(self, self, "invert_camera_y_changed"), true)
 	managers.user:add_setting_changed_callback("southpaw", callback(self, self, "southpaw_changed"), true)
-	managers.user:add_setting_changed_callback("subtitle", callback(self, self, "subtitle_changed"), true)
+	managers.user:add_setting_changed_callback("subtitles", callback(self, self, "subtitle_changed"), true)
 	managers.user:add_setting_changed_callback("music_volume", callback(self, self, "music_volume_changed"), true)
 	managers.user:add_setting_changed_callback("sfx_volume", callback(self, self, "sfx_volume_changed"), true)
 	managers.user:add_setting_changed_callback("voice_volume", callback(self, self, "voice_volume_changed"), true)
@@ -526,11 +313,11 @@ function MenuManager:init(is_start_menu)
 	managers.user:add_setting_changed_callback("net_packet_throttling", callback(self, self, "net_packet_throttling_changed"), true)
 	managers.user:add_setting_changed_callback("net_forwarding", callback(self, self, "net_forwarding_changed"), true)
 	managers.user:add_setting_changed_callback("net_use_compression", callback(self, self, "net_use_compression_changed"), true)
-	managers.user:add_setting_changed_callback("use_thq_weapon_parts", callback(self, self, "use_thq_weapon_parts_changed"), true)
 	managers.user:add_setting_changed_callback("detail_distance", callback(self, self, "detail_distance_setting_changed"), true)
 	managers.user:add_setting_changed_callback("use_parallax", callback(self, self, "use_parallax_setting_changed"), true)
 	managers.user:add_setting_changed_callback("dof_setting", callback(self, self, "dof_setting_changed"), true)
 	managers.user:add_setting_changed_callback("hud_special_weapon_panels", callback(self, self, "iconography_ammo_changed"), true)
+	managers.user:add_setting_changed_callback("capitalize_names", callback(self, self, "capitalize_names_changed"), true)
 	managers.user:add_active_user_state_changed_callback(callback(self, self, "on_user_changed"))
 	managers.user:add_storage_changed_callback(callback(self, self, "on_storage_changed"))
 	managers.savefile:add_active_changed_callback(callback(self, self, "safefile_manager_active_changed"))
@@ -604,7 +391,7 @@ function MenuManager:controller_hotswap_triggered()
 	self:recreate_controller()
 	self._controller:add_trigger("toggle_menu", callback(self, self, "toggle_menu_state"))
 
-	local is_pc_controller = not managers.controller:is_controller_present()
+	local is_pc_controller = not managers.controller:is_using_controller()
 
 	if is_pc_controller then
 		self._controller:add_trigger("toggle_chat", callback(self, self, "toggle_chatinput"))
@@ -622,10 +409,6 @@ function MenuManager:controller_hotswap_triggered()
 
 	self._controller:add_trigger("push_to_talk", callback(self, self, "push_to_talk", true))
 	self._controller:add_release_trigger("push_to_talk", callback(self, self, "push_to_talk", false))
-end
-
-function MenuManager:post_event(event)
-	return
 end
 
 function MenuManager:_cb_matchmake_found_game(game_id, created)
@@ -742,8 +525,6 @@ function MenuManager:back(queue, skip_nodes)
 end
 
 function MenuManager:close_menu(menu_name)
-	self:post_event("menu_exit")
-
 	if Application:paused() and menu_name == "menu_pause" then
 		Application:set_pause(false)
 	end
@@ -898,7 +679,7 @@ end
 
 function MenuManager:toggle_hud_state()
 	if managers.hud and not managers.hud:chat_focus() and not self:is_active() then
-		if managers.hud._disabled then
+		if managers.hud:is_disabled() then
 			managers.hud:set_enabled()
 		else
 			managers.hud:set_disabled()
@@ -911,9 +692,9 @@ function MenuManager:set_slot_voice(peer, peer_id, active)
 end
 
 function MenuManager:recreate_controller()
-	self._controller = managers.controller:create_controller("MenuManager", nil, false)
+	self._controller = managers.controller:create_controller("menu_manager", nil, false)
 
-	local setup = self._controller:get_setup()
+	local setup = managers.controller:get_clean_default_setup()
 	local look_connection = setup:get_connection("look")
 
 	self._look_multiplier = look_connection:get_multiplier()
@@ -927,10 +708,10 @@ end
 
 function MenuManager:create_controller()
 	if not self._controller then
-		self._controller = managers.controller:get_controller_by_name("MenuManager")
+		self._controller = managers.controller:get_controller_by_name("menu_manager")
 
 		if not self._controller then
-			self._controller = managers.controller:create_controller("MenuManager", nil, false)
+			self._controller = managers.controller:create_controller("menu_manager", nil, false)
 		end
 
 		local setup = self._controller:get_setup()
@@ -1040,7 +821,6 @@ function MenuManager:set_mouse_sensitivity(zoomed)
 	mvector3.set_x(multiplier, sense_x * self._look_multiplier.x)
 	mvector3.set_y(multiplier, sense_y * self._look_multiplier.y)
 	self._controller:get_setup():get_connection("look"):set_multiplier(multiplier)
-	managers.controller:rebind_connections()
 end
 
 function MenuManager:camera_sensitivity_x_changed(name, old_value, new_value)
@@ -1051,14 +831,13 @@ function MenuManager:camera_sensitivity_x_changed(name, old_value, new_value)
 	mvector3.set(look_multiplier, look_connection:get_multiplier())
 	mvector3.set_x(look_multiplier, self._look_multiplier.x * new_value)
 	look_connection:set_multiplier(look_multiplier)
-	managers.controller:rebind_connections()
 
-	if alive(managers.player:player_unit()) then
-		local plr_state = managers.player:player_unit():movement():current_state()
-		local weapon_id = alive(plr_state._equipped_unit) and plr_state._equipped_unit:base():get_name_id()
-		local stances = tweak_data.player.stances[weapon_id] or tweak_data.player.stances.default
+	local player = managers.player:player_unit()
 
-		self:set_mouse_sensitivity(plr_state:in_steelsight() and stances.steelsight.zoom_fov)
+	if alive(player) then
+		local plr_state = player:movement():current_state()
+
+		self:set_mouse_sensitivity(plr_state:in_steelsight())
 	else
 		self:set_mouse_sensitivity(false)
 	end
@@ -1072,14 +851,13 @@ function MenuManager:camera_sensitivity_y_changed(name, old_value, new_value)
 	mvector3.set(look_multiplier, look_connection:get_multiplier())
 	mvector3.set_y(look_multiplier, self._look_multiplier.y * new_value)
 	look_connection:set_multiplier(look_multiplier)
-	managers.controller:rebind_connections()
 
-	if alive(managers.player:player_unit()) then
-		local plr_state = managers.player:player_unit():movement():current_state()
-		local weapon_id = alive(plr_state._equipped_unit) and plr_state._equipped_unit:base():get_name_id()
-		local stances = tweak_data.player.stances[weapon_id] or tweak_data.player.stances.default
+	local player = managers.player:player_unit()
 
-		self:set_mouse_sensitivity(plr_state:in_steelsight() and stances.steelsight.zoom_fov)
+	if alive(player) then
+		local plr_state = player:movement():current_state()
+
+		self:set_mouse_sensitivity(plr_state:in_steelsight())
 	else
 		self:set_mouse_sensitivity(false)
 	end
@@ -1233,6 +1011,17 @@ function MenuManager:iconography_ammo_changed(name, old_value, new_value)
 	end
 end
 
+function MenuManager:capitalize_names_changed(name, old_value, new_value)
+	if managers.menu_component then
+		managers.menu_component:refresh_player_profile_gui()
+	end
+
+	if managers.hud then
+		managers.hud:refresh_player_panels()
+		managers.hud:refresh_name_labels()
+	end
+end
+
 function MenuManager:fps_limit_changed(name, old_value, new_value)
 	if not IS_PC then
 		return
@@ -1254,22 +1043,6 @@ end
 
 function MenuManager:net_use_compression_changed(name, old_value, new_value)
 	Network:set_use_compression(new_value)
-end
-
-function MenuManager:use_thq_weapon_parts_changed(name, old_value, new_value)
-	if managers.weapon_factory then
-		managers.weapon_factory:set_use_thq_weapon_parts(managers.user:get_setting("use_thq_weapon_parts"))
-	end
-
-	if not game_state_machine or game_state_machine:current_state_name() ~= "menu_main" then
-		return
-	end
-
-	if managers.network and managers.network:session() then
-		for _, peer in ipairs(managers.network:session():peers()) do
-			peer:force_reload_outfit()
-		end
-	end
 end
 
 function MenuManager:subtitle_changed(name, old_value, new_value)
@@ -1671,10 +1444,6 @@ function MenuManager:exit_online_menues()
 	end
 
 	self:open_menu("menu_main")
-
-	if not managers.menu:is_pc_controller() then
-		-- block empty
-	end
 end
 
 function MenuManager:leave_online_menu()
@@ -1748,7 +1517,6 @@ function MenuManager:do_clear_progress()
 	managers.dlc:on_reset_profile()
 	managers.mission:on_reset_profile()
 	managers.raid_job:cleanup()
-	managers.user:set_setting("mask_set", "clowns")
 
 	if IS_PC then
 		managers.statistics:publish_level_to_steam()

@@ -89,6 +89,26 @@ function LootBagUnitElement:update_editing(time, rel_time)
 	end
 end
 
+function LootBagUnitElement:aim_unit(pos)
+	if pos then
+		mvector3.set(self._hed.spawn_dir, pos)
+		mvector3.subtract(self._hed.spawn_dir, self._unit:position())
+		mvector3.normalize(self._hed.spawn_dir)
+
+		local from = self._unit:position()
+		local to = from + self._hed.spawn_dir * 100000
+		local ray = managers.editor:unit_by_raycast({
+			from = from,
+			mask = managers.slot:get_mask("statics_layer"),
+			to = to,
+		})
+
+		if ray and ray.unit then
+			Application:draw_sphere(ray.position, 25, 1, 0, 0)
+		end
+	end
+end
+
 function LootBagUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -108,6 +128,12 @@ end
 LootBagTriggerUnitElement = LootBagTriggerUnitElement or class(MissionElement)
 LootBagTriggerUnitElement.SAVE_UNIT_POSITION = false
 LootBagTriggerUnitElement.SAVE_UNIT_ROTATION = false
+LootBagTriggerUnitElement.LINK_VALUES = {
+	{
+		table_value = "elements",
+		type = "trigger",
+	},
+}
 
 function LootBagTriggerUnitElement:init(unit)
 	LootBagTriggerUnitElement.super.init(self, unit)

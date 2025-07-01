@@ -124,7 +124,12 @@ function RaidGUIControlServerPlayerDescription:set_data(data)
 		self._class_icon:set_center_x(32)
 		self._class_icon:set_center_y(48)
 		self._class_icon:show()
-		self._player_name:set_text(utf8.to_upper(name))
+
+		if managers.user:get_setting("capitalize_names") then
+			name = utf8.to_upper(name)
+		end
+
+		self._player_name:set_text(name)
 		self._player_name:show()
 
 		if class and tweak_data.skilltree.classes[class] and nationality then

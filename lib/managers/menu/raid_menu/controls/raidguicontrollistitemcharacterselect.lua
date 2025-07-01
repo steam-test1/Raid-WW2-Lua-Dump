@@ -329,7 +329,7 @@ function RaidGUIControlListItemCharacterSelect:select(dont_trigger_selected_call
 		self._on_item_selected_callback(self, self._character_slot)
 	end
 
-	if not managers.controller:is_controller_present() then
+	if not managers.controller:is_using_controller() then
 		if self._customize_button and self._active then
 			self._customize_button:set_visible(true)
 		end

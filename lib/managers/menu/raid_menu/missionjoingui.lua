@@ -107,10 +107,10 @@ function MissionJoinGui:_layout_filters()
 		y = self._friends_only_button:y() + 50,
 	})
 	self._distance_filter_stepper = self._filters_panel:stepper({
-		arrow_color = tweak_data.menu.raid_red,
+		arrow_color = tweak_data.gui.colors.raid_red,
 		button_h = self.FILTER_BUTTON_H,
 		button_w = self.FILTER_BUTTON_W,
-		color = tweak_data.menu.raid_red,
+		color = tweak_data.gui.colors.raid_red,
 		data_source_callback = callback(self, self, "data_source_distance_filter_stepper"),
 		description = self:translate("menu_mission_join_filters_distance_filter", true),
 		font_size = self.FILTER_FONT_SIZE,
@@ -126,10 +126,10 @@ function MissionJoinGui:_layout_filters()
 		y = self._in_camp_servers_only:y() + 50,
 	})
 	self._difficulty_filter_stepper = self._filters_panel:stepper({
-		arrow_color = tweak_data.menu.raid_red,
+		arrow_color = tweak_data.gui.colors.raid_red,
 		button_h = self.FILTER_BUTTON_H,
 		button_w = self.FILTER_BUTTON_W,
-		color = tweak_data.menu.raid_red,
+		color = tweak_data.gui.colors.raid_red,
 		data_source_callback = callback(self, self, "data_source_difficulty_filter_stepper"),
 		description = self:translate("menu_mission_join_filters_difficulty_filter", true),
 		font_size = self.FILTER_FONT_SIZE,
@@ -145,10 +145,10 @@ function MissionJoinGui:_layout_filters()
 		y = self._distance_filter_stepper:y() + 50,
 	})
 	self._mission_filter_stepper = self._filters_panel:stepper({
-		arrow_color = tweak_data.menu.raid_red,
+		arrow_color = tweak_data.gui.colors.raid_red,
 		button_h = self.FILTER_BUTTON_H,
 		button_w = self.FILTER_BUTTON_W,
-		color = tweak_data.menu.raid_red,
+		color = tweak_data.gui.colors.raid_red,
 		data_source_callback = callback(self, self, "data_source_mission_filter_stepper"),
 		description = self:translate("menu_mission_join_filters_mission_filter", true),
 		font_size = self.FILTER_FONT_SIZE,
@@ -529,8 +529,8 @@ function MissionJoinGui:_layout_footer_buttons()
 		name = "apply_filters_button",
 		on_click_callback = callback(self, self, "on_click_apply_filters_button"),
 		text = self:translate("menu_mission_join_filters_apply", true),
-		texture_color = tweak_data.menu.raid_red,
-		texture_highlight_color = tweak_data.menu.raid_red,
+		texture_color = tweak_data.gui.colors.raid_red,
+		texture_highlight_color = tweak_data.gui.colors.raid_red,
 		vertical = "center",
 		w = 128,
 		x = 1280,
@@ -543,8 +543,8 @@ function MissionJoinGui:_layout_footer_buttons()
 		name = "show_filters_button",
 		on_click_callback = callback(self, self, "on_click_show_filters_button"),
 		text = self:translate("menu_mission_join_filters_show", true),
-		texture_color = tweak_data.menu.raid_red,
-		texture_highlight_color = tweak_data.menu.raid_red,
+		texture_color = tweak_data.gui.colors.raid_red,
+		texture_highlight_color = tweak_data.gui.colors.raid_red,
 		vertical = "center",
 		w = 128,
 		x = 1536,
@@ -654,6 +654,12 @@ function MissionJoinGui:data_source_servers_table()
 			}
 		end
 
+		local host_name = value.host_name
+
+		if managers.user:get_setting("capitalize_names") then
+			host_name = utf8.to_upper(host_name)
+		end
+
 		table.insert(missions, {
 			mission_data,
 			{
@@ -663,7 +669,7 @@ function MissionJoinGui:data_source_servers_table()
 			},
 			{
 				info = value.host_name,
-				text = utf8.to_upper(value.host_name),
+				text = host_name,
 				value = value.room_id,
 			},
 			{
@@ -973,10 +979,17 @@ function MissionJoinGui:_set_game_description_data(data)
 		end
 	end
 
-	local card_key_name = data.challenge_card
+	local card_split = string.split(data.challenge_card, ",")
+	local card_key_name = card_split[1]
 	local card_data
 
-	if card_key_name ~= "empty" then
+	if card_key_name == "bounty_card" then
+		local seed = card_split[2]
+
+		card_data = managers.challenge_cards:generate_bounty_card(seed)
+
+		math.randomseed()
+	elseif card_key_name ~= "empty" then
 		card_data = tweak_data.challenge_cards.cards[card_key_name]
 	end
 
@@ -997,7 +1010,7 @@ function MissionJoinGui:_set_game_description_data(data)
 		self._desc_challenge_card_xp:set_w(w1)
 		self._desc_challenge_card_xp:set_right(self._game_description_panel:w())
 
-		local desc_challenge_card_rarity_icon = tweak_data.gui.icons[card_data.rarity]
+		local desc_challenge_card_rarity_icon = tweak_data.challenge_cards.rarity_definition[card_data.rarity].texture_gui
 
 		if desc_challenge_card_rarity_icon then
 			self._desc_challenge_card_rarity_icon:set_image(desc_challenge_card_rarity_icon.texture, unpack(desc_challenge_card_rarity_icon.texture_rect))
@@ -1008,6 +1021,7 @@ function MissionJoinGui:_set_game_description_data(data)
 
 		if not card_data.title_in_texture then
 			self._desc_challenge_card_name_on_card:set_text(self:translate(card_data.name, true))
+			self._desc_challenge_card_name_on_card:set_color(card_data.text_color or RaidGUIControlCardBase.TITLE_COLOR)
 		else
 			self._desc_challenge_card_name_on_card:set_text("")
 		end
@@ -1021,10 +1035,11 @@ function MissionJoinGui:_set_game_description_data(data)
 		self._desc_challenge_card_xp_on_card:set_w(w1)
 		self._desc_challenge_card_xp_on_card:set_h(h1)
 		self._desc_challenge_card_xp_on_card:set_center_x(self.desc_challenge_card_icon:w() / 2)
+		self._desc_challenge_card_xp_on_card:set_color(card_data.text_color or RaidGUIControlCardBase.TITLE_COLOR)
 
-		local type_definition = tweak_data.challenge_cards.type_definition[card_data.card_type]
+		local type_definition = tweak_data.challenge_cards.type_definition[card_data.card_type].texture_gui
 
-		self._desc_challenge_card_type_icon_on_card:set_image(type_definition.texture_path)
+		self._desc_challenge_card_type_icon_on_card:set_image(type_definition.texture)
 		self._desc_challenge_card_type_icon_on_card:set_texture_rect(type_definition.texture_rect or tweak_data.challenge_cards.challenge_card_texture_rect)
 
 		local bonus_description, malus_description = managers.challenge_cards:get_card_description(card_key_name)
@@ -1092,25 +1107,23 @@ function MissionJoinGui:_find_online_games_win32(friends_only)
 		end
 
 		for i, room in ipairs(room_list) do
-			local name_str = tostring(room.owner_name)
+			local host_name = tostring(room.owner_name)
 			local attributes_numbers = attribute_list[i].numbers
 
 			if managers.network.matchmake:is_server_ok(friends_only, room.owner_id, attributes_numbers) then
 				dead_list[room.room_id] = nil
 
-				local host_name = name_str
+				local job_id = attributes_numbers[14]
+				local job_name = ""
 				local level_id = attributes_numbers[1]
-				local name_id = ""
 				local level_name = ""
 				local difficulty_id = attributes_numbers[2]
 				local difficulty = self:translate(tweak_data:get_difficulty_string_name_from_index(difficulty_id), true)
-				local job_id = attributes_numbers[14]
-				local job_name = ""
 				local kick_option = attributes_numbers[8]
 				local job_plan = attributes_numbers[10]
-				local state_string_id = tweak_data:index_to_server_state(attributes_numbers[4])
-				local state_name = state_string_id and managers.localization:text("menu_lobby_server_state_" .. state_string_id) or "UNKNOWN"
 				local state = attributes_numbers[4]
+				local state_string_id = tweak_data:index_to_server_state(state)
+				local state_name = state_string_id and managers.localization:text("menu_lobby_server_state_" .. state_string_id) or "UNKNOWN"
 				local num_plrs = attributes_numbers[5]
 				local challenge_card = attributes_numbers[12]
 				local players_info = attributes_numbers[13]
@@ -1121,7 +1134,9 @@ function MissionJoinGui:_find_online_games_win32(friends_only)
 				local players_info_3 = attributes_numbers[19]
 				local players_info_4 = attributes_numbers[20]
 
-				challenge_card = (challenge_card == "nocards" or challenge_card == "" or challenge_card == "value_pending") and "" or challenge_card
+				if challenge_card == "nocards" or challenge_card == "" or challenge_card == "value_pending" then
+					challenge_card = ""
+				end
 
 				if players_info == "value_pending" then
 					players_info = ""
@@ -1145,41 +1160,55 @@ function MissionJoinGui:_find_online_games_win32(friends_only)
 					local operation_data = tweak_data.operations.missions[job_id]
 
 					if operation_data and operation_data.events and operation_data.events[level_id] then
-						level_name = self:translate(tweak_data.operations.missions[job_id].events[level_id].name_id)
-						job_name = self:translate(tweak_data.operations.missions[job_id].name_id)
-					else
-						level_name = "N/A"
-						job_name = "N/A"
-
-						Application:error("Level '" .. level_id .. "' can't be found in operation '" .. job_id .. "'.")
+						level_name = self:translate(operation_data.events[level_id].name_id)
+						job_name = self:translate(operation_data.name_id)
 					end
 				elseif tonumber(mission_type) == OperationsTweakData.JOB_TYPE_RAID then
-					local mission_data = tweak_data.operations.missions[level_id]
+					local mission_data = tweak_data.operations.missions[job_id]
 
 					level_name = ""
 
 					if mission_data and mission_data.name_id then
-						level_name = self:translate(tweak_data.operations.missions[level_id].name_id)
+						level_name = self:translate(mission_data.name_id)
 					end
 
 					job_name = self:translate("menu_mission_selected_mission_type_raid")
 				end
 
-				local is_friend = false
+				local relation = Steam:friend_relationship(room.owner_id)
+				local is_friend = relation == "friend"
 
-				if is_win32 then
-					for _, friend in ipairs(Steam:friends()) do
-						if friend:id() == room.owner_id then
-							is_friend = true
+				if level_name == "" or job_name == "" then
+					dead_list[room.room_id] = true
+				else
+					local job_data = {
+						challenge_card = challenge_card,
+						custom_text = room.custom_text,
+						difficulty = difficulty,
+						difficulty_id = difficulty_id,
+						host_name = host_name,
+						id = room.room_id,
+						is_friend = is_friend,
+						job_id = job_id,
+						job_name = job_name,
+						job_plan = job_plan,
+						kick_option = kick_option,
+						level_id = level_id,
+						level_name = level_name,
+						mission_type = mission_type,
+						num_plrs = num_plrs,
+						players_info = players_info,
+						players_info_1 = players_info_1,
+						players_info_2 = players_info_2,
+						players_info_3 = players_info_3,
+						players_info_4 = players_info_4,
+						progress = progress,
+						room_id = room.room_id,
+						state = state,
+						state_name = state_name,
+						xuid = room.xuid,
+					}
 
-							break
-						end
-					end
-				end
-
-				name_id = name_id or "unknown"
-
-				if name_id then
 					if not self._active_server_jobs[room.room_id] then
 						if table.size(self._active_jobs) + table.size(self._active_server_jobs) < self._tweak_data.total_active_jobs and table.size(self._active_server_jobs) < self._max_active_server_jobs then
 							self._active_server_jobs[room.room_id] = {
@@ -1187,62 +1216,10 @@ function MissionJoinGui:_find_online_games_win32(friends_only)
 								alive_time = 0,
 							}
 
-							self:add_gui_job({
-								challenge_card = challenge_card,
-								custom_text = room.custom_text,
-								difficulty = difficulty,
-								difficulty_id = difficulty_id,
-								host_name = host_name,
-								id = room.room_id,
-								is_friend = is_friend,
-								job_id = job_id,
-								job_name = job_name,
-								job_plan = job_plan,
-								kick_option = kick_option,
-								level_id = level_id,
-								level_name = level_name,
-								mission_type = mission_type,
-								num_plrs = num_plrs,
-								players_info = players_info,
-								players_info_1 = players_info_1,
-								players_info_2 = players_info_2,
-								players_info_3 = players_info_3,
-								players_info_4 = players_info_4,
-								progress = progress,
-								room_id = room.room_id,
-								state = state,
-								state_name = state_name,
-								xuid = room.xuid,
-							})
+							self:add_gui_job(job_data)
 						end
 					else
-						self:update_gui_job({
-							challenge_card = challenge_card,
-							custom_text = room.custom_text,
-							difficulty = difficulty,
-							difficulty_id = difficulty_id,
-							host_name = host_name,
-							id = room.room_id,
-							is_friend = is_friend,
-							job_id = job_id,
-							job_name = job_name,
-							job_plan = job_plan,
-							kick_option = kick_option,
-							level_id = level_id,
-							level_name = level_name,
-							mission_type = mission_type,
-							num_plrs = num_plrs,
-							players_info = players_info,
-							players_info_1 = players_info_1,
-							players_info_2 = players_info_2,
-							players_info_3 = players_info_3,
-							players_info_4 = players_info_4,
-							progress = progress,
-							room_id = room.room_id,
-							state = state,
-							state_name = state_name,
-							xuid = room.xuid,
-						})
+						self:update_gui_job(job_data)
 					end
 				end
 			end
@@ -1352,7 +1329,9 @@ function MissionJoinGui:_find_online_games_xb1(friends_only)
 				local players_info_3 = attributes_numbers[19]
 				local players_info_4 = attributes_numbers[20]
 
-				challenge_card = (challenge_card == "nocards" or challenge_card == "" or challenge_card == "value_pending") and "" or challenge_card
+				if challenge_card == "nocards" or challenge_card == "" or challenge_card == "value_pending" then
+					challenge_card = ""
+				end
 
 				local players_info = 0
 
@@ -1615,7 +1594,9 @@ function MissionJoinGui:_find_online_games_ps4(friends_only)
 						players_info_4 = S2[4] or "-,-,-,-"
 					end
 
-					challenge_card = (challenge_card == "nocards" or challenge_card == "" or challenge_card == "value_pending") and "" or challenge_card
+					if challenge_card == "nocards" or challenge_card == "" or challenge_card == "value_pending" then
+						challenge_card = ""
+					end
 
 					if players_info == "value_pending" then
 						players_info = ""

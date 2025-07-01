@@ -299,7 +299,7 @@ function PlayerDriving:_update_hud(t, dt)
 		self._respawn_hint_shown = false
 	end
 
-	if managers.user:get_setting("hud_crosshairs") then
+	if self._ext_movement.setting_hud_crosshairs then
 		if self:is_player_shooting_allowed() then
 			managers.hud:update_crosshair_offset(t, dt)
 			self:_update_crosshair_offset()

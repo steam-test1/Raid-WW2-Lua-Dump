@@ -1,12 +1,21 @@
 NavObstacleElement = NavObstacleElement or class(MissionElement)
+NavObstacleElement.LINK_VALUES = {
+	{
+		layer = "Statics",
+		output = true,
+		table_key = "unit_id",
+		table_value = "obstacle_list",
+		type = "obstacle",
+	},
+}
 
 function NavObstacleElement:init(unit)
 	NavObstacleElement.super.init(self, unit)
 
 	self._guis = {}
 	self._obstacle_units = {}
-	self._hed.obstacle_list = {}
 	self._all_object_names = {}
+	self._hed.obstacle_list = {}
 	self._hed.operation = "add"
 
 	table.insert(self._save_values, "obstacle_list")

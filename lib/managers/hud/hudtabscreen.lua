@@ -847,7 +847,11 @@ end
 function HUDTabScreen:_refresh_profile_info()
 	local profile_name = managers.network:session():local_peer():name()
 
-	self._profile_info_panel:child("profile_name"):set_text(utf8.to_upper(profile_name))
+	if managers.user:get_setting("capitalize_names") then
+		profile_name = utf8.to_upper(profile_name)
+	end
+
+	self._profile_info_panel:child("profile_name"):set_text(profile_name)
 
 	local class = managers.skilltree:get_character_profile_class()
 
@@ -963,11 +967,14 @@ function HUDTabScreen:_refresh_card_info()
 		local active_card_title = self._active_card_panel:child("active_card_title")
 
 		if active_card.status == ChallengeCardsManager.CARD_STATUS_FAILED then
-			active_card_title:set_text(utf8.to_upper(managers.localization:text("hud_active_challenge_card_failed_title")))
-			active_card_title:set_color(HUDTabScreen.CARD_INFO_FAILED_TITLE_COLOR)
+			active_card_title:set_text(managers.localization:to_upper_text("hud_active_challenge_card_failed_title"))
+			active_card_title:set_color(self.CARD_INFO_FAILED_TITLE_COLOR)
+		elseif active_card.card_type == ChallengeCardsTweakData.CARD_TYPE_BOUNTY then
+			active_card_title:set_text(managers.localization:to_upper_text("hud_active_bounty_card_title"))
+			active_card_title:set_color(self.CARD_INFO_TITLE_COLOR)
 		else
-			active_card_title:set_text(utf8.to_upper(managers.localization:text("hud_active_challenge_card_title")))
-			active_card_title:set_color(HUDTabScreen.CARD_INFO_TITLE_COLOR)
+			active_card_title:set_text(managers.localization:to_upper_text("hud_active_challenge_card_title"))
+			active_card_title:set_color(self.CARD_INFO_TITLE_COLOR)
 		end
 	end
 end

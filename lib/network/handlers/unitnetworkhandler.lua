@@ -378,14 +378,6 @@ function UnitNetworkHandler:from_server_damage_melee(subject_unit, attacker_unit
 	subject_unit:character_damage():sync_damage_melee(attacker_unit, attacker_unit, hit_offset_height, result_index)
 end
 
-function UnitNetworkHandler:from_server_damage_incapacitated(subject_unit, sender)
-	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_character(subject_unit) then
-		return
-	end
-
-	subject_unit:character_damage():sync_damage_incapacitated()
-end
-
 function UnitNetworkHandler:from_server_damage_bleeding(subject_unit)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_character(subject_unit) then
 		return
@@ -937,7 +929,7 @@ function UnitNetworkHandler:set_pose(unit, pose_code, sender)
 	unit:movement():sync_pose(pose_code)
 end
 
-function UnitNetworkHandler:long_dis_interaction(target_unit, amount, aggressor_unit)
+function UnitNetworkHandler:long_distance_interaction(target_unit, amount, aggressor_unit)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_character(target_unit) or not self._verify_character(aggressor_unit) then
 		return
 	end
@@ -945,21 +937,15 @@ function UnitNetworkHandler:long_dis_interaction(target_unit, amount, aggressor_
 	local target_is_criminal = target_unit:in_slot(managers.slot:get_mask("criminals")) or target_unit:in_slot(managers.slot:get_mask("harmless_criminals"))
 	local aggressor_is_criminal = aggressor_unit:in_slot(managers.slot:get_mask("criminals")) or aggressor_unit:in_slot(managers.slot:get_mask("harmless_criminals"))
 
-	if target_is_criminal then
-		if aggressor_is_criminal then
-			if target_unit:brain() then
-				if target_unit:brain().on_long_dis_interacted then
-					target_unit:movement():set_cool(false)
-					target_unit:brain():on_long_dis_interacted(amount, aggressor_unit)
-				end
-			elseif amount == 1 then
-				target_unit:movement():on_morale_boost(aggressor_unit)
+	if target_is_criminal and aggressor_is_criminal then
+		if target_unit:brain() then
+			if target_unit:brain().on_long_distance_interact then
+				target_unit:movement():set_cool(false)
+				target_unit:brain():on_long_distance_interact(amount, aggressor_unit)
 			end
-		else
-			target_unit:brain():on_intimidated(amount / 10, aggressor_unit)
+		elseif amount == 1 then
+			target_unit:movement():on_morale_boost(aggressor_unit)
 		end
-	elseif target_unit:brain() then
-		target_unit:brain():on_intimidated(amount / 10, aggressor_unit)
 	end
 end
 
@@ -969,30 +955,6 @@ function UnitNetworkHandler:remove_corpse_by_id(u_id, carry_bodybag, peer_id, se
 	end
 
 	managers.enemy:remove_corpse_by_id(u_id)
-end
-
-function UnitNetworkHandler:unit_tied(unit, aggressor)
-	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_character(unit) then
-		return
-	end
-
-	unit:brain():on_tied(aggressor)
-end
-
-function UnitNetworkHandler:unit_traded(unit, trader)
-	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_character(unit) then
-		return
-	end
-
-	unit:brain():on_trade(trader)
-end
-
-function UnitNetworkHandler:hostage_trade(unit, enable, trade_success)
-	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_character(unit) then
-		return
-	end
-
-	CopLogicTrade.hostage_trade(unit, enable, trade_success)
 end
 
 function UnitNetworkHandler:set_unit_invulnerable(unit, invulnerable, immortal)
@@ -1012,12 +974,12 @@ function UnitNetworkHandler:set_trade_countdown(enable)
 	managers.trade:set_trade_countdown(enable)
 end
 
-function UnitNetworkHandler:set_trade_death(criminal_name, respawn_penalty, hostages_killed)
+function UnitNetworkHandler:set_trade_death(criminal_name, respawn_penalty)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
 	end
 
-	managers.trade:sync_set_trade_death(criminal_name, respawn_penalty, hostages_killed)
+	managers.trade:sync_set_trade_death(criminal_name, respawn_penalty)
 end
 
 function UnitNetworkHandler:set_trade_spawn(criminal_name)
@@ -1663,59 +1625,19 @@ function UnitNetworkHandler:say(unit, event_id, sender)
 		return
 	end
 
-	if unit:in_slot(managers.slot:get_mask("all_criminals")) and not managers.groupai:state():is_enemy_converted_to_criminal(unit) then
+	if unit:in_slot(managers.slot:get_mask("all_criminals")) and not managers.groupai:state():is_criminal_minion(unit) then
 		unit:sound():say(event_id, true, nil)
 	else
 		unit:sound():say(event_id, nil, true)
 	end
 end
 
-function UnitNetworkHandler:sync_remove_one_teamAI(name, replace_with_player)
+function UnitNetworkHandler:sync_remove_one_criminal_ai(name, replace_with_player)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
 	end
 
-	managers.groupai:state():sync_remove_one_teamAI(name, replace_with_player)
-end
-
-function UnitNetworkHandler:sync_smoke_grenade(detonate_pos, shooter_pos, duration, flashbang)
-	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
-		return
-	end
-
-	managers.groupai:state():sync_smoke_grenade(detonate_pos, shooter_pos, duration, flashbang)
-end
-
-function UnitNetworkHandler:sync_smoke_grenade_kill()
-	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
-		return
-	end
-
-	managers.groupai:state():sync_smoke_grenade_kill()
-end
-
-function UnitNetworkHandler:sync_cs_grenade(detonate_pos, shooter_pos, duration)
-	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
-		return
-	end
-
-	managers.groupai:state():sync_cs_grenade(detonate_pos, shooter_pos, duration)
-end
-
-function UnitNetworkHandler:sync_cs_grenade_kill()
-	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
-		return
-	end
-
-	managers.groupai:state():sync_cs_grenade_kill()
-end
-
-function UnitNetworkHandler:sync_hostage_headcount(value)
-	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
-		return
-	end
-
-	managers.groupai:state():sync_hostage_headcount(value)
+	managers.groupai:state():sync_remove_one_criminal_ai(name, replace_with_player)
 end
 
 function UnitNetworkHandler:play_distance_interact_redirect(unit, redirect, sender)
@@ -1752,14 +1674,6 @@ function UnitNetworkHandler:killzone_set_unit(type)
 	end
 
 	managers.killzone:set_unit(managers.player:player_unit(), type)
-end
-
-function UnitNetworkHandler:dangerzone_set_level(level)
-	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
-		return
-	end
-
-	managers.player:player_unit():character_damage():set_danger_level(level)
 end
 
 function UnitNetworkHandler:set_player_level(unit, level, unit_id_str, sender)
@@ -1908,12 +1822,10 @@ function UnitNetworkHandler:sync_player_movement_state(unit, state, down_time, u
 		local valid_transitions = {
 			bleed_out = {
 				carry = true,
-				fatal = true,
 				standard = true,
 			},
 			carry = {
 				bleed_out = true,
-				incapacitated = true,
 				standard = true,
 				tased = true,
 			},
@@ -1923,14 +1835,6 @@ function UnitNetworkHandler:sync_player_movement_state(unit, state, down_time, u
 				mask_off = true,
 				standard = true,
 			},
-			fatal = {
-				carry = true,
-				standard = true,
-			},
-			incapacitated = {
-				carry = true,
-				standard = true,
-			},
 			mask_off = {
 				carry = true,
 				standard = true,
@@ -1938,12 +1842,10 @@ function UnitNetworkHandler:sync_player_movement_state(unit, state, down_time, u
 			standard = {
 				bleed_out = true,
 				carry = true,
-				incapacitated = true,
 				tased = true,
 			},
 			tased = {
 				carry = true,
-				incapacitated = true,
 				standard = true,
 			},
 		}
@@ -1962,12 +1864,14 @@ function UnitNetworkHandler:sync_player_movement_state(unit, state, down_time, u
 	end
 end
 
-function UnitNetworkHandler:sync_waiting_for_player_start(variant, soundtrack)
+function UnitNetworkHandler:sync_waiting_for_player_start()
 	if not self._verify_gamestate(self._gamestate_filter.waiting_for_players) then
 		return
 	end
 
-	game_state_machine:current_state():sync_start(variant, soundtrack)
+	if game_state_machine:current_state().sync_start then
+		game_state_machine:current_state():sync_start()
+	end
 end
 
 function UnitNetworkHandler:sync_waiting_for_player_skip()
@@ -2282,7 +2186,7 @@ function UnitNetworkHandler:sync_small_loot_taken(unit, sender)
 		return
 	end
 
-	unit:base():taken()
+	unit:base():sync_taken()
 end
 
 function UnitNetworkHandler:sync_job_time(job_time, sender)
@@ -2389,6 +2293,27 @@ function UnitNetworkHandler:set_health(unit, percent, sender)
 	unit:character_damage():set_health_ratio(health_ratio)
 end
 
+function UnitNetworkHandler:set_ai_health(unit, percent, sender)
+	if not alive(unit) or not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
+		return
+	end
+
+	local panel_id = unit:unit_data().teammate_panel_id
+	local health_ratio = percent / 100
+
+	if panel_id then
+		managers.hud:set_teammate_health(panel_id, {
+			current = health_ratio,
+			max = 1,
+			total = 1,
+		})
+	else
+		managers.hud:set_mugshot_health(unit:unit_data().mugshot_id, health_ratio)
+	end
+
+	unit:character_damage():set_health_ratio(health_ratio)
+end
+
 function UnitNetworkHandler:sync_equipment_possession(peer_id, equipment, amount, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
@@ -2475,38 +2400,6 @@ function UnitNetworkHandler:sync_contour_state(unit, u_id, type, state, multipli
 	end
 end
 
-function UnitNetworkHandler:mark_minion(unit, minion_owner_peer_id, convert_enemies_health_multiplier_level, passive_convert_enemies_health_multiplier_level, sender)
-	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_character_and_sender(unit, sender) then
-		return
-	end
-
-	local health_multiplier = 1
-
-	if convert_enemies_health_multiplier_level > 0 then
-		health_multiplier = health_multiplier * tweak_data.upgrades.values.player.convert_enemies_health_multiplier[convert_enemies_health_multiplier_level]
-	end
-
-	if passive_convert_enemies_health_multiplier_level > 0 then
-		health_multiplier = health_multiplier * tweak_data.upgrades.values.player.passive_convert_enemies_health_multiplier[passive_convert_enemies_health_multiplier_level]
-	end
-
-	unit:character_damage():convert_to_criminal(health_multiplier)
-	unit:contour():add("friendly", false)
-	managers.groupai:state():sync_converted_enemy(unit)
-
-	if minion_owner_peer_id == managers.network:session():local_peer():id() then
-		managers.player:count_up_player_minions()
-	end
-end
-
-function UnitNetworkHandler:count_down_player_minions()
-	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
-		return
-	end
-
-	managers.player:count_down_player_minions()
-end
-
 function UnitNetworkHandler:sync_teammate_helped_hint(hint, helped_unit, helping_unit, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_character_and_sender(helped_unit, sender) or not self._verify_character(helping_unit, sender) then
 		return
@@ -2521,14 +2414,6 @@ function UnitNetworkHandler:sync_assault_mode(enabled)
 	end
 
 	managers.groupai:state():sync_assault_mode(enabled)
-end
-
-function UnitNetworkHandler:sync_hostage_killed_warning(warning)
-	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
-		return
-	end
-
-	managers.groupai:state():sync_hostage_killed_warning(warning)
 end
 
 function UnitNetworkHandler:set_interaction_voice(unit, voice, sender)
@@ -2566,10 +2451,6 @@ function UnitNetworkHandler:sync_statistics_result(top_stat_1_id, top_stat_1_pee
 	managers.statistics:set_bottom_stats(bottom_stat_1_id, bottom_stat_1_peer_id, bottom_stat_1_peer_name, bottom_stat_1_score, bottom_stat_2_id, bottom_stat_2_peer_id, bottom_stat_2_peer_name, bottom_stat_2_score, bottom_stat_3_id, bottom_stat_3_peer_id, bottom_stat_3_peer_name, bottom_stat_3_score)
 	managers.statistics:set_downed_stats(total_downs, all_players_downed)
 	managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.TOP_STATS_READY)
-end
-
-function UnitNetworkHandler:statistics_tied(name, sender)
-	return
 end
 
 function UnitNetworkHandler:bain_comment(bain_line, sender)
@@ -2723,7 +2604,7 @@ function UnitNetworkHandler:unlink_attention(attention_object, sender)
 	attention_object:attention():link(nil)
 end
 
-function UnitNetworkHandler:suspicion(suspect_peer_id, susp_value, sender)
+function UnitNetworkHandler:sync_suspicion(suspect_peer_id, susp_value, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
 	end
@@ -2745,7 +2626,7 @@ function UnitNetworkHandler:suspicion(suspect_peer_id, susp_value, sender)
 	suspect_unit:movement():on_suspicion(nil, susp_value)
 end
 
-function UnitNetworkHandler:suspicion_hud(suspect_unit, observer_unit, status, suspect_id)
+function UnitNetworkHandler:sync_suspicion_hud(suspect_unit, observer_unit, status, suspect_id)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not alive(observer_unit) then
 		return
 	end
@@ -2772,7 +2653,7 @@ function UnitNetworkHandler:suspicion_hud(suspect_unit, observer_unit, status, s
 	managers.groupai:state():on_criminal_suspicion_progress(suspect_unit, observer_unit, status)
 end
 
-function UnitNetworkHandler:spotter_hud(suspect_unit, observer_unit, status)
+function UnitNetworkHandler:sync_spotter_hud(suspect_unit, observer_unit, status)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not alive(observer_unit) then
 		return
 	end
@@ -2786,24 +2667,6 @@ function UnitNetworkHandler:spotter_hud(suspect_unit, observer_unit, status)
 	end
 
 	managers.groupai:state():on_spotter_detection_progress(suspect_unit, observer_unit, status)
-end
-
-function UnitNetworkHandler:sync_suspicion_icon(unit, icon_type, status)
-	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
-		return
-	end
-
-	local waypoint = managers.hud:get_waypoint_for_unit(unit)
-
-	if waypoint then
-		if icon_type == "aim" then
-			managers.hud:set_aiming_icon(waypoint, status)
-		elseif icon_type == "investigate" then
-			managers.hud:set_investigate_icon(waypoint, status)
-		end
-	else
-		Application:error("[UnitNetworkHandler:sync_suspicion_icon] Waypoint not found for unit", unit)
-	end
 end
 
 function UnitNetworkHandler:group_ai_event(event_id, blame_id, sender)
@@ -3060,7 +2923,7 @@ function UnitNetworkHandler:sync_vehicle_player(action, vehicle, peer_id, player
 	end
 end
 
-function UnitNetworkHandler:sync_vehicle_player_swithc_seat(action, vehicle, peer_id, player, seat_name, previous_seat_name, previous_occupant)
+function UnitNetworkHandler:sync_vehicle_player_switch_seat(action, vehicle, peer_id, player, seat_name, previous_seat_name, previous_occupant)
 	managers.player:sync_move_to_next_seat(vehicle, peer_id, player, seat_name, previous_seat_name, previous_occupant)
 end
 
@@ -3466,7 +3329,7 @@ function UnitNetworkHandler:sync_ground_turret_puppet_death(turret_unit, sender)
 	end
 
 	if alive(turret_unit) then
-		turret_unit:weapon():on_puppet_death_client()
+		turret_unit:weapon():deactivate_client()
 	end
 end
 
@@ -3883,6 +3746,7 @@ function UnitNetworkHandler:sync_attach_projectile(unit, instant_dynamic_pickup,
 
 		unit:set_position(world_position)
 		unit:base():set_projectile_entry(projectile_type)
+		unit:base():set_thrower_unit_by_peer_id(peer_id)
 		unit:base():sync_attach_to_unit(instant_dynamic_pickup, parent_unit, parent_body, parent_object, local_pos, dir)
 	end
 

@@ -61,7 +61,7 @@ function RaidGUIControlButtonSkillProfiles:_layout(params)
 		name = "controller_switch_button",
 		text = button,
 		vertical = "bottom",
-		visible = managers.controller:is_controller_present(),
+		visible = managers.controller:is_using_controller(),
 		x = 2,
 	})
 	self._selected_icon_size = params.w * self.ICON_SELECTED_SCALE
@@ -69,7 +69,7 @@ function RaidGUIControlButtonSkillProfiles:_layout(params)
 end
 
 function RaidGUIControlButtonSkillProfiles:_on_controller_hotswap()
-	local on_controller = managers.controller:is_controller_present()
+	local on_controller = managers.controller:is_using_controller()
 	local icon_offset = on_controller and self.CONTROLLER_ICON_OFFSET or 0
 	local button = managers.localization:btn_macro("menu_controller_face_top")
 

@@ -570,10 +570,6 @@ function CopLogicFlee.on_new_objective(data, old_objective)
 	CopLogicBase.update_follow_unit(data, old_objective)
 end
 
-function CopLogicFlee.on_intimidated(data, amount, aggressor_unit)
-	CopLogicBase._surrender(data, amount)
-end
-
 function CopLogicFlee._get_all_paths(data)
 	return {
 		flee_path = data.internal_data.flee_path,

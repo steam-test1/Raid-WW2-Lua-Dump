@@ -128,7 +128,7 @@ function CopLogicPhalanxMinion.queued_update(data)
 		return
 	end
 
-	if data.team.id == "criminal1" and (not data.objective or data.objective.type == "free") and (not data.path_fail_t or data.t - data.path_fail_t > 6) then
+	if data.team and data.team.id == "criminal1" and (not data.objective or data.objective.type == "free") and (not data.path_fail_t or data.t - data.path_fail_t > 6) then
 		managers.groupai:state():on_criminal_jobless(data.unit)
 
 		if my_data ~= data.internal_data then

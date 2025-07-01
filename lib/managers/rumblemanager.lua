@@ -45,13 +45,6 @@ function RumbleManager:setup_preset_rumbles()
 		release = 0.1,
 		sustain = 0.2,
 	})
-	self:add_preset_rumbles("incapacitated_shock", {
-		cumulative = true,
-		engine = "both",
-		peak = 0.75,
-		release = 0.1,
-		sustain = 0.2,
-	})
 	self:add_preset_rumbles("damage_bullet", {
 		cumulative = true,
 		engine = "both",

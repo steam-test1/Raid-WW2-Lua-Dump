@@ -86,7 +86,7 @@ function RaidGUIControlButtonToggle:init(parent, params)
 	self._value = self._params.value or false
 	self._play_mouse_over_sound = true
 	self._on_click_callback = params.on_click_callback
-	self._visible = self._params.visible
+	self._visible = self._params.visible or true
 
 	self:_render_images()
 end
@@ -172,15 +172,11 @@ function RaidGUIControlButtonToggle:set_value_and_render(value)
 end
 
 function RaidGUIControlButtonToggle:_render_images()
-	if self._visible == false then
-		self:hide()
-
+	if not self._visible then
 		return
-	elseif self._value then
-		self._check:set_visible(true)
-	else
-		self._check:set_visible(false)
 	end
+
+	self._check:set_visible(self._value)
 end
 
 function RaidGUIControlButtonToggle:show()
@@ -191,34 +187,27 @@ function RaidGUIControlButtonToggle:hide()
 	self._object:hide()
 end
 
-function RaidGUIControlButtonToggle:set_visible(flag)
-	self._visible = flag
+function RaidGUIControlButtonToggle:set_visible(visible)
+	self._visible = visible
 
+	self._object:set_visible(visible)
 	self:_render_images()
 end
 
 function RaidGUIControlButtonToggle:confirm_pressed()
-	if not self._enabled then
-		return
+	if not self._enabled or not self._selected then
+		return false
 	end
 
-	if self._selected then
-		if self._value then
-			self._value = false
-		else
-			self._value = true
-		end
+	self._value = not self._value
 
-		self:_render_images()
+	self:_render_images()
 
-		if self._on_click_callback then
-			self._on_click_callback(self, self, self._value)
-		end
-
-		return true
+	if self._on_click_callback then
+		self._on_click_callback(self, self, self._value)
 	end
 
-	return false
+	return true
 end
 
 function RaidGUIControlButtonToggle:set_enabled(enabled)

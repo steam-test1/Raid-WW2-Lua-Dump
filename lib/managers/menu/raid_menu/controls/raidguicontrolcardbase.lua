@@ -5,6 +5,7 @@ RaidGUIControlCardBase.TITLE_PADDING = 0.08
 RaidGUIControlCardBase.TITLE_Y = 0.86
 RaidGUIControlCardBase.TITLE_CENTER_Y = 0.92
 RaidGUIControlCardBase.TITLE_H = 0.11
+RaidGUIControlCardBase.TITLE_COLOR = tweak_data.gui.colors.raid_white
 RaidGUIControlCardBase.DESCRIPTION_Y = 0.6494
 RaidGUIControlCardBase.DESCRIPTION_H = 0.15
 RaidGUIControlCardBase.DESCRIPTION_TEXT_SIZE = 14
@@ -78,8 +79,7 @@ function RaidGUIControlCardBase:init(parent, params, item_data, grid_params)
 
 	self._card_title = self._card_panel:label({
 		align = "center",
-		blend_mode = "normal",
-		color = Color.white,
+		color = self.TITLE_COLOR,
 		font = RaidGUIControlCardBase.TITLE_FONT,
 		font_size = title_font_size,
 		h = title_h,
@@ -241,104 +241,108 @@ end
 function RaidGUIControlCardBase:set_card(card_data, is_inventory_item)
 	self._item_data = card_data
 
-	if self._item_data then
-		local empty_slot_texture = tweak_data.gui.icons.cc_empty_slot_small
-		local card_texture = empty_slot_texture.texture
-		local card_texture_rect = empty_slot_texture.texture_rect
+	if not self._item_data then
+		return
+	end
 
-		if not self._item_data.title_in_texture then
-			self._card_title:set_text(self:translate(self._item_data.name, true))
+	local empty_slot_texture = tweak_data.gui.icons.cc_empty_slot_small
+	local card_texture = empty_slot_texture.texture
+	local card_texture_rect = empty_slot_texture.texture_rect
 
-			local title_font_size = math.ceil(RaidGUIControlCardBase.TITLE_TEXT_SIZE * (self._card_image:h() / 255))
+	if not self._item_data.title_in_texture then
+		self._card_title:set_text(self:translate(self._item_data.name, true))
 
-			self._card_title:set_font_size(title_font_size)
+		local title_font_size = math.ceil(RaidGUIControlCardBase.TITLE_TEXT_SIZE * (self._card_image:h() / 255))
 
-			local _, _, w, h = self._card_title:text_rect()
+		self._card_title:set_font_size(title_font_size)
 
-			if h > self._card_title:h() then
-				self:_refit_card_title_text(title_font_size)
-			end
+		local _, _, w, h = self._card_title:text_rect()
 
-			self._card_title:show()
-		else
-			self._card_title:set_text("")
-			self._card_title:hide()
+		if h > self._card_title:h() then
+			self:_refit_card_title_text(title_font_size)
 		end
 
-		self._card_description:set_text("")
-		self._card_description:hide()
+		self._card_title:show()
+		self._card_title:set_color(self._item_data.text_color or self.TITLE_COLOR)
+	else
+		self._card_title:set_text("")
+		self._card_title:hide()
+	end
 
-		local bonus_xp_reward = managers.challenge_cards:get_card_xp_label(self._item_data.key_name)
+	self._card_description:set_text("")
+	self._card_description:hide()
 
-		self._xp_bonus:set_text(tostring(bonus_xp_reward) .. " ")
+	local bonus_xp_reward = managers.challenge_cards:get_card_xp_label(self._item_data.key_name)
 
-		local x1, y1, w1, h1 = self._xp_bonus:text_rect()
+	self._xp_bonus:set_text(tostring(bonus_xp_reward) .. " ")
 
-		self._xp_bonus:set_w(w1)
-		self._xp_bonus:set_h(h1)
-		self._xp_bonus:set_center_x(self._card_image:w() / 2)
+	local x1, y1, w1, h1 = self._xp_bonus:text_rect()
 
-		if self._item_data.card_category == ChallengeCardsTweakData.CARD_CATEGORY_BOOSTER then
-			self._xp_bonus:set_visible(false)
-		else
-			self._xp_bonus:set_visible(true)
+	self._xp_bonus:set_w(w1)
+	self._xp_bonus:set_h(h1)
+	self._xp_bonus:set_center_x(self._card_image:center_x())
+	self._xp_bonus:set_color(self._item_data.text_color or self.TITLE_COLOR)
+
+	if self._item_data.card_category == ChallengeCardsTweakData.CARD_CATEGORY_BOOSTER then
+		self._xp_bonus:set_visible(false)
+	else
+		self._xp_bonus:set_visible(true)
+	end
+
+	if self._item_data.key_name ~= ChallengeCardsManager.CARD_PASS_KEY_NAME then
+		local card_rarity = self._item_data.rarity
+		local rarity_definitions = tweak_data.challenge_cards.rarity_definition[card_rarity]
+		local rarity_definitions_icon = rarity_definitions.texture_gui_dirty
+
+		if self._item_data.texture then
+			card_texture = rarity_definitions.texture .. "/" .. self._item_data.texture
+			card_texture_rect = rarity_definitions.texture_rect
 		end
 
-		if self._item_data.key_name ~= ChallengeCardsManager.CARD_PASS_KEY_NAME then
-			local card_rarity = self._item_data.rarity
-			local rarity_definitions = tweak_data.challenge_cards.rarity_definition[card_rarity]
-			local rarity_definitions_icon = rarity_definitions.texture_gui_dirty
-
-			if self._item_data.texture then
-				card_texture = rarity_definitions.texture .. "/" .. self._item_data.texture
-				card_texture_rect = rarity_definitions.texture_rect
-			end
-
-			if rarity_definitions_icon then
-				self._card_rarity_icon:set_image(rarity_definitions_icon.texture)
-				self._card_rarity_icon:set_texture_rect(rarity_definitions_icon.texture_rect)
-				self._card_rarity_icon:show()
-			else
-				self._card_rarity_icon:hide()
-				Application:error("[RaidGUIControlCardDetails:set_card]", self._item_data.key_name, "is missing rarity icons!")
-			end
-
-			local card_type = self._item_data.card_type
-			local type_definitions_icon = tweak_data.challenge_cards.type_definition[card_type].texture_gui_dirty
-
-			if type_definitions_icon then
-				self._card_type_icon:set_image(type_definitions_icon.texture)
-				self._card_type_icon:set_texture_rect(type_definitions_icon.texture_rect)
-				self._card_type_icon:show()
-			else
-				self._card_type_icon:hide()
-				Application:warn("[RaidGUIControlCardDetails:set_card]", self._item_data.key_name, "is missing rarity icons!")
-			end
+		if rarity_definitions_icon then
+			self._card_rarity_icon:set_image(rarity_definitions_icon.texture)
+			self._card_rarity_icon:set_texture_rect(rarity_definitions_icon.texture_rect)
+			self._card_rarity_icon:show()
 		else
 			self._card_rarity_icon:hide()
+			Application:error("[RaidGUIControlCardDetails:set_card]", self._item_data.key_name, "is missing rarity icons!")
+		end
+
+		local card_type = self._item_data.card_type
+		local type_definitions_icon = tweak_data.challenge_cards.type_definition[card_type].texture_gui_dirty
+
+		if type_definitions_icon then
+			self._card_type_icon:set_image(type_definitions_icon.texture)
+			self._card_type_icon:set_texture_rect(type_definitions_icon.texture_rect)
+			self._card_type_icon:show()
+		else
 			self._card_type_icon:hide()
-			self._card_title:hide()
+			Application:warn("[RaidGUIControlCardDetails:set_card]", self._item_data.key_name, "is missing rarity icons!")
 		end
-
-		self:set_card_image(card_texture, card_texture_rect)
-		self._card_image:show()
-
-		if is_inventory_item then
-			if self._item_data.steam_instances then
-				local stack_amount = 0
-
-				for steam_inst_id, steam_data in pairs(card_data.steam_instances) do
-					stack_amount = stack_amount + (steam_data.stack_amount or 1)
-				end
-
-				self:set_card_stack_amount(stack_amount)
-			else
-				self:set_card_stack_amount(0)
-			end
-		end
-
-		self._card_panel:set_visible(true)
+	else
+		self._card_rarity_icon:hide()
+		self._card_type_icon:hide()
+		self._card_title:hide()
 	end
+
+	self:set_card_image(card_texture, card_texture_rect)
+	self._card_image:show()
+
+	if is_inventory_item then
+		if self._item_data.steam_instances then
+			local stack_amount = 0
+
+			for steam_inst_id, steam_data in pairs(card_data.steam_instances) do
+				stack_amount = stack_amount + (steam_data.stack_amount or 1)
+			end
+
+			self:set_card_stack_amount(stack_amount)
+		else
+			self:set_card_stack_amount(0)
+		end
+	end
+
+	self._card_panel:set_visible(true)
 end
 
 function RaidGUIControlCardBase:set_card_stack_amount(stack_amount)

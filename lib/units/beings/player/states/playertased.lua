@@ -23,9 +23,9 @@ function PlayerTased:enter(state_data, enter_data)
 
 		managers.enemy:add_delayed_clbk(self._recover_delayed_clbk, callback(self, self, "clbk_exit_to_std"), recover_time)
 	else
-		self._fatal_delayed_clbk = "PlayerTased_fatal_delayed_clbk"
+		self._bleedout_delayed_clbk = "PlayerTased_bleedout_delayed_clbk"
 
-		managers.enemy:add_delayed_clbk(self._fatal_delayed_clbk, callback(self, self, "clbk_exit_to_fatal"), TimerManager:game():time() + tweak_data.player.damage.TASED_TIME)
+		managers.enemy:add_delayed_clbk(self._bleedout_delayed_clbk, callback(self, self, "clbk_exit_to_bleedout"), TimerManager:game():time() + tweak_data.player.damage.TASED_TIME)
 	end
 
 	self._next_shock = 0.5
@@ -75,10 +75,10 @@ end
 function PlayerTased:exit(state_data, enter_data)
 	PlayerTased.super.exit(self, state_data, enter_data)
 
-	if self._fatal_delayed_clbk then
-		managers.enemy:remove_delayed_clbk(self._fatal_delayed_clbk)
+	if self._bleedout_delayed_clbk then
+		managers.enemy:remove_delayed_clbk(self._bleedout_delayed_clbk)
 
-		self._fatal_delayed_clbk = nil
+		self._bleedout_delayed_clbk = nil
 	end
 
 	if self._recover_delayed_clbk then
@@ -300,7 +300,7 @@ function PlayerTased:_check_action_interact(t, input)
 end
 
 function PlayerTased:call_teammate(line, t, no_gesture, skip_alert)
-	local voice_type, plural, prime_target = self:_get_unit_intimidation_action(true, false, false, true, false)
+	local voice_type, plural, prime_target = self:_get_unit_long_distance_action(true, false, false, true, false)
 	local interact_type, queue_name
 
 	if voice_type == "stop_cop" or voice_type == "mark_cop" then
@@ -343,6 +343,7 @@ function PlayerTased:_register_revive_SO()
 		return
 	end
 
+	local so_id = "PlayerTased_assistance"
 	local objective = {
 		called = true,
 		destroy_clbk_key = false,
@@ -361,17 +362,16 @@ function PlayerTased:_register_revive_SO()
 		search_pos = self._unit:position(),
 		usage_amount = 1,
 	}
-	local so_id = "PlayerTased_assistance"
 
 	self._SO_id = so_id
 
 	managers.groupai:state():add_special_objective(so_id, so_descriptor)
 end
 
-function PlayerTased:clbk_exit_to_fatal()
-	self._fatal_delayed_clbk = nil
+function PlayerTased:clbk_exit_to_bleedout()
+	self._bleedout_delayed_clbk = nil
 
-	managers.player:set_player_state("incapacitated")
+	managers.player:set_player_state("bleedout")
 end
 
 function PlayerTased:clbk_exit_to_std()
@@ -387,10 +387,10 @@ end
 function PlayerTased:on_tase_ended()
 	self._tase_ended = true
 
-	if self._fatal_delayed_clbk then
-		managers.enemy:remove_delayed_clbk(self._fatal_delayed_clbk)
+	if self._bleedout_delayed_clbk then
+		managers.enemy:remove_delayed_clbk(self._bleedout_delayed_clbk)
 
-		self._fatal_delayed_clbk = nil
+		self._bleedout_delayed_clbk = nil
 	end
 
 	if not self._recover_delayed_clbk and game_state_machine:last_queued_state_name() == "ingame_electrified" and managers.network:session() then

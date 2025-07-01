@@ -530,6 +530,14 @@ function HUDTeammatePlayer:refresh()
 
 	self:set_level(current_level)
 	self._player_level:set_text(current_level)
+
+	local name = self._name
+
+	if managers.user:get_setting("capitalize_names") then
+		name = utf8.to_upper(name)
+	end
+
+	self._player_name:set_text(name)
 end
 
 function HUDTeammatePlayer:reset_state()
@@ -680,7 +688,13 @@ function HUDTeammatePlayer:set_warcry_ready(value)
 end
 
 function HUDTeammatePlayer:set_name(name)
-	self._player_name:set_text(utf8.to_upper(name))
+	self._name = name
+
+	if managers.user:get_setting("capitalize_names") then
+		name = utf8.to_upper(name)
+	end
+
+	self._player_name:set_text(name)
 
 	local name_w = select(3, self._player_name:text_rect())
 	local chat_x = math.min(name_w, self._player_name:w())

@@ -180,7 +180,13 @@ function RaidGUIControlReadyUpPlayerDescription:set_data(data)
 	end
 
 	if data.player_name then
-		self._player_name:set_text(utf8.to_upper(data.player_name))
+		local name = data.player_name
+
+		if managers.user:get_setting("capitalize_names") then
+			name = utf8.to_upper(name)
+		end
+
+		self._player_name:set_text(name)
 	end
 
 	if data.player_status then

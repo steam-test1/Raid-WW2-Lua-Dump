@@ -28,7 +28,7 @@ function EscortExt:set_logic()
 		return
 	end
 
-	if not self._unit:brain():objective() or self._unit:brain():objective().type ~= "escort" then
+	if not self._unit:brain():is_objective_type("escort") then
 		self._unit:brain():set_objective({
 			allow_cool = true,
 			type = "escort",

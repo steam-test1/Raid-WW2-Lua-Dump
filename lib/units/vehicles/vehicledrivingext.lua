@@ -60,6 +60,7 @@ function VehicleDrivingExt:init(unit)
 
 	self._unit:set_extension_update_enabled(Idstring("vehicle_driving"), true)
 
+	self._level_bounds_z = managers.raid_job:current_level_bounds_z()
 	self._vehicle = self._unit:vehicle()
 
 	if self._vehicle == nil then
@@ -73,9 +74,10 @@ function VehicleDrivingExt:init(unit)
 	end
 
 	self._drop_time_delay = nil
-	self._last_synced_position = Vector3(0, 0, 0)
+	self._last_synced_position = Vector3()
 	self._shooting_stance_allowed = true
 	self._slotmask_world = managers.slot:get_mask("world_geometry")
+	self._network_tweak = tweak_data.network.driving
 	self._position_counter = 0
 	self._position_dt = 0
 	self._positions = {}
@@ -1751,9 +1753,8 @@ function VehicleDrivingExt:set_input(accelerate, steer, brake, handbrake, gear_u
 		local distance = mvector3.distance(self._last_synced_position, pos)
 		local t = TimerManager:game():time()
 		local sync_dt = t - self._last_sync_t
-		local tdnd = tweak_data.network.driving
 
-		if distance > tdnd.network_wait_distance and sync_dt > tdnd.network_wait_delta_t then
+		if distance > self._network_tweak.wait_distance and sync_dt > self._network_tweak.wait_delta_t then
 			managers.network:session():send_to_peers_synched("sync_vehicle_state", self._unit, self._vehicle:position(), self._vehicle:rotation(), self._vehicle:velocity())
 
 			self._last_synced_position = pos
@@ -1909,7 +1910,7 @@ end
 function VehicleDrivingExt:_detect_invalid_positions(t, dt)
 	local respawn = false
 
-	if self._vehicle:position().z < PlayerMovement.OUT_OF_WORLD_Z then
+	if self._vehicle:position().z < self._level_bounds_z then
 		self:respawn_vehicle()
 
 		return
@@ -2295,7 +2296,7 @@ function VehicleDrivingExt:_create_seat_SO(seat)
 
 	local haste = "walk"
 
-	if managers.groupai:state()._police_called then
+	if managers.groupai:state():is_police_called() then
 		haste = "run"
 	end
 
@@ -2314,7 +2315,9 @@ function VehicleDrivingExt:_create_seat_SO(seat)
 			type = "act",
 			variant = team_ai_animation,
 		},
+		action_start_clbk = callback(self, self, "on_drive_SO_started", seat),
 		area = align_area,
+		complete_clbk = callback(self, self, "on_drive_SO_completed", seat),
 		destroy_clbk_key = false,
 		fail_clbk = callback(self, self, "on_drive_SO_failed", seat),
 		haste = haste,
@@ -2349,11 +2352,7 @@ function VehicleDrivingExt:_create_seat_SO(seat)
 end
 
 function VehicleDrivingExt:clbk_drive_SO_verification(candidate_unit)
-	if candidate_unit:movement():cool() then
-		return false
-	end
-
-	return true
+	return not candidate_unit:movement():cool()
 end
 
 function VehicleDrivingExt:on_drive_SO_administered(seat, unit)
@@ -2378,11 +2377,7 @@ function VehicleDrivingExt:on_drive_SO_started(seat, unit)
 end
 
 function VehicleDrivingExt:on_drive_SO_completed(seat, unit)
-	if not alive(self._unit) then
-		return
-	end
-
-	self:_place_ai_on_seat(seat, unit)
+	return
 end
 
 function VehicleDrivingExt:on_drive_SO_failed(seat, unit)

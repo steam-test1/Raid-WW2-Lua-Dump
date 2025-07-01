@@ -27,7 +27,7 @@ function SoundLayer:load(world_holder, offset)
 	CoreEws.change_combobox_value(self._default_occasional, managers.sound_environment:default_occasional())
 
 	for _, area in ipairs(managers.sound_environment:areas()) do
-		local unit = SoundLayer.super.do_spawn_unit(self, self._environment_unit, area:position(), area:rotation())
+		local unit = SoundLayer.super.do_spawn_unit(self, self._environment_unit, area:position(), area:rotation(), nil, nil, true)
 
 		if area:name() then
 			self:set_name_id(unit, area:name())
@@ -39,7 +39,7 @@ function SoundLayer:load(world_holder, offset)
 	end
 
 	for _, emitter in ipairs(managers.sound_environment:emitters()) do
-		local unit = SoundLayer.super.do_spawn_unit(self, self._emitter_unit, emitter:position(), emitter:rotation())
+		local unit = SoundLayer.super.do_spawn_unit(self, self._emitter_unit, emitter:position(), emitter:rotation(), nil, nil, true)
 
 		if emitter:name() then
 			self:set_name_id(unit, emitter:name())
@@ -51,7 +51,7 @@ function SoundLayer:load(world_holder, offset)
 	end
 
 	for _, emitter in ipairs(managers.sound_environment:area_emitters()) do
-		local unit = SoundLayer.super.do_spawn_unit(self, self._area_emitter_unit, emitter:position(), emitter:rotation())
+		local unit = SoundLayer.super.do_spawn_unit(self, self._area_emitter_unit, emitter:position(), emitter:rotation(), nil, nil, true)
 
 		if emitter:name() and emitter:name() ~= "" then
 			self:set_name_id(unit, emitter:name())

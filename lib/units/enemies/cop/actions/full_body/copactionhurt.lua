@@ -276,17 +276,7 @@ function CopActionHurt:init(action_desc, common_data)
 	local action_type = action_desc.hurt_type
 	local start_dot_dance_antimation = action_desc.fire_dot_data and action_desc.fire_dot_data.start_dot_dance_antimation
 
-	if action_type == "fatal" then
-		redir_res = self._ext_movement:play_redirect("fatal")
-
-		if not redir_res then
-			debug_pause("[CopActionHurt:init] fatal redirect failed in", self._machine:segment_state(Idstring("base")))
-
-			return
-		end
-
-		managers.hud:on_teammate_downed(self._unit:unit_data().teammate_panel_id, self._unit:unit_data().name_label_id)
-	elseif action_desc.variant == "tase" then
+	if action_desc.variant == "tase" then
 		redir_res = self._ext_movement:play_redirect("tased")
 
 		if not redir_res then
@@ -332,7 +322,7 @@ function CopActionHurt:init(action_desc, common_data)
 	elseif action_type == "taser_tased" then
 		local char_tweak = tweak_data.character[self._unit:base()._tweak_table]
 
-		if (char_tweak.can_be_tased == nil or char_tweak.can_be_tased) and self._unit:brain() and self._unit:brain()._current_logic_name ~= "intimidated" then
+		if char_tweak.can_be_tased == nil or char_tweak.can_be_tased then
 			redir_res = self._ext_movement:play_redirect("taser")
 
 			local variant = math.random(4)
@@ -703,7 +693,7 @@ function CopActionHurt:init(action_desc, common_data)
 
 	if not self._unit:base().nick_name then
 		if action_desc.variant == "fire" then
-			if tweak_table ~= "tank" and tweak_table ~= "tank_hw" and tweak_table ~= "shield" and not self._unit:sound():speaking() then
+			if tweak_table ~= "tank" and tweak_table ~= "shield" and not self._unit:sound():speaking() then
 				if action_desc.hurt_type == "fire_hurt" then
 					self._unit:sound():say("burnhurt", true, true)
 				elseif action_desc.hurt_type == "death" then
@@ -733,7 +723,7 @@ function CopActionHurt:init(action_desc, common_data)
 		end
 	end
 
-	if action_type == "death" or action_type == "bleedout" or action_desc.variant == "tased" or action_type == "fatal" then
+	if action_type == "death" or action_type == "bleedout" or action_desc.variant == "tased" then
 		self._floor_normal = self:_get_floor_normal(common_data.pos, common_data.fwd, common_data.right)
 	end
 
@@ -924,17 +914,13 @@ function CopActionHurt:on_exit()
 	end
 
 	if not self._expired and Network:is_server() then
-		if self._hurt_type == "bleedout" or self._hurt_type == "fatal" or self._variant == "tase" then
+		if self._hurt_type == "bleedout" or self._variant == "tase" then
 			self._unit:network():send("action_hurt_end")
 		end
 
-		if self._hurt_type == "bleedout" or self._hurt_type == "fatal" then
+		if self._hurt_type == "bleedout" then
 			self._ext_inventory:equip_selection(2, true)
 		end
-	end
-
-	if self._hurt_type ~= "fatal" and self._variant == "tase" then
-		-- block empty
 	end
 end
 
@@ -1003,10 +989,10 @@ end
 function CopActionHurt:_upd_tased(t)
 	if not self._tased_time or t > self._tased_time then
 		if self._tased_down_time and t < self._tased_down_time then
-			local redir_res = self._ext_movement:play_redirect("fatal")
+			local redir_res = self._ext_movement:play_redirect("bleedout")
 
 			if not redir_res then
-				debug_pause("[CopActionHurt:init] fatal redirect failed in", self._machine:segment_state(Idstring("base")))
+				debug_pause("[CopActionHurt:init] bleedout redirect failed in", self._machine:segment_state(Idstring("base")))
 			end
 
 			self.update = self._upd_tased_down

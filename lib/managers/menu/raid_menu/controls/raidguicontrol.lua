@@ -547,8 +547,6 @@ function RaidGUIControl:_menu_move_to(target_control_name, direction)
 	for _, controls in pairs(component_controls) do
 		for _, control in pairs(controls) do
 			if control._name == target_control_name then
-				Application:debug("[RaidGUIControl:_menu_move_to] - found next ", control._name)
-
 				if control:visible() and control:selectable() and control:enabled() then
 					self:set_selected(false)
 
@@ -574,11 +572,11 @@ end
 function RaidGUIControl:_find_next_visible_control(control_ref, direction)
 	local next_control_name = control_ref and control_ref._on_menu_move and control_ref._on_menu_move[direction]
 
-	if next_control_name then
-		self:_menu_move_to(next_control_name, direction)
-	else
+	if not next_control_name then
 		return false
 	end
+
+	return self:_menu_move_to(next_control_name, direction)
 end
 
 function RaidGUIControl:confirm_pressed()

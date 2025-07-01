@@ -413,7 +413,6 @@ function RaidGUIControlCharacterDescription:set_data(data)
 	self._nation_flag_icon:set_texture_rect(nation_flag_data.texture_rect)
 	self._nation_flag_icon:set_visible(true)
 	self._nation_flag_label:set_text(utf8.to_upper(managers.localization:text("nationality_" .. data.nationality)))
-	self._nation_flag_label:set_text(utf8.to_upper(managers.localization:text("nationality_" .. data.nationality)))
 	self._level_amount_level:set_text(data.level)
 	self._level_label:set_text(self:translate("select_character_level_label", true))
 

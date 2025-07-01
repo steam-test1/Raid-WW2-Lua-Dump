@@ -59,6 +59,12 @@ function CopActionShoot:init(action_desc, common_data)
 
 	self[preset_data.start](self)
 
+	if not self._ext_inventory:equipped_selection() then
+		Application:error("[CopActionShoot:init vent] No weapon equipped: ", inspect(self._unit), "   ", inspect(common_data.char_tweak))
+
+		return
+	end
+
 	local weapon_unit = self._ext_inventory:equipped_unit()
 	local weap_tweak = weapon_unit:base():weapon_tweak_data()
 	local weapon_usage_tweak = common_data.char_tweak.weapon[weap_tweak.usage]
@@ -165,13 +171,13 @@ function CopActionShoot:on_attention(attention, old_attention)
 	self._next_vis_ray_t = nil
 
 	if attention then
+		local t = TimerManager:game():time()
+
 		self[self._ik_preset.start](self)
 
 		local vis_state = self._ext_base:lod_stage()
 
 		if vis_state and vis_state < 3 and self[self._ik_preset.get_blend](self) > 0 then
-			local t = TimerManager:game():time()
-
 			self._aim_transition = {
 				duration = 0.333,
 				start_t = t + 0.0001,
@@ -183,7 +189,7 @@ function CopActionShoot:on_attention(attention, old_attention)
 			self._get_target_position = self._get_target_pos
 		end
 
-		self._mod_enable_t = TimerManager:game():time() + 0.5
+		self._mod_enable_t = t + 0.5
 
 		if attention.unit then
 			self._shooting_player = attention.unit:base() and attention.unit:base().is_local_player
@@ -192,7 +198,7 @@ function CopActionShoot:on_attention(attention, old_attention)
 				self._shooting_husk_player = attention.unit:base() and attention.unit:base().is_husk_player
 
 				if self._shooting_husk_player then
-					self._next_vis_ray_t = TimerManager:game():time()
+					self._next_vis_ray_t = t
 				end
 			end
 
@@ -213,19 +219,18 @@ function CopActionShoot:on_attention(attention, old_attention)
 			local shoot_hist = self._shoot_history
 
 			if shoot_hist then
-				shoot_hist.focus_error_roll = focus_error_roll
-
 				local displacement = mvector3.distance(target_pos, shoot_hist.m_last_pos)
 				local focus_delay = usage_tweak.focus_delay * math.min(1, displacement / usage_tweak.focus_dis)
 
-				shoot_hist.focus_start_t = TimerManager:game():time()
 				shoot_hist.focus_delay = focus_delay
+				shoot_hist.focus_error_roll = focus_error_roll
+				shoot_hist.focus_start_t = t
 				shoot_hist.m_last_pos = mvector3.copy(target_pos)
 			else
 				shoot_hist = {
 					focus_delay = usage_tweak.focus_delay,
 					focus_error_roll = focus_error_roll,
-					focus_start_t = TimerManager:game():time(),
+					focus_start_t = t,
 					m_last_pos = mvector3.copy(target_pos),
 				}
 				self._shoot_history = shoot_hist
@@ -612,7 +617,7 @@ function CopActionShoot:_get_unit_shoot_pos(t, pos, dis, w_tweak, falloff, i_ran
 	end
 
 	if self._common_data.is_suppressed then
-		hit_chance = hit_chance * 0.5
+		hit_chance = hit_chance * (w_tweak.SUPPRESSION_ACC_CHANCE or 0.5)
 	end
 
 	if self._common_data.active_actions[2] and self._common_data.active_actions[2]:type() == "dodge" then
@@ -665,13 +670,11 @@ function CopActionShoot:on_death_drop()
 end
 
 function CopActionShoot:get_husk_interrupt_desc()
-	local old_action_desc = {
+	return {
 		block_type = "action",
 		body_part = 3,
 		type = "shoot",
 	}
-
-	return old_action_desc
 end
 
 function CopActionShoot:need_upd()

@@ -1,4 +1,5 @@
 TurretWeapon = TurretWeapon or class()
+TurretWeapon.IDS_WEAPON = Idstring("weapon")
 
 local mvec_to = Vector3()
 
@@ -46,6 +47,7 @@ function TurretWeapon:init(unit)
 	self._locator_tpp = unit:get_object(Idstring("third_person_placement"))
 	self._locator_tpp_orig = unit:get_object(Idstring("third_person_placement_orig")) or self._locator_tpp
 	self._SO_object = unit:get_object(Idstring("third_person_placement_orig")) or self._locator_tpp_orig
+	self._activate_turret_clbk_id = "activate_turret_" .. tostring(self._unit:key())
 	self._joint_heading = unit:get_object(Idstring("anim_heading"))
 	self._joint_pitch = unit:get_object(Idstring("anim_pitch"))
 	self._joint_pitch_original_pos = Vector3(self._joint_pitch:local_position().x, self._joint_pitch:local_position().y, self._joint_pitch:local_position().z)
@@ -88,6 +90,8 @@ function TurretWeapon:init(unit)
 
 	self._heat_material = tweak_data.weapon[self.name_id].heat_material
 	self._heat_material_parameter = tweak_data.weapon[self.name_id].heat_material_parameter
+	self._ids_heat_material = self._heat_material and Idstring(self._heat_material)
+	self._ids_heat_material_parameter = self._heat_material_parameter and Idstring(self._heat_material_parameter)
 	self._setup = {
 		ignore_units = {
 			self._unit,
@@ -255,35 +259,21 @@ function TurretWeapon:debug_deactivate()
 end
 
 function TurretWeapon:update(unit, t, dt)
-	self:_update_shell_movement(dt)
-
 	local is_puppet_alive = alive(self._puppet_unit) and not self._puppet_unit:character_damage():dead()
 	local is_enemy_mode = self._mode and self._mode == "enemy"
 
 	if is_enemy_mode and not is_puppet_alive then
 		Application:trace("TurretWeapon:update: ghost turret detected.")
-		self:deactivate()
-	end
 
-	self:_reduce_heat(dt)
-
-	if self._heat_material and self._heat_material_parameter then
-		local ids_heat_material = Idstring(self._heat_material)
-		local ids_heat_material_param = Idstring(self._heat_material_parameter)
-		local materials = self._unit:materials()
-
-		for _, material in ipairs(materials) do
-			if ids_heat_material == material:name() then
-				local start_verheating_threshold = 0.5
-
-				if start_verheating_threshold < self._overheat_current then
-					material:set_variable(ids_heat_material_param, (self._overheat_current - start_verheating_threshold) * 1 / start_verheating_threshold)
-				else
-					material:set_variable(ids_heat_material_param, 0)
-				end
-			end
+		if Network:is_server() then
+			self:deactivate()
+		else
+			self:deactivate_client()
 		end
 	end
+
+	self:_update_shell_movement(dt)
+	self:_reduce_heat(dt)
 
 	if not self._active then
 		return
@@ -397,6 +387,22 @@ function TurretWeapon:_reduce_heat(dt)
 
 	if self._overheat_current == 0 then
 		self._overheated = false
+	end
+
+	if self._overheat_current > 0 and self._heat_material and self._heat_material_parameter then
+		local materials = self._unit:materials()
+
+		for _, material in ipairs(materials) do
+			if self._ids_heat_material == material:name() then
+				local start_verheating_threshold = 0.5
+
+				if start_verheating_threshold < self._overheat_current then
+					material:set_variable(self._ids_heat_material_parameter, (self._overheat_current - start_verheating_threshold) * 1 / start_verheating_threshold)
+				else
+					material:set_variable(self._ids_heat_material_parameter, 0)
+				end
+			end
+		end
 	end
 end
 
@@ -1219,6 +1225,7 @@ function TurretWeapon:_create_turret_SO()
 		type = "turret",
 	}
 	local twk_data = tweak_data.weapon[self.name_id]
+	local interval_delay = math.random() / 2
 	local SO_descriptor = {
 		AI_group = "enemies",
 		access = managers.navigation:convert_access_filter_to_number({
@@ -1232,7 +1239,7 @@ function TurretWeapon:_create_turret_SO()
 		admin_clbk = callback(self, self, "on_turret_SO_administered"),
 		base_chance = twk_data.SO_CHANCE_BASE or 1,
 		chance_inc = twk_data.SO_CHANCE_INC or 0.1,
-		interval = 1,
+		interval = 1 + interval_delay,
 		objective = turret_objective,
 		search_dis_sq = 4000000,
 		search_pos = turret_objective.pos,
@@ -1528,12 +1535,11 @@ function TurretWeapon:on_puppet_damaged(data, damage_info)
 		end
 	end
 
-	self._activate_turret_clbk_id = "activate_turret_" .. tostring(self._puppet_unit:key())
+	self:deactivate_sentry()
+	managers.queued_tasks:unqueue_all(self._activate_turret_clbk_id, self)
 
 	local dazed_duration = tweak_data.weapon[self.name_id].dazed_duration or 3
 
-	self:deactivate_sentry()
-	managers.queued_tasks:unqueue_all(self._activate_turret_clbk_id, self)
 	managers.queued_tasks:queue(self._activate_turret_clbk_id, self.activate_turret, self, nil, dazed_duration)
 end
 
@@ -1553,47 +1559,19 @@ function TurretWeapon:on_puppet_damaged_client(attacker_unit)
 		return
 	end
 
-	local player_is_visible = self._unit:movement():is_target_visible()
-
-	if not player_is_visible then
-		managers.queued_tasks:unqueue_all(self._activate_turret_clbk_id, self)
-		self:deactivate()
-
-		return
-	end
-
-	local damage_by_team = attacker_unit:movement():team()
-
-	if damage_by_team.id == "criminal1" then
-		local shot_from_behind = self._unit:movement():is_unit_behind(attacker_unit)
-
-		if shot_from_behind then
-			managers.queued_tasks:unqueue_all(self._activate_turret_clbk_id, self)
-			self:deactivate()
-
-			return
-		end
-	end
-
-	self._activate_turret_clbk_id = "activate_turret_" .. tostring(self._puppet_unit:key())
+	self:deactivate_sentry()
+	managers.queued_tasks:unqueue_all(self._activate_turret_clbk_id, self)
 
 	local dazed_duration = tweak_data.weapon[self.name_id].dazed_duration or 3
 
-	self:deactivate_sentry()
-	managers.queued_tasks:unqueue_all(self._activate_turret_clbk_id, self)
 	managers.queued_tasks:queue(self._activate_turret_clbk_id, self.activate_turret, self, nil, dazed_duration)
-end
-
-function TurretWeapon:on_puppet_death_client()
-	managers.queued_tasks:unqueue_all(self._activate_turret_clbk_id, self)
-	self:deactivate()
 end
 
 function TurretWeapon:set_active(state)
 	self._active = state
 
 	if state then
-		self._unit:set_extension_update_enabled(Idstring("weapon"), true)
+		self._unit:set_extension_update_enabled(self.IDS_WEAPON, true)
 	else
 		managers.queued_tasks:queue(nil, self._disable_extension, self, nil, 5, nil)
 	end
@@ -1601,7 +1579,7 @@ end
 
 function TurretWeapon:_disable_extension()
 	if alive(self._unit) and not self._active then
-		self._unit:set_extension_update_enabled(Idstring("weapon"), false)
+		self._unit:set_extension_update_enabled(self.IDS_WEAPON, false)
 	end
 end
 
@@ -1629,6 +1607,7 @@ function TurretWeapon:deactivate_client()
 		end
 	end
 
+	managers.queued_tasks:unqueue_all(self._activate_turret_clbk_id, self)
 	self._unit:brain():switch_off(true)
 	self._unit:movement():set_active(false)
 	self:set_active(false)

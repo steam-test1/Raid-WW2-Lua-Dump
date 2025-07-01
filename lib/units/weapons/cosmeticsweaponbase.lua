@@ -45,18 +45,9 @@ end
 
 function NewRaycastWeaponBase:_material_config_name(part_id, unit_name, use_cc_material_config)
 	if self:is_npc() then
-		if use_cc_material_config and tweak_data.weapon.factory.parts[part_id].cc_thq_material_config then
-			return tweak_data.weapon.factory.parts[part_id].cc_thq_material_config
-		end
-
-		if tweak_data.weapon.factory.parts[part_id].thq_material_config then
-			return tweak_data.weapon.factory.parts[part_id].thq_material_config
-		end
-
 		local cc_string = use_cc_material_config and "_cc" or ""
-		local thq_string = self:use_thq() and "_thq" or ""
 
-		return Idstring(unit_name .. cc_string .. thq_string)
+		return Idstring(unit_name .. cc_string)
 	end
 
 	if use_cc_material_config and tweak_data.weapon.factory.parts[part_id].cc_material_config then
@@ -71,11 +62,10 @@ function NewRaycastWeaponBase:_update_materials()
 		return
 	end
 
-	local use = not self:is_npc() or self:use_thq()
+	local use = not self:is_npc()
 	local use_cc_material_config = use and self._cosmetics_data and true or false
-	local is_thq = self:is_npc() and self:use_thq()
 
-	if is_thq or use_cc_material_config then
+	if use_cc_material_config then
 		if not self._materials then
 			for part_id, part in pairs(self._parts) do
 				local part_data = managers.weapon_factory:get_part_data_by_part_id_from_weapon(part_id, self._factory_id, self._blueprint)

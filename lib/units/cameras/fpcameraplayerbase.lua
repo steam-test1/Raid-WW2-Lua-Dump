@@ -1,6 +1,6 @@
 FPCameraPlayerBase = FPCameraPlayerBase or class(UnitBase)
 FPCameraPlayerBase.IDS_EMPTY = Idstring("empty")
-FPCameraPlayerBase.IDS_NOSTRING = Idstring("")
+FPCameraPlayerBase.IDS_NOSTRING = IDS_EMPTY
 FPCameraPlayerBase.bipod_location = nil
 FPCameraPlayerBase.camera_last_pos = nil
 FPCameraPlayerBase.MAX_PITCH = 85
@@ -28,9 +28,10 @@ function FPCameraPlayerBase:init(unit)
 	UnitBase.init(self, unit, true)
 
 	self._unit = unit
+	self._timer = managers.player:player_timer()
 
-	unit:set_timer(managers.player:player_timer())
-	unit:set_animation_timer(managers.player:player_timer())
+	unit:set_timer(self._timer)
+	unit:set_animation_timer(self._timer)
 	unit:set_approximate_orientation(false)
 
 	self._anims_enabled = true
@@ -81,8 +82,6 @@ function FPCameraPlayerBase:init(unit)
 		direction = Vector3(),
 		velocity = 0,
 	}
-
-	self:check_flashlight_enabled()
 end
 
 function FPCameraPlayerBase:set_parent_unit(parent_unit)
@@ -139,31 +138,6 @@ function FPCameraPlayerBase:update(unit, t, dt)
 		self._parent_unit:camera():set_FOV(self._fov.fov)
 
 		self._fov.dirty = nil
-	end
-end
-
-function FPCameraPlayerBase:check_flashlight_enabled()
-	if managers.game_play_central:flashlights_on_player_on() then
-		if not alive(self._light) then
-			self._light = World:create_light("spot|specular")
-
-			self._light:set_spot_angle_end(45)
-			self._light:set_far_range(1000)
-		end
-
-		if not self._light_effect then
-			self._light_effect = World:effect_manager():spawn({
-				effect = tweak_data.common_effects.fps_flashlight,
-				position = self._unit:position(),
-				rotation = Rotation(),
-			})
-		end
-
-		self._light:set_enable(true)
-		World:effect_manager():set_hidden(self._light_effect, false)
-	elseif alive(self._light) then
-		self._light:set_enable(false)
-		World:effect_manager():set_hidden(self._light_effect, true)
 	end
 end
 
@@ -385,7 +359,7 @@ function FPCameraPlayerBase:_update_rot(axis, unscaled_axis)
 		self:animate_pitch_upd()
 	end
 
-	local t = managers.player:player_timer():time()
+	local t = self._timer:time()
 	local dt = t - (self._last_rot_t or t)
 
 	self._last_rot_t = t
@@ -395,10 +369,12 @@ function FPCameraPlayerBase:_update_rot(axis, unscaled_axis)
 	local new_shoulder_pos = mvec1
 	local new_shoulder_rot = mrot1
 	local new_head_rot = mrot2
+	local player_state = managers.player:current_state()
+	local state_in_steelsight = self._parent_unit:movement():current_state():in_steelsight()
 
 	self._parent_unit:m_position(new_head_pos)
 
-	if managers.player:current_state() ~= "turret" then
+	if player_state ~= "turret" then
 		mvector3.add(new_head_pos, self._head_stance.translation)
 	end
 
@@ -408,7 +384,7 @@ function FPCameraPlayerBase:_update_rot(axis, unscaled_axis)
 	local stick_input_x, stick_input_y = self._look_function(axis, self._input.look_multiplier, dt, unscaled_axis)
 	local multiplier = 1
 
-	if self._parent_unit:movement()._current_state:in_steelsight() then
+	if state_in_steelsight then
 		local equipped_unit_base = managers.player:player_unit():movement():current_state()._equipped_unit:base()
 
 		if equipped_unit_base and equipped_unit_base.get_name_id and equipped_unit_base.get_reticle_obj and equipped_unit_base:get_reticle_obj() then
@@ -424,7 +400,7 @@ function FPCameraPlayerBase:_update_rot(axis, unscaled_axis)
 	stick_input_y = stick_input_y * self:_get_aim_assist_look_multiplier() * multiplier
 	self._stick_input_length = mvector3.length(Vector3(stick_input_x, stick_input_y, 0))
 
-	if managers.player:current_state() == "turret" then
+	if player_state == "turret" then
 		local current_State = self._parent_unit:movement()._current_state
 		local camera_speed_limit = current_State.get_camera_speed_limit and current_State:get_camera_speed_limit()
 
@@ -439,7 +415,6 @@ function FPCameraPlayerBase:_update_rot(axis, unscaled_axis)
 
 	local look_polar_spin = data.spin - stick_input_x
 	local look_polar_pitch = math.clamp(data.pitch + stick_input_y, -FPCameraPlayerBase.MAX_PITCH, FPCameraPlayerBase.MAX_PITCH)
-	local player_state = managers.player:current_state()
 
 	if player_state == "turret" and not self._limits then
 		self._turret_unit = managers.player:get_turret_unit()
@@ -592,8 +567,6 @@ function FPCameraPlayerBase:_update_rot(axis, unscaled_axis)
 		end
 	end
 
-	local player_state = managers.player:current_state()
-
 	if player_state == "driving" then
 		self:_set_camera_position_in_vehicle()
 	elseif player_state == "ladder" then
@@ -627,15 +600,6 @@ function FPCameraPlayerBase:_update_rot(axis, unscaled_axis)
 		self:set_rotation(new_shoulder_rot)
 		self._parent_unit:camera():set_position(self._output_data.position)
 		self._parent_unit:camera():set_rotation(self._output_data.rotation)
-	end
-
-	if player_state == "bipod" and not self._parent_unit:movement()._current_state:in_steelsight() then
-		self:set_position(PlayerBipod._shoulder_pos or new_shoulder_pos)
-		self:set_rotation(bipod_rot)
-		self._parent_unit:camera():set_position(PlayerBipod._camera_pos or self._output_data.position)
-		self:set_fov_instant(40)
-	elseif not self._parent_unit:movement()._current_state:in_steelsight() then
-		PlayerBipod:set_camera_positions(bipod_pos, self._output_data.position)
 	end
 end
 
@@ -777,11 +741,11 @@ function FPCameraPlayerBase:calculate_aim_assist_look_multiplier(col_ray)
 			self:clbk_aim_assist(col_ray)
 		end
 
-		self._locked_unit = col_ray.unit
-
 		if distance > 10 then
 			self._aim_locked = false
 			self._locked_unit = nil
+		else
+			self._locked_unit = col_ray.unit
 		end
 	else
 		if distance < 6 then
@@ -1332,7 +1296,7 @@ function FPCameraPlayerBase:set_stance_fov_instant(stance_name)
 end
 
 function FPCameraPlayerBase:clbk_stance_entered(new_shoulder_stance, new_head_stance, new_vel_overshot, new_fov, new_shakers, stance_mod, duration_multiplier, duration)
-	local t = Application:time()
+	local t = self._timer:time()
 
 	if new_shoulder_stance then
 		local transition = {}
@@ -1505,7 +1469,7 @@ function FPCameraPlayerBase:animate_fov(new_fov, duration_multiplier)
 		self._fov.transition = transition
 		transition.end_fov = new_fov
 		transition.start_fov = self._fov.fov
-		transition.start_t = managers.player:player_timer():time()
+		transition.start_t = self._timer:time()
 		transition.duration = 0.23 * (duration_multiplier or 1)
 	end
 end
@@ -1798,7 +1762,6 @@ function FPCameraPlayerBase:anim_clbk_stop_weapon_magazine_empty()
 		local weapon = self._parent_unit:inventory():equipped_unit()
 
 		if alive(weapon) then
-			weapon:base():tweak_data_anim_stop("magazine_empty")
 			weapon:base():tweak_data_anim_stop("magazine_empty")
 		end
 	end

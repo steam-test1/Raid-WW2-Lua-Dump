@@ -1,6 +1,14 @@
 CarryUnitElement = CarryUnitElement or class(MissionElement)
 CarryUnitElement.SAVE_UNIT_POSITION = false
 CarryUnitElement.SAVE_UNIT_ROTATION = false
+CarryUnitElement.LINK_VALUES = {
+	{
+		layer = "Statics",
+		output = true,
+		table_value = "anim_align_unit_ids",
+		type = "target",
+	},
+}
 CarryUnitElement.CARRY_OPTIONS = {
 	"remove",
 	"remove_align",

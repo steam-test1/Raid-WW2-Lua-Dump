@@ -21,7 +21,7 @@ function HUDControllerHotswap:init(hud)
 end
 
 function HUDControllerHotswap.get_icon()
-	local p = managers.controller:is_controller_present() and HUDControllerHotswap.DEVICE_CONTROLLER_XB1 or HUDControllerHotswap.DEVICE_KEYBOARD
+	local p = managers.controller:is_using_controller() and HUDControllerHotswap.DEVICE_CONTROLLER_XB1 or HUDControllerHotswap.DEVICE_KEYBOARD
 
 	return tweak_data.gui.icons["hotswap_" .. (p or "device_unknown")]
 end
@@ -87,7 +87,7 @@ function HUDControllerHotswap:update_input_device()
 		})
 	end
 
-	local text = managers.localization:to_upper_text(managers.controller:is_controller_present() and "hud_hotswap_controller" or "hud_hotswap_keyboard")
+	local text = managers.localization:to_upper_text(managers.controller:is_using_controller() and "hud_hotswap_controller" or "hud_hotswap_keyboard")
 
 	self._text:set_text(text)
 end
@@ -121,7 +121,7 @@ function HUDControllerHotswap:_animate_hotswap()
 	end
 
 	t = 0
-	duration = 5
+	duration = 2.5
 
 	while t < duration do
 		local dt = coroutine.yield()

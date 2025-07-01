@@ -17,10 +17,6 @@ function RaidMenuOptionsSound:_layout()
 end
 
 function RaidMenuOptionsSound:close()
-	self:_save_sound_values()
-
-	Global.savefile_manager.setting_changed = true
-
 	managers.savefile:save_setting(true)
 	RaidMenuOptionsSound.super.close(self)
 end
@@ -34,6 +30,7 @@ function RaidMenuOptionsSound:_layout_sound()
 		name = "slider_master",
 		on_menu_move = {
 			down = "slider_music",
+			up = "tinnitus",
 		},
 		on_value_change_callback = callback(self, self, "on_value_change_master_volume"),
 		value = 100,
@@ -143,6 +140,7 @@ function RaidMenuOptionsSound:_layout_sound()
 		name = "tinnitus",
 		on_click_callback = callback(self, self, "on_click_tinnitus"),
 		on_menu_move = {
+			down = "slider_master",
 			up = "push_to_talk",
 		},
 		w = default_width,
@@ -173,21 +171,6 @@ function RaidMenuOptionsSound:_load_sound_values()
 	self._toggle_menu_voicechat_toggle:set_value_and_render(voice_chat)
 	self._toggle_menu_push_to_talk_toggle:set_value_and_render(push_to_talk)
 	self._toggle_menu_tinnitus_toggle:set_value_and_render(tinnitus_sound_enabled)
-end
-
-function RaidMenuOptionsSound:_save_sound_values()
-	self:on_value_change_master_volume()
-	self:on_value_change_music_volume()
-	self:on_value_change_sfx_volume()
-	self:on_value_change_voice_volume()
-	self:on_value_change_voice_over_volume()
-	self:on_click_voice_chat()
-	self:on_click_push_to_talk()
-	self:on_click_tinnitus()
-
-	Global.savefile_manager.setting_changed = true
-
-	managers.savefile:save_setting(true)
 end
 
 function RaidMenuOptionsSound:on_value_change_master_volume()
@@ -238,12 +221,6 @@ function RaidMenuOptionsSound:on_click_tinnitus()
 	local tinnitus = self._toggle_menu_tinnitus_toggle:get_value()
 
 	managers.menu:active_menu().callback_handler:toggle_tinnitus_raid(tinnitus)
-end
-
-function RaidMenuOptionsSound:close()
-	Application:trace("RaidMenuOptionsSound:close()")
-	self:_save_sound_values()
-	RaidMenuOptionsSound.super.close(self)
 end
 
 function RaidMenuOptionsSound:bind_controller_inputs()

@@ -88,7 +88,11 @@ function RaidGUIControlMeleeWeaponPeerLoot:_create_weapon_point_details()
 end
 
 function RaidGUIControlMeleeWeaponPeerLoot:set_player_name(name)
-	self._name_label:set_text(utf8.to_upper(name))
+	if managers.user:get_setting("capitalize_names") then
+		name = utf8.to_upper(name)
+	end
+
+	self._name_label:set_text(name)
 	self:_layout_text()
 end
 

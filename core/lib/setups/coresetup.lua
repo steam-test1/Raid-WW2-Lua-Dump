@@ -61,7 +61,6 @@ function CoreSetup:init()
 	self.__quit = false
 	self.__exec = false
 	self.__context = nil
-	self.__firstupdate = true
 end
 
 function CoreSetup:init_category_print()
@@ -73,10 +72,6 @@ function CoreSetup:load_packages()
 end
 
 function CoreSetup:unload_packages()
-	return
-end
-
-function CoreSetup:start_boot_loading_screen()
 	return
 end
 
@@ -94,14 +89,6 @@ end
 
 function CoreSetup:init_finalize()
 	managers.mission:post_init()
-end
-
-function CoreSetup:start_loading_screen()
-	return
-end
-
-function CoreSetup:stop_loading_screen()
-	return
 end
 
 function CoreSetup:update(t, dt)
@@ -231,15 +218,12 @@ function CoreSetup:__init()
 	})
 
 	if not Global.__coresetup_bootdone then
-		self:start_boot_loading_screen()
-
 		Global.__coresetup_bootdone = true
 	end
 
 	self:load_packages()
 	World:set_raycast_bounds(Vector3(-50000, -80000, -20000), Vector3(90000, 50000, 30000))
 	World:load(Application:editor() and "core/levels/editor/editor" or "core/levels/zone", false)
-	min_exe_version("1.0.0.7000", "Core Systems")
 	rawset(_G, "UnitDamage", rawget(_G, "UnitDamage") or CoreUnitDamage)
 	rawset(_G, "EditableGui", rawget(_G, "EditableGui") or CoreEditableGui)
 
@@ -319,17 +303,7 @@ function CoreSetup:__destroy()
 	managers.overlay_effect:destroy()
 end
 
-function CoreSetup:loading_update(t, dt)
-	return
-end
-
 function CoreSetup:__update(t, dt)
-	if self.__firstupdate then
-		self:stop_loading_screen()
-
-		self.__firstupdate = false
-	end
-
 	managers.controller:update(t, dt)
 	managers.cutscene:update()
 	managers.sequence:update(t, dt)
@@ -420,7 +394,6 @@ function CoreSetup:__end_frame(t, dt)
 		end
 
 		TextureCache:abort_all_script_requests()
-		self:start_loading_screen()
 
 		if managers.worlddefinition then
 			managers.worlddefinition:unload_packages()
@@ -439,7 +412,7 @@ function CoreSetup:__end_frame(t, dt)
 end
 
 function CoreSetup:__loading_update(t, dt)
-	self:loading_update()
+	return
 end
 
 function CoreSetup:__animations_reloaded()

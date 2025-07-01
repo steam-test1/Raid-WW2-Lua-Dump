@@ -10,7 +10,6 @@ RaidGUIControlTopStat.STAT_NAME_COLOR = tweak_data.gui.colors.raid_grey
 RaidGUIControlTopStat.STAT_ICON_SIZE = 192
 RaidGUIControlTopStat.FONT = tweak_data.gui.fonts.din_compressed
 RaidGUIControlTopStat.FONT_SIZE = tweak_data.gui.font_sizes.large
-RaidGUIControlTopStat.FONT_KERNING = tweak_data.hud.medium_kern
 
 function RaidGUIControlTopStat:init(parent, params)
 	RaidGUIControlTopStat.super.init(self, parent, params)
@@ -98,7 +97,13 @@ function RaidGUIControlTopStat:_create_icon_panel()
 end
 
 function RaidGUIControlTopStat:set_data(data)
-	self._player_name_label:set_text(utf8.to_upper(data.player_nickname))
+	local name = data.player_nickname
+
+	if managers.user:get_setting("capitalize_names") then
+		name = utf8.to_upper(name)
+	end
+
+	self._player_name_label:set_text(name)
 	self._stat_name_label:set_text(self:translate(data.stat, true))
 
 	local params_stat_icon = {

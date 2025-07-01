@@ -1180,10 +1180,10 @@ function NetworkMatchMakingPSN:set_challenge_card_info()
 	local active_card = managers.challenge_cards:get_active_card()
 
 	if self._lobby_attributes then
-		if active_card then
-			self._lobby_attributes.challenge_card_id = active_card.key_name
-		else
-			self._lobby_attributes.challenge_card_id = "nocards"
+		self._lobby_attributes.challenge_card_id = active_card and active_card.key_name or "nocards"
+
+		if active_card and active_card.seed then
+			self._lobby_attributes.challenge_card_id = self._lobby_attributes.challenge_card_id .. "," .. active_card.seed
 		end
 
 		self.lobby_handler:set_lobby_data(self._lobby_attributes)
@@ -1558,12 +1558,6 @@ function NetworkMatchMakingPSN:_invitation_received_result_cb(message)
 		return
 	end
 
-	if managers.dlc:is_installing() then
-		managers.menu:show_game_is_installing()
-
-		return
-	end
-
 	if game_state_machine:current_state_name() ~= "menu_main" then
 		print("INGAME INVITE")
 
@@ -1625,12 +1619,6 @@ function NetworkMatchMakingPSN:join_boot_invite()
 
 	Global.boot_invite.used = true
 	Global.boot_invite.pending = false
-
-	if managers.dlc:is_installing() then
-		managers.menu:show_game_is_installing()
-
-		return
-	end
 
 	local message = Global.boot_invite
 
@@ -2120,7 +2108,7 @@ function NetworkMatchMakingPSN:on_peer_removed(peer)
 	managers.network.voice_chat:close_channel_to(peer)
 end
 
-function NetworkMatchMakingPSN:_joined_game(res, level_index, difficulty_index, state_index)
+function NetworkMatchMakingPSN:_joined_game(res, state_index)
 	if res ~= "FAILED_CONNECT" or managers.network.matchmake._server_connect_retried and managers.network.matchmake._server_connect_retried >= NetworkMatchMaking.RETRY_CONNECT_COUNT then
 		managers.system_menu:close("waiting_for_server_response")
 
@@ -2142,11 +2130,6 @@ function NetworkMatchMakingPSN:_joined_game(res, level_index, difficulty_index, 
 		managers.network.voice_chat:set_drop_in({
 			room_id = managers.network.matchmake:room_id(),
 		})
-
-		local level_id = tweak_data.levels:get_level_id_from_index(level_index)
-
-		Global.game_settings.level_id = level_id
-
 		PSN:leave_user_created_session()
 	elseif res == "KICKED" then
 		managers.network.matchmake:_restart_network()

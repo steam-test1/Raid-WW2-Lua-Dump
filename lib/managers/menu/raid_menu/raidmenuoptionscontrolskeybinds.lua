@@ -361,28 +361,13 @@ function RaidMenuOptionsControlsKeybinds:_on_escape_callback()
 end
 
 function RaidMenuOptionsControlsKeybinds:close()
-	self:_save_controls_keybinds_values()
-
-	Global.savefile_manager.setting_changed = true
-
 	managers.savefile:save_setting(true)
 	managers.raid_menu:register_on_escape_callback(nil)
 	RaidMenuOptionsControlsKeybinds.super.close(self)
 end
 
-function RaidMenuOptionsControlsKeybinds:_save_controls_keybinds_values()
-	return
-end
-
 function RaidMenuOptionsControlsKeybinds:_layout_controls_keybinds()
 	self._keybind_controls_table = {}
-
-	local default_controller_type = managers.controller:get_default_wrapper_type()
-
-	if default_controller_type ~= "pc" then
-		return
-	end
-
 	self._keybinds = {}
 
 	local keybind_types = {
@@ -422,6 +407,7 @@ function RaidMenuOptionsControlsKeybinds:_layout_controls_keybinds()
 				keybind_params = keybind_params,
 				keybind_w = 120,
 				name = "keybind_" .. keybind_params.button,
+				on_menu_move = {},
 				text = utf8.to_upper(keybind_params.button),
 				w = keybind_width,
 				ws = self._ws,
@@ -466,7 +452,6 @@ function RaidMenuOptionsControlsKeybinds:_keybinds_per_type(keybind_type)
 				local btn_connection = connection._btn_connections[btn_name]
 
 				if btn_connection then
-					local name_id = name
 					local params = {
 						axis = connection._name,
 						binding = btn_connection.name,

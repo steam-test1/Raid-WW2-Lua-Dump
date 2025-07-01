@@ -500,6 +500,8 @@ function WeaponSkillsManager:has_weapon_breadcrumbs(params)
 				}) or managers.breadcrumb:category_has_breadcrumbs(BreadcrumbManager.CATEGORY_WEAPON_UPGRADE, {
 					primary_category,
 					weapon.weapon_id,
+				}) or managers.breadcrumb:category_has_breadcrumbs(BreadcrumbManager.CATEGORY_WEAPON_SKIN, {
+					weapon.weapon_id,
 				})
 
 				if has_breadcrumbs then
@@ -522,6 +524,8 @@ function WeaponSkillsManager:has_weapon_breadcrumbs(params)
 					weapon.weapon_id,
 				}) or managers.breadcrumb:category_has_breadcrumbs(BreadcrumbManager.CATEGORY_WEAPON_UPGRADE, {
 					secondary_category,
+					weapon.weapon_id,
+				}) or managers.breadcrumb:category_has_breadcrumbs(BreadcrumbManager.CATEGORY_WEAPON_SKIN, {
 					weapon.weapon_id,
 				})
 
@@ -712,7 +716,7 @@ function WeaponSkillsManager:_clear_all_weapon_part_animation_weights()
 		return
 	end
 
-	for _, weapon_part_anim in ipairs(tweak_data.weapon._all_fps_animation_weights) do
+	for _, weapon_part_anim in ipairs(tweak_data.weapon.all_fps_animation_weights) do
 		managers.player:local_player():camera():camera_unit():anim_state_machine():set_global(weapon_part_anim, 0)
 	end
 end

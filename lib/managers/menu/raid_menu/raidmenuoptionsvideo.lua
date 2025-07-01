@@ -30,7 +30,7 @@ function RaidMenuOptionsVideo:_layout_video()
 	local start_y = 320
 	local default_width = 512
 	local previous_panel
-	local on_controller = managers.controller:is_controller_present()
+	local on_controller = managers.controller:is_using_controller()
 
 	previous_panel = {
 		name = "btn_advanced_options",
@@ -477,7 +477,7 @@ function RaidMenuOptionsVideo:_get_default_resolution()
 end
 
 function RaidMenuOptionsVideo:_callback_default_video()
-	managers.user:reset_video_setting_map()
+	managers.user:reset_setting_map("video")
 	self:_load_video_values()
 	managers.menu:active_menu().callback_handler:set_fullscreen_default_raid_no_dialog()
 
@@ -515,35 +515,12 @@ end
 function RaidMenuOptionsVideo:_setup_control_visibility()
 	local is_fullscreen = self._stepper_menu_window_mode:get_value() == "FULLSCREEN"
 	local is_borderless = self._stepper_menu_window_mode:get_value() == "WINDOWED_FULLSCREEN"
-	local on_controller = managers.controller:is_controller_present()
 
 	for _, control in ipairs(self._fullscreen_only_controls) do
 		control:set_enabled(is_fullscreen)
 	end
 
 	self._stepper_menu_resolution:set_enabled(not is_borderless)
-	self._button_apply_video_resolution:set_enabled(not is_borderless)
-
-	if not is_fullscreen and not is_borderless then
-		self._btn_advanced_options._on_menu_move.down = "stepper_menu_resolution"
-		self._stepper_menu_resolution._on_menu_move.down = on_controller and "stepper_menu_refresh_rate" or "apply_resolution"
-		self._button_apply_video_resolution._on_menu_move.down = "window_mode"
-		self._stepper_menu_window_mode._on_menu_move.up = "apply_resolution"
-		self._progress_bar_menu_effect_quality._on_menu_move.down = "use_headbob"
-		self._toggle_menu_headbob._on_menu_move.up = "effect_quality"
-	elseif is_borderless then
-		self._btn_advanced_options._on_menu_move.down = "window_mode"
-		self._stepper_menu_window_mode._on_menu_move.up = "btn_advanced_options"
-		self._progress_bar_menu_effect_quality._on_menu_move.down = "use_headbob"
-		self._toggle_menu_headbob._on_menu_move.up = "effect_quality"
-	else
-		self._btn_advanced_options._on_menu_move.down = "stepper_menu_resolution"
-		self._stepper_menu_resolution._on_menu_move.down = on_controller and "stepper_menu_refresh_rate" or "apply_resolution"
-		self._button_apply_video_resolution._on_menu_move.down = "stepper_menu_refresh_rate"
-		self._stepper_menu_window_mode._on_menu_move.up = "stepper_menu_refresh_rate"
-		self._progress_bar_menu_effect_quality._on_menu_move.down = "progress_bar_menu_brightness"
-		self._toggle_menu_headbob._on_menu_move.up = "progress_bar_menu_brightness"
-	end
 end
 
 function RaidMenuOptionsVideo:_load_video_values()

@@ -94,7 +94,7 @@ function CharacterSelectionGui:_layout()
 		layer = RaidGuiBase.FOREGROUND_LAYER,
 		name = "select_character_button_disabled",
 		text = self:translate("character_selection_selected_character_button", true),
-		visible = not managers.controller:is_controller_present(),
+		visible = not managers.controller:is_using_controller(),
 		x = 0,
 		y = 736,
 	})
@@ -116,7 +116,7 @@ function CharacterSelectionGui:_layout()
 	self._right_side_info:set_right(self._root_panel:right())
 	self._right_side_info:set_center_y(self._root_panel:h() / 2)
 
-	if managers.controller:is_controller_present() and self._select_character_button then
+	if managers.controller:is_using_controller() and self._select_character_button then
 		self._select_character_button:hide()
 		self._select_character_button_disabled:hide()
 	end
@@ -347,7 +347,7 @@ function CharacterSelectionGui:_select_character_slot(slot_index)
 
 	local slot_empty = not Global.savefile_manager.meta_data_list[slot_index].cache
 
-	if managers.controller:is_controller_present() then
+	if managers.controller:is_using_controller() then
 		self._select_character_button:hide()
 		self._select_character_button_disabled:hide()
 	elseif slot_empty then

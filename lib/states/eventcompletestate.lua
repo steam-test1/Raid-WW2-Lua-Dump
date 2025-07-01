@@ -247,6 +247,18 @@ function EventCompleteState:at_enter(old_state, params)
 				managers.network.matchmake:set_job_info_by_current_job()
 			end
 		end
+
+		if self:is_success() and self:job_data().bounty then
+			if Network:is_server() then
+				managers.raid_job:set_bounty_completed_seed(self:job_data().seed)
+			else
+				local seed = managers.event_system:get_sync_bounty_seed()
+
+				if seed then
+					managers.raid_job:set_bounty_completed_seed(seed)
+				end
+			end
+		end
 	end
 
 	managers.menu_component:post_event("menu_volume_set")
@@ -684,8 +696,6 @@ function EventCompleteState:on_top_stats_ready()
 		acquired_value = acquired_value + tweak_data.statistics.top_stats[stat.id].loot_value
 	end
 
-	local is_in_operation = self._job_type == OperationsTweakData.JOB_TYPE_OPERATION
-
 	self.stats_ready = true
 
 	if self._active_screen == EventCompleteState.SCREEN_ACTIVE_SPECIAL_HONORS and managers.menu_component._raid_menu_special_honors_gui then
@@ -990,6 +1000,14 @@ function EventCompleteState:_continue()
 			if success then
 				self._active_screen = EventCompleteState.SCREEN_ACTIVE_LOOT
 			end
+		elseif self:is_success() and managers.greed:acquired_gold_in_mission() then
+			self._active_screen = EventCompleteState.SCREEN_ACTIVE_GREED_LOOT
+
+			local success = managers.raid_menu:open_menu("raid_menu_greed_loot_screen", false)
+
+			managers.greed:award_gold_picked_up_in_mission()
+
+			self._awarded_rewards.greed_gold = true
 		else
 			local base_xp = self:calculate_xp()
 
@@ -1045,6 +1063,12 @@ end
 
 function EventCompleteState:_clear_controller()
 	managers.controller:remove_hotswap_callback("event_complete_state")
+
+	if self._controller_list then
+		for _, controller in ipairs(self._controller_list) do
+			controller:destroy()
+		end
+	end
 
 	if not self._controller then
 		return
@@ -1109,6 +1133,8 @@ function EventCompleteState:set_statistics_values()
 	end
 
 	local used_challenge_card = self._active_challenge_card and self._active_challenge_card.key_name and self._active_challenge_card.key_name ~= "empty"
+
+	Application:info("[EventCompleteState] set_statistics_values: used_challenge_card", used_challenge_card)
 
 	if self:is_success() and used_challenge_card then
 		managers.statistics:complete_job_with_card(self._job_type, self._active_challenge_card)

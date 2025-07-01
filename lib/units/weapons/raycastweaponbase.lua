@@ -42,9 +42,9 @@ function RaycastWeaponBase:init(unit)
 	self._autohit_data = tweak_data.weapon[self._name_id].autohit
 	self._autohit_current = self._autohit_data.INIT_RATIO
 	self._shoot_through_data = {
+		SYNCH_MIN = nil,
 		from = Vector3(),
 		kills = 0,
-		pow = nil,
 	}
 	self._can_shoot_through_shield = tweak_data.weapon[self._name_id].can_shoot_through_shield
 	self._can_shoot_through_enemy = tweak_data.weapon[self._name_id].can_shoot_through_enemy
@@ -71,13 +71,18 @@ function RaycastWeaponBase:init(unit)
 	end
 
 	if self:ejects_shells() then
-		self._use_shell_ejection_effect = true
 		self._obj_shell_ejection = self._unit:get_object(Idstring("a_shell"))
 		self._shell_ejection_effect = Idstring(self:weapon_tweak_data().shell_ejection or "effects/vanilla/weapons/shells/shell_556")
 		self._shell_ejection_effect_table = {
 			effect = self._shell_ejection_effect,
 			parent = self._obj_shell_ejection,
 		}
+
+		if self._obj_shell_ejection then
+			self._use_shell_ejection_effect = true
+		else
+			Application:warn("[RaycastWeaponBase] Using ejects_shells but could not find an object for 'a_shell'.")
+		end
 	end
 
 	self._sound_fire = SoundDevice:create_source("fire")
@@ -305,11 +310,15 @@ function RaycastWeaponBase:dryfire()
 end
 
 function RaycastWeaponBase:recoil_wait()
-	return tweak_data.weapon[self._name_id].FIRE_MODE == "auto" and self:weapon_tweak_data().fire_mode_data.fire_rate or nil
+	local weapon_tweak = self:weapon_tweak_data()
+
+	return weapon_tweak.FIRE_MODE == "auto" and weapon_tweak.fire_mode_data.fire_rate or nil
 end
 
 function RaycastWeaponBase:fire_rate()
-	return (tweak_data.weapon[self._name_id].fire_mode_data and tweak_data.weapon[self._name_id].fire_mode_data.fire_rate or 0) / self:fire_rate_multiplier()
+	local weapon_tweak = self:weapon_tweak_data()
+
+	return (weapon_tweak.fire_mode_data and weapon_tweak.fire_mode_data.fire_rate or 0) / self:fire_rate_multiplier()
 end
 
 function RaycastWeaponBase:_fire_sound()
@@ -318,6 +327,19 @@ end
 
 function RaycastWeaponBase:next_fire_allowed()
 	return self._next_fire_allowed
+end
+
+function RaycastWeaponBase:next_autofire_allowed()
+	local weapon_tweak = self:weapon_tweak_data()
+	local delay = weapon_tweak.fire_mode_data and weapon_tweak.fire_mode_data.autofire_delay
+
+	if not delay then
+		return
+	end
+
+	local multiplier = self:fire_rate_multiplier()
+
+	return self._next_fire_allowed + delay * multiplier
 end
 
 function RaycastWeaponBase:start_shooting_allowed()
@@ -406,7 +428,7 @@ function RaycastWeaponBase:fire(from_pos, direction, dmg_mul, shoot_player, spre
 	local base = self.parent_weapon and self.parent_weapon:base() or self
 
 	if consume_ammo then
-		if base:get_ammo_remaining_in_clip() == 0 then
+		if base:get_ammo_remaining_in_clip() <= 0 then
 			return
 		end
 
@@ -429,22 +451,15 @@ function RaycastWeaponBase:fire(from_pos, direction, dmg_mul, shoot_player, spre
 
 		base:set_ammo_remaining_in_clip(clip - ammo_usage)
 
-		if clip > 0 and clip - ammo_usage == 0 then
-			if self._setup.user_unit == managers.player:player_unit() then
-				if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_PLAYERS_CANT_EMPTY_CLIPS) then
-					managers.buff_effect:fail_effect(BuffEffectManager.EFFECT_PLAYERS_CANT_EMPTY_CLIPS, managers.network:session():local_peer():id())
-				end
-
-				if self:get_ammo_total() - ammo_usage == 0 then
-					managers.hud:set_prompt("hud_no_ammo_prompt", managers.localization:to_upper_text("hint_no_ammo"))
-				else
-					managers.hud:set_prompt("hud_reload_prompt", managers.localization:to_upper_text("hint_reload"))
-				end
+		if clip > 0 and clip - ammo_usage <= 0 and self._setup.user_unit == managers.player:player_unit() then
+			if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_PLAYERS_CANT_EMPTY_CLIPS) then
+				managers.buff_effect:fail_effect(BuffEffectManager.EFFECT_PLAYERS_CANT_EMPTY_CLIPS, managers.network:session():local_peer():id())
 			end
 
-			if self:weapon_tweak_data().animations and self:weapon_tweak_data().animations.magazine_empty then
-				self:tweak_data_anim_play("magazine_empty")
-				self:play_tweak_data_sound("magazine_empty")
+			if self:get_ammo_total() - ammo_usage <= 0 then
+				managers.hud:set_prompt("hud_no_ammo_prompt", managers.localization:to_upper_text("hint_no_ammo"))
+			else
+				managers.hud:set_prompt("hud_reload_prompt", managers.localization:to_upper_text("hint_reload"))
 			end
 		end
 
@@ -1197,21 +1212,22 @@ function RaycastWeaponBase:tweak_data_anim_play(anim, ...)
 
 	if animations and animations[anim] then
 		self:anim_play(animations[anim], ...)
-
-		return true
 	end
-
-	return false
 end
 
-function RaycastWeaponBase:anim_play(anim, speed_multiplier)
+function RaycastWeaponBase:anim_play(anim, speed_multiplier, time)
 	if anim then
-		local length = self._unit:anim_length(Idstring(anim))
+		local ids_anim_name = Idstring(anim)
+		local length = self._unit:anim_length(ids_anim_name)
 
 		speed_multiplier = speed_multiplier or 1
 
-		self._unit:anim_stop(Idstring(anim))
-		self._unit:anim_play_to(Idstring(anim), length, speed_multiplier)
+		self._unit:anim_stop(ids_anim_name)
+		self._unit:anim_play_to(ids_anim_name, length, speed_multiplier)
+
+		if time then
+			self._unit:anim_set_time(ids_anim_name, length * time)
+		end
 	end
 end
 
@@ -1796,14 +1812,6 @@ function RaycastWeaponBase:set_bullet_hit_slotmask(new_slotmask)
 	self._bullet_slotmask = new_slotmask
 end
 
-function RaycastWeaponBase:flashlight_state_changed()
-	return
-end
-
-function RaycastWeaponBase:set_flashlight_enabled(enabled)
-	return
-end
-
 function RaycastWeaponBase:set_timer(timer)
 	self._timer = timer
 
@@ -1978,7 +1986,7 @@ InstantExplosiveBulletBase.EFFECT_PARAMS = {
 	effect = "effects/vanilla/weapons/shotgun/sho_explosive_round",
 	feedback_range = tweak_data.upgrades.explosive_bullet.feedback_range,
 	idstr_decal = Idstring("explosion_round"),
-	idstr_effect = Idstring(""),
+	idstr_effect = IDS_EMPTY,
 	on_unit = true,
 	sound_event = "round_explode",
 	sound_muffle_effect = true,
@@ -2113,7 +2121,7 @@ FlameBulletBase.EFFECT_PARAMS = {
 	camera_shake_max_mul = tweak_data.upgrades.flame_bullet.camera_shake_max_mul,
 	feedback_range = tweak_data.upgrades.flame_bullet.feedback_range,
 	idstr_decal = Idstring("explosion_round"),
-	idstr_effect = Idstring(""),
+	idstr_effect = IDS_EMPTY,
 	on_unit = true,
 	pushunits = tweak_data.upgrades,
 	sound_event = "round_explode",

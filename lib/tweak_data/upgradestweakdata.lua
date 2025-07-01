@@ -1146,7 +1146,7 @@ function UpgradesTweakData:_create_talent_definitions()
 	self.values.temporary.revenant_revived_critical_hit_chance = {
 		{
 			1.3,
-			7,
+			12,
 		},
 	}
 
@@ -1927,6 +1927,11 @@ function UpgradesTweakData:_create_weapon_definitions()
 		factory_id = "wpn_fps_pis_tt33",
 		weapon_id = "tt33",
 	}
+	self.definitions.georg = {
+		category = UpgradesTweakData.UPG_CAT_WEAPON,
+		factory_id = "wpn_fps_pis_georg",
+		weapon_id = "georg",
+	}
 	self.definitions.ithaca = {
 		category = UpgradesTweakData.UPG_CAT_WEAPON,
 		factory_id = "wpn_fps_sho_ithaca",
@@ -2227,6 +2232,7 @@ function UpgradesTweakData:_secondary_weapon_definitions()
 		13,
 		16,
 		23,
+		2,
 	}
 
 	self:_create_definition_levels("secondary_weapon_magazine_upgrade", UpgradesTweakData.DEF_CAT_FEATURE, "magazine_upgrade", "secondary_weapon", false, self.values.secondary_weapon.magazine_upgrade)
@@ -2882,9 +2888,6 @@ function UpgradesTweakData:_init_pd2_values()
 	self.values.player.special_enemy_highlight = {
 		true,
 	}
-	self.values.player.hostage_trade = {
-		true,
-	}
 	self.ammo_bag_base = 3
 	self.sentry_gun_base_ammo = 150
 	self.sentry_gun_base_armor = 10
@@ -2896,12 +2899,6 @@ function UpgradesTweakData:_init_pd2_values()
 	self.morale_boost_time = 10
 	self.morale_boost_reload_speed_bonus = 1.2
 	self.morale_boost_base_cooldown = 3.5
-	self.hostage_max_num = {
-		damage_dampener = 1,
-		health = 10,
-		health_regen = 1,
-		stamina = 10,
-	}
 	self.on_headshot_dealt_cooldown = 2
 	self.on_killshot_cooldown = 2
 	self.on_damage_dealt_cooldown = 2
@@ -3115,12 +3112,6 @@ function UpgradesTweakData:_init_pd2_values()
 	self.values.saw.reload_speed_multiplier = {
 		1.5,
 	}
-	self.values.team.health.hostage_multiplier = {
-		1.02,
-	}
-	self.values.team.stamina.hostage_multiplier = {
-		1.04,
-	}
 	self.values.player.mark_enemy_time_multiplier = {
 		1,
 	}
@@ -3176,9 +3167,6 @@ function UpgradesTweakData:_init_pd2_values()
 	}
 	self.values.team.armor.multiplier = {
 		1.05,
-	}
-	self.values.team.damage_dampener.hostage_multiplier = {
-		0.92,
 	}
 	self.values.player.revive_damage_reduction_level = {
 		1,
@@ -3918,15 +3906,6 @@ function UpgradesTweakData:_player_definitions()
 			value = 1,
 		},
 	}
-	self.definitions.player_hostage_trade = {
-		category = UpgradesTweakData.DEF_CAT_FEATURE,
-		name_id = "menu_player_hostage_trade",
-		upgrade = {
-			category = UpgradesTweakData.UPG_CAT_PLAYER,
-			upgrade = "hostage_trade",
-			value = 1,
-		},
-	}
 	self.definitions.player_morale_boost = {
 		category = UpgradesTweakData.DEF_CAT_FEATURE,
 		name_id = "menu_player_morale_boost",
@@ -4621,39 +4600,12 @@ function UpgradesTweakData:_team_definitions()
 			value = 1,
 		},
 	}
-	self.definitions.team_hostage_health_multiplier = {
-		category = UpgradesTweakData.DEF_CAT_TEAM,
-		name_id = "menu_team_hostage_health_multiplier",
-		upgrade = {
-			category = "health",
-			upgrade = "hostage_multiplier",
-			value = 1,
-		},
-	}
-	self.definitions.team_hostage_stamina_multiplier = {
-		category = UpgradesTweakData.DEF_CAT_TEAM,
-		name_id = "menu_team_hostage_stamina_multiplier",
-		upgrade = {
-			category = "stamina",
-			upgrade = "hostage_multiplier",
-			value = 1,
-		},
-	}
 	self.definitions.team_move_spread_multiplier = {
 		category = UpgradesTweakData.DEF_CAT_TEAM,
 		name_id = "menu_team_move_spread_multiplier",
 		upgrade = {
 			category = UpgradesTweakData.UPG_CAT_WEAPON,
 			upgrade = "move_spread_multiplier",
-			value = 1,
-		},
-	}
-	self.definitions.team_hostage_damage_dampener_multiplier = {
-		category = UpgradesTweakData.DEF_CAT_TEAM,
-		name_id = "menu_team_hostage_damage_dampener_multiplier",
-		upgrade = {
-			category = "damage_dampener",
-			upgrade = "hostage_multiplier",
 			value = 1,
 		},
 	}

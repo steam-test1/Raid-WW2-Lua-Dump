@@ -17,10 +17,6 @@ function RaidMenuOptionsControls:_layout()
 end
 
 function RaidMenuOptionsControls:close()
-	self:_save_controls_values()
-
-	Global.savefile_manager.setting_changed = true
-
 	managers.savefile:save_setting(true)
 	RaidMenuOptionsControls.super.close(self)
 end
@@ -40,6 +36,7 @@ function RaidMenuOptionsControls:_layout_controls()
 		on_click_callback = callback(self, self, "on_click_options_controls_keybinds_button"),
 		on_menu_move = {
 			down = "slider_look_sensitivity_horizontal",
+			up = "default_controls",
 		},
 		text = utf8.to_upper(managers.localization:text("menu_options_controls_keybinds_button")),
 		x = start_x,
@@ -159,7 +156,7 @@ function RaidMenuOptionsControls:_layout_controls()
 		name = "hold_to_crouch",
 		on_click_callback = callback(self, self, "on_click_toggle_hold_to_duck"),
 		on_menu_move = {
-			down = "controller_sticky_aim",
+			down = "hold_to_wheel",
 			up = previous_params.name,
 		},
 		w = default_width,
@@ -167,6 +164,32 @@ function RaidMenuOptionsControls:_layout_controls()
 		y = previous_params.y + RaidGuiBase.PADDING,
 	}
 	self._toggle_menu_hold_to_duck = self._root_panel:toggle_button(previous_params)
+	previous_params = {
+		description = managers.localization:to_upper_text("menu_options_hold_to_wheel"),
+		name = "hold_to_wheel",
+		on_click_callback = callback(self, self, "on_click_toggle_hold_to_wheel"),
+		on_menu_move = {
+			down = "weapon_autofire",
+			up = previous_params.name,
+		},
+		w = default_width,
+		x = start_x,
+		y = previous_params.y + RaidGuiBase.PADDING,
+	}
+	self._toggle_menu_hold_to_wheel = self._root_panel:toggle_button(previous_params)
+	previous_params = {
+		description = managers.localization:to_upper_text("menu_options_weapon_autofire"),
+		name = "weapon_autofire",
+		on_click_callback = callback(self, self, "on_click_toggle_weapon_autofire"),
+		on_menu_move = {
+			down = "controller_sticky_aim",
+			up = previous_params.name,
+		},
+		w = default_width,
+		x = start_x,
+		y = previous_params.y + RaidGuiBase.PADDING,
+	}
+	self._toggle_menu_weapon_autofire = self._root_panel:toggle_button(previous_params)
 	previous_params = {
 		description = utf8.to_upper(managers.localization:text("menu_options_controller_sticky_aim")),
 		name = "controller_sticky_aim",
@@ -211,6 +234,7 @@ function RaidMenuOptionsControls:_layout_controls()
 		name = "controller_southpaw",
 		on_click_callback = callback(self, self, "on_click_toggle_controller_southpaw"),
 		on_menu_move = {
+			down = "default_controls",
 			up = previous_params.name,
 		},
 		w = default_width,
@@ -223,6 +247,10 @@ function RaidMenuOptionsControls:_layout_controls()
 		layer = RaidGuiBase.FOREGROUND_LAYER,
 		name = "default_controls",
 		on_click_callback = callback(self, self, "on_click_default_controls"),
+		on_menu_move = {
+			down = "btn_keybinding",
+			up = previous_params.name,
+		},
 		text = utf8.to_upper(managers.localization:text("menu_options_controls_default")),
 		x = 1472,
 		y = 832,
@@ -284,64 +312,77 @@ end
 
 function RaidMenuOptionsControls:on_value_change_camera_sensitivity_horizontal()
 	local camera_sensitivity_percentage = math.clamp(self._progress_bar_menu_camera_sensitivity_horizontal:get_value(), 0, 100)
-	local enable_camera_zoom_sensitivity = self._toggle_menu_toggle_zoom_sensitivity:get_value()
 	local camera_sensitivity = camera_sensitivity_percentage / 100 * (tweak_data.player.camera.MAX_SENSITIVITY - tweak_data.player.camera.MIN_SENSITIVITY) + tweak_data.player.camera.MIN_SENSITIVITY
 
 	managers.menu:active_menu().callback_handler:set_camera_sensitivity_x_raid(camera_sensitivity)
 
-	if not enable_camera_zoom_sensitivity then
+	local camera_sensitivity_separate = self._toggle_menu_toggle_zoom_sensitivity:get_value()
+
+	if not camera_sensitivity_separate then
 		self._progress_bar_menu_camera_sensitivity_vertical:set_value(camera_sensitivity_percentage)
+		managers.menu:active_menu().callback_handler:set_camera_sensitivity_y_raid(camera_sensitivity)
 		self._progress_bar_menu_camera_zoom_sensitivity_horizontal:set_value(camera_sensitivity_percentage)
+		managers.menu:active_menu().callback_handler:set_camera_zoom_sensitivity_x_raid(camera_sensitivity)
 		self._progress_bar_menu_camera_zoom_sensitivity_vertical:set_value(camera_sensitivity_percentage)
+		managers.menu:active_menu().callback_handler:set_camera_zoom_sensitivity_y_raid(camera_sensitivity)
 	end
 end
 
 function RaidMenuOptionsControls:on_value_change_camera_sensitivity_vertical()
 	local camera_sensitivity_percentage = math.clamp(self._progress_bar_menu_camera_sensitivity_vertical:get_value(), 0, 100)
-	local enable_camera_zoom_sensitivity = self._toggle_menu_toggle_zoom_sensitivity:get_value()
+	local camera_sensitivity_separate = self._toggle_menu_toggle_zoom_sensitivity:get_value()
 	local camera_sensitivity = camera_sensitivity_percentage / 100 * (tweak_data.player.camera.MAX_SENSITIVITY - tweak_data.player.camera.MIN_SENSITIVITY) + tweak_data.player.camera.MIN_SENSITIVITY
 
 	managers.menu:active_menu().callback_handler:set_camera_sensitivity_y_raid(camera_sensitivity)
 
-	if not enable_camera_zoom_sensitivity then
+	if not camera_sensitivity_separate then
 		self._progress_bar_menu_camera_sensitivity_horizontal:set_value(camera_sensitivity_percentage)
+		managers.menu:active_menu().callback_handler:set_camera_sensitivity_x_raid(camera_sensitivity)
 		self._progress_bar_menu_camera_zoom_sensitivity_horizontal:set_value(camera_sensitivity_percentage)
+		managers.menu:active_menu().callback_handler:set_camera_zoom_sensitivity_x_raid(camera_sensitivity)
 		self._progress_bar_menu_camera_zoom_sensitivity_vertical:set_value(camera_sensitivity_percentage)
+		managers.menu:active_menu().callback_handler:set_camera_zoom_sensitivity_y_raid(camera_sensitivity)
 	end
 end
 
 function RaidMenuOptionsControls:on_value_change_camera_zoom_sensitivity_horizontal()
 	local camera_zoom_sensitivity_percentage = math.clamp(self._progress_bar_menu_camera_zoom_sensitivity_horizontal:get_value(), 0, 100)
-	local enable_camera_zoom_sensitivity = self._toggle_menu_toggle_zoom_sensitivity:get_value()
+	local camera_sensitivity_separate = self._toggle_menu_toggle_zoom_sensitivity:get_value()
 	local camera_zoom_sensitivity = camera_zoom_sensitivity_percentage / 100 * (tweak_data.player.camera.MAX_SENSITIVITY - tweak_data.player.camera.MIN_SENSITIVITY) + tweak_data.player.camera.MIN_SENSITIVITY
 
 	managers.menu:active_menu().callback_handler:set_camera_zoom_sensitivity_x_raid(camera_zoom_sensitivity)
 
-	if not enable_camera_zoom_sensitivity then
+	if not camera_sensitivity_separate then
 		self._progress_bar_menu_camera_sensitivity_horizontal:set_value(camera_zoom_sensitivity_percentage)
+		managers.menu:active_menu().callback_handler:set_camera_sensitivity_x_raid(camera_zoom_sensitivity)
 		self._progress_bar_menu_camera_sensitivity_vertical:set_value(camera_zoom_sensitivity_percentage)
+		managers.menu:active_menu().callback_handler:set_camera_sensitivity_y_raid(camera_zoom_sensitivity)
 		self._progress_bar_menu_camera_zoom_sensitivity_vertical:set_value(camera_zoom_sensitivity_percentage)
+		managers.menu:active_menu().callback_handler:set_camera_zoom_sensitivity_y_raid(camera_zoom_sensitivity)
 	end
 end
 
 function RaidMenuOptionsControls:on_value_change_camera_zoom_sensitivity_vertical()
 	local camera_zoom_sensitivity_percentage = math.clamp(self._progress_bar_menu_camera_zoom_sensitivity_vertical:get_value(), 0, 100)
-	local enable_camera_zoom_sensitivity = self._toggle_menu_toggle_zoom_sensitivity:get_value()
+	local camera_sensitivity_separate = self._toggle_menu_toggle_zoom_sensitivity:get_value()
 	local camera_zoom_sensitivity = camera_zoom_sensitivity_percentage / 100 * (tweak_data.player.camera.MAX_SENSITIVITY - tweak_data.player.camera.MIN_SENSITIVITY) + tweak_data.player.camera.MIN_SENSITIVITY
 
 	managers.menu:active_menu().callback_handler:set_camera_zoom_sensitivity_y_raid(camera_zoom_sensitivity)
 
-	if not enable_camera_zoom_sensitivity then
+	if not camera_sensitivity_separate then
 		self._progress_bar_menu_camera_sensitivity_horizontal:set_value(camera_zoom_sensitivity_percentage)
+		managers.menu:active_menu().callback_handler:set_camera_sensitivity_x_raid(camera_zoom_sensitivity)
 		self._progress_bar_menu_camera_sensitivity_vertical:set_value(camera_zoom_sensitivity_percentage)
+		managers.menu:active_menu().callback_handler:set_camera_sensitivity_y_raid(camera_zoom_sensitivity)
 		self._progress_bar_menu_camera_zoom_sensitivity_horizontal:set_value(camera_zoom_sensitivity_percentage)
+		managers.menu:active_menu().callback_handler:set_camera_zoom_sensitivity_x_raid(camera_zoom_sensitivity)
 	end
 end
 
 function RaidMenuOptionsControls:on_click_toggle_zoom_sensitivity()
-	local enable_camera_zoom_sensitivity = self._toggle_menu_toggle_zoom_sensitivity:get_value()
+	local camera_sensitivity_separate = self._toggle_menu_toggle_zoom_sensitivity:get_value()
 
-	managers.menu:active_menu().callback_handler:toggle_zoom_sensitivity_raid(enable_camera_zoom_sensitivity)
+	managers.menu:active_menu().callback_handler:toggle_camera_sensitivity_separate_raid(camera_sensitivity_separate)
 end
 
 function RaidMenuOptionsControls:on_click_toggle_invert_camera_vertically()
@@ -368,17 +409,27 @@ function RaidMenuOptionsControls:on_click_toggle_hold_to_duck()
 	managers.menu:active_menu().callback_handler:hold_to_duck_raid(hold_to_duck)
 end
 
+function RaidMenuOptionsControls:on_click_toggle_hold_to_wheel()
+	local hold_to_wheel = self._toggle_menu_hold_to_wheel:get_value()
+
+	managers.menu:active_menu().callback_handler:hold_to_wheel_raid(hold_to_wheel)
+end
+
+function RaidMenuOptionsControls:on_click_toggle_weapon_autofire()
+	local weapon_autofire = self._toggle_menu_weapon_autofire:get_value()
+
+	managers.menu:active_menu().callback_handler:weapon_autofire_raid(weapon_autofire)
+end
+
 function RaidMenuOptionsControls:on_click_default_controls()
-	local params = {
+	managers.menu:show_option_dialog({
 		callback = function()
-			managers.user:reset_controls_setting_map()
+			managers.user:reset_setting_map("controls")
 			self:_load_controls_values()
 		end,
 		message = managers.localization:text("dialog_reset_controls_message"),
 		title = managers.localization:text("dialog_reset_controls_title"),
-	}
-
-	managers.menu:show_option_dialog(params)
+	})
 end
 
 function RaidMenuOptionsControls:_load_controls_values()
@@ -386,11 +437,13 @@ function RaidMenuOptionsControls:_load_controls_values()
 	local camera_sensitivity_y = math.clamp(managers.user:get_setting("camera_sensitivity_y"), 0, 100)
 	local camera_zoom_sensitivity_x = math.clamp(managers.user:get_setting("camera_zoom_sensitivity_x"), 0, 100)
 	local camera_zoom_sensitivity_y = math.clamp(managers.user:get_setting("camera_zoom_sensitivity_y"), 0, 100)
-	local enable_camera_zoom_sensitivity = managers.user:get_setting("enable_camera_zoom_sensitivity")
+	local camera_sensitivity_separate = managers.user:get_setting("camera_sensitivity_separate")
 	local invert_camera_y = managers.user:get_setting("invert_camera_y")
 	local hold_to_steelsight = managers.user:get_setting("hold_to_steelsight")
 	local hold_to_run = managers.user:get_setting("hold_to_run")
 	local hold_to_duck = managers.user:get_setting("hold_to_duck")
+	local hold_to_wheel = managers.user:get_setting("hold_to_wheel")
+	local weapon_autofire = managers.user:get_setting("weapon_autofire")
 	local rumble = managers.user:get_setting("rumble")
 	local aim_assist = managers.user:get_setting("aim_assist")
 	local southpaw = managers.user:get_setting("southpaw")
@@ -406,31 +459,17 @@ function RaidMenuOptionsControls:_load_controls_values()
 
 	self._progress_bar_menu_camera_zoom_sensitivity_horizontal:set_value(set_camera_zoom_sensitivity_x)
 	self._progress_bar_menu_camera_zoom_sensitivity_vertical:set_value(set_camera_zoom_sensitivity_y)
-	self._toggle_menu_toggle_zoom_sensitivity:set_value_and_render(enable_camera_zoom_sensitivity)
+	self._toggle_menu_toggle_zoom_sensitivity:set_value_and_render(camera_sensitivity_separate)
 	self._toggle_menu_invert_camera_vertically:set_value_and_render(invert_camera_y)
 	self._toggle_menu_hold_to_steelsight:set_value_and_render(hold_to_steelsight)
 	self._toggle_menu_hold_to_run:set_value_and_render(hold_to_run)
 	self._toggle_menu_hold_to_duck:set_value_and_render(hold_to_duck)
+	self._toggle_menu_hold_to_wheel:set_value_and_render(hold_to_wheel)
+	self._toggle_menu_weapon_autofire:set_value_and_render(weapon_autofire)
 	self._toggle_menu_controller_vibration:set_value_and_render(rumble)
 	self._toggle_menu_controller_aim_assist:set_value_and_render(aim_assist)
 	self._toggle_menu_controller_southpaw:set_value_and_render(southpaw)
 	self._toggle_menu_controller_sticky_aim:set_value_and_render(sticky_aim)
-end
-
-function RaidMenuOptionsControls:_save_controls_values()
-	self:on_value_change_camera_sensitivity_horizontal()
-	self:on_value_change_camera_sensitivity_vertical()
-	self:on_value_change_camera_zoom_sensitivity_horizontal()
-	self:on_value_change_camera_zoom_sensitivity_vertical()
-	self:on_click_toggle_zoom_sensitivity()
-	self:on_click_toggle_invert_camera_vertically()
-	self:on_click_toggle_hold_to_steelsight()
-	self:on_click_toggle_hold_to_run()
-	self:on_click_toggle_hold_to_duck()
-	self:on_click_toggle_controller_vibration()
-	self:on_click_toggle_controller_aim_assist()
-	self:on_click_toggle_controller_southpaw()
-	self:on_click_toggle_controller_sticky_aim()
 end
 
 function RaidMenuOptionsControls:bind_controller_inputs()

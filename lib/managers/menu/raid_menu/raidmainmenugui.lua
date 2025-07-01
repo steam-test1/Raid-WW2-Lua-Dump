@@ -9,6 +9,7 @@ function RaidMainMenuGui:init(ws, fullscreen_ws, node, component_name)
 
 	if RaidMenuCallbackHandler:is_in_main_menu() then
 		managers.raid_menu:show_background_video()
+		managers.raid_job:generate_bounty_job()
 	else
 		managers.raid_menu:show_background()
 	end
@@ -86,16 +87,12 @@ function RaidMainMenuGui:_layout_title_logo()
 		h = 64,
 		text = "",
 		w = self._root_panel:w(),
-		x = 0,
-		y = 0,
 	})
 	self._title_icon = self._root_panel:bitmap({
 		h = 64,
 		texture = tweak_data.gui.icons.missions_camp.texture,
 		texture_rect = tweak_data.gui.icons.missions_camp.texture_rect,
 		w = 64,
-		x = 0,
-		y = 0,
 	})
 
 	local logo_texture, logo_texture_rect
@@ -117,11 +114,11 @@ function RaidMainMenuGui:_layout_title_logo()
 	end
 
 	self._raid_logo_small = self._root_panel:image({
+		h = 242,
 		name = "raid_logo_small",
 		texture = logo_texture,
 		texture_rect = logo_texture_rect,
-		x = 0,
-		y = 0,
+		w = 400,
 	})
 
 	self._raid_logo_small:set_right(self._root_panel:w())
@@ -470,6 +467,7 @@ function RaidMainMenuGui:_list_menu_data_source()
 		},
 		{
 			availability_flags = {
+				RaidGUIItemAvailabilityFlag.IS_NOT_EDITOR,
 				RaidGUIItemAvailabilityFlag.SINGLEPLAYER_RESTART,
 			},
 			callback = "singleplayer_restart_mission",
@@ -478,6 +476,7 @@ function RaidMainMenuGui:_list_menu_data_source()
 		},
 		{
 			availability_flags = {
+				RaidGUIItemAvailabilityFlag.IS_NOT_EDITOR,
 				RaidGUIItemAvailabilityFlag.RESTART_LEVEL_VISIBLE,
 				RaidGUIItemAvailabilityFlag.IS_NOT_IN_CAMP,
 			},
@@ -487,6 +486,7 @@ function RaidMainMenuGui:_list_menu_data_source()
 		},
 		{
 			availability_flags = {
+				RaidGUIItemAvailabilityFlag.IS_NOT_EDITOR,
 				RaidGUIItemAvailabilityFlag.RESTART_VOTE_VISIBLE,
 				RaidGUIItemAvailabilityFlag.IS_NOT_IN_CAMP,
 			},
@@ -496,6 +496,7 @@ function RaidMainMenuGui:_list_menu_data_source()
 		},
 		{
 			availability_flags = {
+				RaidGUIItemAvailabilityFlag.IS_NOT_EDITOR,
 				RaidGUIItemAvailabilityFlag.SINGLEPLAYER_RESTART,
 			},
 			callback = "singleplayer_restart_game_to_camp",
@@ -505,6 +506,7 @@ function RaidMainMenuGui:_list_menu_data_source()
 		},
 		{
 			availability_flags = {
+				RaidGUIItemAvailabilityFlag.IS_NOT_EDITOR,
 				RaidGUIItemAvailabilityFlag.RESTART_LEVEL_VISIBLE,
 			},
 			callback = "restart_to_camp",
@@ -601,6 +603,7 @@ function RaidMainMenuGui:_list_menu_data_source()
 		},
 		{
 			availability_flags = {
+				RaidGUIItemAvailabilityFlag.IS_NOT_EDITOR,
 				RaidGUIItemAvailabilityFlag.IS_IN_CAMP,
 				RaidGUIItemAvailabilityFlag.RESTART_LEVEL_VISIBLE_CLIENT,
 			},

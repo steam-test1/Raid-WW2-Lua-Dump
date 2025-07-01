@@ -200,4 +200,11 @@ function EventsTweakData:_init_trick_or_treat_event(tweak_data)
 			value = true,
 		},
 	}
+	self.special_events.oops = {
+		date = {
+			finish = 715,
+			start = 620,
+		},
+		game_logo = tweak_data.gui.icons.raid_oops_logo_small,
+	}
 end

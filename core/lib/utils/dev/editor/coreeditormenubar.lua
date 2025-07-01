@@ -683,14 +683,30 @@ function CoreEditor:ungroup()
 end
 
 function CoreEditor:save_group()
+	local err_txt = "Cannot save group file without valid group or grouped unit selected!"
+
 	if alive(self._current_layer:selected_unit()) then
 		local groups = self._current_layer:selected_unit():unit_data().editor_groups
 
 		if groups and #groups > 0 then
+			err_txt = ""
+
 			local group = groups[#groups]
 
 			group:save_to_file()
+
+			if #group > 1 then
+				err_txt = "Group saved, but there were multiple groups associated with this unit, check if its the correct group!"
+			end
+		else
+			err_txt = err_txt .. "\n\nThere are no valid groups for this selection."
 		end
+	else
+		err_txt = err_txt .. "\n\nAn alive unit must be selected to continue."
+	end
+
+	if err_txt ~= "" then
+		managers.editor:show_text_box("Error!", err_txt)
 	end
 end
 

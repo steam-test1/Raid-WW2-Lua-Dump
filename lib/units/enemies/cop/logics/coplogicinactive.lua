@@ -136,7 +136,3 @@ function CopLogicInactive.on_new_objective(data, old_objective)
 		old_objective.fail_clbk(data.unit)
 	end
 end
-
-function CopLogicInactive.on_intimidated(data, amount, aggressor_unit)
-	return
-end

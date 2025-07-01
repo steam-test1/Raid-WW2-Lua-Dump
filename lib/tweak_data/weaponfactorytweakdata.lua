@@ -128,6 +128,7 @@ function WeaponFactoryTweakData:init()
 	self:_init_browning()
 	self:_init_welrod()
 	self:_init_shotty()
+	self:_init_georg()
 	self:_init_weapon_skins()
 	self:create_ammunition()
 	self:_init_content_unfinished()
@@ -406,6 +407,7 @@ function WeaponFactoryTweakData:_init_thompson()
 	self.wpn_fps_smg_thompson.animations = {
 		fire = "recoil",
 		fire_steelsight = "recoil",
+		magazine_empty = "last_recoil",
 		reload = "reload",
 		reload_not_empty = "reload_not_empty",
 	}
@@ -652,6 +654,7 @@ function WeaponFactoryTweakData:_init_sten()
 	self.wpn_fps_smg_sten.animations = {
 		fire = "recoil",
 		fire_steelsight = "recoil",
+		magazine_empty = "last_recoil",
 		reload = "reload",
 		reload_not_empty = "reload_not_empty",
 	}
@@ -857,6 +860,7 @@ function WeaponFactoryTweakData:_init_garand()
 	self.wpn_fps_ass_garand.animations = {
 		fire = "recoil",
 		fire_steelsight = "recoil",
+		magazine_empty = "magazine_empty",
 		reload = "reload",
 		reload_not_empty = "reload_not_empty",
 	}
@@ -1982,6 +1986,7 @@ function WeaponFactoryTweakData:_init_m1911()
 	self.wpn_fps_pis_m1911.animations = {
 		fire = "recoil",
 		fire_steelsight = "recoil",
+		magazine_empty = "last_recoil",
 		reload = "reload",
 		reload_not_empty = "reload_not_empty",
 	}
@@ -2116,8 +2121,6 @@ function WeaponFactoryTweakData:_init_geco()
 		"gadget",
 	}
 	self.wpn_fps_sho_geco.animations = {
-		fire = "recoil",
-		fire_steelsight = "recoil",
 		reload = "reload",
 		reload_not_empty = "reload_not_empty",
 	}
@@ -2672,6 +2675,7 @@ function WeaponFactoryTweakData:_init_tt33()
 	self.wpn_fps_pis_tt33.animations = {
 		fire = "recoil",
 		fire_steelsight = "recoil",
+		magazine_empty = "last_recoil",
 		reload = "reload",
 		reload_not_empty = "reload_not_empty",
 	}
@@ -2701,6 +2705,135 @@ function WeaponFactoryTweakData:_init_tt33()
 	}
 	self.wpn_fps_pis_tt33_npc = deep_clone(self.wpn_fps_pis_tt33)
 	self.wpn_fps_pis_tt33_npc.unit = "units/upd_001/weapons/wpn_fps_pis_tt33/wpn_fps_pis_tt33_npc"
+end
+
+function WeaponFactoryTweakData:_init_georg()
+	local unique_materials = {
+		"mat_body",
+		"mat_body_addons",
+	}
+
+	self.parts.wpn_fps_pis_georg_body_default = {
+		a_obj = "a_body",
+		animations = {
+			reload = "reload",
+			reload_not_empty = "reload_not_empty",
+		},
+		name_id = "bm_wp_pis_georg_dummy",
+		stats = {
+			value = 1,
+		},
+		third_unit = "units/upd_georg/weapons/wpn_fps_pis_georg/parts/body_default_tps",
+		type = "body",
+		unique_materials = unique_materials,
+		unit = "units/upd_georg/weapons/wpn_fps_pis_georg/parts/body_default_fps",
+	}
+	self.parts.wpn_fps_pis_georg_slide_default = {
+		a_obj = "a_slide",
+		animations = {
+			fire = "recoil",
+			fire_steelsight = "recoil",
+			magazine_empty = "last_recoil",
+			reload = "reload",
+		},
+		name_id = "bm_wp_pis_georg_dummy",
+		parent = "body",
+		stats = {
+			value = 1,
+		},
+		third_unit = "units/upd_georg/weapons/wpn_fps_pis_georg/parts/slide_default_tps",
+		type = "slide",
+		unique_materials = unique_materials,
+		unit = "units/upd_georg/weapons/wpn_fps_pis_georg/parts/slide_default_fps",
+	}
+	self.parts.wpn_fps_pis_georg_barrel_short = {
+		a_obj = "a_barrel",
+		name_id = "bm_wp_pis_georg_dummy",
+		parent = "slide",
+		stats = {
+			value = 1,
+		},
+		third_unit = "units/upd_georg/weapons/wpn_fps_pis_georg/parts/barrel_short_tps",
+		type = "barrel",
+		unique_materials = unique_materials,
+		unit = "units/upd_georg/weapons/wpn_fps_pis_georg/parts/barrel_short_fps",
+	}
+	self.parts.wpn_fps_pis_georg_barrel_long = {
+		a_obj = "a_barrel",
+		name_id = "bm_wp_pis_georg_dummy",
+		parent = "slide",
+		stance_mod = {
+			wpn_fps_pis_georg = {
+				rotation = Rotation(0, 0.06, 0),
+				translation = Vector3(0, -3, -0.1),
+			},
+		},
+		stats = {
+			value = 1,
+		},
+		third_unit = "units/upd_georg/weapons/wpn_fps_pis_georg/parts/barrel_long_tps",
+		type = "barrel",
+		unique_materials = unique_materials,
+		unit = "units/upd_georg/weapons/wpn_fps_pis_georg/parts/barrel_long_fps",
+	}
+	self.parts.wpn_fps_pis_georg_mag_default = {
+		a_obj = "a_mag",
+		bullet_objects = {
+			amount = 12,
+			prefix = "g_bullet_",
+		},
+		name_id = "bm_wp_pis_georg_dummy",
+		parent = "body",
+		stats = {
+			value = 1,
+		},
+		third_unit = "units/upd_georg/weapons/wpn_fps_pis_georg/parts/mag_default_tps",
+		type = "magazine",
+		unique_materials = unique_materials,
+		unit = "units/upd_georg/weapons/wpn_fps_pis_georg/parts/mag_default_fps",
+	}
+	self.parts.wpn_fps_pis_georg_stock_wooden = {
+		a_obj = "a_stock",
+		name_id = "bm_wp_pis_georg_dummy",
+		parent = "body",
+		stance_mod = {
+			wpn_fps_pis_georg = {
+				rotation = Rotation(0, 0, -2),
+				translation = Vector3(0, 0, -0.15),
+			},
+		},
+		stats = {
+			value = 1,
+		},
+		third_unit = "units/upd_georg/weapons/wpn_fps_pis_georg/parts/stock_wooden_tps",
+		type = "stock",
+		unique_materials = unique_materials,
+		unit = "units/upd_georg/weapons/wpn_fps_pis_georg/parts/stock_wooden_fps",
+	}
+	self.wpn_fps_pis_georg = {}
+	self.wpn_fps_pis_georg.unit = "units/upd_georg/weapons/wpn_fps_pis_georg/wpn_fps_pis_georg"
+	self.wpn_fps_pis_georg.optional_types = {
+		"slide",
+		"barrel",
+		"stock",
+	}
+	self.wpn_fps_pis_georg.animations = {}
+	self.wpn_fps_pis_georg.default_blueprint = {
+		"wpn_fps_pis_georg_body_default",
+		"wpn_fps_pis_georg_mag_default",
+		"wpn_fps_pis_georg_slide_default",
+		"wpn_fps_pis_georg_barrel_short",
+	}
+	self.wpn_fps_pis_georg.uses_parts = {
+		"wpn_fps_pis_georg_body_default",
+		"wpn_fps_pis_georg_mag_default",
+		"wpn_fps_pis_georg_slide_default",
+		"wpn_fps_pis_georg_barrel_short",
+		"wpn_fps_pis_georg_barrel_long",
+		"wpn_fps_pis_georg_stock_wooden",
+	}
+	self.wpn_fps_pis_georg_npc = clone(self.wpn_fps_pis_georg)
+	self.wpn_fps_pis_georg_npc.unit = "units/upd_georg/weapons/wpn_fps_pis_georg/wpn_fps_pis_georg_npc"
 end
 
 function WeaponFactoryTweakData:_init_m1912()
@@ -3657,6 +3790,7 @@ function WeaponFactoryTweakData:_init_carbine()
 	self.wpn_fps_ass_carbine.animations = {
 		fire = "recoil",
 		fire_steelsight = "recoil",
+		magazine_empty = "last_recoil",
 		reload = "reload",
 		reload_not_empty = "reload_not_empty",
 	}
@@ -4059,6 +4193,7 @@ function WeaponFactoryTweakData:_init_c96()
 	self.wpn_fps_pis_c96.animations = {
 		fire = "recoil",
 		fire_steelsight = "recoil",
+		magazine_empty = "last_recoil",
 		reload = "reload",
 		reload_not_empty = "reload_not_empty",
 	}
@@ -4563,6 +4698,7 @@ function WeaponFactoryTweakData:_init_sterling()
 	self.wpn_fps_smg_sterling.animations = {
 		fire = "recoil",
 		fire_steelsight = "recoil",
+		magazine_empty = "last_recoil",
 		reload = "reload",
 		reload_not_empty = "reload_not_empty",
 	}
@@ -4769,7 +4905,104 @@ function WeaponFactoryTweakData:_init_shotty()
 end
 
 function WeaponFactoryTweakData:_init_weapon_skins()
-	return
+	local materials_fps = {
+		mat_body = {
+			bump_normal_texture = "units/upd_georg/weapons/wpn_fps_pis_georg/skins/american/body_nm",
+			diffuse_texture = "units/upd_georg/weapons/wpn_fps_pis_georg/skins/american/body_df",
+			material_texture = "units/upd_georg/weapons/wpn_fps_pis_georg/skins/american/body_gsm",
+		},
+		mat_body_addons = {
+			bump_normal_texture = "units/upd_georg/weapons/wpn_fps_pis_georg/skins/american/body_addons_nm",
+			diffuse_texture = "units/upd_georg/weapons/wpn_fps_pis_georg/skins/american/body_addons_df",
+			material_texture = "units/upd_georg/weapons/wpn_fps_pis_georg/skins/american/body_addons_gsm",
+		},
+	}
+	local materials_tps = materials_fps
+
+	table.insert(self.wpn_fps_pis_georg.uses_parts, "wpn_fps_pis_georg_body_default_skin1")
+
+	self.parts.wpn_fps_pis_georg_body_default_skin1 = deep_clone(self.parts.wpn_fps_pis_georg_body_default)
+	self.parts.wpn_fps_pis_georg_body_default_skin1.materials_fps = materials_fps
+	self.parts.wpn_fps_pis_georg_body_default_skin1.materials_tps = materials_tps
+
+	table.insert(self.wpn_fps_pis_georg.uses_parts, "wpn_fps_pis_georg_slide_default_skin1")
+
+	self.parts.wpn_fps_pis_georg_slide_default_skin1 = deep_clone(self.parts.wpn_fps_pis_georg_slide_default)
+	self.parts.wpn_fps_pis_georg_slide_default_skin1.materials_fps = materials_fps
+	self.parts.wpn_fps_pis_georg_slide_default_skin1.materials_tps = materials_tps
+
+	table.insert(self.wpn_fps_pis_georg.uses_parts, "wpn_fps_pis_georg_barrel_short_skin1")
+
+	self.parts.wpn_fps_pis_georg_barrel_short_skin1 = deep_clone(self.parts.wpn_fps_pis_georg_barrel_short)
+	self.parts.wpn_fps_pis_georg_barrel_short_skin1.materials_fps = materials_fps
+	self.parts.wpn_fps_pis_georg_barrel_short_skin1.materials_tps = materials_tps
+
+	table.insert(self.wpn_fps_pis_georg.uses_parts, "wpn_fps_pis_georg_barrel_long_skin1")
+
+	self.parts.wpn_fps_pis_georg_barrel_long_skin1 = deep_clone(self.parts.wpn_fps_pis_georg_barrel_long)
+	self.parts.wpn_fps_pis_georg_barrel_long_skin1.materials_fps = materials_fps
+	self.parts.wpn_fps_pis_georg_barrel_long_skin1.materials_tps = materials_tps
+
+	table.insert(self.wpn_fps_pis_georg.uses_parts, "wpn_fps_pis_georg_mag_default_skin1")
+
+	self.parts.wpn_fps_pis_georg_mag_default_skin1 = deep_clone(self.parts.wpn_fps_pis_georg_mag_default)
+	self.parts.wpn_fps_pis_georg_mag_default_skin1.materials_fps = materials_fps
+	self.parts.wpn_fps_pis_georg_mag_default_skin1.materials_tps = materials_tps
+
+	table.insert(self.wpn_fps_pis_georg.uses_parts, "wpn_fps_pis_georg_stock_wooden_skin1")
+
+	self.parts.wpn_fps_pis_georg_stock_wooden_skin1 = deep_clone(self.parts.wpn_fps_pis_georg_stock_wooden)
+	self.parts.wpn_fps_pis_georg_stock_wooden_skin1.materials_fps = materials_fps
+	self.parts.wpn_fps_pis_georg_stock_wooden_skin1.materials_tps = materials_tps
+	materials_fps = {
+		mat_body = {
+			bump_normal_texture = "units/upd_georg/weapons/wpn_fps_pis_georg/skins/german/body_nm",
+			diffuse_texture = "units/upd_georg/weapons/wpn_fps_pis_georg/skins/german/body_df",
+			material_texture = "units/upd_georg/weapons/wpn_fps_pis_georg/skins/german/body_gsm",
+		},
+		mat_body_addons = {
+			bump_normal_texture = "units/upd_georg/weapons/wpn_fps_pis_georg/skins/german/body_addons_nm",
+			diffuse_texture = "units/upd_georg/weapons/wpn_fps_pis_georg/skins/german/body_addons_df",
+			material_texture = "units/upd_georg/weapons/wpn_fps_pis_georg/skins/german/body_addons_gsm",
+		},
+	}
+	materials_tps = materials_fps
+
+	table.insert(self.wpn_fps_pis_georg.uses_parts, "wpn_fps_pis_georg_body_default_skin2")
+
+	self.parts.wpn_fps_pis_georg_body_default_skin2 = deep_clone(self.parts.wpn_fps_pis_georg_body_default)
+	self.parts.wpn_fps_pis_georg_body_default_skin2.materials_fps = materials_fps
+	self.parts.wpn_fps_pis_georg_body_default_skin2.materials_tps = materials_tps
+
+	table.insert(self.wpn_fps_pis_georg.uses_parts, "wpn_fps_pis_georg_slide_default_skin2")
+
+	self.parts.wpn_fps_pis_georg_slide_default_skin2 = deep_clone(self.parts.wpn_fps_pis_georg_slide_default)
+	self.parts.wpn_fps_pis_georg_slide_default_skin2.materials_fps = materials_fps
+	self.parts.wpn_fps_pis_georg_slide_default_skin2.materials_tps = materials_tps
+
+	table.insert(self.wpn_fps_pis_georg.uses_parts, "wpn_fps_pis_georg_barrel_short_skin2")
+
+	self.parts.wpn_fps_pis_georg_barrel_short_skin2 = deep_clone(self.parts.wpn_fps_pis_georg_barrel_short)
+	self.parts.wpn_fps_pis_georg_barrel_short_skin2.materials_fps = materials_fps
+	self.parts.wpn_fps_pis_georg_barrel_short_skin2.materials_tps = materials_tps
+
+	table.insert(self.wpn_fps_pis_georg.uses_parts, "wpn_fps_pis_georg_barrel_long_skin2")
+
+	self.parts.wpn_fps_pis_georg_barrel_long_skin2 = deep_clone(self.parts.wpn_fps_pis_georg_barrel_long)
+	self.parts.wpn_fps_pis_georg_barrel_long_skin2.materials_fps = materials_fps
+	self.parts.wpn_fps_pis_georg_barrel_long_skin2.materials_tps = materials_tps
+
+	table.insert(self.wpn_fps_pis_georg.uses_parts, "wpn_fps_pis_georg_mag_default_skin2")
+
+	self.parts.wpn_fps_pis_georg_mag_default_skin2 = deep_clone(self.parts.wpn_fps_pis_georg_mag_default)
+	self.parts.wpn_fps_pis_georg_mag_default_skin2.materials_fps = materials_fps
+	self.parts.wpn_fps_pis_georg_mag_default_skin2.materials_tps = materials_tps
+
+	table.insert(self.wpn_fps_pis_georg.uses_parts, "wpn_fps_pis_georg_stock_wooden_skin2")
+
+	self.parts.wpn_fps_pis_georg_stock_wooden_skin2 = deep_clone(self.parts.wpn_fps_pis_georg_stock_wooden)
+	self.parts.wpn_fps_pis_georg_stock_wooden_skin2.materials_fps = materials_fps
+	self.parts.wpn_fps_pis_georg_stock_wooden_skin2.materials_tps = materials_tps
 end
 
 function WeaponFactoryTweakData:is_part_internal(part_id)

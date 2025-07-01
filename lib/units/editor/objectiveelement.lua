@@ -9,6 +9,12 @@ ObjectiveUnitElement.INSTANCE_VAR_NAMES = {
 		value = "amount",
 	},
 }
+ObjectiveUnitElement.LINK_VALUES = {
+	{
+		table_value = "elements",
+		type = "counter",
+	},
+}
 
 function ObjectiveUnitElement:init(unit)
 	ObjectiveUnitElement.super.init(self, unit)
@@ -43,11 +49,6 @@ function ObjectiveUnitElement:draw_links(t, dt, selected_unit, all_units)
 			})
 		end
 	end
-end
-
-function ObjectiveUnitElement:get_links_to_unit(...)
-	ObjectiveUnitElement.super.get_links_to_unit(self, ...)
-	self:_get_links_of_type_from_elements(self._hed.elements, "trigger", ...)
 end
 
 function ObjectiveUnitElement:update_editing()

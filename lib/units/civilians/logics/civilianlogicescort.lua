@@ -27,22 +27,11 @@ function CivilianLogicEscort.enter(data, new_logic_name, enter_params)
 		data.unit:movement():set_cool(false, "escort")
 	end
 
-	data.unit:movement():set_stance(data.is_tied and "cbt" or "hos")
+	data.unit:movement():set_stance("hos")
 
 	my_data.advance_path_search_id = "CivilianLogicEscort_detailed" .. tostring(data.key)
 	my_data.coarse_path_search_id = "CivilianLogicEscort_coarse" .. tostring(data.key)
 	my_data.vision = data.char_tweak.vision
-
-	if data.unit:anim_data().tied then
-		local action_data = {
-			body_part = 1,
-			clamp_to_graph = true,
-			type = "act",
-			variant = "panic",
-		}
-
-		data.unit:brain():action_request(action_data)
-	end
 
 	if data.char_tweak.outline_on_discover then
 		if not data.been_outlined then
@@ -194,8 +183,8 @@ function CivilianLogicEscort.update(data)
 	end
 end
 
-function CivilianLogicEscort.on_intimidated(data, amount, aggressor_unit)
-	return
+function CivilianLogicEscort.on_long_distance_interact(data, amount, aggressor_unit)
+	Application:info("[CivilianLogicEscort.on_long_distance_interact]", data, amount, aggressor_unit)
 end
 
 function CivilianLogicEscort.on_action_completed(data, action)

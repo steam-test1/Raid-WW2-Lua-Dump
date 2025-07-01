@@ -35,11 +35,3 @@ end
 function HuskCivilianBase:default_weapon_name()
 	return
 end
-
-function HuskCivilianBase:sync_net_event(event_id)
-	if event_id == 1 then
-		managers.groupai:state():on_hostage_follow(managers.player:player_unit(), self._unit, true)
-	elseif event_id == 2 then
-		managers.groupai:state():on_hostage_follow(managers.player:player_unit(), self._unit, false)
-	end
-end

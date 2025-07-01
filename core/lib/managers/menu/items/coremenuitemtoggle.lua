@@ -136,14 +136,6 @@ function ItemToggle:setup_gui(node, row_item)
 		row_item.gui_icon:set_color(row_item.disabled_color)
 	end
 
-	if row_item.help_text then
-		-- block empty
-	end
-
-	if self:info_panel() == "lobby_campaign" then
-		node._set_lobby_campaign(node, row_item)
-	end
-
 	return true
 end
 
@@ -217,11 +209,7 @@ function ItemToggle:reload(row_item, node)
 	end
 
 	if row_item.gui_info_panel then
-		if self:info_panel() == "lobby_campaign" then
-			node._align_lobby_campaign(node, row_item)
-		else
-			node._align_info_panel(node, row_item)
-		end
+		node._align_info_panel(node, row_item)
 	end
 
 	if row_item.gui_option then
@@ -235,10 +223,6 @@ function ItemToggle:reload(row_item, node)
 	end
 
 	self:_set_toggle_item_image(row_item)
-
-	if self:info_panel() == "lobby_campaign" then
-		node._reload_lobby_campaign(node, row_item)
-	end
 
 	return true
 end
@@ -285,10 +269,6 @@ function ItemToggle:highlight_row_item(node, row_item, mouse_over)
 
 	if row_item.gui_info_panel then
 		row_item.gui_info_panel:set_visible(true)
-	end
-
-	if self:info_panel() == "lobby_campaign" then
-		node._highlight_lobby_campaign(node, row_item)
 	end
 
 	return true

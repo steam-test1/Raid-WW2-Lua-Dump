@@ -816,37 +816,48 @@ function CopActionWalk:_calculate_curved_path(path, index, curvature_factor, ent
 end
 
 function CopActionWalk._calculate_simplified_path(good_pos, original_path, nr_iterations, z_test, apply_padding)
-	local simplified_path = {
-		good_pos,
-	}
 	local original_path_size = #original_path
 
-	for i_nav_point, nav_point in ipairs(original_path) do
-		if nav_point.x and i_nav_point ~= original_path_size and (i_nav_point == 1 or simplified_path[#simplified_path].x) then
-			local pos_from = simplified_path[#simplified_path]
-			local pos_to = CopActionWalk._nav_point_pos(original_path[i_nav_point + 1])
-			local add_point = z_test and math.abs(nav_point.z - pos_from.z - (nav_point.z - pos_to.z)) > 60
+	if original_path_size > 2 then
+		local simplified_path = {
+			good_pos,
+		}
 
-			add_point = add_point or CopActionWalk._chk_shortcut_pos_to_pos(pos_from, pos_to)
+		for i_nav_point, nav_point in ipairs(original_path) do
+			if nav_point.x and i_nav_point ~= original_path_size and (i_nav_point == 1 or simplified_path[#simplified_path].x) then
+				local pos_from = simplified_path[#simplified_path]
+				local pos_to = CopActionWalk._nav_point_pos(original_path[i_nav_point + 1])
+				local add_point = z_test and math.abs(nav_point.z - pos_from.z - (nav_point.z - pos_to.z)) > 60
 
-			if add_point then
-				table.insert(simplified_path, mvec3_cpy(nav_point))
+				add_point = add_point or CopActionWalk._chk_shortcut_pos_to_pos(pos_from, pos_to)
+
+				if add_point then
+					table.insert(simplified_path, mvec3_cpy(nav_point))
+				end
+			else
+				table.insert(simplified_path, nav_point)
 			end
-		else
-			table.insert(simplified_path, nav_point)
 		end
+
+		if #simplified_path == 2 and original_path_size ~= 2 then
+			Application:warn("[CopActionWalk._calculate_simplified_path] Simplified path was only 2 points long, using original path instead.")
+
+			return clone(original_path)
+		end
+
+		if apply_padding and #simplified_path > 2 then
+			CopActionWalk._apply_padding_to_simplified_path(simplified_path)
+			CopActionWalk._calculate_shortened_path(simplified_path)
+		end
+
+		if nr_iterations > 1 and #simplified_path > 2 then
+			simplified_path = CopActionWalk._calculate_simplified_path(good_pos, simplified_path, nr_iterations - 1, z_test, apply_padding)
+		end
+
+		return simplified_path
 	end
 
-	if apply_padding and #simplified_path > 2 then
-		CopActionWalk._apply_padding_to_simplified_path(simplified_path)
-		CopActionWalk._calculate_shortened_path(simplified_path)
-	end
-
-	if nr_iterations > 1 and #simplified_path > 2 then
-		simplified_path = CopActionWalk._calculate_simplified_path(good_pos, simplified_path, nr_iterations - 1, z_test, apply_padding)
-	end
-
-	return simplified_path
+	return clone(original_path)
 end
 
 local diagonals = {
@@ -1880,8 +1891,6 @@ function CopActionWalk:_start_move_anim(side, speed, speed_mul, turn)
 	local redir_res = self._ext_movement:play_redirect(redirect_name)
 
 	if not redir_res then
-		print("[CopActionWalk:_start_move_anim]", redirect_name, " failed in", self._machine:segment_state(idstr_base), self._machine:segment_state(Idstring("upper_body")))
-
 		return
 	end
 

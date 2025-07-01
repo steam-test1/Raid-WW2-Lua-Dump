@@ -28,11 +28,13 @@ function CopLogicAttack.enter(data, new_logic_name, enter_params)
 	my_data.detection = data.char_tweak.detection.combat
 	my_data.vision = data.char_tweak.vision.combat
 
-	local weapon_usage = data.unit:inventory():equipped_unit():base():weapon_tweak_data().usage
+	local usage = data.unit:inventory():equipped_selection() and data.unit:inventory():equipped_unit():base():weapon_tweak_data().usage
 
-	my_data.weapon_range = data.char_tweak.weapon[weapon_usage].range
-	my_data.weapon_range_max = data.char_tweak.weapon[weapon_usage].max_range
-	my_data.additional_weapon_stats = data.char_tweak.weapon[weapon_usage].additional_weapon_stats
+	if usage then
+		my_data.weapon_range = data.char_tweak.weapon[usage].range
+		my_data.weapon_range_max = data.char_tweak.weapon[usage].max_range
+		my_data.additional_weapon_stats = data.char_tweak.weapon[usage].additional_weapon_stats
+	end
 
 	if old_internal_data then
 		my_data.turning = old_internal_data.turning
@@ -95,9 +97,12 @@ function CopLogicAttack.queued_update(data)
 
 	if my_data.has_old_action then
 		CopLogicAttack._upd_stop_old_action(data, my_data)
-		CopLogicAttack.queue_update(data, my_data)
 
-		return
+		if my_data.has_old_action then
+			CopLogicAttack.queue_update(data, my_data)
+
+			return
+		end
 	end
 
 	if CopLogicBase._chk_relocate(data) then
@@ -147,7 +152,7 @@ function CopLogicAttack._upd_combat_movement(data)
 	local in_cover = my_data.in_cover
 	local want_to_take_cover = my_data.want_to_take_cover
 	local move_to_cover = false
-	local want_flank_cover = false
+	local use_flank_cover = false
 
 	if not my_data.peek_to_shoot_allowed and not enemy_spotted_last_long and (action_taken or want_to_take_cover or not in_cover) then
 		my_data.peek_to_shoot_allowed = true
@@ -197,13 +202,15 @@ function CopLogicAttack._upd_combat_movement(data)
 							shoot_from_pos,
 						}
 
-						action_taken = CopLogicAttack._request_action_walk_to_cover_shoot_pos(data, my_data, path, math.random() < 0.5 and "run" or "walk")
+						action_taken = CopLogicAttack._request_action_walk_to_cover_shoot_pos(data, my_data, path, math.rand_bool() and "run" or "walk")
 					else
 						my_data.peek_to_shoot_allowed = false
+						move_to_cover = true
+						use_flank_cover = true
 					end
-				elseif not enemy_spotted_last_long and math.random() < 0.05 then
+				elseif not enemy_spotted_last_long then
 					move_to_cover = true
-					want_flank_cover = true
+					use_flank_cover = true
 				end
 			elseif my_data.walking_to_cover_shoot_pos then
 				-- block empty
@@ -230,7 +237,7 @@ function CopLogicAttack._upd_combat_movement(data)
 		action_taken = CopLogicAttack._request_action_walk_to_cover(data, my_data)
 	end
 
-	if want_flank_cover then
+	if use_flank_cover then
 		if not my_data.flank_cover then
 			my_data.flank_cover = CopLogicAttack._flank_cover_params()
 		end
@@ -661,10 +668,11 @@ function CopLogicAttack._find_cover_for_follow(data, my_data, threat_pos)
 end
 
 function CopLogicAttack._find_cover(data, my_data, threat_pos)
+	local min_dis, max_dis
 	local want_to_take_cover = my_data.want_to_take_cover
 	local flank_cover = my_data.flank_cover
 	local best_cover = my_data.best_cover
-	local min_dis, max_dis
+	local group_ai_twk = tweak_data.group_ai
 
 	if want_to_take_cover then
 		min_dis = math.max(data.attention_obj.dis * 0.9, data.attention_obj.dis - 200)
@@ -677,7 +685,24 @@ function CopLogicAttack._find_cover(data, my_data, threat_pos)
 	local target_to_unit_vec = data.m_pos - threat_pos
 
 	if flank_cover then
-		mvector3.rotate_with(target_to_unit_vec, Rotation(flank_cover.angle))
+		local angle = flank_cover.angle
+		local sign = flank_cover.sign
+
+		if math.sign(angle) ~= sign then
+			angle = -angle + flank_cover.step * sign
+
+			if math.abs(angle) > 90 then
+				flank_cover.failed = true
+			else
+				flank_cover.angle = angle
+			end
+		else
+			flank_cover.angle = -angle
+		end
+
+		if not flank_cover.failed then
+			mvector3.rotate_with(target_to_unit_vec, Rotation(flank_cover.angle))
+		end
 	end
 
 	local optimal_distance = target_to_unit_vec:length()
@@ -685,7 +710,7 @@ function CopLogicAttack._find_cover(data, my_data, threat_pos)
 
 	if want_to_take_cover then
 		if optimal_distance < my_data.weapon_range.far then
-			optimal_distance = optimal_distance + 400
+			optimal_distance = optimal_distance + group_ai_twk.cover_optimal_add_retreat
 
 			mvector3.set_length(target_to_unit_vec, optimal_distance)
 		end
@@ -704,30 +729,12 @@ function CopLogicAttack._find_cover(data, my_data, threat_pos)
 	mvector3.set_length(target_to_unit_vec, max_dis)
 
 	local furthest_position = threat_pos + target_to_unit_vec
-
-	if flank_cover then
-		local angle = flank_cover.angle
-		local sign = flank_cover.sign
-
-		if math.sign(angle) ~= sign then
-			angle = -angle + flank_cover.step * sign
-
-			if math.abs(angle) > 90 then
-				flank_cover.failed = true
-			else
-				flank_cover.angle = angle
-			end
-		else
-			flank_cover.angle = -angle
-		end
-	end
-
 	local cone_angle
 
-	if flank_cover then
+	if flank_cover and not flank_cover.failed then
 		cone_angle = flank_cover.step
 	else
-		cone_angle = math.lerp(90, 60, math.min(1, optimal_distance / 3000))
+		cone_angle = math.lerp(group_ai_twk.cover_cone_angle[1], group_ai_twk.cover_cone_angle[2], math.min(1, optimal_distance / 3000))
 	end
 
 	local search_nav_seg
@@ -738,7 +745,7 @@ function CopLogicAttack._find_cover(data, my_data, threat_pos)
 
 	local found_cover = managers.navigation:find_cover_in_cone_from_threat_pos(threat_pos, furthest_position, optimal_position, cone_angle, search_nav_seg, data.pos_rsrv_id)
 
-	if found_cover and (not best_cover or CopLogicAttack._verify_cover(found_cover, threat_pos, min_dis, max_dis)) then
+	if found_cover and (not best_cover or best_cover[1] ~= found_cover) then
 		local better_cover = {
 			found_cover,
 		}
@@ -1278,8 +1285,6 @@ function CopLogicAttack._upd_aim(data, my_data)
 end
 
 function CopLogicAttack.aim_allow_fire(shoot, aim, data, my_data)
-	local focus_enemy = data.attention_obj
-
 	if shoot then
 		if not my_data.firing then
 			data.unit:movement():set_allow_fire(true)
@@ -1475,13 +1480,13 @@ function CopLogicAttack._chk_wants_to_take_cover(data, my_data)
 		return false
 	end
 
-	if my_data.moving_to_cover or data.is_suppressed or my_data.attitude ~= "engage" or data.unit:anim_data().reload then
+	if my_data.moving_to_cover or my_data.attitude ~= "engage" or data.is_suppressed or data.unit:anim_data().reload or not data.unit:inventory():equipped_selection() then
 		return true
 	end
 
 	local ammo_max, ammo = data.unit:inventory():equipped_unit():base():ammo_info()
 
-	if ammo / ammo_max < 0.2 then
+	if ammo_max > 4 and ammo / ammo_max < 0.25 then
 		return true
 	end
 

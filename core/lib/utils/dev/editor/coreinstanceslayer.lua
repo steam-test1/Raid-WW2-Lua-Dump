@@ -7,6 +7,19 @@ core:import("CoreTable")
 core:import("CoreClass")
 core:import("CoreWorldDefinition")
 
+local IDS_MOVE_FWD = Idstring("move_forward")
+local IDS_MOVE_BWD = Idstring("move_back")
+local IDS_MOVE_L = Idstring("move_left")
+local IDS_MOVE_R = Idstring("move_right")
+local IDS_MOVE_UP = Idstring("move_up")
+local IDS_MOVE_DWN = Idstring("move_down")
+local IDS_ROLL_L = Idstring("roll_left")
+local IDS_ROLL_R = Idstring("roll_right")
+local IDS_PITCH_L = Idstring("pitch_left")
+local IDS_PITCH_R = Idstring("pitch_right")
+local IDS_YAW_FWD = Idstring("yaw_backward")
+local IDS_YAW_BWD = Idstring("yaw_forward")
+
 InstancesLayer = InstancesLayer or class(CoreStaticLayer.StaticLayer)
 
 function InstancesLayer:init(owner)
@@ -201,24 +214,22 @@ function InstancesLayer:rotate_unit(btn, pressed)
 	if self._selected_instance and not self:condition() then
 		local rot_axis
 		local snap_axis = self:snap_rotation_axis()
+		local step = self:snap_rotation()
+		local coor_sys = managers.editor:coordinate_system()
 
-		if self:local_rot() then
-			if snap_axis == "x" then
-				rot_axis = self._selected_instance_data.rotation:x()
-			elseif snap_axis == "y" then
-				rot_axis = self._selected_instance_data.rotation:y()
-			elseif snap_axis == "z" then
-				rot_axis = self._selected_instance_data.rotation:z()
-			end
-		elseif snap_axis == "x" then
-			rot_axis = Vector3(1, 0, 0)
-		elseif snap_axis == "y" then
-			rot_axis = Vector3(0, 1, 0)
-		elseif snap_axis == "z" then
-			rot_axis = Vector3(0, 0, 1)
+		if coor_sys == "Local" then
+			ref_rot = self._selected_instance_data.rotation
+		elseif coor_sys == "Camera" then
+			ref_rot = managers.editor:camera():rotation()
 		end
 
-		local step = self:snap_rotation()
+		if snap_axis == "x" then
+			rot_axis = ref_rot and ref_rot:x() or math.X
+		elseif snap_axis == "y" then
+			rot_axis = ref_rot and ref_rot:y() or math.Y
+		elseif snap_axis == "z" then
+			rot_axis = ref_rot and ref_rot:z() or math.Z
+		end
 
 		if self:shift() then
 			step = -step
@@ -262,15 +273,14 @@ function InstancesLayer:select_instance(instance_name)
 	self:_set_selection_instances_listbox(instance_name)
 
 	if instance_name then
-		self._selected_instance = Instance:new(managers.world_instance:get_instance_data_by_name(instance_name))
-		self._selected_instance_data = managers.world_instance:get_instance_data_by_name(instance_name)
-
-		managers.editor:set_grid_altitude(self._selected_instance:data().position.z)
-
 		local instance_data = managers.world_instance:get_instance_data_by_name(instance_name)
 		local continent_data = managers.editor:continents()[instance_data.continent]
 		local start_index = continent_data:base_id() + managers.world_instance:start_offset_index() + instance_data.start_index
 
+		self._selected_instance = Instance:new(instance_data)
+		self._selected_instance_data = instance_data
+
+		managers.editor:set_grid_altitude(self._selected_instance:data().position.z)
 		self._instance_info_guis.index_size:set_label("" .. instance_data.index_size)
 		self._instance_info_guis.start_index:set_label("" .. start_index)
 		self._instance_info_guis.end_index:set_label("" .. start_index + instance_data.index_size)
@@ -496,21 +506,27 @@ function InstancesLayer:update_move_triggers(t, dt)
 		return
 	end
 
-	local mov_vec
-	local u_rot = self._selected_instance_data.rotation
+	local coor_sys = managers.editor:coordinate_system()
+	local ref_rot, mov_vec
 
-	if self._ctrl:down(Idstring("move_forward")) then
-		mov_vec = self:local_rot() and u_rot:y() or Vector3(0, 1, 0)
-	elseif self._ctrl:down(Idstring("move_back")) then
-		mov_vec = self:local_rot() and u_rot:y() * -1 or Vector3(0, 1, 0) * -1
-	elseif self._ctrl:down(Idstring("move_left")) then
-		mov_vec = self:local_rot() and u_rot:x() * -1 or Vector3(1, 0, 0) * -1
-	elseif self._ctrl:down(Idstring("move_right")) then
-		mov_vec = self:local_rot() and u_rot:x() or Vector3(1, 0, 0)
-	elseif self._ctrl:down(Idstring("move_up")) then
-		mov_vec = self:local_rot() and u_rot:z() or Vector3(0, 0, 1)
-	elseif self._ctrl:down(Idstring("move_down")) then
-		mov_vec = self:local_rot() and u_rot:z() * -1 or Vector3(0, 0, 1) * -1
+	if coor_sys == "Local" then
+		ref_rot = self._selected_instance_data.rotation
+	elseif coor_sys == "Camera" then
+		ref_rot = managers.editor:camera():rotation()
+	end
+
+	if self._ctrl:down(IDS_MOVE_FWD) then
+		mov_vec = ref_rot and ref_rot:y() or math.Y
+	elseif self._ctrl:down(IDS_MOVE_BWD) then
+		mov_vec = ref_rot and -ref_rot:y() or -math.Y
+	elseif self._ctrl:down(IDS_MOVE_R) then
+		mov_vec = ref_rot and ref_rot:x() or math.X
+	elseif self._ctrl:down(IDS_MOVE_L) then
+		mov_vec = ref_rot and -ref_rot:x() or -math.X
+	elseif self._ctrl:down(IDS_MOVE_UP) then
+		mov_vec = ref_rot and ref_rot:z() or math.Z
+	elseif self._ctrl:down(IDS_MOVE_DWN) then
+		mov_vec = ref_rot and -ref_rot:z() or -math.Z
 	end
 
 	if mov_vec then
@@ -519,7 +535,7 @@ function InstancesLayer:update_move_triggers(t, dt)
 end
 
 function InstancesLayer:update_rotate_triggers(t, dt)
-	if not self._selected_instance or not self._editor_data.keyboard_available or self:condition() then
+	if not alive(self._selected_unit) or not self._editor_data.keyboard_available or self:condition() then
 		return
 	end
 
@@ -529,21 +545,27 @@ function InstancesLayer:update_rotate_triggers(t, dt)
 		rot_speed = rot_speed / 2
 	end
 
-	local rot_axis
-	local u_rot = self._selected_instance_data.rotation
+	local coor_sys = managers.editor:coordinate_system()
+	local ref_rot, rot_axis
 
-	if self._ctrl:down(Idstring("roll_left")) then
-		rot_axis = self:local_rot() and u_rot:z() or Vector3(0, 0, 1)
-	elseif self._ctrl:down(Idstring("roll_right")) then
-		rot_axis = (self:local_rot() and u_rot:z() or Vector3(0, 0, 1)) * -1
-	elseif self._ctrl:down(Idstring("pitch_right")) then
-		rot_axis = self:local_rot() and u_rot:y() or Vector3(0, 1, 0)
-	elseif self._ctrl:down(Idstring("pitch_left")) then
-		rot_axis = (self:local_rot() and u_rot:y() or Vector3(0, 1, 0)) * -1
-	elseif self._ctrl:down(Idstring("yaw_backward")) then
-		rot_axis = self:local_rot() and u_rot:x() or Vector3(1, 0, 0)
-	elseif self._ctrl:down(Idstring("yaw_forward")) then
-		rot_axis = (self:local_rot() and u_rot:x() or Vector3(1, 0, 0)) * -1
+	if coor_sys == "Local" then
+		ref_rot = self._selected_instance_data.rotation
+	elseif coor_sys == "Camera" then
+		ref_rot = managers.editor:camera():rotation()
+	end
+
+	if self._ctrl:down(IDS_ROLL_L) then
+		rot_axis = ref_rot and ref_rot:z() or math.Z
+	elseif self._ctrl:down(IDS_ROLL_R) then
+		rot_axis = ref_rot and -ref_rot:z() or -math.Z
+	elseif self._ctrl:down(IDS_PITCH_R) then
+		rot_axis = ref_rot and ref_rot:y() or math.Y
+	elseif self._ctrl:down(IDS_PITCH_L) then
+		rot_axis = ref_rot and -ref_rot:y() or -math.Y
+	elseif self._ctrl:down(IDS_YAW_FWD) then
+		rot_axis = ref_rot and ref_rot:x() or math.X
+	elseif self._ctrl:down(IDS_YAW_BWD) then
+		rot_axis = ref_rot and -ref_rot:x() or -math.X
 	end
 
 	if rot_axis then
@@ -1220,6 +1242,7 @@ end
 function InstancesLayer:update_unit_settings(...)
 	InstancesLayer.super.update_unit_settings(self, ...)
 	managers.editor:on_reference_unit(self._selected_instance)
+	managers.editor:on_selected_instance(self._selected_instance)
 end
 
 function InstancesLayer:activate()
@@ -1300,4 +1323,8 @@ end
 
 function Instance:rotation()
 	return self._data.rotation or Rotation()
+end
+
+function Instance:get_layer_name()
+	return "Instances"
 end

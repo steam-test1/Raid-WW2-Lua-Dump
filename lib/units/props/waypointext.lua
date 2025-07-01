@@ -7,6 +7,8 @@ function WaypointExt:init(unit)
 
 	if self._startup_waypoint then
 		self:add_waypoint(self._startup_waypoint, self._startup_waypoint_z, nil, nil, nil)
+	else
+		self._unit:set_extension_update_enabled(Idstring("waypoint"), false)
 	end
 end
 

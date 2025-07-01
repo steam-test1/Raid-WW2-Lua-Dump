@@ -1,6 +1,7 @@
 GoldEconomyManager = GoldEconomyManager or class()
 GoldEconomyManager.THOUSAND_SEPARATOR = ","
 GoldEconomyManager.VERSION = 8
+GoldEconomyManager.MAX_GOLD_AMOUNT = 5000000000
 GoldEconomyManager.ACHIEVEMENT_CAMP_ROYALTY = 1000
 GoldEconomyManager.LOYALTY_SKILL_REWORK = "SkillRework"
 GoldEconomyManager.LOYALTY_REMOVED_SKILL = "RemovedSkill"
@@ -37,6 +38,8 @@ function GoldEconomyManager:current()
 end
 
 function GoldEconomyManager:_set_current(value)
+	value = math.min(value, self.MAX_GOLD_AMOUNT)
+
 	if value >= GoldEconomyManager.ACHIEVEMENT_CAMP_ROYALTY then
 		managers.achievment:award("camp_royalty")
 	end
@@ -306,7 +309,9 @@ function GoldEconomyManager:spend_gold(amount)
 		return
 	end
 
-	self:_set_current(self:current() - amount)
+	local new_amount = math.max(self:current() - amount, 0)
+
+	self:_set_current(new_amount)
 	managers.raid_menu:refresh_footer_gold_amount()
 end
 

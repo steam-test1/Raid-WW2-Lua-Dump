@@ -100,8 +100,8 @@ function NavigationManager:init()
 
 	self._quad_field:set_nav_link_filter(NavigationManager.ACCESS_FLAGS)
 
-	self._pos_rsrv_filters = {}
 	self._obstacles = {}
+	self._pos_rsrv_filters = {}
 	self._pos_reservations = {}
 
 	self:_init_draw_data()
@@ -136,15 +136,12 @@ function NavigationManager:_init_draw_data()
 	brush.vis_graph_node = Draw:brush(Color(1, 0.6, 0, 0.9), duration)
 	brush.vis_graph_links = Draw:brush(Color(0.2, 0.8, 0.1, 0.6), duration)
 	data.brush = brush
-
-	local offsets = {
+	data.offsets = {
 		Vector3(-1, -1),
 		Vector3(-1, 1),
 		Vector3(1, -1),
 		Vector3(1, 1),
 	}
-
-	data.offsets = offsets
 	data.next_draw_i_room = 1
 	data.next_draw_i_door = 1
 	data.next_draw_i_coarse = 1
@@ -214,10 +211,11 @@ function NavigationManager:get_save_data()
 	})
 end
 
-function NavigationManager:set_load_data(data, world_id, translation, yaw, stitcher)
-	Application:debug("[NavigationManager:set_load_data]", world_id, translation, yaw, stitcher)
-
-	if not stitcher then
+function NavigationManager:set_load_data(data, world_id, translation, yaw, appendage)
+	if appendage then
+		self:_load_nav_data(data, world_id, translation, yaw)
+		self._quad_field:load_nav_data(data, world_id, translation, yaw)
+	else
 		data = self:_convert_nav_data_v5_to_v6(data)
 
 		if Application:editor() then
@@ -238,9 +236,6 @@ function NavigationManager:set_load_data(data, world_id, translation, yaw, stitc
 
 		self:_load_nav_data(data, world_id, translation, yaw)
 		self:_send_nav_field_to_engine(data, world_id, translation, yaw)
-	else
-		self:_load_nav_data(data, world_id, translation, yaw)
-		self._quad_field:load_nav_data(data, world_id, Vector3(0, 0, 0), 0)
 	end
 
 	self._data = self._data or {}
@@ -252,7 +247,7 @@ function NavigationManager:set_load_data(data, world_id, translation, yaw, stitc
 		self:set_debug_draw_state(nil)
 	end
 
-	if Network:is_server() and not stitcher then
+	if Network:is_server() and not appendage then
 		self:set_data_ready_flag(true)
 	end
 end
@@ -292,9 +287,11 @@ function NavigationManager:unload_world_data(world_id)
 	self._worlds[world_id] = nil
 end
 
+function NavigationManager:grid_size()
+	return self._grid_size
+end
+
 function NavigationManager:_load_nav_data(data, world_id, translation, yaw)
-	local t_ins = table.insert
-	local grid_size = self._grid_size
 	local segments = {}
 	local world = {
 		id = world_id,
@@ -307,9 +304,9 @@ function NavigationManager:_load_nav_data(data, world_id, translation, yaw)
 		return
 	end
 
-	local translate = translation or Vector3(0, 0, 0)
-
 	yaw = yaw or 0
+
+	local translate = translation or Vector3(0, 0, 0)
 
 	for _, nav_seg in pairs(data.segments) do
 		local unique_id = self:get_segment_unique_id(world_id, nav_seg.id)
@@ -328,26 +325,6 @@ function NavigationManager:_load_nav_data(data, world_id, translation, yaw)
 		world.segments[Idstring(unique_id):key()] = segment
 		self._nav_segments[unique_id] = segment
 	end
-end
-
-function NavigationManager:round_pos_to_grid(pos)
-	local rounded_pos = Vector3()
-
-	mvector3.set_z(rounded_pos, pos.z)
-
-	local round_x = pos.x - pos.x % self._grid_size
-
-	mvector3.set_x(rounded_pos, round_x)
-
-	local round_y = pos.y - pos.y % self._grid_size
-
-	mvector3.set_y(rounded_pos, round_y)
-
-	return rounded_pos
-end
-
-function NavigationManager:grid_size()
-	return self._grid_size
 end
 
 function NavigationManager:_convert_nav_data_v5_to_v6(data_v5)
@@ -722,7 +699,7 @@ function NavigationManager:set_selected_segment(unit)
 end
 
 function NavigationManager:_draw_nav_blockers()
-	if self._load_data.helper_blockers then
+	if self._load_data and self._load_data.helper_blockers then
 		local mvec3_set = mvector3.set
 		local mvec3_rot = mvector3.rotate_with
 		local mvec3_add = mvector3.add
@@ -1016,7 +993,7 @@ end
 
 function NavigationManager:_safe_remove_unit(unit)
 	if Application:editor() then
-		managers.editor:delete_unit(unit)
+		managers.editor:delete_unit(unit, true)
 	else
 		unit:set_slot(0)
 	end
@@ -1322,9 +1299,6 @@ function NavigationManager:find_cover_in_cone_from_threat_pos(threat_pos, cone_b
 	else
 		self._quad_field:find_cover_in_cone(near_pos, threat_pos, cone_angle, cone_base, rsrv_filter)
 	end
-
-	local t2 = TimerManager:now()
-	local duration = (t2 - t) * 1000
 
 	return ret
 end
@@ -1743,7 +1717,7 @@ function NavigationManager:cancel_coarse_search(search_id)
 end
 
 function NavigationManager:print_rect_info()
-	local camera = setup:freeflight()._camera_object
+	local camera = setup:freeflight():enabled() and setup:freeflight()._camera_object or managers.viewport:get_current_camera()
 	local cam_pos = camera:position()
 	local cam_fwd = camera:rotation():y() * 20000
 	local cam_look_ray = World:raycast("ray", cam_pos, cam_pos + cam_fwd)
@@ -1753,7 +1727,7 @@ function NavigationManager:print_rect_info()
 		local nav_tracker = self._quad_field:create_nav_tracker(look_pos, true)
 		local nav_seg_id = nav_tracker:nav_segment()
 
-		print("nav_segment:", nav_seg_id, self._nav_segments[nav_seg_id].disabled and "disabled")
+		print("- - - - -\nnav_segment:", nav_seg_id, self._nav_segments[nav_seg_id].disabled and "disabled")
 		self._quad_field:destroy_nav_tracker(nav_tracker)
 
 		if managers.groupai:state()._area_data then
@@ -1761,7 +1735,9 @@ function NavigationManager:print_rect_info()
 
 			for area_id, area in pairs(managers.groupai:state()._area_data) do
 				if area.nav_segs[nav_seg_id] then
-					areas_text = areas_text .. tostring(area_id) .. " "
+					for k, v in pairs(area) do
+						areas_text = areas_text .. k .. ": " .. tostring(inspect(v)) .. "\n"
+					end
 				end
 			end
 
@@ -1967,7 +1943,7 @@ function NavigationManager:on_simulation_ended()
 
 	self:_unregister_cover_units()
 
-	for i, obs_data in ipairs(self._obstacles) do
+	for _, obs_data in ipairs(self._obstacles) do
 		self._quad_field:remove_obstacle(obs_data.id)
 	end
 
@@ -1987,16 +1963,14 @@ function NavigationManager:_send_nav_field_to_engine(load_data, world_id, transl
 		return
 	end
 
-	local t_ins = table.insert
-	local world_id_string = tostring(world_id)
 	local segments = {}
 
 	for _, nav_seg in pairs(load_data.segments) do
-		local id = self:get_segment_unique_id(world_id, nav_seg.id)
+		local unique_id = self:get_segment_unique_id(world_id, nav_seg.id)
 
-		t_ins(segments, {
+		table.insert(segments, {
 			position = nav_seg.pos,
-			unique_id = id,
+			unique_id = unique_id,
 			vis_groups = nav_seg.vis_groups,
 		})
 	end
@@ -2017,6 +1991,7 @@ function NavigationManager:_send_nav_field_to_engine(load_data, world_id, transl
 		segments = segments,
 		visibility_groups = load_data.visibility_groups,
 	}
+	local world_id_string = tostring(world_id)
 
 	self._quad_field:load_nav_data(engine_data, world_id_string, translation, yaw)
 end
@@ -2239,7 +2214,7 @@ function NavigationManager:add_obstacle(obstacle_unit, obstacle_obj_name, world_
 	local obstacle_obj = obstacle_unit:get_object(obstacle_obj_name)
 
 	if not obstacle_obj then
-		Application:error("[NavigationManager:add_obstacle] There was no obj to remove in this unit!", obstacle_unit, obstacle_obj_name, world_id)
+		Application:error("[NavigationManager:add_obstacle] There was no obj to reference in this unit!", obstacle_unit, obstacle_obj_name, world_id)
 
 		return
 	end
@@ -2258,7 +2233,7 @@ function NavigationManager:remove_obstacle(obstacle_unit, obstacle_obj_name)
 	local obstacle_obj = obstacle_unit:get_object(obstacle_obj_name)
 
 	if not obstacle_obj then
-		Application:error("[NavigationManager:remove_obstacle] There was no obj to remove in this unit!", obstacle_unit, obstacle_obj_name)
+		Application:error("[NavigationManager:remove_obstacle] There was no obj to reference in this unit!", obstacle_unit, obstacle_obj_name)
 
 		return
 	end
@@ -2470,6 +2445,8 @@ function NavigationManager:clbk_navfield(event_name, args, args2, args3)
 end
 
 function NavigationManager:advance_nav_stitcher_counter()
+	Application:stack_dump("advance_nav_stitcher_counter")
+
 	self._nav_stitcher_counter = self._nav_stitcher_counter + 1
 
 	return self._nav_stitcher_counter

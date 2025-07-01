@@ -1664,7 +1664,7 @@ function CharacterCustomizationTweakData:initialization()
 
 	for k, cosmetic in pairs(self.customizations) do
 		if not cosmetic.default_clothing and not cosmetic.dlc and cosmetic.rarity then
-			local gold = LootDropTweakData:get_gold_from_rarity(cosmetic.rarity)
+			local gold = LootDropTweakData.get_gold_from_rarity(cosmetic.rarity)
 
 			if gold then
 				cosmetic.gold_price = gold

@@ -2,12 +2,10 @@ require("lib/units/enemies/cop/logics/CopLogicBase")
 require("lib/units/enemies/cop/logics/CopLogicInactive")
 require("lib/units/enemies/cop/logics/CopLogicIdle")
 require("lib/units/enemies/cop/logics/CopLogicAttack")
-require("lib/units/enemies/cop/logics/CopLogicIntimidated")
 require("lib/units/enemies/cop/logics/CopLogicTravel")
 require("lib/units/enemies/cop/logics/CopLogicFlee")
 require("lib/units/enemies/cop/logics/CopLogicSniper")
 require("lib/units/enemies/cop/logics/CopLogicSpotter")
-require("lib/units/enemies/cop/logics/CopLogicTrade")
 require("lib/units/enemies/cop/logics/CopLogicPhalanxMinion")
 require("lib/units/enemies/cop/logics/CopLogicPhalanxVip")
 require("lib/units/enemies/cop/logics/CopLogicTurret")
@@ -15,136 +13,74 @@ require("lib/units/enemies/cop/logics/CopLogicAlarm")
 require("lib/units/enemies/tank/logics/TankCopLogicAttack")
 require("lib/units/enemies/shield/logics/ShieldLogicAttack")
 require("lib/units/enemies/flamer/logics/FlamerLogicAttack")
+require("lib/units/player_team/logics/TeamAILogicBase")
+require("lib/units/player_team/logics/TeamAILogicInactive")
+require("lib/units/player_team/logics/TeamAILogicIdle")
+require("lib/units/player_team/logics/TeamAILogicAssault")
+require("lib/units/player_team/logics/TeamAILogicTravel")
+require("lib/units/player_team/logics/TeamAILogicDisabled")
+require("lib/units/civilians/logics/CivilianLogicBase")
+require("lib/units/civilians/logics/CivilianLogicInactive")
+require("lib/units/civilians/logics/CivilianLogicIdle")
+require("lib/units/civilians/logics/CivilianLogicFlee")
+require("lib/units/civilians/logics/CivilianLogicEscort")
+require("lib/units/civilians/logics/CivilianLogicTravel")
 
 CopBrain = CopBrain or class()
 
 local logic_variants = {
-	security = {
+	civilian = {
+		escort = CivilianLogicEscort,
+		flee = CivilianLogicFlee,
+		idle = CivilianLogicIdle,
+		inactive = CivilianLogicInactive,
+		travel = CivilianLogicTravel,
+	},
+	criminal = {
+		assault = TeamAILogicAssault,
+		disabled = TeamAILogicDisabled,
+		idle = TeamAILogicIdle,
+		inactive = TeamAILogicInactive,
+		travel = TeamAILogicTravel,
+	},
+	default = {
 		alarm = CopLogicAlarm,
 		attack = CopLogicAttack,
 		flee = CopLogicFlee,
 		idle = CopLogicIdle,
 		inactive = CopLogicInactive,
-		intimidated = CopLogicIntimidated,
 		phalanx = CopLogicPhalanxMinion,
 		sniper = CopLogicSniper,
 		spotter = CopLogicSpotter,
-		trade = CopLogicTrade,
 		travel = CopLogicTravel,
 		turret = CopLogicTurret,
 	},
 }
-local security_variant = logic_variants.security
 
-logic_variants.gensec = security_variant
-logic_variants.cop = security_variant
-logic_variants.fbi = security_variant
-logic_variants.swat = security_variant
-logic_variants.heavy_swat = security_variant
-logic_variants.fbi_swat = security_variant
-logic_variants.fbi_heavy_swat = security_variant
-logic_variants.nathan = security_variant
-logic_variants.sniper = security_variant
-logic_variants.spotter = security_variant
-logic_variants.gangster = security_variant
-logic_variants.biker = security_variant
-logic_variants.mobster = security_variant
-logic_variants.mobster_boss = security_variant
-logic_variants.hector_boss = security_variant
-logic_variants.hector_boss_no_armor = security_variant
-logic_variants.dealer = security_variant
-logic_variants.biker_escape = security_variant
-logic_variants.city_swat = security_variant
-logic_variants.old_hoxton_mission = security_variant
-logic_variants.inside_man = security_variant
-logic_variants.german_officer = security_variant
-logic_variants.german_grunt_light = security_variant
-logic_variants.german_grunt_light_mp38 = security_variant
-logic_variants.german_grunt_light_kar98 = security_variant
-logic_variants.german_grunt_light_shotgun = security_variant
-logic_variants.german_grunt_mid = security_variant
-logic_variants.german_grunt_mid_mp38 = security_variant
-logic_variants.german_grunt_mid_kar98 = security_variant
-logic_variants.german_grunt_mid_shotgun = security_variant
-logic_variants.german_grunt_heavy = security_variant
-logic_variants.german_grunt_heavy_mp38 = security_variant
-logic_variants.german_grunt_heavy_kar98 = security_variant
-logic_variants.german_grunt_heavy_shotgun = security_variant
-logic_variants.german_light = security_variant
-logic_variants.german_light_kar98 = security_variant
-logic_variants.german_light_shotgun = security_variant
-logic_variants.german_heavy = security_variant
-logic_variants.german_heavy_kar98 = security_variant
-logic_variants.german_heavy_shotgun = security_variant
-logic_variants.german_gasmask = security_variant
-logic_variants.german_gasmask_shotgun = security_variant
-logic_variants.german_gasmask_commander_backup = security_variant
-logic_variants.german_gasmask_commander_backup_shotgun = security_variant
-logic_variants.german_light_commander_backup = security_variant
-logic_variants.german_light_commander_backup_kar98 = security_variant
-logic_variants.german_light_commander_backup_shotgun = security_variant
-logic_variants.german_heavy_commander_backup = security_variant
-logic_variants.german_heavy_commander_backup_kar98 = security_variant
-logic_variants.german_heavy_commander_backup_shotgun = security_variant
-logic_variants.german_fallschirmjager_light = security_variant
-logic_variants.german_fallschirmjager_light_kar98 = security_variant
-logic_variants.german_fallschirmjager_light_shotgun = security_variant
-logic_variants.german_fallschirmjager_light_mp38 = security_variant
-logic_variants.german_fallschirmjager_heavy = security_variant
-logic_variants.german_fallschirmjager_heavy_kar98 = security_variant
-logic_variants.german_fallschirmjager_heavy_shotgun = security_variant
-logic_variants.german_fallschirmjager_heavy_mp38 = security_variant
-logic_variants.german_waffen_ss = security_variant
-logic_variants.german_waffen_ss_kar98 = security_variant
-logic_variants.german_waffen_ss_shotgun = security_variant
-logic_variants.german_gebirgsjager_light = security_variant
-logic_variants.german_gebirgsjager_light_kar98 = security_variant
-logic_variants.german_gebirgsjager_light_shotgun = security_variant
-logic_variants.german_gebirgsjager_light_mp38 = security_variant
-logic_variants.german_gebirgsjager_heavy = security_variant
-logic_variants.german_gebirgsjager_heavy_kar98 = security_variant
-logic_variants.german_gebirgsjager_heavy_shotgun = security_variant
-logic_variants.german_gebirgsjager_heavy_mp38 = security_variant
-logic_variants.german_sniper = security_variant
-logic_variants.german_spotter = security_variant
-logic_variants.soviet_nkvd_int_security_captain = security_variant
-logic_variants.soviet_nkvd_int_security_captain_b = security_variant
-
-for _, tweak_table_name in pairs({
-	"shield",
-	"tank",
-	"taser",
-	"german_flamer",
-	"german_commander",
-	"german_og_commander",
-}) do
-	logic_variants[tweak_table_name] = clone(security_variant)
-end
-
-logic_variants.german_commander.intimidated = nil
+logic_variants.german_commander = clone(logic_variants.default)
 logic_variants.german_commander.flee = nil
-logic_variants.german_og_commander.intimidated = nil
-logic_variants.german_og_commander.flee = nil
+logic_variants.german_og_commander = logic_variants.german_commander
+logic_variants.fb_german_commander_boss = logic_variants.german_commander
+logic_variants.fb_german_commander = logic_variants.german_commander
+logic_variants.shield = clone(logic_variants.default)
 logic_variants.shield.attack = ShieldLogicAttack
-logic_variants.shield.intimidated = nil
 logic_variants.shield.flee = nil
+logic_variants.german_flamer = clone(logic_variants.default)
 logic_variants.german_flamer.attack = FlamerLogicAttack
-logic_variants.german_flamer.intimidated = nil
 logic_variants.german_flamer.flee = nil
 logic_variants.phalanx_minion = clone(logic_variants.shield)
 logic_variants.phalanx_vip = clone(logic_variants.shield)
 logic_variants.phalanx_vip.phalanx = CopLogicPhalanxVip
+logic_variants.tank = clone(logic_variants.default)
 logic_variants.tank.attack = TankCopLogicAttack
-logic_variants.tank_hw = logic_variants.tank
-logic_variants.fb_german_commander_boss = security_variant
-logic_variants.fb_german_commander_boss.intimidated = nil
-logic_variants.fb_german_commander_boss.flee = nil
-logic_variants.fb_german_commander = security_variant
-logic_variants.fb_german_commander.intimidated = nil
-logic_variants.fb_german_commander.flee = nil
-security_variant = nil
+logic_variants.german = logic_variants.criminal
+logic_variants.british = logic_variants.criminal
+logic_variants.american = logic_variants.criminal
+logic_variants.russian = logic_variants.criminal
+logic_variants.civilian_female = logic_variants.civilian
+logic_variants.escort = logic_variants.civilian
 CopBrain._logic_variants = logic_variants
-logic_varaints = nil
+logic_variants = nil
 
 local reload
 
@@ -170,11 +106,19 @@ function CopBrain:init(unit)
 	self._SO_access = managers.navigation:convert_access_flag(access)
 	self._slotmask_enemies = managers.slot:get_mask("criminals")
 	self._reload_clbks[unit:key()] = callback(self, self, "on_reload")
-	self.random_travel_applied = false
+	self.use_random_travel = true
+end
+
+function CopBrain:_get_logic_variant(key)
+	local logic_variant = self._logic_variants[key]
+
+	logic_variant = logic_variant or self._logic_variants.default
+
+	return logic_variant
 end
 
 function CopBrain:post_init()
-	self._logics = CopBrain._logic_variants[self._unit:base()._tweak_table]
+	self._logics = self:_get_logic_variant(self._unit:base()._tweak_table)
 
 	self:_reset_logic_data()
 
@@ -340,8 +284,8 @@ function CopBrain:objective()
 	return self._logic_data.objective
 end
 
-function CopBrain:is_hostage()
-	return self._logic_data.internal_data and self._logic_data.internal_data.is_hostage
+function CopBrain:is_objective_type(type)
+	return self._logic_data.objective and self._logic_data.objective.type == type
 end
 
 function CopBrain:is_available_for_assignment(objective)
@@ -585,12 +529,6 @@ function CopBrain:clbk_death(my_unit, damage_info)
 	end
 
 	self:_chk_enable_bodybag_interaction()
-
-	if self._following_hostage_contour_id then
-		self._unit:contour():remove_by_id(self._following_hostage_contour_id, true)
-
-		self._following_hostage_contour_id = nil
-	end
 end
 
 function CopBrain:is_active()
@@ -617,12 +555,10 @@ function CopBrain:cancel_trade()
 	end
 
 	if self._logic_data.is_converted then
-		local action_data = {
+		self:action_request({
 			body_part = 4,
 			type = "stand",
-		}
-
-		self:action_request(action_data)
+		})
 		self:set_objective(nil)
 		self:set_logic("idle")
 	else
@@ -636,24 +572,14 @@ function CopBrain:interaction_voice()
 	end
 end
 
-function CopBrain:on_intimidated(amount, aggressor_unit)
+function CopBrain:on_long_distance_interact(amount, instigator)
 	local interaction_voice = self:interaction_voice()
 
 	if interaction_voice then
 		self:set_objective(self._logic_data.objective.followup_objective)
 
 		return interaction_voice
-	else
-		self._current_logic.on_intimidated(self._logic_data, amount, aggressor_unit)
 	end
-end
-
-function CopBrain:on_tied(aggressor_unit, not_tied)
-	return self._current_logic.on_tied(self._logic_data, aggressor_unit, not_tied)
-end
-
-function CopBrain:on_trade(aggressor_unit)
-	return self._current_logic.on_trade(self._logic_data, aggressor_unit)
 end
 
 function CopBrain:on_detected_enemy_destroyed(destroyed_unit)
@@ -705,7 +631,7 @@ end
 
 function CopBrain:on_reload()
 	self._logic_data.char_tweak = tweak_data.character[self._unit:base()._tweak_table]
-	self._logics = CopBrain._logic_variants[self._unit:base()._tweak_table]
+	self._logics = self:_get_logic_variant(self._unit:base()._tweak_table)
 	self._current_logic = self._logics[self._current_logic_name]
 	self._logic_data.char_tweak = tweak_data.character[self._unit:base()._tweak_table]
 end
@@ -735,48 +661,7 @@ function CopBrain:anim_clbk(unit, ...)
 end
 
 function CopBrain:anim_clbk_dodge_cover_grenade(unit)
-	self:_chk_use_cover_grenade(unit)
-end
-
-function CopBrain:_chk_use_cover_grenade(unit)
-	if not Network:is_server() or not self._logic_data.char_tweak.dodge_with_grenade or not self._logic_data.attention_obj then
-		return
-	end
-
-	local check_f = self._logic_data.char_tweak.dodge_with_grenade.check
-	local t = TimerManager:game():time()
-
-	if check_f and (not self._flashbang_cover_expire_t or t > self._next_cover_grenade_chk_t) then
-		local result, next_t = check_f(t, self._nr_flashbang_covers_used or 0)
-
-		self._next_cover_grenade_chk_t = next_t
-
-		if not result then
-			return
-		end
-	end
-
-	local grenade_was_used
-
-	if self._logic_data.attention_obj.dis > 1000 or not self._logic_data.char_tweak.dodge_with_grenade.flash then
-		if self._logic_data.char_tweak.dodge_with_grenade.smoke and not managers.groupai:state():is_smoke_grenade_active() then
-			local duration = self._logic_data.char_tweak.dodge_with_grenade.smoke.duration
-
-			managers.groupai:state():detonate_smoke_grenade(self._logic_data.m_pos + math.UP * 10, self._unit:movement():m_head_pos(), math.lerp(duration[1], duration[2], math.random()), false)
-
-			grenade_was_used = true
-		end
-	elseif self._logic_data.char_tweak.dodge_with_grenade.flash then
-		local duration = self._logic_data.char_tweak.dodge_with_grenade.flash.duration
-
-		managers.groupai:state():detonate_smoke_grenade(self._logic_data.m_pos + math.UP * 10, self._unit:movement():m_head_pos(), math.lerp(duration[1], duration[2], math.random()), true)
-
-		grenade_was_used = true
-	end
-
-	if grenade_was_used then
-		self._nr_flashbang_covers_used = (self._nr_flashbang_covers_used or 0) + 1
-	end
+	return
 end
 
 function CopBrain:on_nav_link_unregistered(element_id)
@@ -1055,14 +940,15 @@ function CopBrain:convert_to_criminal(mastermind_criminal)
 	self:set_objective(nil)
 	self:set_logic("idle", nil)
 
-	self._logic_data.objective_complete_clbk = callback(managers.groupai:state(), managers.groupai:state(), "on_criminal_objective_complete")
-	self._logic_data.objective_failed_clbk = callback(managers.groupai:state(), managers.groupai:state(), "on_criminal_objective_failed")
+	local group_ai_state = managers.groupai:state()
+
+	self._logic_data.objective_complete_clbk = callback(group_ai_state, group_ai_state, "on_criminal_objective_complete")
+	self._logic_data.objective_failed_clbk = callback(group_ai_state, group_ai_state, "on_criminal_objective_failed")
 
 	managers.groupai:state():on_criminal_jobless(self._unit)
 	self._unit:base():set_slot(self._unit, 16)
 	self._unit:movement():set_stance("hos")
-
-	local action_data = {
+	self._unit:brain():action_request({
 		blocks = {
 			action = -1,
 			heavy_hurt = -1,
@@ -1074,38 +960,8 @@ function CopBrain:convert_to_criminal(mastermind_criminal)
 		clamp_to_graph = true,
 		type = "act",
 		variant = "attached_collar_enter",
-	}
-
-	self._unit:brain():action_request(action_data)
+	})
 	self._unit:sound():say("cn1", true, nil)
-end
-
-function CopBrain:on_surrender_chance()
-	local t = TimerManager:game():time()
-
-	if self._logic_data.surrender_window then
-		self._logic_data.surrender_window.expire_t = t + self._logic_data.surrender_window.timeout_duration
-
-		managers.enemy:reschedule_delayed_clbk(self._logic_data.surrender_window.expire_clbk_id, self._logic_data.surrender_window.expire_t)
-
-		self._logic_data.surrender_window.chance_mul = math.pow(self._logic_data.surrender_window.chance_mul, 0.93)
-
-		return
-	end
-
-	local window_duration = 5 + 4 * math.random()
-	local timeout_duration = 5 + 5 * math.random()
-
-	self._logic_data.surrender_window = {
-		chance_mul = 0.04975,
-		expire_clbk_id = "CopBrain_sur_op" .. tostring(self._unit:key()),
-		expire_t = t + window_duration + timeout_duration,
-		timeout_duration = timeout_duration,
-		window_duration = window_duration,
-		window_expire_t = t + window_duration,
-	}
-
-	managers.enemy:add_delayed_clbk(self._logic_data.surrender_window.expire_clbk_id, callback(self, self, "clbk_surrender_chance_expired"), self._logic_data.surrender_window.expire_t)
 end
 
 function CopBrain:terminate_all_suspicion()
@@ -1117,10 +973,6 @@ function CopBrain:terminate_all_suspicion()
 			u_data.unit:movement():on_suspicion(self._unit, false)
 		end
 	end
-end
-
-function CopBrain:clbk_surrender_chance_expired()
-	self._logic_data.surrender_window = nil
 end
 
 function CopBrain:add_pos_rsrv(rsrv_name, pos_rsrv)
@@ -1296,16 +1148,10 @@ function CopBrain:pre_destroy(unit)
 
 		self._enemy_weapons_hot_listen_id = nil
 	end
-
-	if self._logic_data.surrender_window then
-		managers.enemy:remove_delayed_clbk(self._logic_data.surrender_window.expire_clbk_id)
-
-		self._logic_data.surrender_window = nil
-	end
 end
 
 if reload then
-	for k, clbk in pairs(CopBrain._reload_clbks) do
+	for _, clbk in pairs(CopBrain._reload_clbks) do
 		clbk()
 	end
 end

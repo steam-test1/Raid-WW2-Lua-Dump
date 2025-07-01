@@ -104,6 +104,10 @@ function WeaponInventoryTweakData:init()
 			slot = 6,
 			weapon_id = "welrod",
 		},
+		{
+			slot = 7,
+			weapon_id = "georg",
+		},
 	}
 	self.weapon_grenades_index = {
 		{

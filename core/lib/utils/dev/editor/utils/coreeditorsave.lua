@@ -5,34 +5,33 @@ core:import("CoreClass")
 core:import("CoreXml")
 core:import("CoreDebug")
 
-function save_unit(world, level, unit, data)
-	return
-end
-
 function save_data_table(unit)
 	local ud = unit:unit_data()
-	local t = {}
+	local t = {
+		continent = unit:unit_data().continent and unit:unit_data().continent:name(),
+		cutscene_actor = ud.cutscene_actor,
+		disable_on_ai_graph = ud.disable_on_ai_graph,
+		disable_shadows = ud.disable_shadows,
+		hide_on_projection_light = ud.hide_on_projection_light,
+		lights = _light_data_table(unit),
+		material_variation = ud.material,
+		mesh_variation = ud.mesh_variation,
+		name = unit:name():s(),
+		name_id = ud.name_id,
+		position = unit:position(),
+		projection_light = CoreEditorUtils.has_any_projection_light(unit),
+		projection_lights = ud.projection_lights,
+		projection_textures = ud.projection_textures,
+		rotation = unit:rotation(),
+		triggers = _triggers_data_table(unit),
+		unit_id = ud.unit_id,
+	}
 
-	t.name = unit:name():s()
-	t.unit_id = ud.unit_id
-	t.name_id = ud.name_id
-	t.continent = unit:unit_data().continent and unit:unit_data().continent:name()
-	t.position = unit:position()
-	t.rotation = unit:rotation()
-	t.mesh_variation = ud.mesh_variation
-	t.material_variation = ud.material
-	t.cutscene_actor = ud.cutscene_actor
-	t.disable_shadows = ud.disable_shadows
-	t.hide_on_projection_light = ud.hide_on_projection_light
-	t.disable_on_ai_graph = ud.disable_on_ai_graph
-	t.lights = _light_data_table(unit)
-	t.triggers = _triggers_data_table(unit)
-	t.editable_gui = _editable_gui_data_table(unit)
-	t.projection_light = CoreEditorUtils.has_any_projection_light(unit)
-	t.projection_lights = ud.projection_lights
-	t.projection_textures = ud.projection_textures
-	t.ladder = _editable_ladder_table(unit)
-	t.zipline = _editable_zipline_table(unit)
+	for _, extension in pairs(unit:extensions_infos()) do
+		if extension.editor_save then
+			extension:editor_save(t)
+		end
+	end
 
 	return t
 end
@@ -99,58 +98,6 @@ function _triggers_data_table(unit)
 	end
 
 	return #t > 0 and t or nil
-end
-
-function _editable_gui_data_table(unit)
-	local t
-
-	if unit:editable_gui() then
-		t = {
-			align = unit:editable_gui():align(),
-			alpha = unit:editable_gui():alpha(),
-			blend_mode = unit:editable_gui():blend_mode(),
-			font = unit:editable_gui():font(),
-			font_color = unit:editable_gui():font_color(),
-			font_size = unit:editable_gui():font_size(),
-			render_template = unit:editable_gui():render_template(),
-			shape = unit:editable_gui():shape(),
-			text = unit:editable_gui():text(),
-			vertical = unit:editable_gui():vertical(),
-			word_wrap = unit:editable_gui():word_wrap(),
-			wrap = unit:editable_gui():wrap(),
-		}
-	end
-
-	return t
-end
-
-function _editable_ladder_table(unit)
-	local t
-
-	if unit:ladder() then
-		t = {
-			height = unit:ladder():height(),
-			width = unit:ladder():width(),
-		}
-	end
-
-	return t
-end
-
-function _editable_zipline_table(unit)
-	local t
-
-	if unit:zipline() then
-		t = {
-			ai_ignores_bag = unit:zipline():ai_ignores_bag(),
-			end_pos = unit:zipline():end_pos(),
-			slack = unit:zipline():slack(),
-			speed = unit:zipline():speed(),
-			usage_type = unit:zipline():usage_type(),
-		}
-	end
-
-	return t
 end
 
 function save_layout(params)

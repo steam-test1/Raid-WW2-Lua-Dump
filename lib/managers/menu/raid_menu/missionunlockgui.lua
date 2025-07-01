@@ -30,6 +30,13 @@ function MissionUnlockGui:close()
 	managers.controller:remove_hotswap_callback("mission_unlock_gui")
 	Overlay:gui():destroy_workspace(self._fullscreen_ws)
 	Overlay:gui():destroy_workspace(self._safe_rect_workspace)
+
+	if self._controller_list then
+		for _, controller in ipairs(self._controller_list) do
+			controller:destroy()
+		end
+	end
+
 	MissionUnlockGui.super.close(self)
 end
 

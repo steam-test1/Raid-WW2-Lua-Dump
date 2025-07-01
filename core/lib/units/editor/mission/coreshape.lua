@@ -1,6 +1,14 @@
 core:import("CoreShapeManager")
 
 CoreShapeUnitElement = CoreShapeUnitElement or class(MissionElement)
+CoreShapeUnitElement.LINK_VALUES = {
+	{
+		layer = "Statics",
+		output = true,
+		table_value = "unit_ids",
+		type = "shape",
+	},
+}
 ShapeUnitElement = ShapeUnitElement or class(CoreShapeUnitElement)
 
 function ShapeUnitElement:init(...)

@@ -326,7 +326,7 @@ function HUDTeammatePeer:_create_timer()
 	self._timer_bar:set_center_x(self._timer_panel:w() / 2)
 	self._timer_bar:set_center_y(self._timer_panel:h() / 2)
 
-	local timer_text_params = {
+	self._timer_text = self._timer_panel:text({
 		align = "center",
 		font = tweak_data.gui.fonts[HUDTeammatePeer.TIMER_FONT],
 		font_size = HUDTeammatePeer.TIMER_FONT_SIZE,
@@ -336,11 +336,7 @@ function HUDTeammatePeer:_create_timer()
 		text = "37",
 		vertical = "center",
 		w = self._timer_panel:w(),
-		x = 0,
-		y = 0,
-	}
-
-	self._timer_text = self._timer_panel:text(timer_text_params)
+	})
 
 	local _, _, _, h = self._timer_text:text_rect()
 
@@ -574,6 +570,16 @@ function HUDTeammatePeer:padding_down()
 	return HUDTeammatePeer.PADDING_DOWN
 end
 
+function HUDTeammatePeer:refresh()
+	local name = self._name
+
+	if managers.user:get_setting("capitalize_names") then
+		name = utf8.to_upper(name)
+	end
+
+	self._player_name:set_text(name)
+end
+
 function HUDTeammatePeer:reset_state()
 	self._equipment_panel:clear()
 
@@ -676,7 +682,13 @@ function HUDTeammatePeer:set_warcry_ready(value)
 end
 
 function HUDTeammatePeer:set_name(name)
-	self._player_name:set_text(utf8.to_upper(name))
+	self._name = name
+
+	if managers.user:get_setting("capitalize_names") then
+		name = utf8.to_upper(name)
+	end
+
+	self._player_name:set_text(name)
 
 	local name_w = select(3, self._player_name:text_rect())
 	local chat_x = math.min(name_w, self._player_name:w())

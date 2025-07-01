@@ -3,7 +3,7 @@ local UpgradePickpocket = {}
 function UpgradePickpocket:check_activate()
 	managers.system_event_listener:remove_listener("pickpocket_melee_steal")
 
-	if managers.player:has_category_upgrade("temporary", "pickpocket_melee_ammo_steal") then
+	if alive(managers.player:local_player()) and managers.player:has_category_upgrade("temporary", "pickpocket_melee_ammo_steal") then
 		managers.system_event_listener:add_listener("pickpocket_melee_steal", {
 			CoreSystemEventListenerManager.SystemEventListenerManager.PLAYER_DAMAGED_ENEMY_MELEE,
 		}, callback(self, self, "_on_enemy_melee"))

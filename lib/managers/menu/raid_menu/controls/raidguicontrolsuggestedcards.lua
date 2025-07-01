@@ -51,13 +51,17 @@ function RaidGUIControlSuggestedCards:_create_items()
 			item_params.peer_name = ""
 		end
 
+		if managers.user:get_setting("capitalize_names") then
+			peer_name = utf8.to_upper(peer_name)
+		end
+
 		self._label_peer_name = self._suggested_cards_panel:label({
 			align = "center",
 			font = tweak_data.gui.fonts.din_compressed,
 			font_size = tweak_data.gui.font_sizes.filter,
 			h = 30,
 			name = "label_peer_name",
-			text = utf8.to_upper(peer_name),
+			text = peer_name,
 			vertical = "center",
 			w = self._item_width,
 			wrap = true,

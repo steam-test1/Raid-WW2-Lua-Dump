@@ -77,7 +77,7 @@ function CoreEditor:build_toolbar()
 	})
 
 	self._toolbar:add_separator()
-	self._toolbar:add_check_tool("TB_USING_GROUPS", "Using groups (" .. self:ctrl_binding("using_group_toggle") .. ")", CoreEWS.image_path("world_editor\\using_groups_16x16.png"), "Toggle using groups on and off")
+	self._toolbar:add_check_tool("TB_USING_GROUPS", "Using groups [" .. self:ctrl_binding("using_group_toggle") .. "]", CoreEWS.image_path("world_editor\\using_groups_16x16.png"), "Toggle using groups on and off")
 	self._toolbar:connect("TB_USING_GROUPS", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "toolbar_toggle"), {
 		value = "_using_groups",
 	})

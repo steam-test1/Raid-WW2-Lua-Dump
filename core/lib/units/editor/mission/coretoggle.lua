@@ -1,6 +1,13 @@
 CoreToggleUnitElement = CoreToggleUnitElement or class(MissionElement)
 CoreToggleUnitElement.SAVE_UNIT_POSITION = false
 CoreToggleUnitElement.SAVE_UNIT_ROTATION = false
+CoreToggleUnitElement.LINK_VALUES = {
+	{
+		output = true,
+		table_value = "elements",
+		type = "toggle",
+	},
+}
 ToggleUnitElement = ToggleUnitElement or class(CoreToggleUnitElement)
 
 function ToggleUnitElement:init(...)
@@ -36,11 +43,6 @@ function CoreToggleUnitElement:draw_links(t, dt, selected_unit, all_units)
 			})
 		end
 	end
-end
-
-function CoreToggleUnitElement:get_links_to_unit(...)
-	CoreToggleUnitElement.super.get_links_to_unit(self, ...)
-	self:_get_links_of_type_from_elements(self._hed.elements, "operator", ...)
 end
 
 function CoreToggleUnitElement:update_editing()

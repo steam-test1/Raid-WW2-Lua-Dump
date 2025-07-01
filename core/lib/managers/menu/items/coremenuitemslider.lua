@@ -155,10 +155,6 @@ function ItemSlider:setup_gui(node, row_item)
 		y = 0,
 	})
 
-	if row_item.help_text then
-		-- block empty
-	end
-
 	self:_layout(node, row_item)
 
 	return true

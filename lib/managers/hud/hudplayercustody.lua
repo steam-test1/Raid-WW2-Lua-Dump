@@ -75,7 +75,11 @@ function HUDPlayerCustody:set_spectator_info(unit)
 	if alive(unit) then
 		local nick_name = unit:base():nick_name()
 
-		self._spectator_text:set_text(utf8.to_upper(nick_name))
+		if managers.user:get_setting("capitalize_names") then
+			nick_name = utf8.to_upper(nick_name)
+		end
+
+		self._spectator_text:set_text(nick_name)
 		self._spectator_panel:set_visible(true)
 		self:_refresh_button_prompt()
 	else
@@ -213,24 +217,4 @@ function HUDPlayerCustody:set_respawn_type(is_ai_trade)
 
 		self._last_respawn_type_is_ai_trade = is_ai_trade
 	end
-end
-
-function HUDPlayerCustody:set_civilians_killed(amount)
-	return
-end
-
-function HUDPlayerCustody:set_trade_delay(time)
-	return
-end
-
-function HUDPlayerCustody:set_trade_delay_visible(visible)
-	return
-end
-
-function HUDPlayerCustody:set_negotiating_visible(visible)
-	return
-end
-
-function HUDPlayerCustody:set_can_be_trade_visible(visible)
-	return
 end

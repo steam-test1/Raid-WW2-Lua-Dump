@@ -410,6 +410,7 @@ function ExperienceGui:_skill_profile_renamed_callback(profile_index, button, bu
 
 	self._skill_profiles_list:refresh_data()
 	self._skill_profiles_list:select_item_by_index(profile_index)
+	self:_layout_subtitle_text()
 end
 
 function ExperienceGui:on_item_clicked_upgrade(data)

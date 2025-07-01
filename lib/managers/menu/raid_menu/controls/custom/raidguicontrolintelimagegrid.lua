@@ -105,16 +105,14 @@ end
 function RaidGUIControlIntelImageGrid:set_data(data)
 	self._mission = data.mission
 
-	if data.image_selected then
+	if data.image_selected and self._photos[data.image_selected] then
 		self._selected_index = data.image_selected
 
 		self._photos[self._selected_index]:select(true)
 		self._on_click_callback(data.image_selected, self._mission_photos[data.image_selected])
 	end
 
-	if data.save_data then
-		self._save_data = deep_clone(data.save_data)
-	end
+	self._save_data = data.save_data
 
 	self:_create_photos(data.only_first_n_events)
 
@@ -236,24 +234,14 @@ function RaidGUIControlIntelImageGrid:_get_mission_photos(only_first_n_events)
 	local photos = {}
 
 	if self._save_data then
-		mission_tweak_data.events_index = self._save_data.events_index
-	end
-
-	if mission_tweak_data.photos then
-		for _, photo in pairs(mission_tweak_data.photos) do
-			table.insert(photos, photo)
-		end
-	end
-
-	if mission_tweak_data.job_type == OperationsTweakData.JOB_TYPE_OPERATION and only_first_n_events ~= 1 then
 		local events = 1
-		local operation_event_index = mission_tweak_data.events_index
+		local operation_event_index = self._save_data.events_index
 
-		for _, event in pairs(operation_event_index) do
+		for _, event in ipairs(operation_event_index) do
 			local event_tweak_data = mission_tweak_data.events[event]
 
 			if event_tweak_data.photos then
-				for _, photo in pairs(event_tweak_data.photos) do
+				for _, photo in ipairs(event_tweak_data.photos) do
 					table.insert(photos, photo)
 				end
 			end
@@ -264,11 +252,10 @@ function RaidGUIControlIntelImageGrid:_get_mission_photos(only_first_n_events)
 
 			events = events + 1
 		end
-	end
-
-	if self._save_data then
-		mission_tweak_data.events_index = nil
-		self._save_data = nil
+	elseif mission_tweak_data.photos then
+		for _, photo in ipairs(mission_tweak_data.photos) do
+			table.insert(photos, photo)
+		end
 	end
 
 	return photos

@@ -7,7 +7,6 @@ function ChallengeCardsGui:init(ws, fullscreen_ws, node, component_name)
 
 	self._phase_two_timer = ChallengeCardsTweakData.CARD_SELECTION_TIMER
 
-	managers.raid_menu:register_on_escape_callback(callback(self, self, "back_pressed"))
 	managers.system_event_listener:add_listener("challenge_cards_gui_suggestions_changed", {
 		CoreSystemEventListenerManager.SystemEventListenerManager.CHALLENGE_CARDS_SUGGESTED_CARDS_CHANGED,
 		CoreSystemEventListenerManager.SystemEventListenerManager.EVENT_DROP_IN,
@@ -226,7 +225,7 @@ function ChallengeCardsGui:_layout()
 		h = 675,
 		item_params = {
 			item_h = 383,
-			item_w = 266,
+			item_w = 300,
 			selected_marker_h = 675,
 			selected_marker_w = 352,
 		},
@@ -287,7 +286,7 @@ function ChallengeCardsGui:_layout()
 		})
 	end
 
-	if managers.controller:is_controller_present() then
+	if managers.controller:is_using_controller() then
 		self._suggest_card_button:hide()
 		self._clear_card_button:hide()
 	end
@@ -523,116 +522,6 @@ function ChallengeCardsGui:suggest_card()
 	end
 end
 
-function ChallengeCardsGui:_ask_dismantle_card()
-	Application:debug("[ChallengeCardsGui] Dismantling Card Ask...")
-
-	local card_data = self._selected_card_data
-	local dialog_data = {}
-
-	dialog_data.title = managers.localization:text("dialog_dismantling_card_title")
-	dialog_data.text = managers.localization:text("dialog_dismantling_card")
-
-	local valid_item_recipes = managers.challenge_cards:get_valid_item_recipes_using({
-		card_data.def_id,
-	})
-
-	if valid_item_recipes then
-		local valid_item_recipe = valid_item_recipes[1]
-
-		dialog_data.text = dialog_data.text .. "\n- " .. tostring(1) .. "x " .. managers.localization:text(valid_item_recipe.name)
-	end
-
-	local yes_button = {
-		callback_func = callback(self, self, "_dismantle_card_yes"),
-		text = managers.localization:text("dialog_yes"),
-	}
-	local no_button = {
-		callback_func = callback(self, self, "_dismantle_card_no"),
-		cancel_button = true,
-		class = RaidGUIControlButtonShortSecondary,
-		text = managers.localization:text("dialog_no"),
-	}
-
-	dialog_data.button_list = {
-		yes_button,
-		no_button,
-	}
-
-	managers.system_menu:show(dialog_data)
-end
-
-function ChallengeCardsGui:_dismantle_card_no()
-	Application:debug("[ChallengeCardsGui] Dismantling Card Picked NO!")
-end
-
-function ChallengeCardsGui:_dismantle_card_yes()
-	Application:debug("[ChallengeCardsGui] Dismantling Card Picked YES!")
-
-	local card_data = self._selected_card_data
-
-	if card_data and card_data.steam_instances then
-		local steam_instance_id = card_data.steam_instances[1].instance_id
-
-		managers.challenge_cards:dismantle_challenge_card(card_data.key_name, steam_instance_id)
-		self:_update_suggest_card_button()
-		managers.network.account:inventory_load()
-	end
-end
-
-function ChallengeCardsGui:_ask_crafting_card()
-	Application:debug("[ChallengeCardsGui] Crafting Card Ask...", inspect(self._selected_card_data))
-
-	local card_data = self._selected_card_data
-	local dialog_data = {}
-
-	dialog_data.title = managers.localization:text("dialog_crafting_card_title")
-	dialog_data.text = managers.localization:text("dialog_crafting_card")
-
-	if card_data.recipes then
-		print("--- RECIPES NEEDED FOR CRAFT --- ")
-		table.print_data(card_data.recipes)
-		print("--- RECIPES NEEDED FOR CRAFT END --- ")
-
-		dialog_data.text = dialog_data.text .. "\n- " .. tostring(1) .. "x " .. managers.localization:text("")
-	end
-
-	local yes_button = {
-		callback_func = callback(self, self, "_crafting_card_yes"),
-		text = managers.localization:text("dialog_yes"),
-	}
-	local no_button = {
-		callback_func = callback(self, self, "_crafting_card_no"),
-		cancel_button = true,
-		class = RaidGUIControlButtonShortSecondary,
-		text = managers.localization:text("dialog_no"),
-	}
-
-	dialog_data.button_list = {
-		yes_button,
-		no_button,
-	}
-
-	managers.system_menu:show(dialog_data)
-end
-
-function ChallengeCardsGui:_crafting_card_no()
-	Application:debug("[ChallengeCardsGui] Craftin Card Picked NO!")
-end
-
-function ChallengeCardsGui:_crafting_card_yes()
-	Application:debug("[ChallengeCardsGui] Craftin Card Picked YES!")
-
-	local card_data = self._selected_card_data
-
-	if card_data and card_data.steam_instances then
-		local steam_instance_id = card_data.steam_instances[1].instance_id
-
-		Application:error("[ChallengeCardsGui] Need a function for crafting cards")
-		self:_update_suggest_card_button()
-		managers.network.account:inventory_load()
-	end
-end
-
 function ChallengeCardsGui:cancel_card()
 	managers.challenge_cards:remove_suggested_challenge_card()
 	self:_update_suggest_card_button()
@@ -725,7 +614,7 @@ function ChallengeCardsGui:_update_suggest_card_button()
 	local local_peer = managers.network:session():local_peer()
 	local suggested_card = managers.challenge_cards:get_suggested_cards()[local_peer._id]
 
-	if managers.controller:is_controller_present() then
+	if managers.controller:is_using_controller() then
 		return
 	end
 
@@ -841,6 +730,8 @@ function ChallengeCardsGui:redirect_to_phase_two_screen()
 		local selected_suggested_card_data = selected_suggested_card_item:get_data()
 
 		self:select_suggested_card(selected_suggested_card_data)
+		self._card_grid:set_selected(false)
+		self._host_activates_card_grid:set_selected(true)
 	end
 end
 
@@ -973,8 +864,7 @@ function ChallengeCardsGui:back_pressed()
 		return true
 	end
 
-	managers.raid_menu:register_on_escape_callback(nil)
-	managers.raid_menu:on_escape()
+	ChallengeCardsGui.super.back_pressed(self)
 end
 
 function ChallengeCardsGui:confirm_pressed()

@@ -57,7 +57,7 @@ function RaidGUIControlListItemSkillProfile:_layout(params, item_data)
 		x = self.NAME_X,
 	})
 	self._context_info_panel = self._object:panel({
-		layer = self._background:layer() + 1,
+		layer = self._background:layer() + 10,
 		name = "context_info_panel",
 		visible = false,
 	})
@@ -91,7 +91,7 @@ function RaidGUIControlListItemSkillProfile:_layout_equipable(item_data)
 		on_click_callback = self._special_action_callback,
 		texture = gui_data.texture,
 		texture_rect = gui_data.texture_rect,
-		visible = not managers.controller:is_controller_present(),
+		visible = not managers.controller:is_using_controller(),
 		w = self.RENAME_BUTTON_SIZE,
 	})
 
@@ -159,7 +159,7 @@ end
 
 function RaidGUIControlListItemSkillProfile:highlight_on()
 	if self._rename_profile_button then
-		self._rename_profile_button:set_visible(not managers.controller:is_controller_present())
+		self._rename_profile_button:set_visible(not managers.controller:is_using_controller())
 	end
 
 	if not self._highlighted then

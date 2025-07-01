@@ -1,13 +1,12 @@
 RaidGUIControlCardSuggested = RaidGUIControlCardSuggested or class(RaidGUIControlCardBase)
 
 function RaidGUIControlCardSuggested:init(parent, params, item_data, grid_params)
-	local card_image_params = {}
-
-	card_image_params.x = 16
-	card_image_params.y = 16
-	card_image_params.w = params.item_w - 32
-	card_image_params.h = params.item_h - 16
-	params.card_image_params = card_image_params
+	params.card_image_params = {
+		h = params.item_h - 16,
+		w = params.item_w - 32,
+		x = 16,
+		y = 16,
+	}
 
 	RaidGUIControlCardSuggested.super.init(self, parent, params, item_data, grid_params)
 
@@ -28,7 +27,6 @@ function RaidGUIControlCardSuggested:init(parent, params, item_data, grid_params
 			texture_rect = tweak_data.gui.icons.btn_circ_x.texture_rect,
 			w = 36,
 			x = self._card_panel:w() - 38,
-			y = 0,
 		})
 	end
 
@@ -41,7 +39,6 @@ function RaidGUIControlCardSuggested:init(parent, params, item_data, grid_params
 			texture_rect = tweak_data.gui.icons.btn_circ_lock.texture_rect,
 			w = 36,
 			x = 4,
-			y = 0,
 		})
 	end
 
@@ -58,9 +55,11 @@ function RaidGUIControlCardSuggested:init(parent, params, item_data, grid_params
 		})
 	end
 
-	self._card_rarity_icon:set_x(self._card_image:w() * 0.9)
+	local padding_x = self._card_image:w() * 0.18
+
+	self._card_rarity_icon:set_right(self._card_panel:w() - padding_x)
 	self._card_rarity_icon:set_y(self._card_image:h() * 0.11)
-	self._card_type_icon:set_x(self._card_image:w() * 0.18)
+	self._card_type_icon:set_x(padding_x)
 	self._card_type_icon:set_y(self._card_image:h() * 0.11)
 
 	if self._params.peer_name ~= "" then

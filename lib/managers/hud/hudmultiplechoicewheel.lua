@@ -154,6 +154,8 @@ function HUDMultipleChoiceWheel:show()
 		self._is_active = true
 	end
 
+	self._controller = managers.controller:get_default_controller()
+
 	self:_create_options()
 	self:_fade_in_options()
 	self._ws:connect_controller(self._controller, true)

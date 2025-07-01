@@ -1,4 +1,10 @@
 SpecialObjectiveTriggerUnitElement = SpecialObjectiveTriggerUnitElement or class(MissionElement)
+SpecialObjectiveTriggerUnitElement.LINK_VALUES = {
+	{
+		table_value = "elements",
+		type = "trigger",
+	},
+}
 
 function SpecialObjectiveTriggerUnitElement:init(unit)
 	MissionElement.init(self, unit)

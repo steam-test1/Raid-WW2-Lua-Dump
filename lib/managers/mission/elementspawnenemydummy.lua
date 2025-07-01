@@ -63,11 +63,17 @@ end
 function ElementSpawnEnemyDummy:_get_enemy()
 	local enemy_name = self:value("enemy") or self._enemy_name
 
-	enemy_name = enemy_name or "german_flamer"
+	if not enemy_name then
+		debug_pause("[ElementSpawnEnemyDummy:_get_enemy] enemy_name was nil!")
+
+		enemy_name = "german_flamer"
+	end
 
 	if EnemyManager.ENEMIES[enemy_name] then
-		return Idstring(EnemyManager.ENEMIES[enemy_name])
+		return EnemyManager.ENEMIES[enemy_name]
 	else
+		debug_pause("[ElementSpawnEnemyDummy:_get_enemy] Enemy:", enemy_name, "was not found in enemies manager!")
+
 		return Idstring(enemy_name)
 	end
 end

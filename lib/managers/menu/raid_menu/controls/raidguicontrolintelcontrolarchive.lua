@@ -157,6 +157,12 @@ function RaidGUIControlIntelControlArchive:close()
 		self._safe_panel:child("press_any_key_prompt"):stop()
 		self._safe_panel:remove(self._safe_panel:child("press_any_key_prompt"))
 	end
+
+	if self._controller_list then
+		for _, controller in ipairs(self._controller_list) do
+			controller:destroy()
+		end
+	end
 end
 
 function RaidGUIControlIntelControlArchive:on_escape()

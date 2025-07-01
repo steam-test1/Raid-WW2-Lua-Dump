@@ -1,7 +1,7 @@
 require("lib/units/enemies/cop/logics/CopLogicAttack")
 
 TeamAILogicDisabled = class(TeamAILogicAssault)
-TeamAILogicDisabled.on_long_dis_interacted = TeamAILogicIdle.on_long_dis_interacted
+TeamAILogicDisabled.on_long_distance_interact = TeamAILogicIdle.on_long_distance_interact
 
 function TeamAILogicDisabled.enter(data, new_logic_name, enter_params)
 	local my_data = {
@@ -16,6 +16,13 @@ function TeamAILogicDisabled.enter(data, new_logic_name, enter_params)
 	data.internal_data = my_data
 	my_data.detection = data.char_tweak.detection.combat
 	my_data.vision = data.char_tweak.vision.combat
+
+	local slot = PlayerInventory.SLOT_1
+	local inventory = data.unit:inventory()
+
+	if inventory:is_selection_available(slot) and inventory:equipped_selection() ~= slot then
+		inventory:equip_selection(slot, false)
+	end
 
 	local usage = data.unit:inventory():equipped_unit():base():weapon_tweak_data().usage
 
@@ -87,60 +94,6 @@ function TeamAILogicDisabled._upd_enemy_detection(data)
 	CopLogicBase.queue_task(my_data, my_data.detection_task_key, TeamAILogicDisabled._upd_enemy_detection, data, data.t + delay)
 end
 
-function TeamAILogicDisabled.on_intimidated(data, amount, aggressor_unit)
-	return
-end
-
-function TeamAILogicDisabled._consider_surrender(data, my_data)
-	my_data.stay_cool_chk_t = TimerManager:game():time()
-
-	local my_health_ratio = data.unit:character_damage():health_ratio()
-
-	if my_health_ratio < 0.1 then
-		return
-	end
-
-	local my_health = my_health_ratio * data.unit:character_damage()._HEALTH_BLEEDOUT_INIT
-	local total_scare = 0
-
-	for e_key, e_data in pairs(data.detected_attention_objects) do
-		if e_data.verified and e_data.unit:in_slot(data.enemy_slotmask) then
-			local scare = tweak_data.character[e_data.unit:base()._tweak_table].HEALTH_INIT / my_health
-
-			scare = scare * (1 - math.clamp(e_data.verified_dis - 300, 0, 2500) / 2500)
-			total_scare = total_scare + scare
-		end
-	end
-
-	for c_key, c_data in pairs(managers.groupai:state():all_player_criminals()) do
-		if not c_data.status then
-			local support = tweak_data.player.damage.HEALTH_INIT / my_health
-			local dis = mvector3.distance(c_data.m_pos, data.m_pos)
-
-			if dis < 700 then
-				total_scare = 0
-
-				break
-			end
-
-			support = 3 * support * (1 - math.clamp(dis - 300, 0, 2500) / 2500)
-			total_scare = total_scare - support
-		end
-	end
-
-	if total_scare > 1 then
-		my_data.stay_cool = true
-
-		if my_data.firing then
-			data.unit:movement():set_allow_fire(false)
-
-			my_data.firing = nil
-		end
-	else
-		my_data.stay_cool = false
-	end
-end
-
 function TeamAILogicDisabled._upd_aim(data, my_data)
 	local shoot, aim
 	local focus_enemy = data.attention_obj
@@ -148,18 +101,21 @@ function TeamAILogicDisabled._upd_aim(data, my_data)
 	if my_data.stay_cool then
 		-- block empty
 	elseif focus_enemy then
+		local should_shoot = focus_enemy and focus_enemy.reaction >= AIAttentionObject.REACT_SHOOT
+		local should_aim = should_shoot or focus_enemy and focus_enemy.reaction >= AIAttentionObject.REACT_AIM
+
 		if focus_enemy.verified then
 			if focus_enemy.verified_dis < 2000 or my_data.alert_t and data.t - my_data.alert_t < 7 then
-				shoot = true
+				shoot = should_shoot
 			end
 		elseif focus_enemy.verified_t and data.t - focus_enemy.verified_t < 10 then
-			aim = true
+			aim = should_aim
 
 			if my_data.shooting and data.t - focus_enemy.verified_t < 3 then
-				shoot = true
+				shoot = should_shoot
 			end
 		elseif focus_enemy.verified_dis < 600 and my_data.walking_to_cover_shoot_pos then
-			aim = true
+			aim = should_aim
 		end
 	end
 
@@ -319,16 +275,6 @@ function TeamAILogicDisabled.damage_clbk(data, damage_info)
 
 	if data.unit:character_damage():need_revive() and not my_data.SO_id and not my_data.rescuer then
 		TeamAILogicDisabled._register_revive_SO(data, my_data, "revive")
-	end
-
-	if damage_info.result.type == "fatal" then
-		CopLogicBase.cancel_queued_tasks(my_data)
-
-		if not my_data.invulnerable then
-			my_data.invulnerable = true
-
-			data.unit:character_damage():set_invulnerable(true)
-		end
 	end
 
 	TeamAILogicIdle.damage_clbk(data, damage_info)

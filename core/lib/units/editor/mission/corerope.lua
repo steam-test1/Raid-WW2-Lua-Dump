@@ -1,4 +1,11 @@
 CoreRopeOperatorUnitElement = CoreRopeOperatorUnitElement or class(MissionElement)
+CoreRopeOperatorUnitElement.LINK_VALUES = {
+	{
+		output = true,
+		type = "operator",
+		value = "rope_unit_id",
+	},
+}
 RopeOperatorUnitElement = RopeOperatorUnitElement or class(CoreRopeOperatorUnitElement)
 RopeOperatorUnitElement.OPERATIONS = {
 	"attach",
@@ -36,11 +43,6 @@ function CoreRopeOperatorUnitElement:draw_links(t, dt, selected_unit, all_units)
 			})
 		end
 	end
-end
-
-function CoreRopeOperatorUnitElement:get_links_to_unit(...)
-	CoreRopeOperatorUnitElement.super.get_links_to_unit(self, ...)
-	self:_get_links_of_type_from_elements(self._hed.rope_units, "operator", ...)
 end
 
 function CoreRopeOperatorUnitElement:update_editing()
@@ -132,6 +134,12 @@ function CoreRopeOperatorUnitElement:_get_unit(unit_id)
 end
 
 CoreRopeTriggerUnitElement = CoreRopeTriggerUnitElement or class(MissionElement)
+CoreRopeTriggerUnitElement.LINK_VALUES = {
+	{
+		table_value = "rope_units",
+		type = "trigger",
+	},
+}
 RopeTriggerUnitElement = RopeTriggerUnitElement or class(CoreRopeTriggerUnitElement)
 
 function RopeTriggerUnitElement:init(...)
@@ -165,11 +173,6 @@ function CoreRopeTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 			})
 		end
 	end
-end
-
-function CoreRopeTriggerUnitElement:get_links_to_unit(...)
-	CoreRopeTriggerUnitElement.super.get_links_to_unit(self, ...)
-	self:_get_links_of_type_from_elements(self._hed.rope_units, "trigger", ...)
 end
 
 function CoreRopeTriggerUnitElement:update_editing()

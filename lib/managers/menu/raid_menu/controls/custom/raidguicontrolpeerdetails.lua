@@ -106,7 +106,11 @@ function RaidGUIControlPeerDetails:_create_profile_details()
 end
 
 function RaidGUIControlPeerDetails:set_profile_name(name)
-	self._profile_name:set_text(utf8.to_upper(name))
+	if managers.user:get_setting("capitalize_names") then
+		name = utf8.to_upper(name)
+	end
+
+	self._profile_name:set_text(name)
 end
 
 function RaidGUIControlPeerDetails:set_class(character_class)

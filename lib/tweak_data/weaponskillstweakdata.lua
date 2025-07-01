@@ -41,6 +41,7 @@ function WeaponSkillsTweakData:init(tweak_data)
 	self:_init_browning_skill_tree(tweak_data)
 	self:_init_welrod_skill_tree(tweak_data)
 	self:_init_shotty_skill_tree(tweak_data)
+	self:_init_georg_skill_tree(tweak_data)
 	self:_init_reedem_xp_values()
 end
 
@@ -972,6 +973,92 @@ function WeaponSkillsTweakData:_init_tt33_skill_tree(tweak_data)
 		},
 	}
 	self.skill_trees.tt33.tier_unlock = {
+		"weapon_tier_unlocked",
+		"weapon_tier_unlocked",
+	}
+end
+
+function WeaponSkillsTweakData:_init_georg_skill_tree(tweak_data)
+	self.skill_trees.georg = {}
+	self.skill_trees.georg[1] = {}
+	self.skill_trees.georg[1][1] = {
+		{
+			challenge_tasks = {
+				tweak_data.challenge.georg_kill_enemies_basic_easy,
+			},
+			cost = 1,
+			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
+			value = 1,
+		},
+	}
+	self.skill_trees.georg[1][2] = {
+		{
+			challenge_tasks = {
+				tweak_data.challenge.georg_kill_enemies_headshot_easy,
+			},
+			cost = 1,
+			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
+			value = 1,
+		},
+	}
+	self.skill_trees.georg[1][3] = {
+		{
+			challenge_tasks = {
+				tweak_data.challenge.georg_kill_enemies_hipfire_easy,
+			},
+			cost = 1,
+			skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
+			value = 1,
+		},
+	}
+	self.skill_trees.georg[2] = {}
+	self.skill_trees.georg[2][1] = {
+		{
+			challenge_tasks = {
+				tweak_data.challenge.georg_kill_enemies_basic_medium,
+			},
+			cost = 2,
+			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
+			value = 2,
+		},
+	}
+	self.skill_trees.georg[2][2] = {
+		{
+			challenge_tasks = {
+				tweak_data.challenge.georg_kill_enemies_headshot_medium,
+			},
+			cost = 2,
+			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
+			value = 2,
+			weapon_parts = {
+				"wpn_fps_pis_georg_barrel_long",
+			},
+		},
+	}
+	self.skill_trees.georg[2][3] = {
+		{
+			challenge_tasks = {
+				tweak_data.challenge.georg_kill_enemies_hipfire_medium,
+			},
+			cost = 2,
+			skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
+			value = 2,
+			weapon_parts = {
+				"wpn_fps_pis_georg_stock_wooden",
+			},
+		},
+	}
+	self.skill_trees.georg[2][4] = {
+		{
+			challenge_tasks = {
+				tweak_data.challenge.georg_increase_magazine_hard,
+			},
+			cost = 1,
+			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
+			value = 6,
+		},
+	}
+	self.skill_trees.georg.tier_unlock = {
 		"weapon_tier_unlocked",
 		"weapon_tier_unlocked",
 	}

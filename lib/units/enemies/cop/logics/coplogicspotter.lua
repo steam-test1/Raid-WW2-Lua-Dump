@@ -11,9 +11,6 @@ function CopLogicSpotter.enter(data, new_logic_name, enter_params)
 	}
 
 	CopLogicBase.enter(data, new_logic_name, enter_params, my_data)
-
-	local objective = data.objective
-
 	data.unit:brain():cancel_all_pathing_searches()
 
 	if data.unit:brain().reset_spotter then
@@ -23,9 +20,6 @@ function CopLogicSpotter.enter(data, new_logic_name, enter_params)
 	end
 
 	local old_internal_data = data.internal_data
-
-	my_data.detection = data.char_tweak.detection.recon
-	my_data.vision = data.char_tweak.vision.combat
 
 	if old_internal_data then
 		my_data.turning = old_internal_data.turning
@@ -50,6 +44,8 @@ function CopLogicSpotter.enter(data, new_logic_name, enter_params)
 
 	CopLogicBase.queue_task(my_data, my_data.detection_task_key, CopLogicSpotter._upd_enemy_detection, data)
 
+	local objective = data.objective
+
 	if objective then
 		my_data.wanted_stance = objective.stance
 		my_data.wanted_pose = objective.pose
@@ -66,7 +62,16 @@ function CopLogicSpotter.enter(data, new_logic_name, enter_params)
 		cbt = true,
 	})
 
-	my_data.weapon_range = data.char_tweak.weapon[data.unit:inventory():equipped_unit():base():weapon_tweak_data().usage].range
+	my_data.detection = data.char_tweak.detection.recon
+	my_data.vision = data.char_tweak.vision.combat
+
+	local usage = data.unit:inventory():equipped_selection() and data.unit:inventory():equipped_unit():base():weapon_tweak_data().usage
+
+	if usage then
+		my_data.weapon_range = data.char_tweak.weapon[usage].range
+	else
+		debug_pause_unit(data.unit, "[CopLogicSpotter] Couldnt find usage")
+	end
 end
 
 function CopLogicSpotter.throw_flare_so(data)
@@ -485,7 +490,7 @@ function CopLogicSpotter._aim_or_shoot(data, my_data, aim, shoot)
 end
 
 function CopLogicSpotter._request_action_shoot(data, my_data)
-	if my_data.shooting or data.unit:anim_data().reload or data.unit:movement():chk_action_forbidden("action") then
+	if my_data.shooting or data.unit:inventory():equipped_selection() or data.unit:anim_data().reload or data.unit:movement():chk_action_forbidden("action") then
 		return
 	end
 

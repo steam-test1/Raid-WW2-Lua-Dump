@@ -728,8 +728,6 @@ end
 
 function TextBoxGui:set_focus_button(focus_button)
 	if focus_button ~= self._text_box_focus_button then
-		managers.menu:post_event("highlight")
-
 		if self._text_box_focus_button then
 			self:_set_button_selected(self._text_box_focus_button, false)
 		end

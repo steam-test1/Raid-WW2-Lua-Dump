@@ -108,7 +108,7 @@ end
 function RaidGUIControlWeaponSkills:set_weapon(weapon_category_id, weapon_id)
 	local weapon_skills = managers.weapon_skills:get_weapon_skills(weapon_id)
 
-	if not weapon_skills then
+	if not weapon_skills or #weapon_skills == 0 then
 		return
 	end
 

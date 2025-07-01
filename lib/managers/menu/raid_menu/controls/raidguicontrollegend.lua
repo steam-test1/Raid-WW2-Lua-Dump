@@ -47,7 +47,7 @@ function RaidGUIControlLegend:_create_legend()
 
 	self._labels = {}
 
-	if managers.controller:is_controller_present() then
+	if managers.controller:is_using_controller() then
 		self:_create_console_legend({
 			color = self.COLOR,
 			font = self._params.font or self.FONT,

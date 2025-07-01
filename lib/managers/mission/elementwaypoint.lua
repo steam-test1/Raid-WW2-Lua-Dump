@@ -14,9 +14,7 @@ function ElementWaypoint:init(...)
 end
 
 function ElementWaypoint:_get_unique_id()
-	local uid = self._sync_id .. self._id
-
-	return uid
+	return self._sync_id .. self._id
 end
 
 function ElementWaypoint:on_script_activated()

@@ -7,6 +7,14 @@ CoreTimerUnitElement.INSTANCE_VAR_NAMES = {
 		value = "timer",
 	},
 }
+CoreTimerUnitElement.LINK_VALUES = {
+	{
+		layer = "Statics",
+		output = true,
+		table_value = "digital_gui_unit_ids",
+		type = "guis",
+	},
+}
 TimerUnitElement = TimerUnitElement or class(CoreTimerUnitElement)
 
 function TimerUnitElement:init(...)
@@ -194,6 +202,13 @@ function CoreTimerUnitElement:unregister_debug_output_unit()
 end
 
 CoreTimerOperatorUnitElement = CoreTimerOperatorUnitElement or class(MissionElement)
+CoreTimerOperatorUnitElement.LINK_VALUES = {
+	{
+		output = true,
+		table_value = "elements",
+		type = "operator",
+	},
+}
 TimerOperatorUnitElement = TimerOperatorUnitElement or class(CoreTimerOperatorUnitElement)
 
 function TimerOperatorUnitElement:init(...)
@@ -229,11 +244,6 @@ function CoreTimerOperatorUnitElement:draw_links(t, dt, selected_unit, all_units
 			})
 		end
 	end
-end
-
-function CoreTimerOperatorUnitElement:get_links_to_unit(...)
-	CoreTimerOperatorUnitElement.super.get_links_to_unit(self, ...)
-	self:_get_links_of_type_from_elements(self._hed.elements, "operator", ...)
 end
 
 function CoreTimerOperatorUnitElement:update_editing()
@@ -299,6 +309,12 @@ function CoreTimerOperatorUnitElement:_build_panel(panel, panel_sizer)
 end
 
 CoreTimerTriggerUnitElement = CoreTimerTriggerUnitElement or class(MissionElement)
+CoreTimerTriggerUnitElement.LINK_VALUES = {
+	{
+		table_value = "elements",
+		type = "trigger",
+	},
+}
 TimerTriggerUnitElement = TimerTriggerUnitElement or class(CoreTimerTriggerUnitElement)
 
 function TimerTriggerUnitElement:init(...)
@@ -332,11 +348,6 @@ function CoreTimerTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 			})
 		end
 	end
-end
-
-function CoreTimerTriggerUnitElement:get_links_to_unit(...)
-	CoreTimerTriggerUnitElement.super.get_links_to_unit(self, ...)
-	self:_get_links_of_type_from_elements(self._hed.elements, "trigger", ...)
 end
 
 function CoreTimerTriggerUnitElement:update_editing()

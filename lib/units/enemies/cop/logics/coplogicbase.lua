@@ -87,14 +87,6 @@ function CopLogicBase.can_activate(data)
 	return true
 end
 
-function CopLogicBase.on_intimidated(data, amount, aggressor_unit)
-	return
-end
-
-function CopLogicBase.on_tied(data, aggressor_unit)
-	return
-end
-
 function CopLogicBase.on_criminal_neutralized(data, criminal_key)
 	return
 end
@@ -255,35 +247,12 @@ function CopLogicBase.death_clbk(data, damage_info)
 end
 
 function CopLogicBase.on_alert(data, alert_data)
-	if not managers.player:local_player() then
-		return
-	end
-
-	local nav_seg = data.unit:movement():nav_tracker():nav_segment()
-	local world_id = managers.navigation:get_world_for_nav_seg(nav_seg)
-	local worlds = managers.groupai:state():get_last_world_ids_for_criminals()
-	local alarm = managers.worldcollection:get_alarm_for_world(world_id)
-	local found = false
-
-	for _, player_world_id in ipairs(worlds) do
-		if world_id == player_world_id then
-			found = true
-
-			break
-		end
-	end
-
-	if not found and not alarm then
+	if CopLogicBase._chk_alert_obstructed(data.unit:movement():m_head_pos(), alert_data) then
 		return
 	end
 
 	local alert_type = alert_data[1]
 	local alert_unit = alert_data[5]
-
-	if CopLogicBase._chk_alert_obstructed(data.unit:movement():m_head_pos(), alert_data) then
-		return
-	end
-
 	local was_cool = data.cool
 
 	if CopLogicBase.is_alert_aggressive(alert_type) then
@@ -437,14 +406,14 @@ function CopLogicBase._exit_to_state(unit, state_name, params)
 		unit:brain().logic_queued_key = nil
 	end
 
-	if state_name == "travel" and not unit:brain().random_travel_applied then
-		unit:brain().random_travel_applied = true
-		unit:brain().logic_queued_key = "travel" .. tostring(unit:key())
+	if state_name == "travel" and unit:brain().use_random_travel then
+		unit:brain().use_random_travel = nil
+		unit:brain().logic_queued_key = "random_travel" .. tostring(unit:key())
 
 		managers.queued_tasks:queue(unit:brain().logic_queued_key, unit:brain().set_logic_queued, unit:brain(), {
 			params = params,
 			state_name = state_name,
-		}, math.random() * 0.7, nil)
+		}, 0.1, nil)
 	elseif params and params.delay then
 		unit:brain().logic_queued_key = "logic_queue" .. tostring(unit:key())
 
@@ -488,7 +457,7 @@ function CopLogicBase.queue_task(internal_data, id, func, data, exec_t, asap)
 
 	if qd_tasks then
 		if qd_tasks[id] then
-			debug_pause("[CopLogicBase.queue_task] Task queued twice", internal_data.unit, id, func, data, exec_t, asap)
+			debug_pause_unit(internal_data.unit, "[CopLogicBase.queue_task] Task queued twice", id, func, inspect(data), exec_t, asap)
 		end
 
 		qd_tasks[id] = true
@@ -539,7 +508,7 @@ end
 
 function CopLogicBase.on_queued_task(ignore_this, internal_data, id)
 	if not internal_data.queued_tasks or not internal_data.queued_tasks[id] then
-		debug_pause("[CopLogicBase.on_queued_task] the task is not queued", internal_data.unit, id)
+		debug_pause_unit(internal_data.unit, "[CopLogicBase.on_queued_task] the task is not queued", id)
 
 		return
 	end
@@ -704,8 +673,6 @@ function CopLogicBase.on_new_objective(data, old_objective)
 			CopLogicBase._exit_to_state(data.unit, "spotter")
 		elseif objective_type == "phalanx" then
 			CopLogicBase._exit_to_state(data.unit, "phalanx")
-		elseif objective_type == "surrender" then
-			CopLogicBase._exit_to_state(data.unit, "intimidated", new_objective.params)
 		elseif objective_type == "free" and my_data.exiting then
 			-- block empty
 		elseif new_objective.action or not data.attention_obj or not (data.attention_obj.reaction >= AIAttentionObject.REACT_AIM) then
@@ -864,7 +831,12 @@ function CopLogicBase._chk_record_acquired_attention_importance_wgt(attention_in
 		return
 	end
 
-	local weight = mvector3.direction(tmp_vec1, attention_info.m_head_pos, my_pos)
+	local distance = mvector3.distance_sq(attention_info.m_head_pos, my_pos)
+
+	if distance > managers.groupai:state().max_important_distance then
+		return
+	end
+
 	local e_fwd
 
 	if attention_info.is_husk_player then
@@ -873,9 +845,10 @@ function CopLogicBase._chk_record_acquired_attention_importance_wgt(attention_in
 		e_fwd = attention_info.unit:movement():m_head_rot():y()
 	end
 
-	local dot = mvector3.dot(e_fwd, tmp_vec1)
+	local weight = mvector3.direction(tmp_vec1, attention_info.m_head_pos, my_pos)
+	local weight_dot = 1 - mvector3.dot(e_fwd, tmp_vec1)
 
-	weight = weight * weight * (1 - dot)
+	weight = weight * weight * weight_dot
 
 	table.insert(player_importance_wgt, attention_info.u_key)
 	table.insert(player_importance_wgt, weight)
@@ -917,6 +890,7 @@ end
 
 function CopLogicBase._upd_attention_obj_detection(data, min_reaction, max_reaction)
 	local t = data.t
+	local delay = 1
 	local detected_obj = data.detected_attention_objects
 	local my_data = data.internal_data
 	local my_key = data.key
@@ -926,7 +900,6 @@ function CopLogicBase._upd_attention_obj_detection(data, min_reaction, max_react
 	local my_tracker = data.unit:movement():nav_tracker()
 	local chk_vis_func = my_tracker.check_visibility
 	local is_detection_persistent = managers.groupai:state():is_detection_persistent()
-	local delay = 1
 	local player_importance_wgt = data.unit:in_slot(managers.slot:get_mask("enemies")) and {}
 
 	for u_key, attention_info in pairs(all_attention_objects) do
@@ -1159,17 +1132,23 @@ function CopLogicBase._detection_ray(from, to, slot)
 end
 
 function CopLogicBase._detection_obj_lost(data, attention_info)
+	local unit = data.unit
+
 	CopLogicBase._destroy_detected_attention_object_data(data, attention_info)
 	CopLogicBase._set_attention_obj(data, nil)
 
 	if attention_info.flagged_looking and not managers.groupai:state():enemy_weapons_hot() and not attention_info.identified then
-		data.unit:movement():set_stance("ntl", false, false)
+		unit:movement():set_stance("ntl", false, false)
 
-		data.unit:brain()._flagged_looking = false
+		unit:brain()._flagged_looking = false
+
+		if not attention_info.flagged_search and not attention_info.found_item then
+			managers.voice_over:guard_back_to_patrol(unit)
+		end
 	end
 
 	if attention_info.flagged_search then
-		data.unit:brain()._SO_id = nil
+		unit:brain()._SO_id = nil
 	end
 
 	attention_info.noticed_under_threshold = false
@@ -1178,19 +1157,19 @@ function CopLogicBase._detection_obj_lost(data, attention_info)
 	attention_info.flagged_search = false
 	attention_info.nearly_visible = false
 
-	if data._queued_objective and not managers.groupai:state():enemy_weapons_hot() then
+	if data.queued_objective and not managers.groupai:state():enemy_weapons_hot() then
 		local stop_current_action = {
 			action = {
 				body_part = 1,
 				type = "idle",
 			},
 			action_duration = 1,
-			followup_objective = data._queued_objective,
+			followup_objective = data.queued_objective,
 			stance = "ntl",
 			type = "act",
 		}
 
-		data.unit:brain():set_objective(stop_current_action)
+		unit:brain():set_objective(stop_current_action)
 	end
 end
 
@@ -1201,12 +1180,15 @@ end
 
 function CopLogicBase.on_search_SO_completed(cop, params)
 	managers.groupai:state():hide_investigate_icon(cop)
-	managers.voice_over:guard_back_to_patrol(cop)
 
 	if params.attention_info then
 		CopLogicBase._detection_obj_lost(cop:brain()._logic_data, params.attention_info)
 
 		params.attention_info.flagged_search = false
+
+		if not params.attention_info.found_item then
+			managers.voice_over:guard_back_to_patrol(cop)
+		end
 	end
 
 	cop:brain()._SO_id = nil
@@ -1383,13 +1365,11 @@ function CopLogicBase.register_stop_and_look_SO(data, attention_info)
 
 		cop:brain():set_objective(stop_current_action)
 
-		data._queued_objective = old_objective
+		data.queued_objective = old_objective
 	end
 
 	cop:brain()._flagged_looking = true
 	attention_info.flagged_looking = true
-
-	managers.groupai:state():show_aiming_icon(cop)
 end
 
 function CopLogicBase.register_alert_SO(data)
@@ -1458,30 +1438,17 @@ function CopLogicBase.on_alert_completed(cop, params)
 	params.alert_point:remove_event_callback(tostring(cop:key()))
 
 	if Network:is_server() then
-		if not alive(cop) then
+		if not alive(cop) or cop:character_damage():dead() then
 			managers.groupai:state():on_criminal_suspicion_progress(nil, cop, "call_interrupted")
 
 			return
 		end
 
-		local is_dead = cop:character_damage():dead()
+		local group_state = managers.groupai:state()
+		local cop_type = tostring(group_state.blame_triggers[cop:movement()._ext_base._tweak_table])
 
-		if is_dead then
-			managers.groupai:state():on_criminal_suspicion_progress(nil, cop, "call_interrupted")
-
-			return
-		end
-
-		if not managers.groupai:state():is_ecm_jammer_active("call") then
-			local group_state = managers.groupai:state()
-			local cop_type = tostring(group_state.blame_triggers[cop:movement()._ext_base._tweak_table])
-
-			managers.groupai:state():on_criminal_suspicion_progress(nil, cop, "called")
-			group_state:on_police_called(cop:movement():coolness_giveaway())
-			managers.voice_over:disable()
-		else
-			managers.groupai:state():on_criminal_suspicion_progress(nil, cop, "call_interrupted")
-		end
+		managers.groupai:state():on_criminal_suspicion_progress(nil, cop, "called")
+		group_state:on_police_called(cop:movement():coolness_giveaway())
 	end
 end
 
@@ -1759,6 +1726,8 @@ function CopLogicBase.should_duck_on_alert(data, alert_data)
 	if lower_body_action and lower_body_action:type() == "walk" and not data.char_tweak.crouch_move then
 		return
 	end
+
+	return true
 end
 
 function CopLogicBase._chk_nearly_visible_chk_needed(data, attention_info, u_key)
@@ -1783,12 +1752,6 @@ function CopLogicBase._chk_relocate(data)
 			return
 		end
 
-		if data.is_tied and data.objective.lose_track_dis and data.objective.lose_track_dis * data.objective.lose_track_dis < mvector3.distance_sq(data.m_pos, data.objective.follow_unit:movement():m_pos()) then
-			data.brain:set_objective(nil)
-
-			return true
-		end
-
 		local relocate
 		local follow_unit = data.objective.follow_unit
 		local advance_pos = follow_unit:brain() and follow_unit:brain():is_advancing()
@@ -1803,11 +1766,10 @@ function CopLogicBase._chk_relocate(data)
 		end
 
 		if not relocate then
-			local ray_params = {
+			local ray_res = managers.navigation:raycast({
 				pos_to = follow_unit_pos,
 				tracker_from = data.unit:movement():nav_tracker(),
-			}
-			local ray_res = managers.navigation:raycast(ray_params)
+			})
 
 			if ray_res then
 				relocate = true
@@ -2210,30 +2172,24 @@ end
 function CopLogicBase._call_the_police(data, my_data, paniced)
 	if not my_data.is_on_alert_SO then
 		CopLogicBase.register_alert_SO(data)
-		CopLogicArrest._say_call_the_police(data, my_data)
+		CopLogicBase._say_call_the_police(data, my_data)
 	end
 end
 
 function CopLogicBase._say_call_the_police(data, my_data)
 	local blame_list = {
 		body_bag = "saw_bag",
-		civilian = "saw_civilian",
 		criminal = "spotted_player",
 		dead_civ = "saw_body",
 		dead_cop = "saw_body",
-		drill = "saw_drill",
-		hostage_civ = "saw_hostage_civ",
-		hostage_cop = "saw_hostage_cop",
-		sentry_gun = "saw_sentry_gun",
-		trip_mine = "saw_trip_mine",
 		w_hot = "spotted_player",
 	}
-	local event = blame_list[my_data.call_in_event] or "spotted_player"
+	local call_in_event = blame_list[my_data.call_in_event] or "spotted_player"
 
-	if event == "spotted_player" then
+	if call_in_event == "spotted_player" then
 		managers.groupai:state():chk_say_enemy_chatter(data.unit, data.unit:position(), "spotted_player")
 	else
-		data.unit:sound():say(event, true)
+		data.unit:sound():say(call_in_event, true)
 	end
 end
 
@@ -2317,196 +2273,6 @@ end
 
 function CopLogicBase.is_alert_dangerous(alert_type)
 	return CopLogicBase._DANGEROUS_ALERT_TYPES[alert_type]
-end
-
-function CopLogicBase._evaluate_reason_to_surrender(data, my_data, aggressor_unit)
-	local surrender_tweak = data.char_tweak.surrender
-
-	if not surrender_tweak then
-		return
-	end
-
-	local t = data.t
-
-	if data.surrender_window and t > data.surrender_window.window_expire_t then
-		data.unit:brain():on_surrender_chance()
-
-		return
-	end
-
-	local hold_chance = 1
-	local surrender_chk = {}
-
-	function surrender_chk.health(health_surrender)
-		local health_ratio = data.unit:character_damage():health_ratio()
-
-		if health_ratio < 1 then
-			local min_setting, max_setting
-
-			for k, v in pairs(health_surrender) do
-				if not min_setting or k < min_setting.k then
-					min_setting = {
-						k = k,
-						v = v,
-					}
-				end
-
-				if not max_setting or k > max_setting.k then
-					max_setting = {
-						k = k,
-						v = v,
-					}
-				end
-			end
-
-			if health_ratio < max_setting.k then
-				hold_chance = hold_chance * (1 - math.lerp(min_setting.v, max_setting.v, math.max(0, health_ratio - min_setting.k) / (max_setting.k - min_setting.k)))
-			end
-		end
-	end
-
-	function surrender_chk.aggressor_dis(agg_dis_surrender)
-		local agg_dis = mvec3_dis(data.m_pos, aggressor_unit:movement():m_pos())
-		local min_setting, max_setting
-
-		for k, v in pairs(agg_dis_surrender) do
-			if not min_setting or k < min_setting.k then
-				min_setting = {
-					k = k,
-					v = v,
-				}
-			end
-
-			if not max_setting or k > max_setting.k then
-				max_setting = {
-					k = k,
-					v = v,
-				}
-			end
-		end
-
-		if agg_dis < max_setting.k then
-			hold_chance = hold_chance * (1 - math.lerp(min_setting.v, max_setting.v, math.max(0, agg_dis - min_setting.k) / (max_setting.k - min_setting.k)))
-		end
-	end
-
-	function surrender_chk.weapon_down(weap_down_surrender)
-		local anim_data = data.unit:anim_data()
-
-		if anim_data.reload then
-			hold_chance = hold_chance * (1 - weap_down_surrender)
-		elseif anim_data.hurt then
-			hold_chance = hold_chance * (1 - weap_down_surrender)
-		elseif data.unit:movement():stance_name() == "ntl" then
-			hold_chance = hold_chance * (1 - weap_down_surrender)
-		end
-
-		local ammo_max, ammo = data.unit:inventory():equipped_unit():base():ammo_info()
-
-		if ammo == 0 then
-			hold_chance = hold_chance * (1 - weap_down_surrender)
-		end
-	end
-
-	function surrender_chk.flanked(flanked_surrender)
-		local dis = mvec3_dir(tmp_vec1, data.m_pos, aggressor_unit:movement():m_pos())
-
-		if dis > 200 then
-			local fwd = data.unit:movement():m_rot():y()
-			local fwd_dot = mvec3_dot(fwd, tmp_vec1)
-
-			if fwd_dot < -0.5 then
-				hold_chance = hold_chance * (1 - flanked_surrender)
-			end
-		end
-	end
-
-	function surrender_chk.unaware_of_aggressor(unaware_of_aggressor_surrender)
-		local att_info = data.detected_attention_objects[aggressor_unit:key()]
-
-		if not att_info or not att_info.identified or t - att_info.identified_t < 1 then
-			hold_chance = hold_chance * (1 - unaware_of_aggressor_surrender)
-		end
-	end
-
-	function surrender_chk.enemy_weap_cold(enemy_weap_cold_surrender)
-		if not managers.groupai:state():enemy_weapons_hot() then
-			hold_chance = hold_chance * (1 - enemy_weap_cold_surrender)
-		end
-	end
-
-	function surrender_chk.isolated(isolated_surrender)
-		if data.group and data.group.has_spawned and data.group.initial_size > 1 then
-			local has_support
-			local max_dis_sq = 722500
-
-			for u_key, u_data in pairs(data.group.units) do
-				if u_key ~= data.key and max_dis_sq > mvec3_dis_sq(data.m_pos, u_data.m_pos) then
-					has_support = true
-
-					break
-				end
-
-				if not has_support then
-					hold_chance = hold_chance * (1 - isolated_surrender)
-				end
-			end
-		end
-	end
-
-	function surrender_chk.pants_down(pants_down_surrender)
-		local not_cool_t = data.unit:movement():not_cool_t()
-
-		if (not not_cool_t or t - not_cool_t < 1.5) and not managers.groupai:state():enemy_weapons_hot() then
-			hold_chance = hold_chance * (1 - pants_down_surrender)
-		end
-	end
-
-	for reason, reason_data in pairs(surrender_tweak.reasons) do
-		surrender_chk[reason](reason_data)
-	end
-
-	if hold_chance >= 1 - (surrender_tweak.significant_chance or 0) then
-		return 1
-	end
-
-	for factor, factor_data in pairs(surrender_tweak.factors) do
-		surrender_chk[factor](factor_data)
-	end
-
-	if data.surrender_window then
-		hold_chance = hold_chance * (1 - data.surrender_window.chance_mul)
-	end
-
-	if surrender_tweak.violence_timeout then
-		local violence_t = data.unit:character_damage():last_suppression_t()
-
-		if violence_t then
-			local violence_dt = t - violence_t
-
-			if violence_dt < surrender_tweak.violence_timeout then
-				hold_chance = hold_chance + (1 - hold_chance) * (1 - violence_dt / surrender_tweak.violence_timeout)
-			end
-		end
-	end
-
-	return hold_chance < 1 and hold_chance
-end
-
-function CopLogicBase.on_intimidated(data, amount, aggressor_unit)
-	return false
-end
-
-function CopLogicBase._surrender(data, amount, aggressor_unit)
-	local params = {
-		aggressor_unit = aggressor_unit,
-		effect = amount,
-	}
-
-	data.brain:set_objective({
-		params = params,
-		type = "surrender",
-	})
 end
 
 function CopLogicBase.on_attention_obj_identified(data, attention_u_key, attention_info, reason)
@@ -2956,4 +2722,65 @@ end
 
 function CopLogicBase.chk_should_turn(data, my_data)
 	return not my_data.turning and not my_data.has_old_action
+end
+
+function CopLogicBase._draw_cone_frame(to, from, optimal, angle, height)
+	local col_bad = {
+		1,
+		0.2,
+		0.2,
+	}
+	local col_mid = {
+		1,
+		1,
+		0.2,
+	}
+	local col_good = {
+		0.2,
+		1,
+		0.2,
+	}
+	local dir = Vector3()
+
+	mvector3.direction(dir, from, to)
+
+	local dir_rot = Rotation(dir, math.UP)
+	local tan_angle = math.tan(angle / 2)
+	local dist_full = mvector3.distance(to, from)
+	local dist_optimal = mvector3.distance(from, optimal)
+	local diameter = dist_full * tan_angle
+	local diameter_optimal = dist_optimal * tan_angle
+
+	Application:draw_cylinder(from, optimal, 5, unpack(col_bad))
+	Application:draw_cylinder(optimal, to, 5, unpack(col_good))
+	Application:draw_cylinder(to, to + dir, diameter, unpack(col_good))
+	Application:draw_cylinder(optimal, optimal + dir, diameter_optimal, unpack(col_mid))
+
+	local a, b, c, d = optimal - dir_rot:x() * diameter_optimal, optimal + dir_rot:x() * diameter_optimal, to - dir_rot:x() * diameter, to + dir_rot:x() * diameter
+	local height_offset = dir_rot:z() * height / 2
+
+	Application:draw_line(a + height_offset, b + height_offset, unpack(col_mid))
+	Application:draw_line(c + height_offset, d + height_offset, unpack(col_good))
+	Application:draw_line(a + height_offset, c + height_offset, unpack(col_good))
+	Application:draw_line(d + height_offset, b + height_offset, unpack(col_good))
+	Application:draw_line(a - height_offset, b - height_offset, unpack(col_mid))
+	Application:draw_line(c - height_offset, d - height_offset, unpack(col_good))
+	Application:draw_line(a - height_offset, c - height_offset, unpack(col_good))
+	Application:draw_line(d - height_offset, b - height_offset, unpack(col_good))
+	Application:draw_line(a + height_offset, a - height_offset, unpack(col_mid))
+	Application:draw_line(b + height_offset, b - height_offset, unpack(col_mid))
+	Application:draw_line(c + height_offset, c - height_offset, unpack(col_good))
+	Application:draw_line(d + height_offset, d - height_offset, unpack(col_good))
+	Application:draw_line(a + height_offset, b - height_offset, unpack(col_mid))
+	Application:draw_line(b + height_offset, a - height_offset, unpack(col_mid))
+	Application:draw_line(c + height_offset, d - height_offset, unpack(col_good))
+	Application:draw_line(d + height_offset, c - height_offset, unpack(col_good))
+	Application:draw_line(from + height_offset, from - height_offset, unpack(col_bad))
+	Application:draw_line(from - height_offset, a - height_offset, unpack(col_bad))
+	Application:draw_line(from + height_offset, a + height_offset, unpack(col_bad))
+	Application:draw_line(from - height_offset, b - height_offset, unpack(col_bad))
+	Application:draw_line(from + height_offset, b + height_offset, unpack(col_bad))
+	Application:draw_sphere(from, 10, unpack(col_bad))
+	Application:draw_sphere(optimal, 10, unpack(col_mid))
+	Application:draw_sphere(to, 10, unpack(col_good))
 end

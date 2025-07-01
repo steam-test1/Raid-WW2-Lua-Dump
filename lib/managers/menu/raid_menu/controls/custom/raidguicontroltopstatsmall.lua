@@ -77,7 +77,13 @@ function RaidGUIControlTopStatSmall:_create_stat_info()
 end
 
 function RaidGUIControlTopStatSmall:set_data(data)
-	self._player_name_label:set_text(utf8.to_upper(data.player_nickname))
+	local name = data.player_nickname
+
+	if managers.user:get_setting("capitalize_names") then
+		name = utf8.to_upper(name)
+	end
+
+	self._player_name_label:set_text(name)
 	self._stat_name_label:set_text(self:translate(data.stat, true))
 
 	local icon_params = {

@@ -1,6 +1,26 @@
 core:import("CoreShapeManager")
 
 CoreAreaTriggerUnitElement = CoreAreaTriggerUnitElement or class(MissionElement)
+CoreAreaTriggerUnitElement.LINK_VALUES = {
+	{
+		layer = "Statics",
+		output = true,
+		table_value = "unit_ids",
+		type = "shape",
+	},
+	{
+		table_value = "use_shape_element_ids",
+		type = "shape",
+	},
+	{
+		table_value = "spawn_unit_elements",
+		type = "spawn_unit",
+	},
+	{
+		table_value = "rules_element_ids",
+		type = "rule",
+	},
+}
 AreaTriggerUnitElement = AreaTriggerUnitElement or class(CoreAreaTriggerUnitElement)
 
 function AreaTriggerUnitElement:init(...)
@@ -525,6 +545,13 @@ end
 CoreAreaOperatorUnitElement = CoreAreaOperatorUnitElement or class(MissionElement)
 CoreAreaOperatorUnitElement.SAVE_UNIT_POSITION = false
 CoreAreaOperatorUnitElement.SAVE_UNIT_ROTATION = false
+CoreAreaOperatorUnitElement.LINK_VALUES = {
+	{
+		output = true,
+		table_value = "elements",
+		type = "operator",
+	},
+}
 AreaOperatorUnitElement = AreaOperatorUnitElement or class(CoreAreaOperatorUnitElement)
 
 function AreaOperatorUnitElement:init(...)

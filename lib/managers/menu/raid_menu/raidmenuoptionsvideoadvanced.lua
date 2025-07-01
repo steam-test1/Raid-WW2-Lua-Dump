@@ -22,10 +22,6 @@ function RaidMenuOptionsVideoAdvanced:_layout()
 end
 
 function RaidMenuOptionsVideoAdvanced:close()
-	self:_save_advanced_video_values()
-
-	Global.savefile_manager.setting_changed = true
-
 	managers.savefile:save_setting(true)
 	RaidMenuOptionsVideoAdvanced.super.close(self)
 end
@@ -51,7 +47,6 @@ function RaidMenuOptionsVideoAdvanced:_load_advanced_video_values()
 	local max_anisotropy = RenderSettings.max_anisotropy
 	local video_animation_lod = managers.user:get_setting("video_animation_lod")
 	local fps_cap = managers.user:get_setting("fps_cap")
-	local max_streaming_chunk = managers.user:get_setting("max_streaming_chunk")
 	local colorblind_setting = managers.user:get_setting("colorblind_setting")
 
 	self._toggle_menu_toggle_dof:set_value_and_render(dof_setting, true)
@@ -69,14 +64,6 @@ function RaidMenuOptionsVideoAdvanced:_load_advanced_video_values()
 	self._stepper_menu_fps_limit:set_value_and_render(fps_cap, true)
 	self._stepper_menu_colorblind_setting:set_value_and_render(colorblind_setting, true)
 	self._stepper_menu_toggle_vsync:set_value_and_render(vsync_value, true)
-end
-
-function RaidMenuOptionsVideoAdvanced:_save_advanced_video_values()
-	self:on_click_toggle_ssao()
-	self:on_click_toggle_motion_blur()
-	self:on_click_toggle_volumetric_light_scattering()
-	self:on_item_selected_anim_lod()
-	self:on_item_selected_max_streaming_chunk()
 end
 
 function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
@@ -148,7 +135,7 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 		on_click_callback = callback(self, self, "on_click_toggle_volumetric_light_scattering"),
 		on_menu_move = {
 			down = "progress_bar_menu_detail_distance",
-			up = "toggle_menu_toggle_motion_blur",
+			up = "toggle_menu_toggle_dof",
 		},
 		w = default_width,
 		x = start_x,
@@ -196,7 +183,7 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 		on_item_selected_callback = callback(self, self, "on_item_selected_antialias"),
 		on_menu_move = {
 			down = "stepper_menu_texture_quality",
-			up = "progress_bar_menu_detail_distance",
+			up = "progress_bar_menu_corpse_limit",
 		},
 		w = default_width,
 		x = start_x,
@@ -661,60 +648,6 @@ function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_fps_limit()
 	return result
 end
 
-function RaidMenuOptionsVideoAdvanced:on_item_selected_max_streaming_chunk()
-	local max_streaming_chunk = 4096
-
-	managers.menu:active_menu().callback_handler:choice_max_streaming_chunk_raid(max_streaming_chunk)
-end
-
-function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_max_streaming_chunk()
-	local result = {}
-
-	table.insert(result, {
-		info = "32",
-		text = "32",
-		value = 32,
-	})
-	table.insert(result, {
-		info = "64",
-		text = "64",
-		value = 64,
-	})
-	table.insert(result, {
-		info = "128",
-		text = "128",
-		value = 128,
-	})
-	table.insert(result, {
-		info = "256",
-		text = "256",
-		value = 256,
-	})
-	table.insert(result, {
-		info = "512",
-		text = "512",
-		value = 512,
-	})
-	table.insert(result, {
-		info = "1024",
-		text = "1024",
-		value = 1024,
-	})
-	table.insert(result, {
-		info = "2048",
-		text = "2048",
-		value = 2048,
-	})
-	table.insert(result, {
-		info = "4096",
-		selected = true,
-		text = "4096",
-		value = 4096,
-	})
-
-	return result
-end
-
 function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_colorblind_setting()
 	local result = {}
 
@@ -743,9 +676,9 @@ function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_colorblind_settin
 end
 
 function RaidMenuOptionsVideoAdvanced:on_click_default_advanced_video()
-	local params = {
+	managers.menu:show_option_dialog({
 		callback = function()
-			managers.user:reset_advanced_video_setting_map()
+			managers.user:reset_setting_map("video_advanced")
 
 			RenderSettings.texture_quality_default = "high"
 			RenderSettings.shadow_quality_default = "high"
@@ -761,9 +694,7 @@ function RaidMenuOptionsVideoAdvanced:on_click_default_advanced_video()
 		end,
 		message = managers.localization:text("dialog_reset_advanced_video_message"),
 		title = managers.localization:text("dialog_reset_advanced_video_title"),
-	}
-
-	managers.menu:show_option_dialog(params)
+	})
 end
 
 function RaidMenuOptionsVideoAdvanced:on_item_selected_colorblind_setting()

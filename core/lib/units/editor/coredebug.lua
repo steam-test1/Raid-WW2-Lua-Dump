@@ -2,6 +2,12 @@ CoreDebugUnitElement = CoreDebugUnitElement or class(MissionElement)
 DebugUnitElement = DebugUnitElement or class(CoreDebugUnitElement)
 DebugUnitElement.SAVE_UNIT_POSITION = false
 DebugUnitElement.SAVE_UNIT_ROTATION = false
+DebugUnitElement.LINK_VALUES = {
+	{
+		table_value = "elements",
+		type = "monitor",
+	},
+}
 
 function DebugUnitElement:init(...)
 	CoreDebugUnitElement.init(self, ...)

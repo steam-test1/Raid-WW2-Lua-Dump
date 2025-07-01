@@ -62,10 +62,6 @@ function HuskPlayerDamage:down_time()
 	return self._last_down_time
 end
 
-function HuskPlayerDamage:incapacitated()
-	return self._unit:movement():current_state_name() == "incapacitated"
-end
-
 function HuskPlayerDamage:set_mission_damage_blockers(type, state)
 	self._mission_damage_blockers[type] = state
 end

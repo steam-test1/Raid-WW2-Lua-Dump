@@ -74,18 +74,22 @@ function HUDNameLabel:_create_panel(hud)
 end
 
 function HUDNameLabel:_create_name()
-	local name_params = {
+	local name = self._name
+
+	if managers.user:get_setting("capitalize_names") then
+		name = utf8.to_upper(name)
+	end
+
+	self._character_name = self._object:text({
 		align = "center",
-		font = HUDNameLabel.PLAYER_NAME_FONT,
-		font_size = HUDNameLabel.PLAYER_NAME_FONT_SIZE,
-		h = HUDNameLabel.PLAYER_NAME_H,
+		font = self.PLAYER_NAME_FONT,
+		font_size = self.PLAYER_NAME_FONT_SIZE,
+		h = self.PLAYER_NAME_H,
 		name = "character_name",
-		text = utf8.to_upper(self._name),
+		text = name,
 		vertical = "center",
 		w = self._object:w(),
-	}
-
-	self._character_name = self._object:text(name_params)
+	})
 
 	self._character_name:set_center_x(self._object:w() / 2)
 	self._character_name:set_center_y(self._object:h() / 2)
@@ -352,6 +356,16 @@ function HUDNameLabel:complete_interact()
 	self:_remove_active_state("interaction")
 	self._interaction_progress_fill:stop()
 	self._interaction_progress_fill:animate(callback(self, self, "_animate_complete_interact"))
+end
+
+function HUDNameLabel:refresh()
+	local name = self._name
+
+	if managers.user:get_setting("capitalize_names") then
+		name = utf8.to_upper(name)
+	end
+
+	self._character_name:set_text(name)
 end
 
 function HUDNameLabel:_add_active_state(state_id)

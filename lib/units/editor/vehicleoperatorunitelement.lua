@@ -23,6 +23,14 @@ VehicleOperatorUnitElement.ACTIONS = {
 	"enable_hud_waypoint",
 	"disable_hud_waypoint",
 }
+VehicleOperatorUnitElement.LINK_VALUES = {
+	{
+		layer = "Statics",
+		output = true,
+		table_value = "elements",
+		type = "operator",
+	},
+}
 
 function VehicleOperatorUnitElement:init(unit)
 	VehicleOperatorUnitElement.super.init(self, unit)
@@ -101,20 +109,20 @@ function VehicleOperatorUnitElement:draw_links_unselected(...)
 	end
 end
 
-function VehicleOperatorUnitElement:draw_links_selected(...)
-	VehicleOperatorUnitElement.super.draw_links_selected(self, ...)
+function VehicleOperatorUnitElement:draw_links_selected(t, dt, selected_unit, all_units)
+	VehicleOperatorUnitElement.super.draw_links_selected(self, t, dt, selected_unit, all_units)
 
 	for _, id in ipairs(self._hed.elements) do
 		local unit = managers.editor:unit_with_id(id)
 		local params = {
 			b = 0.5,
-			from_unit = unit,
+			from_unit = self._unit,
 			g = 0,
 			r = 0,
-			to_unit = self._unit,
+			to_unit = unit,
 		}
 
-		if unit and self._unit and self:_should_draw_link(unit, self._unit) then
+		if unit and self._unit and self:_should_draw_link(selected_unit, unit) then
 			self:_draw_link(params)
 			Application:draw(unit, 0.25, 1, 0.25)
 		end

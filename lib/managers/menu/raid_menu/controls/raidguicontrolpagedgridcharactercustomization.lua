@@ -174,12 +174,12 @@ function RaidGUIControlPagedGridCharacterCustomization:_create_paging_controls()
 		}
 		self._paging_controls_panel = self._paged_grid_panel:panel(self._paging_controls_panel_params)
 		self._page_stepper_params = {
-			arrow_color = tweak_data.menu.raid_red,
+			arrow_color = tweak_data.gui.colors.raid_red,
 			arrow_highlight_color = Color.white,
 			background_color = RaidOptions.BACKGROUND_COLOR_UNSELECTED,
 			button_h = MissionJoinGui.FILTER_BUTTON_H,
 			button_w = MissionJoinGui.FILTER_BUTTON_W,
-			color = tweak_data.menu.raid_red,
+			color = tweak_data.gui.colors.raid_red,
 			data_source_callback = callback(self, self, "data_source_grid_page_stepper"),
 			h = 25,
 			highlight_color = Color.white,
@@ -254,12 +254,12 @@ function RaidGUIControlPagedGridCharacterCustomization:_create_filtering_control
 	}
 	self._filtering_controls_panel = self._paged_grid_panel:panel(self._filtering_controls_panel_params)
 	self._filter_stepper_params = {
-		arrow_color = tweak_data.menu.raid_red,
+		arrow_color = tweak_data.gui.colors.raid_red,
 		arrow_highlight_color = Color.white,
 		background_color = RaidOptions.BACKGROUND_COLOR_UNSELECTED,
 		button_h = MissionJoinGui.FILTER_BUTTON_H,
 		button_w = MissionJoinGui.FILTER_BUTTON_W,
-		color = tweak_data.menu.raid_red,
+		color = tweak_data.gui.colors.raid_red,
 		data_source_callback = callback(self, self, "data_source_grid_filter_stepper"),
 		h = 25,
 		highlight_color = Color.white,

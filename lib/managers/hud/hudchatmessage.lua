@@ -66,6 +66,10 @@ function HUDChatMessage:_create_panel(message_panel)
 end
 
 function HUDChatMessage:_create_name(name)
+	if managers.user:get_setting("capitalize_names") then
+		name = utf8.to_upper(name)
+	end
+
 	local name_params = {
 		align = self._horizontal_text_align,
 		color = self._message_color,
@@ -75,7 +79,7 @@ function HUDChatMessage:_create_name(name)
 		halign = "scale",
 		layer = 20,
 		name = "name",
-		text = utf8.to_upper(name),
+		text = name,
 		valign = "top",
 		vertical = "center",
 		w = self._object:w(),

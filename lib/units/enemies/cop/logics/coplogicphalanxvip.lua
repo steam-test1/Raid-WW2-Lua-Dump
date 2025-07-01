@@ -196,7 +196,6 @@ function CopLogicPhalanxVip.breakup(remote_call)
 			}
 
 			if phalanx_vip:brain():objective() then
-				print("Setting VIP flee objective!")
 				phalanx_vip:brain():set_objective(new_objective)
 				phalanx_vip:sound():say("cpw_a04", true, true)
 			end

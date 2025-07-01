@@ -47,10 +47,6 @@ ContourExt._types = {
 		color = tweak_data.contour.interactable.standard_color,
 		priority = 6,
 	},
-	hostage_trade = {
-		color = tweak_data.contour.character_interactable.standard_color,
-		priority = 1,
-	},
 	mark_enemy = {
 		color = tweak_data.contour.character.dangerous_color,
 		fadeout = 4.5,

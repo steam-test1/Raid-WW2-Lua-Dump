@@ -148,7 +148,7 @@ end
 
 function EnvironmentLayer:_load_effects(effects)
 	for _, effect in ipairs(effects) do
-		local unit = self:do_spawn_unit(self._effect_unit, effect.position, effect.rotation)
+		local unit = self:do_spawn_unit(self._effect_unit, effect.position, effect.rotation, nil, nil, true)
 
 		if effect.name_id then
 			self:set_name_id(unit, effect.name_id)
@@ -160,7 +160,7 @@ end
 
 function EnvironmentLayer:_load_environment_areas()
 	for _, area in ipairs(managers.environment_area:areas()) do
-		local unit = EnvironmentLayer.super.do_spawn_unit(self, self._environment_area_unit, area:position(), area:rotation())
+		local unit = EnvironmentLayer.super.do_spawn_unit(self, self._environment_area_unit, area:position(), area:rotation(), nil, nil, true)
 
 		unit:unit_data().environment_area = area
 
@@ -178,7 +178,7 @@ function EnvironmentLayer:_load_dome_occ_shapes(dome_occ_shapes)
 	end
 
 	for _, dome_occ_shape in ipairs(dome_occ_shapes) do
-		local unit = EnvironmentLayer.super.do_spawn_unit(self, self._dome_occ_shape_unit, dome_occ_shape.position, dome_occ_shape.rotation)
+		local unit = EnvironmentLayer.super.do_spawn_unit(self, self._dome_occ_shape_unit, dome_occ_shape.position, dome_occ_shape.rotation, nil, nil, true)
 
 		unit:unit_data().occ_shape = CoreShapeManager.ShapeBox:new(dome_occ_shape)
 
@@ -219,14 +219,14 @@ function EnvironmentLayer:old_load(environment)
 
 	if environment._unit_effects then
 		for _, effect in ipairs(environment._unit_effects) do
-			local unit = self:do_spawn_unit(self._effect_unit, effect.pos, effect.rot)
+			local unit = self:do_spawn_unit(self._effect_unit, effect.pos, effect.rot, nil, nil, true)
 
 			self:play_effect(unit, effect.name)
 		end
 	end
 
 	for _, area in ipairs(managers.environment_area:areas()) do
-		local unit = EnvironmentLayer.super.do_spawn_unit(self, self._environment_area_unit, area:position(), area:rotation())
+		local unit = EnvironmentLayer.super.do_spawn_unit(self, self._environment_area_unit, area:position(), area:rotation(), nil, nil, true)
 
 		unit:unit_data().environment_area = area
 

@@ -31,6 +31,15 @@ function CoreEditor:build_left_toolbar()
 		toolbar = "_left_upper_toolbar",
 		value = "_draw_bodies_on",
 	})
+
+	local NAME = "TB_DRAW_GROUPS"
+
+	self._left_upper_toolbar:add_check_tool(NAME, "Draw Groups", CoreEWS.image_path("info_16x16.png"), "Toggle on to draw groups")
+	self._left_upper_toolbar:set_tool_state(NAME, self._draw_bodies_on)
+	self._left_upper_toolbar:connect(NAME, "EVT_COMMAND_MENU_SELECTED", callback(self, self, "toolbar_toggle"), {
+		toolbar = "_left_upper_toolbar",
+		value = "_draw_groups_on",
+	})
 	self._left_upper_toolbar:add_check_tool("TB_FRUSTUM_FREEZE", "Frustum freeze/unfreeze", CoreEws.image_path("sequencer\\clip_icon_camera_00.png"), "Toggle frustum freeze on/off")
 	self._left_upper_toolbar:set_tool_state("TB_FRUSTUM_FREEZE", false)
 	self._left_upper_toolbar:connect("TB_FRUSTUM_FREEZE", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "_frustum_freeze_toggle"), nil)
@@ -57,6 +66,8 @@ function CoreEditor:build_left_toolbar()
 
 	self._left_toolbar = EWS:ToolBar(left_panel, "", "TB_FLAT,TB_VERTICAL,TB_NODIVIDER")
 
+	self._left_toolbar:add_tool("LTB_LIST_FLOW", "Opens mission flow dialog", CoreEws.image_path("world_editor\\he_timeline_16x16.png"), "Element Flow Dialog")
+	self._left_toolbar:connect("LTB_LIST_FLOW", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "show_element_flow"), {})
 	self:add_edit_buttons()
 	self._left_toolbar:add_tool("LTB_EDIT_UNIT", "Show edit unit dialog", CoreEWS.image_path("world_editor\\edit_settings_16x16.png"), "Help")
 	self._left_toolbar:connect("LTB_EDIT_UNIT", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "show_edit_unit"), nil)
@@ -74,6 +85,22 @@ function CoreEditor:_project_add_left_upper_toolbar_tool()
 	return
 end
 
+function CoreEditor:show_element_flow()
+	self._element_flow = self._element_flow or _G.MissionElementListFlow:new()
+
+	self._element_flow:set_visible(not self._element_flow:visible())
+
+	if self._element_flow:visible() then
+		self._element_flow:on_unit_selected(self:selected_unit())
+	end
+end
+
+function CoreEditor:refresh_list_flow()
+	if self._element_flow and self._element_flow:visible() then
+		self._element_flow:on_unit_selected(self:selected_unit())
+	end
+end
+
 function CoreEditor:show_edit_unit()
 	self:show_dialog("edit_unit", "EditUnitDialog")
 end
@@ -83,9 +110,9 @@ function CoreEditor:on_open_tool(tool)
 end
 
 function CoreEditor:on_output_help()
-	local text = "\n"
+	local text = self._current_layer:get_help("")
 
-	self:output(self._current_layer:get_help(text))
+	managers.editor:show_text_box("HELP!", text)
 end
 
 function CoreEditor:on_list_units()

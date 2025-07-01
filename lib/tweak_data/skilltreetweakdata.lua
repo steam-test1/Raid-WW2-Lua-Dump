@@ -2324,6 +2324,15 @@ function SkillTreeTweakData:_init_skill_list_weapons()
 		},
 		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 	}
+	self.skills.weapon_unlock_georg = {
+		acquires = {},
+		desc_id = "skill_weapon_unlock_georg_desc",
+		name_id = "skill_weapon_unlock_georg_name",
+		upgrades = {
+			"georg",
+		},
+		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
+	}
 	self.skills.weapon_unlock_kar_98k = {
 		acquires = {},
 		desc_id = "skill_weapon_unlock_kar_98k_desc",
@@ -2491,6 +2500,11 @@ function SkillTreeTweakData:_init_recon_unlock_progression()
 				"weapon_unlock_grenade_d343",
 			},
 		},
+		[22] = {
+			weapons = {
+				"weapon_unlock_georg",
+			},
+		},
 		[23] = {
 			weapons = {
 				"weapon_unlock_mosin",
@@ -2612,6 +2626,11 @@ function SkillTreeTweakData:_init_assault_unlock_progression()
 				"weapon_unlock_welrod",
 			},
 		},
+		[24] = {
+			weapons = {
+				"weapon_unlock_georg",
+			},
+		},
 		[25] = {
 			unlocks = {
 				"weapon_tier_unlocked_3",
@@ -2727,6 +2746,11 @@ function SkillTreeTweakData:_init_infiltrator_unlock_progression()
 			weapons = {
 				"weapon_unlock_grenade_d343",
 				"weapon_unlock_grenade_betty",
+			},
+		},
+		[21] = {
+			weapons = {
+				"weapon_unlock_georg",
 			},
 		},
 		[23] = {
@@ -2851,6 +2875,11 @@ function SkillTreeTweakData:_init_demolitions_unlock_progression()
 			weapons = {
 				"weapon_unlock_ithaca",
 				"weapon_unlock_welrod",
+			},
+		},
+		[24] = {
+			weapons = {
+				"weapon_unlock_georg",
 			},
 		},
 		[25] = {

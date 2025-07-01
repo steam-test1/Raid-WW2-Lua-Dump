@@ -376,13 +376,14 @@ function CopDamage:damage_bullet(attack_data)
 	local bodyshot_multiplier = 1
 
 	if is_attacker_player then
-		local percent_dmg = damage / self._HEALTH_INIT
 		local critical_hit, crit_damage = self:roll_critical_hit(damage, attack_data.col_ray)
 
 		if critical_hit then
 			death_event_params.critical_hit = true
 			damage = crit_damage
-		elseif head then
+		end
+
+		if head then
 			death_event_params.headshot = true
 		end
 
@@ -553,10 +554,9 @@ function CopDamage:damage_bullet(attack_data)
 
 	if result.type == "death" then
 		if self:_dismember_condition(attack_data, false) then
-			death_event_params.dismemberment_occured = true
-
 			self:_dismember_body_part(attack_data)
 
+			death_event_params.dismemberment_occured = true
 			dismember_victim = true
 		end
 
@@ -587,7 +587,6 @@ function CopDamage:damage_bullet(attack_data)
 			death_event_params.enemy_marked = self._marked_dmg_mul ~= nil
 
 			self:_comment_death(attack_data.attacker_unit, self._unit:base()._tweak_table)
-			self:_show_death_hint(self._unit:base()._tweak_table)
 
 			local attacker_state = managers.player:current_state()
 
@@ -666,12 +665,6 @@ function CopDamage.is_cop(type)
 	return not CopDamage.is_civilian(type) and not CopDamage.is_gangster(type)
 end
 
-function CopDamage:_show_death_hint(type)
-	if CopDamage.is_civilian(type) and not self._unit:base().enemy then
-		-- block empty
-	end
-end
-
 function CopDamage:ignore_knockdown()
 	return self._ignore_knockdown
 end
@@ -692,7 +685,7 @@ function CopDamage:_AI_comment_death(unit, type)
 end
 
 function CopDamage:damage_fire(attack_data)
-	if self._dead or self._invulnerable or self._unit:brain().is_flamer then
+	if self._dead or self._invulnerable then
 		return
 	end
 
@@ -709,12 +702,14 @@ function CopDamage:damage_fire(attack_data)
 		attacker_unit = attacker_unit:base():thrower_unit()
 	end
 
-	local is_attacker_player = attack_data.attacker_unit == managers.player:player_unit()
-
 	if attack_data.attacker_unit:brain() and attack_data.attacker_unit:brain().is_flamer then
 		local flamer_tweak = tweak_data.character[attack_data.attacker_unit:base()._tweak_table]
 
 		damage = damage * flamer_tweak.friendly_fire_dmg_mul
+	end
+
+	if self._char_tweak.damage and self._char_tweak.damage.fire_damage_mul then
+		damage = damage * self._char_tweak.damage.fire_damage_mul
 	end
 
 	damage = math.clamp(damage, 0, self._HEALTH_INIT)
@@ -747,6 +742,7 @@ function CopDamage:damage_fire(attack_data)
 	end
 
 	local headshot_multiplier = 1
+	local is_attacker_player = attack_data.attacker_unit == managers.player:player_unit()
 
 	if is_attacker_player then
 		if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_PLAYER_HEADSHOT_DAMAGE) and head then
@@ -845,7 +841,6 @@ function CopDamage:damage_fire(attack_data)
 				self:_comment_death(attacker_unit, self._unit:base()._tweak_table)
 			end
 
-			self:_show_death_hint(self._unit:base()._tweak_table)
 			managers.statistics:killed(data)
 		end
 	end
@@ -989,7 +984,6 @@ function CopDamage:damage_dot(attack_data)
 				self:_comment_death(attacker_unit, self._unit:base()._tweak_table)
 			end
 
-			self:_show_death_hint(self._unit:base()._tweak_table)
 			managers.statistics:killed(data)
 		end
 	end
@@ -1024,10 +1018,6 @@ function CopDamage:damage_explosion(attack_data)
 	local is_civilian = CopDamage.is_civilian(self._unit:base()._tweak_table)
 	local player_unit = managers.player:local_player()
 	local is_attacker_player = attacker_unit == player_unit
-
-	if self._unit:base():char_tweak().DAMAGE_CLAMP_EXPLOSION then
-		damage = math.min(damage, self._unit:base():char_tweak().DAMAGE_CLAMP_EXPLOSION)
-	end
 
 	damage = damage * (self._char_tweak.damage.explosion_damage_mul or 1)
 	damage = damage * (self._marked_dmg_mul or 1)
@@ -1172,7 +1162,6 @@ function CopDamage:damage_explosion(attack_data)
 				self:_comment_death(attacker_unit, self._unit:base()._tweak_table)
 			end
 
-			self:_show_death_hint(self._unit:base()._tweak_table)
 			managers.statistics:killed(data)
 			managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.PLAYER_KILLED_ENEMY, death_event_params)
 		end
@@ -1366,12 +1355,7 @@ function CopDamage:damage_tase(attack_data)
 				self:_comment_death(attacker_unit, self._unit:base()._tweak_table)
 			end
 
-			self:_show_death_hint(self._unit:base()._tweak_table)
 			managers.statistics:killed(data)
-
-			if CopDamage.is_civilian(self._unit:base()._tweak_table) then
-				-- block empty
-			end
 		end
 	end
 
@@ -1581,7 +1565,6 @@ function CopDamage:damage_melee(attack_data)
 
 		if is_attacker_player then
 			self:_comment_death(attack_data.attacker_unit, self._unit:base()._tweak_table)
-			self:_show_death_hint(self._unit:base()._tweak_table)
 			managers.statistics:killed(data)
 			managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.PLAYER_KILLED_ENEMY, death_event_params)
 		end
@@ -1833,10 +1816,6 @@ function CopDamage:die(attack_data)
 
 	self:_remove_debug_gui()
 	self._unit:base():set_slot(self._unit, 17)
-
-	if alive(managers.interaction:active_unit()) then
-		managers.interaction:active_unit():interaction():selected()
-	end
 
 	if self._pickup then
 		self:drop_pickup()
@@ -2195,7 +2174,6 @@ function CopDamage:sync_damage_explosion(attacker_unit, damage_percent, i_attack
 				self:_comment_death(attacker_unit, self._unit:base()._tweak_table)
 			end
 
-			self:_show_death_hint(self._unit:base()._tweak_table)
 			managers.statistics:killed(data)
 
 			local death_event_params = {}
@@ -2358,7 +2336,6 @@ function CopDamage:sync_damage_fire(attacker_unit, damage_percent, start_dot_dan
 				self:_comment_death(attacker_unit, self._unit:base()._tweak_table)
 			end
 
-			self:_show_death_hint(self._unit:base()._tweak_table)
 			managers.statistics:killed(data)
 		end
 	end

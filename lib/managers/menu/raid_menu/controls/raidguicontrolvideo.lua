@@ -41,7 +41,7 @@ function RaidGUIControlVideo:_update(t, dt)
 		return
 	end
 
-	if not managers.user:get_setting("subtitle") then
+	if not managers.user:get_setting("subtitles") then
 		self._subtitle:set_text("")
 
 		return

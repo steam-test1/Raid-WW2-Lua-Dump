@@ -161,7 +161,7 @@ function ObjectivesManager:_remind_objetive(id, title_id)
 
 		managers.hud:remind_objective(id)
 		managers.hud:present_mid_text({
-			active = nil,
+			[""] = nil,
 			text = text,
 			time = 4,
 			title = title_message,
@@ -254,7 +254,7 @@ function ObjectivesManager:activate_objective(id, load_data, data, world_id, ski
 
 	if not skip_toast then
 		managers.hud:present_mid_text({
-			state = nil,
+			objective_map = nil,
 			text = text,
 			time = 4.5,
 			title = title_message,
@@ -574,9 +574,7 @@ function ObjectivesManager:objectives_by_name()
 	local t = {}
 	local level_id = managers.editor:layer("Level Settings"):get_setting("simulation_level_id")
 
-	Application:info("[ObjectivesManager:objectives_by_name] level_id", level_id)
-
-	if level_id then
+	if level_id and level_id ~= "none" then
 		for name, data in pairs(self._objectives) do
 			if data.level_id and data.level_id == level_id then
 				table.insert(t, name)

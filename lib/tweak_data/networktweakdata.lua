@@ -2,13 +2,16 @@ NetworkTweakData = NetworkTweakData or class()
 
 function NetworkTweakData:init(tweak_data)
 	self.camera = {
-		network_angle_delta = 45,
-		network_sync_delta_t = 0.5,
-		network_wait_delta_t = 0.2,
+		angle_delta = 45,
+		sync_delta_t = 0.5,
+		wait_delta_t = 0.2,
 	}
 	self.driving = {
-		network_wait_delta_t = 0.05,
-		network_wait_distance = 1,
+		wait_delta_t = 0.05,
+		wait_distance = 1,
+	}
+	self.team_ai = {
+		wait_delta_t = 0.5,
 	}
 	self.stealth_speed_boost = 1.025
 end

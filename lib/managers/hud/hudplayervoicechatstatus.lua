@@ -88,7 +88,11 @@ function HUDPlayerVoiceChatStatus:show_chat_indicator(peer_name)
 		peer_name_formatted = peer_name_formatted .. ".."
 	end
 
-	self._player_name:set_text(utf8.to_upper(peer_name_formatted))
+	if managers.user:get_setting("capitalize_names") then
+		peer_name_formatted = utf8.to_upper(peer_name_formatted)
+	end
+
+	self._player_name:set_text(peer_name_formatted)
 
 	local _, _, w1, _ = self._player_name:text_rect()
 	local label_width = self._player_name:w()

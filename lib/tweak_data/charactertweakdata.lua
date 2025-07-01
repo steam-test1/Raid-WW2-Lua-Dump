@@ -23,6 +23,7 @@ function CharacterTweakData:init(tweak_data)
 
 	self.presets = presets
 
+	self:_init_npc_loadouts(tweak_data)
 	self:_init_dismemberment_data()
 	self:_init_char_buff_gear()
 	self:_init_german_commander(presets)
@@ -45,10 +46,10 @@ function CharacterTweakData:init(tweak_data)
 	self:_init_german_spotter(presets)
 	self:_init_soviet_nkvd_int_security_captain(presets)
 	self:_init_soviet_nkvd_int_security_captain_b(presets)
+	self:_init_british(presets)
 	self:_init_russian(presets)
 	self:_init_german(presets)
 	self:_init_american(presets)
-	self:_init_british(presets)
 	self:_init_civilian(presets)
 	self:_init_escort(presets)
 	self:_init_upd_fb(presets)
@@ -68,108 +69,108 @@ function CharacterTweakData:set_difficulty(diff_index)
 	end
 end
 
-function CharacterTweakData:_init_russian(presets)
-	self.russian = {}
-	self.russian.damage = presets.gang_member_damage
-	self.russian.damage.hurt_severity = deep_clone(presets.hurt_severities.only_explosion_hurts)
-	self.russian.weapon = deep_clone(presets.weapon.gang_member)
-	self.russian.HEALTH_INIT = 400
-	self.russian.weapon.weapons_of_choice = {
-		primary = Idstring("units/vanilla/weapons/wpn_npc_usa_garand/wpn_npc_usa_garand"),
-		secondary = Idstring("units/vanilla/weapons/wpn_npc_usa_garand/wpn_npc_usa_garand"),
+function CharacterTweakData:_init_npc_loadouts(tweak_data)
+	self.npc_loadouts = {}
+	self.npc_loadouts.ger_handgun = {
+		german_grunt_light_kar98 = nil,
+		secondary = Idstring("units/vanilla/weapons/wpn_npc_ger_luger/wpn_npc_ger_luger"),
 	}
-	self.russian.detection = presets.detection.gang_member
-	self.russian.dodge = presets.dodge.average
-	self.russian.move_speed = presets.move_speed.teamai
-	self.russian.crouch_move = false
-	self.russian.flammable = false
-	self.russian.speech_prefix = "russ"
-	self.russian.weapon_voice = "1"
-	self.russian.access = "teamAI2"
-	self.russian.arrest = {
-		aggression_timeout = 6,
-		arrest_timeout = 2400,
-		timeout = 2400,
+	self.npc_loadouts.ger_rifle = {
+		german_grunt_light_kar98 = nil,
+		normal = nil,
+		primary = Idstring("units/vanilla/weapons/wpn_npc_ger_k98/wpn_npc_ger_k98"),
+		secondary = Idstring("units/vanilla/weapons/wpn_npc_ger_luger/wpn_npc_ger_luger"),
 	}
-	self.russian.vision = presets.vision.easy
-end
-
-function CharacterTweakData:_init_german(presets)
-	self.german = {}
-	self.german.damage = presets.gang_member_damage
-	self.german.damage.hurt_severity = deep_clone(presets.hurt_severities.only_explosion_hurts)
-	self.german.weapon = deep_clone(presets.weapon.gang_member)
-	self.german.HEALTH_INIT = 400
-	self.german.weapon.weapons_of_choice = {
-		primary = Idstring("units/vanilla/weapons/wpn_npc_smg_thompson/wpn_npc_smg_thompson"),
-		secondary = Idstring("units/vanilla/weapons/wpn_npc_smg_thompson/wpn_npc_smg_thompson"),
+	self.npc_loadouts.ger_assault_rifle = {
+		german_grunt_light_kar98 = nil,
+		normal = nil,
+		primary = Idstring("units/vanilla/weapons/wpn_npc_ger_stg44/wpn_npc_ger_stg44"),
+		secondary = Idstring("units/vanilla/weapons/wpn_npc_ger_luger/wpn_npc_ger_luger"),
 	}
-	self.german.detection = presets.detection.gang_member
-	self.german.dodge = presets.dodge.average
-	self.german.move_speed = presets.move_speed.teamai
-	self.german.crouch_move = false
-	self.german.flammable = false
-	self.german.speech_prefix = "germ"
-	self.german.weapon_voice = "2"
-	self.german.access = "teamAI3"
-	self.german.arrest = {
-		aggression_timeout = 6,
-		arrest_timeout = 2400,
-		timeout = 2400,
+	self.npc_loadouts.ger_smg = {
+		german_grunt_light_kar98 = nil,
+		normal = nil,
+		primary = Idstring("units/vanilla/weapons/wpn_npc_ger_mp38/wpn_npc_ger_mp38"),
+		secondary = Idstring("units/vanilla/weapons/wpn_npc_ger_luger/wpn_npc_ger_luger"),
 	}
-	self.german.vision = presets.vision.easy
+	self.npc_loadouts.ger_shotgun = {
+		german_grunt_light_kar98 = nil,
+		normal = nil,
+		primary = Idstring("units/vanilla/weapons/wpn_npc_ger_geco/wpn_npc_ger_geco"),
+		secondary = Idstring("units/vanilla/weapons/wpn_npc_ger_luger/wpn_npc_ger_luger"),
+	}
+	self.npc_loadouts.unarmed = {
+		german_grunt_light_kar98 = nil,
+		normal = nil,
+	}
+	self.npc_loadouts.special_commander = {
+		german_grunt_light_kar98 = nil,
+		secondary = Idstring("units/vanilla/weapons/wpn_npc_ger_luger/wpn_npc_ger_luger_fancy"),
+	}
+	self.npc_loadouts.special_flamethrower = {
+		german_grunt_light_kar98 = nil,
+		primary = Idstring("units/vanilla/weapons/wpn_npc_spc_m42_flammenwerfer/wpn_npc_spc_m42_flammenwerfer"),
+	}
+	self.npc_loadouts.special_sniper = {
+		german_grunt_light_kar98 = nil,
+		primary = Idstring("units/vanilla/weapons/wpn_npc_ger_k98/wpn_npc_ger_k98_sniper"),
+	}
+	self.npc_loadouts.special_spotter = {
+		german_grunt_light_kar98 = nil,
+		primary = Idstring("units/vanilla/weapons/wpn_npc_binocular/wpn_npc_binocular"),
+	}
 end
 
 function CharacterTweakData:_init_british(presets)
-	self.british = {}
-	self.british.damage = presets.gang_member_damage
-	self.british.damage.hurt_severity = deep_clone(presets.hurt_severities.only_explosion_hurts)
-	self.british.weapon = deep_clone(presets.weapon.gang_member)
-	self.british.HEALTH_INIT = 400
-	self.british.weapon.weapons_of_choice = {
+	self.british = {
+		HEALTH_INIT = 400,
+		access = "teamAI1",
+		always_face_enemy = true,
+		crouch_move = false,
+		damage = presets.gang_member_damage,
+		detection = presets.detection.gang_member,
+		dodge = presets.dodge.athletic,
+		flammable = false,
+		move_speed = presets.move_speed.teamai,
+		no_run_stop = true,
+		speech_prefix = "brit",
+		vision = presets.vision.easy,
+		weapon = deep_clone(presets.weapon.gang_member),
+	}
+	self.british.loadout = {
 		primary = Idstring("units/vanilla/weapons/wpn_npc_usa_garand/wpn_npc_usa_garand"),
-		secondary = Idstring("units/vanilla/weapons/wpn_npc_usa_garand/wpn_npc_usa_garand"),
+		secondary = Idstring("units/vanilla/weapons/wpn_npc_ger_luger/wpn_npc_ger_luger"),
 	}
-	self.british.detection = presets.detection.gang_member
-	self.british.dodge = presets.dodge.average
-	self.british.move_speed = presets.move_speed.teamai
-	self.british.crouch_move = false
-	self.british.flammable = false
-	self.british.speech_prefix = "brit"
-	self.british.weapon_voice = "3"
-	self.british.access = "teamAI1"
-	self.british.arrest = {
-		aggression_timeout = 6,
-		arrest_timeout = 2400,
-		timeout = 2400,
+end
+
+function CharacterTweakData:_init_russian(presets)
+	self.russian = clone(self.british)
+	self.russian.speech_prefix = "russ"
+	self.russian.access = "teamAI2"
+	self.russian.loadout = {
+		primary = Idstring("units/vanilla/weapons/wpn_npc_smg_thompson/wpn_npc_smg_thompson"),
+		secondary = Idstring("units/vanilla/weapons/wpn_npc_ger_luger/wpn_npc_ger_luger"),
 	}
-	self.british.vision = presets.vision.easy
+end
+
+function CharacterTweakData:_init_german(presets)
+	self.german = clone(self.british)
+	self.german.speech_prefix = "germ"
+	self.german.access = "teamAI3"
+	self.german.loadout = {
+		primary = Idstring("units/vanilla/weapons/wpn_npc_smg_thompson/wpn_npc_smg_thompson"),
+		secondary = Idstring("units/vanilla/weapons/wpn_npc_ger_luger/wpn_npc_ger_luger"),
+	}
 end
 
 function CharacterTweakData:_init_american(presets)
-	self.american = {}
-	self.american.damage = presets.gang_member_damage
-	self.american.damage.hurt_severity = deep_clone(presets.hurt_severities.only_explosion_hurts)
-	self.american.weapon = deep_clone(presets.weapon.gang_member)
-	self.american.HEALTH_INIT = 400
-	self.american.weapon.weapons_of_choice = {
-		primary = Idstring("units/vanilla/weapons/wpn_npc_smg_thompson/wpn_npc_smg_thompson"),
-		secondary = Idstring("units/vanilla/weapons/wpn_npc_smg_thompson/wpn_npc_smg_thompson"),
-	}
-	self.american.detection = presets.detection.gang_member
-	self.american.dodge = presets.dodge.average
-	self.american.move_speed = presets.move_speed.teamai
-	self.american.crouch_move = false
-	self.american.flammable = false
+	self.american = clone(self.british)
 	self.american.speech_prefix = "amer"
-	self.american.weapon_voice = "3"
 	self.american.access = "teamAI4"
-	self.american.arrest = {
-		aggression_timeout = 6,
-		arrest_timeout = 2400,
-		timeout = 2400,
+	self.american.loadout = {
+		primary = Idstring("units/vanilla/weapons/wpn_npc_usa_garand/wpn_npc_usa_garand"),
+		secondary = Idstring("units/vanilla/weapons/wpn_npc_ger_luger/wpn_npc_ger_luger"),
 	}
-	self.american.vision = presets.vision.easy
 end
 
 function CharacterTweakData:_init_civilian(presets)
@@ -427,12 +428,7 @@ function CharacterTweakData:_init_german_grunt_light(presets)
 	self.german_grunt_light.BASE_HEALTH_INIT = 80
 	self.german_grunt_light.headshot_dmg_mul = 1
 	self.german_grunt_light.move_speed = presets.move_speed.fast
-	self.german_grunt_light.surrender_break_time = {
-		10,
-		15,
-	}
 	self.german_grunt_light.suppression = presets.suppression.easy
-	self.german_grunt_light.surrender = presets.surrender.normal
 	self.german_grunt_light.ecm_vulnerability = 1
 	self.german_grunt_light.ecm_hurts = {
 		ears = {
@@ -440,7 +436,6 @@ function CharacterTweakData:_init_german_grunt_light(presets)
 			min_duration = 8,
 		},
 	}
-	self.german_grunt_light.weapon_voice = "1"
 	self.german_grunt_light.speech_prefix_p1 = "ger"
 	self.german_grunt_light.speech_prefix_p2 = "soldier"
 	self.german_grunt_light.speech_prefix_count = 4
@@ -448,18 +443,25 @@ function CharacterTweakData:_init_german_grunt_light(presets)
 	self.german_grunt_light.silent_priority_shout = "shout_loud_soldier"
 	self.german_grunt_light.dodge = presets.dodge.poor
 	self.german_grunt_light.deathguard = false
-	self.german_grunt_light.chatter = presets.enemy_chatter.cop
+	self.german_grunt_light.chatter = presets.enemy_chatter.regular
 	self.german_grunt_light.steal_loot = false
 	self.german_grunt_light.loot_table = "easy_enemy"
 	self.german_grunt_light.type = CharacterTweakData.ENEMY_TYPE_SOLDIER
 	self.german_grunt_light.carry_tweak_corpse = "german_grunt_light_body"
+	self.german_grunt_light.loadout = self.npc_loadouts.ger_handgun
 	self.german_grunt_light_mp38 = clone(self.german_grunt_light)
+	self.german_grunt_light_mp38.loadout = self.npc_loadouts.ger_smg
 	self.german_grunt_light_kar98 = clone(self.german_grunt_light)
+	self.german_grunt_light_kar98.loadout = self.npc_loadouts.ger_rifle
+	self.german_grunt_light_stg44 = clone(self.german_grunt_light)
+	self.german_grunt_light_stg44.loadout = self.npc_loadouts.ger_assault_rifle
 	self.german_grunt_light_shotgun = clone(self.german_grunt_light)
+	self.german_grunt_light_shotgun.loadout = self.npc_loadouts.ger_shotgun
 
 	table.insert(self._enemies_list, "german_grunt_light")
 	table.insert(self._enemies_list, "german_grunt_light_mp38")
 	table.insert(self._enemies_list, "german_grunt_light_kar98")
+	table.insert(self._enemies_list, "german_grunt_light_stg44")
 	table.insert(self._enemies_list, "german_grunt_light_shotgun")
 end
 
@@ -473,12 +475,7 @@ function CharacterTweakData:_init_german_grunt_mid(presets)
 	self.german_grunt_mid.BASE_HEALTH_INIT = 120
 	self.german_grunt_mid.headshot_dmg_mul = 1
 	self.german_grunt_mid.move_speed = presets.move_speed.normal
-	self.german_grunt_mid.surrender_break_time = {
-		10,
-		15,
-	}
 	self.german_grunt_mid.suppression = presets.suppression.easy
-	self.german_grunt_mid.surrender = presets.surrender.normal
 	self.german_grunt_mid.ecm_vulnerability = 1
 	self.german_grunt_mid.ecm_hurts = {
 		ears = {
@@ -486,7 +483,6 @@ function CharacterTweakData:_init_german_grunt_mid(presets)
 			min_duration = 8,
 		},
 	}
-	self.german_grunt_mid.weapon_voice = "1"
 	self.german_grunt_mid.speech_prefix_p1 = "ger"
 	self.german_grunt_mid.speech_prefix_p2 = "soldier"
 	self.german_grunt_mid.speech_prefix_count = 4
@@ -494,18 +490,25 @@ function CharacterTweakData:_init_german_grunt_mid(presets)
 	self.german_grunt_mid.silent_priority_shout = "shout_loud_soldier"
 	self.german_grunt_mid.dodge = presets.dodge.average
 	self.german_grunt_mid.deathguard = false
-	self.german_grunt_mid.chatter = presets.enemy_chatter.cop
+	self.german_grunt_mid.chatter = presets.enemy_chatter.regular
 	self.german_grunt_mid.steal_loot = false
 	self.german_grunt_mid.loot_table = "easy_enemy"
 	self.german_grunt_mid.type = CharacterTweakData.ENEMY_TYPE_SOLDIER
 	self.german_grunt_mid.carry_tweak_corpse = "german_grunt_mid_body"
+	self.german_grunt_mid.loadout = self.npc_loadouts.ger_handgun
 	self.german_grunt_mid_mp38 = clone(self.german_grunt_mid)
+	self.german_grunt_mid_mp38.loadout = self.npc_loadouts.ger_smg
 	self.german_grunt_mid_kar98 = clone(self.german_grunt_mid)
+	self.german_grunt_mid_kar98.loadout = self.npc_loadouts.ger_rifle
+	self.german_grunt_mid_stg44 = clone(self.german_grunt_mid)
+	self.german_grunt_mid_stg44.loadout = self.npc_loadouts.ger_assault_rifle
 	self.german_grunt_mid_shotgun = clone(self.german_grunt_mid)
+	self.german_grunt_mid_shotgun.loadout = self.npc_loadouts.ger_shotgun
 
 	table.insert(self._enemies_list, "german_grunt_mid")
 	table.insert(self._enemies_list, "german_grunt_mid_mp38")
 	table.insert(self._enemies_list, "german_grunt_mid_kar98")
+	table.insert(self._enemies_list, "german_grunt_mid_stg44")
 	table.insert(self._enemies_list, "german_grunt_mid_shotgun")
 end
 
@@ -521,12 +524,7 @@ function CharacterTweakData:_init_german_grunt_heavy(presets)
 	self.german_grunt_heavy.headshot_helmet = true
 	self.german_grunt_heavy.move_speed = presets.move_speed.normal
 	self.german_grunt_heavy.crouch_move = false
-	self.german_grunt_heavy.surrender_break_time = {
-		10,
-		15,
-	}
 	self.german_grunt_heavy.suppression = presets.suppression.easy
-	self.german_grunt_heavy.surrender = presets.surrender.normal
 	self.german_grunt_heavy.ecm_vulnerability = 1
 	self.german_grunt_heavy.ecm_hurts = {
 		ears = {
@@ -534,7 +532,6 @@ function CharacterTweakData:_init_german_grunt_heavy(presets)
 			min_duration = 8,
 		},
 	}
-	self.german_grunt_heavy.weapon_voice = "1"
 	self.german_grunt_heavy.speech_prefix_p1 = "ger"
 	self.german_grunt_heavy.speech_prefix_p2 = "soldier"
 	self.german_grunt_heavy.speech_prefix_count = 4
@@ -542,18 +539,25 @@ function CharacterTweakData:_init_german_grunt_heavy(presets)
 	self.german_grunt_heavy.silent_priority_shout = "shout_loud_soldier"
 	self.german_grunt_heavy.dodge = presets.dodge.heavy
 	self.german_grunt_heavy.deathguard = false
-	self.german_grunt_heavy.chatter = presets.enemy_chatter.cop
+	self.german_grunt_heavy.chatter = presets.enemy_chatter.regular
 	self.german_grunt_heavy.steal_loot = false
 	self.german_grunt_heavy.loot_table = "normal_enemy"
 	self.german_grunt_heavy.type = CharacterTweakData.ENEMY_TYPE_SOLDIER
 	self.german_grunt_heavy.carry_tweak_corpse = "german_grunt_heavy_body"
+	self.german_grunt_heavy.loadout = self.npc_loadouts.ger_handgun
 	self.german_grunt_heavy_mp38 = clone(self.german_grunt_heavy)
+	self.german_grunt_heavy_mp38.loadout = self.npc_loadouts.ger_smg
 	self.german_grunt_heavy_kar98 = clone(self.german_grunt_heavy)
+	self.german_grunt_heavy_kar98.loadout = self.npc_loadouts.ger_rifle
+	self.german_grunt_heavy_stg44 = clone(self.german_grunt_heavy)
+	self.german_grunt_heavy_stg44.loadout = self.npc_loadouts.ger_assault_rifle
 	self.german_grunt_heavy_shotgun = clone(self.german_grunt_heavy)
+	self.german_grunt_heavy_shotgun.loadout = self.npc_loadouts.ger_shotgun
 
 	table.insert(self._enemies_list, "german_grunt_heavy")
 	table.insert(self._enemies_list, "german_grunt_heavy_mp38")
 	table.insert(self._enemies_list, "german_grunt_heavy_kar98")
+	table.insert(self._enemies_list, "german_grunt_heavy_stg44")
 	table.insert(self._enemies_list, "german_grunt_heavy_shotgun")
 end
 
@@ -567,12 +571,7 @@ function CharacterTweakData:_init_german_gebirgsjager_light(presets)
 	self.german_gebirgsjager_light.BASE_HEALTH_INIT = 160
 	self.german_gebirgsjager_light.headshot_dmg_mul = 1
 	self.german_gebirgsjager_light.move_speed = presets.move_speed.fast
-	self.german_gebirgsjager_light.surrender_break_time = {
-		10,
-		15,
-	}
 	self.german_gebirgsjager_light.suppression = presets.suppression.hard_def
-	self.german_gebirgsjager_light.surrender = presets.surrender.normal
 	self.german_gebirgsjager_light.ecm_vulnerability = 1
 	self.german_gebirgsjager_light.ecm_hurts = {
 		ears = {
@@ -580,7 +579,6 @@ function CharacterTweakData:_init_german_gebirgsjager_light(presets)
 			min_duration = 8,
 		},
 	}
-	self.german_gebirgsjager_light.weapon_voice = "1"
 	self.german_gebirgsjager_light.speech_prefix_p1 = "ger"
 	self.german_gebirgsjager_light.speech_prefix_p2 = "paratrooper"
 	self.german_gebirgsjager_light.speech_prefix_count = 4
@@ -588,18 +586,25 @@ function CharacterTweakData:_init_german_gebirgsjager_light(presets)
 	self.german_gebirgsjager_light.silent_priority_shout = "shout_loud_paratrooper"
 	self.german_gebirgsjager_light.dodge = presets.dodge.athletic
 	self.german_gebirgsjager_light.deathguard = false
-	self.german_gebirgsjager_light.chatter = presets.enemy_chatter.cop
+	self.german_gebirgsjager_light.chatter = presets.enemy_chatter.regular
 	self.german_gebirgsjager_light.steal_loot = false
 	self.german_gebirgsjager_light.loot_table = "normal_enemy"
 	self.german_gebirgsjager_light.type = CharacterTweakData.ENEMY_TYPE_PARATROOPER
 	self.german_gebirgsjager_light.carry_tweak_corpse = "german_gebirgsjager_light_body"
+	self.german_gebirgsjager_light.loadout = self.npc_loadouts.ger_handgun
 	self.german_gebirgsjager_light_mp38 = clone(self.german_gebirgsjager_light)
+	self.german_gebirgsjager_light_mp38.loadout = self.npc_loadouts.ger_smg
 	self.german_gebirgsjager_light_kar98 = clone(self.german_gebirgsjager_light)
+	self.german_gebirgsjager_light_kar98.loadout = self.npc_loadouts.ger_rifle
+	self.german_gebirgsjager_light_stg44 = clone(self.german_gebirgsjager_light)
+	self.german_gebirgsjager_light_stg44.loadout = self.npc_loadouts.ger_assault_rifle
 	self.german_gebirgsjager_light_shotgun = clone(self.german_gebirgsjager_light)
+	self.german_gebirgsjager_light_shotgun.loadout = self.npc_loadouts.ger_shotgun
 
 	table.insert(self._enemies_list, "german_gebirgsjager_light")
 	table.insert(self._enemies_list, "german_gebirgsjager_light_mp38")
 	table.insert(self._enemies_list, "german_gebirgsjager_light_kar98")
+	table.insert(self._enemies_list, "german_gebirgsjager_light_stg44")
 	table.insert(self._enemies_list, "german_gebirgsjager_light_shotgun")
 end
 
@@ -615,12 +620,7 @@ function CharacterTweakData:_init_german_gebirgsjager_heavy(presets)
 	self.german_gebirgsjager_heavy.headshot_helmet = true
 	self.german_gebirgsjager_heavy.move_speed = presets.move_speed.normal
 	self.german_gebirgsjager_heavy.crouch_move = false
-	self.german_gebirgsjager_heavy.surrender_break_time = {
-		10,
-		15,
-	}
 	self.german_gebirgsjager_heavy.suppression = presets.suppression.hard_def
-	self.german_gebirgsjager_heavy.surrender = presets.surrender.normal
 	self.german_gebirgsjager_heavy.ecm_vulnerability = 1
 	self.german_gebirgsjager_heavy.ecm_hurts = {
 		ears = {
@@ -628,7 +628,6 @@ function CharacterTweakData:_init_german_gebirgsjager_heavy(presets)
 			min_duration = 8,
 		},
 	}
-	self.german_gebirgsjager_heavy.weapon_voice = "1"
 	self.german_gebirgsjager_heavy.speech_prefix_p1 = "ger"
 	self.german_gebirgsjager_heavy.speech_prefix_p2 = "paratrooper"
 	self.german_gebirgsjager_heavy.speech_prefix_count = 4
@@ -636,18 +635,25 @@ function CharacterTweakData:_init_german_gebirgsjager_heavy(presets)
 	self.german_gebirgsjager_heavy.silent_priority_shout = "shout_loud_paratrooper"
 	self.german_gebirgsjager_heavy.dodge = presets.dodge.heavy
 	self.german_gebirgsjager_heavy.deathguard = false
-	self.german_gebirgsjager_heavy.chatter = presets.enemy_chatter.cop
+	self.german_gebirgsjager_heavy.chatter = presets.enemy_chatter.regular
 	self.german_gebirgsjager_heavy.steal_loot = false
 	self.german_gebirgsjager_heavy.loot_table = "normal_enemy"
 	self.german_gebirgsjager_heavy.type = CharacterTweakData.ENEMY_TYPE_PARATROOPER
 	self.german_gebirgsjager_heavy.carry_tweak_corpse = "german_gebirgsjager_heavy_body"
+	self.german_gebirgsjager_heavy.loadout = self.npc_loadouts.ger_handgun
 	self.german_gebirgsjager_heavy_mp38 = clone(self.german_gebirgsjager_heavy)
+	self.german_gebirgsjager_heavy_mp38.loadout = self.npc_loadouts.ger_smg
 	self.german_gebirgsjager_heavy_kar98 = clone(self.german_gebirgsjager_heavy)
+	self.german_gebirgsjager_heavy_kar98.loadout = self.npc_loadouts.ger_rifle
+	self.german_gebirgsjager_heavy_stg44 = clone(self.german_gebirgsjager_heavy)
+	self.german_gebirgsjager_heavy_stg44.loadout = self.npc_loadouts.ger_assault_rifle
 	self.german_gebirgsjager_heavy_shotgun = clone(self.german_gebirgsjager_heavy)
+	self.german_gebirgsjager_heavy_shotgun.loadout = self.npc_loadouts.ger_shotgun
 
 	table.insert(self._enemies_list, "german_gebirgsjager_heavy")
 	table.insert(self._enemies_list, "german_gebirgsjager_heavy_mp38")
 	table.insert(self._enemies_list, "german_gebirgsjager_heavy_kar98")
+	table.insert(self._enemies_list, "german_gebirgsjager_heavy_stg44")
 	table.insert(self._enemies_list, "german_gebirgsjager_heavy_shotgun")
 end
 
@@ -661,12 +667,7 @@ function CharacterTweakData:_init_german_light(presets)
 	self.german_light.BASE_HEALTH_INIT = 160
 	self.german_light.headshot_dmg_mul = 1
 	self.german_light.move_speed = presets.move_speed.fast
-	self.german_light.surrender_break_time = {
-		10,
-		15,
-	}
 	self.german_light.suppression = presets.suppression.hard_agg
-	self.german_light.surrender = presets.surrender.normal
 	self.german_light.ecm_vulnerability = 1
 	self.german_light.ecm_hurts = {
 		ears = {
@@ -674,7 +675,6 @@ function CharacterTweakData:_init_german_light(presets)
 			min_duration = 8,
 		},
 	}
-	self.german_light.weapon_voice = "1"
 	self.german_light.speech_prefix_p1 = "ger"
 	self.german_light.speech_prefix_p2 = "elite"
 	self.german_light.speech_prefix_count = 4
@@ -682,16 +682,25 @@ function CharacterTweakData:_init_german_light(presets)
 	self.german_light.silent_priority_shout = "shout_loud_soldier"
 	self.german_light.dodge = presets.dodge.athletic
 	self.german_light.deathguard = true
-	self.german_light.chatter = presets.enemy_chatter.cop
+	self.german_light.chatter = presets.enemy_chatter.regular
 	self.german_light.steal_loot = false
 	self.german_light.loot_table = "hard_enemy"
 	self.german_light.type = CharacterTweakData.ENEMY_TYPE_ELITE
 	self.german_light.carry_tweak_corpse = "german_black_waffen_sentry_light_body"
+	self.german_light.loadout = self.npc_loadouts.ger_handgun
+	self.german_light_mp38 = clone(self.german_light)
+	self.german_light_mp38.loadout = self.npc_loadouts.ger_smg
 	self.german_light_kar98 = clone(self.german_light)
+	self.german_light_kar98.loadout = self.npc_loadouts.ger_rifle
+	self.german_light_stg44 = clone(self.german_light)
+	self.german_light_stg44.loadout = self.npc_loadouts.ger_assault_rifle
 	self.german_light_shotgun = clone(self.german_light)
+	self.german_light_shotgun.loadout = self.npc_loadouts.ger_shotgun
 
 	table.insert(self._enemies_list, "german_light")
+	table.insert(self._enemies_list, "german_light_mp38")
 	table.insert(self._enemies_list, "german_light_kar98")
+	table.insert(self._enemies_list, "german_light_stg44")
 	table.insert(self._enemies_list, "german_light_shotgun")
 end
 
@@ -707,12 +716,7 @@ function CharacterTweakData:_init_german_heavy(presets)
 	self.german_heavy.headshot_helmet = true
 	self.german_heavy.move_speed = presets.move_speed.normal
 	self.german_heavy.crouch_move = false
-	self.german_heavy.surrender_break_time = {
-		10,
-		15,
-	}
 	self.german_heavy.suppression = presets.suppression.hard_agg
-	self.german_heavy.surrender = presets.surrender.normal
 	self.german_heavy.ecm_vulnerability = 1
 	self.german_heavy.ecm_hurts = {
 		ears = {
@@ -720,7 +724,6 @@ function CharacterTweakData:_init_german_heavy(presets)
 			min_duration = 8,
 		},
 	}
-	self.german_heavy.weapon_voice = "1"
 	self.german_heavy.speech_prefix_p1 = "ger"
 	self.german_heavy.speech_prefix_p2 = "elite"
 	self.german_heavy.speech_prefix_count = 4
@@ -728,18 +731,25 @@ function CharacterTweakData:_init_german_heavy(presets)
 	self.german_heavy.silent_priority_shout = "shout_loud_soldier"
 	self.german_heavy.dodge = presets.dodge.heavy
 	self.german_heavy.deathguard = true
-	self.german_heavy.chatter = presets.enemy_chatter.cop
+	self.german_heavy.chatter = presets.enemy_chatter.regular
 	self.german_heavy.steal_loot = false
 	self.german_heavy.loot_table = "elite_enemy"
 	self.german_heavy.type = CharacterTweakData.ENEMY_TYPE_ELITE
 	self.german_heavy.carry_tweak_corpse = "german_black_waffen_sentry_heavy_body"
+	self.german_heavy.loadout = self.npc_loadouts.ger_handgun
 	self.german_heavy_mp38 = clone(self.german_heavy)
+	self.german_heavy_mp38.loadout = self.npc_loadouts.ger_smg
 	self.german_heavy_kar98 = clone(self.german_heavy)
+	self.german_heavy_kar98.loadout = self.npc_loadouts.ger_rifle
+	self.german_heavy_stg44 = clone(self.german_heavy)
+	self.german_heavy_stg44.loadout = self.npc_loadouts.ger_assault_rifle
 	self.german_heavy_shotgun = clone(self.german_heavy)
+	self.german_heavy_shotgun.loadout = self.npc_loadouts.ger_shotgun
 
 	table.insert(self._enemies_list, "german_heavy")
 	table.insert(self._enemies_list, "german_heavy_mp38")
 	table.insert(self._enemies_list, "german_heavy_kar98")
+	table.insert(self._enemies_list, "german_heavy_stg44")
 	table.insert(self._enemies_list, "german_heavy_shotgun")
 end
 
@@ -753,12 +763,7 @@ function CharacterTweakData:_init_german_fallschirmjager_light(presets)
 	self.german_fallschirmjager_light.BASE_HEALTH_INIT = 160
 	self.german_fallschirmjager_light.headshot_dmg_mul = 1
 	self.german_fallschirmjager_light.move_speed = presets.move_speed.fast
-	self.german_fallschirmjager_light.surrender_break_time = {
-		10,
-		15,
-	}
 	self.german_fallschirmjager_light.suppression = presets.suppression.hard_def
-	self.german_fallschirmjager_light.surrender = presets.surrender.normal
 	self.german_fallschirmjager_light.ecm_vulnerability = 1
 	self.german_fallschirmjager_light.ecm_hurts = {
 		ears = {
@@ -766,7 +771,6 @@ function CharacterTweakData:_init_german_fallschirmjager_light(presets)
 			min_duration = 8,
 		},
 	}
-	self.german_fallschirmjager_light.weapon_voice = "1"
 	self.german_fallschirmjager_light.speech_prefix_p1 = "ger"
 	self.german_fallschirmjager_light.speech_prefix_p2 = "paratrooper"
 	self.german_fallschirmjager_light.speech_prefix_count = 4
@@ -774,18 +778,25 @@ function CharacterTweakData:_init_german_fallschirmjager_light(presets)
 	self.german_fallschirmjager_light.silent_priority_shout = "shout_loud_paratrooper"
 	self.german_fallschirmjager_light.dodge = presets.dodge.athletic
 	self.german_fallschirmjager_light.deathguard = true
-	self.german_fallschirmjager_light.chatter = presets.enemy_chatter.cop
+	self.german_fallschirmjager_light.chatter = presets.enemy_chatter.regular
 	self.german_fallschirmjager_light.steal_loot = false
 	self.german_fallschirmjager_light.loot_table = "hard_enemy"
 	self.german_fallschirmjager_light.type = CharacterTweakData.ENEMY_TYPE_PARATROOPER
 	self.german_fallschirmjager_light.carry_tweak_corpse = "german_fallschirmjager_light_body"
+	self.german_fallschirmjager_light.loadout = self.npc_loadouts.ger_handgun
 	self.german_fallschirmjager_light_mp38 = clone(self.german_fallschirmjager_light)
+	self.german_fallschirmjager_light_mp38.loadout = self.npc_loadouts.ger_smg
 	self.german_fallschirmjager_light_kar98 = clone(self.german_fallschirmjager_light)
+	self.german_fallschirmjager_light_kar98.loadout = self.npc_loadouts.ger_rifle
+	self.german_fallschirmjager_light_stg44 = clone(self.german_fallschirmjager_light)
+	self.german_fallschirmjager_light_stg44.loadout = self.npc_loadouts.ger_assault_rifle
 	self.german_fallschirmjager_light_shotgun = clone(self.german_fallschirmjager_light)
+	self.german_fallschirmjager_light_shotgun.loadout = self.npc_loadouts.ger_shotgun
 
 	table.insert(self._enemies_list, "german_fallschirmjager_light")
 	table.insert(self._enemies_list, "german_fallschirmjager_light_mp38")
 	table.insert(self._enemies_list, "german_fallschirmjager_light_kar98")
+	table.insert(self._enemies_list, "german_fallschirmjager_light_stg44")
 	table.insert(self._enemies_list, "german_fallschirmjager_light_shotgun")
 end
 
@@ -801,12 +812,7 @@ function CharacterTweakData:_init_german_fallschirmjager_heavy(presets)
 	self.german_fallschirmjager_heavy.headshot_helmet = true
 	self.german_fallschirmjager_heavy.move_speed = presets.move_speed.normal
 	self.german_fallschirmjager_heavy.crouch_move = false
-	self.german_fallschirmjager_heavy.surrender_break_time = {
-		10,
-		15,
-	}
 	self.german_fallschirmjager_heavy.suppression = presets.suppression.hard_def
-	self.german_fallschirmjager_heavy.surrender = presets.surrender.normal
 	self.german_fallschirmjager_heavy.ecm_vulnerability = 1
 	self.german_fallschirmjager_heavy.ecm_hurts = {
 		ears = {
@@ -814,7 +820,6 @@ function CharacterTweakData:_init_german_fallschirmjager_heavy(presets)
 			min_duration = 8,
 		},
 	}
-	self.german_fallschirmjager_heavy.weapon_voice = "1"
 	self.german_fallschirmjager_heavy.speech_prefix_p1 = "ger"
 	self.german_fallschirmjager_heavy.speech_prefix_p2 = "paratrooper"
 	self.german_fallschirmjager_heavy.speech_prefix_count = 4
@@ -822,18 +827,25 @@ function CharacterTweakData:_init_german_fallschirmjager_heavy(presets)
 	self.german_fallschirmjager_heavy.silent_priority_shout = "shout_loud_paratrooper"
 	self.german_fallschirmjager_heavy.dodge = presets.dodge.heavy
 	self.german_fallschirmjager_heavy.deathguard = false
-	self.german_fallschirmjager_heavy.chatter = presets.enemy_chatter.cop
+	self.german_fallschirmjager_heavy.chatter = presets.enemy_chatter.regular
 	self.german_fallschirmjager_heavy.steal_loot = false
 	self.german_fallschirmjager_heavy.loot_table = "hard_enemy"
 	self.german_fallschirmjager_heavy.type = CharacterTweakData.ENEMY_TYPE_PARATROOPER
 	self.german_fallschirmjager_heavy.carry_tweak_corpse = "german_fallschirmjager_heavy_body"
+	self.german_fallschirmjager_heavy.loadout = self.npc_loadouts.ger_handgun
 	self.german_fallschirmjager_heavy_mp38 = clone(self.german_fallschirmjager_heavy)
+	self.german_fallschirmjager_heavy_mp38.loadout = self.npc_loadouts.ger_smg
 	self.german_fallschirmjager_heavy_kar98 = clone(self.german_fallschirmjager_heavy)
+	self.german_fallschirmjager_heavy_kar98.loadout = self.npc_loadouts.ger_rifle
+	self.german_fallschirmjager_heavy_stg44 = clone(self.german_fallschirmjager_heavy)
+	self.german_fallschirmjager_heavy_stg44.loadout = self.npc_loadouts.ger_assault_rifle
 	self.german_fallschirmjager_heavy_shotgun = clone(self.german_fallschirmjager_heavy)
+	self.german_fallschirmjager_heavy_shotgun.loadout = self.npc_loadouts.ger_shotgun
 
 	table.insert(self._enemies_list, "german_fallschirmjager_heavy")
 	table.insert(self._enemies_list, "german_fallschirmjager_heavy_mp38")
 	table.insert(self._enemies_list, "german_fallschirmjager_heavy_kar98")
+	table.insert(self._enemies_list, "german_fallschirmjager_heavy_stg44")
 	table.insert(self._enemies_list, "german_fallschirmjager_heavy_shotgun")
 end
 
@@ -849,12 +861,7 @@ function CharacterTweakData:_init_german_gasmask(presets)
 	self.german_gasmask.headshot_helmet = true
 	self.german_gasmask.move_speed = presets.move_speed.normal
 	self.german_gasmask.crouch_move = false
-	self.german_gasmask.surrender_break_time = {
-		10,
-		15,
-	}
 	self.german_gasmask.suppression = presets.suppression.hard_agg
-	self.german_gasmask.surrender = presets.surrender.normal
 	self.german_gasmask.ecm_vulnerability = 1
 	self.german_gasmask.ecm_hurts = {
 		ears = {
@@ -862,7 +869,6 @@ function CharacterTweakData:_init_german_gasmask(presets)
 			min_duration = 8,
 		},
 	}
-	self.german_gasmask.weapon_voice = "1"
 	self.german_gasmask.speech_prefix_p1 = "ger"
 	self.german_gasmask.speech_prefix_p2 = "elite"
 	self.german_gasmask.speech_prefix_count = 4
@@ -870,51 +876,78 @@ function CharacterTweakData:_init_german_gasmask(presets)
 	self.german_gasmask.silent_priority_shout = "shout_loud_soldier"
 	self.german_gasmask.dodge = presets.dodge.average
 	self.german_gasmask.deathguard = true
-	self.german_gasmask.chatter = presets.enemy_chatter.cop
+	self.german_gasmask.chatter = presets.enemy_chatter.regular
 	self.german_gasmask.steal_loot = false
 	self.german_gasmask.loot_table = "elite_enemy"
 	self.german_gasmask.type = CharacterTweakData.ENEMY_TYPE_ELITE
 	self.german_gasmask.carry_tweak_corpse = "german_black_waffen_sentry_gasmask_body"
-	self.german_gasmask_shotgun = deep_clone(self.german_gasmask)
+	self.german_gasmask.loadout = self.npc_loadouts.ger_handgun
+	self.german_gasmask_mp38 = clone(self.german_gasmask)
+	self.german_gasmask_mp38.loadout = self.npc_loadouts.ger_smg
+	self.german_gasmask_kar98 = clone(self.german_gasmask)
+	self.german_gasmask_kar98.loadout = self.npc_loadouts.ger_rifle
+	self.german_gasmask_stg44 = clone(self.german_gasmask)
+	self.german_gasmask_stg44.loadout = self.npc_loadouts.ger_assault_rifle
+	self.german_gasmask_shotgun = clone(self.german_gasmask)
+	self.german_gasmask_shotgun.loadout = self.npc_loadouts.ger_shotgun
 
 	table.insert(self._enemies_list, "german_gasmask")
+	table.insert(self._enemies_list, "german_gasmask_mp38")
+	table.insert(self._enemies_list, "german_gasmask_kar98")
+	table.insert(self._enemies_list, "german_gasmask_stg44")
 	table.insert(self._enemies_list, "german_gasmask_shotgun")
 end
 
 function CharacterTweakData:_init_german_commander_backup(presets)
-	self.german_light_commander_backup = deep_clone(self.german_light)
+	self.german_light_commander_backup = clone(self.german_light)
 	self.german_light_commander_backup.carry_tweak_corpse = "german_black_waffen_sentry_light_commander_body"
 
 	table.insert(self._enemies_list, "german_light_commander_backup")
 
-	self.german_light_commander_backup_kar98 = deep_clone(self.german_light_commander_backup)
+	self.german_light_commander_backup_mp38 = clone(self.german_light_mp38)
+	self.german_light_commander_backup_mp38.carry_tweak_corpse = "german_black_waffen_sentry_light_commander_body"
+
+	table.insert(self._enemies_list, "german_light_commander_backup_mp38")
+
+	self.german_light_commander_backup_kar98 = clone(self.german_light_kar98)
+	self.german_light_commander_backup_kar98.carry_tweak_corpse = "german_black_waffen_sentry_light_commander_body"
 
 	table.insert(self._enemies_list, "german_light_commander_backup_kar98")
 
-	self.german_light_commander_backup_shotgun = deep_clone(self.german_light_commander_backup)
+	self.german_light_commander_backup_stg44 = clone(self.german_light_stg44)
+	self.german_light_commander_backup_stg44.carry_tweak_corpse = "german_black_waffen_sentry_light_commander_body"
+
+	table.insert(self._enemies_list, "german_light_commander_backup_stg44")
+
+	self.german_light_commander_backup_shotgun = clone(self.german_light_shotgun)
+	self.german_light_commander_backup_shotgun.carry_tweak_corpse = "german_black_waffen_sentry_light_commander_body"
 
 	table.insert(self._enemies_list, "german_light_commander_backup_shotgun")
 
-	self.german_heavy_commander_backup = deep_clone(self.german_heavy)
+	self.german_heavy_commander_backup = clone(self.german_heavy)
 	self.german_heavy_commander_backup.carry_tweak_corpse = "german_black_waffen_sentry_heavy_commander_body"
 
 	table.insert(self._enemies_list, "german_heavy_commander_backup")
 
-	self.german_heavy_commander_backup_shotgun = deep_clone(self.german_heavy_commander_backup)
+	self.german_heavy_commander_backup_mp38 = clone(self.german_heavy_mp38)
+	self.german_heavy_commander_backup_mp38.carry_tweak_corpse = "german_black_waffen_sentry_heavy_commander_body"
 
-	table.insert(self._enemies_list, "german_heavy_commander_backup_shotgun")
+	table.insert(self._enemies_list, "german_heavy_commander_backup_mp38")
 
-	self.german_heavy_commander_backup_kar98 = deep_clone(self.german_heavy_commander_backup)
+	self.german_heavy_commander_backup_kar98 = clone(self.german_heavy_kar98)
+	self.german_heavy_commander_backup_kar98.carry_tweak_corpse = "german_black_waffen_sentry_heavy_commander_body"
 
 	table.insert(self._enemies_list, "german_heavy_commander_backup_kar98")
 
-	self.german_gasmask_commander_backup = deep_clone(self.german_gasmask)
+	self.german_heavy_commander_backup_stg44 = clone(self.german_heavy_stg44)
+	self.german_heavy_commander_backup_stg44.carry_tweak_corpse = "german_black_waffen_sentry_heavy_commander_body"
 
-	table.insert(self._enemies_list, "german_gasmask_commander_backup")
+	table.insert(self._enemies_list, "german_heavy_commander_backup_stg44")
 
-	self.german_gasmask_commander_backup_shotgun = deep_clone(self.german_gasmask_shotgun)
+	self.german_heavy_commander_backup_shotgun = clone(self.german_heavy_shotgun)
+	self.german_heavy_commander_backup_shotgun.carry_tweak_corpse = "german_black_waffen_sentry_heavy_commander_body"
 
-	table.insert(self._enemies_list, "german_gasmask_commander_backup_shotgun")
+	table.insert(self._enemies_list, "german_heavy_commander_backup_shotgun")
 end
 
 function CharacterTweakData:_init_german_waffen_ss(presets)
@@ -928,12 +961,7 @@ function CharacterTweakData:_init_german_waffen_ss(presets)
 	self.german_waffen_ss.headshot_dmg_mul = 1
 	self.german_waffen_ss.move_speed = presets.move_speed.fast
 	self.german_waffen_ss.crouch_move = false
-	self.german_waffen_ss.surrender_break_time = {
-		10,
-		15,
-	}
 	self.german_waffen_ss.suppression = presets.suppression.hard_def
-	self.german_waffen_ss.surrender = presets.surrender.normal
 	self.german_waffen_ss.ecm_vulnerability = 1
 	self.german_waffen_ss.ecm_hurts = {
 		ears = {
@@ -941,7 +969,6 @@ function CharacterTweakData:_init_german_waffen_ss(presets)
 			min_duration = 8,
 		},
 	}
-	self.german_waffen_ss.weapon_voice = "1"
 	self.german_waffen_ss.speech_prefix_p1 = "ger"
 	self.german_waffen_ss.speech_prefix_p2 = "paratrooper"
 	self.german_waffen_ss.speech_prefix_count = 4
@@ -949,16 +976,25 @@ function CharacterTweakData:_init_german_waffen_ss(presets)
 	self.german_waffen_ss.silent_priority_shout = "shout_loud_soldier"
 	self.german_waffen_ss.dodge = presets.dodge.average
 	self.german_waffen_ss.deathguard = false
-	self.german_waffen_ss.chatter = presets.enemy_chatter.cop
+	self.german_waffen_ss.chatter = presets.enemy_chatter.regular
 	self.german_waffen_ss.steal_loot = false
 	self.german_waffen_ss.loot_table = "elite_enemy"
 	self.german_waffen_ss.type = CharacterTweakData.ENEMY_TYPE_PARATROOPER
 	self.german_waffen_ss.carry_tweak_corpse = "german_fallschirmjager_heavy_body"
+	self.german_waffen_ss.loadout = self.npc_loadouts.ger_handgun
+	self.german_waffen_ss_mp38 = clone(self.german_waffen_ss)
+	self.german_waffen_ss_mp38.loadout = self.npc_loadouts.ger_smg
 	self.german_waffen_ss_kar98 = clone(self.german_waffen_ss)
+	self.german_waffen_ss_kar98.loadout = self.npc_loadouts.ger_rifle
+	self.german_waffen_ss_stg44 = clone(self.german_waffen_ss)
+	self.german_waffen_ss_stg44.loadout = self.npc_loadouts.ger_assault_rifle
 	self.german_waffen_ss_shotgun = clone(self.german_waffen_ss)
+	self.german_waffen_ss_shotgun.loadout = self.npc_loadouts.ger_shotgun
 
 	table.insert(self._enemies_list, "german_waffen_ss")
+	table.insert(self._enemies_list, "german_waffen_ss_mp38")
 	table.insert(self._enemies_list, "german_waffen_ss_kar98")
+	table.insert(self._enemies_list, "german_waffen_ss_stg44")
 	table.insert(self._enemies_list, "german_waffen_ss_shotgun")
 end
 
@@ -972,10 +1008,6 @@ function CharacterTweakData:_init_german_commander(presets)
 	self.german_commander.BASE_HEALTH_INIT = 400
 	self.german_commander.headshot_dmg_mul = 1
 	self.german_commander.move_speed = presets.move_speed.very_fast
-	self.german_commander.surrender_break_time = {
-		10,
-		15,
-	}
 	self.german_commander.suppression = presets.suppression.no_supress
 	self.german_commander.ecm_vulnerability = 1
 	self.german_commander.ecm_hurts = {
@@ -984,7 +1016,6 @@ function CharacterTweakData:_init_german_commander(presets)
 			min_duration = 8,
 		},
 	}
-	self.german_commander.weapon_voice = "1"
 	self.german_commander.speech_prefix_p1 = "ger"
 	self.german_commander.speech_prefix_p2 = "officer"
 	self.german_commander.speech_prefix_count = 4
@@ -995,9 +1026,8 @@ function CharacterTweakData:_init_german_commander(presets)
 	self.german_commander.announce_incomming = "incomming_commander"
 	self.german_commander.dodge = presets.dodge.athletic
 	self.german_commander.deathguard = true
-	self.german_commander.chatter = presets.enemy_chatter.cop
+	self.german_commander.chatter = presets.enemy_chatter.special
 	self.german_commander.steal_loot = false
-	self.german_commander.surrender = nil
 	self.german_commander.loot_table = "special_enemy"
 	self.german_commander.type = CharacterTweakData.ENEMY_TYPE_OFFICER
 	self.german_commander.is_special = true
@@ -1011,6 +1041,7 @@ function CharacterTweakData:_init_german_commander(presets)
 		},
 		run_char_seqs = {},
 	}
+	self.german_commander.loadout = self.npc_loadouts.special_commander
 
 	table.insert(self._enemies_list, "german_commander")
 end
@@ -1025,10 +1056,6 @@ function CharacterTweakData:_init_german_og_commander(presets)
 	self.german_og_commander.BASE_HEALTH_INIT = 400
 	self.german_og_commander.headshot_dmg_mul = 1
 	self.german_og_commander.move_speed = presets.move_speed.very_fast
-	self.german_og_commander.surrender_break_time = {
-		10,
-		15,
-	}
 	self.german_og_commander.suppression = presets.suppression.no_supress
 	self.german_og_commander.ecm_vulnerability = 1
 	self.german_og_commander.ecm_hurts = {
@@ -1037,7 +1064,6 @@ function CharacterTweakData:_init_german_og_commander(presets)
 			min_duration = 8,
 		},
 	}
-	self.german_og_commander.weapon_voice = "1"
 	self.german_og_commander.speech_prefix_p1 = "ger"
 	self.german_og_commander.speech_prefix_p2 = "officer"
 	self.german_og_commander.speech_prefix_count = 4
@@ -1048,9 +1074,8 @@ function CharacterTweakData:_init_german_og_commander(presets)
 	self.german_og_commander.announce_incomming = "incomming_commander"
 	self.german_og_commander.dodge = presets.dodge.athletic
 	self.german_og_commander.deathguard = true
-	self.german_og_commander.chatter = presets.enemy_chatter.cop
+	self.german_og_commander.chatter = presets.enemy_chatter.special
 	self.german_og_commander.steal_loot = false
-	self.german_og_commander.surrender = nil
 	self.german_og_commander.loot_table = "special_enemy"
 	self.german_og_commander.type = CharacterTweakData.ENEMY_TYPE_OFFICER
 	self.german_og_commander.is_special = true
@@ -1064,6 +1089,7 @@ function CharacterTweakData:_init_german_og_commander(presets)
 		},
 		run_char_seqs = {},
 	}
+	self.german_og_commander.loadout = self.npc_loadouts.special_commander
 
 	table.insert(self._enemies_list, "german_og_commander")
 end
@@ -1078,12 +1104,7 @@ function CharacterTweakData:_init_german_officer(presets)
 	self.german_officer.BASE_HEALTH_INIT = 400
 	self.german_officer.headshot_dmg_mul = 1
 	self.german_officer.move_speed = presets.move_speed.very_fast
-	self.german_officer.surrender_break_time = {
-		10,
-		15,
-	}
 	self.german_officer.suppression = presets.suppression.no_supress
-	self.german_officer.surrender = presets.surrender.normal
 	self.german_officer.ecm_vulnerability = 1
 	self.german_officer.ecm_hurts = {
 		ears = {
@@ -1091,7 +1112,6 @@ function CharacterTweakData:_init_german_officer(presets)
 			min_duration = 8,
 		},
 	}
-	self.german_officer.weapon_voice = "1"
 	self.german_officer.speech_prefix_p1 = "ger"
 	self.german_officer.speech_prefix_p2 = "officer"
 	self.german_officer.speech_prefix_count = 4
@@ -1100,11 +1120,12 @@ function CharacterTweakData:_init_german_officer(presets)
 	self.german_officer.priority_waypoint = "waypoint_special_mark_officer"
 	self.german_officer.dodge = presets.dodge.athletic
 	self.german_officer.deathguard = true
-	self.german_officer.chatter = presets.enemy_chatter.cop
+	self.german_officer.chatter = presets.enemy_chatter.special
 	self.german_officer.steal_loot = false
 	self.german_officer.loot_table = "special_enemy"
 	self.german_officer.type = CharacterTweakData.ENEMY_TYPE_OFFICER
 	self.german_officer.carry_tweak_corpse = "german_commander_body"
+	self.german_officer.loadout = self.npc_loadouts.special_commander
 
 	table.insert(self._enemies_list, "german_officer")
 end
@@ -1119,12 +1140,7 @@ function CharacterTweakData:_init_soviet_nkvd_int_security_captain(presets)
 	self.soviet_nkvd_int_security_captain.BASE_HEALTH_INIT = 100
 	self.soviet_nkvd_int_security_captain.headshot_dmg_mul = 1
 	self.soviet_nkvd_int_security_captain.move_speed = presets.move_speed.very_fast
-	self.soviet_nkvd_int_security_captain.surrender_break_time = {
-		10,
-		15,
-	}
 	self.soviet_nkvd_int_security_captain.suppression = presets.suppression.no_supress
-	self.soviet_nkvd_int_security_captain.surrender = presets.surrender.normal
 	self.soviet_nkvd_int_security_captain.ecm_vulnerability = 1
 	self.soviet_nkvd_int_security_captain.ecm_hurts = {
 		ears = {
@@ -1132,7 +1148,6 @@ function CharacterTweakData:_init_soviet_nkvd_int_security_captain(presets)
 			min_duration = 8,
 		},
 	}
-	self.soviet_nkvd_int_security_captain.weapon_voice = "1"
 	self.soviet_nkvd_int_security_captain.speech_prefix_p1 = "ger"
 	self.soviet_nkvd_int_security_captain.speech_prefix_p2 = "officer"
 	self.soviet_nkvd_int_security_captain.speech_prefix_count = 4
@@ -1140,18 +1155,18 @@ function CharacterTweakData:_init_soviet_nkvd_int_security_captain(presets)
 	self.soviet_nkvd_int_security_captain.silent_priority_shout = "shout_loud_soldier"
 	self.soviet_nkvd_int_security_captain.dodge = presets.dodge.athletic
 	self.soviet_nkvd_int_security_captain.deathguard = true
-	self.soviet_nkvd_int_security_captain.chatter = presets.enemy_chatter.cop
+	self.soviet_nkvd_int_security_captain.chatter = presets.enemy_chatter.no_chatter
 	self.soviet_nkvd_int_security_captain.steal_loot = false
 	self.soviet_nkvd_int_security_captain.loot_table = "special_enemy"
 	self.soviet_nkvd_int_security_captain.type = CharacterTweakData.ENEMY_TYPE_OFFICER
 	self.soviet_nkvd_int_security_captain.carry_tweak_corpse = "soviet_nkvd_int_security_captain_body"
+	self.soviet_nkvd_int_security_captain.loadout = self.npc_loadouts.unarmed
 
 	table.insert(self._enemies_list, "soviet_nkvd_int_security_captain")
 end
 
 function CharacterTweakData:_init_soviet_nkvd_int_security_captain_b(presets)
 	self.soviet_nkvd_int_security_captain_b = deep_clone(self.soviet_nkvd_int_security_captain)
-	self.soviet_nkvd_int_security_captain_b.weapon_voice = "1"
 	self.soviet_nkvd_int_security_captain_b.speech_prefix_p1 = "ger"
 	self.soviet_nkvd_int_security_captain_b.speech_prefix_p2 = "officer"
 	self.soviet_nkvd_int_security_captain_b.speech_prefix_count = 4
@@ -1181,21 +1196,15 @@ function CharacterTweakData:_init_german_flamer(presets)
 	self.german_flamer.no_run_start = true
 	self.german_flamer.no_run_stop = true
 	self.german_flamer.loot_table = "flamer_enemy"
-	self.german_flamer.surrender = nil
-	self.german_flamer.ecm_vulnerability = 0
-	self.german_flamer.ecm_hurts = {
-		ears = {
-			max_duration = 9,
-			min_duration = 7,
-		},
-	}
 	self.german_flamer.priority_shout = "shout_loud_flamer"
 	self.german_flamer.priority_waypoint = "waypoint_special_mark_flamer"
 	self.german_flamer.deathguard = true
 	self.german_flamer.no_equip_anim = true
+	self.german_flamer.never_strafe = true
 	self.german_flamer.wall_fwd_offset = 100
-	self.german_flamer.damage.explosion_damage_mul = 1
 	self.german_flamer.calls_in = nil
+	self.german_flamer.damage.explosion_damage_mul = 0.665
+	self.german_flamer.damage.fire_damage_mul = 0.011
 	self.german_flamer.critical_hits.damage_mul = 1.2
 	self.german_flamer.damage.hurt_severity = deep_clone(presets.hurt_severities.no_hurts)
 	self.german_flamer.damage.hurt_severity.explosion = {
@@ -1218,6 +1227,7 @@ function CharacterTweakData:_init_german_flamer(presets)
 	self.german_flamer.damage.ignore_knockdown = true
 	self.german_flamer.use_animation_on_fire_damage = false
 	self.german_flamer.flammable = true
+	self.german_flamer.loadout = self.npc_loadouts.special_flamethrower
 	self.german_flamer.weapon = {}
 
 	local max_range = 1200
@@ -1308,6 +1318,7 @@ function CharacterTweakData:_init_german_flamer(presets)
 			},
 		},
 	}
+	self.german_flamer.weapon.ak47.SUPPRESSION_ACC_CHANCE = 1
 
 	self:_process_weapon_usage_table(self.german_flamer.weapon)
 
@@ -1316,12 +1327,11 @@ function CharacterTweakData:_init_german_flamer(presets)
 		projectile_id = "flamer_incendiary",
 		throw_chance = 0.15,
 	}
-	self.german_flamer.weapon_voice = "3"
 	self.german_flamer.speech_prefix_p1 = "ger"
 	self.german_flamer.speech_prefix_p2 = "flamer"
 	self.german_flamer.speech_prefix_count = 4
 	self.german_flamer.access = "tank"
-	self.german_flamer.chatter = presets.enemy_chatter.cop
+	self.german_flamer.chatter = presets.enemy_chatter.special
 	self.german_flamer.announce_incomming = "incomming_flamer"
 	self.german_flamer.steal_loot = nil
 	self.german_flamer.use_animation_on_fire_damage = false
@@ -1346,7 +1356,6 @@ function CharacterTweakData:_init_german_sniper(presets)
 	self.german_sniper.move_speed = presets.move_speed.normal
 	self.german_sniper.suppression = presets.suppression.easy
 	self.german_sniper.loot_table = "normal_enemy"
-	self.german_sniper.surrender = nil
 	self.german_sniper.ecm_vulnerability = 0
 	self.german_sniper.ecm_hurts = {
 		ears = {
@@ -1373,7 +1382,6 @@ function CharacterTweakData:_init_german_sniper(presets)
 	self:_process_weapon_usage_table(self.german_sniper.weapon)
 
 	self.german_sniper.dont_modify_weapon_usage = true
-	self.german_sniper.weapon_voice = "1"
 	self.german_sniper.speech_prefix_p1 = "ger"
 	self.german_sniper.speech_prefix_p2 = "elite"
 	self.german_sniper.speech_prefix_count = 4
@@ -1424,6 +1432,7 @@ function CharacterTweakData:_init_german_sniper(presets)
 			},
 		},
 	}
+	self.german_sniper.loadout = self.npc_loadouts.special_sniper
 
 	table.insert(self._enemies_list, "german_sniper")
 end
@@ -1439,12 +1448,7 @@ function CharacterTweakData:_init_german_spotter(presets)
 	self.german_spotter.headshot_dmg_mul = 4
 	self.german_spotter.move_speed = presets.move_speed.slow
 	self.german_spotter.crouch_move = false
-	self.german_spotter.surrender_break_time = {
-		10,
-		15,
-	}
 	self.german_spotter.suppression = presets.suppression.hard_agg
-	self.german_spotter.surrender = presets.surrender.normal
 	self.german_spotter.ecm_vulnerability = 1
 	self.german_spotter.ecm_hurts = {
 		ears = {
@@ -1452,7 +1456,6 @@ function CharacterTweakData:_init_german_spotter(presets)
 			min_duration = 8,
 		},
 	}
-	self.german_spotter.weapon_voice = "1"
 	self.german_spotter.speech_prefix_p1 = "ger"
 	self.german_spotter.speech_prefix_p2 = "elite"
 	self.german_spotter.speech_prefix_count = 4
@@ -1461,8 +1464,8 @@ function CharacterTweakData:_init_german_spotter(presets)
 	self.german_spotter.priority_shout = "shout_loud_spotter"
 	self.german_spotter.priority_waypoint = "waypoint_special_mark_spotter"
 	self.german_spotter.dodge = presets.dodge.poor
-	self.german_spotter.deathguard = true
-	self.german_spotter.chatter = presets.enemy_chatter.cop
+	self.german_spotter.deathguard = false
+	self.german_spotter.chatter = presets.enemy_chatter.special
 	self.german_spotter.steal_loot = false
 	self.german_spotter.loot_table = "normal_enemy"
 	self.german_spotter.type = CharacterTweakData.ENEMY_TYPE_ELITE
@@ -1503,6 +1506,7 @@ function CharacterTweakData:_init_german_spotter(presets)
 			},
 		},
 	}
+	self.german_spotter.loadout = self.npc_loadouts.special_spotter
 	self.german_spotter.dismemberment_enabled = false
 	self.german_spotter.is_special = true
 	self.german_spotter.special_type = CharacterTweakData.SPECIAL_UNIT_TYPE_SPOTTER
@@ -1752,10 +1756,6 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.base.crouch_move = true
 	presets.base.shooting_death = true
 	presets.base.suspicious = true
-	presets.base.surrender_break_time = {
-		20,
-		30,
-	}
 	presets.base.submission_max = {
 		45,
 		60,
@@ -1786,41 +1786,20 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.base.damage.death_severity = 0.75
 	presets.base.damage.explosion_damage_mul = 1
 	presets.base.dismemberment_enabled = true
-	presets.gang_member_damage = {}
-	presets.gang_member_damage.HEALTH_INIT = 75
-	presets.gang_member_damage.REGENERATE_TIME = 2
-	presets.gang_member_damage.REGENERATE_TIME_AWAY = 0.2
-	presets.gang_member_damage.DOWNED_TIME = tweak_data.player.damage.DOWNED_TIME
-	presets.gang_member_damage.TASED_TIME = tweak_data.player.damage.TASED_TIME
-	presets.gang_member_damage.BLEED_OUT_HEALTH_INIT = tweak_data.player.damage.BLEED_OUT_HEALTH_INIT
-	presets.gang_member_damage.INCAPACITATED_TIME = tweak_data.player.damage.INCAPACITATED_TIME
-	presets.gang_member_damage.hurt_severity = deep_clone(presets.hurt_severities.base)
-	presets.gang_member_damage.hurt_severity.bullet = {
-		health_reference = "current",
-		zones = {
-			{
-				health_limit = 0.4,
-				light = 0.6,
-				moderate = 0.1,
-				none = 0.3,
-			},
-			{
-				health_limit = 0.7,
-				light = 0.7,
-				moderate = 0.2,
-				none = 0.1,
-			},
-			{
-				heavy = 0.1,
-				light = 0.5,
-				moderate = 0.3,
-				none = 0.1,
-			},
-		},
+	presets.gang_member_damage = {
+		DISTANCE_IS_AWAY = 1000000,
+		DOWNED_TIME = tweak_data.player.damage.DOWNED_TIME,
+		HEALTH_INIT = 100,
+		MIN_DAMAGE_INTERVAL = 0.25,
+		REGENERATE_RATIO = 0.09,
+		REGENERATE_TIME = 1,
+		REGENERATE_TIME_AWAY = 2,
+		TASED_TIME = tweak_data.player.damage.TASED_TIME,
+		explosion_damage_mul = 0.8,
+		fire_damage_mul = 0.6,
+		hurt_severity = presets.hurt_severities.only_explosion_hurts,
+		reviving_damage_mul = 0.75,
 	}
-	presets.gang_member_damage.MIN_DAMAGE_INTERVAL = 0.15
-	presets.gang_member_damage.respawn_time_penalty = 0
-	presets.gang_member_damage.base_respawn_time_penalty = 5
 
 	local shotgun_aim_delay = {
 		2,
@@ -2648,6 +2627,7 @@ function CharacterTweakData:_presets(tweak_data)
 			},
 		},
 	}
+	presets.weapon.normal.ger_geco_npc.SUPPRESSION_ACC_CHANCE = 0.25
 	presets.weapon.good = {
 		ger_geco_npc = {},
 		ger_kar98_npc = {},
@@ -3412,6 +3392,7 @@ function CharacterTweakData:_presets(tweak_data)
 			},
 		},
 	}
+	presets.weapon.good.ger_geco_npc.SUPPRESSION_ACC_CHANCE = 0.3
 	presets.weapon.expert = {
 		ger_geco_npc = {},
 		ger_kar98_npc = {},
@@ -4176,6 +4157,7 @@ function CharacterTweakData:_presets(tweak_data)
 			},
 		},
 	}
+	presets.weapon.expert.ger_geco_npc.SUPPRESSION_ACC_CHANCE = 0.35
 	presets.weapon.insane = {
 		ger_geco_npc = {},
 		ger_kar98_npc = {},
@@ -4940,6 +4922,7 @@ function CharacterTweakData:_presets(tweak_data)
 			},
 		},
 	}
+	presets.weapon.insane.ger_geco_npc.SUPPRESSION_ACC_CHANCE = 0.4
 	presets.weapon.sniper = {
 		ger_kar98_npc = {},
 	}
@@ -5035,6 +5018,7 @@ function CharacterTweakData:_presets(tweak_data)
 			},
 		},
 	}
+	presets.weapon.sniper.ger_kar98_npc.SUPPRESSION_ACC_CHANCE = 0.25
 	presets.weapon.gang_member = {
 		ger_luger_npc = {},
 		ger_mp38_npc = {},
@@ -5042,6 +5026,7 @@ function CharacterTweakData:_presets(tweak_data)
 		thompson_npc = {},
 		usa_garand_npc = {},
 		usa_m1911_npc = {},
+		usa_m1912_npc = {},
 	}
 	presets.weapon.gang_member.ger_luger_npc.aim_delay = pistol_aim_delay
 	presets.weapon.gang_member.ger_luger_npc.focus_delay = 1
@@ -5385,6 +5370,94 @@ function CharacterTweakData:_presets(tweak_data)
 			recoil = {
 				2,
 				3,
+			},
+		},
+	}
+	presets.weapon.gang_member.usa_m1912_npc.aim_delay = shotgun_aim_delay
+	presets.weapon.gang_member.usa_m1912_npc.focus_delay = 2
+	presets.weapon.gang_member.usa_m1912_npc.focus_dis = 200
+	presets.weapon.gang_member.usa_m1912_npc.spread = 15
+	presets.weapon.gang_member.usa_m1912_npc.miss_dis = 20
+	presets.weapon.gang_member.usa_m1912_npc.RELOAD_SPEED = 1.3
+	presets.weapon.gang_member.usa_m1912_npc.melee_speed = 1
+	presets.weapon.gang_member.usa_m1912_npc.melee_dmg = 2
+	presets.weapon.gang_member.usa_m1912_npc.melee_retry_delay = presets.weapon.gang_member.usa_garand_npc.melee_retry_delay
+	presets.weapon.gang_member.usa_m1912_npc.range = {
+		close = 600,
+		far = 1000,
+		optimal = 800,
+	}
+	presets.weapon.gang_member.usa_m1912_npc.FALLOFF = {
+		{
+			acc = {
+				0.9,
+				1,
+			},
+			dmg_mul = 5,
+			mode = {
+				1,
+				0,
+				0,
+				0,
+			},
+			r = 600,
+			recoil = {
+				1.5,
+				2,
+			},
+		},
+		{
+			acc = {
+				0.5,
+				0.9,
+			},
+			dmg_mul = 2.5,
+			mode = {
+				1,
+				0,
+				0,
+				0,
+			},
+			r = 1000,
+			recoil = {
+				1.5,
+				2,
+			},
+		},
+		{
+			acc = {
+				0.25,
+				0.65,
+			},
+			dmg_mul = 2,
+			mode = {
+				1,
+				0,
+				0,
+				0,
+			},
+			r = 1500,
+			recoil = {
+				1.5,
+				2,
+			},
+		},
+		{
+			acc = {
+				0.15,
+				0.35,
+			},
+			dmg_mul = 1,
+			mode = {
+				1,
+				0,
+				0,
+				0,
+			},
+			r = 2000,
+			recoil = {
+				1.5,
+				2,
 			},
 		},
 	}
@@ -6684,9 +6757,9 @@ function CharacterTweakData:_presets(tweak_data)
 						strafe = 325,
 					},
 					hos = {
-						bwd = 300,
-						fwd = 500,
-						strafe = 300,
+						bwd = 325,
+						fwd = 580,
+						strafe = 340,
 					},
 				},
 				walk = {
@@ -6828,8 +6901,8 @@ function CharacterTweakData:_presets(tweak_data)
 		},
 	}
 
-	for speed_preset_name, poses in pairs(presets.move_speed) do
-		for pose, hastes in pairs(poses) do
+	for _, poses in pairs(presets.move_speed) do
+		for _, hastes in pairs(poses) do
 			hastes.run.ntl = hastes.run.hos
 		end
 
@@ -6839,95 +6912,6 @@ function CharacterTweakData:_presets(tweak_data)
 		poses.panic = poses.stand
 	end
 
-	presets.surrender = {}
-	presets.surrender.easy = {
-		base_chance = 0.75,
-		factors = {
-			aggressor_dis = {
-				[300] = 0.15,
-				[1000] = 0.02,
-			},
-			enemy_weap_cold = 0.15,
-			flanked = 0.07,
-			unaware_of_aggressor = 0.08,
-		},
-		reasons = {
-			health = {
-				[0.3] = 1,
-				[1] = 0.2,
-			},
-			isolated = 0.1,
-			pants_down = 1,
-			weapon_down = 0.8,
-		},
-		significant_chance = 0.1,
-		violence_timeout = 2,
-	}
-	presets.surrender.normal = {
-		base_chance = 0.5,
-		factors = {
-			aggressor_dis = {
-				[300] = 0.1,
-				[1000] = 0,
-			},
-			enemy_weap_cold = 0.11,
-			flanked = 0.05,
-			unaware_of_aggressor = 0.1,
-		},
-		reasons = {
-			health = {
-				[0.5] = 0.5,
-				[1] = 0,
-			},
-			isolated = 0.08,
-			pants_down = 1,
-			weapon_down = 0.5,
-		},
-		significant_chance = 0.2,
-		violence_timeout = 2,
-	}
-	presets.surrender.hard = {
-		base_chance = 0.35,
-		factors = {
-			aggressor_dis = {
-				[300] = 0.1,
-				[1000] = 0,
-			},
-			enemy_weap_cold = 0.05,
-			flanked = 0.04,
-			isolated = 0.1,
-			unaware_of_aggressor = 0.1,
-		},
-		reasons = {
-			health = {
-				[0.35] = 0.5,
-				[1] = 0,
-			},
-			pants_down = 0.8,
-			weapon_down = 0.2,
-		},
-		significant_chance = 0.25,
-		violence_timeout = 2,
-	}
-	presets.surrender.special = {
-		base_chance = 0.25,
-		factors = {
-			enemy_weap_cold = 0.05,
-			flanked = 0.015,
-			isolated = 0.05,
-			unaware_of_aggressor = 0.02,
-		},
-		reasons = {
-			health = {
-				[0.2] = 0.25,
-				[0.5] = 0,
-			},
-			pants_down = 0.6,
-			weapon_down = 0.02,
-		},
-		significant_chance = 0.25,
-		violence_timeout = 2,
-	}
 	presets.suppression = {
 		easy = {
 			brown_point = {
@@ -6991,7 +6975,8 @@ function CharacterTweakData:_presets(tweak_data)
 		},
 	}
 	presets.enemy_chatter = {
-		cop = {
+		no_chatter = {},
+		regular = {
 			aggressive = true,
 			clear = true,
 			contact = true,
@@ -7004,21 +6989,13 @@ function CharacterTweakData:_presets(tweak_data)
 			smoke = true,
 			suppress = true,
 		},
-		no_chatter = {},
-		shield = {
-			follow_me = true,
-		},
-		swat = {
+		special = {
 			aggressive = true,
 			clear = true,
 			contact = true,
 			follow_me = true,
 			go_go = true,
-			incomming_commander = true,
-			incomming_flamer = true,
 			ready = true,
-			retreat = true,
-			smoke = true,
 			suppress = true,
 		},
 	}
@@ -7040,9 +7017,9 @@ function CharacterTweakData:_create_table_structure()
 		"ger_stg44_npc",
 		"usa_garand_npc",
 		"usa_m1911_npc",
+		"usa_m1912_npc",
 		"thompson_npc",
 		"ger_geco_npc",
-		"ger_shotgun_npc",
 	}
 	self.weap_unit_names = {
 		Idstring("units/vanilla/weapons/wpn_npc_spc_m42_flammenwerfer/wpn_npc_spc_m42_flammenwerfer"),
@@ -7053,13 +7030,12 @@ function CharacterTweakData:_create_table_structure()
 		Idstring("units/vanilla/weapons/wpn_npc_ger_mp38/wpn_npc_ger_mp38"),
 		Idstring("units/vanilla/weapons/wpn_npc_ger_luger/wpn_npc_ger_luger"),
 		Idstring("units/vanilla/weapons/wpn_npc_ger_luger/wpn_npc_ger_luger_fancy"),
-		Idstring("units/vanilla/weapons/wpn_npc_ger_luger/wpn_npc_ger_luger_invisible"),
 		Idstring("units/vanilla/weapons/wpn_npc_ger_stg44/wpn_npc_ger_stg44"),
 		Idstring("units/vanilla/weapons/wpn_npc_usa_garand/wpn_npc_usa_garand"),
 		Idstring("units/vanilla/weapons/wpn_npc_usa_m1911/wpn_npc_usa_m1911"),
+		Idstring("units/vanilla/weapons/wpn_npc_usa_m1912/wpn_npc_usa_m1912"),
 		Idstring("units/vanilla/weapons/wpn_npc_smg_thompson/wpn_npc_smg_thompson"),
 		Idstring("units/vanilla/weapons/wpn_npc_ger_geco/wpn_npc_ger_geco"),
-		Idstring("units/vanilla/weapons/ger_shotgun_npc/ger_shotgun_npc"),
 		Idstring("units/vanilla/weapons/wpn_gre_m24/wpn_gre_m24_husk"),
 		Idstring("units/vanilla/weapons/wpn_fps_decoy_coin_peace/wpn_decoy_coin_peace_husk"),
 		Idstring("units/vanilla/weapons/wpn_fps_gre_mills/wpn_fps_gre_mills_husk"),
@@ -7094,7 +7070,7 @@ function CharacterTweakData:_process_weapon_usage_table(weap_usage_table)
 	for _, weap_id in ipairs(self.weap_ids) do
 		local usage_data = weap_usage_table[weap_id]
 
-		if usage_data then
+		if usage_data and usage_data.FALLOFF then
 			for i_range, range_data in ipairs(usage_data.FALLOFF) do
 				local modes = range_data.mode
 				local total = 0
@@ -7122,9 +7098,7 @@ function CharacterTweakData:_set_difficulty_1()
 	self:_multiply_weapon_delay(self.presets.weapon.sniper, 3)
 	self:_multiply_weapon_delay(self.presets.weapon.gang_member, 1)
 
-	self.presets.gang_member_damage.REGENERATE_TIME = 1.5
-	self.presets.gang_member_damage.REGENERATE_TIME_AWAY = 0.2
-	self.presets.gang_member_damage.HEALTH_INIT = 175
+	self.presets.gang_member_damage.HEALTH_INIT = 100
 	self.escort.HEALTH_INIT = 80
 	self.flashbang_multiplier = 1
 
@@ -7218,9 +7192,7 @@ function CharacterTweakData:_set_difficulty_2()
 	self:_multiply_weapon_delay(self.presets.weapon.sniper, 3)
 	self:_multiply_weapon_delay(self.presets.weapon.gang_member, 1)
 
-	self.presets.gang_member_damage.REGENERATE_TIME = 1.5
-	self.presets.gang_member_damage.REGENERATE_TIME_AWAY = 0.4
-	self.presets.gang_member_damage.HEALTH_INIT = 200
+	self.presets.gang_member_damage.HEALTH_INIT = 100
 	self.escort.HEALTH_INIT = 100
 	self.flashbang_multiplier = 1.25
 
@@ -7314,9 +7286,7 @@ function CharacterTweakData:_set_difficulty_3()
 	self:_multiply_weapon_delay(self.presets.weapon.sniper, 3)
 	self:_multiply_weapon_delay(self.presets.weapon.gang_member, 0.9)
 
-	self.presets.gang_member_damage.REGENERATE_TIME = 1.5
-	self.presets.gang_member_damage.REGENERATE_TIME_AWAY = 0.5
-	self.presets.gang_member_damage.HEALTH_INIT = 275
+	self.presets.gang_member_damage.HEALTH_INIT = 125
 	self.escort.HEALTH_INIT = 120
 	self.flashbang_multiplier = 1.5
 
@@ -7411,9 +7381,7 @@ function CharacterTweakData:_set_difficulty_4()
 	self:_multiply_weapon_delay(self.presets.weapon.sniper, 3)
 	self:_multiply_weapon_delay(self.presets.weapon.gang_member, 0.8)
 
-	self.presets.gang_member_damage.REGENERATE_TIME = 1.5
-	self.presets.gang_member_damage.REGENERATE_TIME_AWAY = 0.5
-	self.presets.gang_member_damage.HEALTH_INIT = 325
+	self.presets.gang_member_damage.HEALTH_INIT = 150
 	self.escort.HEALTH_INIT = 140
 	self.flashbang_multiplier = 1.75
 
@@ -7503,7 +7471,7 @@ function CharacterTweakData:_multiply_weapon_delay(weap_usage_table, mul)
 	for _, weap_id in ipairs(self.weap_ids) do
 		local usage_data = weap_usage_table[weap_id]
 
-		if usage_data then
+		if usage_data and usage_data.focus_delay then
 			usage_data.focus_delay = usage_data.focus_delay * mul
 		end
 	end

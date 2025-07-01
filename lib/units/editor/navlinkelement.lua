@@ -46,6 +46,13 @@ NavLinkUnitElement.PRESETS = {
 		"teamAI4",
 	},
 }
+NavLinkUnitElement.LINK_VALUES = {
+	{
+		output = true,
+		table_value = "followup_elements",
+		type = "followup",
+	},
+}
 
 function NavLinkUnitElement:init(unit)
 	NavLinkUnitElement.super.init(self, unit)
@@ -161,8 +168,6 @@ function NavLinkUnitElement:stop_test_element()
 	end
 
 	if self._start_test_t then
-		print("Stop test time", self._start_test_t and Application:time() - self._start_test_t or 0)
-
 		self._start_test_t = nil
 	end
 
@@ -352,6 +357,12 @@ end
 
 function NavLinkUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "_lmb"))
+end
+
+function NavLinkUnitElement:aim_unit(pos)
+	if pos then
+		self._hed.search_position = pos
+	end
 end
 
 function NavLinkUnitElement:selected()

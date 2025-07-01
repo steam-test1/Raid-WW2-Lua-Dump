@@ -84,7 +84,8 @@ function HUDManager:init()
 
 	self._sound_source = SoundDevice:create_source("hud")
 
-	managers.user:add_setting_changed_callback("controller_mod", callback(self, self, "controller_mod_changed"), true)
+	managers.user:add_setting_changed_callback("keyboard_keybinds", callback(self, self, "controller_mod_changed"), true)
+	managers.user:add_setting_changed_callback("controller_keybinds", callback(self, self, "controller_mod_changed"), true)
 	managers.controller:add_hotswap_callback("hud_manager", callback(self, self, "controller_mod_changed"))
 	self:_init_player_hud_values()
 
@@ -307,7 +308,7 @@ function HUDManager:set_enabled()
 	end
 end
 
-function HUDManager:disabled()
+function HUDManager:is_disabled()
 	return self._disabled
 end
 
@@ -459,18 +460,6 @@ function HUDManager:show(name)
 	else
 		Application:error("ERROR! Component " .. tostring(name) .. " isn't loaded!")
 	end
-
-	self._hud_chat:clear()
-	self._hud_chat:unregister()
-
-	if name == PlayerBase.INGAME_HUD_SAFERECT then
-		self._hud_chat = self._hud_chat_ingame
-	elseif name == IngameWaitingForRespawnState.GUI_SPECTATOR then
-		self._hud_chat = self._hud_chat_respawn
-	end
-
-	self._hud_chat:register()
-	self._hud_chat:hide()
 end
 
 function HUDManager:hide(name)
@@ -1231,8 +1220,6 @@ function HUDManager:_update_waypoints(t, dt)
 			show_on_screen = (not data.range_min or length >= data.range_min) and (not data.range_max or length <= data.range_max)
 		end
 
-		self:_upd_suspition_waypoint_state(data, show_on_screen)
-
 		if show_on_screen then
 			if not data.bitmap then
 				self._hud.waypoints[id] = nil
@@ -1871,7 +1858,11 @@ function HUDManager:get_character_name_by_nationality(nationality)
 		name = "rivet"
 	end
 
-	return utf8.to_upper(name)
+	if managers.user:get_setting("capitalize_names") then
+		name = utf8.to_upper(name)
+	end
+
+	return name
 end
 
 function HUDManager:add_mugshot(data)
@@ -2233,26 +2224,6 @@ function HUDManager:_animate_suspition_waypoint_alpha(data, callback, x, y, z)
 	end
 end
 
-function HUDManager:_upd_suspition_waypoint_state(data, show_on_screen)
-	if not show_on_screen then
-		return
-	end
-
-	if data.bitmap_over ~= nil then
-		if data.is_aiming then
-			data.aiming:set_visible(true)
-		else
-			data.aiming:set_visible(false)
-		end
-
-		if data.is_searching then
-			data.searching:set_visible(true)
-		else
-			data.searching:set_visible(false)
-		end
-	end
-end
-
 function HUDManager:_check_and_hide_suspicion()
 	local found = false
 
@@ -2425,38 +2396,6 @@ function HUDManager:_animate_alpha(icon, data, new_alpha, duration, delay)
 				icon:set_color(icon:color():with_alpha(starting_alpha + change))
 			end
 		end
-	end
-end
-
-function HUDManager:set_aiming_icon(id, status)
-	local data = self._hud.waypoints[id]
-
-	if not data then
-		Application:error("[HUDManager:set_aiming_icon] Attempt to change no existant waypoint:", id)
-
-		return
-	end
-
-	data.is_aiming = status
-
-	if Network:is_server() and managers.network:session() then
-		managers.network:session():send_to_peers("sync_suspicion_icon", data.unit, "aim", status)
-	end
-end
-
-function HUDManager:set_investigate_icon(id, status)
-	local data = self._hud.waypoints[id]
-
-	if not data then
-		Application:error("[HUDManager:set_investigate_icon] Attempt to change no existant waypoint:", id)
-
-		return
-	end
-
-	data.is_searching = status
-
-	if Network:is_server() and managers.network:session() then
-		managers.network:session():send_to_peers("sync_suspicion_icon", data.unit, "investigate", status)
 	end
 end
 

@@ -377,7 +377,7 @@ function HUDLoadingScreen:_layout_operation(current_job)
 		font_size = HUDLoadingScreen.OPERATION_EVENT_TITLE_FONT_SIZE,
 		h = HUDLoadingScreen.OPERATION_EVENT_TITLE_H,
 		name = "current_event_title",
-		text = utf8.to_upper(managers.localization:text(current_job.progress_title_id)),
+		text = managers.localization:to_upper_text(current_job.progress_title_id or current_job.name_id),
 		vertical = "center",
 		y = HUDLoadingScreen.OPERATION_EVENT_TITLE_Y,
 	}

@@ -41,7 +41,11 @@ function RaidMenuFooter:_create_name_and_gold_panel()
 		visible = false,
 		wrap = true,
 	})
-	local username = utf8.to_upper(managers.network.account:username())
+	local username = managers.network.account:username()
+
+	if managers.user:get_setting("capitalize_names") then
+		username = utf8.to_upper(username)
+	end
 
 	string_width_measure_text_field:set_text(username)
 
@@ -59,8 +63,6 @@ function RaidMenuFooter:_create_name_and_gold_panel()
 		type = "label",
 		vertical = "bottom",
 		w = w1,
-		x = 0,
-		y = 0,
 	}
 	local gold_icon = tweak_data.gui.icons.gold_amount_footer
 	local gold_icon_params = {
@@ -124,7 +126,11 @@ function RaidMenuFooter:hide_name_and_gold_panel()
 end
 
 function RaidMenuFooter:refresh_player_profile()
-	local username = utf8.to_upper(managers.network.account:username())
+	local username = managers.network.account:username()
+
+	if managers.user:get_setting("capitalize_names") then
+		username = utf8.to_upper(username)
+	end
 
 	self._profile_gold_label:set_text(username)
 end

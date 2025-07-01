@@ -188,6 +188,8 @@ function CoreWorldInstanceManager:rename_instance(name, new_name)
 
 	if data then
 		data.name = new_name
+	else
+		Application:error("[CoreWorldInstanceManager] Failed to rename instance", name, "->", new_name)
 	end
 end
 
@@ -332,12 +334,10 @@ function CoreWorldInstanceManager:custom_create_instance(instance_name, worlddef
 	local instance = self:get_instance_data_by_name(instance_name, worlddefinition_id)
 
 	worlddefinition = worlddefinition or managers.worlddefinition
-
-	local continent_data = worlddefinition._continents[instance.continent]
-
 	instance.position = custom_data.position or Vector3()
 	instance.rotation = custom_data.rotation or Rotation()
 
+	local continent_data = worlddefinition._continents[instance.continent]
 	local prepared_unit_data = managers.world_instance:prepare_unit_data(instance, continent_data, worlddefinition)
 
 	if prepared_unit_data.statics then

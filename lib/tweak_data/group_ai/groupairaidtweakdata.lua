@@ -15,6 +15,7 @@ function GroupAIRaidTweakData:init(difficulty_index)
 	self.min_spawning_distance = 700
 	self.max_spawning_height_diff = 1440000
 	self.max_distance_to_player = 100000000
+	self.max_important_distance = 9000000
 	self.recurring_group_SO = {
 		recurring_spawn_1 = {
 			interval = {
@@ -91,16 +92,15 @@ function GroupAIRaidTweakData:init(difficulty_index)
 		}
 	end
 
-	self.assault.hostage_hesitation_delay = {
-		0,
-		0,
-		0,
+	self.assault.charge_wait_in_place = {
+		4,
+		10,
 	}
 	self.assault.force = {
-		8,
-		12,
-		15,
+		14,
+		16,
 		18,
+		20,
 	}
 	self.assault.force_pool = {
 		55,
@@ -172,42 +172,42 @@ function GroupAIRaidTweakData:init(difficulty_index)
 	if difficulty_index <= TweakData.DIFFICULTY_1 then
 		self.assault.groups = {
 			gerbish_chargers = {
-				40,
-				75,
-				75,
+				15,
+				18,
+				20,
 			},
 			gerbish_flankers = {
-				30,
-				75,
-				75,
+				15,
+				18,
+				20,
 			},
 			gerbish_rifle_range = {
-				30,
-				40,
-				30,
+				15,
+				18,
+				20,
 			},
 			grunt_chargers = {
-				75,
-				80,
-				0,
+				25,
+				22,
+				20,
 			},
 			grunt_flankers = {
-				75,
-				75,
-				75,
+				25,
+				22,
+				20,
 			},
 			grunt_support_range = {
-				40,
-				40,
-				40,
+				25,
+				22,
+				20,
 			},
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_2 then
 		self.assault.groups = {
 			commander_squad = {
-				0,
-				25,
-				35,
+				10,
+				10,
+				10,
 			},
 			commanders = {
 				0,
@@ -215,47 +215,47 @@ function GroupAIRaidTweakData:init(difficulty_index)
 				3,
 			},
 			flamethrower = {
-				1,
 				2,
 				4,
+				6,
 			},
 			gerbish_chargers = {
-				40,
-				75,
-				75,
+				15,
+				18,
+				20,
 			},
 			gerbish_flankers = {
-				30,
-				75,
-				75,
+				15,
+				18,
+				20,
 			},
 			gerbish_rifle_range = {
-				30,
-				40,
-				30,
+				15,
+				18,
+				20,
 			},
 			grunt_chargers = {
-				75,
-				80,
-				0,
+				25,
+				22,
+				20,
 			},
 			grunt_flankers = {
-				75,
-				75,
-				75,
+				25,
+				22,
+				20,
 			},
 			grunt_support_range = {
-				40,
-				40,
-				40,
+				25,
+				22,
+				20,
 			},
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_3 then
 		self.assault.groups = {
 			commander_squad = {
-				30,
-				45,
-				60,
+				10,
+				10,
+				10,
 			},
 			commanders = {
 				1,
@@ -263,47 +263,47 @@ function GroupAIRaidTweakData:init(difficulty_index)
 				6,
 			},
 			fallschirm_charge = {
-				30,
-				75,
-				75,
+				15,
+				18,
+				20,
 			},
 			fallschirm_flankers = {
-				0,
-				75,
-				75,
+				15,
+				18,
+				20,
 			},
 			fallschirm_support = {
-				0,
-				40,
-				40,
+				15,
+				18,
+				20,
 			},
 			flamethrower = {
+				3,
 				5,
-				8,
-				10,
+				7,
 			},
 			gerbish_chargers = {
-				75,
-				75,
-				30,
+				25,
+				22,
+				20,
 			},
 			gerbish_flankers = {
-				75,
-				75,
-				30,
+				25,
+				22,
+				20,
 			},
 			gerbish_rifle_range = {
-				40,
-				40,
+				25,
+				22,
 				20,
 			},
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_4 then
 		self.assault.groups = {
 			commander_squad = {
-				60,
-				70,
-				80,
+				10,
+				10,
+				10,
 			},
 			commanders = {
 				2,
@@ -311,39 +311,39 @@ function GroupAIRaidTweakData:init(difficulty_index)
 				8,
 			},
 			fallschirm_charge = {
-				75,
-				75,
-				40,
+				25,
+				22,
+				20,
 			},
 			fallschirm_flankers = {
-				75,
-				75,
-				40,
+				25,
+				22,
+				20,
 			},
 			fallschirm_support = {
-				40,
-				40,
-				30,
+				25,
+				22,
+				20,
 			},
 			flamethrower = {
+				4,
+				6,
 				8,
-				10,
-				13,
 			},
 			ss_chargers = {
-				30,
-				75,
-				75,
+				15,
+				18,
+				20,
 			},
 			ss_flankers = {
-				30,
-				75,
-				75,
+				15,
+				18,
+				20,
 			},
 			ss_rifle_range = {
-				0,
-				40,
-				75,
+				15,
+				18,
+				20,
 			},
 		}
 	end
@@ -357,134 +357,154 @@ function GroupAIRaidTweakData:init(difficulty_index)
 
 	if difficulty_index <= TweakData.DIFFICULTY_1 then
 		self.reenforce.groups = {
+			commander_squad = {
+				10,
+				10,
+				10,
+			},
 			gerbish_chargers = {
-				30,
-				30,
-				30,
+				15,
+				18,
+				20,
 			},
 			gerbish_flankers = {
-				20,
-				20,
+				15,
+				18,
 				20,
 			},
 			gerbish_rifle_range = {
-				20,
-				20,
+				15,
+				18,
 				20,
 			},
 			grunt_chargers = {
-				50,
-				50,
-				50,
+				25,
+				22,
+				20,
 			},
 			grunt_flankers = {
-				40,
-				40,
-				40,
+				25,
+				22,
+				20,
 			},
 			grunt_support_range = {
-				40,
-				40,
-				40,
+				25,
+				22,
+				20,
 			},
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_2 then
 		self.reenforce.groups = {
+			commander_squad = {
+				10,
+				10,
+				10,
+			},
 			gerbish_chargers = {
-				50,
-				50,
-				50,
+				15,
+				18,
+				20,
 			},
 			gerbish_flankers = {
-				40,
-				40,
-				40,
+				15,
+				18,
+				20,
 			},
 			gerbish_rifle_range = {
-				40,
-				40,
-				40,
+				15,
+				18,
+				20,
 			},
 			grunt_chargers = {
-				30,
-				30,
-				30,
+				25,
+				22,
+				20,
 			},
 			grunt_flankers = {
-				20,
-				20,
+				25,
+				22,
 				20,
 			},
 			grunt_support_range = {
-				20,
-				20,
+				25,
+				22,
 				20,
 			},
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_3 then
 		self.reenforce.groups = {
+			commander_squad = {
+				10,
+				10,
+				10,
+			},
 			fallschirm_charge = {
-				50,
-				50,
-				50,
+				15,
+				18,
+				20,
 			},
 			fallschirm_flankers = {
-				40,
-				40,
-				40,
+				15,
+				18,
+				20,
 			},
 			fallschirm_support = {
-				40,
-				40,
-				40,
+				15,
+				18,
+				20,
 			},
 			gerbish_chargers = {
-				30,
-				30,
-				30,
+				25,
+				22,
+				20,
 			},
 			gerbish_flankers = {
-				20,
-				20,
+				25,
+				22,
 				20,
 			},
 			gerbish_rifle_range = {
-				20,
-				20,
+				25,
+				22,
 				20,
 			},
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_4 then
 		self.reenforce.groups = {
+			commander_squad = {
+				10,
+				10,
+				10,
+			},
 			fallschirm_charge = {
-				30,
-				30,
-				30,
+				25,
+				22,
+				20,
 			},
 			fallschirm_flankers = {
-				20,
-				20,
+				25,
+				22,
 				20,
 			},
 			fallschirm_support = {
-				20,
-				20,
+				25,
+				22,
 				20,
 			},
 			ss_chargers = {
-				50,
-				50,
-				50,
+				15,
+				18,
+				20,
 			},
 			ss_flankers = {
-				40,
-				40,
-				40,
+				15,
+				18,
+				20,
 			},
 			ss_rifle_range = {
-				40,
-				40,
-				40,
+				15,
+				18,
+				20,
 			},
 		}
 	end

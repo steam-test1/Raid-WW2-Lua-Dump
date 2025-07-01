@@ -327,6 +327,7 @@ end
 function VoteManager:_restart_counter(callback_type)
 	if not self._stopped then
 		Application:set_pause(false)
+		managers.groupai:state():set_allow_dropin(false)
 
 		self._callback_type = callback_type
 		self._callback_counter = TimerManager:wall():time() + tweak_data.voting.restart_delay
@@ -522,43 +523,22 @@ function VoteManager:update(t, dt)
 		if current_time > self._callback_counter then
 			managers.game_play_central:set_restarting(true)
 
-			if managers.network:session():chk_all_peers_spawned() then
-				self._restart_t = self._restart_t or Application:time() + 3
-			else
-				local t = Application:time()
-
-				if not self._next_hint_t or t > self._next_hint_t then
-					self._next_hint_t = t + 6
-
-					managers.notification:add_notification({
-						duration = 2,
-						id = "waiting_for_player_dropin",
-						shelf_life = 5,
-						text = managers.localization:text("hud_waiting_for_player_dropin"),
-					})
-				end
-
-				return
-			end
-
-			if Application:time() >= self._restart_t then
-				if Network:is_server() and self._callback_type == "restart" then
-					self._callback_type = nil
-
-					managers.game_play_central:restart_the_game()
-				end
-
-				if Network:is_server() and self._callback_type == "restart_mission" then
-					self._callback_type = nil
-
-					managers.game_play_central:restart_the_mission()
-				end
-
+			if Network:is_server() and self._callback_type == "restart" then
 				self._callback_type = nil
-				self._callback_counter = nil
-				self._callback_counter_print = nil
-				self._restart_t = nil
+
+				managers.game_play_central:restart_the_game()
 			end
+
+			if Network:is_server() and self._callback_type == "restart_mission" then
+				self._callback_type = nil
+
+				managers.game_play_central:restart_the_mission()
+			end
+
+			self._callback_type = nil
+			self._callback_counter = nil
+			self._callback_counter_print = nil
+			self._restart_t = nil
 		end
 	end
 end

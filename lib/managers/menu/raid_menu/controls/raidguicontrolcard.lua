@@ -24,7 +24,7 @@ function RaidGUIControlCard:init(parent, item_params, item_data, grid_params)
 		y = -2,
 	})
 	self._card_lock_glow = self._card_panel:bitmap({
-		color = tweak_data.menu.raid_red,
+		color = tweak_data.gui.colors.raid_red,
 		h = self._card_panel:h() + 5,
 		name = "glow_lock_texture",
 		texture = tweak_data.challenge_cards.card_glow.texture,

@@ -144,7 +144,6 @@ function InteractionTweakData:_init_interactions()
 	self.grenade_crate = {}
 	self.grenade_crate.icon = "equipment_ammo_bag"
 	self.grenade_crate.text_id = "hud_interact_grenade_crate_take_grenades"
-	self.grenade_crate.contour = "crate_loot_pickup"
 	self.grenade_crate.blocked_hint_sound = "no_more_grenades"
 	self.grenade_crate.action_text_id = "hud_action_taking_grenades"
 	self.grenade_crate.interact_distance = self.POWERUP_INTERACTION_DISTANCE
@@ -155,10 +154,10 @@ function InteractionTweakData:_init_interactions()
 	self.projectile_collect.force_update_position = true
 	self.projectile_collect.start_active = false
 	self.projectile_collect.keep_active = false
+	self.projectile_collect.contour = "deployable"
 	self.grenade_crate_small = {}
 	self.grenade_crate_small.icon = self.grenade_crate.icon
 	self.grenade_crate_small.text_id = self.grenade_crate.text_id
-	self.grenade_crate_small.contour = self.grenade_crate.contour
 	self.grenade_crate_small.blocked_hint = self.grenade_crate.blocked_hint
 	self.grenade_crate_small.blocked_hint_sound = self.grenade_crate.blocked_hint_sound
 	self.grenade_crate_small.sound_start = self.grenade_crate.sound_start
@@ -169,7 +168,6 @@ function InteractionTweakData:_init_interactions()
 	self.grenade_crate_big = {}
 	self.grenade_crate_big.icon = self.grenade_crate.icon
 	self.grenade_crate_big.text_id = self.grenade_crate.text_id
-	self.grenade_crate_big.contour = self.grenade_crate.contour
 	self.grenade_crate_big.blocked_hint = self.grenade_crate.blocked_hint
 	self.grenade_crate_big.blocked_hint_sound = self.grenade_crate.blocked_hint_sound
 	self.grenade_crate_big.sound_start = self.grenade_crate.sound_start
@@ -261,6 +259,11 @@ function InteractionTweakData:_init_interactions()
 	self.main_menu_select_interaction.text_id = "hud_menu_crate_select"
 	self.main_menu_select_interaction.interact_distance = 300
 	self.main_menu_select_interaction.sound_done = "paper_shuffle"
+	self.read_comic = {
+		interact_distance = 300,
+		sound_done = "paper_shuffle",
+		text_id = "hud_menu_interaction_select_comic_book_menu",
+	}
 	self.interaction_ball = {}
 	self.interaction_ball.icon = "develop"
 	self.interaction_ball.text_id = "debug_interact_interaction_ball"
@@ -1928,49 +1931,6 @@ function InteractionTweakData:_init_interactions()
 	self.free.sound_interupt = "bar_rescue_cancel"
 	self.free.sound_done = "bar_rescue_finished"
 	self.free.action_text_id = "hud_action_freeing"
-	self.hostage_trade = {}
-	self.hostage_trade.icon = "interaction_trade"
-	self.hostage_trade.text_id = "debug_interact_trade"
-	self.hostage_trade.start_active = true
-	self.hostage_trade.timer = 3
-	self.hostage_trade.requires_upgrade = {
-		category = "player",
-		upgrade = "hostage_trade",
-	}
-	self.hostage_trade.action_text_id = "hud_action_trading"
-	self.hostage_trade.contour_preset = "generic_interactable"
-	self.hostage_trade.contour_preset_selected = "generic_interactable_selected"
-	self.hostage_move = {}
-	self.hostage_move.icon = "interaction_trade"
-	self.hostage_move.text_id = "debug_interact_hostage_move"
-	self.hostage_move.start_active = true
-	self.hostage_move.timer = 1
-	self.hostage_move.action_text_id = "hud_action_standing_up"
-	self.hostage_move.no_contour = true
-	self.hostage_move.interaction_obj = Idstring("Spine")
-	self.hostage_stay = {}
-	self.hostage_stay.icon = "interaction_trade"
-	self.hostage_stay.text_id = "debug_interact_hostage_stay"
-	self.hostage_stay.start_active = true
-	self.hostage_stay.timer = 0.4
-	self.hostage_stay.action_text_id = "hud_action_getting_down"
-	self.hostage_stay.no_contour = true
-	self.hostage_stay.interaction_obj = Idstring("Spine2")
-	self.hostage_convert = {}
-	self.hostage_convert.icon = "develop"
-	self.hostage_convert.text_id = "hud_int_hostage_convert"
-	self.hostage_convert.blocked_hint = "convert_enemy_failed"
-	self.hostage_convert.timer = 1.5
-	self.hostage_convert.requires_upgrade = {
-		category = "player",
-		upgrade = "convert_enemies",
-	}
-	self.hostage_convert.upgrade_timer_multiplier = {
-		category = "player",
-		upgrade = "convert_enemies_interaction_speed_multiplier",
-	}
-	self.hostage_convert.action_text_id = "hud_action_converting_hostage"
-	self.hostage_convert.no_contour = true
 	self.activate_switch = {}
 	self.activate_switch.icon = "develop"
 	self.activate_switch.text_id = "hud_activate_switch"
@@ -2040,6 +2000,7 @@ function InteractionTweakData:_init_carry()
 	self.hold_take_wine_crate.action_text_id = "hud_action_taking_wine_crate"
 	self.hold_take_wine_crate.timer = self.INTERACT_TIMER_CARRY
 	self.hold_take_wine_crate.upgrade_timer_multipliers = self.TIMER_MULTIPLIERS_CARRY
+	self.hold_take_wine_crate.force_update_position = true
 	self.hold_take_wine_crate.start_active = true
 	self.hold_take_wine_crate.interact_distance = 250
 	self.take_tank_shell = {}
@@ -2083,6 +2044,7 @@ function InteractionTweakData:_init_carry()
 	self.take_painting_active.timer = self.INTERACT_TIMER_CARRY_PAINTING
 	self.take_painting_active.upgrade_timer_multipliers = self.TIMER_MULTIPLIERS_CARRY
 	self.take_painting_active.interact_distance = self.CARRY_DROP_INTERACTION_DISTANCE
+	self.take_painting_active.force_update_position = true
 	self.take_painting_active.start_active = true
 	self.take_painting_active.sound_done = "sto_pick_up_painting"
 	self.take_tank_shells = {}
@@ -2193,6 +2155,7 @@ function InteractionTweakData:_init_carry()
 	self.take_conspiracy_board.sound_done = "sto_painting_finish"
 	self.take_conspiracy_board_bag = deep_clone(self.take_conspiracy_board)
 	self.take_conspiracy_board_bag.start_active = true
+	self.take_conspiracy_board_bag.force_update_position = true
 	self.eat_candy = {}
 	self.eat_candy.text_id = "hud_interact_eat_candy"
 	self.eat_candy.interact_distance = self.POWERUP_INTERACTION_DISTANCE

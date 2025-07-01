@@ -393,9 +393,9 @@ function ElementSpecialObjective:operation_remove()
 		managers.groupai:state():remove_special_objective(self:_unique_string_id())
 
 		if self._receiver_units then
-			local cpy = clone(self._receiver_units)
+			local t = clone(self._receiver_units)
 
-			for u_key, unit in pairs(cpy) do
+			for u_key, unit in pairs(t) do
 				if self._receiver_units[u_key] and alive(unit) and not unit:brain()._current_logic.inactive then
 					unit:brain():set_objective(nil)
 					unit:brain():action_request({

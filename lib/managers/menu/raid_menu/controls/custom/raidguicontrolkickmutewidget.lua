@@ -217,7 +217,13 @@ end
 function RaidGUIControlKickMuteWidget:set_peer(peer, mute_button, kick_button)
 	self._peer = peer
 
-	self._name:set_text(utf8.to_upper(peer:name()))
+	local name = peer:name()
+
+	if managers.user:get_setting("capitalize_names") then
+		name = utf8.to_upper(name)
+	end
+
+	self._name:set_text(name)
 
 	local _, _, w, _ = self._name:text_rect()
 

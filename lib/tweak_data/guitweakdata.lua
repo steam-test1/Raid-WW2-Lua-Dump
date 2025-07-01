@@ -31,6 +31,7 @@ function GuiTweakData:init()
 	self:_setup_optical_flares()
 	self:_setup_xp_icons()
 	self:_setup_paper_icons()
+	self:_setup_standalone_op_icons()
 	self:_setup_nine_rect_icons()
 	self:_setup_old_tweak_data()
 end
@@ -496,6 +497,14 @@ function GuiTweakData:_setup_icons()
 		1316,
 		400,
 		242,
+	}
+	self.icons.raid_oops_logo_small = {}
+	self.icons.raid_oops_logo_small.texture = "ui/updates/upd_oops/update_logo"
+	self.icons.raid_oops_logo_small.texture_rect = {
+		0,
+		0,
+		833,
+		500,
 	}
 	self.icons.bootup_logo_sb = {}
 	self.icons.bootup_logo_sb.texture = "ui/atlas/raid_atlas_bootup"
@@ -1641,6 +1650,22 @@ function GuiTweakData:_setup_icons()
 		64,
 		64,
 	}
+	self.icons.card_type_bounty = {}
+	self.icons.card_type_bounty.texture = "ui/updates/upd_cow/cc_menu_tags_bounty"
+	self.icons.card_type_bounty.texture_rect = {
+		0,
+		0,
+		64,
+		64,
+	}
+	self.icons.card_type_bounty_dirty = {}
+	self.icons.card_type_bounty_dirty.texture = "ui/updates/upd_cow/cc_menu_tags_bounty"
+	self.icons.card_type_bounty_dirty.texture_rect = {
+		64,
+		0,
+		64,
+		64,
+	}
 	self.icons.players_icon_gamecard = {}
 	self.icons.players_icon_gamecard.texture = "ui/atlas/menu/raid_atlas_menu"
 	self.icons.players_icon_gamecard.texture_rect = {
@@ -2578,6 +2603,60 @@ function GuiTweakData:_setup_icons()
 		56,
 		56,
 	}
+	self.icons.missions_operation_clear_skies_menu_1 = {
+		texture = "ui/missions/operation_clear_skies/raid_atlas_missions_op_clear_skies",
+		texture_rect = {
+			3,
+			3,
+			50,
+			50,
+		},
+	}
+	self.icons.missions_operation_clear_skies_menu_2 = {
+		texture = "ui/missions/operation_clear_skies/raid_atlas_missions_op_clear_skies",
+		texture_rect = {
+			59,
+			3,
+			50,
+			50,
+		},
+	}
+	self.icons.missions_operation_clear_skies_menu_3 = {
+		texture = "ui/missions/operation_clear_skies/raid_atlas_missions_op_clear_skies",
+		texture_rect = {
+			115,
+			3,
+			50,
+			50,
+		},
+	}
+	self.icons.missions_operation_clear_skies_menu_4 = {
+		texture = "ui/missions/operation_clear_skies/raid_atlas_missions_op_clear_skies",
+		texture_rect = {
+			171,
+			3,
+			50,
+			50,
+		},
+	}
+	self.icons.missions_operation_clear_skies_menu_5 = {
+		texture = "ui/missions/operation_clear_skies/raid_atlas_missions_op_clear_skies",
+		texture_rect = {
+			3,
+			59,
+			50,
+			50,
+		},
+	}
+	self.icons.missions_operation_clear_skies_menu_6 = {
+		texture = "ui/missions/operation_clear_skies/raid_atlas_missions_op_clear_skies",
+		texture_rect = {
+			59,
+			59,
+			50,
+			50,
+		},
+	}
 	self.icons.missions_operation_empty_slot_menu = {}
 	self.icons.missions_operation_empty_slot_menu.texture = "ui/atlas/raid_atlas_missions"
 	self.icons.missions_operation_empty_slot_menu.texture_rect = {
@@ -2593,6 +2672,42 @@ function GuiTweakData:_setup_icons()
 		126,
 		56,
 		56,
+	}
+	self.icons.missions_operation_rhinegold_menu_1 = {
+		texture = "ui/missions/operation_rhinegold/raid_atlas_missions_op_rhine_gold",
+		texture_rect = {
+			3,
+			3,
+			50,
+			50,
+		},
+	}
+	self.icons.missions_operation_rhinegold_menu_2 = {
+		texture = "ui/missions/operation_rhinegold/raid_atlas_missions_op_rhine_gold",
+		texture_rect = {
+			59,
+			3,
+			50,
+			50,
+		},
+	}
+	self.icons.missions_operation_rhinegold_menu_3 = {
+		texture = "ui/missions/operation_rhinegold/raid_atlas_missions_op_rhine_gold",
+		texture_rect = {
+			115,
+			3,
+			50,
+			50,
+		},
+	}
+	self.icons.missions_operation_rhinegold_menu_4 = {
+		texture = "ui/missions/operation_rhinegold/raid_atlas_missions_op_rhine_gold",
+		texture_rect = {
+			171,
+			3,
+			50,
+			50,
+		},
 	}
 	self.icons.missions_operations_category_menu = {}
 	self.icons.missions_operations_category_menu.texture = "ui/atlas/raid_atlas_missions"
@@ -2695,6 +2810,22 @@ function GuiTweakData:_setup_icons()
 	self.icons.missions_forest_bunker.texture_rect = {
 		424,
 		126,
+		56,
+		56,
+	}
+	self.icons.missions_raid_bounty_menu = {}
+	self.icons.missions_raid_bounty_menu.texture = "ui/updates/upd_cow/job_icons"
+	self.icons.missions_raid_bounty_menu.texture_rect = {
+		384,
+		0,
+		56,
+		56,
+	}
+	self.icons.missions_operation_bounty_menu = {}
+	self.icons.missions_operation_bounty_menu.texture = "ui/updates/upd_cow/job_icons"
+	self.icons.missions_operation_bounty_menu.texture_rect = {
+		448,
+		0,
 		56,
 		56,
 	}
@@ -4770,6 +4901,14 @@ function GuiTweakData:_setup_hud_icons()
 		136,
 		42,
 	}
+	self.icons.weapon_panel_pis_georg = {}
+	self.icons.weapon_panel_pis_georg.texture = "ui/updates/upd_georg/atlas_weapon_icons"
+	self.icons.weapon_panel_pis_georg.texture_rect = {
+		0,
+		0,
+		136,
+		42,
+	}
 	self.icons.weapon_panel_sho_1912 = {}
 	self.icons.weapon_panel_sho_1912.texture = "ui/atlas/raid_atlas_hud"
 	self.icons.weapon_panel_sho_1912.texture_rect = {
@@ -6378,6 +6517,33 @@ function GuiTweakData:_setup_skill_big_icons()
 		408,
 		126,
 	}
+	self.icons.weapon_pis_georg_large = {
+		texture = "ui/updates/upd_georg/atlas_weapon_icons",
+		texture_rect = {
+			0,
+			42,
+			408,
+			126,
+		},
+	}
+	self.icons.ws_georg_yankee_large = {
+		texture = "ui/updates/upd_georg/ws_georg_yankee_large",
+		texture_rect = {
+			0,
+			0,
+			512,
+			256,
+		},
+	}
+	self.icons.ws_georg_uber_large = {
+		texture = "ui/updates/upd_georg/ws_georg_uber_large",
+		texture_rect = {
+			0,
+			0,
+			512,
+			256,
+		},
+	}
 	self.icons.weapon_pis_webley_large = {}
 	self.icons.weapon_pis_webley_large.texture = "ui/atlas/skilltree/raid_atlas_experience"
 	self.icons.weapon_pis_webley_large.texture_rect = {
@@ -7534,6 +7700,30 @@ function GuiTweakData:_setup_mission_photos()
 		416,
 		288,
 	}
+	self.mission_photos.intel_random_operation_01 = {}
+	self.mission_photos.intel_random_operation_01.texture = "ui/updates/upd_oops/raid_atlas_photos_random_operation"
+	self.mission_photos.intel_random_operation_01.texture_rect = {
+		2,
+		2,
+		416,
+		288,
+	}
+	self.mission_photos.intel_random_operation_02 = {}
+	self.mission_photos.intel_random_operation_02.texture = "ui/updates/upd_oops/raid_atlas_photos_random_operation"
+	self.mission_photos.intel_random_operation_02.texture_rect = {
+		2,
+		290,
+		416,
+		288,
+	}
+	self.mission_photos.intel_random_operation_03 = {}
+	self.mission_photos.intel_random_operation_03.texture = "ui/updates/upd_oops/raid_atlas_photos_random_operation"
+	self.mission_photos.intel_random_operation_03.texture_rect = {
+		418,
+		2,
+		416,
+		288,
+	}
 end
 
 function GuiTweakData:_setup_optical_flares()
@@ -7636,6 +7826,60 @@ function GuiTweakData:_setup_xp_icons()
 		392,
 		392,
 	}
+	self.icons.xp_events_missions_operation_clear_skies_1 = {
+		texture = "ui/missions/operation_clear_skies/raid_atlas_xp_op_clear_skies",
+		texture_rect = {
+			25,
+			25,
+			450,
+			450,
+		},
+	}
+	self.icons.xp_events_missions_operation_clear_skies_2 = {
+		texture = "ui/missions/operation_clear_skies/raid_atlas_xp_op_clear_skies",
+		texture_rect = {
+			525,
+			25,
+			450,
+			450,
+		},
+	}
+	self.icons.xp_events_missions_operation_clear_skies_3 = {
+		texture = "ui/missions/operation_clear_skies/raid_atlas_xp_op_clear_skies",
+		texture_rect = {
+			1025,
+			25,
+			450,
+			450,
+		},
+	}
+	self.icons.xp_events_missions_operation_clear_skies_4 = {
+		texture = "ui/missions/operation_clear_skies/raid_atlas_xp_op_clear_skies",
+		texture_rect = {
+			1525,
+			25,
+			450,
+			450,
+		},
+	}
+	self.icons.xp_events_missions_operation_clear_skies_5 = {
+		texture = "ui/missions/operation_clear_skies/raid_atlas_xp_op_clear_skies",
+		texture_rect = {
+			25,
+			525,
+			450,
+			450,
+		},
+	}
+	self.icons.xp_events_missions_operation_clear_skies_6 = {
+		texture = "ui/missions/operation_clear_skies/raid_atlas_xp_op_clear_skies",
+		texture_rect = {
+			525,
+			525,
+			450,
+			450,
+		},
+	}
 	self.icons.xp_events_missions_operation_rhinegold = {}
 	self.icons.xp_events_missions_operation_rhinegold.texture = "ui/atlas/raid_atlas_xp"
 	self.icons.xp_events_missions_operation_rhinegold.texture_rect = {
@@ -7643,6 +7887,42 @@ function GuiTweakData:_setup_xp_icons()
 		2,
 		392,
 		392,
+	}
+	self.icons.xp_events_missions_operation_rhinegold_1 = {
+		texture = "ui/missions/operation_rhinegold/raid_atlas_missions_op_rhine_gold",
+		texture_rect = {
+			25,
+			25,
+			450,
+			450,
+		},
+	}
+	self.icons.xp_events_missions_operation_rhinegold_2 = {
+		texture = "ui/missions/operation_rhinegold/raid_atlas_missions_op_rhine_gold",
+		texture_rect = {
+			525,
+			25,
+			450,
+			450,
+		},
+	}
+	self.icons.xp_events_missions_operation_rhinegold_3 = {
+		texture = "ui/missions/operation_rhinegold/raid_atlas_missions_op_rhine_gold",
+		texture_rect = {
+			1025,
+			25,
+			450,
+			450,
+		},
+	}
+	self.icons.xp_events_missions_operation_rhinegold_4 = {
+		texture = "ui/missions/operation_rhinegold/raid_atlas_missions_op_rhine_gold",
+		texture_rect = {
+			1525,
+			25,
+			450,
+			450,
+		},
 	}
 	self.icons.xp_events_missions_operations_category = {}
 	self.icons.xp_events_missions_operations_category.texture = "ui/atlas/raid_atlas_xp"
@@ -7748,6 +8028,14 @@ function GuiTweakData:_setup_xp_icons()
 		392,
 		392,
 	}
+	self.icons.xp_events_missions_raid_bounty = {}
+	self.icons.xp_events_missions_raid_bounty.texture = "ui/updates/upd_cow/job_icons"
+	self.icons.xp_events_missions_raid_bounty.texture_rect = {
+		0,
+		0,
+		392,
+		392,
+	}
 end
 
 function GuiTweakData:_setup_paper_icons()
@@ -7846,6 +8134,156 @@ function GuiTweakData:_setup_paper_icons()
 		2,
 		268,
 		384,
+	}
+end
+
+function GuiTweakData:_setup_standalone_op_icons()
+	local HD = "ui/updates/upd_oops/atlas_operations_large"
+	local LQ = "ui/updates/upd_oops/atlas_operations_small"
+
+	self.icons.op_empty_slot_lq = {
+		texture = LQ,
+		texture_rect = {
+			0,
+			0,
+			56,
+			56,
+		},
+	}
+	self.icons.op_empty_slot_hd = {
+		texture = HD,
+		texture_rect = {
+			0,
+			0,
+			224,
+			224,
+		},
+	}
+	self.icons.op_blank_lq = {
+		texture = LQ,
+		texture_rect = {
+			56,
+			0,
+			56,
+			56,
+		},
+	}
+	self.icons.op_blank_hd = {
+		texture = HD,
+		texture_rect = {
+			224,
+			0,
+			224,
+			224,
+		},
+	}
+	self.icons.op_rhinegold_lq = {
+		texture = LQ,
+		texture_rect = {
+			112,
+			0,
+			56,
+			56,
+		},
+	}
+	self.icons.op_rhinegold_hd = {
+		texture = HD,
+		texture_rect = {
+			448,
+			0,
+			224,
+			224,
+		},
+	}
+	self.icons.op_clear_skies_lq = {
+		texture = LQ,
+		texture_rect = {
+			168,
+			0,
+			56,
+			56,
+		},
+	}
+	self.icons.op_clear_skies_hd = {
+		texture = HD,
+		texture_rect = {
+			672,
+			0,
+			224,
+			224,
+		},
+	}
+	self.icons.op_free_play_lq = {
+		texture = LQ,
+		texture_rect = {
+			0,
+			56,
+			56,
+			56,
+		},
+	}
+	self.icons.op_free_play_hd = {
+		texture = HD,
+		texture_rect = {
+			0,
+			224,
+			224,
+			224,
+		},
+	}
+	self.icons.op_random_short_lq = {
+		texture = LQ,
+		texture_rect = {
+			56,
+			56,
+			56,
+			56,
+		},
+	}
+	self.icons.op_random_short_hd = {
+		texture = HD,
+		texture_rect = {
+			224,
+			224,
+			224,
+			224,
+		},
+	}
+	self.icons.op_random_medium_lq = {
+		texture = LQ,
+		texture_rect = {
+			112,
+			56,
+			56,
+			56,
+		},
+	}
+	self.icons.op_random_medium_hd = {
+		texture = HD,
+		texture_rect = {
+			448,
+			224,
+			224,
+			224,
+		},
+	}
+	self.icons.op_random_long_lq = {
+		texture = LQ,
+		texture_rect = {
+			168,
+			56,
+			56,
+			56,
+		},
+	}
+	self.icons.op_random_long_hd = {
+		texture = HD,
+		texture_rect = {
+			672,
+			224,
+			224,
+			224,
+		},
 	}
 end
 

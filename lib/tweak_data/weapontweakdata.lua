@@ -69,6 +69,7 @@ function WeaponTweakData:init(tweak_data)
 	self:_init_data_browning_npc(tweak_data)
 	self:_init_data_welrod_npc(tweak_data)
 	self:_init_data_shotty_npc(tweak_data)
+	self:_init_data_georg_npc(tweak_data)
 	self:_init_data_tiger_main_gun_module_npc(difficulty_index)
 	self:_init_data_tiger_machinegun_module_npc(difficulty_index)
 	self:_init_data_junker_machinegun_module_npc(difficulty_index)
@@ -87,6 +88,7 @@ function WeaponTweakData:init(tweak_data)
 	self:_init_data_ger_stg44_npc(tweak_data)
 	self:_init_data_usa_garand_npc(tweak_data)
 	self:_init_data_usa_m1911_npc(tweak_data)
+	self:_init_data_usa_m1912_npc(tweak_data)
 	self:_init_data_usa_sten_npc(tweak_data)
 	self:_init_data_ger_geco_npc(tweak_data)
 	self:_init_data_ger_mp38_npc(tweak_data)
@@ -256,8 +258,11 @@ end
 function WeaponTweakData:_init_data_weapon_skins()
 	self.weapon_skins = {}
 	self.weapon_skins.garand_special_edition = {
-		dlc = DLCTweakData.DLC_NAME_SPECIAL_EDITION,
-		name_id = "bm_w_garand_se",
+		dlc = {
+			DLCTweakData.DLC_NAME_SPECIAL_EDITION,
+			DLCTweakData.DLC_NAME_PREORDER,
+		},
+		name_id = "ws_garand_se",
 		replaces_parts = {
 			wpn_fps_ass_garand_b_standard = "wpn_fps_ass_garand_golden_b_standard",
 			wpn_fps_ass_garand_b_tanker = "wpn_fps_ass_garand_golden_b_tanker",
@@ -273,39 +278,87 @@ function WeaponTweakData:_init_data_weapon_skins()
 			wpn_fps_ass_garand_s_standard = "wpn_fps_ass_garand_golden_s_standard",
 			wpn_fps_ass_garand_strip_standard = "wpn_fps_ass_garand_golden_strip_standard",
 		},
+		weapon_desc_id = "ws_garand_se_desc",
 		weapon_id = "garand",
+		weapon_name_id = "ws_garand_se_name",
 	}
 	self.weapon_skins.lead_bar_gold = {
-		challenge = "candy_gold_bar",
-		name_id = "bm_lead_bar_gold",
+		challenge = {
+			category = "generic",
+			id = "candy_gold_bar",
+		},
+		droppable = true,
+		gold_price = 350,
+		name_id = "ws_lead_bar_gold_name",
+		rarity = LootDropTweakData.RARITY_RARE,
 		replaces_units = {
 			unit = "units/upd_candy/weapons/wpn_gre_gold_bar/gold/wpn_gre_gold_bar",
 			unit_dummy = "units/upd_candy/weapons/wpn_gre_gold_bar/gold/wpn_gre_gold_bar_husk",
 			unit_hand = "units/upd_candy/weapons/wpn_gre_gold_bar/gold/wpn_gre_gold_bar_hand",
 			unit_local = "units/upd_candy/weapons/wpn_gre_gold_bar/gold/wpn_gre_gold_bar_local",
 		},
+		weapon_desc_id = "ws_lead_bar_gold_desc",
 		weapon_id = "gold_bar",
+		weapon_name_id = "ws_lead_bar_gold_name",
 	}
+	self.weapon_skins.georg_yankee = {
+		droppable = true,
+		icon_large = "ws_georg_yankee_large",
+		name_id = "ws_georg_yankee",
+		rarity = LootDropTweakData.RARITY_UNCOMMON,
+		replaces_parts = {
+			wpn_fps_pis_georg_barrel_long = "wpn_fps_pis_georg_barrel_long_skin1",
+			wpn_fps_pis_georg_barrel_short = "wpn_fps_pis_georg_barrel_short_skin1",
+			wpn_fps_pis_georg_barrel_tank = "wpn_fps_pis_georg_barrel_tank_skin1",
+			wpn_fps_pis_georg_body_default = "wpn_fps_pis_georg_body_default_skin1",
+			wpn_fps_pis_georg_mag_default = "wpn_fps_pis_georg_mag_default_skin1",
+			wpn_fps_pis_georg_slide_default = "wpn_fps_pis_georg_slide_default_skin1",
+			wpn_fps_pis_georg_stock_wooden = "wpn_fps_pis_georg_stock_wooden_skin1",
+		},
+		weapon_desc_id = "ws_georg_yankee_desc",
+		weapon_id = "georg",
+	}
+	self.weapon_skins.georg_uber = {
+		droppable = true,
+		icon_large = "ws_georg_uber_large",
+		name_id = "ws_georg_uber",
+		rarity = LootDropTweakData.RARITY_UNCOMMON,
+		replaces_parts = {
+			wpn_fps_pis_georg_barrel_long = "wpn_fps_pis_georg_barrel_long_skin2",
+			wpn_fps_pis_georg_barrel_short = "wpn_fps_pis_georg_barrel_short_skin2",
+			wpn_fps_pis_georg_barrel_tank = "wpn_fps_pis_georg_barrel_tank_skin2",
+			wpn_fps_pis_georg_body_default = "wpn_fps_pis_georg_body_default_skin2",
+			wpn_fps_pis_georg_mag_default = "wpn_fps_pis_georg_mag_default_skin2",
+			wpn_fps_pis_georg_slide_default = "wpn_fps_pis_georg_slide_default_skin2",
+			wpn_fps_pis_georg_stock_wooden = "wpn_fps_pis_georg_stock_wooden_skin2",
+		},
+		weapon_desc_id = "ws_georg_uber_desc",
+		weapon_id = "georg",
+	}
+
+	for _, skin in pairs(self.weapon_skins) do
+		local locked = skin.dlc or skin.challenge or skin.gold_price
+
+		if skin.rarity and not locked then
+			local price = LootDropTweakData.get_gold_from_rarity(skin.rarity)
+
+			if price then
+				skin.gold_price = price
+			end
+		end
+	end
 end
 
 function WeaponTweakData:get_weapon_skins(weapon_id)
+	if not weapon_id then
+		return
+	end
+
 	local skins = {}
 
 	for id, skin_data in pairs(self.weapon_skins) do
 		if skin_data.weapon_id == weapon_id then
-			local owned = true
-
-			if skin_data.dlc then
-				owned = tweak_data.dlc:is_weapon_skin_unlocked(id)
-			elseif skin_data.challenge then
-				local challenge = managers.challenge:get_challenge(ChallengeManager.CATEGORY_GENERIC, skin_data.challenge)
-
-				owned = challenge:completed()
-			end
-
-			if owned then
-				table.insert(skins, id)
-			end
+			table.insert(skins, id)
 		end
 	end
 
@@ -1406,7 +1459,7 @@ function WeaponTweakData:_init_data_c45_npc(tweak_data)
 	self.c45_npc.alert_size = 5000
 	self.c45_npc.suppression = 1
 	self.c45_primary_npc = deep_clone(self.c45_npc)
-	self.c45_primary_npc.use_data.selection_index = tweak_data.WEAPON_SLOT_PRIMARY
+	self.c45_primary_npc.use_data.selection_index = tweak_data.WEAPON_SLOT_SECONDARY
 end
 
 function WeaponTweakData:_init_data_m4_npc(tweak_data)
@@ -1430,7 +1483,7 @@ function WeaponTweakData:_init_data_m4_npc(tweak_data)
 	self.m4_npc.alert_size = 5000
 	self.m4_npc.suppression = 1
 	self.m4_secondary_npc = deep_clone(self.m4_npc)
-	self.m4_secondary_npc.use_data.selection_index = tweak_data.WEAPON_SLOT_SECONDARY
+	self.m4_secondary_npc.use_data.selection_index = tweak_data.WEAPON_SLOT_PRIMARY
 end
 
 function WeaponTweakData:_init_data_mp5_npc(tweak_data)
@@ -1440,7 +1493,7 @@ function WeaponTweakData:_init_data_mp5_npc(tweak_data)
 	self.mp5_npc.usage = "mp5"
 	self.mp5_npc.usage_anim = "mp5"
 	self.mp5_npc.sounds.prefix = "mp5_npc"
-	self.mp5_npc.use_data.selection_index = tweak_data.WEAPON_SLOT_SECONDARY
+	self.mp5_npc.use_data.selection_index = tweak_data.WEAPON_SLOT_PRIMARY
 	self.mp5_npc.DAMAGE = 2
 	self.mp5_npc.muzzleflash = "effects/vanilla/weapons/9mm_auto"
 	self.mp5_npc.muzzleflash_silenced = "effects/vanilla/weapons/9mm_auto_silence"
@@ -1567,10 +1620,9 @@ function WeaponTweakData:_init_data_tiger_main_gun_module_npc(difficulty_index)
 		main_cannon_lock_on = "tiger_npc_canon_reload",
 	}
 	self.tiger_main_gun_module.effect = {
-		WeaponFactoryTweakData = nil,
+		all_fps_animation_weights = nil,
 		main_cannon_fire = "effects/vanilla/explosions/tank_turret_fire",
 		main_cannon_fire_hit = "effects/vanilla/explosions/exp_airbomb_explosion_002",
-		shotgun_db = nil,
 	}
 	self.tiger_main_gun_module.turret = {
 		armor_piercing = true,
@@ -1854,7 +1906,7 @@ function WeaponTweakData:_init_data_usa_garand_npc(tweak_data)
 	self.usa_garand_npc.sounds.single = "m1garand_fire_npc"
 	self.usa_garand_npc.sounds.autofire_start = nil
 	self.usa_garand_npc.sounds.autofire_stop = nil
-	self.usa_garand_npc.use_data.selection_index = tweak_data.WEAPON_SLOT_SECONDARY
+	self.usa_garand_npc.use_data.selection_index = tweak_data.WEAPON_SLOT_PRIMARY
 	self.usa_garand_npc.DAMAGE = 17
 	self.usa_garand_npc.muzzleflash = "effects/vanilla/weapons/556_auto"
 	self.usa_garand_npc.shell_ejection = "effects/vanilla/weapons/shells/shell_556"
@@ -1889,6 +1941,30 @@ function WeaponTweakData:_init_data_usa_m1911_npc(tweak_data)
 	self.usa_m1911_npc.suppression = 1
 end
 
+function WeaponTweakData:_init_data_usa_m1912_npc(tweak_data)
+	self.usa_m1912_npc = {}
+	self.usa_m1912_npc.sounds = {}
+	self.usa_m1912_npc.use_data = {}
+	self.usa_m1912_npc.usage = "usa_garand_npc"
+	self.usa_m1912_npc.usage_anim = "m4"
+	self.usa_m1912_npc.sounds.prefix = ""
+	self.usa_m1912_npc.sounds.single = "shotty_fire_npc_single"
+	self.usa_m1912_npc.sounds.autofire_start = nil
+	self.usa_m1912_npc.sounds.autofire_stop = nil
+	self.usa_m1912_npc.use_data.selection_index = tweak_data.WEAPON_SLOT_PRIMARY
+	self.usa_m1912_npc.DAMAGE = 25
+	self.usa_m1912_npc.muzzleflash = "effects/vanilla/weapons/shotgun/sho_muzzleflash"
+	self.usa_m1912_npc.shell_ejection = "effects/vanilla/weapons/shells/shell_empty"
+	self.usa_m1912_npc.CLIP_AMMO_MAX = 5
+	self.usa_m1912_npc.NR_CLIPS_MAX = 8
+	self.usa_m1912_npc.AMMO_MAX = self.usa_m1912_npc.CLIP_AMMO_MAX * self.usa_m1912_npc.NR_CLIPS_MAX
+	self.usa_m1912_npc.alert_size = 5000
+	self.usa_m1912_npc.suppression = 1
+	self.usa_m1912_npc.hold = "rifle"
+	self.usa_m1912_npc.alert_size = 5000
+	self.usa_m1912_npc.suppression = 1
+end
+
 function WeaponTweakData:_init_data_thompson_npc(tweak_data)
 	self.thompson_npc = {}
 	self.thompson_npc.sounds = {}
@@ -1899,7 +1975,7 @@ function WeaponTweakData:_init_data_thompson_npc(tweak_data)
 	self.thompson_npc.sounds.single = "thompson_fire_npc_single"
 	self.thompson_npc.sounds.autofire_start = "thompson_fire_npc"
 	self.thompson_npc.sounds.autofire_stop = "thompson_fire_npc_stop"
-	self.thompson_npc.use_data.selection_index = tweak_data.WEAPON_SLOT_SECONDARY
+	self.thompson_npc.use_data.selection_index = tweak_data.WEAPON_SLOT_PRIMARY
 	self.thompson_npc.DAMAGE = 17
 	self.thompson_npc.muzzleflash = "effects/vanilla/weapons/9mm_auto"
 	self.thompson_npc.muzzleflash_silenced = "effects/vanilla/weapons/9mm_auto_silence"
@@ -1925,7 +2001,7 @@ function WeaponTweakData:_init_data_usa_sten_npc(tweak_data)
 	self.sten_npc.sounds.single = "sten_fire_npc_single"
 	self.sten_npc.sounds.autofire_start = "sten_fire_npc"
 	self.sten_npc.sounds.autofire_stop = "sten_fire_npc_stop"
-	self.usa_sten_npc.use_data.selection_index = tweak_data.WEAPON_SLOT_SECONDARY
+	self.usa_sten_npc.use_data.selection_index = tweak_data.WEAPON_SLOT_PRIMARY
 	self.usa_sten_npc.DAMAGE = 17
 	self.usa_sten_npc.muzzleflash = "effects/vanilla/weapons/9mm_auto"
 	self.usa_sten_npc.muzzleflash_silenced = "effects/vanilla/weapons/9mm_auto_silence"
@@ -2396,11 +2472,11 @@ function WeaponTweakData:_init_data_crosshairs()
 end
 
 function WeaponTweakData:_collect_all_fps_animation_weights()
-	self._all_fps_animation_weights = {}
+	self.all_fps_animation_weights = {}
 
 	for weapon_part_name, weapon_part_data in pairs(self.factory.parts) do
 		if weapon_part_data and weapon_part_data.fps_animation_weight then
-			table.insert(self._all_fps_animation_weights, weapon_part_data.fps_animation_weight)
+			table.insert(self.all_fps_animation_weights, weapon_part_data.fps_animation_weight)
 		end
 	end
 end
@@ -2928,6 +3004,7 @@ function WeaponTweakData:_init_new_weapons(weapon_data, tweak_data)
 	self:_init_browning(weapon_data, tweak_data)
 	self:_init_welrod(weapon_data, tweak_data)
 	self:_init_shotty(weapon_data, tweak_data)
+	self:_init_georg(weapon_data, tweak_data)
 end
 
 function WeaponTweakData:_init_flamethrower_mk2(weapon_data, tweak_data)
@@ -3023,8 +3100,7 @@ function WeaponTweakData:_init_c96(weapon_data, tweak_data)
 	self.c96.sounds = {}
 	self.c96.sounds.fire = "mauser_c96_fire_1p"
 	self.c96.sounds.dryfire = "secondary_dryfire"
-	self.c96.sounds.enter_steelsight = nil
-	self.c96.sounds.leave_steelsight = nil
+	self.c96.sounds.magazine_empty = "wp_mauser_slide_lock"
 	self.c96.timers = {}
 	self.c96.timers.reload_not_empty = 2.39
 	self.c96.timers.reload_empty = 1.6
@@ -3056,6 +3132,7 @@ function WeaponTweakData:_init_c96(weapon_data, tweak_data)
 	self.c96.FIRE_MODE = "single"
 	self.c96.fire_mode_data = {}
 	self.c96.fire_mode_data.fire_rate = 0.11
+	self.c96.fire_mode_data.autofire_delay = 0.13
 	self.c96.single = {}
 	self.c96.single.fire_rate = 0.11
 	self.c96.spread = {}
@@ -3161,11 +3238,11 @@ function WeaponTweakData:_init_tt33(weapon_data, tweak_data)
 	self.tt33.sounds = {}
 	self.tt33.sounds.fire = "tt33_fire_1p"
 	self.tt33.sounds.dryfire = "secondary_dryfire"
-	self.tt33.sounds.enter_steelsight = nil
-	self.tt33.sounds.leave_steelsight = nil
+	self.tt33.sounds.magazine_empty = "wp_m1911_slide_release"
 	self.tt33.FIRE_MODE = "single"
 	self.tt33.fire_mode_data = {}
 	self.tt33.fire_mode_data.fire_rate = 0.1
+	self.tt33.fire_mode_data.autofire_delay = 0.128
 	self.tt33.single = {}
 	self.tt33.single.fire_rate = 0.1
 	self.tt33.timers = {}
@@ -3289,6 +3366,177 @@ function WeaponTweakData:_init_tt33(weapon_data, tweak_data)
 	}
 end
 
+function WeaponTweakData:_init_georg(weapon_data, tweak_data)
+	self.georg = {
+		CLIP_AMMO_MAX = 8,
+		FIRE_MODE = "single",
+		NR_CLIPS_MAX = 6,
+		aim_assist = weapon_data.aim_assist_pistol_default,
+		ammo_pickup_base = 5,
+		animations = {
+			equip_id = "equip_georg",
+			recoil_steelsight = true,
+		},
+		autohit = weapon_data.autohit_pistol_default,
+		category = self.WEAPON_CATEGORY_PISTOL,
+		crosshair = self._crosshairs.pistol,
+		damage_melee = 86,
+		damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default,
+		damage_profile = {
+			{
+				damage = 56,
+				range = 1000,
+			},
+			{
+				damage = 44,
+				range = 3000,
+			},
+		},
+		desc_id = "bm_w_georg_desc",
+		description_id = "des_georg",
+		dismember_chance = 0,
+		fire_mode_data = {
+			autofire_delay = self:convert_rpm(285),
+			fire_rate = self:convert_rpm(330),
+		},
+		gui = {
+			display_offset = 12,
+			distance_offset = -80,
+			height_offset = -11,
+			icon_large = "weapon_pis_georg_large",
+			initial_rotation = {
+				pitch = WeaponTweakData.INIT_ROTATION_PITCH_PISTOL,
+				roll = 0,
+				yaw = WeaponTweakData.INIT_ROTATION_YAW,
+			},
+			rotation_offset = -4,
+		},
+		gun_kick = {
+			hip_fire = {
+				15,
+				75,
+				-15,
+				30,
+			},
+			position_ratio = -0.05,
+			steelsight = {
+				15,
+				52,
+				-12,
+				22,
+			},
+		},
+		headshot_multiplier = 2.8,
+		hud = {
+			icon = "weapon_panel_pis_georg",
+			panel_class = "clip_shots",
+			panel_clip_icon_loaded = "9mm_loaded",
+			panel_clip_icon_spent = "9mm_spent",
+		},
+		kick = {
+			crouching = {
+				1.05,
+				1.3,
+				-0.45,
+				0.45,
+			},
+			crouching_steelsight = {
+				1.25,
+				1.4,
+				-0.25,
+				0.25,
+			},
+			standing = {
+				1.05,
+				1.3,
+				-0.55,
+				0.55,
+			},
+			steelsight = {
+				1.2,
+				1.5,
+				-0.3,
+				0.3,
+			},
+		},
+		muzzleflash = "effects/vanilla/weapons/9mm_auto_fps",
+		muzzleflash_silenced = "effects/vanilla/weapons/9mm_auto_silence_fps",
+		name_id = "bm_w_georg",
+		panic_suppression_chance = 0.05,
+		shake = {
+			fire_multiplier = 0.4,
+			fire_steelsight_multiplier = 0.3,
+		},
+		shell_ejection = "effects/vanilla/weapons/shells/shell_9mm",
+		single = {
+			fire_rate = self:convert_rpm(320),
+		},
+		sounds = {
+			dryfire = "secondary_dryfire",
+			fire = "georg_fire_1p",
+			magazine_empty = "wp_georg_slide_lock",
+		},
+		stats = {
+			alert_size = 7,
+			concealment = 30,
+			extra_ammo = 6,
+			recoil = 4,
+			spread = 5,
+			spread_moving = 3,
+			suppression = 14,
+			total_ammo_mod = 21,
+			value = 1,
+			zoom = 3,
+		},
+		timers = {
+			equip = 0.45,
+			reload_empty = 1.74,
+			reload_not_empty = 1.52,
+			unequip = 0.5,
+		},
+		transition_duration = 0,
+		use_data = {
+			selection_index = tweak_data.WEAPON_SLOT_SECONDARY,
+		},
+		weapon_hold = "georg",
+	}
+	self.georg.AMMO_MAX = self.georg.CLIP_AMMO_MAX * self.georg.NR_CLIPS_MAX
+	self.georg.spread = {
+		per_shot = 1.27,
+		recovery = 9.5,
+		recovery_wait_multiplier = 2.1,
+		standing = 1.9,
+	}
+	self.georg.spread.crouching = self.georg.spread.standing - 0.25
+	self.georg.spread.steelsight = self.georg.spread.standing - 1.25
+	self.georg.spread.moving_standing = self.georg.spread.standing + 1.5
+	self.georg.spread.moving_crouching = self.georg.spread.crouching + 1
+	self.georg.spread.moving_steelsight = self.georg.spread.steelsight + 0.5
+	self.georg.spread.per_shot_steelsight = self.georg.spread.per_shot - 0.1
+end
+
+function WeaponTweakData:_init_data_georg_npc(tweak_data)
+	self.georg_npc = {}
+	self.georg_npc.use_data = {}
+	self.georg_npc.use_data.selection_index = tweak_data.WEAPON_SLOT_SECONDARY
+	self.georg_npc.usage = "usa_m1911_npc"
+	self.georg_npc.usage_anim = "c45"
+	self.georg_npc.hold = "pistol"
+	self.georg_npc.sounds = {}
+	self.georg_npc.sounds.prefix = ""
+	self.georg_npc.sounds.single = "luger_fire_npc"
+	self.georg_npc.sounds.dryfire = "secondary_dryfire"
+	self.georg_npc.DAMAGE = 2
+	self.georg_npc.muzzleflash = "effects/vanilla/weapons/9mm_auto"
+	self.georg_npc.muzzleflash_silenced = "effects/vanilla/weapons/9mm_auto_silence"
+	self.georg_npc.shell_ejection = "effects/vanilla/weapons/shells/shell_9mm"
+	self.georg_npc.CLIP_AMMO_MAX = 8
+	self.georg_npc.NR_CLIPS_MAX = 5
+	self.georg_npc.AMMO_MAX = self.georg_npc.CLIP_AMMO_MAX * self.georg_npc.NR_CLIPS_MAX
+	self.georg_npc.alert_size = 5000
+	self.georg_npc.suppression = 1
+end
+
 function WeaponTweakData:_init_webley(weapon_data, tweak_data)
 	self.webley = {}
 	self.webley.category = WeaponTweakData.WEAPON_CATEGORY_PISTOL
@@ -3337,6 +3585,7 @@ function WeaponTweakData:_init_webley(weapon_data, tweak_data)
 	self.webley.fire_mode_data.fire_rate = 0.25
 	self.webley.single = {}
 	self.webley.single.fire_rate = 0.25
+	self.webley.fire_mode_data.autofire_delay = 0.338
 	self.webley.spread = {}
 	self.webley.spread.standing = 1.9
 	self.webley.spread.crouching = self.webley.spread.standing - 0.35
@@ -3435,11 +3684,11 @@ function WeaponTweakData:_init_m1911(weapon_data, tweak_data)
 	self.m1911.sounds = {}
 	self.m1911.sounds.fire = "colt_m1911_fire_1p"
 	self.m1911.sounds.dryfire = "secondary_dryfire"
-	self.m1911.sounds.enter_steelsight = nil
-	self.m1911.sounds.leave_steelsight = nil
+	self.m1911.sounds.magazine_empty = "wp_m1911_slide_release"
 	self.m1911.FIRE_MODE = "single"
 	self.m1911.fire_mode_data = {}
 	self.m1911.fire_mode_data.fire_rate = 0.1
+	self.m1911.fire_mode_data.autofire_delay = 0.116
 	self.m1911.single = {}
 	self.m1911.single.fire_rate = 0.1
 	self.m1911.timers = {}
@@ -3608,6 +3857,7 @@ function WeaponTweakData:_init_m1912_winchester(weapon_data, tweak_data)
 	self.m1912.FIRE_MODE = "single"
 	self.m1912.fire_mode_data = {}
 	self.m1912.fire_mode_data.fire_rate = 0.66
+	self.m1912.fire_mode_data.autofire_delay = 0.18
 	self.m1912.CAN_TOGGLE_FIREMODE = false
 	self.m1912.single = {}
 	self.m1912.single.fire_rate = 0.66
@@ -3739,7 +3989,8 @@ function WeaponTweakData:_init_ithaca(weapon_data, tweak_data)
 	self.ithaca.ammo_pickup_base = 3
 	self.ithaca.FIRE_MODE = "single"
 	self.ithaca.fire_mode_data = {}
-	self.ithaca.fire_mode_data.fire_rate = 0.62
+	self.ithaca.fire_mode_data.fire_rate = self:convert_rpm(97)
+	self.ithaca.fire_mode_data.autofire_delay = 0.14
 	self.ithaca.CAN_TOGGLE_FIREMODE = false
 	self.ithaca.single = {}
 	self.ithaca.single.fire_rate = 0.62
@@ -3869,6 +4120,7 @@ function WeaponTweakData:_init_browning(weapon_data, tweak_data)
 	self.browning.FIRE_MODE = "single"
 	self.browning.fire_mode_data = {}
 	self.browning.fire_mode_data.fire_rate = self:convert_rpm(430)
+	self.browning.fire_mode_data.autofire_delay = self:convert_rpm(460)
 	self.browning.CAN_TOGGLE_FIREMODE = false
 	self.browning.single = {}
 	self.browning.single.fire_rate = self:convert_rpm(430)
@@ -3966,7 +4218,8 @@ function WeaponTweakData:_init_welrod(weapon_data, tweak_data)
 	self.welrod.sounds.leave_steelsight = nil
 	self.welrod.FIRE_MODE = "single"
 	self.welrod.fire_mode_data = {}
-	self.welrod.fire_mode_data.fire_rate = 1.29
+	self.welrod.fire_mode_data.fire_rate = self:convert_rpm(47)
+	self.welrod.fire_mode_data.autofire_delay = 0.1
 	self.welrod.single = {}
 	self.welrod.single.fire_rate = 1.29
 	self.welrod.timers = {}
@@ -4142,6 +4395,7 @@ function WeaponTweakData:_init_shotty(weapon_data, tweak_data)
 	self.shotty.CAN_TOGGLE_FIREMODE = false
 	self.shotty.single = {}
 	self.shotty.single.fire_rate = 0.2
+	self.shotty.fire_mode_data.autofire_delay = 0.3
 	self.shotty.spread = deep_clone(self.shotgun_spread_template)
 	self.shotty.kick = {}
 	self.shotty.kick.standing = {
@@ -4272,6 +4526,7 @@ function WeaponTweakData:_init_geco(weapon_data, tweak_data)
 	self.geco.FIRE_MODE = "single"
 	self.geco.fire_mode_data = {}
 	self.geco.fire_mode_data.fire_rate = 0.2
+	self.geco.fire_mode_data.autofire_delay = 0.2
 	self.geco.CAN_TOGGLE_FIREMODE = false
 	self.geco.single = {}
 	self.geco.single.fire_rate = 0.2
@@ -4400,6 +4655,7 @@ function WeaponTweakData:_init_sten_mk2(weapon_data, tweak_data)
 	self.sten.FIRE_MODE = "auto"
 	self.sten.fire_mode_data = {}
 	self.sten.fire_mode_data.fire_rate = self:convert_rpm(550)
+	self.sten.fire_mode_data.autofire_delay = 0.08
 	self.sten.CAN_TOGGLE_FIREMODE = true
 	self.sten.auto = {}
 	self.sten.auto.fire_rate = self:convert_rpm(550)
@@ -4559,6 +4815,7 @@ function WeaponTweakData:_init_thompson(weapon_data, tweak_data)
 	self.thompson.FIRE_MODE = "auto"
 	self.thompson.fire_mode_data = {}
 	self.thompson.fire_mode_data.fire_rate = self:convert_rpm(720)
+	self.thompson.fire_mode_data.autofire_delay = 0.106
 	self.thompson.CAN_TOGGLE_FIREMODE = true
 	self.thompson.auto = {}
 	self.thompson.auto.fire_rate = self:convert_rpm(720)
@@ -4716,6 +4973,7 @@ function WeaponTweakData:_init_mp38(weapon_data, tweak_data)
 	self.mp38.FIRE_MODE = "auto"
 	self.mp38.fire_mode_data = {}
 	self.mp38.fire_mode_data.fire_rate = self:convert_rpm(520)
+	self.mp38.fire_mode_data.autofire_delay = 0.1
 	self.mp38.CAN_TOGGLE_FIREMODE = false
 	self.mp38.auto = {}
 	self.mp38.auto.fire_rate = self:convert_rpm(520)
@@ -4854,6 +5112,7 @@ function WeaponTweakData:_init_sterling(weapon_data, tweak_data)
 	self.sterling.FIRE_MODE = "auto"
 	self.sterling.fire_mode_data = {}
 	self.sterling.fire_mode_data.fire_rate = self:convert_rpm(600)
+	self.sterling.fire_mode_data.autofire_delay = 0.078
 	self.sterling.CAN_TOGGLE_FIREMODE = true
 	self.sterling.auto = {}
 	self.sterling.auto.fire_rate = self:convert_rpm(600)
@@ -4994,6 +5253,7 @@ function WeaponTweakData:_init_m1_carbine(weapon_data, tweak_data)
 	self.carbine.FIRE_MODE = "single"
 	self.carbine.fire_mode_data = {}
 	self.carbine.fire_mode_data.fire_rate = self:convert_rpm(520)
+	self.carbine.fire_mode_data.autofire_delay = 0.08
 	self.carbine.CAN_TOGGLE_FIREMODE = false
 	self.carbine.spread = {}
 	self.carbine.spread.standing = 2.5
@@ -5149,6 +5409,7 @@ function WeaponTweakData:_init_m1_garand(weapon_data, tweak_data)
 	self.garand.FIRE_MODE = "single"
 	self.garand.fire_mode_data = {}
 	self.garand.fire_mode_data.fire_rate = self:convert_rpm(520)
+	self.garand.fire_mode_data.autofire_delay = 0.132
 	self.garand.CAN_TOGGLE_FIREMODE = false
 	self.garand.auto = {}
 	self.garand.auto.fire_rate = self:convert_rpm(520)
@@ -5306,6 +5567,7 @@ function WeaponTweakData:_init_mp44(weapon_data, tweak_data)
 	self.mp44.FIRE_MODE = "auto"
 	self.mp44.fire_mode_data = {}
 	self.mp44.fire_mode_data.fire_rate = self:convert_rpm(540)
+	self.mp44.fire_mode_data.autofire_delay = 0.075
 	self.mp44.CAN_TOGGLE_FIREMODE = true
 	self.mp44.auto = {}
 	self.mp44.auto.fire_rate = self:convert_rpm(540)
@@ -5461,6 +5723,7 @@ function WeaponTweakData:_init_m1918_bar(weapon_data, tweak_data)
 	self.m1918.FIRE_MODE = "auto"
 	self.m1918.fire_mode_data = {}
 	self.m1918.fire_mode_data.fire_rate = self:convert_rpm(500)
+	self.m1918.fire_mode_data.autofire_delay = 0.08333
 	self.m1918.CAN_TOGGLE_FIREMODE = true
 	self.m1918.auto = {}
 	self.m1918.auto.fire_rate = self:convert_rpm(500)
@@ -5620,6 +5883,7 @@ function WeaponTweakData:_init_dp28(weapon_data, tweak_data)
 	self.dp28.FIRE_MODE = "auto"
 	self.dp28.fire_mode_data = {}
 	self.dp28.fire_mode_data.fire_rate = self:convert_rpm(600)
+	self.dp28.fire_mode_data.autofire_delay = 0.08
 	self.dp28.CAN_TOGGLE_FIREMODE = true
 	self.dp28.auto = {}
 	self.dp28.auto.fire_rate = self:convert_rpm(600)
@@ -5771,7 +6035,8 @@ function WeaponTweakData:_init_bren(weapon_data, tweak_data)
 	self.bren.ammo_pickup_base = 20
 	self.bren.FIRE_MODE = "auto"
 	self.bren.fire_mode_data = {}
-	self.bren.fire_mode_data.fire_rate = 0.12
+	self.bren.fire_mode_data.fire_rate = self:convert_rpm(500)
+	self.bren.fire_mode_data.autofire_delay = 0.08
 	self.bren.CAN_TOGGLE_FIREMODE = true
 	self.bren.auto = {}
 	self.bren.auto.fire_rate = 0.12
@@ -5918,6 +6183,7 @@ function WeaponTweakData:_init_mg42(weapon_data, tweak_data)
 	self.mg42.FIRE_MODE = "auto"
 	self.mg42.fire_mode_data = {}
 	self.mg42.fire_mode_data.fire_rate = self:convert_rpm(1000)
+	self.mg42.fire_mode_data.autofire_delay = 0.08
 	self.mg42.CAN_TOGGLE_FIREMODE = false
 	self.mg42.auto = {}
 	self.mg42.auto.fire_rate = self:convert_rpm(1000)
@@ -6047,7 +6313,8 @@ function WeaponTweakData:_init_m1903_springfield(weapon_data, tweak_data)
 	self.m1903.ammo_pickup_base = 5
 	self.m1903.FIRE_MODE = "single"
 	self.m1903.fire_mode_data = {}
-	self.m1903.fire_mode_data.fire_rate = 0.75
+	self.m1903.fire_mode_data.fire_rate = self:convert_rpm(80)
+	self.m1903.fire_mode_data.autofire_delay = 0.164
 	self.m1903.CAN_TOGGLE_FIREMODE = false
 	self.m1903.auto = {}
 	self.m1903.auto.fire_rate = 0.75
@@ -6205,7 +6472,8 @@ function WeaponTweakData:_init_kar_98k(weapon_data, tweak_data)
 	self.kar_98k.ammo_pickup_base = 5
 	self.kar_98k.FIRE_MODE = "single"
 	self.kar_98k.fire_mode_data = {}
-	self.kar_98k.fire_mode_data.fire_rate = 0.8
+	self.kar_98k.fire_mode_data.fire_rate = self:convert_rpm(75)
+	self.kar_98k.fire_mode_data.autofire_delay = 0.18
 	self.kar_98k.CAN_TOGGLE_FIREMODE = false
 	self.kar_98k.auto = {}
 	self.kar_98k.auto.fire_rate = 0.8
@@ -6364,7 +6632,8 @@ function WeaponTweakData:_init_lee_enfield(weapon_data, tweak_data)
 	self.lee_enfield.ammo_pickup_base = 5
 	self.lee_enfield.FIRE_MODE = "single"
 	self.lee_enfield.fire_mode_data = {}
-	self.lee_enfield.fire_mode_data.fire_rate = 0.8
+	self.lee_enfield.fire_mode_data.fire_rate = self:convert_rpm(75)
+	self.lee_enfield.fire_mode_data.autofire_delay = 0.154
 	self.lee_enfield.CAN_TOGGLE_FIREMODE = false
 	self.lee_enfield.auto = {}
 	self.lee_enfield.auto.fire_rate = 0.8
@@ -6519,7 +6788,8 @@ function WeaponTweakData:_init_mosin(weapon_data, tweak_data)
 	self.mosin.ammo_pickup_base = 5
 	self.mosin.FIRE_MODE = "single"
 	self.mosin.fire_mode_data = {}
-	self.mosin.fire_mode_data.fire_rate = 0.78
+	self.mosin.fire_mode_data.fire_rate = self:convert_rpm(77)
+	self.mosin.fire_mode_data.autofire_delay = 0.22
 	self.mosin.CAN_TOGGLE_FIREMODE = false
 	self.mosin.single = {}
 	self.mosin.single.fire_rate = 0.78

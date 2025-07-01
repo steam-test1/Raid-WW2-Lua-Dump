@@ -3,6 +3,13 @@ NavigationStitcherOperatorUnitElement.ACTIONS = {
 	"stitch",
 	"tear",
 }
+NavigationStitcherOperatorUnitElement.LINK_VALUES = {
+	{
+		output = true,
+		table_value = "elements",
+		type = "operator",
+	},
+}
 
 function NavigationStitcherOperatorUnitElement:init(unit)
 	NavigationStitcherOperatorUnitElement.super.init(self, unit)

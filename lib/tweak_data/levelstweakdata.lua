@@ -59,14 +59,6 @@ function LevelsTweakData:init()
 		},
 		world_name = "vanilla/bridge",
 	}
-	self.ger_bridge_operation = {
-		load_env = true,
-		low_poly = "",
-		package = {
-			"packages/zone_germany",
-		},
-		world_name = "vanilla/bridge",
-	}
 	self.radio_defense = {
 		load_env = true,
 		low_poly = "",

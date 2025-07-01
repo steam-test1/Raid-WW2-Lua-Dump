@@ -49,6 +49,23 @@ SpecialObjectiveUnitElement.PRESETS = {
 		"teamAI4",
 	},
 }
+SpecialObjectiveUnitElement.LINK_VALUES = {
+	{
+		output = true,
+		table_value = "followup_elements",
+		type = "followup",
+	},
+	{
+		table_value = "spawn_instigator_ids",
+		type = "instigator",
+	},
+	{
+		layer = "Statics",
+		output = true,
+		type = "turret",
+		value = "turret_id",
+	},
+}
 
 function SpecialObjectiveUnitElement:init(unit)
 	SpecialObjectiveUnitElement.super.init(self, unit)
@@ -176,8 +193,6 @@ function SpecialObjectiveUnitElement:stop_test_element()
 	end
 
 	self._enemies = {}
-
-	print("Stop test time", self._start_test_t and Application:time() - self._start_test_t or 0)
 end
 
 function SpecialObjectiveUnitElement:draw_links(t, dt, selected_unit, all_units)

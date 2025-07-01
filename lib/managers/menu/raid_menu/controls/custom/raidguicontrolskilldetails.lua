@@ -2,11 +2,11 @@ local UpgradeStats = require("lib/utils/UpgradeStats")
 
 RaidGUIControlSkillDetails = RaidGUIControlSkillDetails or class(RaidGUIControl)
 RaidGUIControlSkillDetails.DEFAULT_W = 740
-RaidGUIControlSkillDetails.DEFAULT_H = RaidGUIControlBranchingBarSkilltreeNode.DEFAULT_H
+RaidGUIControlSkillDetails.DEFAULT_H = 88
 RaidGUIControlSkillDetails.TITLE_FONT = tweak_data.gui.fonts.din_compressed
-RaidGUIControlSkillDetails.TITLE_FONT_SIZE = 72
+RaidGUIControlSkillDetails.TITLE_FONT_SIZE = tweak_data.gui.font_sizes.title
 RaidGUIControlSkillDetails.TITLE_COLOR = tweak_data.gui.colors.raid_red
-RaidGUIControlSkillDetails.TITLE_H = RaidGUIControlSkillDetails.TITLE_FONT_SIZE + 2
+RaidGUIControlSkillDetails.TITLE_H = 100
 RaidGUIControlSkillDetails.FRAME_MARGIN_W = 40
 RaidGUIControlSkillDetails.FRAME_MARGIN_H = 20
 RaidGUIControlSkillDetails.DESCRIPTION_PADDING_X = 22

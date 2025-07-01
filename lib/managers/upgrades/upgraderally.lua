@@ -4,8 +4,9 @@ function UpgradeRally:check_activate()
 	managers.system_event_listener:remove_listener("rally_damage_taken")
 	managers.system_event_listener:remove_listener("rally_damaged_enemy")
 	managers.system_event_listener:remove_listener("rally_reset")
+	print("SAJHDGJSHADGJHSADGKJSAHDGJSKAHDGKJHSAGDJKHSAGDJKHASGDJSAKHDGJSAHKGA")
 
-	if managers.player:has_category_upgrade("player", "rally_recoverable_health") then
+	if alive(managers.player:local_player()) and managers.player:has_category_upgrade("player", "rally_recoverable_health") then
 		managers.system_event_listener:add_listener("rally_damage_taken", {
 			CoreSystemEventListenerManager.SystemEventListenerManager.PLAYER_DAMAGE_TAKEN,
 		}, callback(self, self, "_on_damage_taken"))
@@ -27,6 +28,7 @@ function UpgradeRally:check_activate()
 		self._max_amount = nil
 		self._damage_ratio = nil
 		self._headshot_multiplier = nil
+		self._damage_ext = nil
 
 		managers.hud:set_player_special_health({
 			current = 0,

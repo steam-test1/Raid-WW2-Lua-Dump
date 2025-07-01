@@ -3,7 +3,7 @@ local UpgradeAnatomist = {}
 function UpgradeAnatomist:check_activate()
 	managers.system_event_listener:remove_listener("anatomist_knockdown")
 
-	if managers.player:has_category_upgrade("weapon", "anatomist_legshot_knockdown") then
+	if alive(managers.player:local_player()) and managers.player:has_category_upgrade("weapon", "anatomist_legshot_knockdown") then
 		managers.system_event_listener:add_listener("anatomist_knockdown", {
 			CoreSystemEventListenerManager.SystemEventListenerManager.PLAYER_DAMAGED_ENEMY,
 		}, callback(self, self, "_on_knockdown"))

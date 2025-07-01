@@ -261,71 +261,54 @@ function DialogManager:queue_dialog(id, params, test)
 	if self._current_dialog and self._current_dialog.id == id or self._next_dialog and self._next_dialog.id == id then
 		Application:warn("[DialogManager:queue_dialog] Dialog already playing, skipping", id)
 
-		return
+		return false
 	end
 
-	local chance = self._dialog_list[id].chance
+	local dialog = self._dialog_list[id]
+	local chance = dialog.chance
 
 	if chance < 1 then
-		local rand = math.rand(1)
+		local rand = math.random()
 
 		if chance < rand then
-			return
+			return false
 		end
 	end
 
 	if Network:is_server() then
 		self:do_queue_dialog(id, params, test)
 	else
-		local instigator = self:_calc_instigator_string(params)
+		local instigator = self:_get_character_string(params.instigator)
 
 		managers.network:session():send_to_host("sync_queue_dialog", id, instigator or "nil")
 	end
 end
 
-function DialogManager:_calc_instigator_string(params)
-	local instigator
-
-	if params.instigator then
-		if type(params.instigator) == "string" then
-			if params.instigator ~= "nil" then
-				instigator = params.instigator
-			end
-		else
-			instigator = managers.criminals:character_name_by_unit(params.instigator)
-		end
-	end
-
-	return instigator
-end
-
-function DialogManager:_calc_character_string(character)
-	if not character then
+function DialogManager:_get_character_string(character)
+	if not character or character == "nil" then
 		return
 	end
 
-	if type(character) == "string" then
-		if character ~= "nil" then
-			return character
-		end
-	else
+	if type(character) == "userdata" then
 		return managers.criminals:character_name_by_unit(character)
 	end
+
+	return character
 end
 
 function DialogManager:_get_dialog_characters(params)
 	local characters = {}
 
 	if params.char_a or params.instigator then
-		characters.A = self:_calc_character_string(params.char_a or params.instigator)
+		characters.A = self:_get_character_string(params.char_a or params.instigator)
 	end
 
 	if params.char_b then
-		characters.B = self:_calc_character_string(params.char_b)
+		characters.B = self:_get_character_string(params.char_b)
 	end
 
 	if params.char_c then
-		characters.C = self:_calc_character_string(params.char_c)
+		characters.C = self:_get_character_string(params.char_c)
 	end
 
 	return characters
@@ -344,7 +327,7 @@ function DialogManager:paused()
 end
 
 function DialogManager:do_queue_dialog(id, params, test)
-	local instigator = self:_calc_instigator_string(params)
+	local instigator = self:_get_character_string(params.instigator)
 
 	if Network:is_server() then
 		local send = instigator or "nil"
@@ -583,7 +566,7 @@ function DialogManager:_play_dialog(data)
 				managers.player:stop_all_speaking_except_dialog()
 			end
 
-			unit:drama():play_sound(line_data.sound, dialog.sound_source)
+			unit:drama():play_sound(line_data)
 		end
 	else
 		if dialog.string_id then
@@ -603,7 +586,7 @@ function DialogManager:_play_dialog(data)
 				managers.player:stop_all_speaking_except_dialog()
 			end
 
-			unit:drama():play_sound(dialog.sound, dialog.sound_source)
+			unit:drama():play_sound(dialog)
 		end
 	end
 end
@@ -646,8 +629,10 @@ function DialogManager:_load_dialog_data(name)
 			self._dialog_list[node.id] = {
 				chance = node.chance and tonumber(node.chance) or 1,
 				character = node.character,
+				cooldown = node.cooldown and tonumber(node.cooldown),
 				file_name = file_name,
 				id = node.id,
+				once = node.once and node.once,
 				priority = node.priority and tonumber(node.priority) or tweak_data.dialog.DEFAULT_PRIORITY,
 				sound = node.sound,
 				string_id = node.string_id,

@@ -2,7 +2,7 @@ require("lib/units/enemies/cop/logics/CopLogicBase")
 
 TeamAILogicBase = TeamAILogicBase or class(CopLogicBase)
 
-function TeamAILogicBase.on_long_dis_interacted(data, other_unit)
+function TeamAILogicBase.on_long_distance_interact(data, other_unit)
 	return
 end
 
@@ -14,7 +14,7 @@ function TeamAILogicBase.on_recovered(data, reviving_unit)
 	return
 end
 
-function TeamAILogicBase.clbk_heat(data)
+function TeamAILogicBase.clbk_weapons_hot(data)
 	return
 end
 
@@ -86,8 +86,4 @@ end
 
 function TeamAILogicBase.on_new_objective(data, old_objective)
 	CopLogicBase.update_follow_unit(data, old_objective)
-end
-
-function TeamAILogicBase.on_intimidated(data, amount, aggressor_unit)
-	return
 end

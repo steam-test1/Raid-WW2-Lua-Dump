@@ -1,4 +1,21 @@
 SpecialObjectiveGroupElement = SpecialObjectiveGroupElement or class(MissionElement)
+SpecialObjectiveGroupElement.LINK_VALUES = {
+	{
+		table_value = "spawn_instigator_ids",
+		type = "instigator",
+	},
+	{
+		output = true,
+		table_value = "followup_elements",
+		type = "followup",
+	},
+	{
+		output = true,
+		table_key = "id",
+		table_value = "followup_patrol_elements",
+		type = "followup",
+	},
+}
 
 function SpecialObjectiveGroupElement:init(unit)
 	SpecialObjectiveGroupElement.super.init(self, unit)

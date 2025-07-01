@@ -1,7 +1,6 @@
 GreedTweakData = GreedTweakData or class()
 
 function GreedTweakData:init()
-	self.points_spawned_on_level_default = 850
 	self.difficulty_level_point_multipliers = {
 		1,
 		2,

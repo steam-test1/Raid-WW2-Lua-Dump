@@ -1,4 +1,11 @@
 CoreMotionPathOperatorUnitElement = CoreMotionPathOperatorUnitElement or class(MissionElement)
+CoreMotionPathOperatorUnitElement.LINK_VALUES = {
+	{
+		output = true,
+		table_value = "elements",
+		type = "operator",
+	},
+}
 MotionPathOperatorUnitElement = MotionPathOperatorUnitElement or class(CoreMotionPathOperatorUnitElement)
 
 function MotionPathOperatorUnitElement:init(...)
@@ -51,11 +58,6 @@ function CoreMotionPathOperatorUnitElement:draw_links(t, dt, selected_unit, all_
 			})
 		end
 	end
-end
-
-function CoreMotionPathOperatorUnitElement:get_links_to_unit(...)
-	CoreMotionPathOperatorUnitElement.super.get_links_to_unit(self, ...)
-	self:_get_links_of_type_from_elements(self._hed.elements, "operator", ...)
 end
 
 function CoreMotionPathOperatorUnitElement:update_editing()
@@ -157,6 +159,12 @@ function CoreMotionPathOperatorUnitElement:on_executed_marker_selected()
 end
 
 CoreMotionPathTriggerUnitElement = CoreMotionPathTriggerUnitElement or class(MissionElement)
+CoreMotionPathTriggerUnitElement.LINK_VALUES = {
+	{
+		table_value = "elements",
+		type = "trigger",
+	},
+}
 MotionPathTriggerUnitElement = MotionPathTriggerUnitElement or class(CoreMotionPathTriggerUnitElement)
 
 function MotionPathTriggerUnitElement:init(...)
@@ -190,11 +198,6 @@ function CoreMotionPathTriggerUnitElement:draw_links(t, dt, selected_unit, all_u
 			})
 		end
 	end
-end
-
-function CoreMotionPathTriggerUnitElement:get_links_to_unit(...)
-	CoreMotionPathTriggerUnitElement.super.get_links_to_unit(self, ...)
-	self:_get_links_of_type_from_elements(self._hed.elements, "trigger", ...)
 end
 
 function CoreMotionPathTriggerUnitElement:update_editing()

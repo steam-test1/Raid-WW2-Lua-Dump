@@ -1,4 +1,10 @@
 EnemyDummyTriggerUnitElement = EnemyDummyTriggerUnitElement or class(MissionElement)
+EnemyDummyTriggerUnitElement.LINK_VALUES = {
+	{
+		table_value = "elements",
+		type = "trigger",
+	},
+}
 
 function EnemyDummyTriggerUnitElement:init(unit)
 	MissionElement.init(self, unit)
@@ -27,11 +33,6 @@ function EnemyDummyTriggerUnitElement:draw_links(t, dt, selected_unit, all_units
 			})
 		end
 	end
-end
-
-function EnemyDummyTriggerUnitElement:get_links_to_unit(...)
-	EnemyDummyTriggerUnitElement.super.get_links_to_unit(self, ...)
-	self:_get_links_of_type_from_elements(self._hed.elements, "trigger", ...)
 end
 
 function EnemyDummyTriggerUnitElement:update_editing()
@@ -108,7 +109,6 @@ function EnemyDummyTriggerUnitElement:_build_panel(panel, panel_sizer)
 		"spawn",
 		"panic",
 		"weapons_hot",
-		"tied",
 		"anim_act_01",
 		"anim_act_02",
 		"anim_act_03",

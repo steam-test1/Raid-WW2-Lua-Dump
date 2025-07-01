@@ -29,7 +29,8 @@ function RaidGUIControlListItemRaids:init(parent, params, data)
 
 	self._is_consumable = not not mission_data.consumable
 	self._is_debug = not not mission_data.debug
-	self._is_unlocked = data.unlocked or managers.progression:mission_unlocked(OperationsTweakData.JOB_TYPE_RAID, data.value)
+	self._is_bounty = not not mission_data.bounty
+	self._is_unlocked = data.unlocked == nil and managers.progression:mission_unlocked(OperationsTweakData.JOB_TYPE_RAID, data.value) or data.unlocked
 	self._color = params.color or tweak_data.gui.colors.raid_white
 	self._selected_color = params.selected_color or tweak_data.gui.colors.raid_red
 
@@ -56,11 +57,14 @@ function RaidGUIControlListItemRaids:init(parent, params, data)
 
 	if self._is_consumable then
 		self:_layout_consumable_mission_label()
+	elseif self._is_bounty then
+		self:_layout_bounty_mission_label()
 	else
 		self:_layout_difficulty_locked()
 		self:_layout_difficulty()
-		self:_layout_lock_icon()
 	end
+
+	self:_layout_lock_icon()
 
 	self._selectable = self._data.selectable
 	self._selected = false
@@ -73,6 +77,8 @@ function RaidGUIControlListItemRaids:init(parent, params, data)
 
 	if self._is_consumable then
 		-- block empty
+	elseif self._is_bounty then
+		self:_apply_bounty_layout()
 	else
 		self:_apply_progression_layout()
 	end
@@ -194,6 +200,21 @@ function RaidGUIControlListItemRaids:_layout_consumable_mission_label()
 	self._consumable_mission_label:animate(UIAnimation.animate_text_glow, Color("e4a13d"), 0.55, 0.04, 1.4)
 end
 
+function RaidGUIControlListItemRaids:_layout_bounty_mission_label()
+	self._consumable_mission_label = self._object:label({
+		color = tweak_data.gui.colors.raid_gold,
+		fit_text = true,
+		font = tweak_data.gui.fonts.din_compressed,
+		font_size = tweak_data.gui.font_sizes.extra_small,
+		name = "list_item_label_" .. self._name,
+		text = self:translate("menu_mission_selected_mission_type_bounty_raid", true),
+		vertical = "center",
+		x = self._item_icon:x() + self._item_icon:w() + RaidGUIControlListItemRaids.ICON_PADDING,
+	})
+
+	self._consumable_mission_label:set_center_y(RaidGUIControlListItemRaids.DIFFICULTY_CENTER_Y)
+end
+
 function RaidGUIControlListItemRaids:_layout_difficulty_locked()
 	local locked_subtext = self:translate("raid_next_raid_in_description", true)
 	local difficulty_locked_params = {
@@ -231,6 +252,7 @@ function RaidGUIControlListItemRaids:_layout_lock_icon()
 		color = tweak_data.gui.colors.raid_dark_grey,
 		texture = tweak_data.gui.icons[RaidGUIControlListItemRaids.LOCK_ICON].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlListItemRaids.LOCK_ICON].texture_rect,
+		visible = false,
 	}
 
 	self._lock_icon = self._object:bitmap(lock_icon_params)
@@ -240,7 +262,7 @@ function RaidGUIControlListItemRaids:_layout_lock_icon()
 end
 
 function RaidGUIControlListItemRaids:_get_mission_color()
-	return self._is_consumable and tweak_data.gui.colors.raid_gold or tweak_data.gui.colors.raid_dirty_white
+	return (self._is_consumable or self._is_bounty) and tweak_data.gui.colors.raid_gold or tweak_data.gui.colors.raid_dirty_white
 end
 
 function RaidGUIControlListItemRaids:_layout_breadcrumb()
@@ -278,6 +300,56 @@ function RaidGUIControlListItemRaids:_apply_progression_layout()
 	end
 
 	self._item_label:set_color(self._color_type)
+end
+
+function RaidGUIControlListItemRaids:_apply_bounty_layout()
+	if self._is_unlocked then
+		self._lock_icon:hide()
+		self._exp_label:show()
+		self._item_label:set_color(self._color_type)
+		self._consumable_mission_label:stop()
+		self._consumable_mission_label:animate(UIAnimation.animate_text_glow, Color("e4a13d"), 0.55, 0.04, 1.4)
+	else
+		self._lock_icon:show()
+		self._exp_label:hide()
+		self._item_icon:set_color(self._color_type)
+		self._item_label:set_color(self.UNLOCKED_COLOR)
+		self._item_label:set_text(self:translate("menu_mission_next_bounty_raid", true))
+
+		local time_table = os.date("!*t")
+		local ellapsed_time = time_table.hour * 3600 + time_table.min * 60 + time_table.sec
+
+		self._consumable_mission_label:stop()
+		self._consumable_mission_label:animate(callback(self, self, "_animate_bounty_timer"), ellapsed_time)
+		self._consumable_mission_label:set_color(self.UNLOCKED_COLOR)
+	end
+end
+
+function RaidGUIControlListItemRaids._get_time_text(time)
+	time = math.max(math.floor(time or 0), 0)
+
+	local hours = math.floor(time / 3600)
+
+	time = time - hours * 3600
+
+	local minutes = math.floor(time / 60)
+	local seconds = math.mod(time, 60)
+
+	return string.format("%02d:%02d:%02d", hours, minutes, seconds)
+end
+
+function RaidGUIControlListItemRaids:_animate_bounty_timer(o, time)
+	time = 86400 - time
+
+	while time > 0 do
+		local dt = coroutine.yield()
+
+		time = time - dt
+
+		local text = self._get_time_text(time)
+
+		o:set_text(text)
+	end
 end
 
 function RaidGUIControlListItemRaids:on_mouse_released(button)

@@ -12,9 +12,7 @@ BaseNetworkHandler._gamestate_filter = {
 		ingame_bleed_out = true,
 		ingame_driving = true,
 		ingame_electrified = true,
-		ingame_fatal = true,
 		ingame_freefall = true,
-		ingame_incapacitated = true,
 		ingame_loading = true,
 		ingame_menu = true,
 		ingame_parachuting = true,
@@ -29,9 +27,7 @@ BaseNetworkHandler._gamestate_filter = {
 		ingame_bleed_out = true,
 		ingame_driving = true,
 		ingame_electrified = true,
-		ingame_fatal = true,
 		ingame_freefall = true,
-		ingame_incapacitated = true,
 		ingame_parachuting = true,
 		ingame_special_interaction = true,
 		ingame_standard = true,
@@ -44,9 +40,7 @@ BaseNetworkHandler._gamestate_filter = {
 		ingame_bleed_out = true,
 		ingame_driving = true,
 		ingame_electrified = true,
-		ingame_fatal = true,
 		ingame_freefall = true,
-		ingame_incapacitated = true,
 		ingame_menu = true,
 		ingame_parachuting = true,
 		ingame_special_interaction = true,
@@ -56,8 +50,6 @@ BaseNetworkHandler._gamestate_filter = {
 	},
 	downed = {
 		ingame_bleed_out = true,
-		ingame_fatal = true,
-		ingame_incapacitated = true,
 	},
 	game_over = {
 		gameoverscreen = true,
@@ -72,8 +64,6 @@ BaseNetworkHandler._gamestate_filter = {
 	},
 	need_revive = {
 		ingame_bleed_out = true,
-		ingame_fatal = true,
-		ingame_incapacitated = true,
 	},
 	player_slot = {
 		ingame_lobby_menu = true,

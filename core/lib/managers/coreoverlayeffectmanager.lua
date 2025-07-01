@@ -73,9 +73,7 @@ function OverlayEffectManager:destroy()
 end
 
 function OverlayEffectManager:render()
-	if Global.render_debug.render_overlay then
-		Application:render("Overlay", self._vp_overlay)
-	end
+	Application:render("Overlay", self._vp_overlay)
 end
 
 function OverlayEffectManager:progress_effects(t, dt, paused)

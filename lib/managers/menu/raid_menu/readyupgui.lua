@@ -1164,11 +1164,19 @@ function ReadyUpGui:bind_controller_inputs(is_current_player, can_leave)
 	end
 
 	if can_leave then
-		table.insert(bindings, {
-			callback = callback(self, self, "_on_leave_lobby_button"),
-			key = Idstring("menu_controller_face_left"),
-		})
-		table.insert(controler_legend, "menu_legend_ready_up_leave")
+		if Network:is_server() then
+			table.insert(bindings, {
+				callback = callback(self, self, "_on_leave_ready_up_button"),
+				key = Idstring("menu_controller_face_left"),
+			})
+			table.insert(controler_legend, "menu_legend_ready_up_back_out")
+		else
+			table.insert(bindings, {
+				callback = callback(self, self, "_on_leave_lobby_button"),
+				key = Idstring("menu_controller_face_left"),
+			})
+			table.insert(controler_legend, "menu_legend_ready_up_leave")
+		end
 	end
 
 	if not self._ready then

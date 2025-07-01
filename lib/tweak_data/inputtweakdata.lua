@@ -42,24 +42,24 @@ function InputTweakData:init(tweak_data)
 		y = utf8.char(57347),
 	}
 	self.controller_buttons.ps4 = {
-		circle = utf8.char(57445),
-		cross = utf8.char(57444),
+		a = utf8.char(57444),
+		b = utf8.char(57445),
+		back = utf8.char(57448),
 		d_down = utf8.char(57458),
 		d_left = utf8.char(57460),
 		d_right = utf8.char(57461),
 		d_up = utf8.char(57459),
-		l1_trigger = utf8.char(57454),
-		l2_trigger = utf8.char(57452),
+		left_shoulder = utf8.char(57452),
 		left_thumb = utf8.char(57456),
-		r1_trigger = utf8.char(57455),
-		r2_trigger = utf8.char(57453),
+		left_trigger = utf8.char(57454),
+		right_shoulder = utf8.char(57453),
 		right_thumb = utf8.char(57457),
-		select = utf8.char(57448),
-		square = utf8.char(57446),
+		right_trigger = utf8.char(57455),
 		start = utf8.char(57449),
 		stick_l = utf8.char(57450),
 		stick_r = utf8.char(57451),
-		triangle = utf8.char(57447),
+		x = utf8.char(57446),
+		y = utf8.char(57447),
 	}
 
 	local function valid_range(data, var, b, c, ex_b, ex_c)

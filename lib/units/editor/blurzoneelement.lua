@@ -36,13 +36,13 @@ function BlurZoneUnitElement:_build_panel(panel, panel_sizer)
 	local mode_params = {
 		ctrlr_proportions = 2,
 		floats = 0,
-		max = 2,
-		min = 0,
+		max = 3,
+		min = 1,
 		name = "Mode:",
 		name_proportions = 1,
 		panel = panel,
 		sizer = panel_sizer,
-		tooltip = "Set the mode, 0 is disable, 2 is flash, 1 is normal",
+		tooltip = "Set the mode, 1 is normal, 2 is colored, 3 is flash on enter",
 		value = self._hed.mode,
 	}
 	local mode = CoreEWS.number_controller(mode_params)

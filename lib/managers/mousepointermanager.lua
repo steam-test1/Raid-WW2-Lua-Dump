@@ -360,16 +360,13 @@ function MousePointerManager:_mouse_move(o, x, y)
 	end
 end
 
-function MousePointerManager:_modify_mouse_button(button)
-	return button
-end
-
 function MousePointerManager:_mouse_press(o, button, x, y)
-	button = self:_modify_mouse_button(button)
-
 	if not button then
 		return
 	end
+
+	x = x or 0
+	y = y or 0
 
 	if self._mouse_callbacks[#self._mouse_callbacks] and self._mouse_callbacks[#self._mouse_callbacks].mouse_press then
 		self._mouse_callbacks[#self._mouse_callbacks].mouse_press(o, button, x, y)
@@ -377,11 +374,12 @@ function MousePointerManager:_mouse_press(o, button, x, y)
 end
 
 function MousePointerManager:_mouse_release(o, button, x, y)
-	button = self:_modify_mouse_button(button)
-
 	if not button then
 		return
 	end
+
+	x = x or 0
+	y = y or 0
 
 	if self._mouse_callbacks[#self._mouse_callbacks] and self._mouse_callbacks[#self._mouse_callbacks].mouse_release then
 		self._mouse_callbacks[#self._mouse_callbacks].mouse_release(o, button, x, y)
@@ -389,11 +387,12 @@ function MousePointerManager:_mouse_release(o, button, x, y)
 end
 
 function MousePointerManager:_mouse_click(o, button, x, y)
-	button = self:_modify_mouse_button(button)
-
 	if not button then
 		return
 	end
+
+	x = x or 0
+	y = y or 0
 
 	if self._mouse_callbacks[#self._mouse_callbacks] and self._mouse_callbacks[#self._mouse_callbacks].mouse_click then
 		self._mouse_callbacks[#self._mouse_callbacks].mouse_click(o, button, x, y)
@@ -401,11 +400,12 @@ function MousePointerManager:_mouse_click(o, button, x, y)
 end
 
 function MousePointerManager:_mouse_double_click(o, button, x, y)
-	button = self:_modify_mouse_button(button)
-
 	if not button then
 		return
 	end
+
+	x = x or 0
+	y = y or 0
 
 	if self._mouse_callbacks[#self._mouse_callbacks] and self._mouse_callbacks[#self._mouse_callbacks].mouse_double_click then
 		self._mouse_callbacks[#self._mouse_callbacks].mouse_double_click(o, button, x, y)

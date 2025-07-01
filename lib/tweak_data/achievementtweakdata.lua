@@ -72,6 +72,57 @@ function AchievementTweakData:_init_mission_awards()
 			num_peers = 2,
 		},
 	}
+	self.missions.random_short = {
+		{
+			difficulty = very_hard,
+			id = "ach_random_short_hardest",
+		},
+		{
+			id = "ach_random_short_no_bleedout",
+			no_bleedout = true,
+			num_peers = 2,
+		},
+		{
+			difficulty = very_hard,
+			id = "ach_random_short_hardest_no_bleedout",
+			no_bleedout = true,
+			num_peers = 2,
+		},
+	}
+	self.missions.random_medium = {
+		{
+			difficulty = very_hard,
+			id = "ach_random_medium_hardest",
+		},
+		{
+			id = "ach_random_medium_no_bleedout",
+			no_bleedout = true,
+			num_peers = 2,
+		},
+		{
+			difficulty = very_hard,
+			id = "ach_random_medium_hardest_no_bleedout",
+			no_bleedout = true,
+			num_peers = 2,
+		},
+	}
+	self.missions.random_long = {
+		{
+			difficulty = very_hard,
+			id = "ach_random_long_hardest",
+		},
+		{
+			id = "ach_random_long_no_bleedout",
+			no_bleedout = true,
+			num_peers = 2,
+		},
+		{
+			difficulty = very_hard,
+			id = "ach_random_long_hardest_no_bleedout",
+			no_bleedout = true,
+			num_peers = 2,
+		},
+	}
 	self.missions.flakturm = {
 		{
 			difficulty = very_hard,

@@ -11,8 +11,6 @@ function VehicleDamage:init(unit)
 	self._listener_holder = EventListenerHolder:new()
 	self._health = VehicleDamage.VEHICLE_DEFAULT_HEALTH
 	self._current_max_health = VehicleDamage.VEHICLE_DEFAULT_HEALTH
-	self._next_allowed_dmg_t = Application:digest_value(-100, true)
-	self._last_received_dmg = 0
 	self._team_police = "law1"
 	self._team_criminal = "criminal1"
 	self._half_damaged_squence_played = false
@@ -124,8 +122,6 @@ function VehicleDamage:damage_bullet(attack_data)
 		return
 	elseif self:is_friendly_fire(attack_data.attacker_unit) then
 		return "friendly_fire"
-	elseif self:_chk_dmg_too_soon(attack_data.damage) then
-		return
 	end
 
 	local result = damage_info.result
@@ -659,14 +655,6 @@ function VehicleDamage:die()
 	Application:trace("[VehicleDamage:die]")
 	self:set_health(0)
 	self._unit:vehicle_driving():on_vehicle_death()
-end
-
-function VehicleDamage:_chk_dmg_too_soon(damage)
-	local next_allowed_dmg_t = type(self._next_allowed_dmg_t) == "number" and self._next_allowed_dmg_t or Application:digest_value(self._next_allowed_dmg_t, false)
-
-	if damage <= self._last_received_dmg + 0.01 and next_allowed_dmg_t > managers.player:player_timer():time() then
-		return true
-	end
 end
 
 function VehicleDamage:_hit_direction(col_ray)

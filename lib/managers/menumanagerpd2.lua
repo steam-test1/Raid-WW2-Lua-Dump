@@ -141,27 +141,6 @@ function MenuInitiatorBase:create_item(node, params)
 	return new_item
 end
 
-function MenuInitiatorBase:create_multichoice(node, choices, params)
-	if #choices == 0 then
-		return
-	end
-
-	local data_node = {
-		type = "MenuItemMultiChoice",
-	}
-
-	for _, choice in ipairs(choices) do
-		table.insert(data_node, choice)
-	end
-
-	local new_item = node:create_item(data_node, params)
-
-	new_item:set_value(choices[1].value)
-	node:add_item(new_item)
-
-	return new_item
-end
-
 function MenuInitiatorBase:create_slider(node, params)
 	local data_node = {
 		max = params.max,

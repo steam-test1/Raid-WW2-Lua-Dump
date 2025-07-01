@@ -35,7 +35,7 @@ function RaidGUIControlLabel:init(parent, params)
 	self._object = self._panel:text(self._params)
 
 	if self._params.fit_text then
-		local x, y, w, h = self._object:text_rect()
+		local _, _, w, h = self._object:text_rect()
 
 		self._object:set_size(w, h)
 	end
@@ -133,4 +133,12 @@ end
 
 function RaidGUIControlLabel:mouse_released(o, button, x, y)
 	return false
+end
+
+function RaidGUIControlLabel:stop()
+	self._object:stop()
+end
+
+function RaidGUIControlLabel:animate(...)
+	self._object:animate(...)
 end

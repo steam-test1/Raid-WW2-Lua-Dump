@@ -29,23 +29,19 @@ function CopInventory:add_unit_by_name(new_unit_name, equip)
 	local new_unit = World:spawn_unit(new_unit_name, Vector3(), Rotation())
 
 	self:_chk_spawn_shield(new_unit)
-
-	local setup_data = {}
-
-	setup_data.user_unit = self._unit
-	setup_data.ignore_units = {
-		self._unit,
-		new_unit,
-		self._shield_unit,
-	}
-	setup_data.expend_ammo = false
-	setup_data.hit_slotmask = managers.slot:get_mask("bullet_impact_targets")
-	setup_data.hit_player = true
-	setup_data.user_sound_variant = tweak_data.character[self._unit:base()._tweak_table].weapon_voice
-	setup_data.alert_AI = true
-	setup_data.alert_filter = self._unit:brain():SO_access()
-
-	new_unit:base():setup(setup_data)
+	new_unit:base():setup({
+		alert_AI = true,
+		alert_filter = self._unit:brain():SO_access(),
+		expend_ammo = false,
+		hit_player = true,
+		hit_slotmask = managers.slot:get_mask("bullet_impact_targets"),
+		ignore_units = {
+			self._unit,
+			new_unit,
+			self._shield_unit,
+		},
+		user_unit = self._unit,
+	})
 	self:add_unit(new_unit, equip)
 end
 
@@ -70,15 +66,13 @@ function CopInventory:get_sync_data(sync_data)
 end
 
 function CopInventory:get_weapon()
-	local selection = self._available_selections[self._equipped_selection]
-	local unit = selection and selection.unit
+	local equipped_selection = self._available_selections[self._equipped_selection]
 
-	return unit
+	return equipped_selection and equipped_selection.unit
 end
 
 function CopInventory:drop_weapon()
-	local selection = self._available_selections[self._equipped_selection]
-	local unit = selection and selection.unit
+	local unit = self:get_weapon()
 
 	if alive(unit) and unit:damage() then
 		unit:unlink()
@@ -86,7 +80,7 @@ function CopInventory:drop_weapon()
 		unit:damage():has_then_run_sequence_simple("enable_body")
 		self:_call_listeners("unequip")
 		self:remove_selection(self._equipped_selection)
-		managers.game_play_central:weapon_dropped(unit)
+		managers.game_play_central:add_dropped_weapon(unit)
 	end
 end
 
@@ -126,4 +120,8 @@ end
 
 function CopInventory:anim_clbk_equip_enter(unit)
 	self:show_equipped_unit()
+end
+
+function CopInventory:anim_clbk_hide_weapon(unit)
+	self:hide_equipped_unit()
 end

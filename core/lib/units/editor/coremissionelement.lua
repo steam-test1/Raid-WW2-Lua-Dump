@@ -29,17 +29,13 @@ function CoreMissionElement:init(unit)
 
 	self:_add_default_saves()
 
-	if self.USES_POINT_ORIENTATION then
-		self.base_update_editing = callback(self, self, "__update_editing")
-	end
-
 	self._parent_panel = managers.editor:mission_element_panel()
 	self._parent_sizer = managers.editor:mission_element_sizer()
 	self._panels = {}
 	self._on_executed_units = {}
 	self._arrow_brush = Draw:brush()
 
-	self:_createicon()
+	self:_create_icon()
 end
 
 function CoreMissionElement:post_init()
@@ -55,7 +51,7 @@ function CoreMissionElement:post_init()
 	end
 end
 
-function CoreMissionElement:_createicon()
+function CoreMissionElement:_create_icon()
 	local iconsize = 32
 
 	if Global.iconsize then
@@ -107,7 +103,7 @@ function CoreMissionElement:_createicon()
 	end
 end
 
-function CoreMissionElement:set_iconsize(size)
+function CoreMissionElement:set_icon_size(size)
 	if not self._icon_ws then
 		return
 	end
@@ -123,7 +119,6 @@ function CoreMissionElement:_add_default_saves()
 	self._hed.debug = nil
 	self._hed.execute_on_startup = false
 	self._hed.execute_on_startup_priority = 100
-	self._hed.execute_on_restart = nil
 	self._hed.base_delay = 0
 	self._hed.base_delay_rand = nil
 	self._hed.trigger_times = 0
@@ -301,7 +296,7 @@ function CoreMissionElement:build_default_gui(panel, sizer)
 
 	local function refresh_list_flow_cbk(ctrlr)
 		local function f()
-			managers.editor:layer("Mission"):refresh_list_flow()
+			managers.editor:refresh_list_flow()
 		end
 
 		ctrlr:connect("EVT_COMMAND_TEXT_ENTER", f, nil)
@@ -503,13 +498,11 @@ function CoreMissionElement:add_help_text(data)
 end
 
 function CoreMissionElement:_add_help_text(text)
-	local help = {
+	self:add_help_text({
 		panel = self._panel,
 		sizer = self._panel_sizer,
 		text = text,
-	}
-
-	self:add_help_text(help)
+	})
 end
 
 function CoreMissionElement:_on_toolbar_add_element()
@@ -588,7 +581,7 @@ function CoreMissionElement:update_unselected()
 end
 
 function CoreMissionElement:can_edit()
-	return self.update_editing or self.base_update_editing
+	return self.update_editing
 end
 
 function CoreMissionElement:begin_editing()
@@ -801,10 +794,6 @@ function CoreMissionElement:_remove_instigator_rule_unit_id(id)
 	self._hed.rules_elements = #self._hed.rules_elements > 0 and self._hed.rules_elements or nil
 end
 
-function CoreMissionElement:__update_editing(_, t, dt, current_pos)
-	return
-end
-
 function CoreMissionElement:clear_triggers()
 	return
 end
@@ -872,6 +861,10 @@ function CoreMissionElement:destroy()
 		self._icon_gui:destroy_workspace(self._icon_ws)
 
 		self._icon_ws = nil
+	end
+
+	if self.stop_test_element then
+		self:stop_test_element()
 	end
 end
 
@@ -959,8 +952,9 @@ function CoreMissionElement:draw_link_on_executed(t, dt, selected_unit)
 			mvector3.multiply(dir, offset)
 
 			if self._distance_to_camera < 1000000 then
-				local text = self:_get_delay_string(unit:unit_data().unit_id)
-				local alternative = self:_get_on_executed(unit:unit_data().unit_id).alternative
+				local element = self:_get_on_executed(unit:unit_data().unit_id)
+				local text = self:_get_delay_string(element)
+				local alternative = element.alternative
 
 				if alternative then
 					text = text .. " - " .. alternative .. ""
@@ -982,12 +976,12 @@ function CoreMissionElement:draw_link_on_executed(t, dt, selected_unit)
 	end
 end
 
-function CoreMissionElement:_get_delay_string(unit_id)
-	local delay = self._hed.base_delay + self:_get_on_executed(unit_id).delay
+function CoreMissionElement:_get_delay_string(element)
+	local delay = self._hed.base_delay + element.delay
 	local text = string.format("%.2f", delay)
 
-	if self._hed.base_delay_rand or self:_get_on_executed(unit_id).delay_rand then
-		local delay_max = delay + (self:_get_on_executed(unit_id).delay_rand or 0)
+	if self._hed.base_delay_rand or element.delay_rand then
+		local delay_max = delay + (element.delay_rand or 0)
 
 		delay_max = delay_max + (self._hed.base_delay_rand and self._hed.base_delay_rand or 0)
 		text = text .. "-" .. string.format("%.2f", delay_max) .. ""
@@ -1002,11 +996,10 @@ function CoreMissionElement:add_on_executed(unit)
 	end
 
 	local params = {
+		alternative = self.ON_EXECUTED_ALTERNATIVES and self.ON_EXECUTED_ALTERNATIVES[1],
 		delay = 0,
 		id = unit:unit_data().unit_id,
 	}
-
-	params.alternative = self.ON_EXECUTED_ALTERNATIVES and self.ON_EXECUTED_ALTERNATIVES[1] or nil
 
 	table.insert(self._on_executed_units, unit)
 	table.insert(self._hed.on_executed, params)
@@ -1042,11 +1035,11 @@ function CoreMissionElement:remove_on_execute(unit)
 end
 
 function CoreMissionElement:delete_unit(units)
-	local id = self._unit:unit_data().unit_id
-
 	for _, unit in ipairs(units) do
-		unit:mission_element():remove_on_execute(self._unit)
-		unit:mission_element():remove_links(self._unit)
+		if alive(unit) then
+			unit:mission_element():remove_on_execute(self._unit)
+			unit:mission_element():remove_links(self._unit)
+		end
 	end
 end
 
@@ -1220,7 +1213,9 @@ function CoreMissionElement:_combobox_names_names(units)
 	local names = {}
 
 	for _, unit in ipairs(units) do
-		table.insert(names, self:combobox_name(unit))
+		if alive(unit) then
+			table.insert(names, self:combobox_name(unit))
+		end
 	end
 
 	return names
@@ -1563,52 +1558,88 @@ function CoreMissionElement:_remove_static_unit_list_btn(params)
 end
 
 function CoreMissionElement:get_links_to_unit(to_unit, links, all_units)
-	if to_unit == self._unit then
-		for _, data in ipairs(self._hed.on_executed) do
-			local on_executed_unit = all_units[data.id]
-			local delay = self:_get_delay_string(on_executed_unit:unit_data().unit_id)
-			local type = "on_executed" .. (data.alternative and " " .. data.alternative or "")
+	for i, data in ipairs(self._hed.on_executed) do
+		local link = {
+			alternative = data.alternative,
+			delay = self:_get_delay_string(data),
+			index = i,
+			type = "on_executed",
+		}
 
-			table.insert(links.on_executed, {
-				alternative = type,
-				delay = delay,
-				unit = on_executed_unit,
-			})
-		end
+		self:_add_links_to_element(data.id, link, to_unit, links.on_executed, links.executers, all_units)
 	end
 
-	for _, data in ipairs(self._hed.on_executed) do
-		local unit = all_units[data.id]
+	if self.USES_POINT_ORIENTATION and self._hed.orientation_elements then
+		local params = {
+			table_value = "orientation_elements",
+			type = "orientation",
+		}
 
-		if unit == to_unit then
-			local delay = self:_get_delay_string(unit:unit_data().unit_id)
-			local type = "on_executed" .. (data.alternative and " " .. data.alternative or "")
+		self:_get_links_from_value(self._hed.orientation_elements, params, to_unit, links, all_units)
+	end
 
-			table.insert(links.executers, {
-				alternative = type,
-				delay = delay,
-				unit = self._unit,
-			})
+	if self.LINK_VALUES then
+		for _, params in ipairs(self.LINK_VALUES) do
+			local value = self._hed[params.table_value or params.value]
+
+			if value then
+				self:_get_links_from_value(value, params, to_unit, links, all_units)
+			end
 		end
 	end
 end
 
-function CoreMissionElement:_get_links_of_type_from_elements(elements, type, to_unit, links, all_units)
-	local links1 = type == "operator" and links.on_executed or type == "trigger" and links.executers or type == "filter" and links.executers or links.on_executed
-	local links2 = type == "operator" and links.executers or type == "trigger" and links.on_executed or type == "filter" and links.on_executed or links.executers
-	local to_unit_id = to_unit:unit_data().unit_id
+function CoreMissionElement:_get_links_from_value(value, params, to_unit, links, all_units)
+	if not value then
+		return
+	end
 
-	for _, id in ipairs(elements) do
-		if to_unit == self._unit then
-			table.insert(links1, {
-				alternative = type,
-				unit = all_units[id],
-			})
-		elseif id == to_unit_id then
-			table.insert(links2, {
-				alternative = type,
-				unit = self._unit,
-			})
+	local type = params.type or params.table_value or params.value
+	local links1 = params.output and links.on_executed or links.executers
+	local links2 = params.output and links.executers or links.on_executed
+	local layer = params.layer and managers.editor:layer(params.layer)
+
+	all_units = layer and layer:created_units_pairs() or all_units
+
+	if params.table_value then
+		for i, element in ipairs(value) do
+			local id = params.table_key and element[params.table_key] or element
+			local link = {
+				index = i,
+				layer = params.layer,
+				type = type,
+			}
+
+			self:_add_links_to_element(id, link, to_unit, links1, links2, all_units)
 		end
+	elseif params.value then
+		local link = {
+			layer = params.layer,
+			type = type,
+		}
+
+		self:_add_links_to_element(value, link, to_unit, links1, links2, all_units)
+	end
+end
+
+function CoreMissionElement:_add_links_to_element(id, link, to_unit, links1, links2, all_units)
+	if type(to_unit) == "table" then
+		link.id = to_unit.id
+	else
+		link.id = to_unit:unit_data().unit_id or 0
+	end
+
+	if to_unit == self._unit then
+		if link.layer == "Instances" then
+			link.instance = id
+		else
+			link.unit = all_units[id]
+		end
+
+		table.insert(links1, link)
+	elseif id == link.id then
+		link.unit = self._unit
+
+		table.insert(links2, link)
 	end
 end
