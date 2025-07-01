@@ -24,6 +24,7 @@ function ChallengeCardsManager:init()
 
 	self._active_card = nil
 	self._suggested_cards = {}
+	self._delay_start = false
 
 	managers.system_event_listener:add_listener("challenge_cards_manager_drop_in", {
 		CoreSystemEventListenerManager.SystemEventListenerManager.EVENT_DROP_IN,
@@ -40,6 +41,10 @@ function ChallengeCardsManager:init()
 end
 
 function ChallengeCardsManager:update(t, dt)
+	if self._delay_start == true then
+		self:system_pre_start_raid()
+	end
+
 	if self._automatic_steam_inventory_refresh then
 		if self._readyup_inventory_load_frequency_counter > ChallengeCardsManager.READYUP_INVENTORY_LOAD_FREQUENCY then
 			managers.network.account:inventory_load()
@@ -161,8 +166,26 @@ function ChallengeCardsManager:_steam_challenge_cards_inventory_loaded(params)
 end
 
 function ChallengeCardsManager:system_pre_start_raid(params)
-	managers.raid_menu:close_all_menus()
-	managers.raid_menu:open_menu("ready_up_menu")
+	local _peer_still_connecting = false
+
+	Application:trace("Starting raid")
+
+	for _, p in pairs(managers.network:session()._peers) do
+		if p._peer_connecting == true and not p._synced then
+			_peer_still_connecting = true
+
+			break
+		end
+	end
+
+	if _peer_still_connecting == false then
+		managers.raid_menu:close_all_menus()
+		managers.raid_menu:open_menu("ready_up_menu")
+
+		self._delay_start = false
+	else
+		self._delay_start = true
+	end
 end
 
 function ChallengeCardsManager:player_droped_in(params)

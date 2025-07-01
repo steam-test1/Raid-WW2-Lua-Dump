@@ -96,6 +96,7 @@ function NetworkPeer:init(name, rpc, id, loading, synced, in_lobby, character, u
 	}
 	self._outfit_version = 0
 	self._synced_worlds = {}
+	self._peer_connecting = true
 end
 
 function NetworkPeer:set_teammate_panel_id(id)
@@ -1811,6 +1812,8 @@ function NetworkPeer:_spawn_unit_on_dropin()
 	if self._class then
 		self:_set_class_to_unit()
 	end
+
+	self._peer_connecting = false
 
 	managers.hud:_fix_peer_warcry_icons()
 
