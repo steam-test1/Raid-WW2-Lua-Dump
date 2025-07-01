@@ -514,6 +514,40 @@ function PlayerTweakData:_init_pistol_stances()
 	self.stances.welrod.crouched.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
 	self.stances.welrod.crouched.shoulders.rotation = pivot_head_rotation * pivot_shoulder_rotation:inverse()
 	self.stances.welrod.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -35, 0)
+	self.stances.nagant = deep_clone(self.stances.default)
+
+	local pivot_shoulder_translation = Vector3(8.14841, 33.5584, 1.75919)
+	local pivot_shoulder_rotation = Rotation(8.24405e-05, 0.000829823, -0.000204329)
+	local pivot_head_translation = Vector3(6, 20, -2)
+	local pivot_head_rotation = Rotation(0, 0, -1)
+
+	self.stances.nagant.standard.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
+	self.stances.nagant.standard.shoulders.rotation = pivot_head_rotation * pivot_shoulder_rotation:inverse()
+	self.stances.nagant.standard.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -35, 0)
+	self.stances.nagant.standard.vel_overshot.yaw_neg = 10
+	self.stances.nagant.standard.vel_overshot.yaw_pos = -10
+	self.stances.nagant.standard.vel_overshot.pitch_neg = -13
+	self.stances.nagant.standard.vel_overshot.pitch_pos = 13
+
+	local pivot_head_translation = Vector3(0, 16, 0)
+	local pivot_head_rotation = Rotation(0, 0, 0)
+
+	self.stances.nagant.steelsight.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
+	self.stances.nagant.steelsight.shoulders.rotation = pivot_head_rotation * pivot_shoulder_rotation:inverse()
+	self.stances.nagant.steelsight.FOV = self.stances.nagant.standard.FOV
+	self.stances.nagant.steelsight.zoom_fov = false
+	self.stances.nagant.steelsight.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -35, 0)
+	self.stances.nagant.steelsight.vel_overshot.yaw_neg = -6
+	self.stances.nagant.steelsight.vel_overshot.yaw_pos = 4
+	self.stances.nagant.steelsight.vel_overshot.pitch_neg = 4
+	self.stances.nagant.steelsight.vel_overshot.pitch_pos = -6
+
+	local pivot_head_translation = Vector3(4, 18, -4)
+	local pivot_head_rotation = Rotation(0, 0, -6)
+
+	self.stances.nagant.crouched.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
+	self.stances.nagant.crouched.shoulders.rotation = pivot_head_rotation * pivot_shoulder_rotation:inverse()
+	self.stances.nagant.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -35, 0)
 	self.stances.shotty = deep_clone(self.stances.default)
 
 	local pivot_shoulder_translation = Vector3(11.4127, 15.7764, -5.20036)
