@@ -802,7 +802,7 @@ function MissionScript:load(data)
 	end
 
 	for id, mission_state in pairs(state) do
-		if self._elements[id].load then
+		if self._elements[id] and self._elements[id].load then
 			self._elements[id]:load(mission_state)
 		else
 			_G.debug_pause("Mission element without load method?", id, inspect(mission_state))

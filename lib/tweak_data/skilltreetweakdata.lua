@@ -2898,6 +2898,18 @@ function SkillTreeTweakData:_init_skill_list()
 			"d343",
 		},
 	}
+	self.skills.weapon_unlock_grenade_mills = {
+		desc_id = "skill_weapon_unlock_grenade_mills_desc",
+		name_id = "skill_weapon_unlock_grenade_mills_name",
+		acquires = {},
+		icon_xy = {
+			1,
+			1,
+		},
+		upgrades = {
+			"mills",
+		},
+	}
 	self.skills.weapon_unlock_dp28 = {
 		desc_id = "skill_weapon_unlock_dp28_desc",
 		name_id = "skill_weapon_unlock_dp28_name",
@@ -2944,6 +2956,30 @@ function SkillTreeTweakData:_init_skill_list()
 		},
 		upgrades = {
 			"kar_98k",
+		},
+	}
+	self.skills.weapon_unlock_lee_enfield = {
+		desc_id = "skill_weapon_unlock_lee_enfield_desc",
+		name_id = "skill_weapon_unlock_lee_enfield_name",
+		acquires = {},
+		icon_xy = {
+			1,
+			1,
+		},
+		upgrades = {
+			"lee_enfield",
+		},
+	}
+	self.skills.weapon_unlock_shotty = {
+		desc_id = "skill_weapon_unlock_shotty_desc",
+		name_id = "skill_weapon_unlock_shotty_name",
+		acquires = {},
+		icon_xy = {
+			1,
+			1,
+		},
+		upgrades = {
+			"shotty",
 		},
 	}
 	self.skills.pistol_damage_multiplier_1 = {
@@ -5274,6 +5310,11 @@ function SkillTreeTweakData:_init_recon_unlock_progression()
 			"weapon_unlock_kar_98k",
 		},
 	}
+	self.automatic_unlock_progressions.recon[11] = {
+		weapons = {
+			"weapon_unlock_shotty",
+		},
+	}
 	self.automatic_unlock_progressions.recon[13] = {
 		weapons = {
 			"weapon_unlock_garand",
@@ -5314,6 +5355,16 @@ function SkillTreeTweakData:_init_recon_unlock_progression()
 	self.automatic_unlock_progressions.recon[30] = {
 		weapons = {
 			"weapon_unlock_m1911",
+		},
+	}
+	self.automatic_unlock_progressions.recon[31] = {
+		weapons = {
+			"weapon_unlock_grenade_mills",
+		},
+	}
+	self.automatic_unlock_progressions.recon[33] = {
+		weapons = {
+			"weapon_unlock_lee_enfield",
 		},
 	}
 	self.automatic_unlock_progressions.recon[35] = {
@@ -5366,6 +5417,11 @@ function SkillTreeTweakData:_init_assault_unlock_progression()
 			"weapon_unlock_garand_golden",
 		},
 	}
+	self.automatic_unlock_progressions.assault[11] = {
+		weapons = {
+			"weapon_unlock_shotty",
+		},
+	}
 	self.automatic_unlock_progressions.assault[13] = {
 		weapons = {
 			"weapon_unlock_thompson",
@@ -5405,6 +5461,11 @@ function SkillTreeTweakData:_init_assault_unlock_progression()
 	self.automatic_unlock_progressions.assault[30] = {
 		weapons = {
 			"weapon_unlock_m1911",
+		},
+	}
+	self.automatic_unlock_progressions.assault[31] = {
+		weapons = {
+			"weapon_unlock_grenade_mills",
 		},
 	}
 	self.automatic_unlock_progressions.assault[33] = {
@@ -5461,6 +5522,11 @@ function SkillTreeTweakData:_init_infiltrator_unlock_progression()
 			"weapon_unlock_thompson",
 		},
 	}
+	self.automatic_unlock_progressions.infiltrator[11] = {
+		weapons = {
+			"weapon_unlock_shotty",
+		},
+	}
 	self.automatic_unlock_progressions.infiltrator[13] = {
 		weapons = {
 			"weapon_unlock_geco",
@@ -5498,6 +5564,11 @@ function SkillTreeTweakData:_init_infiltrator_unlock_progression()
 	self.automatic_unlock_progressions.infiltrator[30] = {
 		weapons = {
 			"weapon_unlock_m1911",
+		},
+	}
+	self.automatic_unlock_progressions.infiltrator[31] = {
+		weapons = {
+			"weapon_unlock_grenade_mills",
 		},
 	}
 	self.automatic_unlock_progressions.infiltrator[33] = {
@@ -5544,6 +5615,16 @@ function SkillTreeTweakData:_init_demolitions_unlock_progression()
 			"weapon_unlock_grenade_concrete",
 		},
 	}
+	self.automatic_unlock_progressions.demolitions[6] = {
+		weapons = {
+			"weapon_unlock_grenade_concrete",
+		},
+	}
+	self.automatic_unlock_progressions.demolitions[8] = {
+		weapons = {
+			"weapon_unlock_shotty",
+		},
+	}
 	self.automatic_unlock_progressions.demolitions[10] = {
 		weapons = {
 			"weapon_unlock_geco",
@@ -5586,6 +5667,11 @@ function SkillTreeTweakData:_init_demolitions_unlock_progression()
 	self.automatic_unlock_progressions.demolitions[30] = {
 		weapons = {
 			"weapon_unlock_m1911",
+		},
+	}
+	self.automatic_unlock_progressions.demolitions[31] = {
+		weapons = {
+			"weapon_unlock_grenade_mills",
 		},
 	}
 	self.automatic_unlock_progressions.demolitions[35] = {

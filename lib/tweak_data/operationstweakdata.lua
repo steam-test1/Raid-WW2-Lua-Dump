@@ -177,6 +177,9 @@ function OperationsTweakData:_init_loading_screens()
 	self._loading_screens.sto = {}
 	self._loading_screens.sto.image = "loading_screens_07"
 	self._loading_screens.sto.text = "loading_bridge"
+	self._loading_screens.silo = {}
+	self._loading_screens.silo.image = "loading_screens_07"
+	self._loading_screens.silo.text = "loading_bridge"
 end
 
 function OperationsTweakData:_init_raids()
@@ -194,6 +197,7 @@ function OperationsTweakData:_init_raids()
 		"convoy",
 		"spies_test",
 		"sto",
+		"silo",
 	}
 	self.missions.streaming_level = {}
 	self.missions.streaming_level.name_id = "menu_stream"
@@ -1053,6 +1057,68 @@ function OperationsTweakData:_init_raids()
 			title_id = "art_storage_mission_photo_4_title",
 		},
 	}
+	self.missions.silo = {}
+	self.missions.silo.name_id = "menu_silo_hl"
+	self.missions.silo.level_id = "silo"
+	self.missions.silo.briefing_id = "menu_silo_desc"
+	self.missions.silo.sub_worlds_spawned = 2
+	self.missions.silo.audio_briefing_id = ""
+	self.missions.silo.short_audio_briefing_id = ""
+	self.missions.silo.music_id = "random"
+	self.missions.silo.region = "germany"
+	self.missions.silo.dogtags_min = 30
+	self.missions.silo.dogtags_max = 37
+	self.missions.silo.trophy = {
+		position = "snap_17",
+		unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_silo",
+	}
+	self.missions.silo.xp = 2500
+	self.missions.silo.stealth_bonus = 1.5
+	self.missions.silo.mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED
+	self.missions.silo.mission_flag = "level_raid_silo"
+	self.missions.silo.job_type = OperationsTweakData.JOB_TYPE_RAID
+	self.missions.silo.progression_groups = {
+		OperationsTweakData.PROGRESSION_GROUP_STANDARD,
+	}
+	self.missions.silo.icon_menu_big = "xp_events_missions_silo"
+	self.missions.silo.icon_menu = "missions_silo"
+	self.missions.silo.icon_hud = "missions_silo"
+	self.missions.silo.control_brief_video = {
+		"movies/vanilla/mission_briefings/02_mission_brief_a2_cause-carnage_v005",
+		"movies/vanilla/mission_briefings/02_mission_brief_b1_cause-carnage_v004",
+	}
+	self.missions.silo.tab_background_image = "ui/hud/backgrounds/tab_screen_bg_raid_flak_hud"
+	self.missions.silo.loading = {
+		image = "loading_silo",
+		text = "menu_silo_loading_desc",
+	}
+	self.missions.silo.photos = {
+		{
+			description_id = "silo_mission_photo_1_description",
+			photo = "intel_silo_01",
+			title_id = "silo_mission_photo_1_title",
+		},
+		{
+			description_id = "silo_mission_photo_2_description",
+			photo = "intel_silo_02",
+			title_id = "silo_mission_photo_2_title",
+		},
+		{
+			description_id = "silo_mission_photo_3_description",
+			photo = "intel_silo_03",
+			title_id = "silo_mission_photo_3_title",
+		},
+		{
+			description_id = "silo_mission_photo_4_description",
+			photo = "intel_silo_04",
+			title_id = "silo_mission_photo_4_title",
+		},
+		{
+			description_id = "silo_mission_photo_5_description",
+			photo = "intel_silo_05",
+			title_id = "silo_mission_photo_5_title",
+		},
+	}
 end
 
 function OperationsTweakData:_init_operations()
@@ -1201,7 +1267,7 @@ function OperationsTweakData:_init_operations()
 	}
 	self.missions.clear_skies.events.gold_rush = {}
 	self.missions.clear_skies.events.gold_rush.music_id = "reichsbank"
-	self.missions.clear_skies.events.gold_rush.xp = 750
+	self.missions.clear_skies.events.gold_rush.xp = 975
 	self.missions.clear_skies.events.gold_rush.stealth_bonus = 1.5
 	self.missions.clear_skies.events.gold_rush.start_in_stealth = true
 	self.missions.clear_skies.events.gold_rush.mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED
@@ -1220,7 +1286,7 @@ function OperationsTweakData:_init_operations()
 	}
 	self.missions.clear_skies.events.mini_raid_2 = {}
 	self.missions.clear_skies.events.mini_raid_2.music_id = "random"
-	self.missions.clear_skies.events.mini_raid_2.xp = 750
+	self.missions.clear_skies.events.mini_raid_2.xp = 1200
 	self.missions.clear_skies.events.mini_raid_2.mission_state = OperationsTweakData.STATE_ZONE_MISSION_SELECTED
 	self.missions.clear_skies.events.mini_raid_2.mission_flag = "level_operation_01_mission_03"
 	self.missions.clear_skies.events.mini_raid_2.checkpoint = true
@@ -1242,7 +1308,7 @@ function OperationsTweakData:_init_operations()
 	}
 	self.missions.clear_skies.events.mini_raid_2_park = {}
 	self.missions.clear_skies.events.mini_raid_2_park.music_id = "random"
-	self.missions.clear_skies.events.mini_raid_2_park.xp = 750
+	self.missions.clear_skies.events.mini_raid_2_park.xp = 1200
 	self.missions.clear_skies.events.mini_raid_2_park.mission_state = OperationsTweakData.STATE_ZONE_MISSION_SELECTED
 	self.missions.clear_skies.events.mini_raid_2_park.mission_flag = "level_operation_01_mission_03"
 	self.missions.clear_skies.events.mini_raid_2_park.checkpoint = true
@@ -1264,7 +1330,7 @@ function OperationsTweakData:_init_operations()
 	}
 	self.missions.clear_skies.events.mini_raid_2_destroyed = {}
 	self.missions.clear_skies.events.mini_raid_2_destroyed.music_id = "random"
-	self.missions.clear_skies.events.mini_raid_2_destroyed.xp = 750
+	self.missions.clear_skies.events.mini_raid_2_destroyed.xp = 1200
 	self.missions.clear_skies.events.mini_raid_2_destroyed.mission_state = OperationsTweakData.STATE_ZONE_MISSION_SELECTED
 	self.missions.clear_skies.events.mini_raid_2_destroyed.mission_flag = "level_operation_01_mission_03"
 	self.missions.clear_skies.events.mini_raid_2_destroyed.checkpoint = true
@@ -1286,7 +1352,7 @@ function OperationsTweakData:_init_operations()
 	}
 	self.missions.clear_skies.events.radio_defense = {}
 	self.missions.clear_skies.events.radio_defense.music_id = "radio_defense"
-	self.missions.clear_skies.events.radio_defense.xp = 750
+	self.missions.clear_skies.events.radio_defense.xp = 1425
 	self.missions.clear_skies.events.radio_defense.stealth_bonus = 1.5
 	self.missions.clear_skies.events.radio_defense.start_in_stealth = true
 	self.missions.clear_skies.events.radio_defense.mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED
@@ -1305,7 +1371,7 @@ function OperationsTweakData:_init_operations()
 	}
 	self.missions.clear_skies.events.mini_raid_3 = {}
 	self.missions.clear_skies.events.mini_raid_3.music_id = "random"
-	self.missions.clear_skies.events.mini_raid_3.xp = 750
+	self.missions.clear_skies.events.mini_raid_3.xp = 1425
 	self.missions.clear_skies.events.mini_raid_3.mission_state = OperationsTweakData.STATE_ZONE_MISSION_SELECTED
 	self.missions.clear_skies.events.mini_raid_3.mission_flag = "level_operation_01_mission_05"
 	self.missions.clear_skies.events.mini_raid_3.checkpoint = true
@@ -1327,7 +1393,7 @@ function OperationsTweakData:_init_operations()
 	}
 	self.missions.clear_skies.events.railyard = {}
 	self.missions.clear_skies.events.railyard.music_id = "train_yard"
-	self.missions.clear_skies.events.railyard.xp = 750
+	self.missions.clear_skies.events.railyard.xp = 1650
 	self.missions.clear_skies.events.railyard.mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED
 	self.missions.clear_skies.events.railyard.mission_flag = "level_operation_01_mission_06"
 	self.missions.clear_skies.events.railyard.checkpoint = true
@@ -1346,7 +1412,7 @@ function OperationsTweakData:_init_operations()
 	self.missions.clear_skies.events.flakturm.level_id = "flakturm"
 	self.missions.clear_skies.events.flakturm.music_id = "flakturm"
 	self.missions.clear_skies.events.flakturm.start_in_stealth = true
-	self.missions.clear_skies.events.flakturm.xp = 750
+	self.missions.clear_skies.events.flakturm.xp = 1875
 	self.missions.clear_skies.events.flakturm.icon_menu = "missions_raid_flaktower_menu"
 	self.missions.clear_skies.events.flakturm.icon_hud = "miissions_raid_flaktower"
 	self.missions.clear_skies.events.flakturm.mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED
@@ -1499,7 +1565,7 @@ function OperationsTweakData:_init_operations()
 	}
 	self.missions.oper_flamable.events.mini_raid_2_destroyed = {}
 	self.missions.oper_flamable.events.mini_raid_2_destroyed.music_id = "random"
-	self.missions.oper_flamable.events.mini_raid_2_destroyed.xp = 750
+	self.missions.oper_flamable.events.mini_raid_2_destroyed.xp = 975
 	self.missions.oper_flamable.events.mini_raid_2_destroyed.mission_state = OperationsTweakData.STATE_ZONE_MISSION_SELECTED
 	self.missions.oper_flamable.events.mini_raid_2_destroyed.checkpoint = true
 	self.missions.oper_flamable.events.mini_raid_2_destroyed.icon_menu = "missions_mini_raid_2_menu"
@@ -1521,7 +1587,7 @@ function OperationsTweakData:_init_operations()
 	}
 	self.missions.oper_flamable.events.mini_raid_2_roundabout = {}
 	self.missions.oper_flamable.events.mini_raid_2_roundabout.music_id = "random"
-	self.missions.oper_flamable.events.mini_raid_2_roundabout.xp = 750
+	self.missions.oper_flamable.events.mini_raid_2_roundabout.xp = 975
 	self.missions.oper_flamable.events.mini_raid_2_roundabout.mission_state = OperationsTweakData.STATE_ZONE_MISSION_SELECTED
 	self.missions.oper_flamable.events.mini_raid_2_roundabout.checkpoint = true
 	self.missions.oper_flamable.events.mini_raid_2_roundabout.icon_menu = "missions_mini_raid_2_menu"
@@ -1543,7 +1609,7 @@ function OperationsTweakData:_init_operations()
 	}
 	self.missions.oper_flamable.events.bridge = {}
 	self.missions.oper_flamable.events.bridge.music_id = "ger_bridge"
-	self.missions.oper_flamable.events.bridge.xp = 750
+	self.missions.oper_flamable.events.bridge.xp = 1200
 	self.missions.oper_flamable.events.bridge.dogtags_min = 26
 	self.missions.oper_flamable.events.bridge.dogtags_max = 33
 	self.missions.oper_flamable.events.bridge.mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED
@@ -1562,7 +1628,7 @@ function OperationsTweakData:_init_operations()
 	self.missions.oper_flamable.events.bridge.level_id = "ger_bridge_operation"
 	self.missions.oper_flamable.events.castle = {}
 	self.missions.oper_flamable.events.castle.music_id = "castle"
-	self.missions.oper_flamable.events.castle.xp = 750
+	self.missions.oper_flamable.events.castle.xp = 1425
 	self.missions.oper_flamable.events.castle.icon_menu = "missions_raid_castle_menu"
 	self.missions.oper_flamable.events.castle.icon_hud = "missions_raid_castle"
 	self.missions.oper_flamable.events.castle.mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED

@@ -4372,6 +4372,375 @@ function InteractionTweakData:init()
 			},
 		},
 	}
+	self.activate_switch = {}
+	self.activate_switch.icon = "develop"
+	self.activate_switch.text_id = "hud_activate_switch"
+	self.activate_switch.action_text_id = "hud_action_activate_switch"
+	self.activate_switch.axis = "y"
+	self.activate_switch.interact_distance = 200
+	self.activate_switch.number_of_circles = 3
+	self.activate_switch.circle_radius = {
+		self.MINIGAME_CIRCLE_RADIUS_SMALL,
+		self.MINIGAME_CIRCLE_RADIUS_MEDIUM,
+		self.MINIGAME_CIRCLE_RADIUS_BIG,
+	}
+	self.activate_switch.circle_rotation_speed = {
+		160,
+		180,
+		190,
+	}
+	self.activate_switch.circle_rotation_direction = {
+		1,
+		-1,
+		1,
+	}
+	self.activate_switch.circle_difficulty = {
+		0.9,
+		0.93,
+		0.96,
+	}
+	self.activate_switch.sounds = {
+		failed = "lock_fail",
+		success = "success",
+		circles = {
+			{
+				lock = "lock_a",
+				mechanics = "lock_mechanics_a",
+			},
+			{
+				lock = "lock_b",
+				mechanics = "lock_mechanics_b",
+			},
+			{
+				lock = "lock_c",
+				mechanics = "lock_mechanics_c",
+			},
+		},
+	}
+	self.activate_switch_easy = {}
+	self.activate_switch_easy.icon = "develop"
+	self.activate_switch_easy.text_id = "hud_activate_switch"
+	self.activate_switch_easy.action_text_id = "hud_action_activate_switch"
+	self.activate_switch_easy.axis = "y"
+	self.activate_switch_easy.interact_distance = 200
+	self.activate_switch_easy.number_of_circles = 1
+	self.activate_switch_easy.circle_radius = {
+		self.MINIGAME_CIRCLE_RADIUS_SMALL,
+	}
+	self.activate_switch_easy.circle_rotation_speed = {
+		160,
+	}
+	self.activate_switch_easy.circle_rotation_direction = {
+		1,
+	}
+	self.activate_switch_easy.circle_difficulty = {
+		0.9,
+	}
+	self.activate_switch_easy.sounds = {
+		failed = "lock_fail",
+		success = "success",
+		circles = {
+			{
+				lock = "lock_a",
+				mechanics = "lock_mechanics_a",
+			},
+			{
+				lock = "lock_b",
+				mechanics = "lock_mechanics_b",
+			},
+			{
+				lock = "lock_c",
+				mechanics = "lock_mechanics_c",
+			},
+		},
+	}
+	self.activate_switch_medium = {}
+	self.activate_switch_medium.icon = "develop"
+	self.activate_switch_medium.text_id = "hud_activate_switch"
+	self.activate_switch_medium.action_text_id = "hud_action_activate_switch"
+	self.activate_switch_medium.axis = "y"
+	self.activate_switch_medium.interact_distance = 200
+	self.activate_switch_medium.number_of_circles = 2
+	self.activate_switch_medium.circle_radius = {
+		self.MINIGAME_CIRCLE_RADIUS_SMALL,
+		self.MINIGAME_CIRCLE_RADIUS_MEDIUM,
+	}
+	self.activate_switch_medium.circle_rotation_speed = {
+		160,
+		180,
+	}
+	self.activate_switch_medium.circle_rotation_direction = {
+		1,
+		-1,
+	}
+	self.activate_switch_medium.circle_difficulty = {
+		0.9,
+		0.93,
+	}
+	self.activate_switch_medium.sounds = {
+		failed = "lock_fail",
+		success = "success",
+		circles = {
+			{
+				lock = "lock_a",
+				mechanics = "lock_mechanics_a",
+			},
+			{
+				lock = "lock_b",
+				mechanics = "lock_mechanics_b",
+			},
+			{
+				lock = "lock_c",
+				mechanics = "lock_mechanics_c",
+			},
+		},
+	}
+	self.rewire_fuse_pane = {}
+	self.rewire_fuse_pane.icon = "develop"
+	self.rewire_fuse_pane.text_id = "hud_rewire_fuse_pane"
+	self.rewire_fuse_pane.action_text_id = "hud_action_rewire_fuse_pane"
+	self.rewire_fuse_pane.axis = "y"
+	self.rewire_fuse_pane.interact_distance = 200
+	self.rewire_fuse_pane.number_of_circles = 3
+	self.rewire_fuse_pane.circle_radius = {
+		self.MINIGAME_CIRCLE_RADIUS_SMALL,
+		self.MINIGAME_CIRCLE_RADIUS_MEDIUM,
+		self.MINIGAME_CIRCLE_RADIUS_BIG,
+	}
+	self.rewire_fuse_pane.circle_rotation_speed = {
+		160,
+		180,
+		190,
+	}
+	self.rewire_fuse_pane.circle_rotation_direction = {
+		1,
+		-1,
+		1,
+	}
+	self.rewire_fuse_pane.circle_difficulty = {
+		0.9,
+		0.93,
+		0.96,
+	}
+	self.rewire_fuse_pane.sounds = {
+		failed = "lock_fail",
+		success = "success",
+		circles = {
+			{
+				lock = "lock_a",
+				mechanics = "lock_mechanics_a",
+			},
+			{
+				lock = "lock_b",
+				mechanics = "lock_mechanics_b",
+			},
+			{
+				lock = "lock_c",
+				mechanics = "lock_mechanics_c",
+			},
+		},
+	}
+	self.rewire_fuse_pane_easy = {}
+	self.rewire_fuse_pane_easy.icon = "develop"
+	self.rewire_fuse_pane_easy.text_id = "hud_rewire_fuse_pane"
+	self.rewire_fuse_pane_easy.action_text_id = "hud_action_rewire_fuse_pane"
+	self.rewire_fuse_pane_easy.axis = "y"
+	self.rewire_fuse_pane_easy.interact_distance = 200
+	self.rewire_fuse_pane_easy.number_of_circles = 1
+	self.rewire_fuse_pane_easy.circle_radius = {
+		self.MINIGAME_CIRCLE_RADIUS_SMALL,
+	}
+	self.rewire_fuse_pane_easy.circle_rotation_speed = {
+		160,
+	}
+	self.rewire_fuse_pane_easy.circle_rotation_direction = {
+		1,
+	}
+	self.rewire_fuse_pane_easy.circle_difficulty = {
+		0.9,
+	}
+	self.rewire_fuse_pane_easy.sounds = {
+		failed = "lock_fail",
+		success = "success",
+		circles = {
+			{
+				lock = "lock_a",
+				mechanics = "lock_mechanics_a",
+			},
+			{
+				lock = "lock_b",
+				mechanics = "lock_mechanics_b",
+			},
+			{
+				lock = "lock_c",
+				mechanics = "lock_mechanics_c",
+			},
+		},
+	}
+	self.rewire_fuse_pane_medium = {}
+	self.rewire_fuse_pane_medium.icon = "develop"
+	self.rewire_fuse_pane_medium.text_id = "hud_rewire_fuse_pane"
+	self.rewire_fuse_pane_medium.action_text_id = "hud_action_rewire_fuse_pane"
+	self.rewire_fuse_pane_medium.axis = "y"
+	self.rewire_fuse_pane_medium.interact_distance = 200
+	self.rewire_fuse_pane_medium.number_of_circles = 2
+	self.rewire_fuse_pane_medium.circle_radius = {
+		self.MINIGAME_CIRCLE_RADIUS_SMALL,
+		self.MINIGAME_CIRCLE_RADIUS_MEDIUM,
+	}
+	self.rewire_fuse_pane_medium.circle_rotation_speed = {
+		160,
+		180,
+	}
+	self.rewire_fuse_pane_medium.circle_rotation_direction = {
+		1,
+		-1,
+	}
+	self.rewire_fuse_pane_medium.circle_difficulty = {
+		0.9,
+		0.93,
+	}
+	self.rewire_fuse_pane_medium.sounds = {
+		failed = "lock_fail",
+		success = "success",
+		circles = {
+			{
+				lock = "lock_a",
+				mechanics = "lock_mechanics_a",
+			},
+			{
+				lock = "lock_b",
+				mechanics = "lock_mechanics_b",
+			},
+			{
+				lock = "lock_c",
+				mechanics = "lock_mechanics_c",
+			},
+		},
+	}
+	self.activate_burners = {}
+	self.activate_burners.icon = "develop"
+	self.activate_burners.text_id = "hud_activate_burners"
+	self.activate_burners.action_text_id = "hud_action_activate_burners"
+	self.activate_burners.axis = "y"
+	self.activate_burners.interact_distance = 200
+	self.activate_burners.number_of_circles = 3
+	self.activate_burners.circle_radius = {
+		self.MINIGAME_CIRCLE_RADIUS_SMALL,
+		self.MINIGAME_CIRCLE_RADIUS_MEDIUM,
+		self.MINIGAME_CIRCLE_RADIUS_BIG,
+	}
+	self.activate_burners.circle_rotation_speed = {
+		160,
+		180,
+		190,
+	}
+	self.activate_burners.circle_rotation_direction = {
+		1,
+		-1,
+		1,
+	}
+	self.activate_burners.circle_difficulty = {
+		0.9,
+		0.93,
+		0.96,
+	}
+	self.activate_burners.sounds = {
+		failed = "lock_fail",
+		success = "success",
+		circles = {
+			{
+				lock = "lock_a",
+				mechanics = "lock_mechanics_a",
+			},
+			{
+				lock = "lock_b",
+				mechanics = "lock_mechanics_b",
+			},
+			{
+				lock = "lock_c",
+				mechanics = "lock_mechanics_c",
+			},
+		},
+	}
+	self.activate_burners_easy = {}
+	self.activate_burners_easy.icon = "develop"
+	self.activate_burners_easy.text_id = "hud_activate_burners"
+	self.activate_burners_easy.action_text_id = "hud_action_activate_burners"
+	self.activate_burners_easy.axis = "y"
+	self.activate_burners_easy.interact_distance = 200
+	self.activate_burners_easy.number_of_circles = 1
+	self.activate_burners_easy.circle_radius = {
+		self.MINIGAME_CIRCLE_RADIUS_SMALL,
+	}
+	self.activate_burners_easy.circle_rotation_speed = {
+		160,
+	}
+	self.activate_burners_easy.circle_rotation_direction = {
+		1,
+	}
+	self.activate_burners_easy.circle_difficulty = {
+		0.9,
+	}
+	self.activate_burners_easy.sounds = {
+		failed = "lock_fail",
+		success = "success",
+		circles = {
+			{
+				lock = "lock_a",
+				mechanics = "lock_mechanics_a",
+			},
+			{
+				lock = "lock_b",
+				mechanics = "lock_mechanics_b",
+			},
+			{
+				lock = "lock_c",
+				mechanics = "lock_mechanics_c",
+			},
+		},
+	}
+	self.activate_burners_medium = {}
+	self.activate_burners_medium.icon = "develop"
+	self.activate_burners_medium.text_id = "hud_activate_burners"
+	self.activate_burners_medium.action_text_id = "hud_action_activate_burners"
+	self.activate_burners_medium.axis = "y"
+	self.activate_burners_medium.interact_distance = 200
+	self.activate_burners_medium.number_of_circles = 2
+	self.activate_burners_medium.circle_radius = {
+		self.MINIGAME_CIRCLE_RADIUS_SMALL,
+		self.MINIGAME_CIRCLE_RADIUS_MEDIUM,
+	}
+	self.activate_burners_medium.circle_rotation_speed = {
+		160,
+		180,
+	}
+	self.activate_burners_medium.circle_rotation_direction = {
+		1,
+		-1,
+	}
+	self.activate_burners_medium.circle_difficulty = {
+		0.9,
+		0.93,
+	}
+	self.activate_burners_medium.sounds = {
+		failed = "lock_fail",
+		success = "success",
+		circles = {
+			{
+				lock = "lock_a",
+				mechanics = "lock_mechanics_a",
+			},
+			{
+				lock = "lock_b",
+				mechanics = "lock_mechanics_b",
+			},
+			{
+				lock = "lock_c",
+				mechanics = "lock_mechanics_c",
+			},
+		},
+	}
 	self.take_parachute = {}
 	self.take_parachute.text_id = "hud_take_parachute"
 	self.take_parachute.start_active = false

@@ -142,3 +142,11 @@ function GroupAIManager:kill_all_AI()
 
 	managers.enemy._enemy_data.nr_units = 0
 end
+
+function GroupAIManager:kill_all_team_ai()
+	for _, data in pairs(managers.groupai:state():all_AI_criminals()) do
+		if data and alive(data.unit) then
+			data.unit:character_damage():force_bleedout()
+		end
+	end
+end

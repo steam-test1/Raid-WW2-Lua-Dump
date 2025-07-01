@@ -120,6 +120,10 @@ function EventCompleteState:init(game_state_machine, setup)
 	self._continue_cb = callback(self, self, "_continue")
 	self._controller = nil
 	self._continue_block_timer = 0
+	self._awarded_rewards = {}
+	self._awarded_rewards.loot = false
+	self._awarded_rewards.xp = false
+	self._awarded_rewards.greed_gold = false
 end
 
 function EventCompleteState:setup_controller()
@@ -371,6 +375,8 @@ function EventCompleteState:drop_loot_for_player()
 	end
 
 	managers.lootdrop:give_loot_to_player(loot_percentage, false, forced_loot_group)
+
+	self._awarded_rewards.loot = true
 end
 
 function EventCompleteState:on_loot_dropped_for_player()
@@ -563,6 +569,75 @@ function EventCompleteState:job_data()
 	return self._current_job_data
 end
 
+function EventCompleteState:on_server_left(message)
+	local dialog_data = {}
+
+	dialog_data.title = managers.localization:text("dialog_returning_to_main_menu")
+	dialog_data.text = managers.localization:text("dialog_server_left")
+
+	if not self._awarded_rewards.loot and managers.raid_job:is_at_last_event() and self:is_success() then
+		managers.lootdrop._cards_already_rejected = true
+
+		self:drop_loot_for_player()
+
+		local dropped_loot = managers.lootdrop._dropped_loot
+
+		if not dropped_loot.reward_type == LootDropTweakData.REWARD_XP then
+			dialog_data.text = dialog_data.text .. "\n"
+		end
+
+		if dropped_loot.reward_type == LootDropTweakData.REWARD_CUSTOMIZATION then
+			dialog_data.text = dialog_data.text .. managers.localization:text("menu_server_left_loot_outfit", {
+				OUTFIT = tostring(managers.localization:text(dropped_loot.character_customization.name)),
+			})
+		elseif dropped_loot.reward_type == LootDropTweakData.REWARD_GOLD_BARS then
+			dialog_data.text = dialog_data.text .. managers.localization:text("menu_server_left_loot_gold", {
+				GOLD = tostring(dropped_loot.awarded_gold_bars),
+			})
+		elseif dropped_loot.reward_type == LootDropTweakData.REWARD_MELEE_WEAPON then
+			dialog_data.text = dialog_data.text .. managers.localization:text("menu_server_left_loot_melee", {
+				MELEE = tostring(managers.localization:text(tweak_data.blackmarket.melee_weapons[dropped_loot.weapon_id].name_id)),
+			})
+		end
+	end
+
+	if not self._awarded_rewards.xp then
+		local base_xp = self:calculate_xp()
+
+		self:award_xp(base_xp)
+
+		dialog_data.text = dialog_data.text .. "\n" .. managers.localization:text("menu_server_left_loot_xp", {
+			XP = tostring(self._awarded_xp),
+		})
+	end
+
+	if not self._awarded_rewards.greed_gold and managers.greed:acquired_gold_in_mission() and self:is_success() then
+		dialog_data.text = dialog_data.text .. "\n" .. managers.localization:text("menu_server_left_loot_greed_gold", {
+			GOLD = tostring(managers.greed._gold_awarded_in_mission),
+		})
+
+		managers.greed:award_gold_picked_up_in_mission()
+	end
+
+	managers.worldcollection:on_server_left()
+
+	if managers.game_play_central then
+		managers.game_play_central:stop_the_game()
+	end
+
+	local ok_button = {}
+
+	ok_button.text = managers.localization:text("dialog_ok")
+	ok_button.callback_func = MenuCallbackHandler._dialog_end_game_yes
+	dialog_data.button_list = {
+		ok_button,
+	}
+
+	managers.system_menu:show(dialog_data)
+
+	Global.on_remove_peer_message = nil
+end
+
 function EventCompleteState:on_top_stats_ready()
 	Application:trace("[EventCompleteState:on_top_stats_ready()]")
 
@@ -739,6 +814,7 @@ function EventCompleteState:award_xp(value)
 	end
 
 	self._awarded_xp = self._awarded_xp + value
+	self._awarded_rewards.xp = true
 end
 
 function EventCompleteState:is_success()
@@ -750,7 +826,6 @@ function EventCompleteState:at_exit(next_state)
 	managers.briefing:stop_event(true)
 	self:_clear_controller()
 	managers.experience:clear_loot_redeemed_xp()
-	managers.lootdrop:clear_dropped_loot()
 	managers.loot:clear()
 	managers.greed:clear_cache()
 
@@ -876,6 +951,8 @@ function EventCompleteState:_continue()
 			local success = managers.raid_menu:open_menu("raid_menu_greed_loot_screen", false)
 
 			managers.greed:award_gold_picked_up_in_mission()
+
+			self._awarded_rewards.greed_gold = true
 		else
 			self:_continue()
 

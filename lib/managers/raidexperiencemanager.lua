@@ -1,10 +1,25 @@
 RaidExperienceManager = RaidExperienceManager or class()
 RaidExperienceManager.LEVEL_CAP = Application:digest_value(40, true)
 RaidExperienceManager.THOUSAND_SEPARATOR = "."
+RaidExperienceManager.VERSION = 87
+RaidExperienceManager.XP_MIGRATION_VERSION_LIST = {
+	85,
+	86,
+}
 RaidExperienceManager.SCRIPT_XP_EVENT_STEALTH = "stealth_bonus"
 
 function RaidExperienceManager:init()
 	self:_setup()
+end
+
+function RaidExperienceManager:xp_migration_needed(version)
+	for i = 1, #RaidExperienceManager.XP_MIGRATION_VERSION_LIST do
+		if RaidExperienceManager.XP_MIGRATION_VERSION_LIST[i] == version then
+			return true
+		end
+	end
+
+	return false
 end
 
 function RaidExperienceManager:_setup()
@@ -400,11 +415,22 @@ function RaidExperienceManager:reached_level_cap()
 	return self:current_level() >= self:level_cap()
 end
 
+function RaidExperienceManager:get_total_xp_for_levels(level)
+	local total_xp = 0
+
+	for i_level = 1, level do
+		total_xp = total_xp + tweak_data:get_value("experience_manager", "levels", i_level, "points")
+	end
+
+	return total_xp
+end
+
 function RaidExperienceManager:save(data)
 	local state = {
 		level = self._global.level,
 		next_level_data = self._global.next_level_data,
 		total = self._global.total,
+		version = self._global.version,
 		xp_gained = self._global.xp_gained,
 	}
 
@@ -416,7 +442,34 @@ function RaidExperienceManager:load(data)
 
 	local state = data.RaidExperienceManager
 
-	if state then
+	if not state.version or state.version and state.version ~= RaidExperienceManager.VERSION and self:xp_migration_needed(state.version) then
+		Application:trace("[RaidExperienceManager:load] The save data and manager version are mismatched! Migrating...")
+
+		local temp = {
+			level = Application:digest_value(state.level, false),
+			max_level = Application:digest_value(RaidExperienceManager.LEVEL_CAP, false),
+		}
+
+		self._global.version = RaidExperienceManager.VERSION
+		self._global.level = state.level or Application:digest_value(1, true)
+
+		local current_xp_ratio = Application:digest_value(state.next_level_data.current_points, false) / Application:digest_value(state.next_level_data.points, false)
+
+		self._global.total = Application:digest_value(managers.experience:get_total_xp_for_level(temp.level) + Application:digest_value(tweak_data.experience_manager.levels[temp.level].points, false) * current_xp_ratio, true)
+		self._global.xp_gained = state.xp_gained or state.total
+
+		local next_level = temp.level + 1
+
+		if next_level > temp.max_level then
+			next_level = temp.max_level
+		end
+
+		self._global.next_level_data = {
+			current_points = Application:digest_value(Application:digest_value(tweak_data.experience_manager.levels[next_level].points, false) * current_xp_ratio, true),
+			points = tweak_data.experience_manager.levels[next_level].points,
+		}
+	elseif state then
+		self._global.version = state.version
 		self._global.total = state.total
 		self._global.xp_gained = state.xp_gained or state.total
 		self._global.next_level_data = state.next_level_data

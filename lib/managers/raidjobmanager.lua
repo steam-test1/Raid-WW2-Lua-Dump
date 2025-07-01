@@ -574,7 +574,7 @@ function RaidJobManager:has_available_save_slot()
 end
 
 function RaidJobManager:is_at_last_event()
-	local job = self._current_job
+	local job = self._current_job or game_state_machine._current_state._current_job_data
 
 	if not job then
 		if not managers.worldcollection:first_pass() then

@@ -296,7 +296,7 @@ function ProgressionManager:_unlock_all_missions()
 					end
 				end
 			else
-				debug_pause("[ProgressionManager:_unlock_all_missions] Tried to unlock a map that doesn't exist, call programmers, level:" .. mission_id)
+				Application:trace("[ProgressionManager:_unlock_all_missions] Tried to unlock a map that doesn't exist, call programmers, level:" .. mission_id)
 			end
 		end
 	end

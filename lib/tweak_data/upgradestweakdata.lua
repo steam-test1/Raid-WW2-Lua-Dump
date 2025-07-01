@@ -898,10 +898,20 @@ function UpgradesTweakData:_create_weapon_definitions()
 		factory_id = "wpn_fps_pis_tt33",
 		weapon_id = "tt33",
 	}
+	self.definitions.shotty = {
+		category = "weapon",
+		factory_id = "wpn_fps_pis_shotty",
+		weapon_id = "shotty",
+	}
 	self.definitions.kar_98k = {
 		category = "weapon",
 		factory_id = "wpn_fps_snp_kar_98k",
 		weapon_id = "kar_98k",
+	}
+	self.definitions.lee_enfield = {
+		category = "weapon",
+		factory_id = "wpn_fps_snp_lee_enfield",
+		weapon_id = "lee_enfield",
 	}
 	self.definitions.thompson = {
 		category = "weapon",
@@ -983,12 +993,6 @@ function UpgradesTweakData:_create_weapon_definitions()
 		factory_id = "wpn_fps_smg_sterling",
 		weapon_id = "sterling",
 	}
-	self.definitions.welrod = {
-		category = "weapon",
-		factory_id = "wpn_fps_pis_welrod",
-		free = true,
-		weapon_id = "welrod",
-	}
 	self.definitions.geco = {
 		category = "weapon",
 		factory_id = "wpn_fps_sho_geco",
@@ -1038,6 +1042,9 @@ function UpgradesTweakData:_create_grenades_definitions()
 		category = "grenade",
 	}
 	self.definitions.d343 = {
+		category = "grenade",
+	}
+	self.definitions.mills = {
 		category = "grenade",
 	}
 end
@@ -3884,12 +3891,13 @@ function UpgradesTweakData:_old_init()
 			"webley",
 			"mosin",
 			"sterling",
-			"welrod",
 			"geco",
 			"dp28",
 			"tt33",
 			"kar_98k",
 			"bren",
+			"lee_enfield",
+			"shotty",
 		},
 	}
 

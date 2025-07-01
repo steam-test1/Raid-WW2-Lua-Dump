@@ -534,7 +534,7 @@ function PlayerDriving:_move_to_next_seat()
 	managers.player:move_to_next_seat(self._vehicle_unit)
 	self._vehicle_ext:stop_horn_sound()
 
-	if self._equipped_unit and self._equipped_unit.base and self._equipped_unit:base() and self._equipped_unit:base():shooting() then
+	if self._equipped_unit and self._equipped_unit.base and self._equipped_unit:base() and self._equipped_unit:base().shooting and self._equipped_unit:base():shooting() then
 		self:_check_stop_shooting()
 	end
 end

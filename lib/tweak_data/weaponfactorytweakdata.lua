@@ -116,7 +116,6 @@ function WeaponFactoryTweakData:init()
 	self:_init_mp38()
 	self:_init_mp44()
 	self:_init_carbine()
-	self:_init_welrod()
 	self:_init_mg42()
 	self:_init_c96()
 	self:_init_mosin()
@@ -126,6 +125,8 @@ function WeaponFactoryTweakData:init()
 	self:_init_tt33()
 	self:_init_kar_98k()
 	self:_init_bren()
+	self:_init_lee_enfield()
+	self:_init_shotty()
 	self:create_ammunition()
 	self:_init_content_unfinished()
 	self:_cleanup_unfinished_content()
@@ -1682,6 +1683,205 @@ function WeaponFactoryTweakData:_init_kar_98k()
 	self.wpn_fps_snp_kar_98k_npc.unit = "units/upd_003/weapons/wpn_fps_snp_kar_98k/wpn_fps_snp_kar_98k_npc"
 end
 
+function WeaponFactoryTweakData:_init_lee_enfield()
+	self.parts.wpn_fps_snp_lee_enfield_b_standard = {
+		a_obj = "a_b",
+		name_id = "bm_wp_snp_lee_enfield_b_standard",
+		third_unit = "units/upd_015/weapons/wpn_third_snp_lee_enfield_pts/wpn_third_snp_lee_enfield_b_standard",
+		type = "barrel",
+		unit = "units/upd_015/weapons/wpn_fps_snp_lee_enfield_pts/wpn_fps_snp_lee_enfield_b_standard",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_snp_lee_enfield_b_long = {
+		a_obj = "a_b",
+		name_id = "bm_wp_snp_lee_enfield_b_long",
+		third_unit = "units/upd_015/weapons/wpn_third_snp_lee_enfield_pts/wpn_third_snp_lee_enfield_b_long",
+		type = "barrel",
+		unit = "units/upd_015/weapons/wpn_fps_snp_lee_enfield_pts/wpn_fps_snp_lee_enfield_b_long",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_snp_lee_enfield_ns_coned = {
+		a_obj = "a_ns",
+		name_id = "bm_wp_snp_lee_enfield_ns_coned",
+		parent = "barrel",
+		third_unit = "units/upd_015/weapons/wpn_third_snp_lee_enfield_pts/wpn_third_snp_lee_enfield_ns_coned",
+		type = "barrel_ext",
+		unit = "units/upd_015/weapons/wpn_fps_snp_lee_enfield_pts/wpn_fps_snp_lee_enfield_ns_coned",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_snp_lee_enfield_body_standard = {
+		a_obj = "a_body",
+		name_id = "bm_wp_snp_lee_enfield_body_standard",
+		third_unit = "units/upd_015/weapons/wpn_third_snp_lee_enfield_pts/wpn_third_snp_lee_enfield_body_standard",
+		type = "body",
+		unit = "units/upd_015/weapons/wpn_fps_snp_lee_enfield_pts/wpn_fps_snp_lee_enfield_body_standard",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_snp_lee_enfield_s_standard = {
+		a_obj = "a_s",
+		name_id = "bm_wp_snp_lee_enfield_s_standard",
+		third_unit = "units/upd_015/weapons/wpn_third_snp_lee_enfield_pts/wpn_third_snp_lee_enfield_s_standard",
+		type = "stock",
+		unit = "units/upd_015/weapons/wpn_fps_snp_lee_enfield_pts/wpn_fps_snp_lee_enfield_s_standard",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_snp_lee_enfield_pad_buffered = {
+		a_obj = "a_pad",
+		name_id = "bm_wp_snp_lee_enfield_pad_buffered",
+		third_unit = "units/upd_015/weapons/wpn_third_snp_lee_enfield_pts/wpn_third_snp_lee_enfield_pad_buffered",
+		type = "stock_ext",
+		unit = "units/upd_015/weapons/wpn_fps_snp_lee_enfield_pts/wpn_fps_snp_lee_enfield_pad_buffered",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_snp_lee_enfield_cheek_rest = {
+		a_obj = "a_rest",
+		name_id = "bm_wp_snp_lee_enfield_cheek_rest",
+		third_unit = "units/upd_015/weapons/wpn_third_snp_lee_enfield_pts/wpn_third_snp_lee_enfield_cheek_rest",
+		type = "rest",
+		unit = "units/upd_015/weapons/wpn_fps_snp_lee_enfield_pts/wpn_fps_snp_lee_enfield_cheek_rest",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_snp_lee_enfield_firepin = {
+		a_obj = "a_firepin",
+		name_id = "bm_wp_snp_lee_enfield_firepin",
+		third_unit = "units/upd_015/weapons/wpn_third_snp_lee_enfield_pts/wpn_third_snp_lee_enfield_firepin",
+		type = "firepin",
+		unit = "units/upd_015/weapons/wpn_fps_snp_lee_enfield_pts/wpn_fps_snp_lee_enfield_firepin",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_snp_lee_enfield_dh_standard = {
+		a_obj = "a_dh",
+		name_id = "bm_wp_snp_lee_enfield_dh_standard",
+		third_unit = "units/upd_015/weapons/wpn_third_snp_lee_enfield_pts/wpn_third_snp_lee_enfield_dh_standard",
+		type = "drag_handle",
+		unit = "units/upd_015/weapons/wpn_fps_snp_lee_enfield_pts/wpn_fps_snp_lee_enfield_dh_standard",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_snp_lee_enfield_m_standard = {
+		a_obj = "a_m",
+		name_id = "bm_wp_snp_lee_enfield_m_standard",
+		third_unit = "units/upd_015/weapons/wpn_third_snp_lee_enfield_pts/wpn_third_snp_lee_enfield_m_standard",
+		type = "magazine",
+		unit = "units/upd_015/weapons/wpn_fps_snp_lee_enfield_pts/wpn_fps_snp_lee_enfield_m_standard",
+		bullet_objects = {
+			amount = 5,
+			prefix = "g_bullet_",
+		},
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_snp_lee_enfield_bullet = {
+		a_obj = "a_bullet",
+		name_id = "bm_wp_snp_lee_enfield_bullet",
+		third_unit = "units/upd_015/weapons/wpn_third_snp_lee_enfield_pts/wpn_third_snp_lee_enfield_bullet",
+		type = "extra",
+		unit = "units/upd_015/weapons/wpn_fps_snp_lee_enfield_pts/wpn_fps_snp_lee_enfield_bullet",
+		animations = {
+			fire = "recoil",
+			fire_steelsight = "recoil",
+			reload_enter = "reload_enter",
+			reload_exit = "reload_exit",
+			reload_not_empty_exit = "reload_exit",
+		},
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_snp_lee_enfield_m_extended = {
+		a_obj = "a_m",
+		name_id = "bm_wp_snp_lee_enfield_m_extended",
+		third_unit = "units/upd_015/weapons/wpn_third_snp_lee_enfield_pts/wpn_third_snp_lee_enfield_m_extended",
+		type = "magazine",
+		unit = "units/upd_015/weapons/wpn_fps_snp_lee_enfield_pts/wpn_fps_snp_lee_enfield_m_extended",
+		bullet_objects = {
+			amount = 5,
+			prefix = "g_bullet_",
+		},
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_snp_lee_enfield_o_scope = {
+		a_obj = "a_o",
+		name_id = "bm_wp_snp_lee_enfield_o_scope",
+		reticle_obj = "g_reticle",
+		third_unit = "units/upd_015/weapons/wpn_third_snp_lee_enfield_pts/wpn_third_snp_lee_enfield_o_scope",
+		type = "scope",
+		unit = "units/upd_015/weapons/wpn_fps_snp_lee_enfield_pts/wpn_fps_snp_lee_enfield_o_scope",
+		stance_mod = {
+			wpn_fps_snp_lee_enfield = {
+				lens_distortion_power = 1.04,
+				translation = Vector3(0, -16, -2.2586),
+			},
+		},
+		stats = {
+			value = 1,
+			zoom = 10,
+		},
+	}
+	self.wpn_fps_snp_lee_enfield = {}
+	self.wpn_fps_snp_lee_enfield.unit = "units/upd_015/weapons/wpn_fps_snp_lee_enfield/wpn_fps_snp_lee_enfield"
+	self.wpn_fps_snp_lee_enfield.optional_types = {
+		"barrel_ext",
+		"gadget",
+		"barrel",
+		"lower_receiver",
+	}
+	self.wpn_fps_snp_lee_enfield.animations = {
+		fire = "recoil",
+		fire_steelsight = "recoil",
+		reload = "reload",
+		reload_enter = "reload_enter",
+		reload_not_empty = "reload_not_empty",
+		reload_not_empty_exit = "reload_exit",
+	}
+	self.wpn_fps_snp_lee_enfield.default_blueprint = {
+		"wpn_fps_snp_lee_enfield_dh_standard",
+		"wpn_fps_snp_lee_enfield_b_standard",
+		"wpn_fps_snp_lee_enfield_body_standard",
+		"wpn_fps_snp_lee_enfield_firepin",
+		"wpn_fps_snp_lee_enfield_s_standard",
+		"wpn_fps_snp_lee_enfield_m_standard",
+		"wpn_fps_snp_lee_enfield_bullet",
+	}
+	self.wpn_fps_snp_lee_enfield.uses_parts = {
+		"wpn_fps_snp_lee_enfield_dh_standard",
+		"wpn_fps_snp_lee_enfield_b_standard",
+		"wpn_fps_snp_lee_enfield_body_standard",
+		"wpn_fps_snp_lee_enfield_firepin",
+		"wpn_fps_snp_lee_enfield_s_standard",
+		"wpn_fps_snp_lee_enfield_m_standard",
+		"wpn_fps_snp_lee_enfield_bullet",
+		"wpn_fps_snp_lee_enfield_b_long",
+		"wpn_fps_snp_lee_enfield_ns_coned",
+		"wpn_fps_snp_lee_enfield_pad_buffered",
+		"wpn_fps_snp_lee_enfield_cheek_rest",
+		"wpn_fps_snp_lee_enfield_m_extended",
+		"wpn_fps_snp_lee_enfield_o_scope",
+	}
+	self.wpn_fps_snp_lee_enfield_npc = deep_clone(self.wpn_fps_snp_lee_enfield)
+	self.wpn_fps_snp_lee_enfield_npc.unit = "units/upd_015/weapons/wpn_fps_snp_lee_enfield/wpn_fps_snp_lee_enfield_npc"
+end
+
 function WeaponFactoryTweakData:_init_m1911()
 	self.parts.wpn_fps_pis_m1911_body_standard = {
 		a_obj = "a_body",
@@ -2322,6 +2522,8 @@ function WeaponFactoryTweakData:_init_bren()
 	self.wpn_fps_lmg_bren = {}
 	self.wpn_fps_lmg_bren.unit = "units/upd_005/weapons/wpn_fps_lmg_bren/wpn_fps_lmg_bren"
 	self.wpn_fps_lmg_bren.animations = {
+		fire = "recoil",
+		fire_steelsight = "recoil",
 		reload = "reload",
 		reload_not_empty = "reload_not_empty",
 	}
@@ -4063,35 +4265,83 @@ function WeaponFactoryTweakData:_init_sterling()
 	self.wpn_fps_smg_sterling_npc.unit = "units/vanilla/weapons/wpn_fps_smg_sterling/wpn_fps_smg_sterling_npc"
 end
 
-function WeaponFactoryTweakData:_init_welrod()
-	self.wpn_fps_pis_welrod = {}
-	self.wpn_fps_pis_welrod.unit = "units/vanilla/weapons/wpn_fps_pis_welrod/wpn_fps_pis_welrod"
-	self.wpn_fps_pis_welrod.optional_types = {
+function WeaponFactoryTweakData:_init_shotty()
+	self.parts.wpn_fps_pis_shotty_b_standard = {
+		a_obj = "a_b",
+		name_id = "bm_wp_pis_shotty_b_standard",
+		third_unit = "units/upd_015/weapons/wpn_third_pis_shotty_pts/wpn_third_pis_shotty_b_standard",
+		type = "barrel",
+		unit = "units/upd_015/weapons/wpn_fps_pis_shotty_pts/wpn_fps_pis_shotty_b_standard",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_pis_shotty_body_standard = {
+		a_obj = "a_body",
+		name_id = "bm_wp_pis_shotty_body_standard",
+		third_unit = "units/upd_015/weapons/wpn_third_pis_shotty_pts/wpn_third_pis_shotty_body_standard",
+		type = "lower_receiver",
+		unit = "units/upd_015/weapons/wpn_fps_pis_shotty_pts/wpn_fps_pis_shotty_body_standard",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_pis_shotty_lock = {
+		a_obj = "a_lock",
+		name_id = "bm_wp_pis_shotty_lock",
+		third_unit = "units/upd_015/weapons/wpn_third_pis_shotty_pts/wpn_third_pis_shotty_lock",
+		type = "lock",
+		unit = "units/upd_015/weapons/wpn_fps_pis_shotty_pts/wpn_fps_pis_shotty_lock",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_pis_shotty_shell_1 = {
+		a_obj = "a_shell_1",
+		name_id = "bm_wp_pis_shotty_shell_1",
+		third_unit = "units/upd_015/weapons/wpn_third_pis_shotty_pts/wpn_third_pis_shotty_shell_1",
+		type = "shell_1",
+		unit = "units/upd_015/weapons/wpn_fps_pis_shotty_pts/wpn_fps_pis_shotty_shell_1",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_pis_shotty_shell_2 = {
+		a_obj = "a_shell_2",
+		name_id = "bm_wp_pis_shotty_shell_2",
+		third_unit = "units/upd_015/weapons/wpn_third_pis_shotty_pts/wpn_third_pis_shotty_shell_2",
+		type = "shell_2",
+		unit = "units/upd_015/weapons/wpn_fps_pis_shotty_pts/wpn_fps_pis_shotty_shell_2",
+		stats = {
+			value = 1,
+		},
+	}
+	self.wpn_fps_pis_shotty = {}
+	self.wpn_fps_pis_shotty.unit = "units/upd_015/weapons/wpn_fps_pis_shotty/wpn_fps_pis_shotty"
+	self.wpn_fps_pis_shotty.optional_types = {
 		"barrel_ext",
 		"gadget",
 	}
-	self.wpn_fps_pis_welrod.animations = {
-		fire = "recoil",
-		fire_steelsight = "recoil",
+	self.wpn_fps_pis_shotty.animations = {
 		reload = "reload",
 		reload_not_empty = "reload_not_empty",
 	}
-	self.wpn_fps_pis_welrod.default_blueprint = {
-		"wpn_fps_pis_m1911_body_standard",
-		"wpn_fps_pis_m1911_b_standard",
-		"wpn_fps_pis_m1911_sl_standard",
-		"wpn_fps_pis_m1911_m_standard",
-		"wpn_fps_pis_m1911_dh_hammer",
+	self.wpn_fps_pis_shotty.default_blueprint = {
+		"wpn_fps_pis_shotty_b_standard",
+		"wpn_fps_pis_shotty_body_standard",
+		"wpn_fps_pis_shotty_lock",
+		"wpn_fps_pis_shotty_shell_1",
+		"wpn_fps_pis_shotty_shell_2",
 	}
-	self.wpn_fps_pis_welrod.uses_parts = {
-		"wpn_fps_pis_m1911_body_standard",
-		"wpn_fps_pis_m1911_b_standard",
-		"wpn_fps_pis_m1911_sl_standard",
-		"wpn_fps_pis_m1911_m_standard",
-		"wpn_fps_pis_m1911_dh_hammer",
+	self.wpn_fps_pis_shotty.uses_parts = {
+		"wpn_fps_pis_shotty_b_standard",
+		"wpn_fps_pis_shotty_body_standard",
+		"wpn_fps_pis_shotty_lock",
+		"wpn_fps_pis_shotty_shell_1",
+		"wpn_fps_pis_shotty_shell_2",
 	}
-	self.wpn_fps_pis_welrod_npc = deep_clone(self.wpn_fps_pis_welrod)
-	self.wpn_fps_pis_welrod_npc.unit = "units/vanilla/weapons/wpn_fps_pis_welrod/wpn_fps_pis_welrod_npc"
+	self.wpn_fps_pis_shotty_npc = deep_clone(self.wpn_fps_pis_shotty)
+	self.wpn_fps_pis_shotty_npc.unit = "units/upd_015/weapons/wpn_fps_pis_shotty/wpn_fps_pis_shotty_npc"
 end
 
 function WeaponFactoryTweakData:is_part_internal(part_id)

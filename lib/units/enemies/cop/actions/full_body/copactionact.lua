@@ -66,6 +66,8 @@ CopActionAct._act_redirects.enemy_spawn = {
 	"e_sp_down_1_30m_var1",
 	"e_sp_2_50m_fwd_1_30m_down",
 	"e_sp_2_50m_fwd_1_30m_down_var1",
+	"e_sp_10m_turn_r_2m",
+	"e_sp_10m_turn_r_2m_var1",
 	"e_sp_fwd_9m",
 	"e_sp_fwd_9m_var1",
 	"e_sp_fwd_9m_var2",

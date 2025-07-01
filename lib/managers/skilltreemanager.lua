@@ -115,12 +115,7 @@ end
 function SkillTreeManager:_calculate_health_stat(character_class, applied_skills, pending_skills)
 	local class_tweak_data = tweak_data.player:get_tweak_data_for_class(character_class)
 	local health_stat_base_rating = class_tweak_data.damage.BASE_HEALTH
-	local max_health_multiplier = 0
-
-	if applied_skills.max_health_multiplier then
-		max_health_multiplier = tweak_data.upgrades.values.player.max_health_multiplier[applied_skills.max_health_multiplier] - 1
-	end
-
+	local max_health_multiplier = managers.player:health_skill_multiplier() - 1
 	local health_base_rating_multiplier = 1 + max_health_multiplier
 	local max_health_pending_multiplier = 0
 

@@ -276,6 +276,18 @@ function ElementAreaTrigger:_check_amount(unit)
 		if inside > 0 and (amount and amount <= inside or not amount) then
 			self:on_executed(unit)
 		end
+	elseif self._values.trigger_on == "while_inside" then
+		local amount = self._values.amount == "all" and self:project_amount_all()
+
+		amount = amount or tonumber(self._values.amount)
+
+		self:_clean_destroyed_units()
+
+		local inside = self:project_amount_inside()
+
+		if inside > 0 and (amount and amount <= inside or not amount) then
+			self:on_executed(unit)
+		end
 	elseif self:is_instigator_valid(unit) then
 		self:on_executed(unit)
 	end

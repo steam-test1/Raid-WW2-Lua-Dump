@@ -34,6 +34,8 @@ function WeaponSkillsTweakData:init()
 	self:_init_tt33_skill_tree()
 	self:_init_kar_98k_skill_tree()
 	self:_init_bren_skill_tree()
+	self:_init_lee_enfield_skill_tree()
+	self:_init_shotty_skill_tree()
 	self:_init_reedem_xp_values()
 end
 
@@ -175,15 +177,15 @@ function WeaponSkillsTweakData:_init_m1911_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 50,
+					target = 35,
 					modifiers = {
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
-						20,
-						35,
-						45,
+						15,
+						25,
+						30,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -202,7 +204,7 @@ function WeaponSkillsTweakData:_init_m1911_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 525,
+					target = 230,
 					reminders = {
 						200,
 						400,
@@ -224,16 +226,16 @@ function WeaponSkillsTweakData:_init_m1911_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 250,
+					target = 165,
 					modifiers = {
 						hip_fire = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
 						50,
+						100,
 						125,
-						200,
-						225,
+						150,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -252,12 +254,12 @@ function WeaponSkillsTweakData:_init_m1911_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 500,
+					target = 325,
 					reminders = {
-						125,
-						250,
-						375,
-						450,
+						50,
+						100,
+						200,
+						300,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -274,15 +276,15 @@ function WeaponSkillsTweakData:_init_m1911_skill_tree()
 			value = 3,
 			challenge_tasks = {
 				{
-					target = 75,
+					target = 45,
 					modifiers = {
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
+						15,
 						25,
-						50,
-						65,
+						35,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -301,11 +303,11 @@ function WeaponSkillsTweakData:_init_m1911_skill_tree()
 			value = 5,
 			challenge_tasks = {
 				{
-					target = 1050,
+					target = 300,
 					reminders = {
-						300,
-						600,
-						900,
+						100,
+						200,
+						250,
 					},
 					type = ChallengeTweakData.TASK_COLLECT_AMMO,
 				},
@@ -324,16 +326,16 @@ function WeaponSkillsTweakData:_init_m1911_skill_tree()
 			value = 3,
 			challenge_tasks = {
 				{
-					target = 375,
+					target = 215,
 					modifiers = {
 						hip_fire = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
+						50,
 						100,
+						150,
 						200,
-						300,
-						350,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -352,12 +354,12 @@ function WeaponSkillsTweakData:_init_m1911_skill_tree()
 			value = 3,
 			challenge_tasks = {
 				{
-					target = 750,
+					target = 425,
 					reminders = {
-						185,
-						375,
-						550,
-						700,
+						100,
+						200,
+						300,
+						400,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -431,10 +433,10 @@ function WeaponSkillsTweakData:_init_c96_skill_tree()
 			value = 1,
 			challenge_tasks = {
 				{
-					target = 250,
+					target = 175,
 					reminders = {
 						100,
-						200,
+						150,
 					},
 					type = ChallengeTweakData.TASK_COLLECT_AMMO,
 				},
@@ -454,12 +456,12 @@ function WeaponSkillsTweakData:_init_c96_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 500,
+					target = 325,
 					reminders = {
-						125,
+						100,
+						200,
 						250,
-						375,
-						450,
+						300,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -478,16 +480,16 @@ function WeaponSkillsTweakData:_init_c96_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 250,
+					target = 165,
 					modifiers = {
 						hip_fire = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
-						50,
-						125,
-						200,
-						225,
+						20,
+						60,
+						100,
+						130,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -506,10 +508,10 @@ function WeaponSkillsTweakData:_init_c96_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 750,
+					target = 230,
 					reminders = {
-						300,
-						600,
+						100,
+						200,
 					},
 					type = ChallengeTweakData.TASK_COLLECT_AMMO,
 				},
@@ -528,15 +530,15 @@ function WeaponSkillsTweakData:_init_c96_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 50,
+					target = 35,
 					modifiers = {
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
+						10,
 						20,
-						35,
-						45,
+						30,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -606,12 +608,12 @@ function WeaponSkillsTweakData:_init_webley_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 500,
+					target = 325,
 					reminders = {
-						125,
-						250,
-						375,
-						450,
+						100,
+						170,
+						260,
+						300,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -627,15 +629,15 @@ function WeaponSkillsTweakData:_init_webley_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 50,
+					target = 35,
 					modifiers = {
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
+						10,
 						20,
-						35,
-						45,
+						30,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -651,16 +653,16 @@ function WeaponSkillsTweakData:_init_webley_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 250,
+					target = 165,
 					modifiers = {
 						hip_fire = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
-						50,
-						125,
-						200,
-						225,
+						30,
+						60,
+						90,
+						130,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -685,7 +687,7 @@ function WeaponSkillsTweakData:_init_geco_skill_tree()
 			value = 5,
 			challenge_tasks = {
 				{
-					target = 50,
+					target = 75,
 					modifiers = {
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
@@ -736,12 +738,12 @@ function WeaponSkillsTweakData:_init_geco_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 1000,
+					target = 650,
 					reminders = {
-						250,
-						500,
-						750,
-						900,
+						150,
+						350,
+						450,
+						600,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -758,15 +760,15 @@ function WeaponSkillsTweakData:_init_geco_skill_tree()
 			value = 7,
 			challenge_tasks = {
 				{
-					target = 150,
+					target = 130,
 					modifiers = {
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
 						50,
-						100,
-						130,
+						80,
+						110,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -782,12 +784,12 @@ function WeaponSkillsTweakData:_init_geco_skill_tree()
 			value = 3,
 			challenge_tasks = {
 				{
-					target = 1500,
+					target = 845,
 					reminders = {
-						375,
-						750,
-						1125,
-						1400,
+						200,
+						400,
+						600,
+						800,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -803,16 +805,16 @@ function WeaponSkillsTweakData:_init_geco_skill_tree()
 			value = 3,
 			challenge_tasks = {
 				{
-					target = 750,
+					target = 595,
 					modifiers = {
 						hip_fire = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
+						100,
 						200,
+						300,
 						400,
-						600,
-						700,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -831,7 +833,7 @@ function WeaponSkillsTweakData:_init_geco_skill_tree()
 			value = 8,
 			challenge_tasks = {
 				{
-					target = 50,
+					target = 165,
 					modifiers = {
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
@@ -840,8 +842,8 @@ function WeaponSkillsTweakData:_init_geco_skill_tree()
 						},
 					},
 					reminders = {
-						20,
-						40,
+						50,
+						110,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -857,15 +859,15 @@ function WeaponSkillsTweakData:_init_geco_skill_tree()
 			value = 4,
 			challenge_tasks = {
 				{
-					target = 30,
+					target = 1000,
 					modifiers = {
 						enemy_type = {
 							CharacterTweakData.SPECIAL_UNIT_TYPE_FLAMER,
 						},
 					},
 					reminders = {
-						10,
-						20,
+						500,
+						800,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -881,16 +883,16 @@ function WeaponSkillsTweakData:_init_geco_skill_tree()
 			value = 4,
 			challenge_tasks = {
 				{
-					target = 100,
+					target = 770,
 					modifiers = {
 						headshot = true,
 						hip_fire = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
-						20,
-						50,
-						80,
+						200,
+						400,
+						600,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -965,7 +967,7 @@ function WeaponSkillsTweakData:_init_dp28_skill_tree()
 			value = 1,
 			challenge_tasks = {
 				{
-					target = 50,
+					target = 65,
 					modifiers = {
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
@@ -992,16 +994,16 @@ function WeaponSkillsTweakData:_init_dp28_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 500,
+					target = 325,
 					modifiers = {
 						hip_fire = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
-						100,
-						250,
-						400,
-						450,
+						70,
+						120,
+						230,
+						300,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -1020,12 +1022,12 @@ function WeaponSkillsTweakData:_init_dp28_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 1000,
+					target = 650,
 					reminders = {
-						250,
-						500,
-						750,
-						900,
+						150,
+						350,
+						450,
+						600,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -1041,15 +1043,15 @@ function WeaponSkillsTweakData:_init_dp28_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 100,
+					target = 85,
 					modifiers = {
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
+						20,
 						40,
-						70,
-						90,
+						60,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -1068,11 +1070,11 @@ function WeaponSkillsTweakData:_init_dp28_skill_tree()
 			value = 4,
 			challenge_tasks = {
 				{
-					target = 3000,
+					target = 650,
 					reminders = {
-						750,
-						1500,
-						2750,
+						200,
+						400,
+						600,
 					},
 					type = ChallengeTweakData.TASK_COLLECT_AMMO,
 				},
@@ -1146,10 +1148,10 @@ function WeaponSkillsTweakData:_init_tt33_skill_tree()
 			value = 1,
 			challenge_tasks = {
 				{
-					target = 250,
+					target = 175,
 					reminders = {
-						100,
-						200,
+						70,
+						130,
 					},
 					type = ChallengeTweakData.TASK_COLLECT_AMMO,
 				},
@@ -1169,12 +1171,12 @@ function WeaponSkillsTweakData:_init_tt33_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 500,
+					target = 325,
 					reminders = {
-						125,
-						250,
-						375,
-						450,
+						70,
+						130,
+						200,
+						270,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -1190,15 +1192,15 @@ function WeaponSkillsTweakData:_init_tt33_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 50,
+					target = 35,
 					modifiers = {
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
+						10,
 						20,
-						35,
-						45,
+						30,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -1217,10 +1219,10 @@ function WeaponSkillsTweakData:_init_tt33_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 750,
+					target = 230,
 					reminders = {
-						300,
-						600,
+						90,
+						180,
 					},
 					type = ChallengeTweakData.TASK_COLLECT_AMMO,
 				},
@@ -1239,16 +1241,16 @@ function WeaponSkillsTweakData:_init_tt33_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 250,
+					target = 165,
 					modifiers = {
 						hip_fire = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
-						50,
-						125,
-						200,
-						225,
+						30,
+						60,
+						90,
+						130,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -1321,7 +1323,7 @@ function WeaponSkillsTweakData:_init_thompson_skill_tree()
 			value = 1,
 			challenge_tasks = {
 				{
-					target = 1000,
+					target = 500,
 					reminders = {
 						450,
 						900,
@@ -1344,12 +1346,12 @@ function WeaponSkillsTweakData:_init_thompson_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 1000,
+					target = 650,
 					reminders = {
-						250,
-						500,
-						750,
-						900,
+						150,
+						350,
+						450,
+						600,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -1365,16 +1367,16 @@ function WeaponSkillsTweakData:_init_thompson_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 500,
+					target = 325,
 					modifiers = {
 						hip_fire = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
-						100,
-						250,
-						400,
-						450,
+						70,
+						120,
+						230,
+						300,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -1390,11 +1392,11 @@ function WeaponSkillsTweakData:_init_thompson_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 3000,
+					target = 650,
 					reminders = {
-						1000,
-						2000,
-						2750,
+						200,
+						400,
+						600,
 					},
 					type = ChallengeTweakData.TASK_COLLECT_AMMO,
 				},
@@ -1413,15 +1415,15 @@ function WeaponSkillsTweakData:_init_thompson_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 100,
+					target = 85,
 					modifiers = {
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
+						20,
 						40,
-						70,
-						90,
+						60,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -1441,12 +1443,12 @@ function WeaponSkillsTweakData:_init_thompson_skill_tree()
 			value = 3,
 			challenge_tasks = {
 				{
-					target = 1500,
+					target = 845,
 					reminders = {
-						375,
-						750,
-						1125,
-						1400,
+						200,
+						400,
+						600,
+						800,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -1462,16 +1464,16 @@ function WeaponSkillsTweakData:_init_thompson_skill_tree()
 			value = 3,
 			challenge_tasks = {
 				{
-					target = 750,
+					target = 425,
 					modifiers = {
 						hip_fire = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
+						100,
 						200,
+						300,
 						400,
-						600,
-						700,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -1490,11 +1492,11 @@ function WeaponSkillsTweakData:_init_thompson_skill_tree()
 			value = 4,
 			challenge_tasks = {
 				{
-					target = 6000,
+					target = 845,
 					reminders = {
-						2000,
-						4000,
-						5750,
+						200,
+						400,
+						600,
 					},
 					type = ChallengeTweakData.TASK_COLLECT_AMMO,
 				},
@@ -1513,15 +1515,15 @@ function WeaponSkillsTweakData:_init_thompson_skill_tree()
 			value = 3,
 			challenge_tasks = {
 				{
-					target = 150,
+					target = 115,
 					modifiers = {
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
-						50,
+						40,
+						70,
 						100,
-						130,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -1542,15 +1544,15 @@ function WeaponSkillsTweakData:_init_thompson_skill_tree()
 			value = 4,
 			challenge_tasks = {
 				{
-					target = 30,
+					target = 15,
 					modifiers = {
 						enemy_type = {
 							CharacterTweakData.SPECIAL_UNIT_TYPE_FLAMER,
 						},
 					},
 					reminders = {
+						5,
 						10,
-						20,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -1566,16 +1568,16 @@ function WeaponSkillsTweakData:_init_thompson_skill_tree()
 			value = 4,
 			challenge_tasks = {
 				{
-					target = 100,
+					target = 15,
 					modifiers = {
 						headshot = true,
 						hip_fire = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
-						20,
-						50,
-						80,
+						3,
+						7,
+						11,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -1594,15 +1596,15 @@ function WeaponSkillsTweakData:_init_thompson_skill_tree()
 			value = 5,
 			challenge_tasks = {
 				{
-					target = 250,
+					target = 20,
 					modifiers = {
 						last_round_in_magazine = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
-						80,
-						160,
-						220,
+						5,
+						10,
+						15,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -1621,7 +1623,7 @@ function WeaponSkillsTweakData:_init_thompson_skill_tree()
 			value = 4,
 			challenge_tasks = {
 				{
-					target = 50,
+					target = 10,
 					modifiers = {
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
@@ -1630,8 +1632,8 @@ function WeaponSkillsTweakData:_init_thompson_skill_tree()
 						},
 					},
 					reminders = {
-						20,
-						40,
+						3,
+						9,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -1709,7 +1711,7 @@ function WeaponSkillsTweakData:_init_mp38_skill_tree()
 			value = 1,
 			challenge_tasks = {
 				{
-					target = 50,
+					target = 65,
 					modifiers = {
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
@@ -1736,12 +1738,12 @@ function WeaponSkillsTweakData:_init_mp38_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 1000,
+					target = 650,
 					reminders = {
-						250,
-						500,
-						750,
-						900,
+						150,
+						350,
+						450,
+						600,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -1757,16 +1759,16 @@ function WeaponSkillsTweakData:_init_mp38_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 500,
+					target = 325,
 					modifiers = {
 						hip_fire = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
-						100,
-						250,
-						400,
-						450,
+						70,
+						120,
+						230,
+						300,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -1785,15 +1787,15 @@ function WeaponSkillsTweakData:_init_mp38_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 100,
+					target = 85,
 					modifiers = {
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
+						20,
 						40,
-						70,
-						90,
+						60,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -1812,11 +1814,11 @@ function WeaponSkillsTweakData:_init_mp38_skill_tree()
 			value = 5,
 			challenge_tasks = {
 				{
-					target = 3000,
+					target = 650,
 					reminders = {
-						1000,
-						2000,
-						2750,
+						200,
+						400,
+						600,
 					},
 					type = ChallengeTweakData.TASK_COLLECT_AMMO,
 				},
@@ -1844,7 +1846,7 @@ function WeaponSkillsTweakData:_init_sterling_skill_tree()
 			value = 1,
 			challenge_tasks = {
 				{
-					target = 50,
+					target = 65,
 					modifiers = {
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
@@ -1867,10 +1869,10 @@ function WeaponSkillsTweakData:_init_sterling_skill_tree()
 			value = 1,
 			challenge_tasks = {
 				{
-					target = 1000,
+					target = 500,
 					reminders = {
+						200,
 						400,
-						800,
 					},
 					type = ChallengeTweakData.TASK_COLLECT_AMMO,
 				},
@@ -1914,15 +1916,15 @@ function WeaponSkillsTweakData:_init_sterling_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 100,
+					target = 85,
 					modifiers = {
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
+						20,
 						40,
-						70,
-						90,
+						60,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -1941,11 +1943,11 @@ function WeaponSkillsTweakData:_init_sterling_skill_tree()
 			value = 5,
 			challenge_tasks = {
 				{
-					target = 3000,
+					target = 650,
 					reminders = {
-						1000,
-						2000,
-						2750,
+						200,
+						400,
+						600,
 					},
 					type = ChallengeTweakData.TASK_COLLECT_AMMO,
 				},
@@ -1964,16 +1966,16 @@ function WeaponSkillsTweakData:_init_sterling_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 500,
+					target = 325,
 					modifiers = {
 						hip_fire = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
-						100,
-						250,
-						400,
-						450,
+						70,
+						120,
+						230,
+						300,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -1989,12 +1991,12 @@ function WeaponSkillsTweakData:_init_sterling_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 1000,
+					target = 650,
 					reminders = {
-						250,
-						500,
-						750,
-						900,
+						150,
+						350,
+						450,
+						600,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -2067,7 +2069,7 @@ function WeaponSkillsTweakData:_init_sten_skill_tree()
 			value = 1,
 			challenge_tasks = {
 				{
-					target = 50,
+					target = 65,
 					modifiers = {
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
@@ -2093,10 +2095,10 @@ function WeaponSkillsTweakData:_init_sten_skill_tree()
 			value = 1,
 			challenge_tasks = {
 				{
-					target = 1000,
+					target = 500,
 					reminders = {
+						200,
 						400,
-						800,
 					},
 					type = ChallengeTweakData.TASK_COLLECT_AMMO,
 				},
@@ -2116,16 +2118,16 @@ function WeaponSkillsTweakData:_init_sten_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 500,
+					target = 325,
 					modifiers = {
 						hip_fire = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
-						100,
-						250,
-						400,
-						450,
+						70,
+						120,
+						230,
+						300,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -2144,12 +2146,12 @@ function WeaponSkillsTweakData:_init_sten_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 1000,
+					target = 650,
 					reminders = {
-						250,
-						500,
-						750,
-						900,
+						150,
+						350,
+						450,
+						600,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -2165,15 +2167,15 @@ function WeaponSkillsTweakData:_init_sten_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 100,
+					target = 85,
 					modifiers = {
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
+						20,
 						40,
-						70,
-						90,
+						60,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -2192,11 +2194,11 @@ function WeaponSkillsTweakData:_init_sten_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 3000,
+					target = 650,
 					reminders = {
-						1000,
-						2000,
-						2750,
+						200,
+						400,
+						600,
 					},
 					type = ChallengeTweakData.TASK_COLLECT_AMMO,
 				},
@@ -2216,16 +2218,16 @@ function WeaponSkillsTweakData:_init_sten_skill_tree()
 			value = 3,
 			challenge_tasks = {
 				{
-					target = 750,
+					target = 425,
 					modifiers = {
 						hip_fire = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
+						100,
 						200,
+						300,
 						400,
-						600,
-						700,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -2244,12 +2246,12 @@ function WeaponSkillsTweakData:_init_sten_skill_tree()
 			value = 3,
 			challenge_tasks = {
 				{
-					target = 1500,
+					target = 845,
 					reminders = {
-						375,
-						750,
-						1125,
-						1400,
+						200,
+						400,
+						600,
+						800,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -2265,15 +2267,15 @@ function WeaponSkillsTweakData:_init_sten_skill_tree()
 			value = 3,
 			challenge_tasks = {
 				{
-					target = 150,
+					target = 115,
 					modifiers = {
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
-						50,
+						40,
+						70,
 						100,
-						130,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -2292,11 +2294,11 @@ function WeaponSkillsTweakData:_init_sten_skill_tree()
 			value = 3,
 			challenge_tasks = {
 				{
-					target = 6000,
+					target = 845,
 					reminders = {
-						2000,
-						4000,
-						5750,
+						200,
+						400,
+						600,
 					},
 					type = ChallengeTweakData.TASK_COLLECT_AMMO,
 				},
@@ -2316,16 +2318,16 @@ function WeaponSkillsTweakData:_init_sten_skill_tree()
 			value = 4,
 			challenge_tasks = {
 				{
-					target = 100,
+					target = 15,
 					modifiers = {
 						headshot = true,
 						hip_fire = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
-						20,
-						50,
-						80,
+						3,
+						7,
+						11,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -2341,15 +2343,15 @@ function WeaponSkillsTweakData:_init_sten_skill_tree()
 			value = 4,
 			challenge_tasks = {
 				{
-					target = 30,
+					target = 15,
 					modifiers = {
 						enemy_type = {
 							CharacterTweakData.SPECIAL_UNIT_TYPE_FLAMER,
 						},
 					},
 					reminders = {
+						5,
 						10,
-						20,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -2365,7 +2367,7 @@ function WeaponSkillsTweakData:_init_sten_skill_tree()
 			value = 4,
 			challenge_tasks = {
 				{
-					target = 50,
+					target = 10,
 					modifiers = {
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
@@ -2374,8 +2376,8 @@ function WeaponSkillsTweakData:_init_sten_skill_tree()
 						},
 					},
 					reminders = {
-						20,
-						40,
+						3,
+						9,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -2394,15 +2396,15 @@ function WeaponSkillsTweakData:_init_sten_skill_tree()
 			value = 5,
 			challenge_tasks = {
 				{
-					target = 250,
+					target = 20,
 					modifiers = {
 						last_round_in_magazine = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
-						80,
-						160,
-						220,
+						5,
+						10,
+						15,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -2432,15 +2434,15 @@ function WeaponSkillsTweakData:_init_m1903_skill_tree()
 			value = 1,
 			challenge_tasks = {
 				{
-					target = 250,
+					target = 175,
 					modifiers = {
-						min_range = 2000,
+						min_range = 1000,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
-						80,
-						160,
-						220,
+						50,
+						100,
+						150,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -2483,16 +2485,16 @@ function WeaponSkillsTweakData:_init_m1903_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 500,
+					target = 230,
 					modifiers = {
-						min_range = 3000,
+						min_range = 1000,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
+						50,
 						100,
-						250,
-						400,
-						450,
+						150,
+						200,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -2511,15 +2513,15 @@ function WeaponSkillsTweakData:_init_m1903_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 100,
+					target = 65,
 					modifiers = {
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
-						40,
-						70,
-						90,
+						15,
+						35,
+						50,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -2538,12 +2540,12 @@ function WeaponSkillsTweakData:_init_m1903_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 1000,
+					target = 650,
 					reminders = {
-						250,
-						500,
-						750,
-						900,
+						150,
+						350,
+						450,
+						600,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -2559,10 +2561,10 @@ function WeaponSkillsTweakData:_init_m1903_skill_tree()
 			value = 1,
 			challenge_tasks = {
 				{
-					target = 750,
+					target = 550,
 					reminders = {
 						250,
-						500,
+						400,
 					},
 					type = ChallengeTweakData.TASK_COLLECT_AMMO,
 				},
@@ -2590,15 +2592,15 @@ function WeaponSkillsTweakData:_init_kar_98k_skill_tree()
 			value = 1,
 			challenge_tasks = {
 				{
-					target = 250,
+					target = 175,
 					modifiers = {
-						min_range = 2000,
+						min_range = 1000,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
-						80,
-						160,
-						220,
+						50,
+						100,
+						150,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -2641,16 +2643,16 @@ function WeaponSkillsTweakData:_init_kar_98k_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 500,
+					target = 230,
 					modifiers = {
-						min_range = 3000,
+						min_range = 1000,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
+						50,
 						100,
-						250,
-						400,
-						450,
+						150,
+						200,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -2669,15 +2671,15 @@ function WeaponSkillsTweakData:_init_kar_98k_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 100,
+					target = 65,
 					modifiers = {
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
-						40,
-						70,
-						90,
+						15,
+						35,
+						50,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -2696,10 +2698,10 @@ function WeaponSkillsTweakData:_init_kar_98k_skill_tree()
 			value = 1,
 			challenge_tasks = {
 				{
-					target = 750,
+					target = 550,
 					reminders = {
 						250,
-						500,
+						400,
 					},
 					type = ChallengeTweakData.TASK_COLLECT_AMMO,
 				},
@@ -2718,12 +2720,12 @@ function WeaponSkillsTweakData:_init_kar_98k_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 1000,
+					target = 650,
 					reminders = {
-						250,
-						500,
-						750,
-						900,
+						150,
+						350,
+						450,
+						600,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -2732,6 +2734,167 @@ function WeaponSkillsTweakData:_init_kar_98k_skill_tree()
 		},
 	}
 	self.skill_trees.kar_98k.tier_unlock = {
+		"weapon_tier_unlocked",
+		"weapon_tier_unlocked",
+	}
+end
+
+function WeaponSkillsTweakData:_init_lee_enfield_skill_tree()
+	self.skill_trees.lee_enfield = {}
+	self.skill_trees.lee_enfield[1] = {}
+	self.skill_trees.lee_enfield[1][1] = {
+		{
+			challenge_briefing_id = "weapon_skill_kill_beyond_range_briefing",
+			challenge_done_text_id = "weapon_skill_kill_beyond_range_completed",
+			cost = 1,
+			value = 1,
+			challenge_tasks = {
+				{
+					target = 175,
+					modifiers = {
+						min_range = 1000,
+						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
+					},
+					reminders = {
+						50,
+						100,
+						150,
+					},
+					type = ChallengeTweakData.TASK_KILL_ENEMIES,
+				},
+			},
+			skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
+			weapon_parts = {
+				"wpn_fps_snp_lee_enfield_cheek_rest",
+			},
+		},
+	}
+	self.skill_trees.lee_enfield[1][2] = {
+		{
+			challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
+			challenge_done_text_id = "weapon_skill_headshot_kill_completed",
+			cost = 1,
+			value = 1,
+			challenge_tasks = {
+				{
+					target = 50,
+					modifiers = {
+						headshot = true,
+						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
+					},
+					reminders = {
+						25,
+						40,
+					},
+					type = ChallengeTweakData.TASK_KILL_ENEMIES,
+				},
+			},
+			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
+			weapon_parts = {
+				"wpn_fps_snp_lee_enfield_ns_coned",
+			},
+		},
+	}
+	self.skill_trees.lee_enfield[2] = {}
+	self.skill_trees.lee_enfield[2][1] = {
+		{
+			challenge_briefing_id = "weapon_skill_kill_beyond_range_briefing",
+			challenge_done_text_id = "weapon_skill_kill_beyond_range_briefing",
+			cost = 2,
+			value = 2,
+			challenge_tasks = {
+				{
+					target = 230,
+					modifiers = {
+						min_range = 1000,
+						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
+					},
+					reminders = {
+						50,
+						100,
+						150,
+						200,
+					},
+					type = ChallengeTweakData.TASK_KILL_ENEMIES,
+				},
+			},
+			skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
+			weapon_parts = {
+				"wpn_fps_snp_lee_enfield_pad_buffered",
+			},
+		},
+	}
+	self.skill_trees.lee_enfield[2][2] = {
+		{
+			challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
+			challenge_done_text_id = "weapon_skill_headshot_kill_completed",
+			cost = 2,
+			value = 2,
+			challenge_tasks = {
+				{
+					target = 65,
+					modifiers = {
+						headshot = true,
+						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
+					},
+					reminders = {
+						15,
+						35,
+						50,
+					},
+					type = ChallengeTweakData.TASK_KILL_ENEMIES,
+				},
+			},
+			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
+			weapon_parts = {
+				"wpn_fps_snp_lee_enfield_b_long",
+			},
+		},
+	}
+	self.skill_trees.lee_enfield[2][3] = {
+		{
+			challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
+			challenge_done_text_id = "weapon_skill_collect_ammo_completed",
+			cost = 3,
+			value = 1,
+			challenge_tasks = {
+				{
+					target = 550,
+					reminders = {
+						250,
+						400,
+					},
+					type = ChallengeTweakData.TASK_COLLECT_AMMO,
+				},
+			},
+			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
+			weapon_parts = {
+				"wpn_fps_snp_lee_enfield_m_extended",
+			},
+		},
+	}
+	self.skill_trees.lee_enfield[2][4] = {
+		{
+			challenge_briefing_id = "weapon_skill_generic_kill_briefing",
+			challenge_done_text_id = "weapon_skill_generic_kill_completed",
+			cost = 3,
+			value = 2,
+			challenge_tasks = {
+				{
+					target = 650,
+					reminders = {
+						150,
+						350,
+						450,
+						600,
+					},
+					type = ChallengeTweakData.TASK_KILL_ENEMIES,
+				},
+			},
+			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
+		},
+	}
+	self.skill_trees.lee_enfield.tier_unlock = {
 		"weapon_tier_unlocked",
 		"weapon_tier_unlocked",
 	}
@@ -2748,15 +2911,15 @@ function WeaponSkillsTweakData:_init_mosin_skill_tree()
 			value = 1,
 			challenge_tasks = {
 				{
-					target = 250,
+					target = 175,
 					modifiers = {
-						min_range = 2000,
+						min_range = 1000,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
-						80,
-						160,
-						220,
+						50,
+						100,
+						150,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -2799,16 +2962,16 @@ function WeaponSkillsTweakData:_init_mosin_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 500,
+					target = 230,
 					modifiers = {
-						min_range = 3000,
+						min_range = 1000,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
+						50,
 						100,
-						250,
-						400,
-						450,
+						150,
+						200,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -2827,15 +2990,15 @@ function WeaponSkillsTweakData:_init_mosin_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 100,
+					target = 65,
 					modifiers = {
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
-						40,
-						70,
-						90,
+						15,
+						35,
+						50,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -2854,12 +3017,12 @@ function WeaponSkillsTweakData:_init_mosin_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 1000,
+					target = 650,
 					reminders = {
-						250,
-						500,
-						750,
-						900,
+						150,
+						350,
+						450,
+						600,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -2905,15 +3068,15 @@ function WeaponSkillsTweakData:_init_garand_skill_tree()
 			value = 1,
 			challenge_tasks = {
 				{
-					target = 250,
+					target = 175,
 					modifiers = {
-						min_range = 2000,
+						min_range = 1000,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
-						80,
-						160,
-						220,
+						50,
+						100,
+						150,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -2933,12 +3096,12 @@ function WeaponSkillsTweakData:_init_garand_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 1000,
+					target = 650,
 					reminders = {
-						250,
-						500,
-						750,
-						900,
+						150,
+						350,
+						450,
+						600,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -2954,16 +3117,16 @@ function WeaponSkillsTweakData:_init_garand_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 500,
+					target = 230,
 					modifiers = {
-						min_range = 2000,
+						min_range = 1000,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
+						50,
 						100,
-						250,
-						400,
-						450,
+						150,
+						200,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -2979,15 +3142,15 @@ function WeaponSkillsTweakData:_init_garand_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 100,
+					target = 65,
 					modifiers = {
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
-						40,
-						70,
-						90,
+						15,
+						35,
+						50,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -3004,12 +3167,12 @@ function WeaponSkillsTweakData:_init_garand_skill_tree()
 			value = 3,
 			challenge_tasks = {
 				{
-					target = 1500,
+					target = 850,
 					reminders = {
-						375,
-						750,
-						1125,
-						1400,
+						200,
+						400,
+						600,
+						800,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -3025,16 +3188,16 @@ function WeaponSkillsTweakData:_init_garand_skill_tree()
 			value = 3,
 			challenge_tasks = {
 				{
-					target = 750,
+					target = 300,
 					modifiers = {
-						min_range = 2500,
+						min_range = 1000,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
-						200,
-						400,
-						600,
-						700,
+						50,
+						100,
+						150,
+						250,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -3050,15 +3213,15 @@ function WeaponSkillsTweakData:_init_garand_skill_tree()
 			value = 3,
 			challenge_tasks = {
 				{
-					target = 150,
+					target = 85,
 					modifiers = {
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
-						50,
-						100,
-						130,
+						20,
+						40,
+						60,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -3077,11 +3240,11 @@ function WeaponSkillsTweakData:_init_garand_skill_tree()
 			value = 1,
 			challenge_tasks = {
 				{
-					target = 2400,
+					target = 710,
 					reminders = {
-						1000,
-						1500,
-						2000,
+						200,
+						400,
+						620,
 					},
 					type = ChallengeTweakData.TASK_COLLECT_AMMO,
 				},
@@ -3101,15 +3264,15 @@ function WeaponSkillsTweakData:_init_garand_skill_tree()
 			value = 4,
 			challenge_tasks = {
 				{
-					target = 30,
+					target = 15,
 					modifiers = {
 						enemy_type = {
 							CharacterTweakData.SPECIAL_UNIT_TYPE_FLAMER,
 						},
 					},
 					reminders = {
+						5,
 						10,
-						20,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -3125,16 +3288,16 @@ function WeaponSkillsTweakData:_init_garand_skill_tree()
 			value = 4,
 			challenge_tasks = {
 				{
-					target = 100,
+					target = 385,
 					modifiers = {
 						headshot = true,
-						min_range = 2500,
+						min_range = 1000,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
-						20,
-						50,
-						80,
+						100,
+						200,
+						300,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -3153,7 +3316,7 @@ function WeaponSkillsTweakData:_init_garand_skill_tree()
 			value = 4,
 			challenge_tasks = {
 				{
-					target = 50,
+					target = 10,
 					modifiers = {
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
@@ -3162,8 +3325,8 @@ function WeaponSkillsTweakData:_init_garand_skill_tree()
 						},
 					},
 					reminders = {
-						20,
-						40,
+						3,
+						9,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -3182,15 +3345,15 @@ function WeaponSkillsTweakData:_init_garand_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 250,
+					target = 20,
 					modifiers = {
 						last_round_in_magazine = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
-						80,
-						160,
-						220,
+						5,
+						10,
+						15,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -3241,15 +3404,15 @@ function WeaponSkillsTweakData:_init_garand_golden_skill_tree()
 			value = 1,
 			challenge_tasks = {
 				{
-					target = 250,
+					target = 175,
 					modifiers = {
-						min_range = 2000,
+						min_range = 1000,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
-						80,
-						160,
-						220,
+						50,
+						100,
+						150,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -3269,12 +3432,12 @@ function WeaponSkillsTweakData:_init_garand_golden_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 1000,
+					target = 650,
 					reminders = {
-						250,
-						500,
-						750,
-						900,
+						150,
+						350,
+						450,
+						600,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -3290,9 +3453,9 @@ function WeaponSkillsTweakData:_init_garand_golden_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 500,
+					target = 300,
 					modifiers = {
-						min_range = 2000,
+						min_range = 1000,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
@@ -3315,15 +3478,15 @@ function WeaponSkillsTweakData:_init_garand_golden_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 100,
+					target = 65,
 					modifiers = {
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
-						40,
-						70,
-						90,
+						15,
+						35,
+						50,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -3340,12 +3503,12 @@ function WeaponSkillsTweakData:_init_garand_golden_skill_tree()
 			value = 3,
 			challenge_tasks = {
 				{
-					target = 1500,
+					target = 845,
 					reminders = {
-						375,
-						750,
-						1125,
-						1400,
+						200,
+						400,
+						600,
+						800,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -3361,16 +3524,16 @@ function WeaponSkillsTweakData:_init_garand_golden_skill_tree()
 			value = 3,
 			challenge_tasks = {
 				{
-					target = 750,
+					target = 300,
 					modifiers = {
-						min_range = 2500,
+						min_range = 1000,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
-						200,
-						400,
-						600,
-						700,
+						50,
+						100,
+						150,
+						250,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -3386,15 +3549,15 @@ function WeaponSkillsTweakData:_init_garand_golden_skill_tree()
 			value = 3,
 			challenge_tasks = {
 				{
-					target = 150,
+					target = 85,
 					modifiers = {
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
-						50,
-						100,
-						130,
+						20,
+						40,
+						60,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -3413,11 +3576,11 @@ function WeaponSkillsTweakData:_init_garand_golden_skill_tree()
 			value = 1,
 			challenge_tasks = {
 				{
-					target = 2400,
+					target = 710,
 					reminders = {
-						1000,
-						1500,
-						2000,
+						200,
+						400,
+						620,
 					},
 					type = ChallengeTweakData.TASK_COLLECT_AMMO,
 				},
@@ -3437,15 +3600,15 @@ function WeaponSkillsTweakData:_init_garand_golden_skill_tree()
 			value = 4,
 			challenge_tasks = {
 				{
-					target = 30,
+					target = 15,
 					modifiers = {
 						enemy_type = {
 							CharacterTweakData.SPECIAL_UNIT_TYPE_FLAMER,
 						},
 					},
 					reminders = {
+						5,
 						10,
-						20,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -3461,16 +3624,16 @@ function WeaponSkillsTweakData:_init_garand_golden_skill_tree()
 			value = 4,
 			challenge_tasks = {
 				{
-					target = 100,
+					target = 385,
 					modifiers = {
 						headshot = true,
-						min_range = 2500,
+						min_range = 1000,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
-						20,
-						50,
-						80,
+						100,
+						200,
+						300,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -3489,7 +3652,7 @@ function WeaponSkillsTweakData:_init_garand_golden_skill_tree()
 			value = 4,
 			challenge_tasks = {
 				{
-					target = 50,
+					target = 10,
 					modifiers = {
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
@@ -3498,8 +3661,8 @@ function WeaponSkillsTweakData:_init_garand_golden_skill_tree()
 						},
 					},
 					reminders = {
-						20,
-						40,
+						3,
+						9,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -3518,15 +3681,15 @@ function WeaponSkillsTweakData:_init_garand_golden_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 250,
+					target = 20,
 					modifiers = {
 						last_round_in_magazine = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
-						80,
-						160,
-						220,
+						5,
+						10,
+						15,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -3604,7 +3767,7 @@ function WeaponSkillsTweakData:_init_m1918_skill_tree()
 			value = 1,
 			challenge_tasks = {
 				{
-					target = 50,
+					target = 65,
 					modifiers = {
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
@@ -3631,16 +3794,16 @@ function WeaponSkillsTweakData:_init_m1918_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 500,
+					target = 325,
 					modifiers = {
 						hip_fire = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
-						100,
-						250,
-						400,
-						450,
+						70,
+						120,
+						230,
+						300,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -3659,12 +3822,12 @@ function WeaponSkillsTweakData:_init_m1918_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 1000,
+					target = 650,
 					reminders = {
-						250,
-						500,
-						750,
-						900,
+						150,
+						350,
+						450,
+						600,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -3680,15 +3843,15 @@ function WeaponSkillsTweakData:_init_m1918_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 100,
+					target = 85,
 					modifiers = {
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
+						20,
 						40,
-						70,
-						90,
+						60,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -3707,11 +3870,11 @@ function WeaponSkillsTweakData:_init_m1918_skill_tree()
 			value = 4,
 			challenge_tasks = {
 				{
-					target = 3000,
+					target = 650,
 					reminders = {
-						750,
-						1500,
-						2750,
+						200,
+						400,
+						600,
 					},
 					type = ChallengeTweakData.TASK_COLLECT_AMMO,
 				},
@@ -3787,7 +3950,7 @@ function WeaponSkillsTweakData:_init_bren_skill_tree()
 			value = 1,
 			challenge_tasks = {
 				{
-					target = 50,
+					target = 65,
 					modifiers = {
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
@@ -3814,16 +3977,16 @@ function WeaponSkillsTweakData:_init_bren_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 500,
+					target = 325,
 					modifiers = {
 						hip_fire = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
-						100,
-						250,
-						400,
-						450,
+						70,
+						120,
+						230,
+						300,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -3842,12 +4005,12 @@ function WeaponSkillsTweakData:_init_bren_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 1000,
+					target = 650,
 					reminders = {
-						250,
-						500,
-						750,
-						900,
+						150,
+						350,
+						450,
+						600,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -3866,15 +4029,15 @@ function WeaponSkillsTweakData:_init_bren_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 100,
+					target = 85,
 					modifiers = {
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
+						20,
 						40,
-						70,
-						90,
+						60,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -3893,11 +4056,11 @@ function WeaponSkillsTweakData:_init_bren_skill_tree()
 			value = 4,
 			challenge_tasks = {
 				{
-					target = 3000,
+					target = 650,
 					reminders = {
-						750,
-						1500,
-						2750,
+						200,
+						400,
+						600,
 					},
 					type = ChallengeTweakData.TASK_COLLECT_AMMO,
 				},
@@ -3949,7 +4112,7 @@ function WeaponSkillsTweakData:_init_mg42_skill_tree()
 			value = 1,
 			challenge_tasks = {
 				{
-					target = 50,
+					target = 65,
 					modifiers = {
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
@@ -3977,16 +4140,16 @@ function WeaponSkillsTweakData:_init_mg42_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 500,
+					target = 325,
 					modifiers = {
 						hip_fire = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
-						100,
-						250,
-						400,
-						450,
+						70,
+						120,
+						230,
+						300,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -4005,15 +4168,15 @@ function WeaponSkillsTweakData:_init_mg42_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 100,
+					target = 85,
 					modifiers = {
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
+						20,
 						40,
-						70,
-						90,
+						60,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -4029,12 +4192,12 @@ function WeaponSkillsTweakData:_init_mg42_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 1000,
+					target = 650,
 					reminders = {
-						250,
-						500,
-						750,
-						900,
+						150,
+						350,
+						450,
+						600,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -4051,16 +4214,16 @@ function WeaponSkillsTweakData:_init_mg42_skill_tree()
 			value = 3,
 			challenge_tasks = {
 				{
-					target = 750,
+					target = 425,
 					modifiers = {
 						hip_fire = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
+						100,
 						200,
+						300,
 						400,
-						600,
-						700,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -4079,15 +4242,15 @@ function WeaponSkillsTweakData:_init_mg42_skill_tree()
 			value = 3,
 			challenge_tasks = {
 				{
-					target = 150,
+					target = 115,
 					modifiers = {
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
-						50,
+						40,
+						70,
 						100,
-						130,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -4103,12 +4266,12 @@ function WeaponSkillsTweakData:_init_mg42_skill_tree()
 			value = 3,
 			challenge_tasks = {
 				{
-					target = 1500,
+					target = 845,
 					reminders = {
-						375,
-						750,
-						1125,
-						1400,
+						200,
+						400,
+						600,
+						800,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -4124,11 +4287,11 @@ function WeaponSkillsTweakData:_init_mg42_skill_tree()
 			value = 5,
 			challenge_tasks = {
 				{
-					target = 6000,
+					target = 845,
 					reminders = {
-						2000,
-						4000,
-						5750,
+						200,
+						400,
+						600,
 					},
 					type = ChallengeTweakData.TASK_COLLECT_AMMO,
 				},
@@ -4179,11 +4342,11 @@ function WeaponSkillsTweakData:_init_mp44_skill_tree()
 			value = 1,
 			challenge_tasks = {
 				{
-					target = 750,
+					target = 500,
 					reminders = {
-						250,
-						500,
-						700,
+						150,
+						350,
+						450,
 					},
 					type = ChallengeTweakData.TASK_COLLECT_AMMO,
 				},
@@ -4227,12 +4390,12 @@ function WeaponSkillsTweakData:_init_mp44_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 1000,
+					target = 650,
 					reminders = {
-						250,
-						500,
-						750,
-						900,
+						150,
+						350,
+						450,
+						600,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -4248,11 +4411,11 @@ function WeaponSkillsTweakData:_init_mp44_skill_tree()
 			value = 4,
 			challenge_tasks = {
 				{
-					target = 2250,
+					target = 650,
 					reminders = {
-						750,
-						1500,
-						2000,
+						200,
+						400,
+						600,
 					},
 					type = ChallengeTweakData.TASK_COLLECT_AMMO,
 				},
@@ -4271,16 +4434,16 @@ function WeaponSkillsTweakData:_init_mp44_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 500,
+					target = 325,
 					modifiers = {
 						hip_fire = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
-						100,
-						250,
-						400,
-						450,
+						70,
+						120,
+						230,
+						300,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -4296,15 +4459,15 @@ function WeaponSkillsTweakData:_init_mp44_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 100,
+					target = 85,
 					modifiers = {
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
+						20,
 						40,
-						70,
-						90,
+						60,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -4332,7 +4495,7 @@ function WeaponSkillsTweakData:_init_m1912_skill_tree()
 			value = 1,
 			challenge_tasks = {
 				{
-					target = 250,
+					target = 350,
 					modifiers = {
 						hip_fire = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
@@ -4359,7 +4522,7 @@ function WeaponSkillsTweakData:_init_m1912_skill_tree()
 			value = 5,
 			challenge_tasks = {
 				{
-					target = 50,
+					target = 75,
 					modifiers = {
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
@@ -4386,7 +4549,7 @@ function WeaponSkillsTweakData:_init_m1912_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 500,
+					target = 455,
 					modifiers = {
 						hip_fire = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
@@ -4394,8 +4557,8 @@ function WeaponSkillsTweakData:_init_m1912_skill_tree()
 					reminders = {
 						100,
 						250,
+						330,
 						400,
-						450,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -4441,12 +4604,12 @@ function WeaponSkillsTweakData:_init_m1912_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 1000,
+					target = 650,
 					reminders = {
-						250,
-						500,
-						750,
-						900,
+						150,
+						350,
+						450,
+						600,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -4463,16 +4626,16 @@ function WeaponSkillsTweakData:_init_m1912_skill_tree()
 			value = 3,
 			challenge_tasks = {
 				{
-					target = 750,
+					target = 595,
 					modifiers = {
 						hip_fire = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
+						100,
 						200,
+						300,
 						400,
-						600,
-						700,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -4491,15 +4654,15 @@ function WeaponSkillsTweakData:_init_m1912_skill_tree()
 			value = 7,
 			challenge_tasks = {
 				{
-					target = 150,
+					target = 130,
 					modifiers = {
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
 						50,
-						100,
-						130,
+						80,
+						110,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -4518,12 +4681,12 @@ function WeaponSkillsTweakData:_init_m1912_skill_tree()
 			value = 3,
 			challenge_tasks = {
 				{
-					target = 1500,
+					target = 845,
 					reminders = {
-						375,
-						750,
-						1125,
-						1400,
+						200,
+						400,
+						600,
+						800,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -4540,16 +4703,16 @@ function WeaponSkillsTweakData:_init_m1912_skill_tree()
 			value = 4,
 			challenge_tasks = {
 				{
-					target = 100,
+					target = 15,
 					modifiers = {
 						headshot = true,
 						hip_fire = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
-						20,
-						50,
-						80,
+						3,
+						7,
+						11,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -4568,7 +4731,7 @@ function WeaponSkillsTweakData:_init_m1912_skill_tree()
 			value = 8,
 			challenge_tasks = {
 				{
-					target = 50,
+					target = 10,
 					modifiers = {
 						headshot = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
@@ -4577,8 +4740,8 @@ function WeaponSkillsTweakData:_init_m1912_skill_tree()
 						},
 					},
 					reminders = {
-						20,
-						40,
+						3,
+						9,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -4597,15 +4760,15 @@ function WeaponSkillsTweakData:_init_m1912_skill_tree()
 			value = 4,
 			challenge_tasks = {
 				{
-					target = 30,
+					target = 15,
 					modifiers = {
 						enemy_type = {
 							CharacterTweakData.SPECIAL_UNIT_TYPE_FLAMER,
 						},
 					},
 					reminders = {
+						5,
 						10,
-						20,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -4618,6 +4781,130 @@ function WeaponSkillsTweakData:_init_m1912_skill_tree()
 		"weapon_tier_unlocked",
 		"weapon_tier_unlocked",
 		"demolitions_tier_4_unlocked",
+	}
+end
+
+function WeaponSkillsTweakData:_init_shotty_skill_tree()
+	self.skill_trees.shotty = {}
+	self.skill_trees.shotty[1] = {}
+	self.skill_trees.shotty[1][1] = {
+		{
+			challenge_briefing_id = "weapon_skill_generic_kill_briefing",
+			challenge_done_text_id = "weapon_skill_generic_kill_completed",
+			cost = 1,
+			value = 1,
+			challenge_tasks = {
+				{
+					target = 250,
+					reminders = {
+						60,
+						125,
+						185,
+						225,
+					},
+					type = ChallengeTweakData.TASK_KILL_ENEMIES,
+				},
+			},
+			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
+		},
+	}
+	self.skill_trees.shotty[1][2] = {
+		{
+			challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
+			challenge_done_text_id = "weapon_skill_headshot_kill_completed",
+			cost = 1,
+			value = 1,
+			challenge_tasks = {
+				{
+					target = 25,
+					modifiers = {
+						headshot = true,
+						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
+					},
+					reminders = {
+						10,
+						20,
+					},
+					type = ChallengeTweakData.TASK_KILL_ENEMIES,
+				},
+			},
+			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
+		},
+	}
+	self.skill_trees.shotty[2] = {}
+	self.skill_trees.shotty[2][1] = {
+		{
+			challenge_briefing_id = "weapon_skill_generic_kill_briefing",
+			challenge_done_text_id = "weapon_skill_generic_kill_completed",
+			cost = 2,
+			value = 2,
+			challenge_tasks = {
+				{
+					target = 325,
+					reminders = {
+						70,
+						120,
+						200,
+						290,
+					},
+					type = ChallengeTweakData.TASK_KILL_ENEMIES,
+				},
+			},
+			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
+		},
+	}
+	self.skill_trees.shotty[2][2] = {
+		{
+			challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
+			challenge_done_text_id = "weapon_skill_headshot_kill_completed",
+			cost = 3,
+			value = 2,
+			challenge_tasks = {
+				{
+					target = 35,
+					modifiers = {
+						headshot = true,
+						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
+					},
+					reminders = {
+						10,
+						20,
+						30,
+					},
+					type = ChallengeTweakData.TASK_KILL_ENEMIES,
+				},
+			},
+			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
+		},
+	}
+	self.skill_trees.shotty[2][3] = {
+		{
+			challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
+			challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
+			cost = 2,
+			value = 2,
+			challenge_tasks = {
+				{
+					target = 165,
+					modifiers = {
+						hip_fire = true,
+						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
+					},
+					reminders = {
+						30,
+						60,
+						90,
+						130,
+					},
+					type = ChallengeTweakData.TASK_KILL_ENEMIES,
+				},
+			},
+			skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
+		},
+	}
+	self.skill_trees.shotty.tier_unlock = {
+		"weapon_tier_unlocked",
+		"weapon_tier_unlocked",
 	}
 end
 
@@ -4654,12 +4941,12 @@ function WeaponSkillsTweakData:_init_carbine_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 1000,
+					target = 650,
 					reminders = {
-						250,
-						500,
-						750,
-						900,
+						150,
+						350,
+						450,
+						600,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -4675,16 +4962,16 @@ function WeaponSkillsTweakData:_init_carbine_skill_tree()
 			value = 2,
 			challenge_tasks = {
 				{
-					target = 500,
+					target = 325,
 					modifiers = {
 						hip_fire = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
-						100,
-						250,
-						400,
-						450,
+						70,
+						120,
+						230,
+						300,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -4704,12 +4991,12 @@ function WeaponSkillsTweakData:_init_carbine_skill_tree()
 			value = 3,
 			challenge_tasks = {
 				{
-					target = 1500,
+					target = 845,
 					reminders = {
-						375,
-						750,
-						1125,
-						1400,
+						200,
+						400,
+						600,
+						800,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -4725,16 +5012,16 @@ function WeaponSkillsTweakData:_init_carbine_skill_tree()
 			value = 3,
 			challenge_tasks = {
 				{
-					target = 750,
+					target = 425,
 					modifiers = {
 						hip_fire = true,
 						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
 					},
 					reminders = {
+						100,
 						200,
+						300,
 						400,
-						600,
-						700,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -4750,11 +5037,11 @@ function WeaponSkillsTweakData:_init_carbine_skill_tree()
 			value = 3,
 			challenge_tasks = {
 				{
-					target = 4500,
+					target = 845,
 					reminders = {
-						1000,
-						3000,
-						4000,
+						200,
+						450,
+						650,
 					},
 					type = ChallengeTweakData.TASK_COLLECT_AMMO,
 				},

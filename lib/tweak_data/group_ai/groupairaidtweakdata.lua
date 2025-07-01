@@ -245,16 +245,16 @@ function GroupAIRaidTweakData:init(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_3 then
 		self.assault.force_balance_mul = {
-			1.5,
-			2,
-			2.5,
-			3,
+			1.3,
+			1.9,
+			2.4,
+			2.9,
 		}
 		self.assault.force_pool_balance_mul = {
-			1.5,
-			2,
-			2.5,
-			3,
+			1.4,
+			1.9,
+			2.4,
+			2.9,
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_4 then
 		self.assault.force_balance_mul = {

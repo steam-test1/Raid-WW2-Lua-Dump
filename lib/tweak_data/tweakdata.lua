@@ -810,45 +810,53 @@ function TweakData:init()
 	self.experience_manager.difficulty_multiplier[TweakData.DIFFICULTY_4] = 10
 
 	local multiplier = 1
+	local level_xp_requirements = {}
 
+	level_xp_requirements[1] = 0
+	level_xp_requirements[2] = 1200
+	level_xp_requirements[3] = 1440
+	level_xp_requirements[4] = 1728
+	level_xp_requirements[5] = 2074
+	level_xp_requirements[6] = 2488
+	level_xp_requirements[7] = 2986
+	level_xp_requirements[8] = 3583
+	level_xp_requirements[9] = 4300
+	level_xp_requirements[10] = 5160
+	level_xp_requirements[11] = 6192
+	level_xp_requirements[12] = 7430
+	level_xp_requirements[13] = 8916
+	level_xp_requirements[14] = 10254
+	level_xp_requirements[15] = 11381
+	level_xp_requirements[16] = 12520
+	level_xp_requirements[17] = 13771
+	level_xp_requirements[18] = 15149
+	level_xp_requirements[19] = 16664
+	level_xp_requirements[20] = 18330
+	level_xp_requirements[21] = 20163
+	level_xp_requirements[22] = 22179
+	level_xp_requirements[23] = 24397
+	level_xp_requirements[24] = 26837
+	level_xp_requirements[25] = 29520
+	level_xp_requirements[26] = 32472
+	level_xp_requirements[27] = 35720
+	level_xp_requirements[28] = 39292
+	level_xp_requirements[29] = 43221
+	level_xp_requirements[30] = 47543
+	level_xp_requirements[31] = 52297
+	level_xp_requirements[32] = 57527
+	level_xp_requirements[33] = 63280
+	level_xp_requirements[34] = 69608
+	level_xp_requirements[35] = 80049
+	level_xp_requirements[36] = 92056
+	level_xp_requirements[37] = 105864
+	level_xp_requirements[38] = 121744
+	level_xp_requirements[39] = 140006
+	level_xp_requirements[40] = 161007
 	self.experience_manager.levels = {}
-	self.experience_manager.levels[1] = {
-		points = 0 * multiplier,
-	}
-	self.experience_manager.levels[2] = {
-		points = 1200 * multiplier,
-	}
-	self.experience_manager.levels[3] = {
-		points = 1400 * multiplier,
-	}
-	self.experience_manager.levels[4] = {
-		points = 1800 * multiplier,
-	}
-	self.experience_manager.levels[5] = {
-		points = 2200 * multiplier,
-	}
-	self.experience_manager.levels[6] = {
-		points = 2700 * multiplier,
-	}
-	self.experience_manager.levels[7] = {
-		points = 3200 * multiplier,
-	}
-	self.experience_manager.levels[8] = {
-		points = 3800 * multiplier,
-	}
-	self.experience_manager.levels[9] = {
-		points = 4400 * multiplier,
-	}
 
-	local exp_step_start = 10
-	local exp_step_end = 40
-	local exp_step = 1 / (exp_step_end - exp_step_start)
-	local exp_step_last_points = 5000
-	local exp_step_curve = 1.5
-
-	for i = exp_step_start, exp_step_end do
+	for i = 1, #level_xp_requirements do
 		self.experience_manager.levels[i] = {
-			points = math.round((250000 - exp_step_last_points) * math.pow(exp_step * (i - exp_step_start), exp_step_curve) + exp_step_last_points) * multiplier,
+			points = level_xp_requirements[i] * multiplier,
 		}
 	end
 

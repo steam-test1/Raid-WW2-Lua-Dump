@@ -393,6 +393,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.british_gangbanger_001_lower.redeem_xp = 0
 	self.customizations.british_gangbanger_001_lower.rarity = LootDropTweakData.RARITY_RARE
 	self.customizations.british_gangbanger_001_lower.droppable = true
+	self.customizations.british_gangbanger_001_lower.gold_price = 150
 	self.customizations.british_gold_jacket_001_upper = {}
 	self.customizations.british_gold_jacket_001_upper.name = "character_customization_british_gold_jacket_001_upper_name"
 	self.customizations.british_gold_jacket_001_upper.description = "character_customization_british_gold_jacket_001_upper_desc"
@@ -1366,6 +1367,122 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.american_ace_jacket_001_lower.redeem_xp = 0
 	self.customizations.american_ace_jacket_001_lower.rarity = LootDropTweakData.RARITY_HALLOWEEN_2017
 	self.customizations.american_ace_jacket_001_lower.droppable = true
+	self.customizations.british_bomber_jacket_001_upper = {}
+	self.customizations.british_bomber_jacket_001_upper.name = "character_customization_british_bomber_jacket_001_upper_name"
+	self.customizations.british_bomber_jacket_001_upper.description = "character_customization_british_bomber_jacket_001_upper_desc"
+	self.customizations.british_bomber_jacket_001_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.british_bomber_jacket_001_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_BRITISH,
+	}
+	self.customizations.british_bomber_jacket_001_upper.path = "units/vanilla/characters/players/british/upper/bomber_jacket/player_criminal_british_bomber_jacket_upper"
+	self.customizations.british_bomber_jacket_001_upper.path_icon = "units/vanilla/characters/players/generic/bomber_jacket/player_bomber_jacket_upper_hud"
+	self.customizations.british_bomber_jacket_001_upper.path_icon_large = "units/vanilla/characters/players/generic/bomber_jacket/player_bomber_jacket_large_upper_hud"
+	self.customizations.british_bomber_jacket_001_upper.path_fps_hands = "units/vanilla/characters/players/generic/bomber_jacket/player_generic_bomber_jacket_fp"
+	self.customizations.british_bomber_jacket_001_upper.redeem_xp = 0
+	self.customizations.british_bomber_jacket_001_upper.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.british_bomber_jacket_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
+	self.customizations.british_bomber_jacket_001_upper.gold_price = 150
+	self.customizations.british_bomber_jacket_001_lower = {}
+	self.customizations.british_bomber_jacket_001_lower.name = "character_customization_british_bomber_jacket_001_lower_name"
+	self.customizations.british_bomber_jacket_001_lower.description = "character_customization_british_bomber_jacket_001_lower_desc"
+	self.customizations.british_bomber_jacket_001_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.british_bomber_jacket_001_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_BRITISH,
+	}
+	self.customizations.british_bomber_jacket_001_lower.path_long = "units/vanilla/characters/players/british/lower/bomber_jacket/player_british_bomber_jacket_lower"
+	self.customizations.british_bomber_jacket_001_lower.path_short = "units/vanilla/characters/players/british/lower/bomber_jacket/player_british_bomber_jacket_lower_short"
+	self.customizations.british_bomber_jacket_001_lower.path_icon = "units/vanilla/characters/players/generic/bomber_jacket/player_bomber_jacket_lower_hud"
+	self.customizations.british_bomber_jacket_001_lower.path_icon_large = "units/vanilla/characters/players/generic/bomber_jacket/player_bomber_jacket_large_lower_hud"
+	self.customizations.british_bomber_jacket_001_lower.redeem_xp = 0
+	self.customizations.british_bomber_jacket_001_lower.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.british_bomber_jacket_001_lower.gold_price = 150
+	self.customizations.german_bomber_jacket_001_upper = {}
+	self.customizations.german_bomber_jacket_001_upper.name = "character_customization_german_bomber_jacket_001_upper_name"
+	self.customizations.german_bomber_jacket_001_upper.description = "character_customization_german_bomber_jacket_001_upper_desc"
+	self.customizations.german_bomber_jacket_001_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.german_bomber_jacket_001_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_GERMAN,
+	}
+	self.customizations.german_bomber_jacket_001_upper.path = "units/vanilla/characters/players/german/upper/bomber_jacket/player_criminal_german_bomber_jacket_upper"
+	self.customizations.german_bomber_jacket_001_upper.path_icon = "units/vanilla/characters/players/generic/bomber_jacket/player_bomber_jacket_upper_hud"
+	self.customizations.german_bomber_jacket_001_upper.path_icon_large = "units/vanilla/characters/players/generic/bomber_jacket/player_bomber_jacket_large_upper_hud"
+	self.customizations.german_bomber_jacket_001_upper.path_fps_hands = "units/vanilla/characters/players/generic/bomber_jacket/player_generic_bomber_jacket_fp"
+	self.customizations.german_bomber_jacket_001_upper.redeem_xp = 0
+	self.customizations.german_bomber_jacket_001_upper.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.german_bomber_jacket_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
+	self.customizations.german_bomber_jacket_001_upper.gold_price = 150
+	self.customizations.german_bomber_jacket_001_lower = {}
+	self.customizations.german_bomber_jacket_001_lower.name = "character_customization_german_bomber_jacket_001_lower_name"
+	self.customizations.german_bomber_jacket_001_lower.description = "character_customization_german_bomber_jacket_001_lower_desc"
+	self.customizations.german_bomber_jacket_001_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.german_bomber_jacket_001_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_GERMAN,
+	}
+	self.customizations.german_bomber_jacket_001_lower.path_long = "units/vanilla/characters/players/german/lower/bomber_jacket/player_german_bomber_jacket_lower"
+	self.customizations.german_bomber_jacket_001_lower.path_short = "units/vanilla/characters/players/german/lower/bomber_jacket/player_german_bomber_jacket_lower_short"
+	self.customizations.german_bomber_jacket_001_lower.path_icon = "units/vanilla/characters/players/generic/bomber_jacket/player_bomber_jacket_lower_hud"
+	self.customizations.german_bomber_jacket_001_lower.path_icon_large = "units/vanilla/characters/players/generic/bomber_jacket/player_bomber_jacket_large_lower_hud"
+	self.customizations.german_bomber_jacket_001_lower.redeem_xp = 0
+	self.customizations.german_bomber_jacket_001_lower.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.german_bomber_jacket_001_lower.gold_price = 150
+	self.customizations.russian_bomber_jacket_001_upper = {}
+	self.customizations.russian_bomber_jacket_001_upper.name = "character_customization_soviet_bomber_jacket_001_upper_name"
+	self.customizations.russian_bomber_jacket_001_upper.description = "character_customization_soviet_bomber_jacket_001_upper_desc"
+	self.customizations.russian_bomber_jacket_001_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.russian_bomber_jacket_001_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_RUSSIAN,
+	}
+	self.customizations.russian_bomber_jacket_001_upper.path = "units/vanilla/characters/players/soviet/upper/bomber_jacket/player_criminal_soviet_bomber_jacket_upper"
+	self.customizations.russian_bomber_jacket_001_upper.path_icon = "units/vanilla/characters/players/generic/bomber_jacket/player_bomber_jacket_upper_hud"
+	self.customizations.russian_bomber_jacket_001_upper.path_icon_large = "units/vanilla/characters/players/generic/bomber_jacket/player_bomber_jacket_large_upper_hud"
+	self.customizations.russian_bomber_jacket_001_upper.path_fps_hands = "units/vanilla/characters/players/generic/bomber_jacket/player_generic_bomber_jacket_fp"
+	self.customizations.russian_bomber_jacket_001_upper.redeem_xp = 0
+	self.customizations.russian_bomber_jacket_001_upper.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.russian_bomber_jacket_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
+	self.customizations.russian_bomber_jacket_001_upper.gold_price = 150
+	self.customizations.russian_bomber_jacket_001_lower = {}
+	self.customizations.russian_bomber_jacket_001_lower.name = "character_customization_soviet_bomber_jacket_001_lower_name"
+	self.customizations.russian_bomber_jacket_001_lower.description = "character_customization_soviet_bomber_jacket_001_lower_desc"
+	self.customizations.russian_bomber_jacket_001_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.russian_bomber_jacket_001_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_RUSSIAN,
+	}
+	self.customizations.russian_bomber_jacket_001_lower.path_long = "units/vanilla/characters/players/soviet/lower/bomber_jacket/player_soviet_bomber_jacket_lower"
+	self.customizations.russian_bomber_jacket_001_lower.path_short = "units/vanilla/characters/players/soviet/lower/bomber_jacket/player_soviet_bomber_jacket_lower_short"
+	self.customizations.russian_bomber_jacket_001_lower.path_icon = "units/vanilla/characters/players/generic/bomber_jacket/player_bomber_jacket_lower_hud"
+	self.customizations.russian_bomber_jacket_001_lower.path_icon_large = "units/vanilla/characters/players/generic/bomber_jacket/player_bomber_jacket_large_lower_hud"
+	self.customizations.russian_bomber_jacket_001_lower.redeem_xp = 0
+	self.customizations.russian_bomber_jacket_001_lower.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.russian_bomber_jacket_001_lower.gold_price = 150
+	self.customizations.american_bomber_jacket_001_upper = {}
+	self.customizations.american_bomber_jacket_001_upper.name = "character_customization_usa_bomber_jacket_001_upper_name"
+	self.customizations.american_bomber_jacket_001_upper.description = "character_customization_usa_bomber_jacket_001_upper_desc"
+	self.customizations.american_bomber_jacket_001_upper.part_type = CharacterCustomizationTweakData.PART_TYPE_UPPER
+	self.customizations.american_bomber_jacket_001_upper.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_AMERICAN,
+	}
+	self.customizations.american_bomber_jacket_001_upper.path = "units/vanilla/characters/players/usa/upper/bomber_jacket/player_criminal_usa_bomber_jacket_upper"
+	self.customizations.american_bomber_jacket_001_upper.path_icon = "units/vanilla/characters/players/generic/bomber_jacket/player_bomber_jacket_upper_hud"
+	self.customizations.american_bomber_jacket_001_upper.path_icon_large = "units/vanilla/characters/players/generic/bomber_jacket/player_bomber_jacket_large_upper_hud"
+	self.customizations.american_bomber_jacket_001_upper.path_fps_hands = "units/vanilla/characters/players/generic/bomber_jacket/player_generic_bomber_jacket_fp"
+	self.customizations.american_bomber_jacket_001_upper.redeem_xp = 0
+	self.customizations.american_bomber_jacket_001_upper.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.american_bomber_jacket_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
+	self.customizations.american_bomber_jacket_001_upper.gold_price = 150
+	self.customizations.american_bomber_jacket_001_lower = {}
+	self.customizations.american_bomber_jacket_001_lower.name = "character_customization_usa_bomber_jacket_001_lower_name"
+	self.customizations.american_bomber_jacket_001_lower.description = "character_customization_usa_bomber_jacket_001_lower_desc"
+	self.customizations.american_bomber_jacket_001_lower.part_type = CharacterCustomizationTweakData.PART_TYPE_LOWER
+	self.customizations.american_bomber_jacket_001_lower.nationalities = {
+		CharacterCustomizationTweakData.NATIONALITY_AMERICAN,
+	}
+	self.customizations.american_bomber_jacket_001_lower.path_long = "units/vanilla/characters/players/usa/lower/bomber_jacket/player_usa_bomber_jacket_lower"
+	self.customizations.american_bomber_jacket_001_lower.path_short = "units/vanilla/characters/players/usa/lower/bomber_jacket/player_usa_bomber_jacket_lower_short"
+	self.customizations.american_bomber_jacket_001_lower.path_icon = "units/vanilla/characters/players/generic/bomber_jacket/player_bomber_jacket_lower_hud"
+	self.customizations.american_bomber_jacket_001_lower.path_icon_large = "units/vanilla/characters/players/generic/bomber_jacket/player_bomber_jacket_large_lower_hud"
+	self.customizations.american_bomber_jacket_001_lower.redeem_xp = 0
+	self.customizations.american_bomber_jacket_001_lower.rarity = LootDropTweakData.RARITY_RARE
+	self.customizations.american_bomber_jacket_001_lower.gold_price = 150
 	self._head_index = {
 		"american_default_head",
 		"german_default_head",
@@ -1409,6 +1526,10 @@ function CharacterCustomizationTweakData:initialization()
 		"russian_grunt_002_upper",
 		"german_grunt_003_upper",
 		"british_officer_002_upper",
+		"british_bomber_jacket_001_upper",
+		"american_bomber_jacket_001_upper",
+		"german_bomber_jacket_001_upper",
+		"russian_bomber_jacket_001_upper",
 		"american_special_edition_001_upper",
 		"british_special_edition_001_upper",
 		"russian_special_edition_001_upper",
@@ -1455,6 +1576,10 @@ function CharacterCustomizationTweakData:initialization()
 		"russian_grunt_002_lower",
 		"german_grunt_003_lower",
 		"british_officer_002_lower",
+		"british_bomber_jacket_001_lower",
+		"american_bomber_jacket_001_lower",
+		"german_bomber_jacket_001_lower",
+		"russian_bomber_jacket_001_lower",
 		"british_highlander_jacket_lower",
 		"german_highlander_jacket_lower",
 		"russian_highlander_jacket_lower",
