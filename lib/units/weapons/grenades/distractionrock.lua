@@ -37,8 +37,26 @@ function DistractionRock:_detonate(tag, unit, body, other_unit, other_body, posi
 	local range = self._range
 	local slotmask = managers.slot:get_mask("enemies")
 	local units = World:find_units_quick("sphere", pos, self._range, slotmask)
+	local end_position = Vector3(pos.x, pos.y, pos.z - 50)
+	local collision = World:raycast("ray", pos, end_position, "slot_mask", managers.slot:get_mask("AI_graph_obstacle_check"))
 
-	if units then
+	if collision then
+		if managers.navigation:is_point_inside(pos, false) then
+			Application:debug("[DistractionRock:_detonate] Hit the ground! coin pos: " .. pos .. " true")
+		else
+			Application:debug("[DistractionRock:_detonate] Hit the ground! coin pos: " .. pos .. " false")
+
+			return
+		end
+	elseif managers.navigation:is_point_inside(pos, false) then
+		Application:debug("[DistractionRock:_detonate] Missed the ground! coin pos: " .. pos .. " true")
+	else
+		Application:debug("[DistractionRock:_detonate] Missed the ground! coin pos: " .. pos .. " false")
+
+		return
+	end
+
+	if units and managers.navigation:is_point_inside(pos, false) then
 		local closest_cop
 
 		for _, cop in ipairs(units) do
@@ -86,7 +104,14 @@ function DistractionRock:clbk_pathing_results(search_id, path)
 		if not search.invalid and search.total_length < self._range and not self._found_cop then
 			self:_abort_all_unfinished_pathing()
 
-			self._found_cop = CopLogicBase.register_search_SO(search.cop, nil, search.pos_to)
+			local attention_info = managers.groupai:state():get_AI_attention_objects_by_filter(search.cop:base()._char_tweak.access)[search.cop:key()]
+
+			attention_info.m_pos = search.pos_to
+			attention_info.settings = {
+				reaction = AIAttentionObject.REACT_SUSPICIOUS,
+			}
+			attention_info.u_key = 1
+			self._found_cop = CopLogicBase.register_search_SO(search.cop, attention_info, search.pos_to)
 		end
 	end
 end

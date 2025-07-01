@@ -2913,6 +2913,18 @@ function SkillTreeTweakData:_init_skill_list()
 			"mills",
 		},
 	}
+	self.skills.weapon_unlock_decoy_coin = {
+		desc_id = "skill_weapon_unlock_decoy_coin_desc",
+		name_id = "skill_weapon_unlock_decoy_coin_name",
+		acquires = {},
+		icon_xy = {
+			1,
+			1,
+		},
+		upgrades = {
+			"decoy_coin",
+		},
+	}
 	self.skills.weapon_unlock_dp28 = {
 		desc_id = "skill_weapon_unlock_dp28_desc",
 		name_id = "skill_weapon_unlock_dp28_name",
@@ -2995,6 +3007,18 @@ function SkillTreeTweakData:_init_skill_list()
 		},
 		upgrades = {
 			"browning",
+		},
+	}
+	self.skills.weapon_unlock_welrod = {
+		desc_id = "skill_weapon_unlock_welrod_desc",
+		name_id = "skill_weapon_unlock_welrod_name",
+		acquires = {},
+		icon_xy = {
+			1,
+			1,
+		},
+		upgrades = {
+			"welrod",
 		},
 	}
 	self.skills.weapon_unlock_shotty = {
@@ -5327,6 +5351,11 @@ function SkillTreeTweakData:_init_recon_unlock_progression()
 			"weapon_unlock_tt33",
 		},
 	}
+	self.automatic_unlock_progressions.recon[7] = {
+		weapons = {
+			"weapon_unlock_decoy_coin",
+		},
+	}
 	self.automatic_unlock_progressions.recon[8] = {
 		weapons = {
 			"weapon_unlock_grenade_concrete",
@@ -5359,6 +5388,11 @@ function SkillTreeTweakData:_init_recon_unlock_progression()
 	self.automatic_unlock_progressions.recon[18] = {
 		weapons = {
 			"weapon_unlock_webley",
+		},
+	}
+	self.automatic_unlock_progressions.recon[19] = {
+		weapons = {
+			"weapon_unlock_welrod",
 		},
 	}
 	self.automatic_unlock_progressions.recon[21] = {
@@ -5397,6 +5431,9 @@ function SkillTreeTweakData:_init_recon_unlock_progression()
 	self.automatic_unlock_progressions.recon[35] = {
 		unlocks = {
 			"recon_tier_4_unlocked",
+			"assault_tier_4_unlocked",
+			"infiltrator_tier_4_unlocked",
+			"demolitions_tier_4_unlocked",
 		},
 	}
 	self.automatic_unlock_progressions.recon[38] = {
@@ -5460,6 +5497,7 @@ function SkillTreeTweakData:_init_assault_unlock_progression()
 		},
 		weapons = {
 			"weapon_unlock_dp28",
+			"weapon_unlock_decoy_coin",
 		},
 	}
 	self.automatic_unlock_progressions.assault[18] = {
@@ -5467,9 +5505,19 @@ function SkillTreeTweakData:_init_assault_unlock_progression()
 			"weapon_unlock_webley",
 		},
 	}
+	self.automatic_unlock_progressions.assault[19] = {
+		weapons = {
+			"weapon_unlock_shotty",
+		},
+	}
 	self.automatic_unlock_progressions.assault[21] = {
 		weapons = {
 			"weapon_unlock_grenade_d343",
+		},
+	}
+	self.automatic_unlock_progressions.assault[22] = {
+		weapons = {
+			"weapon_unlock_welrod",
 		},
 	}
 	self.automatic_unlock_progressions.assault[25] = {
@@ -5502,7 +5550,10 @@ function SkillTreeTweakData:_init_assault_unlock_progression()
 	}
 	self.automatic_unlock_progressions.assault[35] = {
 		unlocks = {
+			"recon_tier_4_unlocked",
 			"assault_tier_4_unlocked",
+			"infiltrator_tier_4_unlocked",
+			"demolitions_tier_4_unlocked",
 		},
 	}
 	self.automatic_unlock_progressions.assault[38] = {
@@ -5552,6 +5603,7 @@ function SkillTreeTweakData:_init_infiltrator_unlock_progression()
 	self.automatic_unlock_progressions.infiltrator[11] = {
 		weapons = {
 			"weapon_unlock_shotty",
+			"weapon_unlock_decoy_coin",
 		},
 	}
 	self.automatic_unlock_progressions.infiltrator[13] = {
@@ -5576,6 +5628,7 @@ function SkillTreeTweakData:_init_infiltrator_unlock_progression()
 	self.automatic_unlock_progressions.infiltrator[20] = {
 		weapons = {
 			"weapon_unlock_grenade_d343",
+			"weapon_unlock_welrod",
 		},
 	}
 	self.automatic_unlock_progressions.infiltrator[23] = {
@@ -5610,7 +5663,10 @@ function SkillTreeTweakData:_init_infiltrator_unlock_progression()
 	}
 	self.automatic_unlock_progressions.infiltrator[35] = {
 		unlocks = {
+			"recon_tier_4_unlocked",
+			"assault_tier_4_unlocked",
 			"infiltrator_tier_4_unlocked",
+			"demolitions_tier_4_unlocked",
 		},
 	}
 	self.automatic_unlock_progressions.infiltrator[38] = {
@@ -5679,6 +5735,7 @@ function SkillTreeTweakData:_init_demolitions_unlock_progression()
 		weapons = {
 			"weapon_unlock_garand",
 			"weapon_unlock_garand_golden",
+			"weapon_unlock_decoy_coin",
 		},
 	}
 	self.automatic_unlock_progressions.demolitions[18] = {
@@ -5694,6 +5751,7 @@ function SkillTreeTweakData:_init_demolitions_unlock_progression()
 	self.automatic_unlock_progressions.demolitions[23] = {
 		weapons = {
 			"weapon_unlock_ithaca",
+			"weapon_unlock_welrod",
 		},
 	}
 	self.automatic_unlock_progressions.demolitions[25] = {
@@ -5723,6 +5781,9 @@ function SkillTreeTweakData:_init_demolitions_unlock_progression()
 	}
 	self.automatic_unlock_progressions.demolitions[35] = {
 		unlocks = {
+			"recon_tier_4_unlocked",
+			"assault_tier_4_unlocked",
+			"infiltrator_tier_4_unlocked",
 			"demolitions_tier_4_unlocked",
 		},
 	}

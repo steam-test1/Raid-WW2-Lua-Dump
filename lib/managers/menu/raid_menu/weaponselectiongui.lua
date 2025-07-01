@@ -101,6 +101,7 @@ end
 function WeaponSelectionGui:_layout()
 	WeaponSelectionGui.super._layout(self)
 	self:_disable_dof()
+	self:clear_grenade_secondary_breadbrumbs()
 	self:_layout_use_weapon_parts_as_cosmetics()
 	self:_layout_left_side_panels()
 	self:_layout_category_tabs()
@@ -117,6 +118,16 @@ function WeaponSelectionGui:_layout()
 	self:set_weapon_select_allowed(true)
 	self._weapon_list:set_selected(true, true)
 	self:on_weapon_category_selected(WeaponInventoryManager.BM_CATEGORY_PRIMARY_ID)
+end
+
+function WeaponSelectionGui:clear_grenade_secondary_breadbrumbs()
+	if managers.breadcrumb._breadcrumbs.character and managers.breadcrumb._breadcrumbs.character.weapon_secondary then
+		for i = 1, #tweak_data.projectiles._projectiles_index do
+			if managers.breadcrumb._breadcrumbs.character.weapon_secondary[tweak_data.projectiles._projectiles_index[i]] then
+				managers.breadcrumb._breadcrumbs.character.weapon_secondary[tweak_data.projectiles._projectiles_index[i]] = nil
+			end
+		end
+	end
 end
 
 function WeaponSelectionGui:set_weapon_select_allowed(value)
@@ -986,6 +997,7 @@ function WeaponSelectionGui:_update_weapon_stats(reset_applied_stats)
 	local selected_weapon_data = self._weapon_list:selected_item():data().value
 	local weapon_name = ""
 	local weapon_category = managers.weapon_inventory:get_weapon_category_by_weapon_category_id(self._selected_weapon_category_id)
+	local weapon_string = ""
 
 	if weapon_category == WeaponInventoryManager.BM_CATEGORY_PRIMARY_NAME or weapon_category == WeaponInventoryManager.BM_CATEGORY_SECONDARY_NAME then
 		local ammo_max_multiplier = 1
@@ -1025,6 +1037,7 @@ function WeaponSelectionGui:_update_weapon_stats(reset_applied_stats)
 		})
 
 		weapon_name = tweak_data.weapon[selected_weapon_data.weapon_id].name_id
+		weapon_string = "(" .. self:translate("weapon_catagory_" .. tweak_data.weapon[selected_weapon_data.weapon_id].category, true) .. utf8.to_upper(") ") .. self:translate(weapon_name, true)
 	elseif weapon_category == WeaponInventoryManager.BM_CATEGORY_MELEE_NAME then
 		local base_stats, mods_stats, skill_stats = managers.weapon_inventory:get_melee_weapon_stats(selected_weapon_data.weapon_id)
 		local damage = f2s(base_stats.damage.min_value) .. "-" .. f2s(base_stats.damage.max_value)
@@ -1035,6 +1048,7 @@ function WeaponSelectionGui:_update_weapon_stats(reset_applied_stats)
 		self._melee_weapon_stats:set_stats(damage, knockback, range, charge_time)
 
 		weapon_name = tweak_data.blackmarket.melee_weapons[selected_weapon_data.weapon_id].name_id
+		weapon_string = self:translate(weapon_name, true)
 	elseif weapon_category == WeaponInventoryManager.BM_CATEGORY_GRENADES_NAME then
 		local proj_tweak_data = tweak_data.projectiles[selected_weapon_data.weapon_id]
 		local damage = f2s(proj_tweak_data.damage or 0)
@@ -1044,9 +1058,11 @@ function WeaponSelectionGui:_update_weapon_stats(reset_applied_stats)
 		weapon_name = proj_tweak_data.name_id
 
 		self._grenade_weapon_stats:set_stats(damage, range, distance)
+
+		weapon_string = self:translate(weapon_name, true)
 	end
 
-	self._weapon_name_label:set_text(self:translate(weapon_name, true))
+	self._weapon_name_label:set_text(weapon_string)
 end
 
 function WeaponSelectionGui:_recreate_and_show_weapon_parts(temp_skills)

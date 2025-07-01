@@ -341,12 +341,12 @@ function AttentionTweakData:_init_civilian()
 	}
 	self.settings.civ_enemy_corpse_sneak = {
 		filter = "all",
-		max_range = 2500,
+		max_range = 3000,
 		notice_delay_mul = 0.05,
 		notice_requires_FOV = true,
 		reaction = "REACT_SCARED",
 		release_delay = 6,
-		uncover_range = 300,
+		uncover_range = 1000,
 		verification_interval = 0.1,
 	}
 	self.settings.civ_civ_cbt = {
@@ -799,7 +799,7 @@ function AttentionTweakData:_init_prop()
 		notice_requires_FOV = true,
 		reaction = "REACT_AIM",
 		release_delay = 1,
-		uncover_range = 300,
+		uncover_range = 1000,
 		verification_interval = 0.1,
 	}
 	self.settings.prop_civ_ene_ntl = {

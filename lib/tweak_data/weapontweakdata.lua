@@ -42,6 +42,7 @@ function WeaponTweakData:init(tweak_data)
 	self:_init_data_bren_npc()
 	self:_init_data_lee_enfield_npc()
 	self:_init_data_browning_npc()
+	self:_init_data_welrod_npc()
 	self:_init_data_shotty_npc()
 	self:_init_data_tiger_main_gun_module_npc(difficulty_index)
 	self:_init_data_tiger_machinegun_module_npc(difficulty_index)
@@ -50,6 +51,7 @@ function WeaponTweakData:init(tweak_data)
 	self:_init_data_concrete()
 	self:_init_data_d343()
 	self:_init_data_mills()
+	self:_init_data_decoy_coin()
 	self:_init_data_molotov()
 	self:_init_data_kar98_npc()
 	self:_init_data_sniper_kar98_npc()
@@ -518,6 +520,50 @@ function WeaponTweakData:_init_data_mills()
 	self.mills.gui.icon_large = "weapon_gre_mills_large"
 end
 
+function WeaponTweakData:_init_data_decoy_coin()
+	self.decoy_coin = {}
+	self.decoy_coin.sounds = {}
+	self.decoy_coin.use_data = {}
+	self.decoy_coin.usage = "c45"
+	self.decoy_coin.usage_anim = "c45"
+	self.decoy_coin.name_id = "bm_coin"
+	self.decoy_coin.sounds.prefix = ""
+	self.decoy_coin.sounds.single = ""
+	self.decoy_coin.sounds.autofire_start = nil
+	self.decoy_coin.sounds.autofire_stop = nil
+	self.decoy_coin.use_data.selection_index = 3
+	self.decoy_coin.auto = {}
+	self.decoy_coin.auto.fire_rate = 0.4
+	self.decoy_coin.hold = "grenade"
+	self.decoy_coin.alert_size = 5000
+	self.decoy_coin.suppression = 1
+	self.decoy_coin.timers = {}
+	self.decoy_coin.timers.reload_not_empty = 1.25
+	self.decoy_coin.timers.reload_empty = 1.65
+	self.decoy_coin.timers.unequip = 0.5
+	self.decoy_coin.timers.equip = 0.25
+	self.decoy_coin.weapon_movement_penalty = 1
+	self.decoy_coin.exit_run_speed_multiplier = 1
+	self.decoy_coin.transition_duration = 0
+	self.decoy_coin.stance = "nagant"
+	self.decoy_coin.weapon_hold = "nagant"
+	self.decoy_coin.use_data = {}
+	self.decoy_coin.use_data.equip = {
+		align_place = "right_hand",
+	}
+	self.decoy_coin.use_data.selection_index = 3
+	self.decoy_coin.use_data.unequip = {
+		align_place = "back",
+	}
+	self.decoy_coin.damage_melee = 66
+	self.decoy_coin.damage_melee_effect_mul = 1
+	self.decoy_coin.hud = {}
+	self.decoy_coin.hud.icon = "weapons_panel_gre_decoy_coin"
+	self.decoy_coin.hud.panel_class = "grenade"
+	self.decoy_coin.gui = {}
+	self.decoy_coin.gui.icon_large = "weapon_gre_decoy_coin_large"
+end
+
 function WeaponTweakData:_init_data_molotov()
 	self.molotov = {}
 	self.molotov.sounds = {}
@@ -872,6 +918,29 @@ function WeaponTweakData:_init_data_sterling_npc()
 	self.sterling_npc.hold = "sterling"
 	self.sterling_npc.alert_size = 5000
 	self.sterling_npc.suppression = 1
+end
+
+function WeaponTweakData:_init_data_welrod_npc()
+	self.welrod_npc = {}
+	self.welrod_npc.sounds = {}
+	self.welrod_npc.use_data = {}
+	self.welrod_npc.usage = "c45"
+	self.welrod_npc.usage_anim = "c45"
+	self.welrod_npc.sounds.prefix = ""
+	self.welrod_npc.sounds.single = "welrod_fire_npc"
+	self.welrod_npc.sounds.autofire_start = nil
+	self.welrod_npc.sounds.autofire_stop = nil
+	self.welrod_npc.use_data.selection_index = 1
+	self.welrod_npc.DAMAGE = 1
+	self.welrod_npc.muzzleflash = "effects/vanilla/weapons/9mm_auto_silence"
+	self.welrod_npc.muzzleflash_silenced = "effects/vanilla/weapons/9mm_auto_silence"
+	self.welrod_npc.shell_ejection = "effects/vanilla/weapons/shells/shell_empty"
+	self.welrod_npc.CLIP_AMMO_MAX = 6
+	self.welrod_npc.NR_CLIPS_MAX = 8
+	self.welrod_npc.AMMO_MAX = self.welrod_npc.CLIP_AMMO_MAX * self.welrod_npc.NR_CLIPS_MAX
+	self.welrod_npc.hold = "pistol"
+	self.welrod_npc.alert_size = 5000
+	self.welrod_npc.suppression = 1
 end
 
 function WeaponTweakData:_init_data_shotty_npc()
@@ -1531,7 +1600,7 @@ function WeaponTweakData:_init_data_kar98_npc()
 	self.ger_kar98_npc.sounds.prefix = ""
 	self.ger_kar98_npc.sounds.single = "kar98_fire_npc_single"
 	self.ger_kar98_npc.use_data.selection_index = 2
-	self.ger_kar98_npc.DAMAGE = 3
+	self.ger_kar98_npc.DAMAGE = 2.5
 	self.ger_kar98_npc.muzzleflash = "effects/vanilla/weapons/762_auto"
 	self.ger_kar98_npc.shell_ejection = "effects/vanilla/weapons/shells/shell_sniper"
 	self.ger_kar98_npc.CLIP_AMMO_MAX = 1
@@ -2540,6 +2609,7 @@ function WeaponTweakData:_init_new_weapons(weapon_data)
 	self:_init_bren(weapon_data)
 	self:_init_lee_enfield(weapon_data)
 	self:_init_browning(weapon_data)
+	self:_init_welrod(weapon_data)
 	self:_init_shotty(weapon_data)
 end
 
@@ -3676,6 +3746,153 @@ function WeaponTweakData:_init_browning(weapon_data)
 		spread = 5,
 		spread_moving = 9,
 		suppression = 6,
+		total_ammo_mod = 21,
+		value = 1,
+		zoom = 3,
+	}
+end
+
+function WeaponTweakData:_init_welrod(weapon_data)
+	self.welrod = {}
+	self.welrod.inventory_texture = "ui/temp/customization_temp_df"
+	self.welrod.category = WeaponTweakData.WEAPON_CATEGORY_PISTOL
+	self.welrod.dismember_chance = 0
+	self.welrod.damage_melee = 66
+	self.welrod.damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default
+	self.welrod.sounds = {}
+	self.welrod.sounds.fire = "welrod_fire_1p"
+	self.welrod.sounds.dryfire = ""
+	self.welrod.sounds.enter_steelsight = nil
+	self.welrod.sounds.leave_steelsight = nil
+	self.welrod.FIRE_MODE = "single"
+	self.welrod.fire_mode_data = {}
+	self.welrod.fire_mode_data.fire_rate = 1
+	self.welrod.single = {}
+	self.welrod.single.fire_rate = 1.6
+	self.welrod.timers = {}
+	self.welrod.timers.reload_not_empty = 4.1
+	self.welrod.timers.reload_empty = 4.1
+	self.welrod.timers.unequip = 0.5
+	self.welrod.timers.equip = 0.25
+	self.welrod.name_id = "bm_w_welrod"
+	self.welrod.desc_id = "bm_w_welrod_desc"
+	self.welrod.description_id = "des_welrod"
+	self.welrod.muzzleflash = "effects/vanilla/weapons/9mm_auto_fps"
+	self.welrod.muzzleflash_silenced = "effects/vanilla/weapons/9mm_auto_silence_fps"
+	self.welrod.shell_ejection = "effects/vanilla/weapons/shells/shell_empty"
+	self.welrod.use_data = {}
+	self.welrod.use_data.selection_index = 1
+	self.welrod.damage_profile = {
+		{
+			damage = 100,
+			range = 500,
+		},
+		{
+			damage = 15,
+			range = 2500,
+		},
+	}
+	self.welrod.headshot_multiplier = 3.5
+	self.welrod.CLIP_AMMO_MAX = 6
+	self.welrod.NR_CLIPS_MAX = 3
+	self.welrod.AMMO_MAX = self.welrod.CLIP_AMMO_MAX * self.welrod.NR_CLIPS_MAX
+	self.welrod.AMMO_PICKUP = self:_pickup_chance(self.welrod.AMMO_MAX, 1)
+	self.welrod.ammo_pickup_base = 3
+	self.welrod.spread = {}
+	self.welrod.spread.standing = 2
+	self.welrod.spread.crouching = 1.25
+	self.welrod.spread.steelsight = 0.75
+	self.welrod.spread.moving_standing = 3.75
+	self.welrod.spread.moving_crouching = 3.38
+	self.welrod.spread.moving_steelsight = 1.56
+	self.welrod.spread.per_shot = 0.24
+	self.welrod.spread.per_shot_steelsight = 0.16
+	self.welrod.spread.recovery = 8
+	self.welrod.spread.recovery_wait_multiplier = 1
+	self.welrod.kick = {}
+	self.welrod.kick.standing = {
+		1,
+		1.2,
+		-0.5,
+		0.5,
+	}
+	self.welrod.kick.crouching = {
+		1,
+		1.2,
+		-0.4,
+		0.4,
+	}
+	self.welrod.kick.steelsight = {
+		1.2,
+		1.45,
+		-0.25,
+		0.25,
+	}
+	self.welrod.kick.crouching_steelsight = {
+		1.2,
+		1.3,
+		-0.2,
+		0.2,
+	}
+	self.welrod.gun_kick = {}
+	self.welrod.gun_kick.hip_fire = {
+		25,
+		50,
+		-30,
+		25,
+	}
+	self.welrod.gun_kick.steelsight = {
+		25,
+		32,
+		-20,
+		20,
+	}
+	self.welrod.gun_kick.position_ratio = -0.05
+	self.welrod.crosshair = {}
+	self.welrod.crosshair.standing = {}
+	self.welrod.crosshair.crouching = {}
+	self.welrod.crosshair.steelsight = {}
+	self.welrod.crosshair.standing.offset = 0.175
+	self.welrod.crosshair.standing.moving_offset = 0.6
+	self.welrod.crosshair.standing.kick_offset = 0.4
+	self.welrod.crosshair.crouching.offset = 0.1
+	self.welrod.crosshair.crouching.moving_offset = 0.6
+	self.welrod.crosshair.crouching.kick_offset = 0.3
+	self.welrod.crosshair.steelsight.hidden = true
+	self.welrod.crosshair.steelsight.offset = 0
+	self.welrod.crosshair.steelsight.moving_offset = 0
+	self.welrod.crosshair.steelsight.kick_offset = 0.1
+	self.welrod.shake = {}
+	self.welrod.shake.fire_multiplier = 1
+	self.welrod.shake.fire_steelsight_multiplier = 1
+	self.welrod.autohit = weapon_data.autohit_pistol_default
+	self.welrod.aim_assist = weapon_data.aim_assist_pistol_default
+	self.welrod.weapon_hold = "welrod_pistol"
+	self.welrod.animations = {}
+	self.welrod.animations.equip_id = "equip_welrod_pistol"
+	self.welrod.animations.magazine_empty = "last_recoil"
+	self.welrod.animations.recoil_steelsight = true
+	self.welrod.transition_duration = 0
+	self.welrod.gui = {}
+	self.welrod.gui.rotation_offset = -8
+	self.welrod.gui.distance_offset = -50
+	self.welrod.gui.height_offset = -7
+	self.welrod.gui.display_offset = 12
+	self.welrod.gui.initial_rotation = {}
+	self.welrod.gui.initial_rotation.yaw = -90
+	self.welrod.gui.initial_rotation.pitch = 0
+	self.welrod.gui.initial_rotation.roll = 0
+	self.welrod.gui.icon_large = "weapon_welrod_large"
+	self.welrod.hud = {}
+	self.welrod.hud.icon = "weapon_panel_welrod"
+	self.welrod.stats = {
+		alert_size = 16,
+		concealment = 29,
+		extra_ammo = 6,
+		recoil = 4,
+		spread = 6,
+		spread_moving = 9,
+		suppression = 14,
 		total_ammo_mod = 21,
 		value = 1,
 		zoom = 3,
@@ -6087,7 +6304,7 @@ function WeaponTweakData:_init_lee_enfield(weapon_data)
 	self.lee_enfield.sounds.fire_single = "lee_fire_1p_single"
 	self.lee_enfield.sounds.dryfire = "primary_dryfire"
 	self.lee_enfield.timers = {}
-	self.lee_enfield.timers.reload_empty = 2.07
+	self.lee_enfield.timers.reload_empty = 3.7
 	self.lee_enfield.timers.reload_not_empty = 2.07
 	self.lee_enfield.timers.shotgun_reload_enter = 0.6333333333333333
 	self.lee_enfield.timers.shotgun_reload_exit_empty = 0.8333333333333334

@@ -244,6 +244,7 @@ end
 function SkillTreeManager:_equip_class_default_weapons()
 	managers.blackmarket:equip_class_default_primary()
 	managers.blackmarket:equip_class_default_secondary()
+	managers.blackmarket:equip_generic_default_grenade()
 end
 
 function SkillTreeManager:set_character_profile_subclass(character_profile_subclass)
@@ -341,11 +342,13 @@ function SkillTreeManager:apply_automatic_unlocks_for_level(level, category_to_a
 			if category_index == "weapons" then
 				for index, unlock in ipairs(character_unlock_progression[level][category_index]) do
 					local unlock_weapon = tweak_data.skilltree.skills[unlock].upgrades[1]
-					local breadcrumb_category = tweak_data.weapon[unlock_weapon].use_data.selection_index == 2 and BreadcrumbManager.CATEGORY_WEAPON_PRIMARY or BreadcrumbManager.CATEGORY_WEAPON_SECONDARY
+					local breadcrumb_category = tweak_data.weapon[unlock_weapon].use_data.selection_index == 2 and BreadcrumbManager.CATEGORY_WEAPON_PRIMARY or tweak_data.weapon[unlock_weapon].use_data.selection_index == 1 and BreadcrumbManager.CATEGORY_WEAPON_SECONDARY
 
-					managers.breadcrumb:add_breadcrumb(breadcrumb_category, {
-						unlock_weapon,
-					})
+					if breadcrumb_category then
+						managers.breadcrumb:add_breadcrumb(breadcrumb_category, {
+							unlock_weapon,
+						})
+					end
 				end
 			end
 		end

@@ -2741,6 +2741,7 @@ function BlackMarketManager:aquire_default_weapons(only_enable)
 	end
 
 	self:_aquire_generic_default_melee(only_enable)
+	self:_aquire_generic_default_grenade(only_enable)
 end
 
 function BlackMarketManager:equip_class_default_primary()
@@ -2777,6 +2778,10 @@ function BlackMarketManager:equip_class_default_secondary()
 	end
 
 	return false
+end
+
+function BlackMarketManager:equip_generic_default_grenade()
+	managers.blackmarket:equip_grenade(self._defaults.grenade)
 end
 
 function BlackMarketManager:_aquire_class_default_secondary(class, only_enable)
@@ -2853,6 +2858,18 @@ function BlackMarketManager:_aquire_generic_default_melee(only_enable)
 			self._global.melee_weapons[self._defaults.melee_weapon].unlocked = true
 		else
 			managers.upgrades:aquire(self._defaults.melee_weapon, nil, UpgradesManager.AQUIRE_STRINGS[1])
+		end
+	end
+end
+
+function BlackMarketManager:_aquire_generic_default_grenade(only_enable)
+	local grenade = self._global and self._global.grenades and self._global.grenades[self._defaults.grenade]
+
+	if grenade and not grenade.unlocked and not managers.upgrades:aquired(self._defaults.grenade, UpgradesManager.AQUIRE_STRINGS[1]) then
+		if only_enable then
+			self._global.grenades[self._defaults.grenade].unlocked = true
+		else
+			managers.upgrades:aquire(self._defaults.grenade, nil, UpgradesManager.AQUIRE_STRINGS[1])
 		end
 	end
 end

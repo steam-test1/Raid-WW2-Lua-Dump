@@ -259,6 +259,15 @@ function LevelsTweakData:init()
 	}
 	self.silo.cube = "cube_apply_heist_bank"
 	self.silo.predefined_world = "silo"
+	self.kelly = {}
+	self.kelly.name_id = "kelly"
+	self.kelly.briefing_id = "kelly_briefing"
+	self.kelly.world_name = "upg_003/kelly"
+	self.kelly.packages = {
+		"packages/zone_germany",
+	}
+	self.kelly.cube = "cube_apply_heist_bank"
+	self.kelly.predefined_world = "kelly"
 	self._level_index = {
 		"streaming_level",
 		"germany_zone",
@@ -279,6 +288,7 @@ function LevelsTweakData:init()
 		"spies_test",
 		"sto",
 		"silo",
+		"kelly",
 	}
 	self.escape_levels = {}
 end

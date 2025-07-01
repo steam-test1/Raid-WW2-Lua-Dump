@@ -1716,7 +1716,31 @@ function PlayerStandard:_start_action_throw_grenade(t, input, primary)
 		return
 	end
 
-	if press and not self:_is_throwing_grenade() and managers.player:can_throw_grenade() then
+	local equipped_grenade = managers.blackmarket:equipped_grenade()
+
+	if press and not self:_is_throwing_grenade() and managers.player:can_throw_grenade() and equipped_grenade == "decoy_coin" then
+		if self._state_data.throw_grenade_cooldown and t < self._state_data.throw_grenade_cooldown then
+			return
+		end
+
+		self:_interupt_action_reload(t)
+		self:_interupt_action_steelsight(t)
+		self:_interupt_action_running(t)
+		self:_interupt_action_charging_weapon(t)
+		managers.network:session():send_to_peers_synched("play_distance_interact_redirect", self._unit, "throw_grenade_charge")
+
+		local throw_high = input.btn_primary_attack_press and 1 or 0
+
+		self._camera_unit:anim_state_machine():set_global("throw_high", throw_high)
+		self._camera_unit:anim_state_machine():set_global("throw_low", 1 - throw_high)
+
+		self._state_data.throw_grenade_expire_t = t
+		self._state_data.throw_high = input.btn_primary_attack_press
+		self._state_data.throw_grenade_cooldown = t + PlayerStandard.THROW_GRENADE_COOLDOWN
+
+		managers.network:session():send_to_peers_synched("play_distance_interact_redirect", self._unit, "throw_grenade")
+		self._ext_camera:play_redirect(Idstring("throw_grenade_now"))
+	elseif press and not self:_is_throwing_grenade() and managers.player:can_throw_grenade() and equipped_grenade ~= "decoy_coin" then
 		if self._state_data.throw_grenade_cooldown and t < self._state_data.throw_grenade_cooldown then
 			return
 		end
@@ -4202,6 +4226,14 @@ function PlayerStandard:get_zoom_fov(stance_data)
 	return fov * fov_multiplier
 end
 
+function PlayerStandard:_is_throwing_coin(t)
+	if self._state_data.throw_grenade_cooldown then
+		return t - self._state_data.throw_grenade_cooldown <= self._equipped_unit:base():weapon_tweak_data().timers.equip
+	else
+		return false
+	end
+end
+
 function PlayerStandard:_check_action_primary_attack(t, input)
 	local new_action
 
@@ -4216,7 +4248,7 @@ function PlayerStandard:_check_action_primary_attack(t, input)
 	local action_wanted = input.btn_primary_attack_state or input.btn_primary_attack_release
 
 	if action_wanted then
-		local action_forbidden = self:_is_reloading() or self:_changing_weapon() or self:_is_meleeing() or self._use_item_expire_t or self:_interacting() or self:_is_throwing_projectile() or self:_is_deploying_bipod() or self:_is_comm_wheel_active()
+		local action_forbidden = self:_is_reloading() or self:_changing_weapon() or self:_is_meleeing() or self._use_item_expire_t or self:_interacting() or self:_is_throwing_projectile() or self:_is_deploying_bipod() or self:_is_comm_wheel_active() or self:_is_throwing_grenade() or self:_is_throwing_coin(t)
 
 		if not action_forbidden then
 			local use_recoil_anim = true

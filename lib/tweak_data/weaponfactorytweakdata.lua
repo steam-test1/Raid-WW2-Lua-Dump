@@ -128,6 +128,7 @@ function WeaponFactoryTweakData:init()
 	self:_init_bren()
 	self:_init_lee_enfield()
 	self:_init_browning()
+	self:_init_welrod()
 	self:_init_shotty()
 	self:create_ammunition()
 	self:_init_content_unfinished()
@@ -4593,6 +4594,103 @@ function WeaponFactoryTweakData:_init_sterling()
 	}
 	self.wpn_fps_smg_sterling_npc = deep_clone(self.wpn_fps_smg_sterling)
 	self.wpn_fps_smg_sterling_npc.unit = "units/vanilla/weapons/wpn_fps_smg_sterling/wpn_fps_smg_sterling_npc"
+end
+
+function WeaponFactoryTweakData:_init_welrod()
+	self.parts.wpn_fps_pis_welrod_body_standard = {
+		a_obj = "a_body",
+		name_id = "bm_wp_welrod_body_standard",
+		third_unit = "units/upd_017/weapons/wpn_third_pis_welrod_pts/wpn_third_pis_welrod_body_standard",
+		type = "barrel",
+		unit = "units/upd_017/weapons/wpn_fps_pis_welrod_pts/wpn_fps_pis_welrod_body_standard",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_pis_welrod_bolt_standard = {
+		a_obj = "a_bolt",
+		name_id = "bm_wp_welrod_bolt_standard",
+		third_unit = "units/upd_017/weapons/wpn_third_pis_welrod_pts/wpn_third_pis_welrod_bolt_standard",
+		type = "drag_handle",
+		unit = "units/upd_017/weapons/wpn_fps_pis_welrod_pts/wpn_fps_pis_welrod_bolt_standard",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_pis_welrod_m_standard = {
+		a_obj = "a_m",
+		name_id = "bm_wp_welrod_m_standard",
+		third_unit = "units/upd_017/weapons/wpn_third_pis_welrod_pts/wpn_third_pis_welrod_m_standard",
+		type = "magazine",
+		unit = "units/upd_017/weapons/wpn_fps_pis_welrod_pts/wpn_fps_pis_welrod_m_standard",
+		bullet_objects = {
+			amount = 5,
+			prefix = "g_bullet_",
+		},
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_pis_welrod_catch = {
+		a_obj = "a_catch",
+		name_id = "bm_wp_welrod_catch",
+		third_unit = "units/upd_017/weapons/wpn_third_pis_welrod_pts/wpn_third_pis_welrod_catch",
+		type = "extra_1",
+		unit = "units/upd_017/weapons/wpn_fps_pis_welrod_pts/wpn_fps_pis_welrod_catch",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_pis_welrod_trigger = {
+		a_obj = "a_trigger",
+		name_id = "bm_wp_welrod_trigger",
+		third_unit = "units/upd_017/weapons/wpn_third_pis_welrod_pts/wpn_third_pis_welrod_trigger",
+		type = "extra_2",
+		unit = "units/upd_017/weapons/wpn_fps_pis_welrod_pts/wpn_fps_pis_welrod_trigger",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_pis_welrod_safety = {
+		a_obj = "a_safety",
+		name_id = "bm_wp_welrod_safety",
+		third_unit = "units/upd_017/weapons/wpn_third_pis_welrod_pts/wpn_third_pis_welrod_safety",
+		type = "extra_3",
+		unit = "units/upd_017/weapons/wpn_fps_pis_welrod_pts/wpn_fps_pis_welrod_safety",
+		stats = {
+			value = 1,
+		},
+	}
+	self.wpn_fps_pis_welrod = {}
+	self.wpn_fps_pis_welrod.unit = "units/upd_017/weapons/wpn_fps_pis_welrod/wpn_fps_pis_welrod"
+	self.wpn_fps_pis_welrod.optional_types = {
+		"barrel_ext",
+		"gadget",
+	}
+	self.wpn_fps_pis_welrod.animations = {
+		fire = "recoil",
+		fire_steelsight = "recoil",
+		reload = "reload",
+		reload_not_empty = "reload",
+	}
+	self.wpn_fps_pis_welrod.default_blueprint = {
+		"wpn_fps_pis_welrod_body_standard",
+		"wpn_fps_pis_welrod_bolt_standard",
+		"wpn_fps_pis_welrod_m_standard",
+		"wpn_fps_pis_welrod_catch",
+		"wpn_fps_pis_welrod_trigger",
+		"wpn_fps_pis_welrod_safety",
+	}
+	self.wpn_fps_pis_welrod.uses_parts = {
+		"wpn_fps_pis_welrod_body_standard",
+		"wpn_fps_pis_welrod_bolt_standard",
+		"wpn_fps_pis_welrod_m_standard",
+		"wpn_fps_pis_welrod_catch",
+		"wpn_fps_pis_welrod_trigger",
+		"wpn_fps_pis_welrod_safety",
+	}
+	self.wpn_fps_pis_welrod_npc = deep_clone(self.wpn_fps_pis_welrod)
+	self.wpn_fps_pis_welrod_npc.unit = "units/upd_017/weapons/wpn_fps_pis_welrod/wpn_fps_pis_welrod_npc"
 end
 
 function WeaponFactoryTweakData:_init_shotty()

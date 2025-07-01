@@ -198,6 +198,7 @@ function OperationsTweakData:_init_raids()
 		"spies_test",
 		"sto",
 		"silo",
+		"kelly",
 	}
 	self.missions.streaming_level = {}
 	self.missions.streaming_level.name_id = "menu_stream"
@@ -1062,8 +1063,8 @@ function OperationsTweakData:_init_raids()
 	self.missions.silo.level_id = "silo"
 	self.missions.silo.briefing_id = "menu_silo_desc"
 	self.missions.silo.sub_worlds_spawned = 2
-	self.missions.silo.audio_briefing_id = "mrs_white_silo_brief"
-	self.missions.silo.short_audio_briefing_id = "mrs_white_silo_brief"
+	self.missions.silo.audio_briefing_id = "mrs_white_silo_brief_long"
+	self.missions.silo.short_audio_briefing_id = "mrs_white_silo_brief_short"
 	self.missions.silo.music_id = "random"
 	self.missions.silo.region = "germany"
 	self.missions.silo.dogtags_min = 30
@@ -1117,6 +1118,62 @@ function OperationsTweakData:_init_raids()
 			description_id = "silo_mission_photo_5_description",
 			photo = "intel_silo_05",
 			title_id = "silo_mission_photo_5_title",
+		},
+	}
+	self.missions.kelly = {}
+	self.missions.kelly.name_id = "menu_kelly_hl"
+	self.missions.kelly.level_id = "kelly"
+	self.missions.kelly.briefing_id = "menu_kelly_desc"
+	self.missions.kelly.audio_briefing_id = "mrs_white_kelly_brief_long"
+	self.missions.kelly.short_audio_briefing_id = "mrs_white_kelly_brief_short"
+	self.missions.kelly.music_id = "random"
+	self.missions.kelly.region = "germany"
+	self.missions.kelly.dogtags_min = 30
+	self.missions.kelly.dogtags_max = 37
+	self.missions.kelly.xp = 1000
+	self.missions.kelly.stealth_bonus = 1.5
+	self.missions.kelly.mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED
+	self.missions.kelly.mission_flag = "level_raid_kelly"
+	self.missions.kelly.job_type = OperationsTweakData.JOB_TYPE_RAID
+	self.missions.kelly.progression_groups = {
+		OperationsTweakData.PROGRESSION_GROUP_INITIAL,
+		OperationsTweakData.PROGRESSION_GROUP_STANDARD,
+	}
+	self.missions.kelly.icon_menu_big = "xp_events_missions_kelly"
+	self.missions.kelly.icon_menu = "missions_kelly"
+	self.missions.kelly.icon_menu_big = "xp_events_missions_kelly"
+	self.missions.kelly.icon_menu = "missions_kelly"
+	self.missions.kelly.icon_hud = "missions_raid_flaktower"
+	self.missions.kelly.control_brief_video = {
+		"movies/vanilla/mission_briefings/02_mission_brief_a2_cause-carnage_v005",
+		"movies/vanilla/mission_briefings/02_mission_brief_b1_cause-carnage_v004",
+	}
+	self.missions.kelly.start_in_stealth = true
+	self.missions.kelly.tab_background_image = "ui/hud/backgrounds/tab_screen_bg_raid_flak_hud"
+	self.missions.kelly.loading = {
+		image = "loading_kelly",
+		text = "menu_kelly_loading_desc",
+	}
+	self.missions.kelly.photos = {
+		{
+			description_id = "kelly_mission_photo_1_description",
+			photo = "intel_kelly_01",
+			title_id = "kelly_mission_photo_1_title",
+		},
+		{
+			description_id = "kelly_mission_photo_2_description",
+			photo = "intel_kelly_02",
+			title_id = "kelly_mission_photo_2_title",
+		},
+		{
+			description_id = "kelly_mission_photo_3_description",
+			photo = "intel_kelly_03",
+			title_id = "kelly_mission_photo_3_title",
+		},
+		{
+			description_id = "kelly_mission_photo_4_description",
+			photo = "intel_kelly_04",
+			title_id = "kelly_mission_photo_4_title",
 		},
 	}
 end

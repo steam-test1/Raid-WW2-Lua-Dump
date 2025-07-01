@@ -197,6 +197,32 @@ function ProjectilesTweakData:init(tweak_data)
 	self.molotov.fire_alert_radius = 1500
 	self.molotov.animations = {}
 	self.molotov.animations.equip_id = "equip_welrod"
+	self.decoy_coin = {}
+	self.decoy_coin.name_id = "bm_coin"
+	self.decoy_coin.unit = "units/vanilla/weapons/wpn_fps_decoy_coin_peace/wpn_decoy_coin_peace"
+	self.decoy_coin.unit_hand = "units/vanilla/weapons/wpn_fps_decoy_coin_peace/wpn_decoy_coin_peace_husk"
+	self.decoy_coin.unit_dummy = "units/vanilla/weapons/wpn_fps_decoy_coin_peace/wpn_decoy_coin_peace_husk"
+	self.decoy_coin.icon = "frag_grenade"
+	self.decoy_coin.max_amount = 15
+	self.decoy_coin.throwable = true
+	self.decoy_coin.anim_global_param = "projectile_molotov"
+	self.decoy_coin.throw_allowed_expire_t = 0.1
+	self.decoy_coin.expire_t = 1.1
+	self.decoy_coin.repeat_expire_t = 1.5
+	self.decoy_coin.is_a_grenade = true
+	self.decoy_coin.range = 3000
+	self.decoy_coin.animations = {}
+	self.decoy_coin.animations.equip_id = "equip_welrod"
+	self.decoy_coin.launch_speed = 200
+	self.decoy_coin.gui = {}
+	self.decoy_coin.gui.rotation_offset = 0
+	self.decoy_coin.gui.distance_offset = -160
+	self.decoy_coin.gui.height_offset = -12
+	self.decoy_coin.gui.display_offset = 16
+	self.decoy_coin.gui.initial_rotation = {}
+	self.decoy_coin.gui.initial_rotation.yaw = 180
+	self.decoy_coin.gui.initial_rotation.pitch = 10
+	self.decoy_coin.gui.initial_rotation.roll = 0
 	self.mortar_shell = {}
 	self.mortar_shell.name_id = "bm_mortar_shell"
 	self.mortar_shell.unit = "units/vanilla/weapons/wpn_npc_proj_mortar_shell/wpn_npc_proj_mortar_shell"
@@ -231,6 +257,7 @@ function ProjectilesTweakData:init(tweak_data)
 		"concrete",
 		"d343",
 		"mills",
+		"decoy_coin",
 	}
 
 	self:_add_desc_from_name_macro(self)

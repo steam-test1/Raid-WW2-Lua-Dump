@@ -219,6 +219,19 @@ function GroupAIRaidTweakData:init(difficulty_index)
 		end
 	elseif difficulty_index <= TweakData.DIFFICULTY_1 then
 		self.assault.force_balance_mul = {
+			0.7,
+			1,
+			1.3,
+			1.7,
+		}
+		self.assault.force_pool_balance_mul = {
+			0.5,
+			0.65,
+			0.7,
+			0.9,
+		}
+	elseif difficulty_index == TweakData.DIFFICULTY_2 then
+		self.assault.force_balance_mul = {
 			0.8,
 			1.1,
 			1.4,
@@ -226,48 +239,35 @@ function GroupAIRaidTweakData:init(difficulty_index)
 		}
 		self.assault.force_pool_balance_mul = {
 			0.6,
-			0.75,
-			0.8,
 			1,
-		}
-	elseif difficulty_index == TweakData.DIFFICULTY_2 then
-		self.assault.force_balance_mul = {
-			1,
-			1.3,
-			1.6,
-			2,
-		}
-		self.assault.force_pool_balance_mul = {
-			0.8,
-			1.25,
-			1.6,
-			2,
+			1.4,
+			1.8,
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_3 then
 		self.assault.force_balance_mul = {
-			1.3,
-			1.9,
-			2.4,
-			2.9,
+			1.1,
+			1.7,
+			2.2,
+			2.7,
 		}
 		self.assault.force_pool_balance_mul = {
-			1.4,
-			1.9,
-			2.4,
-			2.9,
+			1.2,
+			1.7,
+			2.2,
+			2.7,
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_4 then
 		self.assault.force_balance_mul = {
-			2.5,
+			2,
+			2.25,
 			3,
-			3.5,
-			4.5,
+			4,
 		}
 		self.assault.force_pool_balance_mul = {
-			2,
-			3,
-			3.5,
-			4,
+			1.8,
+			2.8,
+			3.3,
+			3.8,
 		}
 	end
 

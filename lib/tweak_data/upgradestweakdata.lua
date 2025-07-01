@@ -908,6 +908,11 @@ function UpgradesTweakData:_create_weapon_definitions()
 		factory_id = "wpn_fps_sho_browning",
 		weapon_id = "browning",
 	}
+	self.definitions.welrod = {
+		category = "weapon",
+		factory_id = "wpn_fps_pis_welrod",
+		weapon_id = "welrod",
+	}
 	self.definitions.shotty = {
 		category = "weapon",
 		factory_id = "wpn_fps_pis_shotty",
@@ -1055,6 +1060,9 @@ function UpgradesTweakData:_create_grenades_definitions()
 		category = "grenade",
 	}
 	self.definitions.mills = {
+		category = "grenade",
+	}
+	self.definitions.decoy_coin = {
 		category = "grenade",
 	}
 end
@@ -3909,6 +3917,7 @@ function UpgradesTweakData:_old_init()
 			"bren",
 			"lee_enfield",
 			"browning",
+			"welrod",
 			"shotty",
 		},
 	}

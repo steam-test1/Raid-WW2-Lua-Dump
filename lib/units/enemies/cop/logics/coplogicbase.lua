@@ -251,50 +251,7 @@ function CopLogicBase.damage_clbk(data, damage_info)
 end
 
 function CopLogicBase.death_clbk(data, damage_info)
-	if not managers.groupai:state():whisper_mode() then
-		return
-	end
-
-	local have_suspition, unit
-
-	if data.detected_attention_objects then
-		for _, attention_info in pairs(data.detected_attention_objects) do
-			local progress = attention_info.notice_progress or 0
-
-			if attention_info.is_human_player and progress > CopLogicBase.INVESTIGATE_THRESHOLD then
-				have_suspition = true
-				unit = attention_info.unit
-
-				break
-			end
-
-			if attention_info.identified then
-				have_suspition = true
-			end
-		end
-	end
-
-	if have_suspition and unit then
-		local rand = math.rand(1)
-
-		Application:debug("[CopLogicBase.death_clbk] Normal kill", rand)
-
-		if rand < data.char_tweak.kill_shout_chance then
-			Application:debug("[CopLogicBase.death_clbk] Shout!")
-
-			local new_alert = {
-				"vo_cbt",
-				unit:movement():m_head_pos(),
-				data.char_tweak.shout_radius or 0,
-				unit:movement():SO_access(),
-				unit,
-			}
-
-			managers.groupai:state():propagate_alert(new_alert)
-		end
-	elseif not have_suspition then
-		Application:debug("[CopLogicBase.death_clbk] Stealth kill!")
-	end
+	return
 end
 
 function CopLogicBase.on_alert(data, alert_data)

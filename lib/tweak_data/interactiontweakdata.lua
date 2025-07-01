@@ -4864,6 +4864,129 @@ function InteractionTweakData:init()
 			},
 		},
 	}
+	self.call_mrs_white = {}
+	self.call_mrs_white.icon = "develop"
+	self.call_mrs_white.text_id = "hud_call_mrs_white"
+	self.call_mrs_white.action_text_id = "hud_action_call_mrs_white"
+	self.call_mrs_white.axis = "z"
+	self.call_mrs_white.interact_distance = 200
+	self.call_mrs_white.number_of_circles = 3
+	self.call_mrs_white.circle_radius = {
+		self.MINIGAME_CIRCLE_RADIUS_SMALL,
+		self.MINIGAME_CIRCLE_RADIUS_MEDIUM,
+		self.MINIGAME_CIRCLE_RADIUS_BIG,
+	}
+	self.call_mrs_white.circle_rotation_speed = {
+		160,
+		180,
+		190,
+	}
+	self.call_mrs_white.circle_rotation_direction = {
+		1,
+		-1,
+		1,
+	}
+	self.call_mrs_white.circle_difficulty = {
+		0.9,
+		0.93,
+		0.96,
+	}
+	self.call_mrs_white.sounds = {
+		failed = "lock_fail",
+		success = "success",
+		circles = {
+			{
+				lock = "lock_a",
+				mechanics = "lock_mechanics_a",
+			},
+			{
+				lock = "lock_b",
+				mechanics = "lock_mechanics_b",
+			},
+			{
+				lock = "lock_c",
+				mechanics = "lock_mechanics_c",
+			},
+		},
+	}
+	self.call_mrs_white_easy = {}
+	self.call_mrs_white_easy.icon = "develop"
+	self.call_mrs_white_easy.text_id = "hud_call_mrs_white"
+	self.call_mrs_white_easy.action_text_id = "hud_action_call_mrs_white"
+	self.call_mrs_white_easy.axis = "z"
+	self.call_mrs_white_easy.interact_distance = 200
+	self.call_mrs_white_easy.number_of_circles = 1
+	self.call_mrs_white_easy.circle_radius = {
+		self.MINIGAME_CIRCLE_RADIUS_SMALL,
+	}
+	self.call_mrs_white_easy.circle_rotation_speed = {
+		160,
+	}
+	self.call_mrs_white_easy.circle_rotation_direction = {
+		1,
+	}
+	self.call_mrs_white_easy.circle_difficulty = {
+		0.9,
+	}
+	self.call_mrs_white_easy.sounds = {
+		failed = "lock_fail",
+		success = "success",
+		circles = {
+			{
+				lock = "lock_a",
+				mechanics = "lock_mechanics_a",
+			},
+			{
+				lock = "lock_b",
+				mechanics = "lock_mechanics_b",
+			},
+			{
+				lock = "lock_c",
+				mechanics = "lock_mechanics_c",
+			},
+		},
+	}
+	self.call_mrs_white_medium = {}
+	self.call_mrs_white_medium.icon = "develop"
+	self.call_mrs_white_medium.text_id = "hud_call_mrs_white"
+	self.call_mrs_white_medium.action_text_id = "hud_action_call_mrs_white"
+	self.call_mrs_white_medium.axis = "z"
+	self.call_mrs_white_medium.interact_distance = 200
+	self.call_mrs_white_medium.number_of_circles = 2
+	self.call_mrs_white_medium.circle_radius = {
+		self.MINIGAME_CIRCLE_RADIUS_SMALL,
+		self.MINIGAME_CIRCLE_RADIUS_MEDIUM,
+	}
+	self.call_mrs_white_medium.circle_rotation_speed = {
+		160,
+		180,
+	}
+	self.call_mrs_white_medium.circle_rotation_direction = {
+		1,
+		-1,
+	}
+	self.call_mrs_white_medium.circle_difficulty = {
+		0.9,
+		0.93,
+	}
+	self.call_mrs_white_medium.sounds = {
+		failed = "lock_fail",
+		success = "success",
+		circles = {
+			{
+				lock = "lock_a",
+				mechanics = "lock_mechanics_a",
+			},
+			{
+				lock = "lock_b",
+				mechanics = "lock_mechanics_b",
+			},
+			{
+				lock = "lock_c",
+				mechanics = "lock_mechanics_c",
+			},
+		},
+	}
 	self.activate_burners = {}
 	self.activate_burners.icon = "develop"
 	self.activate_burners.text_id = "hud_activate_burners"

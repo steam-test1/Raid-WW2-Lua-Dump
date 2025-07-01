@@ -2128,6 +2128,14 @@ function GuiTweakData:_setup_icons()
 		56,
 		56,
 	}
+	self.icons.missions_kelly = {}
+	self.icons.missions_kelly.texture = "ui/atlas/raid_atlas_missions"
+	self.icons.missions_kelly.texture_rect = {
+		312,
+		126,
+		56,
+		56,
+	}
 	self.icons.missions_tutorial = {}
 	self.icons.missions_tutorial.texture = "ui/atlas/raid_atlas_missions"
 	self.icons.missions_tutorial.texture_rect = {
@@ -3952,6 +3960,14 @@ function GuiTweakData:_setup_hud_icons()
 		205,
 		1891,
 		136,
+		42,
+	}
+	self.icons.weapons_panel_gre_decoy_coin = {}
+	self.icons.weapons_panel_gre_decoy_coin.texture = "ui/atlas/raid_atlas_hud"
+	self.icons.weapons_panel_gre_decoy_coin.texture_rect = {
+		238,
+		1940,
+		42,
 		42,
 	}
 end
@@ -5865,6 +5881,14 @@ function GuiTweakData:_setup_skill_big_icons()
 		306,
 		126,
 	}
+	self.icons.weapon_gre_decoy_coin_large = {}
+	self.icons.weapon_gre_decoy_coin_large.texture = "ui/atlas/raid_atlas_experience_3"
+	self.icons.weapon_gre_decoy_coin_large.texture_rect = {
+		1024,
+		772,
+		128,
+		128,
+	}
 	self.icons.weapon_gre_d343_large = {}
 	self.icons.weapon_gre_d343_large.texture = "ui/atlas/raid_atlas_experience_3"
 	self.icons.weapon_gre_d343_large.texture_rect = {
@@ -6041,9 +6065,9 @@ function GuiTweakData:_setup_skill_big_icons()
 		408,
 		126,
 	}
-	self.icons.weapon_welrod = {}
-	self.icons.weapon_welrod.texture = "ui/atlas/raid_atlas_experience_3"
-	self.icons.weapon_welrod.texture_rect = {
+	self.icons.weapon_welrod_large = {}
+	self.icons.weapon_welrod_large.texture = "ui/atlas/raid_atlas_experience_3"
+	self.icons.weapon_welrod_large.texture_rect = {
 		1232,
 		898,
 		408,
@@ -6717,6 +6741,38 @@ function GuiTweakData:_setup_mission_photos()
 		416,
 		288,
 	}
+	self.mission_photos.intel_kelly_01 = {}
+	self.mission_photos.intel_kelly_01.texture = "ui/missions/kelly/raid_atlas_photos_kelly"
+	self.mission_photos.intel_kelly_01.texture_rect = {
+		2,
+		2,
+		416,
+		288,
+	}
+	self.mission_photos.intel_kelly_02 = {}
+	self.mission_photos.intel_kelly_02.texture = "ui/missions/kelly/raid_atlas_photos_kelly"
+	self.mission_photos.intel_kelly_02.texture_rect = {
+		420,
+		2,
+		416,
+		288,
+	}
+	self.mission_photos.intel_kelly_03 = {}
+	self.mission_photos.intel_kelly_03.texture = "ui/missions/kelly/raid_atlas_photos_kelly"
+	self.mission_photos.intel_kelly_03.texture_rect = {
+		2,
+		292,
+		416,
+		288,
+	}
+	self.mission_photos.intel_kelly_04 = {}
+	self.mission_photos.intel_kelly_04.texture = "ui/missions/kelly/raid_atlas_photos_kelly"
+	self.mission_photos.intel_kelly_04.texture_rect = {
+		2,
+		582,
+		416,
+		288,
+	}
 	self.mission_photos.intel_spies_01 = {}
 	self.mission_photos.intel_spies_01.texture = "ui/missions/spies/raid_atlas_photos_spies"
 	self.mission_photos.intel_spies_01.texture_rect = {
@@ -7296,6 +7352,14 @@ function GuiTweakData:_setup_xp_icons()
 	self.icons.xp_events_missions_tank_depot.texture_rect = {
 		790,
 		1184,
+		392,
+		392,
+	}
+	self.icons.xp_events_missions_kelly = {}
+	self.icons.xp_events_missions_kelly.texture = "ui/atlas/raid_atlas_xp"
+	self.icons.xp_events_missions_kelly.texture_rect = {
+		790,
+		1576,
 		392,
 		392,
 	}
