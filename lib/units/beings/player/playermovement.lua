@@ -961,7 +961,10 @@ function PlayerMovement:set_player_class(class)
 	self._class_tweak_data = tweak_data.player:get_tweak_data_for_class(self._player_class)
 
 	self:_change_stamina(self:_max_stamina())
-	self._current_state:set_class_tweak_data(class)
+
+	if self._current_state then
+		self._current_state:set_class_tweak_data(class)
+	end
 end
 
 function PlayerMovement:_max_stamina()

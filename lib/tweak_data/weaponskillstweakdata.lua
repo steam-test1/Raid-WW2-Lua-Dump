@@ -32,6 +32,7 @@ function WeaponSkillsTweakData:init()
 	self:_init_geco_skill_tree()
 	self:_init_dp28_skill_tree()
 	self:_init_tt33_skill_tree()
+	self:_init_kar_98k_skill_tree()
 	self:_init_reedem_xp_values()
 end
 
@@ -2572,6 +2573,164 @@ function WeaponSkillsTweakData:_init_m1903_skill_tree()
 		},
 	}
 	self.skill_trees.m1903.tier_unlock = {
+		"weapon_tier_unlocked",
+		"weapon_tier_unlocked",
+	}
+end
+
+function WeaponSkillsTweakData:_init_kar_98k_skill_tree()
+	self.skill_trees.kar_98k = {}
+	self.skill_trees.kar_98k[1] = {}
+	self.skill_trees.kar_98k[1][1] = {
+		{
+			challenge_briefing_id = "weapon_skill_kill_beyond_range_briefing",
+			challenge_done_text_id = "weapon_skill_kill_beyond_range_completed",
+			cost = 1,
+			value = 1,
+			challenge_tasks = {
+				{
+					target = 250,
+					modifiers = {
+						min_range = 2000,
+						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
+					},
+					reminders = {
+						80,
+						160,
+						220,
+					},
+					type = ChallengeTweakData.TASK_KILL_ENEMIES,
+				},
+			},
+			skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
+			weapon_parts = {
+				"wpn_fps_snp_kar_98k_body_grip",
+			},
+		},
+	}
+	self.skill_trees.kar_98k[1][2] = {
+		{
+			challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
+			challenge_done_text_id = "weapon_skill_headshot_kill_completed",
+			cost = 1,
+			value = 1,
+			challenge_tasks = {
+				{
+					target = 50,
+					modifiers = {
+						headshot = true,
+						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
+					},
+					reminders = {
+						25,
+						40,
+					},
+					type = ChallengeTweakData.TASK_KILL_ENEMIES,
+				},
+			},
+			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
+		},
+	}
+	self.skill_trees.kar_98k[2] = {}
+	self.skill_trees.kar_98k[2][1] = {
+		{
+			challenge_briefing_id = "weapon_skill_kill_beyond_range_briefing",
+			challenge_done_text_id = "weapon_skill_kill_beyond_range_briefing",
+			cost = 2,
+			value = 2,
+			challenge_tasks = {
+				{
+					target = 500,
+					modifiers = {
+						min_range = 3000,
+						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
+					},
+					reminders = {
+						100,
+						250,
+						400,
+						450,
+					},
+					type = ChallengeTweakData.TASK_KILL_ENEMIES,
+				},
+			},
+			skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
+			weapon_parts = {
+				"wpn_fps_snp_kar_98k_pad_big",
+			},
+		},
+	}
+	self.skill_trees.kar_98k[2][2] = {
+		{
+			challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
+			challenge_done_text_id = "weapon_skill_headshot_kill_completed",
+			cost = 2,
+			value = 2,
+			challenge_tasks = {
+				{
+					target = 100,
+					modifiers = {
+						headshot = true,
+						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
+					},
+					reminders = {
+						40,
+						70,
+						90,
+					},
+					type = ChallengeTweakData.TASK_KILL_ENEMIES,
+				},
+			},
+			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
+			weapon_parts = {
+				"wpn_fps_snp_kar_98k_b_long",
+			},
+		},
+	}
+	self.skill_trees.kar_98k[2][3] = {
+		{
+			challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
+			challenge_done_text_id = "weapon_skill_collect_ammo_completed",
+			cost = 3,
+			value = 1,
+			challenge_tasks = {
+				{
+					target = 750,
+					reminders = {
+						250,
+						500,
+					},
+					type = ChallengeTweakData.TASK_COLLECT_AMMO,
+				},
+			},
+			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
+			weapon_parts = {
+				"wpn_fps_snp_kar_98k_m_extended",
+			},
+		},
+	}
+	self.skill_trees.kar_98k[2][4] = {
+		{
+			challenge_briefing_id = "weapon_skill_generic_kill_briefing",
+			challenge_done_text_id = "weapon_skill_generic_kill_completed",
+			cost = 3,
+			value = 2,
+			challenge_tasks = {
+				{
+					target = 1000,
+					reminders = {
+						250,
+						500,
+						750,
+						900,
+					},
+					type = ChallengeTweakData.TASK_KILL_ENEMIES,
+				},
+			},
+			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
+		},
+	}
+	self.skill_trees.kar_98k.tier_unlock = {
 		"weapon_tier_unlocked",
 		"weapon_tier_unlocked",
 	}

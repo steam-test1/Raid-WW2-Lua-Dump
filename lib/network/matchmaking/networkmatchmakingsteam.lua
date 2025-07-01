@@ -1,6 +1,6 @@
 NetworkMatchMakingSTEAM = NetworkMatchMakingSTEAM or class()
 NetworkMatchMakingSTEAM.OPEN_SLOTS = 4
-NetworkMatchMakingSTEAM._BUILD_SEARCH_INTEREST_KEY = "raid_ww2_retail_1_0_10"
+NetworkMatchMakingSTEAM._BUILD_SEARCH_INTEREST_KEY = "raid_ww2_retail_1_0_11"
 NetworkMatchMakingSTEAM.EMPTY_PLAYER_INFO = "-,-,-,-"
 
 function NetworkMatchMakingSTEAM:init()

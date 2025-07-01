@@ -38,11 +38,13 @@ function WeaponTweakData:init(tweak_data)
 	self:_init_data_geco_npc()
 	self:_init_data_dp28_npc()
 	self:_init_data_tt33_npc()
+	self:_init_data_kar_98k_npc()
 	self:_init_data_tiger_main_gun_module_npc(difficulty_index)
 	self:_init_data_tiger_machinegun_module_npc(difficulty_index)
 	self:_init_data_junker_machinegun_module_npc(difficulty_index)
 	self:_init_data_m24()
 	self:_init_data_concrete()
+	self:_init_data_d343()
 	self:_init_data_molotov()
 	self:_init_data_kar98_npc()
 	self:_init_data_sniper_kar98_npc()
@@ -397,6 +399,51 @@ function WeaponTweakData:_init_data_concrete()
 	self.concrete.gui.icon_large = "weapon_gre_concrete_large"
 end
 
+function WeaponTweakData:_init_data_d343()
+	self.d343 = {}
+	self.d343.sounds = {}
+	self.d343.use_data = {}
+	self.d343.usage = "c45"
+	self.d343.usage_anim = "c45"
+	self.d343.name_id = "bm_grenade_d343"
+	self.d343.sounds.prefix = ""
+	self.d343.sounds.single = "new_grenade_explode"
+	self.d343.sounds.autofire_start = nil
+	self.d343.sounds.autofire_stop = nil
+	self.d343.use_data.selection_index = 3
+	self.d343.auto = {}
+	self.d343.auto.fire_rate = 0.4
+	self.d343.hold = "grenade"
+	self.d343.alert_size = 5000
+	self.d343.suppression = 1
+	self.d343.timers = {}
+	self.d343.timers.reload_not_empty = 1.25
+	self.d343.timers.reload_empty = 1.65
+	self.d343.timers.unequip = 0.25
+	self.d343.timers.equip = 0.3
+	self.d343.weapon_movement_penalty = 1
+	self.d343.exit_run_speed_multiplier = 1
+	self.d343.transition_duration = 0
+	self.d343.stance = "d343"
+	self.d343.weapon_hold = "d343"
+	self.d343.use_data = {}
+	self.d343.use_data.equip = {
+		align_place = "right_hand",
+	}
+	self.d343.use_data.selection_index = 3
+	self.d343.use_data.unequip = {
+		align_place = "back",
+	}
+	self.d343.sound_event = "new_grenade_explode"
+	self.d343.damage_melee = 1
+	self.d343.damage_melee_effect_mul = 1
+	self.d343.hud = {}
+	self.d343.hud.icon = "weapons_panel_gre_d343"
+	self.d343.hud.panel_class = "grenade"
+	self.d343.gui = {}
+	self.d343.gui.icon_large = "weapon_gre_d343_large"
+end
+
 function WeaponTweakData:_init_data_molotov()
 	self.molotov = {}
 	self.molotov.sounds = {}
@@ -452,10 +499,34 @@ function WeaponTweakData:_init_data_m1903_npc()
 	self.m1903_npc.NR_CLIPS_MAX = 8
 	self.m1903_npc.AMMO_MAX = self.m1903_npc.CLIP_AMMO_MAX * self.m1903_npc.NR_CLIPS_MAX
 	self.m1903_npc.auto = {}
-	self.m1903_npc.auto.fire_rate = 0.2
+	self.m1903_npc.auto.fire_rate = 1.2
 	self.m1903_npc.hold = "springfield"
 	self.m1903_npc.alert_size = 5000
 	self.m1903_npc.suppression = 1
+end
+
+function WeaponTweakData:_init_data_kar_98k_npc()
+	self.kar_98k_npc = {}
+	self.kar_98k_npc.sounds = {}
+	self.kar_98k_npc.use_data = {}
+	self.kar_98k_npc.usage = "springfield"
+	self.kar_98k_npc.usage_anim = "springfield"
+	self.kar_98k_npc.sounds.prefix = ""
+	self.kar_98k_npc.sounds.single = "kar98_fire_npc_single"
+	self.kar_98k_npc.sounds.autofire_start = nil
+	self.kar_98k_npc.sounds.autofire_stop = nil
+	self.kar_98k_npc.use_data.selection_index = 2
+	self.kar_98k_npc.DAMAGE = 2
+	self.kar_98k_npc.muzzleflash = "effects/vanilla/weapons/556_auto"
+	self.kar_98k_npc.shell_ejection = "effects/vanilla/weapons/shells/shell_556"
+	self.kar_98k_npc.CLIP_AMMO_MAX = 6
+	self.kar_98k_npc.NR_CLIPS_MAX = 8
+	self.kar_98k_npc.AMMO_MAX = self.kar_98k_npc.CLIP_AMMO_MAX * self.kar_98k_npc.NR_CLIPS_MAX
+	self.kar_98k_npc.auto = {}
+	self.kar_98k_npc.auto.fire_rate = 1.2
+	self.kar_98k_npc.hold = "springfield"
+	self.kar_98k_npc.alert_size = 5000
+	self.kar_98k_npc.suppression = 1
 end
 
 function WeaponTweakData:_init_data_m1912_npc()
@@ -1311,7 +1382,7 @@ function WeaponTweakData:_init_data_kar98_npc()
 	self.ger_kar98_npc.usage = "ger_kar98_npc"
 	self.ger_kar98_npc.usage_anim = "ger_kar98_npc"
 	self.ger_kar98_npc.sounds.prefix = ""
-	self.ger_kar98_npc.sounds.single = "m1_carbine_fire_npc"
+	self.ger_kar98_npc.sounds.single = "kar98_fire_npc_single"
 	self.ger_kar98_npc.use_data.selection_index = 2
 	self.ger_kar98_npc.DAMAGE = 3
 	self.ger_kar98_npc.muzzleflash = "effects/vanilla/weapons/762_auto"
@@ -2317,6 +2388,7 @@ function WeaponTweakData:_init_new_weapons(weapon_data)
 	self:_init_geco(weapon_data)
 	self:_init_dp28(weapon_data)
 	self:_init_tt33(weapon_data)
+	self:_init_kar_98k(weapon_data)
 end
 
 function WeaponTweakData:_init_flamethrower_mk2(weapon_data)
@@ -5062,6 +5134,175 @@ function WeaponTweakData:_init_m1903_springfield(weapon_data)
 		recoil = 2,
 		spread = 6,
 		spread_moving = 9,
+		suppression = 8,
+		total_ammo_mod = 21,
+		value = 1,
+		zoom = 1,
+	}
+end
+
+function WeaponTweakData:_init_kar_98k(weapon_data)
+	self.kar_98k = {}
+	self.kar_98k.inventory_texture = "ui/temp/customization_temp_df"
+	self.kar_98k.category = WeaponTweakData.WEAPON_CATEGORY_SNP
+	self.kar_98k.use_shotgun_reload = true
+	self.kar_98k.dismember_chance = 0.25
+	self.kar_98k.damage_melee = 100
+	self.kar_98k.damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default
+	self.kar_98k.sounds = {}
+	self.kar_98k.sounds.fire_single = "kar98_fire_1p_single"
+	self.kar_98k.sounds.dryfire = "primary_dryfire"
+	self.kar_98k.timers = {}
+	self.kar_98k.timers.reload_empty = 2.07
+	self.kar_98k.timers.shotgun_reload_enter = 0.6333333333333333
+	self.kar_98k.timers.shotgun_reload_exit_empty = 0.8333333333333334
+	self.kar_98k.timers.shotgun_reload_exit_not_empty = 0.8333333333333334
+	self.kar_98k.timers.shotgun_reload_shell = 0.8666666666666667
+	self.kar_98k.timers.shotgun_reload_first_shell_offset = 0.16666666666666666
+	self.kar_98k.timers.unequip = 0.6
+	self.kar_98k.timers.equip = 0.5
+	self.kar_98k.name_id = "bm_w_kar_98k"
+	self.kar_98k.desc_id = "bm_w_kar_98k_desc"
+	self.kar_98k.description_id = "des_kar_98k"
+	self.kar_98k.muzzleflash = "effects/vanilla/weapons/762_auto_fps"
+	self.kar_98k.shell_ejection = "effects/vanilla/weapons/shells/shell_sniper"
+	self.kar_98k.use_data = {}
+	self.kar_98k.use_data.selection_index = 2
+	self.kar_98k.damage_profile = {
+		{
+			damage = 235,
+			range = 1000,
+		},
+	}
+	self.kar_98k.headshot_multiplier = 3.5
+	self.kar_98k.CLIP_AMMO_MAX = 5
+	self.kar_98k.NR_CLIPS_MAX = 9
+	self.kar_98k.AMMO_MAX = self.kar_98k.CLIP_AMMO_MAX * self.kar_98k.NR_CLIPS_MAX
+	self.kar_98k.AMMO_PICKUP = {
+		0.7,
+		1,
+	}
+	self.kar_98k.ammo_pickup_base = 5
+	self.kar_98k.FIRE_MODE = "single"
+	self.kar_98k.fire_mode_data = {}
+	self.kar_98k.fire_mode_data.fire_rate = 1.2
+	self.kar_98k.CAN_TOGGLE_FIREMODE = false
+	self.kar_98k.auto = {}
+	self.kar_98k.auto.fire_rate = 1.2
+	self.kar_98k.spread = {}
+	self.kar_98k.spread.standing = 4.4
+	self.kar_98k.spread.crouching = 3.1
+	self.kar_98k.spread.steelsight = 0.1
+	self.kar_98k.spread.moving_standing = 8.9
+	self.kar_98k.spread.moving_crouching = 6
+	self.kar_98k.spread.moving_steelsight = 0.16
+	self.kar_98k.spread.per_shot = 0.8
+	self.kar_98k.spread.per_shot_steelsight = 0.1
+	self.kar_98k.spread.recovery = 16
+	self.kar_98k.spread.recovery_wait_multiplier = 0.9
+	self.kar_98k.kick = {}
+	self.kar_98k.kick.standing = {
+		2.3,
+		2.6,
+		-2.4,
+		2.4,
+	}
+	self.kar_98k.kick.crouching = {
+		2.1,
+		2.4,
+		-2.1,
+		2.1,
+	}
+	self.kar_98k.kick.steelsight = {
+		2.05,
+		2.3,
+		-2,
+		2.05,
+	}
+	self.kar_98k.kick.crouching_steelsight = {
+		1.95,
+		2.2,
+		-1.95,
+		1.95,
+	}
+	self.kar_98k.kick.recenter_speed = 490
+	self.kar_98k.kick.recenter_speed_steelsight = 400
+	self.kar_98k.minimum_view_kick = {}
+	self.kar_98k.minimum_view_kick.standing = {
+		0,
+		1.9,
+	}
+	self.kar_98k.minimum_view_kick.crouching = {
+		0,
+		1.75,
+	}
+	self.kar_98k.minimum_view_kick.steelsight = {
+		0,
+		1.65,
+	}
+	self.kar_98k.minimum_view_kick.crouching_steelsight = {
+		0,
+		1.4,
+	}
+	self.kar_98k.gun_kick = {}
+	self.kar_98k.gun_kick.hip_fire = {
+		40,
+		40,
+		-40,
+		40,
+	}
+	self.kar_98k.gun_kick.steelsight = {
+		0,
+		0,
+		0,
+		0,
+	}
+	self.kar_98k.crosshair = {}
+	self.kar_98k.crosshair.standing = {}
+	self.kar_98k.crosshair.crouching = {}
+	self.kar_98k.crosshair.steelsight = {}
+	self.kar_98k.crosshair.standing.offset = 0.16
+	self.kar_98k.crosshair.standing.moving_offset = 0.8
+	self.kar_98k.crosshair.standing.kick_offset = 0.6
+	self.kar_98k.crosshair.crouching.offset = 0.08
+	self.kar_98k.crosshair.crouching.moving_offset = 0.7
+	self.kar_98k.crosshair.crouching.kick_offset = 0
+	self.kar_98k.crosshair.steelsight.hidden = true
+	self.kar_98k.crosshair.steelsight.offset = 0
+	self.kar_98k.crosshair.steelsight.moving_offset = 0
+	self.kar_98k.crosshair.steelsight.kick_offset = 0.1
+	self.kar_98k.shake = {}
+	self.kar_98k.shake.fire_multiplier = 2
+	self.kar_98k.shake.fire_steelsight_multiplier = -1
+	self.kar_98k.autohit = weapon_data.autohit_snp_default
+	self.kar_98k.aim_assist = weapon_data.aim_assist_snp_default
+	self.kar_98k.weapon_hold = "kar_98k"
+	self.kar_98k.animations = {}
+	self.kar_98k.animations.equip_id = "kar_98k"
+	self.kar_98k.animations.recoil_steelsight = true
+	self.kar_98k.can_shoot_through_enemy = true
+	self.kar_98k.can_shoot_through_shield = false
+	self.kar_98k.can_shoot_through_wall = false
+	self.kar_98k.armor_piercing_chance = 1
+	self.kar_98k.gui = {}
+	self.kar_98k.gui.rotation_offset = -27
+	self.kar_98k.gui.distance_offset = 70
+	self.kar_98k.gui.height_offset = -6
+	self.kar_98k.gui.display_offset = -8
+	self.kar_98k.gui.initial_rotation = {}
+	self.kar_98k.gui.initial_rotation.yaw = -90
+	self.kar_98k.gui.initial_rotation.pitch = 0
+	self.kar_98k.gui.initial_rotation.roll = 0
+	self.kar_98k.gui.icon_large = "weapon_kar_98k_large"
+	self.kar_98k.hud = {}
+	self.kar_98k.hud.icon = "weapons_panel_kar_98k"
+	self.kar_98k.stats = {
+		alert_size = 7,
+		concealment = 10,
+		extra_ammo = 6,
+		recoil = 3,
+		spread = 5,
+		spread_moving = 8,
 		suppression = 8,
 		total_ammo_mod = 21,
 		value = 1,

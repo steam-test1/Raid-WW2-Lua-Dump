@@ -1396,6 +1396,10 @@ function NewRaycastWeaponBase:_debug_bipod()
 	end
 end
 
+function NewRaycastWeaponBase:use_shotgun_reload()
+	return self._use_shotgun_reload
+end
+
 function NewRaycastWeaponBase:reload_expire_t()
 	if self._use_shotgun_reload then
 		local ammo_remaining_in_clip = self:get_ammo_remaining_in_clip()

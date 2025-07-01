@@ -211,6 +211,21 @@ function UpgradesTweakData:_create_raid_warcry_definitions()
 
 	self:_create_definition("warcry_player_aim_assist", "feature", "warcry_aim_assist", "player", false, 1)
 
+	self.values.player.warcry_health_regen_on_kill = {
+		true,
+	}
+
+	self:_create_definition("warcry_player_health_regen_on_kill", "feature", "warcry_health_regen_on_kill", "player", false, 1)
+
+	self.values.player.warcry_health_regen_amount = {
+		5,
+		7,
+		9,
+		12,
+	}
+
+	self:_create_definition_levels("warcry_player_health_regen_amount", "feature", "warcry_health_regen_amount", "player", false, self.values.player.warcry_health_regen_amount)
+
 	self.values.player.warcry_nullify_spread = {
 		true,
 	}
@@ -878,6 +893,11 @@ function UpgradesTweakData:_create_weapon_definitions()
 		factory_id = "wpn_fps_pis_tt33",
 		weapon_id = "tt33",
 	}
+	self.definitions.kar_98k = {
+		category = "weapon",
+		factory_id = "wpn_fps_snp_kar_98k",
+		weapon_id = "kar_98k",
+	}
 	self.definitions.thompson = {
 		category = "weapon",
 		factory_id = "wpn_fps_smg_thompson",
@@ -1010,6 +1030,9 @@ function UpgradesTweakData:_create_grenades_definitions()
 		category = "grenade",
 	}
 	self.definitions.concrete = {
+		category = "grenade",
+	}
+	self.definitions.d343 = {
 		category = "grenade",
 	}
 end
@@ -3860,6 +3883,7 @@ function UpgradesTweakData:_old_init()
 			"geco",
 			"dp28",
 			"tt33",
+			"kar_98k",
 		},
 	}
 

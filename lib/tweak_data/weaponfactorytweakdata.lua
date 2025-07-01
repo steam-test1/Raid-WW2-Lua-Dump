@@ -124,6 +124,7 @@ function WeaponFactoryTweakData:init()
 	self:_init_geco()
 	self:_init_dp28()
 	self:_init_tt33()
+	self:_init_kar_98k()
 	self:create_ammunition()
 	self:_init_content_unfinished()
 	self:_cleanup_unfinished_content()
@@ -1436,6 +1437,248 @@ function WeaponFactoryTweakData:_init_m1903()
 	}
 	self.wpn_fps_snp_m1903_npc = deep_clone(self.wpn_fps_snp_m1903)
 	self.wpn_fps_snp_m1903_npc.unit = "units/vanilla/weapons/wpn_fps_snp_m1903/wpn_fps_snp_m1903_npc"
+end
+
+function WeaponFactoryTweakData:_init_kar_98k()
+	self.parts.wpn_fps_snp_kar_98k_b_standard = {
+		a_obj = "a_b",
+		name_id = "bm_wp_snp_kar_98k_b_standard",
+		third_unit = "units/upd_003/weapons/wpn_third_snp_kar_98k_pts/wpn_third_snp_kar_98k_b_standard",
+		type = "barrel",
+		unit = "units/upd_003/weapons/wpn_fps_snp_kar_98k_pts/wpn_fps_snp_kar_98k_b_standard",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_snp_kar_98k_b_long = {
+		a_obj = "a_b",
+		name_id = "bm_wp_snp_kar_98k_b_long",
+		third_unit = "units/upd_003/weapons/wpn_third_snp_kar_98k_pts/wpn_third_snp_kar_98k_b_long",
+		type = "barrel",
+		unit = "units/upd_003/weapons/wpn_fps_snp_kar_98k_pts/wpn_fps_snp_kar_98k_b_long",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_snp_kar_98k_body_standard = {
+		a_obj = "a_body",
+		name_id = "bm_wp_snp_kar_98k_body_standard",
+		third_unit = "units/upd_003/weapons/wpn_third_snp_kar_98k_pts/wpn_third_snp_kar_98k_body_standard",
+		type = "body",
+		unit = "units/upd_003/weapons/wpn_fps_snp_kar_98k_pts/wpn_fps_snp_kar_98k_body_standard",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_snp_kar_98k_body_grip = {
+		a_obj = "a_body",
+		name_id = "bm_wp_snp_kar_98k_body_grip",
+		third_unit = "units/upd_003/weapons/wpn_third_snp_kar_98k_pts/wpn_third_snp_kar_98k_body_grip",
+		type = "body",
+		unit = "units/upd_003/weapons/wpn_fps_snp_kar_98k_pts/wpn_fps_snp_kar_98k_body_grip",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_snp_kar_98k_pad_standard = {
+		a_obj = "a_pad",
+		name_id = "bm_wp_snp_kar_98k_pad_standard",
+		parent = "body",
+		third_unit = "units/upd_003/weapons/wpn_third_snp_kar_98k_pts/wpn_third_snp_kar_98k_pad_standard",
+		type = "stock_ext",
+		unit = "units/upd_003/weapons/wpn_fps_snp_kar_98k_pts/wpn_fps_snp_kar_98k_pad_standard",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_snp_kar_98k_pad_big = {
+		a_obj = "a_pad",
+		name_id = "bm_wp_snp_kar_98k_pad_big",
+		parent = "body",
+		third_unit = "units/upd_003/weapons/wpn_third_snp_kar_98k_pts/wpn_third_snp_kar_98k_pad_big",
+		type = "stock_ext",
+		unit = "units/upd_003/weapons/wpn_fps_snp_kar_98k_pts/wpn_fps_snp_kar_98k_pad_big",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_snp_kar_98k_firepin = {
+		a_obj = "a_bolt",
+		name_id = "bm_wp_snp_kar_98k_firepin",
+		third_unit = "units/upd_003/weapons/wpn_third_snp_kar_98k_pts/wpn_third_snp_kar_98k_firepin",
+		type = "firepin",
+		unit = "units/upd_003/weapons/wpn_fps_snp_kar_98k_pts/wpn_fps_snp_kar_98k_firepin",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_snp_kar_98k_bolt_standard = {
+		a_obj = "a_bolt",
+		name_id = "bm_wp_snp_kar_98k_bolt",
+		third_unit = "units/upd_003/weapons/wpn_third_snp_kar_98k_pts/wpn_third_snp_kar_98k_bolt_standard",
+		type = "bolt",
+		unit = "units/upd_003/weapons/wpn_fps_snp_kar_98k_pts/wpn_fps_snp_kar_98k_bolt_standard",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_snp_kar_98k_dh_standard = {
+		a_obj = "a_dh",
+		name_id = "bm_wp_snp_kar_98k_dh_standard",
+		third_unit = "units/upd_003/weapons/wpn_third_snp_kar_98k_pts/wpn_third_snp_kar_98k_dh_standard",
+		type = "drag_handle",
+		unit = "units/upd_003/weapons/wpn_fps_snp_kar_98k_pts/wpn_fps_snp_kar_98k_dh_standard",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_snp_kar_98k_strip = {
+		a_obj = "a_strip",
+		name_id = "bm_wp_snp_kar_98k_strip",
+		third_unit = "units/upd_003/weapons/wpn_third_snp_kar_98k_pts/wpn_third_snp_kar_98k_strip",
+		type = "strip",
+		unit = "units/upd_003/weapons/wpn_fps_snp_kar_98k_pts/wpn_fps_snp_kar_98k_strip",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_snp_kar_98k_trigger = {
+		a_obj = "a_trigger",
+		name_id = "bm_wp_snp_kar_98k_trigger",
+		third_unit = "units/upd_003/weapons/wpn_third_snp_kar_98k_pts/wpn_third_snp_kar_98k_trigger",
+		type = "trigger",
+		unit = "units/upd_003/weapons/wpn_fps_snp_kar_98k_pts/wpn_fps_snp_kar_98k_trigger",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_snp_kar_98k_bullet = {
+		a_obj = "a_bullets",
+		name_id = "bm_wp_snp_kar_98k_bullet",
+		third_unit = "units/upd_003/weapons/wpn_third_snp_kar_98k_pts/wpn_third_snp_kar_98k_bullet",
+		type = "magazine",
+		unit = "units/upd_003/weapons/wpn_fps_snp_kar_98k_pts/wpn_fps_snp_kar_98k_bullet",
+		animations = {
+			fire = "recoil",
+			fire_steelsight = "recoil",
+			reload_enter = "reload_enter",
+			reload_exit = "reload_exit",
+			reload_not_empty_exit = "reload_exit",
+		},
+		bullet_objects = {
+			amount = 5,
+			prefix = "g_bullet_",
+		},
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_snp_kar_98k_bullets = {
+		a_obj = "a_bullets",
+		name_id = "bm_wp_snp_kar_98k_bullets",
+		third_unit = "units/upd_003/weapons/wpn_third_snp_kar_98k_pts/wpn_third_snp_kar_98k_bullets",
+		type = "bullets",
+		unit = "units/upd_003/weapons/wpn_fps_snp_kar_98k_pts/wpn_fps_snp_kar_98k_bullets",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_snp_kar_98k_m_extended = {
+		a_obj = "a_m",
+		name_id = "bm_wp_snp_kar_98k_m_extended",
+		third_unit = "units/upd_003/weapons/wpn_third_snp_kar_98k_pts/wpn_third_snp_kar_98k_m_extended",
+		type = "magazine",
+		unit = "units/upd_003/weapons/wpn_fps_snp_kar_98k_pts/wpn_fps_snp_kar_98k_m_extended",
+		animations = {
+			fire = "recoil",
+			fire_steelsight = "recoil",
+			reload_enter = "reload_enter",
+			reload_exit = "reload_exit",
+			reload_not_empty_exit = "reload_exit",
+		},
+		bullet_objects = {
+			amount = 5,
+			prefix = "g_bullet_",
+		},
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_snp_kar_98k_m_long = {
+		a_obj = "a_m",
+		name_id = "bm_wp_snp_kar_98k_m_long",
+		third_unit = "units/upd_003/weapons/wpn_third_snp_kar_98k_pts/wpn_third_snp_kar_98k_m_long",
+		type = "magazine",
+		unit = "units/upd_003/weapons/wpn_fps_snp_kar_98k_pts/wpn_fps_snp_kar_98k_m_long",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_snp_kar_98k_o_scope = {
+		a_obj = "a_o",
+		name_id = "bm_wp_snp_kar_98k_o_scope",
+		reticle_obj = "g_reticle",
+		third_unit = "units/upd_003/weapons/wpn_third_snp_kar_98k_pts/wpn_third_snp_kar_98k_o_scope",
+		type = "scope",
+		unit = "units/upd_003/weapons/wpn_fps_snp_kar_98k_pts/wpn_fps_snp_kar_98k_o_scope",
+		stance_mod = {
+			wpn_fps_snp_kar_98k = {
+				lens_distortion_power = 1.04,
+				translation = Vector3(0, -24, -3.8478),
+			},
+		},
+		stats = {
+			value = 1,
+			zoom = 10,
+		},
+	}
+	self.wpn_fps_snp_kar_98k = {}
+	self.wpn_fps_snp_kar_98k.unit = "units/upd_003/weapons/wpn_fps_snp_kar_98k/wpn_fps_snp_kar_98k"
+	self.wpn_fps_snp_kar_98k.optional_types = {
+		"barrel_ext",
+		"gadget",
+		"barrel",
+		"lower_receiver",
+	}
+	self.wpn_fps_snp_kar_98k.animations = {
+		fire = "recoil",
+		fire_steelsight = "recoil",
+		reload = "reload",
+		reload_enter = "reload_enter",
+		reload_not_empty_exit = "reload_exit",
+	}
+	self.wpn_fps_snp_kar_98k.default_blueprint = {
+		"wpn_fps_snp_kar_98k_strip",
+		"wpn_fps_snp_kar_98k_dh_standard",
+		"wpn_fps_snp_kar_98k_bolt_standard",
+		"wpn_fps_snp_kar_98k_b_standard",
+		"wpn_fps_snp_kar_98k_body_standard",
+		"wpn_fps_snp_kar_98k_firepin",
+		"wpn_fps_snp_kar_98k_bullet",
+		"wpn_fps_snp_kar_98k_bullets",
+		"wpn_fps_snp_kar_98k_trigger",
+		"wpn_fps_snp_kar_98k_pad_standard",
+	}
+	self.wpn_fps_snp_kar_98k.uses_parts = {
+		"wpn_fps_snp_kar_98k_strip",
+		"wpn_fps_snp_kar_98k_dh_standard",
+		"wpn_fps_snp_kar_98k_bolt_standard",
+		"wpn_fps_snp_kar_98k_b_standard",
+		"wpn_fps_snp_kar_98k_body_standard",
+		"wpn_fps_snp_kar_98k_firepin",
+		"wpn_fps_snp_kar_98k_bullet",
+		"wpn_fps_snp_kar_98k_bullets",
+		"wpn_fps_snp_kar_98k_trigger",
+		"wpn_fps_snp_kar_98k_pad_standard",
+		"wpn_fps_snp_kar_98k_b_long",
+		"wpn_fps_snp_kar_98k_body_grip",
+		"wpn_fps_snp_kar_98k_pad_big",
+		"wpn_fps_snp_kar_98k_m_extended",
+		"wpn_fps_snp_kar_98k_m_long",
+		"wpn_fps_snp_kar_98k_o_scope",
+	}
+	self.wpn_fps_snp_kar_98k_npc = deep_clone(self.wpn_fps_snp_kar_98k)
+	self.wpn_fps_snp_kar_98k_npc.unit = "units/upd_003/weapons/wpn_fps_snp_kar_98k/wpn_fps_snp_kar_98k_npc"
 end
 
 function WeaponFactoryTweakData:_init_m1911()

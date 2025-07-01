@@ -46,9 +46,9 @@ function ProjectilesTweakData:init(tweak_data)
 	self.concrete.repeat_expire_t = 1.5
 	self.concrete.is_a_grenade = true
 	self.concrete.damage = 850
-	self.concrete.player_damage = 20
+	self.concrete.player_damage = 24
 	self.concrete.range = 750
-	self.m24.killzone_range = 0.75
+	self.concrete.killzone_range = 0.75
 	self.concrete.init_timer = 4.5
 	self.concrete.animations = {}
 	self.concrete.animations.equip_id = "equip_welrod"
@@ -62,6 +62,36 @@ function ProjectilesTweakData:init(tweak_data)
 	self.concrete.gui.initial_rotation.yaw = -90
 	self.concrete.gui.initial_rotation.pitch = 60
 	self.concrete.gui.initial_rotation.roll = 0
+	self.d343 = {}
+	self.d343.name_id = "bm_grenade_d343"
+	self.d343.unit = "units/upd_003/weapons/wpn_fps_gre_d343/wpn_fps_gre_d343"
+	self.d343.unit_hand = "units/upd_003/weapons/wpn_fps_gre_d343/wpn_fps_gre_d343_hand"
+	self.d343.unit_dummy = "units/upd_003/weapons/wpn_fps_gre_d343/wpn_fps_gre_d343_husk"
+	self.d343.icon = "frag_grenade"
+	self.d343.throwable = true
+	self.d343.max_amount = 3
+	self.d343.anim_global_param = "projectile_frag"
+	self.d343.throw_allowed_expire_t = 0.1
+	self.d343.expire_t = 1.1
+	self.d343.repeat_expire_t = 1.5
+	self.d343.is_a_grenade = true
+	self.d343.damage = 950
+	self.d343.player_damage = 28
+	self.d343.range = 600
+	self.d343.killzone_range = 0.75
+	self.d343.init_timer = 4.5
+	self.d343.animations = {}
+	self.d343.animations.equip_id = "equip_welrod"
+	self.d343.sound_event = "d43d_grenade_explode"
+	self.d343.gui = {}
+	self.d343.gui.rotation_offset = 0
+	self.d343.gui.distance_offset = -120
+	self.d343.gui.height_offset = -8
+	self.d343.gui.display_offset = 16
+	self.d343.gui.initial_rotation = {}
+	self.d343.gui.initial_rotation.yaw = 0
+	self.d343.gui.initial_rotation.pitch = 90
+	self.d343.gui.initial_rotation.roll = 30
 	self.cluster = {}
 	self.cluster.name_id = "bm_grenade_frag"
 	self.cluster.unit = "units/vanilla/dev/dev_shrapnel/dev_shrapnel"
@@ -165,6 +195,7 @@ function ProjectilesTweakData:init(tweak_data)
 		"mortar_shell",
 		"flamer_death_fake",
 		"concrete",
+		"d343",
 	}
 
 	self:_add_desc_from_name_macro(self)

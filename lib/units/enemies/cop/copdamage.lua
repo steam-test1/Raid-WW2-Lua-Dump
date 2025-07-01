@@ -549,6 +549,23 @@ function CopDamage:damage_bullet(attack_data)
 			death_event_params.weapon_used = attack_data.weapon_unit
 			death_event_params.using_turret = managers.player:current_state() == "turret"
 
+			if managers.player:upgrade_value("player", "warcry_health_regen_on_kill", false) == true and tweak_data.weapon[death_event_params.weapon_used:base()._name_id] and tweak_data.weapon[death_event_params.weapon_used:base()._name_id].category == WeaponTweakData.WEAPON_CATEGORY_SNP then
+				local unit = managers.player:player_unit()
+				local max_health = unit:character_damage():get_max_health()
+				local current_health = unit:character_damage():get_real_health()
+				local hp_pickup_amount = managers.player:upgrade_value("player", "warcry_health_regen_amount", false)
+
+				if max_health < current_health + hp_pickup_amount then
+					unit:character_damage():set_health(max_health)
+				else
+					unit:character_damage():set_health(current_health + hp_pickup_amount)
+				end
+
+				if attack_data and attack_data.attacker_unit and attack_data.attacker_unit:sound() then
+					attack_data.attacker_unit:sound():play(tweak_data.warcry.sharpshooter.health_boost_sound)
+				end
+			end
+
 			self:_comment_death(attack_data.attacker_unit, self._unit:base()._tweak_table)
 			self:_show_death_hint(self._unit:base()._tweak_table)
 

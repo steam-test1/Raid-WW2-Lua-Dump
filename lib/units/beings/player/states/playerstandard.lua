@@ -2526,7 +2526,7 @@ function PlayerStandard:_update_reload_timers(t, dt, input)
 		if t >= self._state_data.reload_expire_t or interupt then
 			self._state_data.reload_expire_t = nil
 
-			if self._equipped_unit:base():reload_exit_expire_t() then
+			if self._equipped_unit:base():use_shotgun_reload() then
 				local speed_multiplier = self._equipped_unit:base():reload_speed_multiplier()
 
 				if self._equipped_unit:base():started_reload_empty() then
@@ -4520,7 +4520,7 @@ function PlayerStandard:_start_action_reload_enter(t)
 			self:_interupt_action_running(t)
 		end
 
-		if self._equipped_unit:base():reload_enter_expire_t() then
+		if self._equipped_unit:base():use_shotgun_reload() then
 			local speed_multiplier = self._equipped_unit:base():reload_speed_multiplier()
 
 			self._ext_camera:play_redirect(Idstring("reload_enter_" .. self._equipped_unit:base().name_id), speed_multiplier)
@@ -4551,20 +4551,24 @@ function PlayerStandard:_start_action_reload(t)
 		local reload_name_id = tweak_data.animations.reload_name_id or self._equipped_unit:base().name_id
 
 		if self._equipped_unit:base():clip_empty() then
-			local result = self._ext_camera:play_redirect(Idstring("reload_" .. reload_name_id), speed_multiplier)
+			if not self._equipped_unit:base():use_shotgun_reload() then
+				local result = self._ext_camera:play_redirect(Idstring("reload_" .. reload_name_id), speed_multiplier)
+			end
 
-			self._state_data.reload_expire_t = t + (tweak_data.timers.reload_empty or self._equipped_unit:base():reload_expire_t() or 2.6) / speed_multiplier
+			self._state_data.reload_expire_t = t + (not self._equipped_unit:base():use_shotgun_reload() and tweak_data.timers.reload_empty or self._equipped_unit:base():use_shotgun_reload() and self._equipped_unit:base():reload_expire_t() or 2.6) / speed_multiplier
 		else
 			reload_anim = "reload_not_empty"
 
-			local result = self._ext_camera:play_redirect(Idstring("reload_not_empty_" .. reload_name_id), speed_multiplier)
+			if not self._equipped_unit:base():use_shotgun_reload() then
+				local result = self._ext_camera:play_redirect(Idstring("reload_not_empty_" .. reload_name_id), speed_multiplier)
+			end
 
-			self._state_data.reload_expire_t = t + (tweak_data.timers.reload_not_empty or self._equipped_unit:base():reload_expire_t() or 2.2) / speed_multiplier
+			self._state_data.reload_expire_t = t + (not self._equipped_unit:base():use_shotgun_reload() and tweak_data.timers.reload_not_empty or self._equipped_unit:base():use_shotgun_reload() and self._equipped_unit:base():reload_expire_t() or 2.2) / speed_multiplier
 		end
 
 		self._equipped_unit:base():start_reload()
 
-		if not self._equipped_unit:base():tweak_data_anim_play(reload_anim, speed_multiplier) then
+		if not self._equipped_unit:base():use_shotgun_reload() and not self._equipped_unit:base():tweak_data_anim_play(reload_anim, speed_multiplier) then
 			self._equipped_unit:base():tweak_data_anim_play("reload", speed_multiplier)
 		end
 

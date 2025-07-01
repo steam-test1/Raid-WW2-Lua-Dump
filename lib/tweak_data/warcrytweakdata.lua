@@ -28,12 +28,16 @@ function WarcryTweakData:_init_data_sharpshooter()
 			"warcry_team_damage_multiplier_1",
 		},
 		{
+			"warcry_player_health_regen_on_kill",
+			"warcry_player_health_regen_amount_1",
 			"warcry_player_aim_assist",
-			"warcry_player_aim_assist_radius_2",
+			"warcry_player_aim_assist_radius_1",
 			"warcry_player_nullify_spread",
 			"warcry_team_damage_multiplier_1",
 		},
 		{
+			"warcry_player_health_regen_on_kill",
+			"warcry_player_health_regen_amount_2",
 			"warcry_player_aim_assist",
 			"warcry_player_aim_assist_radius_2",
 			"warcry_player_nullify_spread",
@@ -41,6 +45,8 @@ function WarcryTweakData:_init_data_sharpshooter()
 			"warcry_team_damage_multiplier_1",
 		},
 		{
+			"warcry_player_health_regen_on_kill",
+			"warcry_player_health_regen_amount_3",
 			"warcry_player_aim_assist",
 			"warcry_player_aim_assist_radius_3",
 			"warcry_player_nullify_spread",
@@ -48,6 +54,8 @@ function WarcryTweakData:_init_data_sharpshooter()
 			"warcry_team_damage_multiplier_1",
 		},
 		{
+			"warcry_player_health_regen_on_kill",
+			"warcry_player_health_regen_amount_4",
 			"warcry_player_aim_assist",
 			"warcry_player_aim_assist_radius_3",
 			"warcry_player_nullify_spread",
@@ -62,6 +70,7 @@ function WarcryTweakData:_init_data_sharpshooter()
 	self.sharpshooter.ids_effect_name = Idstring("warcry_sharpshooter")
 	self.sharpshooter.overlay_pulse_freq = 0.5
 	self.sharpshooter.overlay_pulse_ampl = 0.1
+	self.sharpshooter.health_boost_sound = "recon_warcry_enemy_hit"
 end
 
 function WarcryTweakData:_init_data_berserk()

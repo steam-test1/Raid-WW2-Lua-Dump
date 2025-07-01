@@ -793,6 +793,8 @@ function WeaponSkillsManager:recreate_weapon_blueprint(weapon_id, weapon_categor
 end
 
 function WeaponSkillsManager:apply_weapon_blueprint(weapon_id, weapon_category_id, new_blueprint)
+	Application:trace("[WeaponSkillsManager:apply_weapon_blueprint] weapon_id, weapon_category_id, new_blueprint ", weapon_id, weapon_category_id, inspect(new_blueprint))
+
 	local weapon_category_name = weapon_category_id == WeaponInventoryManager.BM_CATEGORY_PRIMARY_ID and WeaponInventoryManager.BM_CATEGORY_PRIMARY_NAME or WeaponInventoryManager.BM_CATEGORY_SECONDARY_NAME
 
 	if Global.blackmarket_manager.crafted_items and Global.blackmarket_manager.crafted_items[weapon_category_name] then
@@ -801,8 +803,9 @@ function WeaponSkillsManager:apply_weapon_blueprint(weapon_id, weapon_category_i
 				Global.blackmarket_manager.crafted_items[weapon_category_name][weapon_index].blueprint = new_blueprint
 
 				local local_peer = managers.network:session():local_peer()
+				local outfit_version = local_peer:outfit_version()
 
-				local_peer:set_outfit_string(managers.blackmarket:outfit_string())
+				local_peer:set_outfit_string(managers.blackmarket:outfit_string(), outfit_version)
 
 				break
 			end

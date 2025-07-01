@@ -566,7 +566,9 @@ function RaycastWeaponBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul
 			damage = self:get_damage_falloff(col_ray, user_unit)
 			hit_unit = self._bullet_class:on_collision(col_ray, self._unit, user_unit, damage)
 		elseif autoaim then
-			local autohit_chance = 1 - math.clamp((self._autohit_current - self._autohit_data.MIN_RATIO) / (self._autohit_data.MAX_RATIO - self._autohit_data.MIN_RATIO), 0, 1)
+			local autohit_chance = 1
+
+			autohit_chance = tweak_data.weapon[self._name_id].category == WeaponTweakData.WEAPON_CATEGORY_SNP and 1 or 1 - math.clamp((self._autohit_current - self._autohit_data.MIN_RATIO) / (self._autohit_data.MAX_RATIO - self._autohit_data.MIN_RATIO), 0, 1)
 
 			if autohit_mul then
 				autohit_chance = autohit_chance * autohit_mul
@@ -786,7 +788,7 @@ function RaycastWeaponBase:check_autoaim(from_pos, direction, max_dist, use_aim_
 		if enemy:base():lod_stage() == 1 and not enemy:in_slot(16) then
 			local com
 
-			if managers.player:upgrade_value("player", "warcry_aim_assist_aim_at_head", false) == true then
+			if managers.player:upgrade_value("player", "warcry_aim_assist_aim_at_head", false) == true and managers.player:get_current_state():in_steelsight() then
 				com = enemy:movement():m_head_pos()
 			else
 				com = enemy:movement():m_com()
@@ -1398,6 +1400,10 @@ function RaycastWeaponBase:reload_enter_expire_t()
 end
 
 function RaycastWeaponBase:reload_exit_expire_t()
+	return nil
+end
+
+function RaycastWeaponBase:use_shotgun_reload()
 	return nil
 end
 
