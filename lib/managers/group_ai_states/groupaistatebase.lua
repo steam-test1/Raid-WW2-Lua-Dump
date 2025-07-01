@@ -3124,13 +3124,7 @@ function GroupAIStateBase:sync_assault_mode(enabled)
 end
 
 function GroupAIStateBase:_lightfx_assault_update()
-	if _G.IS_PC and managers.network and managers.network.account:has_alienware() then
-		if self._assault_mode then
-			LightFX:set_lamps(255, 0, 0, 255)
-		else
-			LightFX:set_lamps(0, 255, 0, 255)
-		end
-	end
+	return
 end
 
 function GroupAIStateBase:set_fake_assault_mode(enabled)
