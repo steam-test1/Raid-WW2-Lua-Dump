@@ -98,7 +98,7 @@ function RaidGUIControlListItemCharacterSelect:_load_data()
 	if self._item_data.cache then
 		profile_name = self._item_data.cache.PlayerManager.character_profile_name
 		character_nationality = self._item_data.cache.PlayerManager.character_profile_nation
-		character_name = tweak_data.criminals.character_nation_name[character_nationality].char_name
+		character_name = self:translate("menu_" .. character_nationality, true)
 		character_flag = tweak_data.criminals.character_nation_name[character_nationality].flag_name
 		self._customize_button = self._object:create_custom_control(RaidGUIControlListItemCharacterSelectButton, {
 			h = 94,

@@ -181,7 +181,7 @@ end
 
 function MissionJoinGui:_layout_server_list_table()
 	self._servers_title_label = self._list_panel:label({
-		h = 60,
+		h = 69,
 		name = "servers_title_label",
 		vertical = "top",
 		w = 320,

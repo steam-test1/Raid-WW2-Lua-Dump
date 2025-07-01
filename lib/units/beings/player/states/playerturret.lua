@@ -463,6 +463,10 @@ function PlayerTurret:_postion_player()
 end
 
 function PlayerTurret:_reposition_player()
+	if not managers.raid_job:current_level_id() then
+		return
+	end
+
 	local pos = self._turret_unit:get_object(Idstring("first_person_view")):position()
 
 	if self._unit:position() ~= pos then

@@ -1,6 +1,6 @@
 RaidGUIControlSlider = RaidGUIControlSlider or class(RaidGUIControl)
 RaidGUIControlSlider.DEFAULT_WIDTH = 576
-RaidGUIControlSlider.DEFAULT_HEIGHT = 32
+RaidGUIControlSlider.DEFAULT_HEIGHT = 64
 RaidGUIControlSlider.TEXT_PADDING = 16
 RaidGUIControlSlider.TEXT_COLOR = tweak_data.gui.colors.raid_grey
 RaidGUIControlSlider.TEXT_HIGHLIGHT_COLOR = tweak_data.gui.colors.raid_white

@@ -2886,6 +2886,30 @@ function SkillTreeTweakData:_init_skill_list()
 			"concrete",
 		},
 	}
+	self.skills.weapon_unlock_dp28 = {
+		desc_id = "skill_weapon_unlock_dp28_desc",
+		name_id = "skill_weapon_unlock_dp28_name",
+		acquires = {},
+		icon_xy = {
+			1,
+			1,
+		},
+		upgrades = {
+			"dp28",
+		},
+	}
+	self.skills.weapon_unlock_tt33 = {
+		desc_id = "skill_weapon_unlock_tt33_desc",
+		name_id = "skill_weapon_unlock_tt33_name",
+		acquires = {},
+		icon_xy = {
+			1,
+			1,
+		},
+		upgrades = {
+			"tt33",
+		},
+	}
 	self.skills.pistol_damage_multiplier_1 = {
 		desc_id = "skill_pistol_damage_multiplier_desc",
 		icon = "skills_dealing_damage_pistol_multiplier",
@@ -5199,6 +5223,11 @@ function SkillTreeTweakData:_init_recon_unlock_progression()
 			"weapon_unlock_sten",
 		},
 	}
+	self.automatic_unlock_progressions.recon[5] = {
+		weapons = {
+			"weapon_unlock_tt33",
+		},
+	}
 	self.automatic_unlock_progressions.recon[8] = {
 		weapons = {
 			"weapon_unlock_grenade_concrete",
@@ -5275,6 +5304,11 @@ function SkillTreeTweakData:_init_assault_unlock_progression()
 			"weapon_unlock_bar",
 		},
 	}
+	self.automatic_unlock_progressions.assault[5] = {
+		weapons = {
+			"weapon_unlock_tt33",
+		},
+	}
 	self.automatic_unlock_progressions.assault[8] = {
 		weapons = {
 			"weapon_unlock_grenade_concrete",
@@ -5294,6 +5328,9 @@ function SkillTreeTweakData:_init_assault_unlock_progression()
 	self.automatic_unlock_progressions.assault[15] = {
 		unlocks = {
 			"weapon_tier_unlocked_2",
+		},
+		weapons = {
+			"weapon_unlock_dp28",
 		},
 	}
 	self.automatic_unlock_progressions.assault[18] = {
@@ -5353,6 +5390,11 @@ function SkillTreeTweakData:_init_infiltrator_unlock_progression()
 	self.automatic_unlock_progressions.infiltrator[3] = {
 		weapons = {
 			"weapon_unlock_carbine",
+		},
+	}
+	self.automatic_unlock_progressions.infiltrator[5] = {
+		weapons = {
+			"weapon_unlock_tt33",
 		},
 	}
 	self.automatic_unlock_progressions.infiltrator[7] = {
@@ -5433,6 +5475,11 @@ function SkillTreeTweakData:_init_demolitions_unlock_progression()
 			"weapon_unlock_carbine",
 		},
 	}
+	self.automatic_unlock_progressions.demolitions[5] = {
+		weapons = {
+			"weapon_unlock_tt33",
+		},
+	}
 	self.automatic_unlock_progressions.demolitions[6] = {
 		weapons = {
 			"weapon_unlock_grenade_concrete",
@@ -5441,6 +5488,11 @@ function SkillTreeTweakData:_init_demolitions_unlock_progression()
 	self.automatic_unlock_progressions.demolitions[10] = {
 		weapons = {
 			"weapon_unlock_geco",
+		},
+	}
+	self.automatic_unlock_progressions.demolitions[13] = {
+		weapons = {
+			"weapon_unlock_dp28",
 		},
 	}
 	self.automatic_unlock_progressions.demolitions[15] = {

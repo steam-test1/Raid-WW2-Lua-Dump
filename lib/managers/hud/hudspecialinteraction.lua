@@ -119,7 +119,7 @@ function HUDSpecialInteraction:show()
 	self._background_texture:set_alpha(0.5)
 	self._legend_exit_text:set_visible(true)
 	self._legend_exit_text:set_text(utf8.to_upper(managers.localization:text(self._tweak_data.legend_exit_text_id or "hud_legend_lockpicking_exit", {
-		BTN_CANCEL = managers.localization:btn_macro("jump"),
+		BTN_CANCEL = managers.localization:btn_macro("jump") or utf8.char(57344),
 	})))
 	self._legend_interact_text:set_visible(true)
 	self._legend_interact_text:set_text(utf8.to_upper(managers.localization:text(self._tweak_data.legend_interact_text_id or "hud_legend_lockpicking_interact", {

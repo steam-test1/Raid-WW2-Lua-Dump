@@ -888,7 +888,7 @@ end
 
 HUDNotificationDogTag = HUDNotificationDogTag or class(HUDNotification)
 HUDNotificationDogTag.BOTTOM = 800
-HUDNotificationDogTag.WIDTH = 352
+HUDNotificationDogTag.WIDTH = 550
 HUDNotificationDogTag.HEIGHT = 160
 HUDNotificationDogTag.BACKGROUND_IMAGE = "backgrounds_chat_bg"
 HUDNotificationDogTag.DOG_TAG_ICON = "rewards_dog_tags"

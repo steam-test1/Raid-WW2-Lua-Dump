@@ -1459,6 +1459,7 @@ function CoreWorldCollection:level_transition_started()
 	managers.barrage:stop_barrages()
 	managers.network:unregister_all_spawn_points()
 	managers.menu:close_all_menus()
+	managers.system_menu:force_close_all()
 	Global.music_manager.source:post_event("stop_all")
 
 	if Network:is_server() then

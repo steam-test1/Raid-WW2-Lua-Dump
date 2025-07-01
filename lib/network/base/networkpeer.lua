@@ -1929,6 +1929,10 @@ function NetworkPeer:set_unit(unit, character_name, team_id)
 		unit:movement():set_character_anim_variables()
 	end
 
+	if self._id == managers.network:session():local_peer():id() then
+		managers.weapon_skills:update_weapon_part_animation_weights()
+	end
+
 	self:set_character_customization()
 
 	self._spawn_unit_called = true

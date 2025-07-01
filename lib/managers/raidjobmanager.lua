@@ -246,6 +246,8 @@ function RaidJobManager:external_start_mission()
 end
 
 function RaidJobManager:do_external_start_mission(mission, event_index)
+	managers.system_menu:force_close_all()
+	managers.menu:close_all_menus()
 	managers.player:set_local_player_in_camp(false)
 
 	local data = {}
@@ -384,6 +386,8 @@ function RaidJobManager:played_tutorial()
 end
 
 function RaidJobManager:do_external_end_mission(restart_camp)
+	managers.system_menu:force_close_all()
+	managers.menu:close_all_menus()
 	Application:debug("[RaidJobManager:external_end_mission()]", restart_camp)
 	managers.player:set_local_player_in_camp(true)
 	managers.consumable_missions:on_level_exited(self._current_job and self:stage_success())

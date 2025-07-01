@@ -521,6 +521,7 @@ function CharacterCreationGui:close()
 	managers.network:session():send_to_peers_synched("sync_character_class_nationality", managers.skilltree:get_character_profile_class(), managers.player:get_character_profile_nation())
 	CharacterCreationGui.super.close(self)
 	managers.network:start_matchmake_attributes_update()
+	managers.weapon_skills:update_weapon_part_animation_weights()
 end
 
 function CharacterCreationGui:show_selected_character_default_customization(nationality)
@@ -548,7 +549,7 @@ function CharacterCreationGui:show_character_create_input_textbox(callback_yes_f
 	local params = {
 		callback_no = callback_no_function,
 		callback_yes = callback_yes_function,
-		textbox_value = utf8.to_upper(tweak_data.criminals.character_nation_name[self._selected_nation].char_name) .. "_" .. slot_index - 10,
+		textbox_value = self:translate("menu_" .. self._selected_nation, true) .. "_" .. slot_index - 10,
 	}
 
 	managers.menu:show_character_create_dialog(params)

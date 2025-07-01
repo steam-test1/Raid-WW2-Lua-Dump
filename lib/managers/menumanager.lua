@@ -3858,6 +3858,14 @@ function MenuOptionInitiator:modify_debug_options(node)
 		show_all_intel_documents_item:set_value(show_all_intel_documents_value)
 	end
 
+	local spawn_all_dog_tags_item = node:item("toggle_spawn_all_dog_tags")
+
+	if spawn_all_dog_tags_item then
+		local spawn_all_dog_tags_value = Global.spawn_all_dog_tags and "on" or "off"
+
+		spawn_all_dog_tags_item:set_value(spawn_all_dog_tags_value)
+	end
+
 	local show_dog_tags_item = node:item("toggle_debug_show_dog_tags")
 
 	if show_dog_tags_item then

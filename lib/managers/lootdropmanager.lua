@@ -483,14 +483,18 @@ function LootDropManager:plant_loot_on_level(world_id, total_value, job_id)
 	for _, loot_data in ipairs(self._registered_loot_units[world_id]) do
 		if not alive(loot_data.unit) then
 			loot_data.deleted = true
-		elseif total_value <= self._loot_spawned_current_leg then
-			loot_data.unit:set_slot(0)
-
-			loot_data.deleted = true
 		else
-			self._loot_spawned_current_leg = self._loot_spawned_current_leg + loot_data.value
+			local should_remove_loot_unit = total_value <= self._loot_spawned_current_leg
 
-			table.insert(self._active_loot_units, loot_data.unit)
+			if should_remove_loot_unit then
+				loot_data.unit:set_slot(0)
+
+				loot_data.deleted = true
+			else
+				self._loot_spawned_current_leg = self._loot_spawned_current_leg + loot_data.value
+
+				table.insert(self._active_loot_units, loot_data.unit)
+			end
 		end
 	end
 

@@ -1107,7 +1107,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.german_special_edition_001_upper.path_fps_hands = "units/vanilla/characters/players/german/fp/special_edition/player_german_special_edition_fp"
 	self.customizations.german_special_edition_001_upper.redeem_xp = 0
 	self.customizations.german_special_edition_001_upper.rarity = LootDropTweakData.RARITY_RARE
-	self.customizations.german_special_edition_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_LONG
+	self.customizations.german_special_edition_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
 	self.customizations.german_special_edition_001_upper.dlc = DLCTweakData.DLC_NAME_SPECIAL_EDITION
 	self.customizations.german_special_edition_001_upper.dlc_show_if_locked = false
 	self.customizations.russian_special_edition_001_upper = {}

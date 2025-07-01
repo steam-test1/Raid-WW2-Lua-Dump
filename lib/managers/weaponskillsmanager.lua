@@ -414,6 +414,46 @@ function WeaponSkillsManager:update_weapon_skills(weapon_category_id, weapon_id,
 	self._temp_weapon_skills = nil
 end
 
+function WeaponSkillsManager:_clear_all_weapon_part_animation_weights()
+	if not managers.player:local_player() then
+		return
+	end
+
+	for _, weapon_part_anim in ipairs(tweak_data.weapon._all_fps_animation_weights) do
+		managers.player:local_player():camera():camera_unit():anim_state_machine():set_global(weapon_part_anim, 0)
+		Application:trace("TURNING OFF WEAPON PART ANIM: ", weapon_part_anim)
+	end
+end
+
+function WeaponSkillsManager:update_weapon_part_animation_weights()
+	if not managers.player:local_player() then
+		return
+	end
+
+	self:_clear_all_weapon_part_animation_weights()
+
+	local equipped_primary_weapon_data = managers.weapon_inventory:get_equipped_primary_weapon()
+	local equipped_secondary_weapon_data = managers.weapon_inventory:get_equipped_secondary_weapon()
+
+	for _, weapon_part_name in ipairs(equipped_primary_weapon_data.blueprint) do
+		local weapon_part_data = tweak_data.weapon.factory.parts[weapon_part_name]
+
+		if weapon_part_data and weapon_part_data.fps_animation_weight then
+			managers.player:local_player():camera():camera_unit():anim_state_machine():set_global(weapon_part_data.fps_animation_weight, 1)
+			Application:trace("TURNING ON WEAPON PART ANIM: ", weapon_part_data.fps_animation_weight)
+		end
+	end
+
+	for _, weapon_part_name in ipairs(equipped_secondary_weapon_data.blueprint) do
+		local weapon_part_data = tweak_data.weapon.factory.parts[weapon_part_name]
+
+		if weapon_part_data and weapon_part_data.fps_animation_weight then
+			managers.player:local_player():camera():camera_unit():anim_state_machine():set_global(weapon_part_data.fps_animation_weight, 1)
+			Application:trace("TURNING ON WEAPON PART ANIM: ", weapon_part_data.fps_animation_weight)
+		end
+	end
+end
+
 function WeaponSkillsManager:update_weapon_skill(raid_stat_name, data, weapon_category_id, action)
 	local upgrade_name = self:get_upgrade_name_from_raid_stat_name(raid_stat_name)
 	local weapon_category_string = weapon_category_id == WeaponInventoryManager.BM_CATEGORY_PRIMARY_ID and "primary_weapon" or "secondary_weapon"

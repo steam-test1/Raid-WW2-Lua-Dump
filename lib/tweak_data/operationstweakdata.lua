@@ -274,7 +274,7 @@ function OperationsTweakData:_init_raids()
 	self.missions.flakturm.short_audio_briefing_id = "flakturm_brief_short"
 	self.missions.flakturm.music_id = "flakturm"
 	self.missions.flakturm.region = "germany"
-	self.missions.flakturm.xp = 2000
+	self.missions.flakturm.xp = 2500
 	self.missions.flakturm.stealth_bonus = 1.5
 	self.missions.flakturm.start_in_stealth = true
 	self.missions.flakturm.dogtags_min = 32
@@ -348,7 +348,7 @@ function OperationsTweakData:_init_raids()
 	self.missions.gold_rush.short_audio_briefing_id = "bank_brief_short"
 	self.missions.gold_rush.region = "germany"
 	self.missions.gold_rush.music_id = "reichsbank"
-	self.missions.gold_rush.xp = 2000
+	self.missions.gold_rush.xp = 2500
 	self.missions.gold_rush.trophy = {
 		position = "snap_02",
 		unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_bank",
@@ -410,7 +410,7 @@ function OperationsTweakData:_init_raids()
 	self.missions.train_yard.region = "germany"
 	self.missions.train_yard.music_id = "train_yard"
 	self.missions.train_yard.start_in_stealth = true
-	self.missions.train_yard.xp = 2000
+	self.missions.train_yard.xp = 2500
 	self.missions.train_yard.trophy = {
 		position = "snap_03",
 		unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_railyard",
@@ -469,7 +469,7 @@ function OperationsTweakData:_init_raids()
 	self.missions.radio_defense.short_audio_briefing_id = "radio_brief_short"
 	self.missions.radio_defense.region = "germany"
 	self.missions.radio_defense.music_id = "radio_defense"
-	self.missions.radio_defense.xp = 2000
+	self.missions.radio_defense.xp = 2500
 	self.missions.radio_defense.stealth_bonus = 1.5
 	self.missions.radio_defense.start_in_stealth = true
 	self.missions.radio_defense.dogtags_min = 27
@@ -541,7 +541,7 @@ function OperationsTweakData:_init_raids()
 		OperationsTweakData.PROGRESSION_GROUP_INITIAL,
 		OperationsTweakData.PROGRESSION_GROUP_STANDARD,
 	}
-	self.missions.ger_bridge.xp = 2000
+	self.missions.ger_bridge.xp = 2500
 	self.missions.ger_bridge.dogtags_min = 28
 	self.missions.ger_bridge.dogtags_max = 34
 	self.missions.ger_bridge.trophy = {
@@ -601,7 +601,7 @@ function OperationsTweakData:_init_raids()
 	self.missions.settlement.short_audio_briefing_id = "castle_brief_short"
 	self.missions.settlement.region = "germany"
 	self.missions.settlement.music_id = "castle"
-	self.missions.settlement.xp = 2000
+	self.missions.settlement.xp = 2500
 	self.missions.settlement.trophy = {
 		position = "snap_22",
 		unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_castle",
@@ -709,7 +709,7 @@ function OperationsTweakData:_init_raids()
 	self.missions.bunker_test.short_audio_briefing_id = "mrs_white_bunkers_briefing_short"
 	self.missions.bunker_test.music_id = "random"
 	self.missions.bunker_test.region = "germany"
-	self.missions.bunker_test.xp = 1000
+	self.missions.bunker_test.xp = 1250
 	self.missions.bunker_test.stealth_bonus = 1.5
 	self.missions.bunker_test.dogtags_min = 31
 	self.missions.bunker_test.dogtags_max = 35
@@ -956,7 +956,7 @@ function OperationsTweakData:_init_raids()
 	self.missions.spies_test.short_audio_briefing_id = "mrs_white_spies_briefing_short"
 	self.missions.spies_test.music_id = "random"
 	self.missions.spies_test.region = "germany"
-	self.missions.spies_test.xp = 1000
+	self.missions.spies_test.xp = 1250
 	self.missions.spies_test.stealth_bonus = 1.5
 	self.missions.spies_test.dogtags_min = 30
 	self.missions.spies_test.dogtags_max = 37
@@ -1066,7 +1066,7 @@ function OperationsTweakData:_init_operations()
 	self.missions.clear_skies.audio_briefing_id = "mrs_white_cs_op_mr1_brief_long"
 	self.missions.clear_skies.short_audio_briefing_id = "mrs_white_cs_op_mr1_brief_long"
 	self.missions.clear_skies.region = "germany"
-	self.missions.clear_skies.xp = 5500
+	self.missions.clear_skies.xp = 6500
 	self.missions.clear_skies.trophy = {
 		position = "snap_05",
 		unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_operation_clear_sky",
@@ -1391,7 +1391,7 @@ function OperationsTweakData:_init_operations()
 	self.missions.oper_flamable.audio_briefing_id = "mrs_white_or_mr1_brief_long"
 	self.missions.oper_flamable.short_audio_briefing_id = "mrs_white_or_mr1_brief_long"
 	self.missions.oper_flamable.region = "germany"
-	self.missions.oper_flamable.xp = 3750
+	self.missions.oper_flamable.xp = 4500
 	self.missions.oper_flamable.trophy = {
 		position = "snap_18",
 		unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_operation_rhinegold",

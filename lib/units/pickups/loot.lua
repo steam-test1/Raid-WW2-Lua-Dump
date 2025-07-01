@@ -3,6 +3,8 @@ Loot = Loot or class()
 function Loot:init(unit)
 	self._unit = unit
 	self._value = 0
+
+	self._unit:set_extension_update_enabled(Idstring("loot_drop"), false)
 end
 
 function Loot:set_value(value)

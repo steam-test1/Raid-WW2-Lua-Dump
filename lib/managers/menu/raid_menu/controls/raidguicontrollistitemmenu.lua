@@ -63,7 +63,7 @@ function RaidGUIControlListItemMenu:init(parent, params, data)
 			texture = ico_locker.texture,
 			texture_rect = text_rect,
 			w = text_rect[3],
-			x = self._object:right() - 64,
+			x = self._object:right() - 74,
 			y = self._object:h() / 2 - text_rect[4] / 2,
 		})
 	end

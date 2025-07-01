@@ -4456,6 +4456,13 @@ function PlayerStandard:_check_stop_shooting()
 		self._camera_unit:base():stop_shooting(self._equipped_unit:base():recoil_wait())
 
 		local weap_base = self._equipped_unit:base()
+
+		if weap_base._name_id == "dp28" then
+			weap_base:weapon_parts_anim_pause()
+		else
+			weap_base:tweak_data_anim_stop("fire")
+		end
+
 		local fire_mode = weap_base:fire_mode()
 		local use_recoil_anim = true
 

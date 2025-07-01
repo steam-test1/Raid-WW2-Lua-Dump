@@ -346,13 +346,15 @@ function GoldEconomyManager:get_store_items_data()
 
 	for upgrade_slot_name, upgrade_slot in pairs(tweak_data.camp_customization.camp_upgrades) do
 		for upgrade_level, upgrade in ipairs(upgrade_slot.levels) do
-			if tweak_data.camp_customization:is_upgrade_unlocked(upgrade) then
+			local is_default = tweak_data.camp_customization:is_default_upgrade(upgrade_slot_name, upgrade_level)
+
+			if is_default or tweak_data.camp_customization:is_upgrade_unlocked(upgrade) then
 				local store_upgrade_data = clone(upgrade)
 
 				store_upgrade_data.upgrade_name = upgrade_slot_name
 				store_upgrade_data.level = upgrade_level
 
-				if self:is_upgrade_owned(upgrade_slot_name, upgrade_level) then
+				if is_default or self:is_upgrade_owned(upgrade_slot_name, upgrade_level) then
 					store_upgrade_data.status = RaidGUIControlGridItem.STATUS_OWNED_OR_PURCHASED
 				elseif upgrade.gold_price <= self:current() then
 					store_upgrade_data.status = RaidGUIControlGridItem.STATUS_PURCHASABLE

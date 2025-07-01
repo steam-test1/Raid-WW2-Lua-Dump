@@ -1704,7 +1704,7 @@ function GroupAIStateBase:check_gameover_conditions()
 		if not self._gameover_clbk then
 			self._gameover_clbk = callback(self, self, "_gameover_clbk_func")
 
-			managers.enemy:add_delayed_clbk("_gameover_clbk", self._gameover_clbk, Application:time() + 10)
+			managers.enemy:add_delayed_clbk("_gameover_clbk", self._gameover_clbk, Application:time() + 7)
 		end
 	elseif self._gameover_clbk then
 		managers.enemy:remove_delayed_clbk("_gameover_clbk")
@@ -1727,6 +1727,9 @@ function GroupAIStateBase:_gameover_clbk_func()
 end
 
 function GroupAIStateBase:begin_gameover_fadeout()
+	managers.system_menu:force_close_all()
+	managers.menu:close_all_menus()
+
 	if Network:is_server() and not managers.vote:is_restarting() and not managers.game_play_central:is_restarting() then
 		managers.raid_job:external_end_mission(false, true)
 	end

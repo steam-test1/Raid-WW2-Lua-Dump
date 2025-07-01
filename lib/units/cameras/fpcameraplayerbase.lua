@@ -1917,6 +1917,13 @@ function FPCameraPlayerBase:anim_clbk_stop_weapon_magazine_empty()
 	end
 end
 
+function FPCameraPlayerBase:anim_clbk_reset_dp28_mag_pos()
+	local weapon = self._parent_unit:inventory():equipped_unit()
+
+	weapon:base():reset_magazine_anim_pos()
+	print("-------------------FPCameraPlayerBase:anim_clbk_reset_dp28_mag_pos")
+end
+
 function FPCameraPlayerBase:anim_clbk_spawn_shotgun_shell()
 	if alive(self._parent_unit) then
 		local weapon = self._parent_unit:inventory():equipped_unit()

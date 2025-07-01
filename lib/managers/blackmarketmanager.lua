@@ -3754,7 +3754,7 @@ function BlackMarketManager:_verfify_equipped_category(category)
 		for melee_weapon, craft in pairs(Global.blackmarket_manager.melee_weapons) do
 			local melee_weapon_data = tweak_data.blackmarket.melee_weapons[melee_weapon] or {}
 
-			if craft.equipped and craft.unlocked and (not melee_weapon_data.dlc or tweak_data.dlc:is_melee_weapon_unlocked(melee_weapon_id)) then
+			if craft.equipped and craft.unlocked and (not melee_weapon_data.dlc or tweak_data.dlc:is_melee_weapon_unlocked(melee_weapon)) then
 				melee_weapon_id = melee_weapon
 			end
 		end

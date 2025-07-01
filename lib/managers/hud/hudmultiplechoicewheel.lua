@@ -133,6 +133,8 @@ function HUDMultipleChoiceWheel:show()
 
 	if #self._options > 0 then
 		self:_destroy_options()
+
+		self._is_active = true
 	end
 
 	self:_create_options()

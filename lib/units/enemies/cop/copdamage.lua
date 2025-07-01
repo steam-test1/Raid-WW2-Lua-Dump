@@ -1527,7 +1527,9 @@ function CopDamage:damage_melee(attack_data)
 	local snatch_pager = false
 
 	if result.type == "death" then
-		if self:_dismember_condition(attack_data, false) then
+		local melee_weapon_used = attack_data.weapon_unit:base().is_melee_weapon and attack_data.weapon_unit:base():is_melee_weapon()
+
+		if melee_weapon_used and self:_dismember_condition(attack_data, false) then
 			death_event_params.dismemberment_occured = true
 
 			self:_dismember_body_part(attack_data)

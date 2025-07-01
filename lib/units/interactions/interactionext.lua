@@ -181,6 +181,10 @@ function BaseInteractionExt:_btn_interact()
 end
 
 function BaseInteractionExt:can_select(player)
+	if not self._active then
+		return false
+	end
+
 	if not self:_has_required_upgrade(alive(player) and player:movement() and player:movement().current_state_name and player:movement():current_state_name()) then
 		return false
 	end
@@ -504,6 +508,10 @@ function BaseInteractionExt:interact(player)
 end
 
 function BaseInteractionExt:can_interact(player)
+	if not self._active then
+		return false
+	end
+
 	if not self:_has_required_upgrade(alive(player) and player:movement() and player:movement().current_state_name and player:movement():current_state_name()) then
 		return false
 	end
@@ -2036,6 +2044,10 @@ function CarryInteractionExt:_interact_blocked(player)
 end
 
 function CarryInteractionExt:can_select(player)
+	if not self._active then
+		return false
+	end
+
 	if self.tweak_data == "corpse_dispose" and managers.groupai:state():is_police_called() then
 		return false
 	end

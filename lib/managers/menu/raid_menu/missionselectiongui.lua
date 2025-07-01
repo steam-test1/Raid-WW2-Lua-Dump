@@ -40,6 +40,12 @@ function MissionSelectionGui:init(ws, fullscreen_ws, node, component_name)
 	if just_unlocked_raid then
 		self._raid_list:select_item_by_value(just_unlocked_raid)
 	end
+
+	if managers.raid_job:selected_job() then
+		print(self._selected_job_id)
+		self._raid_list:select_item_by_value(managers.raid_job:selected_job().level_id)
+		self._difficulty_stepper:set_value_and_render(Global.game_settings.difficulty, true)
+	end
 end
 
 function MissionSelectionGui:_set_initial_data()
@@ -1385,6 +1391,13 @@ function MissionSelectionGui:_on_raid_clicked(raid_data)
 
 	if not self._selected_job_id or self._selected_job_id ~= raid_data.value then
 		self:_stop_mission_briefing_audio()
+	end
+
+	local difficulty_available = managers.progression:get_mission_progression(tweak_data.operations.missions[raid_data.value].job_type, raid_data.value)
+
+	if difficulty_available and difficulty_available < tweak_data:difficulty_to_index(self._difficulty_stepper:get_value()) then
+		self._difficulty_stepper:set_value_and_render(tweak_data:index_to_difficulty(difficulty_available), true)
+		self:_check_difficulty_warning()
 	end
 
 	self._operation_tutorialization_panel:get_engine_panel():stop()

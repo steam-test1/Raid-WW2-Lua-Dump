@@ -216,7 +216,7 @@ function RaidExperienceManager:calculate_exp_brakedown(mission_id, operation_id,
 	local difficulty_multiplicative = {}
 
 	difficulty_multiplicative.id = "xp_multiplicative_difficulty"
-	difficulty_multiplicative.amount = tweak_data:get_value("experience_manager", "difficulty_multiplier", tweak_data:difficulty_to_index(Global.game_settings.difficulty)) - 1
+	difficulty_multiplicative.amount = tweak_data:get_value("experience_manager", "difficulty_multiplier", tweak_data:difficulty_to_index(game_state_machine._current_state._difficulty or Global.game_settings.difficulty)) - 1
 
 	table.insert(exp_table.multiplicative, difficulty_multiplicative)
 

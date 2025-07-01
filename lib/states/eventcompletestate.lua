@@ -256,6 +256,8 @@ function EventCompleteState:at_enter(old_state, params)
 	else
 		self:_continue()
 	end
+
+	self._difficulty = Global.game_settings.difficulty
 end
 
 function EventCompleteState:_calculate_card_xp_bonuses()

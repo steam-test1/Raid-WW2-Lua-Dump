@@ -193,7 +193,7 @@ function ObjectInteractionManager:_update_targeted(player_pos, player_unit)
 					end
 
 					self._active_locator = closest_locator
-				elseif unit:interaction():can_select(player_unit) and unit:interaction():can_select(player_unit) then
+				elseif unit:interaction():can_select(player_unit) then
 					mvector3.set(mvec1, unit:interaction():interact_position())
 					mvector3.subtract(mvec1, camera_pos)
 					mvector3.normalize(mvec1)

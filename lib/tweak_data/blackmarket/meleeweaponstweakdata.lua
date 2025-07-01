@@ -454,7 +454,7 @@ function BlackMarketTweakData:_init_melee_weapons()
 	self.melee_weapons.marching_mace.use_data.unequip = {
 		align_place = "back",
 	}
-	self.melee_weapons.marching_mace.hold = "melee"
+	self.melee_weapons.marching_mace.hold = "marching_mace"
 	self.melee_weapons.marching_mace.usage_anim = "c45"
 	self.melee_weapons.marching_mace.sounds = {}
 	self.melee_weapons.marching_mace.sounds.equip = "knife_equip"

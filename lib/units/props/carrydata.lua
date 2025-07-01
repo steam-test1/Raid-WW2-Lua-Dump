@@ -10,6 +10,11 @@ function CarryData:init(unit)
 	self._has_dye_pack = false
 	self._dye_value_multiplier = 100
 	self._value = 0
+
+	if self._disable_update then
+		Application:debug("CarryData:init disabled!")
+		self._unit:set_extension_update_enabled(Idstring("carry_data"), false)
+	end
 end
 
 function CarryData:set_mission_element(mission_element)

@@ -804,6 +804,7 @@ function ReadyUpGui:close()
 
 	self._spawned_weapon_parts = nil
 
+	managers.lootdrop:clear_dropped_loot()
 	ReadyUpGui.super.close(self)
 end
 

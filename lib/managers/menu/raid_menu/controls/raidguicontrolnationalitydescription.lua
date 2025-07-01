@@ -87,7 +87,7 @@ function RaidGUIControlNationalityDescription:set_data(data)
 	self._nation_icon:set_image(nation_icon_data.texture)
 	self._nation_icon:set_texture_rect(nation_icon_data.texture_rect)
 	self._nation_icon:set_visible(true)
-	self._character_name_label:set_text(utf8.to_upper(tweak_data.criminals.character_nation_name[data.nationality].char_name))
+	self._character_name_label:set_text(self:translate("menu_" .. data.nationality, true))
 
 	local backstory_text = self:translate("character_profile_creation_" .. data.nationality .. "_description", false) or ""
 
