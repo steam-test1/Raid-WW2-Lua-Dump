@@ -859,15 +859,15 @@ function WeaponSkillsTweakData:_init_geco_skill_tree()
 			value = 4,
 			challenge_tasks = {
 				{
-					target = 1000,
+					target = 30,
 					modifiers = {
 						enemy_type = {
 							CharacterTweakData.SPECIAL_UNIT_TYPE_FLAMER,
 						},
 					},
 					reminders = {
-						500,
-						800,
+						10,
+						20,
 					},
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
@@ -4473,9 +4473,6 @@ function WeaponSkillsTweakData:_init_mp44_skill_tree()
 				},
 			},
 			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
-			weapon_parts = {
-				"wpn_fps_ass_mp44_o_scope",
-			},
 		},
 	}
 	self.skill_trees.mp44.tier_unlock = {

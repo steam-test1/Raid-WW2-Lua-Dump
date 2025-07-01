@@ -291,6 +291,18 @@ function WeaponSelectionGui:_layout_weapon_stats()
 	}
 
 	self._melee_weapon_stats = self._root_panel:create_custom_control(RaidGUIControlMeleeWeaponStats, melee_weapon_stats_params)
+
+	local grenade_weapon_stats_params = {
+		name = "grenade_weapon_stats",
+		selection_enabled = false,
+		tab_height = 60,
+		tab_width = 180,
+		x = 550,
+		y = 771,
+		label_class = RaidGUIControlLabelNamedValue,
+	}
+
+	self._grenade_weapon_stats = self._root_panel:create_custom_control(RaidGUIControlGrenadeWeaponStats, grenade_weapon_stats_params)
 end
 
 function WeaponSelectionGui:_layout_equip_button()
@@ -1013,7 +1025,14 @@ function WeaponSelectionGui:_update_weapon_stats(reset_applied_stats)
 
 		weapon_name = tweak_data.blackmarket.melee_weapons[selected_weapon_data.weapon_id].name_id
 	elseif weapon_category == WeaponInventoryManager.BM_CATEGORY_GRENADES_NAME then
-		weapon_name = tweak_data.projectiles[selected_weapon_data.weapon_id].name_id
+		local proj_tweak_data = tweak_data.projectiles[selected_weapon_data.weapon_id]
+		local damage = f2s(proj_tweak_data.damage)
+		local range = f2s(proj_tweak_data.range)
+		local distance = f2s(proj_tweak_data.launch_speed or 250)
+
+		weapon_name = proj_tweak_data.name_id
+
+		self._grenade_weapon_stats:set_stats(damage, range, distance)
 	end
 
 	self._weapon_name_label:set_text(self:translate(weapon_name, true))
@@ -1101,13 +1120,16 @@ function WeaponSelectionGui:_select_weapon(weapon_id, weapon_category_switched)
 	if self._selected_weapon_category_id == WeaponInventoryManager.BM_CATEGORY_GRENADES_ID then
 		self._weapon_stats:hide()
 		self._melee_weapon_stats:hide()
+		self._grenade_weapon_stats:show()
 	elseif self._selected_weapon_category_id == WeaponInventoryManager.BM_CATEGORY_MELEE_ID then
 		self._weapon_stats:hide()
 		self._melee_weapon_stats:show()
+		self._grenade_weapon_stats:hide()
 	else
 		self._weapon_stats:show()
 		self._melee_weapon_stats:hide()
 		self._weapon_skills:set_weapon(self._selected_weapon_category_id, weapon_id)
+		self._grenade_weapon_stats:hide()
 	end
 
 	if self._selected_weapon_category_id == WeaponInventoryManager.BM_CATEGORY_PRIMARY_ID or self._selected_weapon_category_id == WeaponInventoryManager.BM_CATEGORY_SECONDARY_ID then
@@ -1288,6 +1310,9 @@ function WeaponSelectionGui:_unit_loading_complete(params)
 	local weapon_blueprint = params.pre_created_blueprint or managers.blackmarket:get_weapon_blueprint(weapon_category, selected_weapon_slot)
 	local weapon_factory_id = managers.weapon_factory:get_factory_id_by_weapon_id(params.weapon_id)
 	local default_blueprint = clone(managers.weapon_factory:get_default_blueprint_by_factory_id(weapon_factory_id))
+
+	default_blueprint = managers.weapon_skills:update_scope_in_blueprint(params.weapon_id, weapon_category, default_blueprint)
+
 	local use_default_blueprint = not self._weapon_parts_toggle:get_value()
 
 	weapon_blueprint = not use_default_blueprint and weapon_blueprint or default_blueprint

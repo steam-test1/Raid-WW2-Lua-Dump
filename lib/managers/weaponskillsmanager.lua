@@ -742,6 +742,11 @@ end
 
 function WeaponSkillsManager:get_scope_weapon_part_name(weapon_id)
 	local result
+
+	if weapon_id == "mp44" and managers.weapon_skills:get_weapon_skills("mp44")[2][4][1].active ~= true then
+		return result
+	end
+
 	local factory_id = managers.weapon_factory:get_factory_id_by_weapon_id(weapon_id)
 
 	if tweak_data.weapon.factory[factory_id] and tweak_data.weapon.factory[factory_id].uses_parts then
@@ -927,33 +932,41 @@ function WeaponSkillsManager:recreate_weapon_blueprint(weapon_id, weapon_categor
 		end
 	end
 
+	local weapon_factory_id = managers.weapon_factory:get_factory_id_by_weapon_id(weapon_id)
+
+	new_blueprint = clone(managers.weapon_factory:get_default_blueprint_by_factory_id(weapon_factory_id))
+
+	self:update_scope_in_blueprint(weapon_id, weapon_factory_id, new_blueprint)
+
 	if self._temp_weapon_skills then
-		local weapon_factory_id = managers.weapon_factory:get_factory_id_by_weapon_id(weapon_id)
-
-		new_blueprint = clone(managers.weapon_factory:get_default_blueprint_by_factory_id(weapon_factory_id))
-
 		local use_cosmetics_flag = managers.weapon_skills:get_cosmetics_flag_for_weapon_id(weapon_id)
 
 		if use_cosmetics_flag then
 			for weapon_part_type, weapon_part_name in pairs(self._temp_weapon_skills) do
 				managers.weapon_factory:change_part_blueprint_only(weapon_factory_id, weapon_part_name, new_blueprint, false)
 			end
-
-			local scope_weapon_part_name = self:get_scope_weapon_part_name(weapon_id)
-
-			if scope_weapon_part_name and self:get_player_using_scope(weapon_id) then
-				managers.weapon_factory:change_part_blueprint_only(weapon_factory_id, scope_weapon_part_name, new_blueprint, false)
-			end
 		end
+	end
 
-		if apply_blueprint then
-			self:apply_weapon_blueprint(weapon_id, weapon_category_id, new_blueprint)
-		end
+	if apply_blueprint then
+		self:apply_weapon_blueprint(weapon_id, weapon_category_id, new_blueprint)
 	end
 
 	self._temp_weapon_skills = nil
 
 	return new_blueprint
+end
+
+function WeaponSkillsManager:update_scope_in_blueprint(weapon_id, weapon_category_id, blueprint)
+	local scope_weapon_part_name = self:get_scope_weapon_part_name(weapon_id)
+	local weapon_factory_id = managers.weapon_factory:get_factory_id_by_weapon_id(weapon_id)
+
+	if scope_weapon_part_name and self:get_player_using_scope(weapon_id) then
+		managers.weapon_factory:change_part_blueprint_only(weapon_factory_id, scope_weapon_part_name, blueprint, false)
+		self:apply_weapon_blueprint(weapon_id, weapon_category_id, blueprint)
+	end
+
+	return blueprint
 end
 
 function WeaponSkillsManager:apply_weapon_blueprint(weapon_id, weapon_category_id, new_blueprint)

@@ -3165,7 +3165,7 @@ function WeaponFactoryTweakData:_init_mp44()
 		a_obj = "a_o",
 		name_id = "bm_wp_ass_mp44_o_scope",
 		parent = "body",
-		type = "sight",
+		type = "scope",
 		unit = "units/vanilla/weapons/wpn_fps_ass_mp44_pts/wpn_fps_ass_mp44_o_scope",
 		stance_mod = {
 			wpn_fps_ass_mp44 = {

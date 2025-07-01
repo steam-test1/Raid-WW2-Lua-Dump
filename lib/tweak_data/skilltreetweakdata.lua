@@ -305,6 +305,7 @@ function SkillTreeTweakData:_init_skill_list()
 			1,
 		},
 		upgrades = {
+			"player_can_use_scope",
 			"player_highlight_enemy",
 		},
 	}
@@ -339,6 +340,7 @@ function SkillTreeTweakData:_init_skill_list()
 			1,
 		},
 		upgrades = {
+			"player_can_use_scope",
 			"player_highlight_enemy",
 		},
 	}
@@ -373,6 +375,7 @@ function SkillTreeTweakData:_init_skill_list()
 			1,
 		},
 		upgrades = {
+			"player_can_use_scope",
 			"player_highlight_enemy",
 		},
 	}
