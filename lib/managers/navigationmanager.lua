@@ -1899,7 +1899,9 @@ function NavigationManager:add_pos_reservation(desc)
 	desc.id = self._quad_field:add_position_reservation(desc)
 
 	if self._pos_reservations[desc.id] and not self._pos_reservations[desc.id][1].expire_t then
-		debug_pause("[NavigationManager:add_pos_reservation] LEAKING POS RESERVATION!!", inspect(self._pos_reservations[desc.id]))
+		if not Application:editor() then
+			debug_pause("[NavigationManager:add_pos_reservation] LEAKING POS RESERVATION!!", inspect(self._pos_reservations[desc.id]))
+		end
 
 		return
 	end

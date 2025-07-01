@@ -158,23 +158,23 @@ end
 
 function StatisticsTweakData:statistics_table()
 	local level_list = {
-		"camp",
 		"flakturm",
-		"reichsbank",
+		"forest_gumpy",
 		"train_yard",
 		"radio_defense",
 		"ger_bridge",
-		"castle",
-		"zone_germany",
+		"hunters",
+		"spies_test",
+		"convoy",
+		"tnd",
+		"sto",
+		"bunker_test",
+		"gold_rush",
+		"settlement",
+		"tutorial",
+		"ger_bridge_operation",
 	}
 	local job_list = {
-		"camp",
-		"flakturm",
-		"reichsbank",
-		"train_yard",
-		"radio_defense",
-		"ger_bridge",
-		"castle",
 		"clear_skies",
 		"oper_flamable",
 	}
@@ -232,16 +232,14 @@ function StatisticsTweakData:statistics_table()
 		"german_grunt_mid",
 		"german_sniper",
 	}
-	local armor_list = {}
 	local character_list = {
 		"russian",
 		"german",
 		"british",
 		"american",
 	}
-	local deployable_list = {}
 
-	return level_list, job_list, mask_list, weapon_list, melee_list, grenade_list, enemy_list, armor_list, character_list, deployable_list
+	return level_list, job_list, weapon_list, melee_list, grenade_list, enemy_list, character_list
 end
 
 function StatisticsTweakData:resolution_statistics_table()

@@ -243,6 +243,39 @@ function CarryTweakData:init(tweak_data)
 	self.gold_bar.AI_carry = {
 		SO_category = "enemies",
 	}
+	self.dev_pku_carry_light = {}
+	self.dev_pku_carry_light.type = "light"
+	self.dev_pku_carry_light.name_id = "hud_carry_gold_bar"
+	self.dev_pku_carry_light.bag_value = "gold_bar"
+	self.dev_pku_carry_light.loot_value = 5
+	self.dev_pku_carry_light.unit = "units/vanilla/dev/dev_pku_carry_light/dev_pku_carry_light_bag"
+	self.dev_pku_carry_light.hud_icon = "carry_gold"
+	self.dev_pku_carry_light.value_in_gold = 1
+	self.dev_pku_carry_light.AI_carry = {
+		SO_category = "enemies",
+	}
+	self.dev_pku_carry_medium = {}
+	self.dev_pku_carry_medium.type = "medium"
+	self.dev_pku_carry_medium.name_id = "hud_carry_gold_bar"
+	self.dev_pku_carry_medium.bag_value = "gold_bar"
+	self.dev_pku_carry_medium.loot_value = 5
+	self.dev_pku_carry_medium.unit = "units/vanilla/dev/dev_pku_carry_medium/dev_pku_carry_medium_bag"
+	self.dev_pku_carry_medium.hud_icon = "carry_gold"
+	self.dev_pku_carry_medium.value_in_gold = 1
+	self.dev_pku_carry_medium.AI_carry = {
+		SO_category = "enemies",
+	}
+	self.dev_pku_carry_heavy = {}
+	self.dev_pku_carry_heavy.type = "heavy"
+	self.dev_pku_carry_heavy.name_id = "hud_carry_gold_bar"
+	self.dev_pku_carry_heavy.bag_value = "gold_bar"
+	self.dev_pku_carry_heavy.loot_value = 5
+	self.dev_pku_carry_heavy.unit = "units/vanilla/dev/dev_pku_carry_heavy/dev_pku_carry_heavy_bag"
+	self.dev_pku_carry_heavy.hud_icon = "carry_gold"
+	self.dev_pku_carry_heavy.value_in_gold = 1
+	self.dev_pku_carry_heavy.AI_carry = {
+		SO_category = "enemies",
+	}
 	self.german_grunt_body = {}
 	self.german_grunt_body.type = "heavy"
 	self.german_grunt_body.name_id = "hud_carry_body"

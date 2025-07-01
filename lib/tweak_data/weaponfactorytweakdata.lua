@@ -2788,12 +2788,8 @@ function WeaponFactoryTweakData:_init_webley()
 		a_obj = "a_m",
 		name_id = "bm_wp_webley_m_standard",
 		third_unit = "units/vanilla/weapons/wpn_third_pis_webley_pts/wpn_third_pis_webley_m_standard",
-		type = "magazine",
+		type = "drum",
 		unit = "units/vanilla/weapons/wpn_fps_pis_webley_pts/wpn_fps_pis_webley_m_standard",
-		bullet_objects = {
-			amount = 6,
-			prefix = "g_bullet_",
-		},
 		stats = {
 			value = 1,
 		},
@@ -2878,6 +2874,24 @@ function WeaponFactoryTweakData:_init_webley()
 			value = 1,
 		},
 	}
+	self.parts.wpn_fps_pis_webley_bullets = {
+		a_obj = "a_bullets",
+		name_id = "bm_wp_webley_bullets",
+		third_unit = "units/vanilla/weapons/wpn_third_pis_webley_pts/wpn_third_pis_webley_bullets",
+		type = "magazine",
+		unit = "units/vanilla/weapons/wpn_fps_pis_webley_pts/wpn_fps_pis_webley_bullets",
+		animations = {
+			reload = "reload",
+			reload_not_empty = "reload_not_empty",
+		},
+		bullet_objects = {
+			amount = 6,
+			prefix = "g_bullet_",
+		},
+		stats = {
+			value = 1,
+		},
+	}
 	self.wpn_fps_pis_webley = {}
 	self.wpn_fps_pis_webley.unit = "units/vanilla/weapons/wpn_fps_pis_webley/wpn_fps_pis_webley"
 	self.wpn_fps_pis_webley.animations = {
@@ -2906,6 +2920,7 @@ function WeaponFactoryTweakData:_init_webley()
 		"wpn_fps_pis_webley_casing_5",
 		"wpn_fps_pis_webley_casing_6",
 		"wpn_fps_pis_webley_bullet_clip",
+		"wpn_fps_pis_webley_bullets",
 	}
 	self.wpn_fps_pis_webley.uses_parts = {
 		"wpn_fps_pis_webley_body_standard",
@@ -2922,6 +2937,7 @@ function WeaponFactoryTweakData:_init_webley()
 		"wpn_fps_pis_webley_casing_5",
 		"wpn_fps_pis_webley_casing_6",
 		"wpn_fps_pis_webley_bullet_clip",
+		"wpn_fps_pis_webley_bullets",
 	}
 	self.wpn_fps_pis_webley_npc = deep_clone(self.wpn_fps_pis_webley)
 	self.wpn_fps_pis_webley_npc.unit = "units/vanilla/weapons/wpn_fps_pis_webley/wpn_fps_pis_webley_npc"

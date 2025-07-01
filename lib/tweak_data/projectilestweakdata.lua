@@ -18,7 +18,6 @@ function ProjectilesTweakData:init(tweak_data)
 	self.m24.damage = 500
 	self.m24.player_damage = 10
 	self.m24.range = 1000
-	self.m24.name_id = "bm_grenade_frag"
 	self.m24.init_timer = 4.5
 	self.m24.animations = {}
 	self.m24.animations.equip_id = "equip_welrod"
@@ -45,7 +44,6 @@ function ProjectilesTweakData:init(tweak_data)
 	self.cluster.adjust_z = 5
 	self.cluster.player_damage = 3
 	self.cluster.range = 350
-	self.cluster.name_id = "bm_grenade_cluster"
 	self.cluster.animations = {}
 	self.cluster.animations.equip_id = "equip_welrod"
 	self.ammo_bag = {}
@@ -64,7 +62,6 @@ function ProjectilesTweakData:init(tweak_data)
 	self.ammo_bag.damage = 0
 	self.ammo_bag.player_damage = 0
 	self.ammo_bag.range = 1000
-	self.ammo_bag.name_id = "bm_grenade_frag"
 	self.ammo_bag.init_timer = 4.5
 	self.ammo_bag.animations = {}
 	self.ammo_bag.animations.equip_id = "equip_welrod"
@@ -98,7 +95,6 @@ function ProjectilesTweakData:init(tweak_data)
 	self.molotov.burn_duration = 20
 	self.molotov.burn_tick_period = 0.5
 	self.molotov.sound_event_impact_duration = 4
-	self.molotov.name_id = "bm_grenade_molotov"
 	self.molotov.alert_radius = 1500
 	self.molotov.fire_alert_radius = 1500
 	self.molotov.animations = {}

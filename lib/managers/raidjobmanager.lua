@@ -291,7 +291,10 @@ function RaidJobManager:external_start_mission_clbk()
 	managers.menu.loading_screen_visible = true
 	managers.worldcollection.moving_to_camp = false
 
-	managers.worldcollection:set_world_counter(self._current_job.sub_worlds_spawned or 0)
+	if self._current_job then
+		managers.worldcollection:set_world_counter(self._current_job.sub_worlds_spawned or 0)
+	end
+
 	managers.queued_tasks:queue(nil, managers.worldcollection.level_transition_started, managers.worldcollection, nil, 0.1, nil)
 
 	local mission_wp = managers.mission:get_element_by_name(RaidJobManager.WORLD_POINT_MISSION)
@@ -313,16 +316,18 @@ function RaidJobManager:external_start_mission_clbk()
 
 	local world, excluded_conts
 
-	if self._current_job.job_type == OperationsTweakData.JOB_TYPE_RAID then
-		world = tweak_data.levels[self._current_job.level_id].predefined_world
-		excluded_conts = self._current_job.excluded_continents
-	elseif self._current_job.job_type == OperationsTweakData.JOB_TYPE_OPERATION then
-		world = tweak_data.levels[self._current_job.current_event_data.level_id].predefined_world
-		excluded_conts = self._current_job.current_event_data.excluded_continents
-	else
-		Application:error("[RaidJobManager:external_start_mission_clbk()] Missing job_type in tweak data for", self._current_job.job_id)
+	if self._current_job then
+		if self._current_job.job_type == OperationsTweakData.JOB_TYPE_RAID then
+			world = tweak_data.levels[self._current_job.level_id].predefined_world
+			excluded_conts = self._current_job.excluded_continents
+		elseif self._current_job.job_type == OperationsTweakData.JOB_TYPE_OPERATION then
+			world = tweak_data.levels[self._current_job.current_event_data.level_id].predefined_world
+			excluded_conts = self._current_job.current_event_data.excluded_continents
+		else
+			Application:error("[RaidJobManager:external_start_mission_clbk()] Missing job_type in tweak data for", self._current_job.job_id)
 
-		return
+			return
+		end
 	end
 
 	if mission_wp then

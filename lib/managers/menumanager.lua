@@ -3842,12 +3842,20 @@ function MenuOptionInitiator:modify_debug_options(node)
 		cinematic_mode_item:set_value(cinematic_mode_value)
 	end
 
-	local spawn_all_intel_documents_item = node:item("toggle_show_all_intel_documents")
+	local spawn_all_intel_documents_item = node:item("toggle_spawn_all_intel_documents")
 
 	if spawn_all_intel_documents_item then
-		local spawn_all_intel_documents_value = Global.show_all_intel_documents and "on" or "off"
+		local spawn_all_intel_documents_value = Global.spawn_all_intel_documents and "on" or "off"
 
 		spawn_all_intel_documents_item:set_value(spawn_all_intel_documents_value)
+	end
+
+	local show_all_intel_documents_item = node:item("toggle_show_all_intel_documents")
+
+	if show_all_intel_documents_item then
+		local show_all_intel_documents_value = Global.show_intel_document_positions and "on" or "off"
+
+		show_all_intel_documents_item:set_value(show_all_intel_documents_value)
 	end
 
 	local show_dog_tags_item = node:item("toggle_debug_show_dog_tags")

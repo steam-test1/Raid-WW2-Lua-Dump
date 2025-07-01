@@ -338,6 +338,19 @@ function HUDNameLabel:hide()
 	self._object:set_visible(false)
 end
 
+function HUDNameLabel:is_overlapping(name_label)
+	local c1x = self._object:center_x()
+	local c1y = self._object:center_y()
+	local c2x = name_label:panel():center_x()
+	local c2y = name_label:panel():center_y()
+	local h = self._object:h()
+	local w = self._object:w()
+	local y_overlap = c1y - h / 2 < c2y + h / 2 or c2y - h / 2 < c1y + h / 2
+	local x_overlap = c1x + h / 2 > c2x - h / 2 or c2x + h / 2 > c1x - h / 2
+
+	return y_overlap and x_overlap
+end
+
 function HUDNameLabel:set_carry_info(carry_id)
 	local carry_tweak_data = tweak_data.carry[carry_id]
 

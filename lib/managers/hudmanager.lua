@@ -659,6 +659,44 @@ local nl_dir = Vector3()
 local nl_dir_normalized = Vector3()
 local nl_cam_forward = Vector3()
 
+function HUDManager:_calculate_name_label_screen_position(name_label, cam)
+	local HEIGHT_FROM_HEAD = 50
+	local head_obj = name_label:movement():get_object(Idstring("Head"))
+	local pos = head_obj:position()
+
+	mvector3.set(nl_w_pos, pos)
+	mvector3.set_z(nl_w_pos, mvector3.z(pos + Vector3(0, 0, HEIGHT_FROM_HEAD)))
+	mvector3.set(nl_pos, self._workspace:world_to_screen(cam, nl_w_pos))
+end
+
+function HUDManager:_handle_name_label_overlapping(name_label1, name_label2, cam_pos)
+	if not name_label1:is_overlapping(name_label2) then
+		return
+	end
+
+	if not name_label1:panel():visible() or not name_label2:panel():visible() then
+		return
+	end
+
+	local label1_unit_dist = (name_label1:movement():m_detect_pos() - cam_pos):length()
+	local label2_unit_dist = (name_label2:movement():m_detect_pos() - cam_pos):length()
+	local further_label = name_label1
+
+	if label1_unit_dist < label2_unit_dist then
+		further_label = name_label2
+	end
+
+	local Y_DIST_COEFF = 4
+	local DIST_TO_ALPHA_COEFF = 0.004
+	local label_dist = Y_DIST_COEFF * math.abs(name_label1:panel():center_y() - name_label2:panel():center_y())
+
+	label_dist = label_dist + math.abs(name_label1:panel():center_x() - name_label2:panel():center_x())
+
+	local alpha = math.min(math.clamp(label_dist * DIST_TO_ALPHA_COEFF, 0, 1), further_label:panel():alpha())
+
+	further_label:panel():set_alpha(alpha)
+end
+
 function HUDManager:_update_name_labels(t, dt)
 	local cam = managers.viewport:get_current_camera()
 
@@ -682,11 +720,8 @@ function HUDManager:_update_name_labels(t, dt)
 
 	for index, name_label in ipairs(self._hud.name_labels) do
 		local panel = panel or name_label:panel():parent()
-		local pos = name_label:movement():m_pos()
 
-		mvector3.set(nl_w_pos, pos)
-		mvector3.set_z(nl_w_pos, mvector3.z(name_label:movement():m_pos() + Vector3(0, 0, 195)))
-		mvector3.set(nl_pos, self._workspace:world_to_screen(cam, nl_w_pos))
+		self:_calculate_name_label_screen_position(name_label, cam)
 		mvector3.set(nl_dir, nl_w_pos)
 		mvector3.subtract(nl_dir, cam_pos)
 		mvector3.set(nl_dir_normalized, nl_dir)
@@ -711,6 +746,12 @@ function HUDManager:_update_name_labels(t, dt)
 
 		if name_label:panel():visible() then
 			name_label:panel():set_center(nl_pos.x, nl_pos.y)
+		end
+	end
+
+	for i = 1, #self._hud.name_labels do
+		for j = i + 1, #self._hud.name_labels do
+			self:_handle_name_label_overlapping(self._hud.name_labels[i], self._hud.name_labels[j], cam_pos)
 		end
 	end
 end

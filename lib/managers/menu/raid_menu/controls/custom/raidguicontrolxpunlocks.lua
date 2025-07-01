@@ -421,6 +421,12 @@ function RaidGUIControlXPDoubleUnlock:_create_weapon_icons(weapon_unlocks)
 	icon:set_center_x(self._weapon_icon_panel:w() / 2)
 	icon:set_center_y(RaidGUIControlXPDoubleUnlock.ICON_CENTER_Y)
 	self._weapon_name:set_text(self:translate(weapon_tweak_data.name_id, true))
+
+	local _, _, w, _ = self._weapon_name:text_rect()
+
+	if w > self._weapon_name:w() then
+		self:_refit_title_text(self._weapon_name, self._weapon_name:font_size())
+	end
 end
 
 function RaidGUIControlXPDoubleUnlock:_animate_skill_change(skill_panel, skills)
@@ -489,4 +495,26 @@ function RaidGUIControlXPDoubleUnlock:_animate_weapon_change(weapon_panel, weapo
 	end
 
 	self._weapon_panel:set_alpha(1)
+end
+
+function RaidGUIControlXPDoubleUnlock:_refit_title_text(title_control, original_font_size)
+	local font_sizes = {}
+
+	for index, size in pairs(tweak_data.gui.font_sizes) do
+		if size < original_font_size then
+			table.insert(font_sizes, size)
+		end
+	end
+
+	table.sort(font_sizes)
+
+	for i = #font_sizes, 1, -1 do
+		title_control:set_font_size(font_sizes[i])
+
+		local _, _, w, h = title_control:text_rect()
+
+		if h <= title_control:h() and w <= title_control:w() then
+			break
+		end
+	end
 end

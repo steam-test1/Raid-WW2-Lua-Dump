@@ -135,7 +135,7 @@ function VehicleTweakData:_init_data_kubelwagen()
 			name = "driver",
 			next_seat = "passenger_front",
 			camera_limits = {
-				90,
+				50,
 				45,
 			},
 		},

@@ -75,7 +75,7 @@ function BlackMarketManager:_setup_grenades()
 				equipped = false,
 				level = 0,
 				skill_based = false,
-				unlocked = false,
+				unlocked = true,
 			}
 
 			local is_default, weapon_level = managers.upgrades:get_value(grenade_id, self._defaults.grenade)
@@ -86,7 +86,7 @@ function BlackMarketManager:_setup_grenades()
 	end
 
 	grenades[self._defaults.grenade].equipped = false
-	grenades[self._defaults.grenade].unlocked = false
+	grenades[self._defaults.grenade].unlocked = true
 	grenades[self._defaults.grenade].amount = 0
 end
 

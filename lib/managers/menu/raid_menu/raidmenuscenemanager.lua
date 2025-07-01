@@ -118,7 +118,7 @@ function RaidMenuSceneManager:init()
 	self._close_menu_allowed = true
 	self._component_on_escape_callback = nil
 	self._background_image = _get_background_image_instance()
-	self._pause_menu_enabled = true
+	self._pause_menu_enabled = Application:editor()
 
 	self:hide_background()
 end

@@ -10,86 +10,6 @@ end
 function StatisticsManager:_setup(reset)
 	self._defaults = {}
 	self._defaults.killed = {
-		biker_escape = {
-			count = 0,
-			dismembered = 0,
-			explosion = 0,
-			head_shots = 0,
-			melee = 0,
-			tied = 0,
-		},
-		city_swat = {
-			count = 0,
-			dismembered = 0,
-			explosion = 0,
-			head_shots = 0,
-			melee = 0,
-			tied = 0,
-		},
-		civilian = {
-			count = 0,
-			dismembered = 0,
-			explosion = 0,
-			head_shots = 0,
-			melee = 0,
-			tied = 0,
-		},
-		civilian_female = {
-			count = 0,
-			dismembered = 0,
-			explosion = 0,
-			head_shots = 0,
-			melee = 0,
-			tied = 0,
-		},
-		cop = {
-			count = 0,
-			dismembered = 0,
-			explosion = 0,
-			head_shots = 0,
-			melee = 0,
-			tied = 0,
-		},
-		fbi = {
-			count = 0,
-			dismembered = 0,
-			explosion = 0,
-			head_shots = 0,
-			melee = 0,
-			tied = 0,
-		},
-		fbi_heavy_swat = {
-			count = 0,
-			dismembered = 0,
-			explosion = 0,
-			head_shots = 0,
-			melee = 0,
-			tied = 0,
-		},
-		fbi_swat = {
-			count = 0,
-			dismembered = 0,
-			explosion = 0,
-			head_shots = 0,
-			melee = 0,
-			tied = 0,
-		},
-		gangster = {
-			count = 0,
-			dismembered = 0,
-			explosion = 0,
-			head_shots = 0,
-			melee = 0,
-			tied = 0,
-		},
-		gensec = {
-			count = 0,
-			dismembered = 0,
-			explosion = 0,
-			head_shots = 0,
-			melee = 0,
-			tied = 0,
-		},
 		german_commander = {
 			count = 0,
 			dismembered = 0,
@@ -466,103 +386,7 @@ function StatisticsManager:_setup(reset)
 			melee = 0,
 			tied = 0,
 		},
-		heavy_swat = {
-			count = 0,
-			dismembered = 0,
-			explosion = 0,
-			head_shots = 0,
-			melee = 0,
-			tied = 0,
-		},
-		hector_boss = {
-			count = 0,
-			dismembered = 0,
-			explosion = 0,
-			head_shots = 0,
-			melee = 0,
-			tied = 0,
-		},
-		hector_boss_no_armor = {
-			count = 0,
-			dismembered = 0,
-			explosion = 0,
-			head_shots = 0,
-			melee = 0,
-			tied = 0,
-		},
-		hostage_rescue = {
-			count = 0,
-			dismembered = 0,
-			explosion = 0,
-			head_shots = 0,
-			melee = 0,
-			tied = 0,
-		},
-		mobster = {
-			count = 0,
-			dismembered = 0,
-			explosion = 0,
-			head_shots = 0,
-			melee = 0,
-			tied = 0,
-		},
-		mobster_boss = {
-			count = 0,
-			dismembered = 0,
-			explosion = 0,
-			head_shots = 0,
-			melee = 0,
-			tied = 0,
-		},
-		murkywater = {
-			count = 0,
-			dismembered = 0,
-			explosion = 0,
-			head_shots = 0,
-			melee = 0,
-			tied = 0,
-		},
 		other = {
-			count = 0,
-			dismembered = 0,
-			explosion = 0,
-			head_shots = 0,
-			melee = 0,
-			tied = 0,
-		},
-		phalanx_minion = {
-			count = 0,
-			dismembered = 0,
-			explosion = 0,
-			head_shots = 0,
-			melee = 0,
-			tied = 0,
-		},
-		phalanx_vip = {
-			count = 0,
-			dismembered = 0,
-			explosion = 0,
-			head_shots = 0,
-			melee = 0,
-			tied = 0,
-		},
-		security = {
-			count = 0,
-			dismembered = 0,
-			explosion = 0,
-			head_shots = 0,
-			melee = 0,
-			tied = 0,
-		},
-		shield = {
-			count = 0,
-			dismembered = 0,
-			explosion = 0,
-			head_shots = 0,
-			melee = 0,
-			tied = 0,
-		},
-		sniper = {
 			count = 0,
 			dismembered = 0,
 			explosion = 0,
@@ -579,54 +403,6 @@ function StatisticsManager:_setup(reset)
 			tied = 0,
 		},
 		soviet_nkvd_int_security_captain_b = {
-			count = 0,
-			dismembered = 0,
-			explosion = 0,
-			head_shots = 0,
-			melee = 0,
-			tied = 0,
-		},
-		swat = {
-			count = 0,
-			dismembered = 0,
-			explosion = 0,
-			head_shots = 0,
-			melee = 0,
-			tied = 0,
-		},
-		tank = {
-			count = 0,
-			dismembered = 0,
-			explosion = 0,
-			head_shots = 0,
-			melee = 0,
-			tied = 0,
-		},
-		tank_black = {
-			count = 0,
-			dismembered = 0,
-			explosion = 0,
-			head_shots = 0,
-			melee = 0,
-			tied = 0,
-		},
-		tank_green = {
-			count = 0,
-			dismembered = 0,
-			explosion = 0,
-			head_shots = 0,
-			melee = 0,
-			tied = 0,
-		},
-		tank_hw = {
-			count = 0,
-			dismembered = 0,
-			explosion = 0,
-			head_shots = 0,
-			melee = 0,
-			tied = 0,
-		},
-		tank_skull = {
 			count = 0,
 			dismembered = 0,
 			explosion = 0,
@@ -659,7 +435,7 @@ function StatisticsManager:_setup(reset)
 	}
 	self._defaults.sessions.levels = {}
 
-	for _, lvl in ipairs(tweak_data.levels._level_index) do
+	for _, lvl in ipairs(tweak_data.statistics:statistics_table()) do
 		self._defaults.sessions.levels[lvl] = {
 			completed = 0,
 			drop_in = 0,
@@ -674,9 +450,6 @@ function StatisticsManager:_setup(reset)
 	self._defaults.revives = {
 		npc_count = 0,
 		player_count = 0,
-	}
-	self._defaults.cameras = {
-		count = 0,
 	}
 	self._defaults.objectives = {
 		count = 0,
@@ -839,16 +612,22 @@ function StatisticsManager:start_session(data)
 		return
 	end
 
-	if Global.level_data.level_id and self._global.sessions.levels[Global.level_data.level_id] then
-		self._global.sessions.levels[Global.level_data.level_id].started = self._global.sessions.levels[Global.level_data.level_id].started + 1
-		self._global.sessions.levels[Global.level_data.level_id].from_beginning = self._global.sessions.levels[Global.level_data.level_id].from_beginning + (Global.statistics_manager.playing_from_start and 1 or 0)
-		self._global.sessions.levels[Global.level_data.level_id].drop_in = self._global.sessions.levels[Global.level_data.level_id].drop_in + (Global.statistics_manager.playing_from_start and 0 or 1)
+	local current_level_id = managers.raid_job:current_level_id()
+
+	if current_level_id and self._global.sessions.levels[current_level_id] then
+		self._global.sessions.levels[current_level_id].started = self._global.sessions.levels[current_level_id].started + 1
+		self._global.sessions.levels[current_level_id].from_beginning = self._global.sessions.levels[current_level_id].from_beginning + (Global.statistics_manager.playing_from_start and 1 or 0)
+		self._global.sessions.levels[current_level_id].drop_in = self._global.sessions.levels[current_level_id].drop_in + (Global.statistics_manager.playing_from_start and 0 or 1)
 	end
 
 	local job_id = managers.raid_job:current_job_id()
-	local job_stat = tostring(job_id) .. "_" .. tostring(Global.game_settings.difficulty)
 
-	self._global.sessions.jobs[job_stat .. "_started"] = (self._global.sessions.jobs[job_stat .. "_started"] or 0) + 1
+	if managers.raid_job._current_job and job_id then
+		local job_stat = tostring(job_id) .. "_part_" .. tostring(managers.raid_job._current_job.current_event)
+
+		self._global.sessions.jobs[job_stat .. "_started"] = (self._global.sessions.jobs[job_stat .. "_started"] or 0) + 1
+	end
+
 	self._global.session = deep_clone(self._defaults)
 	self._global.sessions.count = self._global.sessions.count + 1
 	self._start_session_time = Application:time()
@@ -880,8 +659,10 @@ function StatisticsManager:stop_session(data)
 		return
 	end
 
-	if not self._global.sessions.levels[Global.level_data.level_id] then
-		return
+	local current_level_id = managers.raid_job:current_level_id()
+
+	if not self._global.sessions.levels[current_level_id] then
+		-- block empty
 	end
 
 	self:_flush_log()
@@ -892,35 +673,39 @@ function StatisticsManager:stop_session(data)
 	local success = data and data.success
 	local session_time = self:get_session_time_seconds()
 
-	if Global.level_data.level_id then
-		self._global.sessions.levels[Global.level_data.level_id].time = self._global.sessions.levels[Global.level_data.level_id].time + session_time
+	if current_level_id then
+		self._global.sessions.levels[current_level_id].time = self._global.sessions.levels[current_level_id].time + session_time
 
 		if success then
-			self._global.sessions.levels[Global.level_data.level_id].completed = self._global.sessions.levels[Global.level_data.level_id].completed + 1
+			self._global.sessions.levels[current_level_id].completed = self._global.sessions.levels[current_level_id].completed + 1
 		else
-			self._global.sessions.levels[Global.level_data.level_id].quited = self._global.sessions.levels[Global.level_data.level_id].quited + 1
+			self._global.sessions.levels[current_level_id].quited = self._global.sessions.levels[current_level_id].quited + 1
 		end
 	end
 
 	local completion
 	local job_id = managers.raid_job:current_job_id()
 
-	if job_id and data then
-		local job_stat = tostring(job_id) .. "_" .. tostring(Global.game_settings.difficulty)
+	if managers.raid_job._current_job and job_id and data then
+		local job_stat = tostring(job_id) .. "_part_" .. tostring(managers.raid_job._current_job.current_event)
 
 		if data.type == "victory" then
+			self._global.sessions.jobs[job_stat .. "_victory"] = (self._global.sessions.jobs[job_stat .. "_victory"] or 0) + 1
+
 			if Global.statistics_manager.playing_from_start then
-				self._global.sessions.jobs[job_stat .. "_completed"] = (self._global.sessions.jobs[job_stat .. "_completed"] or 0) + 1
+				self._global.sessions.jobs[job_stat .. "_from_beginning"] = (self._global.sessions.jobs[job_stat .. "_from_beginning"] or 0) + 1
 				completion = "win_begin"
 			else
-				self._global.sessions.jobs[job_stat .. "_completed_dropin"] = (self._global.sessions.jobs[job_stat .. "_completed_dropin"] or 0) + 1
+				self._global.sessions.jobs[job_stat .. "_drop_in"] = (self._global.sessions.jobs[job_stat .. "_drop_in"] or 0) + 1
 				completion = "win_dropin"
 			end
 		elseif data.type == "gameover" then
+			self._global.sessions.jobs[job_stat .. "_failed"] = (self._global.sessions.jobs[job_stat .. "_failed"] or 0) + 1
+
 			if Global.statistics_manager.playing_from_start then
-				self._global.sessions.jobs[job_stat .. "_failed"] = (self._global.sessions.jobs[job_stat .. "_failed"] or 0) + 1
+				self._global.sessions.jobs[job_stat .. "_from_beginning"] = (self._global.sessions.jobs[job_stat .. "_from_beginning"] or 0) + 1
 			else
-				self._global.sessions.jobs[job_stat .. "_failed_dropin"] = (self._global.sessions.jobs[job_stat .. "_failed_dropin"] or 0) + 1
+				self._global.sessions.jobs[job_stat .. "_drop_in"] = (self._global.sessions.jobs[job_stat .. "_drop_in"] or 0) + 1
 			end
 
 			completion = "fail"
@@ -933,7 +718,7 @@ function StatisticsManager:stop_session(data)
 
 	self:_calculate_average()
 
-	if data and (managers.raid_job:is_at_last_event() and data.type == "victory" or data.quit) then
+	if data and data.quit then
 		Global.statistics_manager.playing_from_start = nil
 	end
 
@@ -1101,30 +886,6 @@ function StatisticsManager:received_best_of_stat(best_of_stat_count)
 	self:publish_top_stats_to_steam()
 end
 
-function StatisticsManager:use_ammo_bag()
-	self:_increment_misc("deploy_ammo", 1)
-end
-
-function StatisticsManager:use_doctor_bag()
-	self:_increment_misc("deploy_medic", 1)
-end
-
-function StatisticsManager:use_sentry_gun()
-	self:_increment_misc("deploy_sentry", 1)
-end
-
-function StatisticsManager:use_first_aid()
-	self:_increment_misc("deploy_firstaid", 1)
-end
-
-function StatisticsManager:use_body_bag()
-	self:_increment_misc("deploy_bodybag", 1)
-end
-
-function StatisticsManager:use_armor_bag()
-	self:_increment_misc("deploy_armorbag", 1)
-end
-
 function StatisticsManager:in_custody()
 	self:_increment_misc("in_custody", 1)
 end
@@ -1133,13 +894,38 @@ function StatisticsManager:trade(data)
 	self:_increment_misc("trade", 1)
 end
 
-function StatisticsManager:aquired_money(amount)
-	self:_increment_misc("cash", amount * 1000)
-end
-
 function StatisticsManager:mission_stats(name)
 	self._global.session.mission_stats = self._global.session.mission_stats or {}
 	self._global.session.mission_stats[name] = (self._global.session.mission_stats[name] or 0) + 1
+end
+
+function StatisticsManager:write_level_stats(session, stats)
+	for level_name, level_data in pairs(sessions.levels) do
+		stats["level_" .. level_name .. "_completed"] = {
+			type = "int",
+			value = level_data.completed,
+		}
+		stats["level_" .. level_name .. "_started"] = {
+			type = "int",
+			value = level_data.started,
+		}
+		stats["level_" .. level_name .. "_drop_in"] = {
+			type = "int",
+			value = level_data.drop_in,
+		}
+		stats["level_" .. level_name .. "_quit"] = {
+			type = "int",
+			value = level_data.quited,
+		}
+		stats["level_" .. level_name .. "_from_beginning"] = {
+			type = "int",
+			value = level_data.from_beginning,
+		}
+		stats["level_" .. level_name .. "_time"] = {
+			type = "int",
+			value = level_data.time,
+		}
+	end
 end
 
 function StatisticsManager:publish_to_steam(session, success, completion)
@@ -1156,7 +942,7 @@ function StatisticsManager:publish_to_steam(session, success, completion)
 		return
 	end
 
-	local level_list, job_list, mask_list, weapon_list, melee_list, grenade_list, enemy_list, armor_list, character_list = tweak_data.statistics:statistics_table()
+	local level_list, job_list, weapon_list, melee_list, grenade_list, enemy_list, character_list = tweak_data.statistics:statistics_table()
 	local stats = self:check_version()
 
 	self._global.play_time.minutes = math.ceil(self._global.play_time.minutes + session_time_minutes)
@@ -1435,25 +1221,50 @@ function StatisticsManager:publish_to_steam(session, success, completion)
 		end
 	end
 
-	if completion == "win_begin" or completion == "win_dropin" then
-		stats.heist_success = {
-			type = "int",
-			value = 1,
-		}
-	elseif completion == "fail" then
-		stats.heist_failed = {
-			type = "int",
-			value = 1,
-		}
-	end
-
 	local level_id = managers.raid_job:current_job_id()
 
-	if completion and table.contains(level_list, level_id) then
-		stats["level_" .. level_id] = {
-			type = "int",
-			value = 1,
-		}
+	if completion then
+		-- block empty
+	end
+
+	if table.contains(level_list, level_id) then
+		for level_name, level_data in pairs(self._global.sessions.levels) do
+			stats["level_" .. level_name .. "_completed"] = {
+				type = "int",
+				value = level_data.completed,
+			}
+			stats["level_" .. level_name .. "_started"] = {
+				type = "int",
+				value = level_data.started,
+			}
+			stats["level_" .. level_name .. "_drop_in"] = {
+				type = "int",
+				value = level_data.drop_in,
+			}
+			stats["level_" .. level_name .. "_quit"] = {
+				type = "int",
+				value = level_data.quited,
+			}
+			stats["level_" .. level_name .. "_from_beginning"] = {
+				type = "int",
+				value = level_data.from_beginning,
+			}
+			stats["level_" .. level_name .. "_time"] = {
+				type = "int",
+				value = level_data.time,
+			}
+		end
+	end
+
+	local job_id = managers.raid_job:current_job_id()
+
+	if table.contains(job_list, job_id) then
+		for job_name, job_data in pairs(self._global.sessions.jobs) do
+			stats["jobs_" .. job_name] = {
+				type = "int",
+				value = job_data,
+			}
+		end
 	end
 
 	if session.mission_stats then
@@ -1545,7 +1356,7 @@ function StatisticsManager:publish_equipped_to_steam()
 	end
 
 	local stats = {}
-	local level_list, job_list, mask_list, weapon_list, melee_list, grenade_list, enemy_list, armor_list, character_list, deployable_list = tweak_data.statistics:statistics_table()
+	local level_list, job_list, weapon_list, melee_list, grenade_list, enemy_list, character_list = tweak_data.statistics:statistics_table()
 	local primary_name = managers.blackmarket:equipped_primary().weapon_id
 	local primary_index = self:_table_contains(weapon_list, primary_name)
 
@@ -1689,10 +1500,6 @@ function StatisticsManager:_calculate_average()
 	end
 
 	self._global.average.sessions.time = self._global.average.sessions.time / t
-
-	for lvl, data in pairs(self._global.average.sessions.levels) do
-		data.time = data.time / t
-	end
 
 	for counter, value in pairs(self._global.average.revives) do
 		self._global.average.revives[counter] = math.round(value / t)
@@ -1914,32 +1721,6 @@ function StatisticsManager:completed_job(job_id, difficulty)
 	return self._global.sessions.jobs[tostring(job_id) .. "_" .. tostring(difficulty) .. "_completed"] or 0
 end
 
-function StatisticsManager:tied(data)
-	data.type = tweak_data.character[data.name] and tweak_data.character[data.name].challenges.type
-
-	if not self._global.killed[data.name] or not self._global.session.killed[data.name] then
-		Application:error("Bad name id applied to tied, " .. tostring(data.name) .. ". Defaulting to 'other'")
-
-		data.name = "other"
-	end
-
-	self._global.killed[data.name].tied = (self._global.killed[data.name].tied or 0) + 1
-
-	if self._session_started then
-		self._global.session.killed[data.name].tied = self._global.session.killed[data.name].tied + 1
-	end
-
-	if self._data_log and alive(managers.player:player_unit()) then
-		table.insert(self._data_log, {
-			3,
-			Application:time(),
-			managers.player:player_unit():position(),
-			"tiedown",
-			1,
-		})
-	end
-end
-
 function StatisticsManager:revived(data)
 	if not data.reviving_unit or data.reviving_unit ~= managers.player:player_unit() then
 		return
@@ -1966,14 +1747,6 @@ end
 
 function StatisticsManager:session_teammates_revived()
 	return self._global.session.revives
-end
-
-function StatisticsManager:camera_destroyed(data)
-	self._global.cameras.count = self._global.cameras.count + 1
-
-	if self._session_started then
-		self._global.session.cameras.count = self._global.session.cameras.count + 1
-	end
 end
 
 function StatisticsManager:objective_completed(data)
@@ -2140,8 +1913,6 @@ function StatisticsManager:print_stats()
 	print("\n- Revives \t\t-")
 	print("Count: " .. self._global.revives.npc_count .. "/" .. self._global.average.revives.npc_count .. "\t- Npcs")
 	print("Count: " .. self._global.revives.player_count .. "/" .. self._global.average.revives.player_count .. "\t- Players")
-	print("\n- Cameras \t\t-")
-	print("Count: " .. self._global.cameras.count)
 	print("\n- Objectives \t-")
 	print("Count: " .. self._global.objectives.count)
 	print("\n- Shots fired \t-")
@@ -2800,7 +2571,6 @@ end
 
 function StatisticsManager:save(data)
 	local state = {
-		camera = self._global.cameras,
 		camp = self._global.camp,
 		challenge_cards = self._global.challenge_cards,
 		downed = self._global.downed,

@@ -180,9 +180,17 @@ function EventCompleteState:at_enter(old_state, params)
 	self:_calculate_card_xp_bonuses()
 	self:check_complete_achievements()
 	self:set_statistics_values()
-	managers.statistics:stop_session()
+	managers.statistics:stop_session({
+		quit = false,
+		type = "victory",
+		success = self._success,
+	})
 	managers.statistics:send_statistics()
 	self:get_personal_stats()
+
+	if self._success then
+		managers.gold_economy:decrease_respec_reset()
+	end
 
 	if self.is_at_last_event and self:is_success() then
 		managers.lootdrop:add_listener(LootScreenGui.EVENT_KEY_PEER_LOOT_RECEIVED, {
@@ -593,7 +601,7 @@ function EventCompleteState:on_top_stats_ready()
 		managers.menu_component._raid_menu_special_honors_gui:show_honors()
 	end
 
-	if self.is_at_last_event and is_in_operation then
+	if self.is_at_last_event and self._success and is_in_operation then
 		local operation_save_data = managers.raid_job:get_save_slots()[managers.raid_job:get_current_save_slot()]
 
 		if not operation_save_data then

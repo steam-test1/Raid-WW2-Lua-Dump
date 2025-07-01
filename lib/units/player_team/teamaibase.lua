@@ -30,6 +30,7 @@ function TeamAIBase:arrest_settings()
 end
 
 function TeamAIBase:pre_destroy(unit)
+	self:remove_from_vehicle()
 	self:unregister()
 	UnitBase.pre_destroy(self, unit)
 end
@@ -66,6 +67,14 @@ function TeamAIBase:unregister()
 
 		self._char_name = managers.criminals:character_name_by_unit(self._unit)
 		self._registered = nil
+	end
+end
+
+function TeamAIBase:remove_from_vehicle()
+	local unit_movement = self._unit:movement()
+
+	if unit_movement.vehicle_unit and unit_movement.vehicle_seat and unit_movement.vehicle_seat.occupant == self._unit then
+		unit_movement.vehicle_unit:vehicle_driving():_evacuate_seat(unit_movement.vehicle_seat)
 	end
 end
 

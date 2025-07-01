@@ -336,6 +336,7 @@ function PlayerManager:need_send_player_status()
 	self._sent_player_status_this_frame = true
 
 	player:character_damage():send_set_status()
+	managers.raid_menu:set_pause_menu_enabled(true)
 	managers.player:sync_upgrades()
 
 	local current_player_level = managers.experience:current_level()
@@ -896,7 +897,7 @@ function PlayerManager:on_damage_dealt(unit, damage_info)
 	self._on_damage_dealt_t = t + (tweak_data.upgrades.on_damage_dealt_cooldown or 0)
 end
 
-function PlayerManager:on_headshot_dealt()
+function PlayerManager:on_headshot_dealt(is_kill)
 	local player_unit = self:player_unit()
 
 	if not player_unit then
@@ -918,10 +919,12 @@ function PlayerManager:on_headshot_dealt()
 		damage_ext:restore_armor(regen_armor_bonus)
 	end
 
-	managers.dialog:queue_dialog("player_gen_critical_hit", {
-		skip_idle_check = true,
-		instigator = managers.player:local_player(),
-	})
+	if is_kill then
+		managers.dialog:queue_dialog("player_gen_critical_hit", {
+			skip_idle_check = true,
+			instigator = managers.player:local_player(),
+		})
+	end
 end
 
 function PlayerManager:_check_damage_to_hot(t, unit, damage_info)

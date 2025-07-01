@@ -3111,24 +3111,24 @@ function GuiTweakData:_setup_hud_icons()
 	self.icons.equipment_panel_sps_interaction_key = {}
 	self.icons.equipment_panel_sps_interaction_key.texture = "ui/hud/atlas/raid_atlas"
 	self.icons.equipment_panel_sps_interaction_key.texture_rect = {
-		205,
-		1891,
+		649,
+		1717,
 		32,
 		32,
 	}
 	self.icons.equipment_panel_sto_safe_key = {}
 	self.icons.equipment_panel_sto_safe_key.texture = "ui/hud/atlas/raid_atlas"
 	self.icons.equipment_panel_sto_safe_key.texture_rect = {
-		205,
-		1925,
+		683,
+		1717,
 		32,
 		32,
 	}
 	self.icons.equipment_panel_tools = {}
 	self.icons.equipment_panel_tools.texture = "ui/hud/atlas/raid_atlas"
 	self.icons.equipment_panel_tools.texture_rect = {
-		205,
-		1959,
+		717,
+		1717,
 		32,
 		32,
 	}
@@ -3352,31 +3352,31 @@ function GuiTweakData:_setup_hud_icons()
 	self.icons.nationality_small_american.texture = "ui/hud/atlas/raid_atlas"
 	self.icons.nationality_small_american.texture_rect = {
 		205,
-		1993,
+		1891,
 		32,
 		32,
 	}
 	self.icons.nationality_small_british = {}
 	self.icons.nationality_small_british.texture = "ui/hud/atlas/raid_atlas"
 	self.icons.nationality_small_british.texture_rect = {
-		239,
-		1891,
+		205,
+		1925,
 		32,
 		32,
 	}
 	self.icons.nationality_small_german = {}
 	self.icons.nationality_small_german.texture = "ui/hud/atlas/raid_atlas"
 	self.icons.nationality_small_german.texture_rect = {
-		239,
-		1925,
+		205,
+		1959,
 		32,
 		32,
 	}
 	self.icons.nationality_small_russian = {}
 	self.icons.nationality_small_russian.texture = "ui/hud/atlas/raid_atlas"
 	self.icons.nationality_small_russian.texture_rect = {
-		239,
-		1959,
+		205,
+		1993,
 		32,
 		32,
 	}
@@ -3488,7 +3488,7 @@ function GuiTweakData:_setup_hud_icons()
 	self.icons.player_panel_host_indicator.texture = "ui/hud/atlas/raid_atlas"
 	self.icons.player_panel_host_indicator.texture_rect = {
 		239,
-		1993,
+		1891,
 		32,
 		32,
 	}
@@ -3500,25 +3500,25 @@ function GuiTweakData:_setup_hud_icons()
 		56,
 		56,
 	}
-	self.icons.player_panel_nationality_german = {}
-	self.icons.player_panel_nationality_german.texture = "ui/hud/atlas/raid_atlas"
-	self.icons.player_panel_nationality_german.texture_rect = {
-		43,
-		1975,
-		52,
-		52,
-	}
 	self.icons.player_panel_nationality_american = {}
 	self.icons.player_panel_nationality_american.texture = "ui/hud/atlas/raid_atlas"
 	self.icons.player_panel_nationality_american.texture_rect = {
-		97,
-		1807,
+		43,
+		1975,
 		52,
 		52,
 	}
 	self.icons.player_panel_nationality_british = {}
 	self.icons.player_panel_nationality_british.texture = "ui/hud/atlas/raid_atlas"
 	self.icons.player_panel_nationality_british.texture_rect = {
+		97,
+		1807,
+		52,
+		52,
+	}
+	self.icons.player_panel_nationality_german = {}
+	self.icons.player_panel_nationality_german.texture = "ui/hud/atlas/raid_atlas"
+	self.icons.player_panel_nationality_german.texture_rect = {
 		97,
 		1861,
 		52,
@@ -3740,42 +3740,50 @@ function GuiTweakData:_setup_hud_icons()
 		136,
 		42,
 	}
+	self.icons.weapon_panel_sho_geco = {}
+	self.icons.weapon_panel_sho_geco.texture = "ui/hud/atlas/raid_atlas"
+	self.icons.weapon_panel_sho_geco.texture_rect = {
+		235,
+		1739,
+		136,
+		42,
+	}
 	self.icons.weapon_panel_smg_mp38 = {}
 	self.icons.weapon_panel_smg_mp38.texture = "ui/hud/atlas/raid_atlas"
 	self.icons.weapon_panel_smg_mp38.texture_rect = {
-		235,
-		1739,
+		205,
+		1847,
 		136,
 		42,
 	}
 	self.icons.weapon_panel_smg_sten = {}
 	self.icons.weapon_panel_smg_sten.texture = "ui/hud/atlas/raid_atlas"
 	self.icons.weapon_panel_smg_sten.texture_rect = {
-		205,
-		1847,
+		259,
+		1783,
 		136,
 		42,
 	}
 	self.icons.weapon_panel_smg_sterling = {}
 	self.icons.weapon_panel_smg_sterling.texture = "ui/hud/atlas/raid_atlas"
 	self.icons.weapon_panel_smg_sterling.texture_rect = {
-		259,
-		1783,
+		373,
+		1739,
 		136,
 		42,
 	}
 	self.icons.weapon_panel_smg_thompson = {}
 	self.icons.weapon_panel_smg_thompson.texture = "ui/hud/atlas/raid_atlas"
 	self.icons.weapon_panel_smg_thompson.texture_rect = {
-		373,
-		1739,
+		395,
+		1673,
 		136,
 		42,
 	}
 	self.icons.weapon_panel_snp_m1903 = {}
 	self.icons.weapon_panel_snp_m1903.texture = "ui/hud/atlas/raid_atlas"
 	self.icons.weapon_panel_snp_m1903.texture_rect = {
-		395,
+		533,
 		1673,
 		136,
 		42,
@@ -3783,16 +3791,16 @@ function GuiTweakData:_setup_hud_icons()
 	self.icons.weapon_panel_snp_mosin = {}
 	self.icons.weapon_panel_snp_mosin.texture = "ui/hud/atlas/raid_atlas"
 	self.icons.weapon_panel_snp_mosin.texture_rect = {
-		533,
-		1673,
+		839,
+		1723,
 		136,
 		42,
 	}
 	self.icons.weapons_panel_pis_webley = {}
 	self.icons.weapons_panel_pis_webley.texture = "ui/hud/atlas/raid_atlas"
 	self.icons.weapons_panel_pis_webley.texture_rect = {
-		839,
-		1723,
+		511,
+		1717,
 		136,
 		42,
 	}
@@ -5614,7 +5622,7 @@ function GuiTweakData:_setup_skill_big_icons()
 	self.icons.skills_weapons_reduce_flinch_when_hit_large = {}
 	self.icons.skills_weapons_reduce_flinch_when_hit_large.texture = "ui/atlas/raid_atlas_experience_3"
 	self.icons.skills_weapons_reduce_flinch_when_hit_large.texture_rect = {
-		1028,
+		1130,
 		386,
 		380,
 		380,
@@ -5622,7 +5630,7 @@ function GuiTweakData:_setup_skill_big_icons()
 	self.icons.skills_weapons_reduce_movement_penalty_large = {}
 	self.icons.skills_weapons_reduce_movement_penalty_large.texture = "ui/atlas/raid_atlas_experience_3"
 	self.icons.skills_weapons_reduce_movement_penalty_large.texture_rect = {
-		1410,
+		1512,
 		766,
 		380,
 		380,
@@ -5679,14 +5687,14 @@ function GuiTweakData:_setup_skill_big_icons()
 	self.icons.weapon_gre_concrete_large.texture = "ui/atlas/raid_atlas_experience_3"
 	self.icons.weapon_gre_concrete_large.texture_rect = {
 		412,
-		386,
+		514,
 		306,
 		126,
 	}
 	self.icons.weapon_gre_d343_large = {}
 	self.icons.weapon_gre_d343_large.texture = "ui/atlas/raid_atlas_experience_3"
 	self.icons.weapon_gre_d343_large.texture_rect = {
-		412,
+		720,
 		514,
 		306,
 		126,
@@ -5694,7 +5702,7 @@ function GuiTweakData:_setup_skill_big_icons()
 	self.icons.weapon_gre_mills_large = {}
 	self.icons.weapon_gre_mills_large.texture = "ui/atlas/raid_atlas_experience_3"
 	self.icons.weapon_gre_mills_large.texture_rect = {
-		720,
+		822,
 		386,
 		306,
 		126,
@@ -5747,10 +5755,18 @@ function GuiTweakData:_setup_skill_big_icons()
 		408,
 		126,
 	}
+	self.icons.weapon_sho_geco_large = {}
+	self.icons.weapon_sho_geco_large.texture = "ui/atlas/raid_atlas_experience_3"
+	self.icons.weapon_sho_geco_large.texture_rect = {
+		412,
+		258,
+		408,
+		126,
+	}
 	self.icons.weapon_smg_mp38_large = {}
 	self.icons.weapon_smg_mp38_large.texture = "ui/atlas/raid_atlas_experience_3"
 	self.icons.weapon_smg_mp38_large.texture_rect = {
-		412,
+		822,
 		258,
 		408,
 		126,
@@ -5758,7 +5774,7 @@ function GuiTweakData:_setup_skill_big_icons()
 	self.icons.weapon_smg_sten_large = {}
 	self.icons.weapon_smg_sten_large.texture = "ui/atlas/raid_atlas_experience_3"
 	self.icons.weapon_smg_sten_large.texture_rect = {
-		822,
+		1232,
 		258,
 		408,
 		126,
@@ -5766,8 +5782,8 @@ function GuiTweakData:_setup_skill_big_icons()
 	self.icons.weapon_smg_sterling_large = {}
 	self.icons.weapon_smg_sterling_large.texture = "ui/atlas/raid_atlas_experience_3"
 	self.icons.weapon_smg_sterling_large.texture_rect = {
-		1232,
-		258,
+		2,
+		386,
 		408,
 		126,
 	}
@@ -5775,7 +5791,7 @@ function GuiTweakData:_setup_skill_big_icons()
 	self.icons.weapon_smg_thompson_large.texture = "ui/atlas/raid_atlas_experience_3"
 	self.icons.weapon_smg_thompson_large.texture_rect = {
 		2,
-		386,
+		514,
 		408,
 		126,
 	}
@@ -5783,15 +5799,15 @@ function GuiTweakData:_setup_skill_big_icons()
 	self.icons.weapon_snp_m1903_large.texture = "ui/atlas/raid_atlas_experience_3"
 	self.icons.weapon_snp_m1903_large.texture_rect = {
 		2,
-		514,
+		1912,
 		408,
 		126,
 	}
 	self.icons.weapon_snp_mosin_large = {}
 	self.icons.weapon_snp_mosin_large.texture = "ui/atlas/raid_atlas_experience_3"
 	self.icons.weapon_snp_mosin_large.texture_rect = {
-		2,
-		1912,
+		412,
+		386,
 		408,
 		126,
 	}

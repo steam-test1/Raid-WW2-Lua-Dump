@@ -262,6 +262,7 @@ function WeaponTweakData:_init_data_m24()
 	self.m24.use_data = {}
 	self.m24.usage = "c45"
 	self.m24.usage_anim = "c45"
+	self.m24.name_id = "bm_grenade_frag"
 	self.m24.sounds.prefix = ""
 	self.m24.sounds.single = "grenade_explode"
 	self.m24.sounds.autofire_start = nil
@@ -304,6 +305,7 @@ function WeaponTweakData:_init_data_molotov()
 	self.molotov.use_data = {}
 	self.molotov.usage = "c45"
 	self.molotov.usage_anim = "c45"
+	self.molotov.name_id = "bm_grenade_molotov"
 	self.molotov.sounds.prefix = ""
 	self.molotov.sounds.single = ""
 	self.molotov.sounds.autofire_start = nil
@@ -3028,9 +3030,9 @@ function WeaponTweakData:_init_geco(weapon_data)
 	self.geco.gui.initial_rotation.yaw = -90
 	self.geco.gui.initial_rotation.pitch = 0
 	self.geco.gui.initial_rotation.roll = 0
-	self.geco.gui.icon_large = "weapon_sho_1912_large"
+	self.geco.gui.icon_large = "weapon_sho_geco_large"
 	self.geco.hud = {}
-	self.geco.hud.icon = "weapon_panel_sho_1912"
+	self.geco.hud.icon = "weapon_panel_sho_geco"
 	self.geco.stats = {
 		alert_size = 7,
 		concealment = 12,

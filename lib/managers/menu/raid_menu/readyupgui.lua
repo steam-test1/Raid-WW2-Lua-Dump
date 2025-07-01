@@ -29,6 +29,7 @@ function ReadyUpGui:init(ws, fullscreen_ws, node, component_name)
 	managers.raid_menu:hide_background()
 
 	self._local_player_selected = true
+	Global.statistics_manager.playing_from_start = true
 end
 
 function ReadyUpGui:_setup_properties()
