@@ -28,7 +28,27 @@ end
 function WeaponSkillsManager:set_character_default_weapon_skills()
 	Global.weapon_skills_manager.weapon_skills_skill_tree = deep_clone(tweak_data.weapon_skills.skill_trees)
 
+	for weapon_name, skill_tree_data in pairs(Global.weapon_skills_manager.weapon_skills_skill_tree) do
+		if skill_tree_data.use_weapon_parts_cosmetics == nil then
+			skill_tree_data.use_weapon_parts_cosmetics = true
+		end
+	end
+
 	self:_initialize_weapon_skill_challenges()
+end
+
+function WeaponSkillsManager:set_cosmetics_flag_for_weapon_id(weapon_id, use_cosmetics_flag)
+	Global.weapon_skills_manager.weapon_skills_skill_tree[weapon_id].use_weapon_parts_cosmetics = use_cosmetics_flag
+end
+
+function WeaponSkillsManager:get_cosmetics_flag_for_weapon_id(weapon_id)
+	local cosmetics_flag
+
+	if Global.weapon_skills_manager.weapon_skills_skill_tree[weapon_id] then
+		cosmetics_flag = Global.weapon_skills_manager.weapon_skills_skill_tree[weapon_id].use_weapon_parts_cosmetics
+	end
+
+	return cosmetics_flag
 end
 
 function WeaponSkillsManager:_initialize_weapon_skill_challenges()
@@ -630,6 +650,12 @@ function WeaponSkillsManager:load(data, version)
 		end
 	end
 
+	for weapon_name, skill_tree_data in pairs(Global.weapon_skills_manager.weapon_skills_skill_tree) do
+		if skill_tree_data.use_weapon_parts_cosmetics == nil then
+			skill_tree_data.use_weapon_parts_cosmetics = true
+		end
+	end
+
 	self:_force_complete_stuck_weapon_challenges()
 	self:update_weapon_skills(WeaponInventoryManager.BM_CATEGORY_PRIMARY_ID, managers.weapon_inventory:get_equipped_primary_weapon_id(), "activate")
 	self:update_weapon_skills(WeaponInventoryManager.BM_CATEGORY_SECONDARY_ID, managers.weapon_inventory:get_equipped_secondary_weapon_id(), "activate")
@@ -702,14 +728,18 @@ function WeaponSkillsManager:recreate_weapon_blueprint(weapon_id, weapon_categor
 
 		new_blueprint = clone(managers.weapon_factory:get_default_blueprint_by_factory_id(weapon_factory_id))
 
-		for weapon_part_type, weapon_part_name in pairs(self._temp_weapon_skills) do
-			managers.weapon_factory:change_part_blueprint_only(weapon_factory_id, weapon_part_name, new_blueprint, false)
-		end
+		local use_cosmetics_flag = managers.weapon_skills:get_cosmetics_flag_for_weapon_id(weapon_id)
 
-		local scope_weapon_part_name = self:get_scope_weapon_part_name(weapon_id)
+		if use_cosmetics_flag then
+			for weapon_part_type, weapon_part_name in pairs(self._temp_weapon_skills) do
+				managers.weapon_factory:change_part_blueprint_only(weapon_factory_id, weapon_part_name, new_blueprint, false)
+			end
 
-		if scope_weapon_part_name and self:get_player_using_scope(weapon_id) then
-			managers.weapon_factory:change_part_blueprint_only(weapon_factory_id, scope_weapon_part_name, new_blueprint, false)
+			local scope_weapon_part_name = self:get_scope_weapon_part_name(weapon_id)
+
+			if scope_weapon_part_name and self:get_player_using_scope(weapon_id) then
+				managers.weapon_factory:change_part_blueprint_only(weapon_factory_id, scope_weapon_part_name, new_blueprint, false)
+			end
 		end
 
 		if apply_blueprint then

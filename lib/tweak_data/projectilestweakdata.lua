@@ -46,7 +46,7 @@ function ProjectilesTweakData:init(tweak_data)
 	self.concrete.is_a_grenade = true
 	self.concrete.damage = 600
 	self.concrete.player_damage = 10
-	self.concrete.range = 7500
+	self.concrete.range = 750
 	self.concrete.init_timer = 4.5
 	self.concrete.animations = {}
 	self.concrete.animations.equip_id = "equip_welrod"

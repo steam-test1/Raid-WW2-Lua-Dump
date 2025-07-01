@@ -122,7 +122,7 @@ function TeamAILogicIdle.enter(data, new_logic_name, enter_params)
 
 				local action_timeout_t = data.t + objective.action_duration
 
-				CopLogicBase.add_delayed_clbk(my_data, my_data.action_timeout_clbk_id, callback(CopLogicIdle, CopLogicIdle, "clbk_action_timeout", data), action_timeout_t)
+				CopLogicBase.add_delayed_clbk(my_data, my_data.action_timeout_clbk_id, callback(TeamAILogicIdle, TeamAILogicIdle, "clbk_action_timeout", data), action_timeout_t)
 			end
 
 			if objective.type == "act" then

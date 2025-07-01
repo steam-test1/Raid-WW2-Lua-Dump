@@ -2,7 +2,7 @@ RaidMenuOptionsControlsControllerMapping = RaidMenuOptionsControlsControllerMapp
 
 function RaidMenuOptionsControlsControllerMapping:init(ws, fullscreen_ws, node, component_name)
 	self._label_font = tweak_data.gui.fonts.din_compressed
-	self._label_font_size = tweak_data.gui.font_sizes.size_32
+	self._label_font_size = tweak_data.gui.font_sizes.size_24
 
 	RaidMenuOptionsControlsControllerMapping.super.init(self, ws, fullscreen_ws, node, component_name)
 end
@@ -67,7 +67,7 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot()
 
 	self:_set_position_size_controller_keybind_label({
 		align = "left",
-		coord_y = 0.007,
+		coord_y = 0.13,
 		control = self._controller_keybind_aim,
 	})
 
@@ -80,7 +80,7 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot()
 
 	self:_set_position_size_controller_keybind_label({
 		align = "left",
-		coord_y = 0.14,
+		coord_y = 0.25,
 		control = self._controller_keybind_lean,
 	})
 
@@ -93,7 +93,7 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot()
 
 	self:_set_position_size_controller_keybind_label({
 		align = "left",
-		coord_y = 0.362,
+		coord_y = 0.44,
 		control = self._controller_keybind_move,
 	})
 
@@ -106,7 +106,7 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot()
 
 	self:_set_position_size_controller_keybind_label({
 		align = "left",
-		coord_y = 0.507,
+		coord_y = 0.57,
 		control = self._controller_keybind_comm_wheel,
 	})
 
@@ -119,7 +119,7 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot()
 
 	self:_set_position_size_controller_keybind_label({
 		align = "left",
-		coord_y = 0.582,
+		coord_y = 0.635,
 		control = self._controller_keybind_grenade,
 	})
 
@@ -132,7 +132,7 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot()
 
 	self:_set_position_size_controller_keybind_label({
 		align = "left",
-		coord_y = 0.805,
+		coord_y = 0.83,
 		control = self._controller_keybind_fire_mode,
 	})
 
@@ -145,7 +145,7 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot()
 
 	self:_set_position_size_controller_keybind_label({
 		align = "bottom",
-		coord_x = 0.466,
+		coord_x = 0.47,
 		control = self._controller_keybind_knife,
 	})
 
@@ -158,7 +158,7 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot()
 
 	self:_set_position_size_controller_keybind_label({
 		align = "bottom",
-		coord_x = 0.615,
+		coord_x = 0.6,
 		control = self._controller_keybind_melee_attack,
 	})
 
@@ -171,7 +171,7 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot()
 
 	self:_set_position_size_controller_keybind_label({
 		align = "right",
-		coord_y = 0.007,
+		coord_y = 0.13,
 		control = self._controller_keybind_fire_weapon,
 	})
 
@@ -184,7 +184,7 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot()
 
 	self:_set_position_size_controller_keybind_label({
 		align = "right",
-		coord_y = 0.14,
+		coord_y = 0.25,
 		control = self._controller_keybind_interact,
 	})
 
@@ -197,7 +197,7 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot()
 
 	self:_set_position_size_controller_keybind_label({
 		align = "right",
-		coord_y = 0.258,
+		coord_y = 0.36,
 		control = self._controller_keybind_switch_weapons,
 	})
 
@@ -210,7 +210,7 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot()
 
 	self:_set_position_size_controller_keybind_label({
 		align = "right",
-		coord_y = 0.357,
+		coord_y = 0.44,
 		control = self._controller_keybind_crouch,
 	})
 
@@ -223,7 +223,7 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot()
 
 	self:_set_position_size_controller_keybind_label({
 		align = "right",
-		coord_y = 0.447,
+		coord_y = 0.52,
 		control = self._controller_keybind_jump,
 	})
 
@@ -236,7 +236,7 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot()
 
 	self:_set_position_size_controller_keybind_label({
 		align = "right",
-		coord_y = 0.537,
+		coord_y = 0.59,
 		control = self._controller_keybind_reload,
 	})
 
@@ -249,7 +249,7 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot()
 
 	self:_set_position_size_controller_keybind_label({
 		align = "top",
-		coord_x = 0.46,
+		coord_x = 0.465,
 		control = self._controller_keybind_mission_info,
 	})
 
@@ -262,9 +262,24 @@ function RaidMenuOptionsControlsControllerMapping:_layout_on_foot()
 
 	self:_set_position_size_controller_keybind_label({
 		align = "top",
-		coord_x = 0.57,
+		coord_x = 0.56,
 		control = self._controller_keybind_ingame_menu,
 	})
+
+	self._controller_keybind_warcry = self._panel_on_foot:label({
+		name = "warcry",
+		font = self._label_font,
+		font_size = self._label_font_size,
+		text = self:translate("menu_controller_keybind_warcry", true),
+	})
+
+	local x, y, w, h = self._controller_keybind_warcry:text_rect()
+
+	self._controller_keybind_warcry:set_w(w)
+	self._controller_keybind_warcry:set_h(h)
+	self._controller_keybind_warcry:set_align("center")
+	self._controller_keybind_warcry:set_center_x(self._controller_image:center_x() + 20)
+	self._controller_keybind_warcry:set_y(self._controller_image:y() - 20)
 end
 
 function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle()
@@ -286,7 +301,7 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle()
 
 	self:_set_position_size_controller_keybind_label({
 		align = "left",
-		coord_y = 0.007,
+		coord_y = 0.13,
 		control = self._controller_keybind_reverse,
 	})
 
@@ -299,7 +314,7 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle()
 
 	self:_set_position_size_controller_keybind_label({
 		align = "left",
-		coord_y = 0.14,
+		coord_y = 0.25,
 		control = self._controller_keybind_change_seat,
 	})
 
@@ -312,7 +327,7 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle()
 
 	self:_set_position_size_controller_keybind_label({
 		align = "left",
-		coord_y = 0.362,
+		coord_y = 0.44,
 		control = self._controller_keybind_steering,
 	})
 
@@ -325,7 +340,7 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle()
 
 	self:_set_position_size_controller_keybind_label({
 		align = "left",
-		coord_y = 0.507,
+		coord_y = 0.57,
 		control = self._controller_keybind_na2,
 	})
 
@@ -338,7 +353,7 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle()
 
 	self:_set_position_size_controller_keybind_label({
 		align = "left",
-		coord_y = 0.582,
+		coord_y = 0.635,
 		control = self._controller_keybind_na3,
 	})
 
@@ -351,7 +366,7 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle()
 
 	self:_set_position_size_controller_keybind_label({
 		align = "left",
-		coord_y = 0.805,
+		coord_y = 0.83,
 		control = self._controller_keybind_na4,
 	})
 
@@ -364,7 +379,7 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle()
 
 	self:_set_position_size_controller_keybind_label({
 		align = "bottom",
-		coord_x = 0.466,
+		coord_x = 0.47,
 		control = self._controller_keybind_na5,
 	})
 
@@ -377,7 +392,7 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle()
 
 	self:_set_position_size_controller_keybind_label({
 		align = "bottom",
-		coord_x = 0.615,
+		coord_x = 0.6,
 		control = self._controller_keybind_look_back,
 	})
 
@@ -390,7 +405,7 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle()
 
 	self:_set_position_size_controller_keybind_label({
 		align = "right",
-		coord_y = 0.007,
+		coord_y = 0.13,
 		control = self._controller_keybind_na7,
 	})
 
@@ -403,7 +418,7 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle()
 
 	self:_set_position_size_controller_keybind_label({
 		align = "right",
-		coord_y = 0.14,
+		coord_y = 0.25,
 		control = self._controller_keybind_exit_vehicle,
 	})
 
@@ -416,7 +431,7 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle()
 
 	self:_set_position_size_controller_keybind_label({
 		align = "right",
-		coord_y = 0.258,
+		coord_y = 0.36,
 		control = self._controller_keybind_na8,
 	})
 
@@ -429,7 +444,7 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle()
 
 	self:_set_position_size_controller_keybind_label({
 		align = "right",
-		coord_y = 0.357,
+		coord_y = 0.44,
 		control = self._controller_keybind_switch_pose,
 	})
 
@@ -442,7 +457,7 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle()
 
 	self:_set_position_size_controller_keybind_label({
 		align = "right",
-		coord_y = 0.447,
+		coord_y = 0.52,
 		control = self._controller_keybind_handbrake,
 	})
 
@@ -455,7 +470,7 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle()
 
 	self:_set_position_size_controller_keybind_label({
 		align = "right",
-		coord_y = 0.537,
+		coord_y = 0.59,
 		control = self._controller_keybind_na10,
 	})
 
@@ -468,7 +483,7 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle()
 
 	self:_set_position_size_controller_keybind_label({
 		align = "top",
-		coord_x = 0.46,
+		coord_x = 0.465,
 		control = self._controller_keybind_mission_info_vehicle,
 	})
 
@@ -481,7 +496,7 @@ function RaidMenuOptionsControlsControllerMapping:_layout_in_vehicle()
 
 	self:_set_position_size_controller_keybind_label({
 		align = "top",
-		coord_x = 0.57,
+		coord_x = 0.56,
 		control = self._controller_keybind_ingame_menu_vehicle,
 	})
 end
@@ -494,16 +509,16 @@ function RaidMenuOptionsControlsControllerMapping:_set_position_size_controller_
 	params.control:set_align("center")
 
 	if params.align == "left" then
-		params.control:set_right(self._controller_image:x() + self._controller_image:w() * 0.13)
+		params.control:set_right(self._controller_image:x() + self._controller_image:w() * 0.17)
 		params.control:set_center_y(self._controller_image:y() + self._controller_image:h() * params.coord_y)
 	elseif params.align == "bottom" then
 		params.control:set_top(self._controller_image:bottom())
 		params.control:set_center_x(self._controller_image:x() + self._controller_image:w() * params.coord_x)
 	elseif params.align == "right" then
-		params.control:set_left(self._controller_image:right() - self._controller_image:w() * 0.13)
+		params.control:set_left(self._controller_image:right() - self._controller_image:w() * 0.17)
 		params.control:set_center_y(self._controller_image:y() + self._controller_image:h() * params.coord_y)
 	elseif params.align == "top" then
-		params.control:set_bottom(self._controller_image:top())
+		params.control:set_bottom(self._controller_image:top() + self._controller_image:top() * 0.43)
 		params.control:set_center_x(self._controller_image:x() + self._controller_image:w() * params.coord_x)
 	end
 end

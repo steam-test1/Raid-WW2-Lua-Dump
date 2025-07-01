@@ -4,6 +4,7 @@ WeaponSelectionGui.CATEGORY_TABS_Y = 18
 WeaponSelectionGui.SCREEN_STATE_WEAPON_LIST = "weapon_list"
 WeaponSelectionGui.SCREEN_STATE_UPGRADE = "upgrade"
 WeaponSelectionGui.WEAPON_EQUIP_SOUND = "weapon_upgrade_apply"
+WeaponSelectionGui.WEAPON_ERROR_EQUIP_SOUND = "generic_fail_sound"
 WeaponSelectionGui.TOGGLE_SWITCH_BINDING = {
 	{
 		"menu_enable_disable_scope",
@@ -92,6 +93,7 @@ end
 function WeaponSelectionGui:_layout()
 	WeaponSelectionGui.super._layout(self)
 	self:_disable_dof()
+	self:_layout_use_weapon_parts_as_cosmetics()
 	self:_layout_left_side_panels()
 	self:_layout_category_tabs()
 	self:_layout_lists()
@@ -114,6 +116,23 @@ function WeaponSelectionGui:set_weapon_select_allowed(value)
 
 	self._list_tabs:set_abort_selection(not value)
 	self._weapon_list:set_abort_selection(not value)
+end
+
+function WeaponSelectionGui:_layout_use_weapon_parts_as_cosmetics()
+	local weapon_parts_toggle_params = {
+		align = "right",
+		h = 66,
+		layer = 1,
+		name = "toggle_weapon_parts",
+		text_align = "right",
+		w = 200,
+		x = 1200,
+		y = 120,
+		description = self:translate("menu_enable_disable_weapon_cosmetics", true),
+		on_click_callback = callback(self, self, "on_toggle_weapon_parts_click"),
+	}
+
+	self._weapon_parts_toggle = self._root_panel:switch_button(weapon_parts_toggle_params)
 end
 
 function WeaponSelectionGui:_layout_left_side_panels()
@@ -528,6 +547,17 @@ function WeaponSelectionGui:_update_scope_switch()
 	end
 end
 
+function WeaponSelectionGui:on_toggle_weapon_parts_click()
+	Application:trace("[WeaponSelectionGui:on_toggle_weapon_parts_click] ", self._weapon_parts_toggle:get_value())
+
+	local is_toggle_button_active = self._weapon_parts_toggle:get_value()
+
+	if self._selected_weapon_id then
+		managers.weapon_skills:set_cosmetics_flag_for_weapon_id(self._selected_weapon_id, is_toggle_button_active)
+		self:_recreate_and_show_weapon_parts()
+	end
+end
+
 function WeaponSelectionGui:on_weapon_category_selected(selected_category)
 	if selected_category == WeaponInventoryManager.BM_CATEGORY_PRIMARY_ID or selected_category == WeaponInventoryManager.BM_CATEGORY_SECONDARY_ID then
 		self._upgrade_button:show()
@@ -596,8 +626,7 @@ function WeaponSelectionGui:on_item_selected_weapon_list(weapon_data)
 end
 
 function WeaponSelectionGui:on_item_double_click()
-	self:_equip_weapon()
-	managers.menu_component:post_event(WeaponSelectionGui.WEAPON_EQUIP_SOUND)
+	self:on_equip_button_click()
 end
 
 function WeaponSelectionGui:data_source_weapon_list()
@@ -733,7 +762,12 @@ function WeaponSelectionGui:data_source_weapon_list()
 end
 
 function WeaponSelectionGui:on_equip_button_click()
-	self:_equip_weapon()
+	if self._weapon_list:selected_item():data().value.unlocked and self._weapon_list:selected_item() ~= self._weapon_list:get_active_item() then
+		managers.menu_component:post_event(WeaponSelectionGui.WEAPON_EQUIP_SOUND)
+		self:_equip_weapon()
+	elseif not self._weapon_list:selected_item():data().value.unlocked then
+		managers.menu_component:post_event(WeaponSelectionGui.WEAPON_ERROR_EQUIP_SOUND)
+	end
 end
 
 function WeaponSelectionGui:on_enable_scope_click()
@@ -930,15 +964,20 @@ function WeaponSelectionGui:_update_weapon_stats(reset_applied_stats)
 	local weapon_category = managers.weapon_inventory:get_weapon_category_by_weapon_category_id(self._selected_weapon_category_id)
 
 	if weapon_category == WeaponInventoryManager.BM_CATEGORY_PRIMARY_NAME or weapon_category == WeaponInventoryManager.BM_CATEGORY_SECONDARY_NAME then
+		local ammo_max_multiplier = 1
+
+		if weapon_category == WeaponInventoryManager.BM_CATEGORY_PRIMARY_NAME then
+			ammo_max_multiplier = managers.player:upgrade_value("player", "primary_ammo_increase", 1)
+		elseif weapon_category == WeaponInventoryManager.BM_CATEGORY_SECONDARY_NAME then
+			ammo_max_multiplier = managers.player:upgrade_value("player", "secondary_ammo_increase", 1)
+		end
+
 		local base_stats, mods_stats, skill_stats = managers.weapon_inventory:get_weapon_stats(selected_weapon_data.weapon_id, weapon_category, selected_weapon_data.slot, nil)
 		local damage = f2s(base_stats.damage.value) + f2s(skill_stats.damage.value)
 		local magazine = f2s(base_stats.magazine.value) + f2s(skill_stats.magazine.value)
-		local total_ammo = f2s(base_stats.totalammo.value) + f2s(skill_stats.totalammo.value)
+		local total_ammo = f2s(base_stats.totalammo.value * ammo_max_multiplier)
 		local fire_rate = f2s(base_stats.fire_rate.value) + f2s(skill_stats.fire_rate.value)
 		local accuracy = f2s(100 / (1 + tweak_data.weapon[selected_weapon_data.weapon_id].spread.steelsight)) + f2s(skill_stats.spread.value)
-
-		print(skill_stats.spread.value)
-
 		local stability = f2s(base_stats.recoil.value) + f2s(skill_stats.recoil.value)
 
 		if reset_applied_stats then
@@ -1038,6 +1077,17 @@ function WeaponSelectionGui:_select_weapon(weapon_id, weapon_category_switched)
 	local weapon_switched = self._selected_weapon_id ~= weapon_id
 
 	self._selected_weapon_id = weapon_id
+
+	local use_cosmetics = managers.weapon_skills:get_cosmetics_flag_for_weapon_id(weapon_id)
+
+	Application:trace("[WeaponSelectionGui:_select_weapon] use_cosmetics ", use_cosmetics)
+
+	if use_cosmetics == nil then
+		self._weapon_parts_toggle:hide()
+	else
+		self._weapon_parts_toggle:show()
+		self._weapon_parts_toggle:set_value_and_render(use_cosmetics)
+	end
 
 	if weapon_category_switched then
 		managers.weapon_skills:deactivate_all_upgrades_for_bm_weapon_category_id(self._selected_weapon_category_id)
@@ -1235,6 +1285,12 @@ function WeaponSelectionGui:_unit_loading_complete(params)
 	local selected_weapon_slot = managers.weapon_inventory:get_weapon_slot_by_weapon_id(params.weapon_id, self._selected_weapon_category_id)
 	local weapon_category = managers.weapon_inventory:get_weapon_category_by_weapon_category_id(self._selected_weapon_category_id)
 	local weapon_blueprint = params.pre_created_blueprint or managers.blackmarket:get_weapon_blueprint(weapon_category, selected_weapon_slot)
+	local weapon_factory_id = managers.weapon_factory:get_factory_id_by_weapon_id(params.weapon_id)
+	local default_blueprint = clone(managers.weapon_factory:get_default_blueprint_by_factory_id(weapon_factory_id))
+	local use_default_blueprint = not self._weapon_parts_toggle:get_value()
+
+	weapon_blueprint = not use_default_blueprint and weapon_blueprint or default_blueprint
+
 	local parts, blueprint = managers.weapon_factory:preload_blueprint(params.weapon_factory_id, weapon_blueprint, false, callback(self, self, "_preload_blueprint_completed", {
 		direction_forward = direction_forward,
 		direction_up = direction_up,

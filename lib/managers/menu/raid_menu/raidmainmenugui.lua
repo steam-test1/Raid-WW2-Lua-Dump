@@ -74,8 +74,6 @@ function RaidMainMenuGui:_layout_title_logo()
 		logo_texture_rect = tweak_data.gui.icons.raid_se_logo_small.texture_rect
 	end
 
-	logo_texture = tweak_data.gui.icons.raid_hw_logo_small.texture
-	logo_texture_rect = tweak_data.gui.icons.raid_hw_logo_small.texture_rect
 	self._raid_logo_small = self._root_panel:image({
 		name = "raid_logo_small",
 		x = 0,

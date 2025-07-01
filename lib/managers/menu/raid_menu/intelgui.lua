@@ -11,7 +11,7 @@ function IntelGui:init(ws, fullscreen_ws, node, component_name)
 end
 
 function IntelGui:_set_initial_data()
-	self._selected_category = IntelGui.CATEGORY_BULLETINS
+	self._selected_category = IntelGui.CATEGORY_RAID_PERSONEL
 end
 
 function IntelGui:_layout()

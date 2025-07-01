@@ -141,6 +141,7 @@ end
 function RaidGUIControlButtonSwitch:set_value_and_render(value)
 	self:set_value(value)
 	self:_render_images()
+	self:highlight_off()
 end
 
 function RaidGUIControlButtonSwitch:_render_images()
