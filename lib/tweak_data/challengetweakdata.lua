@@ -2,6 +2,7 @@ ChallengeTweakData = ChallengeTweakData or class()
 ChallengeTweakData.TASK_GENERIC = "task_generic"
 ChallengeTweakData.TASK_KILL_ENEMIES = "task_kill_enemies"
 ChallengeTweakData.TASK_COLLECT_AMMO = "task_collect_ammo"
+ChallengeTweakData.TASK_COLLECT_CANDY = "task_collect_candy"
 
 function ChallengeTweakData:init()
 	self.tighter_spread_easy = {
@@ -221,5 +222,20 @@ function ChallengeTweakData:init()
 		25,
 		50,
 		60,
+	}
+	self.candy_gold_bar = {
+		challenge_briefing_id = "weapon_inventory_gold_bar_briefing",
+		challenge_done_text_id = "weapon_inventory_gold_bar_completed",
+		challenge_icon = "weapon_gre_gold_bar_large",
+		challenge_name_id = "card_trick_or_treat_name_id",
+		reminders = {
+			111,
+			222,
+			333,
+			444,
+			555,
+		},
+		target = 666,
+		type = ChallengeTweakData.TASK_COLLECT_CANDY,
 	}
 end

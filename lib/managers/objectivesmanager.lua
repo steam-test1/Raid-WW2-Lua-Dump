@@ -166,7 +166,7 @@ function ObjectivesManager:_remind_objetive(id, title_id)
 
 		managers.hud:remind_objective(id)
 		managers.hud:present_mid_text({
-			["P\x00\x00\x00\x00"] = nil,
+			[""] = nil,
 			text = text,
 			time = 4,
 			title = title_message,
@@ -259,7 +259,7 @@ function ObjectivesManager:activate_objective(id, load_data, data, world_id, ski
 
 	if not skip_toast then
 		managers.hud:present_mid_text({
-			set_sub_objective_current_amount = nil,
+			[""] = nil,
 			text = text,
 			time = 4.5,
 			title = title_message,

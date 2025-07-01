@@ -131,6 +131,11 @@ function WeaponInventoryTweakData:init()
 			slot = 6,
 			weapon_id = "betty",
 		},
+		{
+			challenge = "candy_gold_bar",
+			slot = 7,
+			weapon_id = "gold_bar",
+		},
 	}
 	self.weapon_melee_index = {
 		{

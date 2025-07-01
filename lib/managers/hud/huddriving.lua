@@ -402,7 +402,7 @@ function HUDDriving:set_vehicle_loot_info(vehicle, current_loot, current_loot_am
 		return
 	end
 
-	if current_loot and current_loot[1] and current_loot[1].carry_id == "german_spy" then
+	if current_loot and current_loot[1] and current_loot[1].carry_id == "german_spy_body" then
 		return
 	end
 

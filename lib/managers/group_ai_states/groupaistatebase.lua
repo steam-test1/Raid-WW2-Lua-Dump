@@ -245,7 +245,7 @@ function GroupAIStateBase:_init_misc_data(clean_up)
 
 	self._phalanx_data = {
 		minions = {},
-		type = nil,
+		stand = nil,
 	}
 end
 

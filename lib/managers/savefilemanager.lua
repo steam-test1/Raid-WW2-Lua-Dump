@@ -52,7 +52,7 @@ function SavefileManager:init()
 
 	if not Global.savefile_manager then
 		Global.savefile_manager = {
-			_resave_required = nil,
+			SavefileInfo = nil,
 			meta_data_list = {},
 		}
 	end
@@ -942,9 +942,9 @@ function SavefileManager:_load_cache(slot)
 			managers.raid_job:load_game(cache)
 			managers.statistics:load(cache, version)
 			self:_set_setting_changed(false)
-			managers.weapon_inventory:load_account_wide_info(cache)
 			managers.skilltree:load_profile_slot(cache, version)
 			managers.challenge:load_profile_slot(cache, version)
+			managers.weapon_inventory:load_account_wide_info(cache)
 			managers.breadcrumb:load_profile_slot(cache, version)
 			managers.consumable_missions:load(cache, version)
 			managers.gold_economy:load(cache, version)

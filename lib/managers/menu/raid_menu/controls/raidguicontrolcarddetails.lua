@@ -84,15 +84,11 @@ function RaidGUIControlCardDetails:_create_card_details()
 		color = Color.white,
 		font = tweak_data.gui.fonts.lato,
 		font_size = RaidGUIControlLootCardDetails.DESCRIPTION_RIGHT_TEXT_SIZE,
-		h = 0,
 		layer = self._object:layer() + 1,
 		name = "card_description_label_right",
 		text = "",
 		visible = false,
-		w = 0,
 		wrap = true,
-		x = 0,
-		y = 0,
 	}
 
 	self._card_description_label_right = self._object:label(params_card_description_right)

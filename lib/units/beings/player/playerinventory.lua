@@ -140,6 +140,10 @@ function PlayerInventory:clbk_weapon_unit_destroyed(weap_unit)
 	end
 end
 
+function PlayerInventory:latest_addition()
+	return self._latest_addition
+end
+
 function PlayerInventory:get_latest_addition_hud_data()
 	local unit = self._available_selections[self._latest_addition].unit
 	local _, _, amount = unit:base():ammo_info()

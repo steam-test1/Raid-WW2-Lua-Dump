@@ -240,6 +240,7 @@ require("lib/managers/menu/raid_menu/controls/custom/RaidGUIControlKickMuteWidge
 require("lib/managers/menu/raid_menu/controls/custom/RaidGUIControlGridItemSkill")
 require("lib/managers/menu/raid_menu/controls/custom/RaidGUIControlSkillProgression")
 require("lib/managers/menu/raid_menu/controls/custom/RaidGUIControlButtonSkillTiny")
+require("lib/managers/menu/raid_menu/controls/custom/RaidGUIControlEventDisplay")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlWeaponStats")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlMeleeWeaponStats")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlGrenadeWeaponStats")

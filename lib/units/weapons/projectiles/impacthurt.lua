@@ -21,6 +21,7 @@ function ImpactHurt:_setup_from_tweak_data()
 		debug_pause_unit(self._unit, "No projectile tweakdata entry for unit.", proj_entry, self._tweak_data)
 	end
 
+	self._range = self._tweak_data.range
 	self._damage_class_string = tweak_data.projectiles[self.name_id].bullet_class or "InstantBulletBase"
 	self._damage_class = CoreSerialize.string_to_classtable(self._damage_class_string)
 	self._damage = self._tweak_data.damage or 1
@@ -29,6 +30,12 @@ function ImpactHurt:_setup_from_tweak_data()
 end
 
 function ImpactHurt:set_owner_peer_id(peer_id)
+	if not peer_id then
+		Application:warn("[ImpactHurt:set_owner_peer_id] Cannot set nil peer id", peer_id)
+
+		return
+	end
+
 	self._owner_peer_id = peer_id
 	ImpactHurt._impact_units[peer_id] = ImpactHurt._impact_units[peer_id] or {}
 	ImpactHurt._impact_units[peer_id][self._unit:key()] = self._unit
@@ -158,8 +165,8 @@ function ImpactHurt:_on_collision(col_ray)
 	dynamic_body:set_velocity(new_vel)
 end
 
-function ImpactHurt:add_damage_result(unit, is_dead, damage_percent)
-	print("[ImpactHurt:add_damage_result]", unit, is_dead, damage_percent)
+function ImpactHurt:add_damage_result(unit, attacker, is_dead, damage_percent)
+	return
 end
 
 function ImpactHurt:update(unit, t, dt)
@@ -629,6 +636,7 @@ function ImpactHurt:save(data)
 	local state = {
 		is_pickup = self._is_pickup,
 		is_pickup_dynamic = self._is_pickup_dynamic,
+		owner_peer_id = self._owner_peer_id,
 	}
 
 	if not self._sync_attach_data then
@@ -664,6 +672,8 @@ function ImpactHurt:load(data)
 	ImpactHurt.super.load(self, data)
 
 	local state = data.ImpactHurt
+
+	self:set_owner_peer_id(state.owner_peer_id)
 
 	if state.is_pickup then
 		self:_switch_to_pickup(state.is_pickup_dynamic)

@@ -108,8 +108,8 @@ function CharacterSelectionGui:_layout()
 		x = 1308,
 		y = 0,
 	}, {
+		Vector3 = nil,
 		class = nil,
-		slot = nil,
 	})
 
 	self._right_side_info:set_right(self._root_panel:right())

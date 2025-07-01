@@ -216,6 +216,9 @@ function StatisticsTweakData:statistics_table()
 		"mills",
 		"decoy_coin",
 		"betty",
+		"gold_bar",
+		"thermite",
+		"anti_tank",
 	}
 	local enemy_list = {
 		"german_black_waffen_sentry_gasmask",

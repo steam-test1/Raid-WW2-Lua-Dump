@@ -528,15 +528,39 @@ function StatisticsManager:_setup(reset)
 		complete_mission_grand_total = 0,
 		complete_mission_rare_total = 0,
 		complete_operation_common_count = 0,
+		complete_operation_halloween_count = 0,
 		complete_operation_rare_count = 0,
 		complete_operation_uncommon_count = 0,
 		complete_raid_common_count = 0,
+		complete_raid_halloween_count = 0,
 		complete_raid_rare_count = 0,
 		complete_raid_uncommon_count = 0,
 		start_operation_common_count = 0,
+		start_operation_halloween_count = 0,
 		start_operation_rare_count = 0,
 		start_operation_uncommon_count = 0,
 		start_raid_common_count = 0,
+		start_raid_halloween_count = 0,
+		start_raid_rare_count = 0,
+		start_raid_uncommon_count = 0,
+	}
+	self._defaults.booster_cards = {
+		complete_mission_grand_total = 0,
+		complete_mission_rare_total = 0,
+		complete_operation_common_count = 0,
+		complete_operation_halloween_count = 0,
+		complete_operation_rare_count = 0,
+		complete_operation_uncommon_count = 0,
+		complete_raid_common_count = 0,
+		complete_raid_halloween_count = 0,
+		complete_raid_rare_count = 0,
+		complete_raid_uncommon_count = 0,
+		start_operation_common_count = 0,
+		start_operation_halloween_count = 0,
+		start_operation_rare_count = 0,
+		start_operation_uncommon_count = 0,
+		start_raid_common_count = 0,
+		start_raid_halloween_count = 0,
 		start_raid_rare_count = 0,
 		start_raid_uncommon_count = 0,
 	}
@@ -685,7 +709,7 @@ function StatisticsManager:start_session(data)
 	self._start_session_drop_in = data.drop_in
 	self._session_started = true
 
-	managers.statistics:start_job_with_challenge_card(managers.raid_job:current_job_type(), managers.challenge_cards:get_active_card())
+	managers.statistics:start_job_with_card(managers.raid_job:current_job_type(), managers.challenge_cards:get_active_card())
 end
 
 function StatisticsManager:get_session_time_seconds()
@@ -871,7 +895,29 @@ function StatisticsManager:publish_top_stats_to_steam()
 	managers.network.account:publish_statistics(stats)
 end
 
+function StatisticsManager:start_job_with_card(job_type, challenge_card_data)
+	if challenge_card_data then
+		if challenge_card_data.card_category == ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD then
+			self:_increment_challenge_card_stat("start", job_type, challenge_card_data)
+		elseif challenge_card_data.card_category == ChallengeCardsTweakData.CARD_CATEGORY_BOOSTER then
+			self:_increment_booster_card_stat("start", job_type, challenge_card_data)
+		end
+	end
+end
+
+function StatisticsManager:complete_job_with_card(job_type, challenge_card_data)
+	if challenge_card_data then
+		if challenge_card_data.card_category == ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD then
+			self:_increment_challenge_card_stat("complete", job_type, challenge_card_data)
+		elseif challenge_card_data.card_category == ChallengeCardsTweakData.CARD_CATEGORY_BOOSTER then
+			self:_increment_booster_card_stat("complete", job_type, challenge_card_data)
+		end
+	end
+end
+
 function StatisticsManager:_increment_challenge_card_stat(start_complete_flag, job_type, challenge_card_data)
+	Application:trace("[StatisticsManager:_increment_challenge_card_stat] start_complete_flag, job_type, challenge_card_data ", start_complete_flag, job_type, inspect(challenge_card_data))
+
 	if not challenge_card_data then
 		return false
 	end
@@ -896,21 +942,65 @@ function StatisticsManager:_increment_challenge_card_stat(start_complete_flag, j
 		card_rarity_name = "uncommon"
 	elseif challenge_card_data.rarity == LootDropTweakData.RARITY_RARE then
 		card_rarity_name = "rare"
+	elseif challenge_card_data.rarity == LootDropTweakData.RARITY_HALLOWEEN_2017 then
+		card_rarity_name = "halloween"
 	end
 
 	local stat_name = start_complete_flag .. "_" .. job_type_name .. "_" .. card_rarity_name .. "_count"
 
+	Application:info("[StatisticsManager:_increment_challenge_card_stat] incremented stat_name", stat_name)
+
 	self._global.challenge_cards[stat_name] = (self._global.challenge_cards[stat_name] or 0) + 1
+
+	if start_complete_flag == "complete" then
+		Application:info("[StatisticsManager:_increment_challenge_card_stat] incremented challenge_cards_complete_mission_grand_total")
+
+		self._global.challenge_cards.complete_mission_grand_total = (self._global.challenge_cards.complete_mission_grand_total or 0) + 1
+	end
 end
 
-function StatisticsManager:start_job_with_challenge_card(job_type, challenge_card_data)
-	self:_increment_challenge_card_stat("start", job_type, challenge_card_data)
-end
+function StatisticsManager:_increment_booster_card_stat(start_complete_flag, job_type, booster_card_data)
+	Application:trace("[StatisticsManager:_increment_booster_card_stat] start_complete_flag, job_type, booster_card_data ", start_complete_flag, job_type, inspect(booster_card_data))
 
-function StatisticsManager:complete_job_with_challenge_card(job_type, challenge_card_data)
-	self:_increment_challenge_card_stat("complete", job_type, challenge_card_data)
+	if not booster_card_data then
+		return false
+	end
 
-	self._global.challenge_cards.complete_mission_grand_total = (self._global.challenge_cards.complete_mission_grand_total or 0) + 1
+	if not self._global.booster_cards then
+		self._global.booster_cards = {}
+	end
+
+	local job_type_name = ""
+
+	if job_type == OperationsTweakData.JOB_TYPE_RAID then
+		job_type_name = "raid"
+	elseif job_type == OperationsTweakData.JOB_TYPE_OPERATION then
+		job_type_name = "operation"
+	end
+
+	local card_rarity_name = ""
+
+	if booster_card_data.rarity == LootDropTweakData.RARITY_COMMON then
+		card_rarity_name = "common"
+	elseif booster_card_data.rarity == LootDropTweakData.RARITY_UNCOMMON then
+		card_rarity_name = "uncommon"
+	elseif booster_card_data.rarity == LootDropTweakData.RARITY_RARE then
+		card_rarity_name = "rare"
+	elseif booster_card_data.rarity == LootDropTweakData.RARITY_HALLOWEEN_2017 then
+		card_rarity_name = "halloween"
+	end
+
+	local stat_name = start_complete_flag .. "_" .. job_type_name .. "_" .. card_rarity_name .. "_count"
+
+	Application:info("[StatisticsManager:_increment_booster_card_stat] incremented stat_name", stat_name)
+
+	self._global.booster_cards[stat_name] = (self._global.booster_cards[stat_name] or 0) + 1
+
+	if start_complete_flag == "complete" then
+		Application:info("[StatisticsManager:_increment_booster_card_stat] incremented booster_cards_complete_mission_grand_total")
+
+		self._global.booster_cards.complete_mission_grand_total = (self._global.booster_cards.complete_mission_grand_total or 0) + 1
+	end
 end
 
 function StatisticsManager:open_loot_crate()
@@ -946,7 +1036,7 @@ function StatisticsManager:received_best_of_stat(best_of_stat_count)
 	if managers.raid_job:stage_success() then
 		local all_peers = managers.network:session() and managers.network:session():all_peers() or {}
 
-		if #all_peers == 4 or Global._fake_four_players then
+		if #all_peers > 1 then
 			self:_increment_misc("best_of_stats", best_of_stat_count)
 		end
 
@@ -1151,6 +1241,11 @@ function StatisticsManager:publish_to_steam(session, success, completion)
 		type = "int",
 		value = self._global.challenge_cards.complete_operation_uncommon_count or 0,
 	}
+	stats.challenge_cards_complete_operation_halloween_count = {
+		method = "set",
+		type = "int",
+		value = self._global.challenge_cards.complete_operation_uncommon_count or 0,
+	}
 	stats.challenge_cards_complete_raid_common_count = {
 		method = "set",
 		type = "int",
@@ -1162,6 +1257,11 @@ function StatisticsManager:publish_to_steam(session, success, completion)
 		value = self._global.challenge_cards.complete_raid_rare_count or 0,
 	}
 	stats.challenge_cards_complete_raid_uncommon_count = {
+		method = "set",
+		type = "int",
+		value = self._global.challenge_cards.complete_raid_uncommon_count or 0,
+	}
+	stats.challenge_cards_complete_raid_halloween_count = {
 		method = "set",
 		type = "int",
 		value = self._global.challenge_cards.complete_raid_uncommon_count or 0,
@@ -1181,6 +1281,11 @@ function StatisticsManager:publish_to_steam(session, success, completion)
 		type = "int",
 		value = self._global.challenge_cards.start_operation_uncommon_count or 0,
 	}
+	stats.challenge_cards_start_operation_halloween_count = {
+		method = "set",
+		type = "int",
+		value = self._global.challenge_cards.start_operation_uncommon_count or 0,
+	}
 	stats.challenge_cards_start_raid_common_count = {
 		method = "set",
 		type = "int",
@@ -1196,35 +1301,130 @@ function StatisticsManager:publish_to_steam(session, success, completion)
 		type = "int",
 		value = self._global.challenge_cards.start_raid_uncommon_count or 0,
 	}
+	stats.challenge_cards_start_raid_halloween_count = {
+		method = "set",
+		type = "int",
+		value = self._global.challenge_cards.start_raid_uncommon_count or 0,
+	}
 	stats.challenge_cards_complete_operation_total_count = {
 		method = "set",
 		type = "int",
-		value = (self._global.challenge_cards.complete_operation_common_count or 0) + (self._global.challenge_cards.complete_operation_rare_count or 0) + (self._global.challenge_cards.complete_operation_uncommon_count or 0),
+		value = (self._global.challenge_cards.complete_operation_common_count or 0) + (self._global.challenge_cards.complete_operation_rare_count or 0) + (self._global.challenge_cards.complete_operation_uncommon_count or 0) + (self._global.challenge_cards.complete_operation_halloween_count or 0),
 	}
 	stats.challenge_cards_complete_raid_total_count = {
 		method = "set",
 		type = "int",
-		value = (self._global.challenge_cards.complete_raid_common_count or 0) + (self._global.challenge_cards.complete_raid_rare_count or 0) + (self._global.challenge_cards.complete_raid_uncommon_count or 0),
+		value = (self._global.challenge_cards.complete_raid_common_count or 0) + (self._global.challenge_cards.complete_raid_rare_count or 0) + (self._global.challenge_cards.complete_raid_uncommon_count or 0) + (self._global.challenge_cards.complete_raid_halloween_count or 0),
 	}
 	stats.challenge_cards_start_operation_total_count = {
 		method = "set",
 		type = "int",
-		value = (self._global.challenge_cards.start_operation_common_count or 0) + (self._global.challenge_cards.start_operation_rare_count or 0) + (self._global.challenge_cards.start_operation_uncommon_count or 0),
+		value = (self._global.challenge_cards.start_operation_common_count or 0) + (self._global.challenge_cards.start_operation_rare_count or 0) + (self._global.challenge_cards.start_operation_uncommon_count or 0) + (self._global.challenge_cards.start_operation_halloween_count or 0),
 	}
 	stats.challenge_cards_start_raid_total_count = {
 		method = "set",
 		type = "int",
-		value = (self._global.challenge_cards.start_raid_common_count or 0) + (self._global.challenge_cards.start_raid_rare_count or 0) + (self._global.challenge_cards.start_raid_uncommon_count or 0),
+		value = (self._global.challenge_cards.start_raid_common_count or 0) + (self._global.challenge_cards.start_raid_rare_count or 0) + (self._global.challenge_cards.start_raid_uncommon_count or 0) + (self._global.challenge_cards.start_raid_halloween_count or 0),
+	}
+	stats.challenge_cards_complete_mission_rare_total = {
+		method = "set",
+		type = "int",
+		value = (self._global.challenge_cards.complete_operation_rare_count or 0) + (self._global.challenge_cards.complete_raid_rare_count or 0),
 	}
 	stats.challenge_cards_complete_mission_grand_total = {
 		method = "set",
 		type = "int",
 		value = self._global.challenge_cards.complete_mission_grand_total or 0,
 	}
-	stats.challenge_cards_complete_mission_rare_total = {
+	stats.booster_cards_complete_operation_common_count = {
 		method = "set",
 		type = "int",
-		value = (self._global.challenge_cards.complete_operation_rare_count or 0) + (self._global.challenge_cards.complete_raid_rare_count or 0),
+		value = self._global.booster_cards.complete_operation_common_count or 0,
+	}
+	stats.booster_cards_complete_operation_rare_count = {
+		method = "set",
+		type = "int",
+		value = self._global.booster_cards.complete_operation_rare_count or 0,
+	}
+	stats.booster_cards_complete_operation_uncommon_count = {
+		method = "set",
+		type = "int",
+		value = self._global.booster_cards.complete_operation_uncommon_count or 0,
+	}
+	stats.booster_cards_complete_raid_common_count = {
+		method = "set",
+		type = "int",
+		value = self._global.booster_cards.complete_raid_common_count or 0,
+	}
+	stats.booster_cards_complete_raid_rare_count = {
+		method = "set",
+		type = "int",
+		value = self._global.booster_cards.complete_raid_rare_count or 0,
+	}
+	stats.booster_cards_complete_raid_uncommon_count = {
+		method = "set",
+		type = "int",
+		value = self._global.booster_cards.complete_raid_uncommon_count or 0,
+	}
+	stats.booster_cards_start_operation_common_count = {
+		method = "set",
+		type = "int",
+		value = self._global.booster_cards.start_operation_common_count or 0,
+	}
+	stats.booster_cards_start_operation_rare_count = {
+		method = "set",
+		type = "int",
+		value = self._global.booster_cards.start_operation_rare_count or 0,
+	}
+	stats.booster_cards_start_operation_uncommon_count = {
+		method = "set",
+		type = "int",
+		value = self._global.booster_cards.start_operation_uncommon_count or 0,
+	}
+	stats.booster_cards_start_raid_common_count = {
+		method = "set",
+		type = "int",
+		value = self._global.booster_cards.start_raid_common_count or 0,
+	}
+	stats.booster_cards_start_raid_rare_count = {
+		method = "set",
+		type = "int",
+		value = self._global.booster_cards.start_raid_rare_count or 0,
+	}
+	stats.booster_cards_start_raid_uncommon_count = {
+		method = "set",
+		type = "int",
+		value = self._global.booster_cards.start_raid_uncommon_count or 0,
+	}
+	stats.booster_cards_complete_operation_total_count = {
+		method = "set",
+		type = "int",
+		value = (self._global.booster_cards.complete_operation_common_count or 0) + (self._global.booster_cards.complete_operation_rare_count or 0) + (self._global.booster_cards.complete_operation_uncommon_count or 0) + (self._global.booster_cards.complete_operation_halloween_count or 0),
+	}
+	stats.booster_cards_complete_raid_total_count = {
+		method = "set",
+		type = "int",
+		value = (self._global.booster_cards.complete_raid_common_count or 0) + (self._global.booster_cards.complete_raid_rare_count or 0) + (self._global.booster_cards.complete_raid_uncommon_count or 0) + (self._global.booster_cards.complete_raid_halloween_count or 0),
+	}
+	stats.booster_cards_start_operation_total_count = {
+		method = "set",
+		type = "int",
+		value = (self._global.booster_cards.start_operation_common_count or 0) + (self._global.booster_cards.start_operation_rare_count or 0) + (self._global.booster_cards.start_operation_uncommon_count or 0) + (self._global.booster_cards.start_operation_halloween_count or 0),
+	}
+	stats.booster_cards_start_raid_total_count = {
+		method = "set",
+		type = "int",
+		value = (self._global.booster_cards.start_raid_common_count or 0) + (self._global.booster_cards.start_raid_rare_count or 0) + (self._global.booster_cards.start_raid_uncommon_count or 0) + (self._global.booster_cards.start_raid_halloween_count or 0),
+	}
+	stats.booster_cards_complete_mission_rare_total = {
+		method = "set",
+		type = "int",
+		value = (self._global.booster_cards.complete_operation_rare_count or 0) + (self._global.booster_cards.complete_raid_rare_count or 0),
+	}
+	stats.booster_cards_complete_mission_grand_total = {
+		method = "set",
+		type = "int",
+		value = self._global.booster_cards.complete_mission_grand_total or 0,
 	}
 	stats.ach_open_loot_crates = {
 		type = "int",
@@ -2389,24 +2589,23 @@ function StatisticsManager:check_if_all_stats_received()
 
 	for _, peer in pairs(all_peers) do
 		if not peer:has_statistics() then
-			managers.queued_tasks:queue("stats_manager_check_if_all_stats_received", self.check_if_all_stats_received, self, nil, 0.2, nil)
+			managers.queued_tasks:queue("stats_manager_check_if_all_stats_received", self.check_if_all_stats_received, self, nil, 0.2)
 
 			return
 		end
 	end
 
 	managers.queued_tasks:unqueue_all("stats_manager_check_if_all_stats_received", self)
-	self:calculate_top_stats()
-	self:calculate_bottom_stats()
+	self:calculate_top_stats(all_peers)
+	self:calculate_bottom_stats(all_peers)
+	self:calculate_downed_stats(all_peers)
 	managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.TOP_STATS_READY)
-	managers.network:session():send_to_peers("sync_statistics_result", self.top_stats[1].id, self.top_stats[1].peer_id, self.top_stats[1].peer_name, self.top_stats[1].score, self.top_stats[2].id, self.top_stats[2].peer_id, self.top_stats[2].peer_name, self.top_stats[2].score, self.top_stats[3].id, self.top_stats[3].peer_id, self.top_stats[3].peer_name, self.top_stats[3].score, self.bottom_stats[1].id, self.bottom_stats[1].peer_id, self.bottom_stats[1].peer_name, self.bottom_stats[1].score, self.bottom_stats[2].id, self.bottom_stats[2].peer_id, self.bottom_stats[2].peer_name, self.bottom_stats[2].score, self.bottom_stats[3].id, self.bottom_stats[3].peer_id, self.bottom_stats[3].peer_name, self.bottom_stats[3].score)
+	managers.network:session():send_to_peers("sync_statistics_result", self.top_stats[1].id, self.top_stats[1].peer_id, self.top_stats[1].peer_name, self.top_stats[1].score, self.top_stats[2].id, self.top_stats[2].peer_id, self.top_stats[2].peer_name, self.top_stats[2].score, self.top_stats[3].id, self.top_stats[3].peer_id, self.top_stats[3].peer_name, self.top_stats[3].score, self.bottom_stats[1].id, self.bottom_stats[1].peer_id, self.bottom_stats[1].peer_name, self.bottom_stats[1].score, self.bottom_stats[2].id, self.bottom_stats[2].peer_id, self.bottom_stats[2].peer_name, self.bottom_stats[2].score, self.bottom_stats[3].id, self.bottom_stats[3].peer_id, self.bottom_stats[3].peer_name, self.bottom_stats[3].score, self.downed_stats.total_downs, self.downed_stats.all_players_downed)
 end
 
-function StatisticsManager:calculate_top_stats()
+function StatisticsManager:calculate_top_stats(all_peers)
 	Application:trace("[StatisticsManager:calculate_top_stats]")
 
-	local all_peers = managers.network:session():all_peers()
-	local achievement_all_players_downed = true
 	local stats = {}
 
 	for index, stat_id in pairs(tweak_data.statistics.top_stats_calculated) do
@@ -2421,10 +2620,6 @@ function StatisticsManager:calculate_top_stats()
 	for _, peer in pairs(all_peers) do
 		if peer:has_statistics() then
 			local peer_stats = peer:statistics()
-
-			if not peer_stats.downs or peer_stats.downs < 1 then
-				achievement_all_players_downed = false
-			end
 
 			for index, stat_id in pairs(tweak_data.statistics.top_stats_calculated) do
 				local stat_tweak_data = tweak_data.statistics.top_stats[stat_id]
@@ -2477,18 +2672,12 @@ function StatisticsManager:calculate_top_stats()
 
 	Application:trace("peer_1_top_stats_count self.top_stats ", peer_1_top_stats_count, inspect(self.top_stats))
 
-	if #all_peers == 4 and managers.raid_job:stage_success() and peer_1_top_stats_count > 0 then
+	if managers.raid_job:stage_success() and #all_peers > 1 and peer_1_top_stats_count > 0 then
 		self:received_best_of_stat(peer_1_top_stats_count)
-	end
-
-	if #all_peers == 4 and achievement_all_players_downed and managers.raid_job:stage_success() then
-		managers.achievment:award("ach_all_players_go_to_bleedout")
-		managers.network:session():send_to_peers("sync_award_achievement", "ach_all_players_go_to_bleedout")
 	end
 end
 
-function StatisticsManager:calculate_bottom_stats()
-	local all_peers = managers.network:session():all_peers()
+function StatisticsManager:calculate_bottom_stats(all_peers)
 	local stats = {}
 
 	for index, bottom_stat in pairs(tweak_data.statistics.bottom_stats_calculated) do
@@ -2549,6 +2738,35 @@ function StatisticsManager:calculate_bottom_stats()
 
 		self.bottom_stats[stat_slot] = indexed_stats[i]
 	end
+end
+
+function StatisticsManager:calculate_downed_stats(all_peers)
+	Application:trace("[StatisticsManager:calculate_downed_stats]")
+
+	local all_players_downed = true
+	local total_downs = 0
+	local current_job = managers.raid_job:current_job()
+
+	if current_job and current_job.job_type == OperationsTweakData.JOB_TYPE_OPERATION then
+		total_downs, all_players_downed = managers.raid_job:get_save_slot_downs(managers.raid_job:get_current_save_slot())
+	end
+
+	for _, peer in pairs(all_peers) do
+		if peer:has_statistics() then
+			local peer_stats = peer:statistics()
+
+			total_downs = total_downs + (peer_stats.downs or 0)
+
+			if not peer_stats.downs or peer_stats.downs < 1 then
+				all_players_downed = false
+			end
+		end
+	end
+
+	self.downed_stats = {
+		all_players_downed = all_players_downed,
+		total_downs = total_downs,
+	}
 end
 
 function StatisticsManager:set_top_stats(top_stat_1_id, top_stat_1_peer_id, top_stat_1_peer_name, top_stat_1_score, top_stat_2_id, top_stat_2_peer_id, top_stat_2_peer_name, top_stat_2_score, top_stat_3_id, top_stat_3_peer_id, top_stat_3_peer_name, top_stat_3_score)
@@ -2613,6 +2831,13 @@ function StatisticsManager:set_bottom_stats(bottom_stat_1_id, bottom_stat_1_peer
 	})
 end
 
+function StatisticsManager:set_downed_stats(total_downs, all_players_downed)
+	self.downed_stats = {
+		all_players_downed = all_players_downed,
+		total_downs = total_downs,
+	}
+end
+
 function StatisticsManager:_get_free_stat_slot(stat_table)
 	local slot = math.random(1, 3)
 
@@ -2629,6 +2854,10 @@ end
 
 function StatisticsManager:get_bottom_stats()
 	return self.bottom_stats
+end
+
+function StatisticsManager:get_downed_stats()
+	return self.downed_stats
 end
 
 function StatisticsManager:get_top_stats_for_player(peer_id)
@@ -2690,6 +2919,7 @@ end
 
 function StatisticsManager:save(data)
 	local state = {
+		booster_cards = self._global.booster_cards,
 		camp = self._global.camp,
 		challenge_cards = self._global.challenge_cards,
 		downed = self._global.downed,

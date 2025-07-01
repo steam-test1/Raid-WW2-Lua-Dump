@@ -602,14 +602,17 @@ function PostGameBreakdownGui:animate_breakdown()
 		local top_stats = managers.statistics:get_top_stats()
 
 		for i = 1, 3 do
+			local stat_data = top_stats[i]
+			local stat_tweak = tweak_data.statistics.top_stats[stat_data.id]
+			local peer_id = stat_data.peer_id
 			local data = {
-				icon = tweak_data.statistics.top_stats[top_stats[i].id].icon,
-				icon_texture = tweak_data.statistics.top_stats[top_stats[i].id].texture,
-				icon_texture_rect = tweak_data.statistics.top_stats[top_stats[i].id].texture_rect,
-				player_nickname = top_stats[i].peer_name,
-				score = top_stats[i].score,
-				score_format = tweak_data.statistics.top_stats[top_stats[i].id].score_format,
-				stat = top_stats[i].id,
+				icon = stat_tweak.icon,
+				icon_texture = stat_tweak.texture,
+				icon_texture_rect = stat_tweak.texture_rect,
+				player_nickname = stat_data.peer_name,
+				score = stat_data.score,
+				score_format = stat_tweak.score_format,
+				stat = stat_data.id,
 			}
 
 			self._top_stats_small[i]:set_data(data)

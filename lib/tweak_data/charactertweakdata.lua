@@ -24,6 +24,7 @@ function CharacterTweakData:init(tweak_data)
 	self.presets = presets
 
 	self:_init_dismemberment_data()
+	self:_init_char_buff_gear()
 	self:_init_german_commander(presets)
 	self:_init_german_og_commander(presets)
 	self:_init_german_officer(presets)
@@ -213,7 +214,7 @@ function CharacterTweakData:_init_civilian(presets)
 	self.civilian_female.vision = presets.vision.civilian
 end
 
-function CharacterTweakData:_init_dismemberment_data(presets)
+function CharacterTweakData:_init_dismemberment_data()
 	self.dismemberment_data = {}
 
 	local dismembers = {}
@@ -294,6 +295,120 @@ function CharacterTweakData:_init_dismemberment_data(presets)
 		13.69,
 	}
 	self.dismemberment_data.blood_decal_data = blood_decal_data
+end
+
+function CharacterTweakData:_init_char_buff_gear()
+	self.char_buff_gear = {
+		pumkin_heads = {},
+	}
+
+	local pumpkin_heads = {
+		items = {
+			Head = {
+				"units/upd_candy/characters/props/pumpkin_mask/pumpkin_mask",
+			},
+		},
+		run_char_seqs = {
+			"detach_hat_no_debris",
+		},
+	}
+
+	self.char_buff_gear.pumkin_heads = {
+		german_black_waffen_sentry_gasmask = pumpkin_heads,
+		german_black_waffen_sentry_gasmask_commander = pumpkin_heads,
+		german_black_waffen_sentry_gasmask_commander_shotgun = pumpkin_heads,
+		german_black_waffen_sentry_gasmask_shotgun = pumpkin_heads,
+		german_black_waffen_sentry_heavy = pumpkin_heads,
+		german_black_waffen_sentry_heavy_commander = pumpkin_heads,
+		german_black_waffen_sentry_heavy_commander_kar98 = pumpkin_heads,
+		german_black_waffen_sentry_heavy_commander_shotgun = pumpkin_heads,
+		german_black_waffen_sentry_heavy_kar98 = pumpkin_heads,
+		german_black_waffen_sentry_heavy_shotgun = pumpkin_heads,
+		german_black_waffen_sentry_light = pumpkin_heads,
+		german_black_waffen_sentry_light_kar98 = pumpkin_heads,
+		german_black_waffen_sentry_light_shotgun = pumpkin_heads,
+		german_fallschirmjager_heavy = pumpkin_heads,
+		german_fallschirmjager_heavy_kar98 = pumpkin_heads,
+		german_fallschirmjager_heavy_mp38 = pumpkin_heads,
+		german_fallschirmjager_heavy_shotgun = pumpkin_heads,
+		german_fallschirmjager_light = pumpkin_heads,
+		german_fallschirmjager_light_kar98 = pumpkin_heads,
+		german_fallschirmjager_light_mp38 = pumpkin_heads,
+		german_fallschirmjager_light_shotgun = pumpkin_heads,
+		german_gasmask = pumpkin_heads,
+		german_gasmask_shotgun = pumpkin_heads,
+		german_gebirgsjager_heavy = pumpkin_heads,
+		german_gebirgsjager_heavy_kar98 = pumpkin_heads,
+		german_gebirgsjager_heavy_mp38 = pumpkin_heads,
+		german_gebirgsjager_heavy_shotgun = pumpkin_heads,
+		german_gebirgsjager_light = pumpkin_heads,
+		german_gebirgsjager_light_kar98 = pumpkin_heads,
+		german_gebirgsjager_light_mp38 = pumpkin_heads,
+		german_gebirgsjager_light_shotgun = pumpkin_heads,
+		german_grunt_heavy = pumpkin_heads,
+		german_grunt_heavy_kar98 = pumpkin_heads,
+		german_grunt_heavy_mp38 = pumpkin_heads,
+		german_grunt_heavy_shotgun = pumpkin_heads,
+		german_grunt_light = pumpkin_heads,
+		german_grunt_light_kar98 = pumpkin_heads,
+		german_grunt_light_mp38 = pumpkin_heads,
+		german_grunt_light_shotgun = pumpkin_heads,
+		german_grunt_mid = pumpkin_heads,
+		german_grunt_mid_kar98 = pumpkin_heads,
+		german_grunt_mid_mp38 = pumpkin_heads,
+		german_grunt_mid_shotgun = pumpkin_heads,
+		german_heavy = pumpkin_heads,
+		german_heavy_kar98 = pumpkin_heads,
+		german_heavy_mp38 = pumpkin_heads,
+		german_heavy_shotgun = pumpkin_heads,
+		german_light = pumpkin_heads,
+		german_light_commander_backup = pumpkin_heads,
+		german_light_commander_backup_kar98 = pumpkin_heads,
+		german_light_commander_backup_shotgun = pumpkin_heads,
+		german_light_kar98 = pumpkin_heads,
+		german_light_shotgun = pumpkin_heads,
+		german_waffen_ss = pumpkin_heads,
+		german_waffen_ss_kar98 = pumpkin_heads,
+		german_waffen_ss_shotgun = pumpkin_heads,
+	}
+	self.char_buff_gear.pumkin_heads.german_commander = {
+		items = {
+			Head = {
+				"units/upd_candy/characters/props/pumpkin_mask/pumpkin_mask_commander_1",
+			},
+		},
+		run_char_seqs = {
+			"detach_hat_no_debris",
+		},
+	}
+	self.char_buff_gear.pumkin_heads.german_officer = {
+		items = {
+			Head = {
+				"units/upd_candy/characters/props/pumpkin_mask/pumpkin_mask_commander_1",
+			},
+		},
+		run_char_seqs = {
+			"detach_hat_no_debris",
+		},
+	}
+	self.char_buff_gear.pumkin_heads.german_og_commander = {
+		items = {
+			Head = {
+				"units/upd_candy/characters/props/pumpkin_mask/pumpkin_mask_commander_2",
+			},
+		},
+		run_char_seqs = {
+			"detach_hat_no_debris",
+		},
+	}
+	self.char_buff_gear.pumkin_heads.german_flamer = {
+		items = {
+			Head = {
+				"units/upd_candy/characters/props/pumpkin_mask/pumpkin_mask_flamer",
+			},
+		},
+		run_char_seqs = {},
+	}
 end
 
 function CharacterTweakData:_init_german_grunt_light(presets)
@@ -781,11 +896,11 @@ function CharacterTweakData:_init_german_commander_backup(presets)
 
 	self.german_heavy_commander_backup_shotgun = deep_clone(self.german_heavy_commander_backup)
 
-	table.insert(self._enemies_list, "german_heavy_commander_backup_kar98")
+	table.insert(self._enemies_list, "german_heavy_commander_backup_shotgun")
 
 	self.german_heavy_commander_backup_kar98 = deep_clone(self.german_heavy_commander_backup)
 
-	table.insert(self._enemies_list, "german_heavy_commander_backup_shotgun")
+	table.insert(self._enemies_list, "german_heavy_commander_backup_kar98")
 
 	self.german_gasmask_commander_backup = deep_clone(self.german_gasmask)
 
@@ -882,6 +997,14 @@ function CharacterTweakData:_init_german_commander(presets)
 	self.german_commander.is_special = true
 	self.german_commander.special_type = CharacterTweakData.SPECIAL_UNIT_TYPE_COMMANDER
 	self.german_commander.carry_tweak_corpse = "german_commander_body"
+	self.german_commander.gear = {
+		items = {
+			Spine2 = {
+				"units/vanilla/characters/props/prop_backpack_radio/prop_backpack_radio",
+			},
+		},
+		run_char_seqs = {},
+	}
 
 	table.insert(self._enemies_list, "german_commander")
 end
@@ -927,6 +1050,14 @@ function CharacterTweakData:_init_german_og_commander(presets)
 	self.german_og_commander.is_special = true
 	self.german_og_commander.special_type = CharacterTweakData.SPECIAL_UNIT_TYPE_COMMANDER
 	self.german_og_commander.carry_tweak_corpse = "german_og_commander_body"
+	self.german_og_commander.gear = {
+		items = {
+			Spine2 = {
+				"units/vanilla/characters/props/prop_backpack_radio/prop_backpack_radio",
+			},
+		},
+		run_char_seqs = {},
+	}
 
 	table.insert(self._enemies_list, "german_og_commander")
 end
@@ -2004,7 +2135,7 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.normal.ger_kar98_npc.focus_dis = 200
 	presets.weapon.normal.ger_kar98_npc.spread = 20
 	presets.weapon.normal.ger_kar98_npc.miss_dis = 40
-	presets.weapon.normal.ger_kar98_npc.RELOAD_SPEED = 2.8
+	presets.weapon.normal.ger_kar98_npc.RELOAD_SPEED = 0.8
 	presets.weapon.normal.ger_kar98_npc.melee_speed = 1
 	presets.weapon.normal.ger_kar98_npc.melee_dmg = 5
 	presets.weapon.normal.ger_kar98_npc.melee_retry_delay = {
@@ -2095,7 +2226,7 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.normal.ger_luger_npc.focus_dis = 200
 	presets.weapon.normal.ger_luger_npc.spread = 20
 	presets.weapon.normal.ger_luger_npc.miss_dis = 50
-	presets.weapon.normal.ger_luger_npc.RELOAD_SPEED = 0.8
+	presets.weapon.normal.ger_luger_npc.RELOAD_SPEED = 1
 	presets.weapon.normal.ger_luger_npc.melee_speed = 1
 	presets.weapon.normal.ger_luger_npc.melee_dmg = 5
 	presets.weapon.normal.ger_luger_npc.melee_retry_delay = {
@@ -2122,8 +2253,8 @@ function CharacterTweakData:_presets(tweak_data)
 			},
 			r = 800,
 			recoil = {
-				0.15,
-				0.25,
+				0.65,
+				0.75,
 			},
 		},
 		{
@@ -2140,8 +2271,8 @@ function CharacterTweakData:_presets(tweak_data)
 			},
 			r = 1500,
 			recoil = {
-				0.15,
-				0.3,
+				0.65,
+				0.8,
 			},
 		},
 		{
@@ -2158,8 +2289,8 @@ function CharacterTweakData:_presets(tweak_data)
 			},
 			r = 2000,
 			recoil = {
-				0.3,
-				0.7,
+				0.8,
+				1.2,
 			},
 		},
 		{
@@ -2176,8 +2307,8 @@ function CharacterTweakData:_presets(tweak_data)
 			},
 			r = 2500,
 			recoil = {
-				0.4,
-				1,
+				0.9,
+				1.5,
 			},
 		},
 	}
@@ -2376,7 +2507,7 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.normal.ger_geco_npc.focus_dis = 200
 	presets.weapon.normal.ger_geco_npc.spread = 15
 	presets.weapon.normal.ger_geco_npc.miss_dis = 20
-	presets.weapon.normal.ger_geco_npc.RELOAD_SPEED = 2
+	presets.weapon.normal.ger_geco_npc.RELOAD_SPEED = 0.8
 	presets.weapon.normal.ger_geco_npc.melee_speed = 1
 	presets.weapon.normal.ger_geco_npc.melee_dmg = 5
 	presets.weapon.normal.ger_geco_npc.melee_retry_delay = {
@@ -2789,7 +2920,7 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.good.ger_kar98_npc.focus_dis = 200
 	presets.weapon.good.ger_kar98_npc.spread = 20
 	presets.weapon.good.ger_kar98_npc.miss_dis = 40
-	presets.weapon.good.ger_kar98_npc.RELOAD_SPEED = 2.6
+	presets.weapon.good.ger_kar98_npc.RELOAD_SPEED = 1
 	presets.weapon.good.ger_kar98_npc.melee_speed = 1
 	presets.weapon.good.ger_kar98_npc.melee_dmg = 5
 	presets.weapon.good.ger_kar98_npc.melee_retry_delay = presets.weapon.normal.ger_kar98_npc.melee_retry_delay
@@ -2877,7 +3008,7 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.good.ger_luger_npc.focus_dis = 200
 	presets.weapon.good.ger_luger_npc.spread = 20
 	presets.weapon.good.ger_luger_npc.miss_dis = 50
-	presets.weapon.good.ger_luger_npc.RELOAD_SPEED = 1
+	presets.weapon.good.ger_luger_npc.RELOAD_SPEED = 1.2
 	presets.weapon.good.ger_luger_npc.melee_speed = presets.weapon.normal.ger_luger_npc.melee_speed
 	presets.weapon.good.ger_luger_npc.melee_dmg = 5
 	presets.weapon.good.ger_luger_npc.melee_retry_delay = presets.weapon.normal.ger_luger_npc.melee_retry_delay
@@ -2901,8 +3032,8 @@ function CharacterTweakData:_presets(tweak_data)
 			},
 			r = 800,
 			recoil = {
-				0.15,
-				0.25,
+				0.45,
+				0.5,
 			},
 		},
 		{
@@ -2919,8 +3050,8 @@ function CharacterTweakData:_presets(tweak_data)
 			},
 			r = 1500,
 			recoil = {
-				0.15,
-				0.3,
+				0.45,
+				0.65,
 			},
 		},
 		{
@@ -2937,8 +3068,8 @@ function CharacterTweakData:_presets(tweak_data)
 			},
 			r = 2000,
 			recoil = {
-				0.3,
-				0.7,
+				0.55,
+				0.95,
 			},
 		},
 		{
@@ -2955,8 +3086,8 @@ function CharacterTweakData:_presets(tweak_data)
 			},
 			r = 2500,
 			recoil = {
-				0.4,
-				1,
+				0.65,
+				1.25,
 			},
 		},
 	}
@@ -3143,7 +3274,7 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.good.ger_geco_npc.focus_dis = 200
 	presets.weapon.good.ger_geco_npc.spread = 15
 	presets.weapon.good.ger_geco_npc.miss_dis = 20
-	presets.weapon.good.ger_geco_npc.RELOAD_SPEED = 1.75
+	presets.weapon.good.ger_geco_npc.RELOAD_SPEED = 1
 	presets.weapon.good.ger_geco_npc.melee_speed = 1
 	presets.weapon.good.ger_geco_npc.melee_dmg = 5
 	presets.weapon.good.ger_geco_npc.melee_retry_delay = presets.weapon.normal.ger_geco_npc.melee_retry_delay
@@ -3553,7 +3684,7 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.expert.ger_kar98_npc.focus_dis = 200
 	presets.weapon.expert.ger_kar98_npc.spread = 20
 	presets.weapon.expert.ger_kar98_npc.miss_dis = 40
-	presets.weapon.expert.ger_kar98_npc.RELOAD_SPEED = 2.4
+	presets.weapon.expert.ger_kar98_npc.RELOAD_SPEED = 1.1
 	presets.weapon.expert.ger_kar98_npc.melee_speed = 1
 	presets.weapon.expert.ger_kar98_npc.melee_dmg = 10
 	presets.weapon.expert.ger_kar98_npc.melee_retry_delay = presets.weapon.normal.ger_kar98_npc.melee_retry_delay
@@ -3641,7 +3772,7 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.expert.ger_luger_npc.focus_dis = 200
 	presets.weapon.expert.ger_luger_npc.spread = 20
 	presets.weapon.expert.ger_luger_npc.miss_dis = 50
-	presets.weapon.expert.ger_luger_npc.RELOAD_SPEED = 1.4
+	presets.weapon.expert.ger_luger_npc.RELOAD_SPEED = 1.3
 	presets.weapon.expert.ger_luger_npc.melee_speed = presets.weapon.normal.ger_luger_npc.melee_speed
 	presets.weapon.expert.ger_luger_npc.melee_dmg = 10
 	presets.weapon.expert.ger_luger_npc.melee_retry_delay = presets.weapon.normal.ger_luger_npc.melee_retry_delay
@@ -3665,8 +3796,8 @@ function CharacterTweakData:_presets(tweak_data)
 			},
 			r = 800,
 			recoil = {
-				0.15,
-				0.25,
+				0.35,
+				0.4,
 			},
 		},
 		{
@@ -3683,8 +3814,8 @@ function CharacterTweakData:_presets(tweak_data)
 			},
 			r = 1500,
 			recoil = {
-				0.15,
-				0.3,
+				0.35,
+				0.55,
 			},
 		},
 		{
@@ -3701,8 +3832,8 @@ function CharacterTweakData:_presets(tweak_data)
 			},
 			r = 2000,
 			recoil = {
-				0.3,
-				0.7,
+				0.45,
+				0.85,
 			},
 		},
 		{
@@ -3719,8 +3850,8 @@ function CharacterTweakData:_presets(tweak_data)
 			},
 			r = 2500,
 			recoil = {
-				0.4,
-				1,
+				0.55,
+				1.15,
 			},
 		},
 	}
@@ -3729,7 +3860,7 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.expert.ger_mp38_npc.focus_dis = 200
 	presets.weapon.expert.ger_mp38_npc.spread = 15
 	presets.weapon.expert.ger_mp38_npc.miss_dis = 10
-	presets.weapon.expert.ger_mp38_npc.RELOAD_SPEED = 1.4
+	presets.weapon.expert.ger_mp38_npc.RELOAD_SPEED = 1.1
 	presets.weapon.expert.ger_mp38_npc.melee_speed = presets.weapon.normal.ger_mp38_npc.melee_speed
 	presets.weapon.expert.ger_mp38_npc.melee_dmg = 10
 	presets.weapon.expert.ger_mp38_npc.melee_retry_delay = presets.weapon.normal.ger_mp38_npc.melee_retry_delay
@@ -3818,7 +3949,7 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.expert.ger_stg44_npc.focus_dis = 200
 	presets.weapon.expert.ger_stg44_npc.spread = 20
 	presets.weapon.expert.ger_stg44_npc.miss_dis = 40
-	presets.weapon.expert.ger_stg44_npc.RELOAD_SPEED = 1.4
+	presets.weapon.expert.ger_stg44_npc.RELOAD_SPEED = 1.1
 	presets.weapon.expert.ger_stg44_npc.melee_speed = 1
 	presets.weapon.expert.ger_stg44_npc.melee_dmg = 10
 	presets.weapon.expert.ger_stg44_npc.melee_retry_delay = presets.weapon.normal.ger_stg44_npc.melee_retry_delay
@@ -3907,7 +4038,7 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.expert.ger_geco_npc.focus_dis = 200
 	presets.weapon.expert.ger_geco_npc.spread = 15
 	presets.weapon.expert.ger_geco_npc.miss_dis = 20
-	presets.weapon.expert.ger_geco_npc.RELOAD_SPEED = 1.5
+	presets.weapon.expert.ger_geco_npc.RELOAD_SPEED = 1.1
 	presets.weapon.expert.ger_geco_npc.melee_speed = 1
 	presets.weapon.expert.ger_geco_npc.melee_dmg = 10
 	presets.weapon.expert.ger_geco_npc.melee_retry_delay = presets.weapon.normal.ger_geco_npc.melee_retry_delay
@@ -4317,7 +4448,7 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.insane.ger_kar98_npc.focus_dis = 200
 	presets.weapon.insane.ger_kar98_npc.spread = 20
 	presets.weapon.insane.ger_kar98_npc.miss_dis = 40
-	presets.weapon.insane.ger_kar98_npc.RELOAD_SPEED = 2.4
+	presets.weapon.insane.ger_kar98_npc.RELOAD_SPEED = 1.2
 	presets.weapon.insane.ger_kar98_npc.melee_speed = 1
 	presets.weapon.insane.ger_kar98_npc.melee_dmg = 10
 	presets.weapon.insane.ger_kar98_npc.melee_retry_delay = presets.weapon.normal.ger_kar98_npc.melee_retry_delay
@@ -4429,8 +4560,8 @@ function CharacterTweakData:_presets(tweak_data)
 			},
 			r = 800,
 			recoil = {
-				0.15,
 				0.25,
+				0.3,
 			},
 		},
 		{
@@ -4447,8 +4578,8 @@ function CharacterTweakData:_presets(tweak_data)
 			},
 			r = 1500,
 			recoil = {
-				0.15,
-				0.3,
+				0.25,
+				0.45,
 			},
 		},
 		{
@@ -4465,8 +4596,8 @@ function CharacterTweakData:_presets(tweak_data)
 			},
 			r = 2000,
 			recoil = {
-				0.3,
-				0.7,
+				0.35,
+				0.75,
 			},
 		},
 		{
@@ -4483,8 +4614,8 @@ function CharacterTweakData:_presets(tweak_data)
 			},
 			r = 2500,
 			recoil = {
-				0.4,
-				1,
+				0.45,
+				1.05,
 			},
 		},
 	}
@@ -4493,7 +4624,7 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.insane.ger_mp38_npc.focus_dis = 200
 	presets.weapon.insane.ger_mp38_npc.spread = 15
 	presets.weapon.insane.ger_mp38_npc.miss_dis = 10
-	presets.weapon.insane.ger_mp38_npc.RELOAD_SPEED = 1.4
+	presets.weapon.insane.ger_mp38_npc.RELOAD_SPEED = 1.2
 	presets.weapon.insane.ger_mp38_npc.melee_speed = presets.weapon.normal.ger_mp38_npc.melee_speed
 	presets.weapon.insane.ger_mp38_npc.melee_dmg = 10
 	presets.weapon.insane.ger_mp38_npc.melee_retry_delay = presets.weapon.normal.ger_mp38_npc.melee_retry_delay
@@ -4582,7 +4713,7 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.insane.ger_stg44_npc.focus_dis = 200
 	presets.weapon.insane.ger_stg44_npc.spread = 20
 	presets.weapon.insane.ger_stg44_npc.miss_dis = 40
-	presets.weapon.insane.ger_stg44_npc.RELOAD_SPEED = 1.4
+	presets.weapon.insane.ger_stg44_npc.RELOAD_SPEED = 1.2
 	presets.weapon.insane.ger_stg44_npc.melee_speed = 1
 	presets.weapon.insane.ger_stg44_npc.melee_dmg = 10
 	presets.weapon.insane.ger_stg44_npc.melee_retry_delay = presets.weapon.normal.ger_stg44_npc.melee_retry_delay
@@ -4671,7 +4802,7 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.insane.ger_geco_npc.focus_dis = 200
 	presets.weapon.insane.ger_geco_npc.spread = 15
 	presets.weapon.insane.ger_geco_npc.miss_dis = 20
-	presets.weapon.insane.ger_geco_npc.RELOAD_SPEED = 1.3
+	presets.weapon.insane.ger_geco_npc.RELOAD_SPEED = 1.2
 	presets.weapon.insane.ger_geco_npc.melee_speed = 1
 	presets.weapon.insane.ger_geco_npc.melee_dmg = 10
 	presets.weapon.insane.ger_geco_npc.melee_retry_delay = presets.weapon.normal.ger_geco_npc.melee_retry_delay
@@ -4765,7 +4896,7 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.weapon.sniper.ger_kar98_npc.focus_dis = 15000
 	presets.weapon.sniper.ger_kar98_npc.spread = 30
 	presets.weapon.sniper.ger_kar98_npc.miss_dis = 250
-	presets.weapon.sniper.ger_kar98_npc.RELOAD_SPEED = 2.5
+	presets.weapon.sniper.ger_kar98_npc.RELOAD_SPEED = 1
 	presets.weapon.sniper.ger_kar98_npc.melee_speed = presets.weapon.normal.ger_kar98_npc.melee_speed
 	presets.weapon.sniper.ger_kar98_npc.melee_dmg = presets.weapon.normal.ger_kar98_npc.melee_dmg
 	presets.weapon.sniper.ger_kar98_npc.melee_retry_delay = presets.weapon.normal.ger_kar98_npc.melee_retry_delay
@@ -4776,6 +4907,24 @@ function CharacterTweakData:_presets(tweak_data)
 	}
 	presets.weapon.sniper.ger_kar98_npc.use_laser = true
 	presets.weapon.sniper.ger_kar98_npc.FALLOFF = {
+		{
+			acc = {
+				0.8,
+				0.95,
+			},
+			dmg_mul = 3.5,
+			mode = {
+				1,
+				0,
+				0,
+				0,
+			},
+			r = 1000,
+			recoil = {
+				5,
+				6,
+			},
+		},
 		{
 			acc = {
 				0.4,
@@ -4790,8 +4939,8 @@ function CharacterTweakData:_presets(tweak_data)
 			},
 			r = 15000,
 			recoil = {
-				2,
-				4,
+				8,
+				10,
 			},
 		},
 		{
@@ -4808,8 +4957,8 @@ function CharacterTweakData:_presets(tweak_data)
 			},
 			r = 40000,
 			recoil = {
-				3,
-				4,
+				8,
+				10,
 			},
 		},
 		{
@@ -4826,8 +4975,8 @@ function CharacterTweakData:_presets(tweak_data)
 			},
 			r = 80000,
 			recoil = {
-				3,
-				5,
+				8,
+				10,
 			},
 		},
 	}
@@ -6803,6 +6952,9 @@ function CharacterTweakData:_create_table_structure()
 		Idstring("units/vanilla/weapons/wpn_fps_gre_d343/wpn_fps_gre_d343_husk"),
 		Idstring("units/upd_001/weapons/wpn_fps_gre_concrete/wpn_fps_gre_concrete_husk"),
 		Idstring("units/upd_021/weapons/wpn_fps_gre_betty/wpn_fps_gre_betty_husk"),
+		Idstring("units/upd_candy/weapons/gre_gold_bar/wpn_tps_gre_gold_bar"),
+		Idstring("units/upd_blaze/weapons/gre_thermite/wpn_tps_gre_thermite"),
+		Idstring("units/upd_blaze/weapons/gre_anti_tank/wpn_tps_gre_anti_tank"),
 		Idstring("units/vanilla/weapons/wpn_third_mel_m3_knife/wpn_third_mel_m3_knife"),
 		Idstring("units/vanilla/weapons/wpn_third_mel_robbins_dudley_trench_push_dagger/wpn_third_mel_robbins_dudley_trench_push_dagger"),
 		Idstring("units/vanilla/weapons/wpn_third_mel_german_brass_knuckles/wpn_third_mel_german_brass_knuckles"),
@@ -6867,6 +7019,24 @@ function CharacterTweakData:_set_difficulty_1()
 	self.presets.weapon.sniper.ger_kar98_npc.FALLOFF = {
 		{
 			acc = {
+				0.8,
+				0.95,
+			},
+			dmg_mul = 3.5,
+			mode = {
+				1,
+				0,
+				0,
+				0,
+			},
+			r = 1000,
+			recoil = {
+				5,
+				6,
+			},
+		},
+		{
+			acc = {
 				0.4,
 				0.95,
 			},
@@ -6879,8 +7049,8 @@ function CharacterTweakData:_set_difficulty_1()
 			},
 			r = 15000,
 			recoil = {
-				2,
-				4,
+				8,
+				10,
 			},
 		},
 		{
@@ -6897,8 +7067,8 @@ function CharacterTweakData:_set_difficulty_1()
 			},
 			r = 40000,
 			recoil = {
-				3,
-				4,
+				8,
+				10,
 			},
 		},
 		{
@@ -6915,8 +7085,8 @@ function CharacterTweakData:_set_difficulty_1()
 			},
 			r = 80000,
 			recoil = {
-				3,
-				5,
+				8,
+				10,
 			},
 		},
 	}
@@ -6942,10 +7112,28 @@ function CharacterTweakData:_set_difficulty_2()
 	self.presets.weapon.sniper.ger_kar98_npc.FALLOFF = {
 		{
 			acc = {
+				0.8,
+				0.95,
+			},
+			dmg_mul = 3.5,
+			mode = {
+				1,
+				0,
+				0,
+				0,
+			},
+			r = 1000,
+			recoil = {
+				5,
+				6,
+			},
+		},
+		{
+			acc = {
 				0.4,
 				0.95,
 			},
-			dmg_mul = 4,
+			dmg_mul = 3.5,
 			mode = {
 				1,
 				0,
@@ -6954,8 +7142,8 @@ function CharacterTweakData:_set_difficulty_2()
 			},
 			r = 15000,
 			recoil = {
-				2,
-				4,
+				5,
+				8,
 			},
 		},
 		{
@@ -6963,7 +7151,7 @@ function CharacterTweakData:_set_difficulty_2()
 				0.1,
 				0.75,
 			},
-			dmg_mul = 3,
+			dmg_mul = 2.5,
 			mode = {
 				1,
 				0,
@@ -6972,8 +7160,8 @@ function CharacterTweakData:_set_difficulty_2()
 			},
 			r = 40000,
 			recoil = {
-				3,
-				4,
+				6,
+				9,
 			},
 		},
 		{
@@ -6981,7 +7169,7 @@ function CharacterTweakData:_set_difficulty_2()
 				0,
 				0.25,
 			},
-			dmg_mul = 2,
+			dmg_mul = 1.5,
 			mode = {
 				1,
 				0,
@@ -6990,8 +7178,8 @@ function CharacterTweakData:_set_difficulty_2()
 			},
 			r = 80000,
 			recoil = {
-				3,
-				5,
+				7,
+				10,
 			},
 		},
 	}
@@ -7017,26 +7205,8 @@ function CharacterTweakData:_set_difficulty_3()
 	self.presets.weapon.sniper.ger_kar98_npc.FALLOFF = {
 		{
 			acc = {
-				0.4,
+				0.8,
 				0.95,
-			},
-			dmg_mul = 4.5,
-			mode = {
-				1,
-				0,
-				0,
-				0,
-			},
-			r = 15000,
-			recoil = {
-				2,
-				4,
-			},
-		},
-		{
-			acc = {
-				0.1,
-				0.75,
 			},
 			dmg_mul = 3.5,
 			mode = {
@@ -7045,16 +7215,34 @@ function CharacterTweakData:_set_difficulty_3()
 				0,
 				0,
 			},
-			r = 40000,
+			r = 1000,
 			recoil = {
-				3,
-				4,
+				5,
+				6,
 			},
 		},
 		{
 			acc = {
+				0.4,
+				0.95,
+			},
+			dmg_mul = 3.5,
+			mode = {
+				1,
 				0,
-				0.25,
+				0,
+				0,
+			},
+			r = 15000,
+			recoil = {
+				6,
+				7,
+			},
+		},
+		{
+			acc = {
+				0.1,
+				0.75,
 			},
 			dmg_mul = 2.5,
 			mode = {
@@ -7063,10 +7251,28 @@ function CharacterTweakData:_set_difficulty_3()
 				0,
 				0,
 			},
+			r = 40000,
+			recoil = {
+				7,
+				8,
+			},
+		},
+		{
+			acc = {
+				0,
+				0.25,
+			},
+			dmg_mul = 1.5,
+			mode = {
+				1,
+				0,
+				0,
+				0,
+			},
 			r = 80000,
 			recoil = {
-				3,
-				5,
+				8,
+				9,
 			},
 		},
 	}
@@ -7093,10 +7299,28 @@ function CharacterTweakData:_set_difficulty_4()
 	self.presets.weapon.sniper.ger_kar98_npc.FALLOFF = {
 		{
 			acc = {
+				0.8,
+				0.95,
+			},
+			dmg_mul = 3.5,
+			mode = {
+				1,
+				0,
+				0,
+				0,
+			},
+			r = 1000,
+			recoil = {
+				5,
+				6,
+			},
+		},
+		{
+			acc = {
 				0.4,
 				0.95,
 			},
-			dmg_mul = 5,
+			dmg_mul = 3.5,
 			mode = {
 				1,
 				0,
@@ -7105,8 +7329,8 @@ function CharacterTweakData:_set_difficulty_4()
 			},
 			r = 15000,
 			recoil = {
-				2,
-				4,
+				5,
+				6,
 			},
 		},
 		{
@@ -7114,7 +7338,7 @@ function CharacterTweakData:_set_difficulty_4()
 				0.1,
 				0.75,
 			},
-			dmg_mul = 4,
+			dmg_mul = 2.5,
 			mode = {
 				1,
 				0,
@@ -7123,8 +7347,8 @@ function CharacterTweakData:_set_difficulty_4()
 			},
 			r = 40000,
 			recoil = {
-				3,
-				4,
+				6,
+				7,
 			},
 		},
 		{
@@ -7132,7 +7356,7 @@ function CharacterTweakData:_set_difficulty_4()
 				0,
 				0.25,
 			},
-			dmg_mul = 3,
+			dmg_mul = 1.5,
 			mode = {
 				1,
 				0,
@@ -7141,8 +7365,8 @@ function CharacterTweakData:_set_difficulty_4()
 			},
 			r = 80000,
 			recoil = {
-				3,
-				5,
+				7,
+				8,
 			},
 		},
 	}

@@ -1,6 +1,6 @@
 NetworkMatchMakingSTEAM = NetworkMatchMakingSTEAM or class()
 NetworkMatchMakingSTEAM.OPEN_SLOTS = 4
-NetworkMatchMakingSTEAM._BUILD_SEARCH_INTEREST_KEY = "raid_ww2_retail_22_05"
+NetworkMatchMakingSTEAM._BUILD_SEARCH_INTEREST_KEY = NetworkMatchMaking._BUILD_SEARCH_INTEREST_KEY
 NetworkMatchMakingSTEAM.EMPTY_PLAYER_INFO = "-,-,-,-"
 
 function NetworkMatchMakingSTEAM:init()
@@ -477,6 +477,12 @@ function NetworkMatchMakingSTEAM:join_server_with_check(room_id, is_invite)
 		local server_ok, ok_error = self:is_server_ok(nil, room_id, attributes, is_invite)
 
 		if server_ok then
+			local challenge_card = lobby:key_value("challenge_card_id")
+
+			if challenge_card ~= "" and challenge_card ~= "nocards" and challenge_card ~= "value_pending" then
+				managers.challenge_cards:set_dropin_card(challenge_card)
+			end
+
 			self:join_server(room_id, true)
 		else
 			managers.system_menu:close("join_server")
@@ -710,6 +716,8 @@ function NetworkMatchMakingSTEAM:_restart_network()
 	else
 		managers.network:prepare_stop_network()
 	end
+
+	managers.challenge_cards:set_dropin_card()
 end
 
 function NetworkMatchMakingSTEAM:send_join_invite(friend)

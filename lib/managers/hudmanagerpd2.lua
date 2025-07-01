@@ -17,6 +17,7 @@ require("lib/managers/hud/HUDMapPlayerPin")
 require("lib/managers/hud/HUDMapBase")
 require("lib/managers/hud/HUDMapTab")
 require("lib/managers/hud/HUDTabGreedBar")
+require("lib/managers/hud/HUDTabCandyProgression")
 require("lib/managers/hud/HUDTabWeaponChallenge")
 require("lib/managers/hud/HUDTabScreen")
 require("lib/managers/hud/HUDNameLabel")
@@ -43,6 +44,7 @@ require("lib/managers/hud/HUDCenterPrompt")
 require("lib/managers/hud/HUDBigPrompt")
 require("lib/managers/hud/HUDControllerHotswap")
 require("lib/managers/hud/HUDCrosshair")
+require("lib/managers/hud/HUDStatusEffects")
 require("lib/managers/hud/HUDSpecialInteraction/Base")
 require("lib/managers/hud/HUDSpecialInteraction/LockPick")
 require("lib/managers/hud/HUDSpecialInteraction/FuseCutting")
@@ -705,6 +707,7 @@ function HUDManager:_setup_ingame_hud_saferect()
 	self:_create_watermark(hud)
 	self:_create_crosshair(hud)
 	self:set_motiondot_type(managers.user:get_setting("motion_dot"))
+	self:_create_status_effects(hud)
 end
 
 function HUDManager:_create_ammo_test()
@@ -1491,6 +1494,24 @@ function HUDManager:set_loot_total(amount)
 	self._tab_screen:set_loot_total(amount)
 end
 
+function HUDManager:register_tab_event_panel(control_class, params)
+	if self._tab_screen then
+		self._tab_screen:register_event_panel(control_class, params)
+	end
+end
+
+function HUDManager:set_tab_event_panel_data(data)
+	if self._tab_screen then
+		self._tab_screen:set_event_panel_data(data)
+	end
+end
+
+function HUDManager:remove_tab_event_panel()
+	if self._tab_screen then
+		self._tab_screen:remove_event_panel()
+	end
+end
+
 function HUDManager:feed_point_of_no_return_timer(time, is_inside)
 	return
 end
@@ -1802,6 +1823,31 @@ end
 function HUDManager:update_crosshair_offset(t, dt)
 	if self._hud_crosshair and managers.user:get_setting("hud_crosshairs") then
 		self._hud_crosshair:update_crosshair_offset(t, dt)
+	end
+end
+
+function HUDManager:_create_status_effects(hud)
+	hud = hud or managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT)
+	self._hud_status_effects = HUDStatusEffects:new(hud)
+end
+
+function HUDManager:add_status_effect(status_data)
+	if self._hud_status_effects then
+		Application:debug("[StatusEffects] add_status", status_data and status_data.id)
+		self._hud_status_effects:add_status(status_data)
+	end
+end
+
+function HUDManager:remove_status_effect(status_key, sync)
+	if self._hud_status_effects then
+		Application:debug("[StatusEffects] remove_status", status_key)
+		self._hud_status_effects:remove_status(status_key, sync)
+	end
+end
+
+function HUDManager:clear_all_status_effects()
+	if self._hud_status_effects then
+		self._hud_status_effects:clear_all_status()
 	end
 end
 

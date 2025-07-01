@@ -106,10 +106,6 @@ function NPCRaycastWeaponBase:_setup_contours()
 	end
 end
 
-function NPCRaycastWeaponBase:get_contour_materials()
-	return self._contour_materials
-end
-
 function NPCRaycastWeaponBase:setup(setup_data)
 	self._autoaim = setup_data.autoaim
 	self._alert_events = setup_data.alert_AI and {} or nil

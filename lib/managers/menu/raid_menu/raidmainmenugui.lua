@@ -94,15 +94,15 @@ function RaidMainMenuGui:_layout_title_logo()
 	})
 
 	local logo_texture, logo_texture_rect
-	local is_halloween = tweak_data.lootdrop:get_month_event() == LootDropTweakData.EVENT_MONTH_HALLOWEEN
+	local event_data = managers.event_system:active_event_data()
 	local is_freeweek = Steam:is_subscribed_from_free_weekend()
 
 	if is_freeweek then
 		logo_texture = tweak_data.gui.icons.raid_logo_small.texture
 		logo_texture_rect = tweak_data.gui.icons.raid_logo_small.texture_rect
-	elseif is_halloween then
-		logo_texture = tweak_data.gui.icons.raid_hw_logo_small.texture
-		logo_texture_rect = tweak_data.gui.icons.raid_hw_logo_small.texture_rect
+	elseif event_data and event_data.game_logo then
+		logo_texture = event_data.game_logo.texture
+		logo_texture_rect = event_data.game_logo.texture_rect
 	elseif managers.dlc:is_dlc_unlocked(DLCTweakData.DLC_NAME_SPECIAL_EDITION) then
 		logo_texture = tweak_data.gui.icons.raid_se_logo_small.texture
 		logo_texture_rect = tweak_data.gui.icons.raid_se_logo_small.texture_rect

@@ -1922,7 +1922,7 @@ function CarryInteractionExt:_interact_blocked(player)
 	local tweak_data = tweak_data.carry[carry_id]
 
 	if not tweak_data then
-		Application:warn("[CarryInteractionExt:can_select] Carry interaction unit uses invalid carry id: ", tostring(carry_id))
+		Application:warn("[CarryInteractionExt:can_select] Carry interaction unit uses invalid carry id: ", tostring(carry_id), self._unit)
 
 		return true, true
 	end
@@ -3030,5 +3030,26 @@ function DummyInteractionExt:can_select()
 end
 
 function DummyInteractionExt:can_interact()
+	return false
+end
+
+CandyPickupInteractionExt = CandyPickupInteractionExt or class(PickupInteractionExt)
+
+function CandyPickupInteractionExt:_interact_blocked(player)
+	return not managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_TRICK_OR_TREAT)
+end
+
+function CandyPickupInteractionExt:_get_interaction_details()
+	local interaction_detail = self._unit:pickup():interaction_detail()
+
+	if interaction_detail then
+		local details = {
+			icon = interaction_detail.icon,
+			text = managers.localization:text(interaction_detail.text),
+		}
+
+		return details
+	end
+
 	return false
 end

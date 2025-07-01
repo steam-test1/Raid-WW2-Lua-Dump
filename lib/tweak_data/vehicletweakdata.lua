@@ -183,7 +183,7 @@ function VehicleTweakData:_init_data_kubelwagen()
 	}
 	self.kubelwagen.secure_loot = false
 	self.kubelwagen.loot_filter = {
-		german_spy = true,
+		german_spy_body = true,
 		gold = true,
 	}
 	self.kubelwagen.allow_only_filtered = true

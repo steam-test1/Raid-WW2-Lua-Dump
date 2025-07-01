@@ -1817,6 +1817,7 @@ function PlayerStandard:interupt_all_actions()
 	self:_interupt_action_cash_inspect(t)
 	self:_interupt_action_mantle(t)
 	self:_interupt_action_diving(t)
+	self:_check_stop_shooting()
 end
 
 function PlayerStandard:_start_action_throw_projectile(t, input)
@@ -2947,7 +2948,7 @@ function PlayerStandard:_start_action_use_item(t)
 	})
 
 	managers.hud:show_progress_timer({
-		ratio = nil,
+		delay = nil,
 		text = text,
 	})
 
@@ -3939,6 +3940,7 @@ function PlayerStandard:_check_action_jump(t, input)
 				local action_start_data = {}
 				local jump_vel_z = self._tweak_data.movement.jump_velocity.z
 
+				jump_vel_z = jump_vel_z * managers.player:temporary_upgrade_value("temporary", "candy_jump_boost", 1)
 				action_start_data.jump_vel_z = jump_vel_z
 
 				if self._move_dir then
@@ -4765,6 +4767,7 @@ function PlayerStandard:_check_action_primary_attack(t, input)
 					local autohit_mul = math.lerp(1, tweak_data.player.suppression.autohit_chance_mul, suppression_ratio)
 					local suppression_mul = managers.blackmarket:threat_multiplier()
 					local dmg_mul = managers.player:temporary_upgrade_value("temporary", "dmg_multiplier_outnumbered", 1)
+					local dmg_mul = dmg_mul * managers.player:temporary_upgrade_value("temporary", "candy_attack_damage", 1)
 					local weapon_category = weap_base:category()
 					local health_ratio = self._ext_damage:health_ratio()
 
@@ -5089,12 +5092,18 @@ function PlayerStandard:_get_swap_speed_multiplier()
 	return multiplier
 end
 
-function PlayerStandard:force_change_weapon_slot(slot)
+function PlayerStandard:force_change_weapon_slot(slot, instant)
 	local tbl = {
 		selection_wanted = slot,
 	}
 
-	self:_start_action_unequip_weapon(managers.player:player_timer():time(), tbl)
+	if instant then
+		self._change_weapon_data = tbl
+
+		self:_start_action_equip_weapon(managers.player:player_timer():time())
+	else
+		self:_start_action_unequip_weapon(managers.player:player_timer():time(), tbl)
+	end
 end
 
 function PlayerStandard:_start_action_unequip_weapon(t, data)

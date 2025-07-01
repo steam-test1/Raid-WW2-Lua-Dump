@@ -1293,41 +1293,51 @@ function WeaponSelectionGui:_select_weapon(weapon_id, weapon_category_switched)
 		self._upgrade_button:hide()
 		self._skins_button:hide()
 
-		if self._selected_weapon_category_id ~= WeaponInventoryManager.BM_CATEGORY_MELEE_ID then
-			local class_name = managers.skilltree:get_character_profile_class()
-			local weapon_unlock_levels = tweak_data.skilltree:get_weapon_unlock_levels()
-			local weapon_id = selected_weapon:data().value.weapon_id
-			local level = weapon_unlock_levels[weapon_id][class_name]
+		local info_label_text
 
-			if level then
-				self._cant_equip_explanation_label:set_text(utf8.to_upper(managers.localization:text("menu_weapons_locked_higher_level", {
-					LEVEL = level,
-				})))
-			else
-				local classes = ""
-
-				for class_name, _ in pairs(weapon_unlock_levels[weapon_id]) do
-					classes = classes .. self:translate("character_skill_tree_" .. class_name, true) .. ", "
-				end
-
-				classes = string.sub(classes, 0, -3)
-
-				self._cant_equip_explanation_label:set_text(utf8.to_upper(managers.localization:text("menu_weapons_locked_wrong_class", {
-					CLASSES = classes,
-				})))
-			end
-		else
-			local info_label_text
-
+		if self._selected_weapon_category_id == WeaponInventoryManager.BM_CATEGORY_MELEE_ID then
 			if selected_weapon:data().value.is_challenge_reward then
 				info_label_text = self:translate("character_customization_locked_cc_label", true)
 			else
 				info_label_text = self:translate("character_customization_locked_drop_label", true)
 			end
+		else
+			local class_name = managers.skilltree:get_character_profile_class()
+			local weapon_unlock_levels = tweak_data.skilltree:get_weapon_unlock_levels()
+			local weapon_id = selected_weapon:data().value.weapon_id
+			local weapon_unlocks = weapon_unlock_levels[weapon_id]
+			local level = weapon_unlocks and weapon_unlocks[class_name]
 
-			self._cant_equip_explanation_label:set_text(info_label_text)
+			if selected_weapon:data().value.challenge then
+				local challenge_id = selected_weapon:data().value.challenge
+				local challenge = tweak_data.challenge[challenge_id]
+
+				if challenge and challenge.challenge_name_id then
+					local challenge_name = managers.localization:to_upper_text(challenge.challenge_name_id)
+
+					info_label_text = managers.localization:to_upper_text("character_customization_locked_challenge_label", {
+						CHALLENGE = challenge_name,
+					})
+				end
+			elseif level then
+				info_label_text = managers.localization:to_upper_text("menu_weapons_locked_higher_level", {
+					LEVEL = level,
+				})
+			elseif weapon_unlocks then
+				local classes = ""
+
+				for class_name, _ in pairs(weapon_unlocks) do
+					classes = classes .. self:translate("character_skill_tree_" .. class_name, true) .. ", "
+				end
+
+				classes = string.sub(classes, 0, -3)
+				info_label_text = managers.localization:to_upper_text("menu_weapons_locked_wrong_class", {
+					CLASSES = classes,
+				})
+			end
 		end
 
+		self._cant_equip_explanation_label:set_text(info_label_text)
 		self._cant_equip_explanation_label:show()
 	end
 

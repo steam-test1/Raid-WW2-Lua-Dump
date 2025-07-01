@@ -481,7 +481,7 @@ function UpgradesTweakData:_create_warcry_definitions()
 
 	self.values.player.warcry_grenade_cluster_damage = {
 		1.5,
-		1.667,
+		1.65,
 		1.75,
 	}
 
@@ -1776,6 +1776,78 @@ function UpgradesTweakData:_create_raid_definitions_abilities()
 	}
 
 	self:_create_definition("player_warcry_dmg", UpgradesTweakData.DEF_CAT_FEATURE, "warcry_dmg", UpgradesTweakData.UPG_CAT_PLAYER, true, 1)
+
+	self.values.temporary.candy_health_regen = {
+		{
+			1.05,
+			20,
+		},
+	}
+
+	self:_create_definition("temporary_candy_health_regen", UpgradesTweakData.DEF_CAT_TEMPORARY, "candy_health_regen", UpgradesTweakData.UPG_CAT_TEMPORARY, false, 1)
+
+	self.values.temporary.candy_god_mode = {
+		{
+			0,
+			20,
+		},
+	}
+
+	self:_create_definition("temporary_candy_god_mode", UpgradesTweakData.DEF_CAT_TEMPORARY, "candy_god_mode", UpgradesTweakData.UPG_CAT_TEMPORARY, false, 1)
+
+	self.values.temporary.candy_armor_pen = {
+		{
+			5,
+			20,
+		},
+	}
+
+	self:_create_definition("temporary_candy_armor_pen", UpgradesTweakData.DEF_CAT_TEMPORARY, "candy_armor_pen", UpgradesTweakData.UPG_CAT_TEMPORARY, false, 1)
+
+	self.values.temporary.candy_unlimited_ammo = {
+		{
+			true,
+			20,
+		},
+	}
+
+	self:_create_definition("temporary_candy_unlimited_ammo", UpgradesTweakData.DEF_CAT_TEMPORARY, "candy_unlimited_ammo", UpgradesTweakData.UPG_CAT_TEMPORARY, false, 1)
+
+	self.values.temporary.candy_sprint_speed = {
+		{
+			1.45,
+			25,
+		},
+	}
+
+	self:_create_definition("temporary_candy_sprint_speed", UpgradesTweakData.DEF_CAT_TEMPORARY, "candy_sprint_speed", UpgradesTweakData.UPG_CAT_TEMPORARY, false, 1)
+
+	self.values.temporary.candy_jump_boost = {
+		{
+			1.66,
+			25,
+		},
+	}
+
+	self:_create_definition("temporary_candy_jump_boost", UpgradesTweakData.DEF_CAT_TEMPORARY, "candy_jump_boost", UpgradesTweakData.UPG_CAT_TEMPORARY, false, 1)
+
+	self.values.temporary.candy_attack_damage = {
+		{
+			1.45,
+			30,
+		},
+	}
+
+	self:_create_definition("temporary_candy_attack_damage", UpgradesTweakData.DEF_CAT_TEMPORARY, "candy_attack_damage", UpgradesTweakData.UPG_CAT_TEMPORARY, false, 1)
+
+	self.values.temporary.candy_critical_hit_chance = {
+		{
+			1.8,
+			25,
+		},
+	}
+
+	self:_create_definition("temporary_candy_critical_hit_chance", UpgradesTweakData.DEF_CAT_TEMPORARY, "candy_critical_hit_chance", UpgradesTweakData.UPG_CAT_TEMPORARY, false, 1)
 end
 
 function UpgradesTweakData:_create_weapon_definitions()
@@ -2004,6 +2076,15 @@ function UpgradesTweakData:_create_grenades_definitions()
 		category = "grenade",
 	}
 	self.definitions.ammo_bag = {
+		category = "grenade",
+	}
+	self.definitions.gold_bar = {
+		category = "grenade",
+	}
+	self.definitions.thermite = {
+		category = "grenade",
+	}
+	self.definitions.anti_tank = {
 		category = "grenade",
 	}
 end

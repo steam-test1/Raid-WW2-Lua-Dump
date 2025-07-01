@@ -107,17 +107,21 @@ function Warcry:activate()
 		managers.warcry:set_warcry_post_effect(self._tweak_data.ids_effect_name)
 	end
 
-	if self._tweak_data.activation_spawn_unit and alive(self._local_player) then
-		self._activation_spawned_unit = managers.game_play_central:spawn_warcry_unit({
-			level = self._level,
-			name = self._tweak_data.activation_spawn_unit,
-			position = self._local_player:position(),
-			rotation = self._local_player:rotation(),
-			world_id = 0,
-		})
-	end
-
 	if alive(self._local_player) then
+		if self._tweak_data.activation_spawn_unit then
+			self._activation_spawned_unit = managers.game_play_central:spawn_warcry_unit({
+				level = self._level,
+				name = self._tweak_data.activation_spawn_unit,
+				position = self._local_player:position(),
+				rotation = self._local_player:rotation(),
+				world_id = 0,
+			})
+		end
+
+		if self._tweak_data.activation_equip_weapon then
+			managers.player:set_temporary_grenade(self._tweak_data.activation_equip_weapon)
+		end
+
 		self._local_player:character_damage():set_health_effects_blocked(true)
 	end
 end
@@ -139,10 +143,6 @@ function Warcry:deactivate()
 		managers.warcry:set_warcry_post_effect(ids_empty)
 	end
 
-	if alive(self._local_player) then
-		self._local_player:character_damage():set_health_effects_blocked(false)
-	end
-
 	if self._tweak_data.activation_spawn_unit and alive(self._activation_spawned_unit) then
 		if self._activation_spawned_unit:damage() then
 			self._activation_spawned_unit:damage():run_sequence_simple("deactivate")
@@ -151,6 +151,15 @@ function Warcry:deactivate()
 		end
 
 		self._activation_spawned_unit = nil
+	end
+
+	if alive(self._local_player) then
+		self._local_player:character_damage():set_health_effects_blocked(false)
+
+		if self._tweak_data.activation_equip_weapon then
+			self._local_player:inventory():remove_listener("warcry_weapon_unequipped")
+			managers.player:clear_temporary_grenade()
+		end
 	end
 end
 

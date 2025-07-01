@@ -182,8 +182,6 @@ function OperationsTweakData:get_camp_goto_objective_id(level_id)
 end
 
 function OperationsTweakData:_init_raids()
-	local is_halloween = false
-
 	self._raids_index = {
 		"sto",
 		"forest_gumpy",
@@ -244,11 +242,6 @@ function OperationsTweakData:_init_raids()
 		image = "fail_loading_screen_01",
 	}
 	self.missions.camp.excluded_continents = {}
-
-	if not is_halloween then
-		table.insert(self.missions.camp.excluded_continents, "event_halloween")
-	end
-
 	self.missions.tutorial = {}
 	self.missions.tutorial.name_id = "menu_tutorial_hl"
 	self.missions.tutorial.level_id = "tutorial"

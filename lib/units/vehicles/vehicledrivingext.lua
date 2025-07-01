@@ -49,7 +49,7 @@ VehicleDrivingExt.cumulative_dt = 0
 VehicleDrivingExt.cumulative_gravity = 0
 VehicleDrivingExt.PLAYER_CAPSULE_OFFSET = Vector3(0, 0, -150)
 VehicleDrivingExt.SPECIAL_OBJECTIVE_TYPE_DRIVING = "special_objective_type_driving"
-VehicleDrivingExt.SPECIAL_LOOT_GERMAN_SPY_CARRY_ID = "german_spy"
+VehicleDrivingExt.SPECIAL_LOOT_GERMAN_SPY_CARRY_ID = "german_spy_body"
 
 function VehicleDrivingExt:init(unit)
 	self._unit = unit
@@ -1030,7 +1030,7 @@ function VehicleDrivingExt:place_player_on_seat(player, seat_name, move, previou
 		self._interaction_enter_vehicle = false
 
 		managers.dialog:queue_dialog("gen_vehicle_good_to_go", {
-			position = nil,
+			done_cbk = nil,
 			skip_idle_check = true,
 		})
 	end

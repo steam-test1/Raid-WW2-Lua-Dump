@@ -35,8 +35,8 @@ end
 function CoreEffectPropertyContainer:validate_properties()
 	local ret = {
 		message = "",
-		self = nil,
 		valid = true,
+		view = nil,
 	}
 
 	for _, p in ipairs(self._properties) do
@@ -218,8 +218,8 @@ end
 function CoreEffectProperty:validate()
 	local ret = {
 		message = "",
-		self = nil,
 		valid = true,
+		view = nil,
 	}
 
 	if self._type == "value_list" then

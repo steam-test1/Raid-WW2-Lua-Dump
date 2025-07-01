@@ -38,6 +38,11 @@ function ChallengeCardsManager:init()
 
 	self._readyup_card_cache = {}
 	self._readyup_inventory_load_frequency_counter = 0
+
+	if Global.challenge_cards_manager.dropin_card then
+		self._dropin_card = Global.challenge_cards_manager.dropin_card
+		Global.challenge_cards_manager.dropin_card = nil
+	end
 end
 
 function ChallengeCardsManager:update(t, dt)
@@ -53,6 +58,16 @@ function ChallengeCardsManager:update(t, dt)
 		end
 
 		self._readyup_inventory_load_frequency_counter = self._readyup_inventory_load_frequency_counter + dt
+	end
+
+	if self._dropin_card then
+		local card_data = tweak_data.challenge_cards:get_card_by_key_name(self._dropin_card)
+
+		card_data.status = self.CARD_STATUS_ACTIVE
+
+		self:set_active_card(card_data)
+
+		self._dropin_card = nil
 	end
 end
 
@@ -673,6 +688,14 @@ function ChallengeCardsManager:get_cards_back_texture(card_data)
 	end
 
 	return nil, nil
+end
+
+function ChallengeCardsManager:set_dropin_card(card_name)
+	if not card_name or not Global.challenge_cards_manager then
+		return
+	end
+
+	Global.challenge_cards_manager.dropin_card = card_name
 end
 
 function ChallengeCardsManager:inventory_alter_stacks(source_steam_instance_id, destination_steam_instance_id, amount)

@@ -559,7 +559,7 @@ function PlayerDamage:damage_melee(attack_data)
 		"melee_hit_var2",
 	}
 
-	self._unit:camera():play_shaker(vars[math.random(#vars)], 1 * managers.player:upgrade_value("player", "on_hit_flinch_reduction", 1))
+	self._unit:camera():play_shaker(table.random(vars), 1 * managers.player:upgrade_value("player", "on_hit_flinch_reduction", 1))
 
 	if managers.player:current_state() == "bipod" or managers.player:current_state() == "turret" then
 		managers.player:set_player_state("standard")
@@ -1416,9 +1416,7 @@ function PlayerDamage:shoot_pos_mid(m_pos)
 end
 
 function PlayerDamage:set_regenerate_timer_to_max()
-	local mul = managers.player:body_armor_regen_multiplier(alive(self._unit) and self._unit:movement():current_state()._moving, self:health_ratio())
-
-	self._regenerate_timer = tweak_data.player.damage.REGENERATE_TIME * mul
+	self._regenerate_timer = tweak_data.player.damage.REGENERATE_TIME
 	self._regenerate_speed = self._regenerate_speed or 1
 end
 

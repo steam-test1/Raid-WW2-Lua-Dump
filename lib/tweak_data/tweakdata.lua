@@ -349,7 +349,7 @@ function TweakData:init()
 	self.attention = AttentionTweakData:new()
 	self.timespeed = TimeSpeedEffectTweakData:new()
 	self.sound = SoundTweakData:new()
-	self.events = EventsTweakData:new()
+	self.events = EventsTweakData:new(self)
 	self.lootdrop = LootDropTweakData:new(self)
 	self.drop_loot = DropLootTweakData:new(self)
 	self.dlc = DLCTweakData:new(self)
@@ -883,6 +883,7 @@ function TweakData:init()
 	self.experience_manager.extra_objectives_bonus = 1.25
 	self.experience_manager.tiny_objectives_bonus = 1.01
 	self.experience_manager.tiny_loot_bonus = 1.01
+	self.experience_manager.sugar_high_bonus = 1.5
 
 	local level_xp_requirements = {}
 
@@ -1007,6 +1008,36 @@ function TweakData:init()
 	}
 	self.pickups.scrap = {
 		unit = Idstring("units/vanilla/props/props_wooden_crate_01/props_wooden_crate_scrap_parts"),
+	}
+	self.pickups.candy_simple = {
+		unit = Idstring("units/upd_candy/pickups/pku_candy/simple/pku_candy_simple"),
+	}
+	self.pickups.candy_simple_drop = {
+		unit = Idstring("units/upd_candy/pickups/pku_candy/simple/pku_candy_simple_drop"),
+	}
+	self.pickups.candy_unlimited_ammo = {
+		unit = Idstring("units/upd_candy/pickups/pku_candy/unlimited_ammo/pku_candy_unlimited_ammo_drop"),
+	}
+	self.pickups.candy_armor_pen = {
+		unit = Idstring("units/upd_candy/pickups/pku_candy/armor_pen/pku_candy_armor_pen_drop"),
+	}
+	self.pickups.candy_sprint_speed = {
+		unit = Idstring("units/upd_candy/pickups/pku_candy/sprint_speed/pku_candy_sprint_speed_drop"),
+	}
+	self.pickups.candy_jump_boost = {
+		unit = Idstring("units/upd_candy/pickups/pku_candy/jump_boost/pku_candy_jump_boost_drop"),
+	}
+	self.pickups.candy_atk_dmg = {
+		unit = Idstring("units/upd_candy/pickups/pku_candy/atk_dmg/pku_candy_atk_dmg_drop"),
+	}
+	self.pickups.candy_crit_chance = {
+		unit = Idstring("units/upd_candy/pickups/pku_candy/crit_chance/pku_candy_crit_chance_drop"),
+	}
+	self.pickups.candy_health_regen = {
+		unit = Idstring("units/upd_candy/pickups/pku_candy/health_regen/pku_candy_health_regen_drop"),
+	}
+	self.pickups.candy_god_mode = {
+		unit = Idstring("units/upd_candy/pickups/pku_candy/god_mode/pku_candy_god_mode_drop"),
 	}
 	self.pickups.enigma_part_01 = {
 		unit = Idstring("units/vanilla/props/props_enigma_machine_part/props_enigma_machine_part_01"),

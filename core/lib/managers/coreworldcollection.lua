@@ -1340,6 +1340,7 @@ function CoreWorldCollection:level_transition_cleanup()
 	managers.warcry:deactivate_warcry(true)
 	managers.hud:clear_hit_direction_indicators()
 	managers.hud:clear_suspicion_direction_indicators()
+	managers.hud:clear_all_status_effects()
 	managers.hud:clear_waypoints()
 	managers.hud:pd_cancel_progress()
 	managers.hud:hide_interaction_bar(false, false)
@@ -1418,7 +1419,7 @@ function CoreWorldCollection:level_transition_ended()
 
 	if Network:is_server() then
 		managers.network:session():set_state("in_game")
-		self:_plant_loot_on_spawned_levels()
+		managers.queued_tasks:queue(nil, self._plant_loot_on_spawned_levels, self, nil, 2)
 		managers.queued_tasks:queue(nil, self._do_spawn_players, self, nil, 0.1)
 		managers.gold_economy:layout_camp()
 		managers.progression:layout_camp()
@@ -1448,7 +1449,7 @@ end
 
 function CoreWorldCollection:_fire_level_loaded_event()
 	Application:trace("[CoreWorldCollection:_fire_level_loaded_event()]")
-	managers.global_state:fire_event("system_level_loaded")
+	managers.global_state:fire_event(GlobalStateManager.EVENT_LEVEL_LOADED)
 end
 
 function CoreWorldCollection:world_spawn(world_id)

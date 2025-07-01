@@ -226,21 +226,22 @@ end
 
 function WarcryTweakData:_init_clustertruck()
 	self.clustertruck = {
+		activation_equip_weapon = "anti_tank",
 		base_duration = 8,
 		base_kill_fill_amount = 0.06666666666666667,
 		buffs = {
 			{
-				"warcry_player_grenade_refill_amounts_1",
 				"warcry_player_grenade_clusters_1",
 				"warcry_player_grenade_cluster_damage_1",
 				"warcry_player_grenade_cluster_range_1",
 			},
 			{
-				"warcry_player_grenade_refill_amounts_2",
+				"warcry_player_grenade_refill_amounts_1",
 				"warcry_player_grenade_cluster_damage_2",
 				"warcry_player_grenade_cluster_range_2",
 			},
 			{
+				"warcry_player_grenade_refill_amounts_2",
 				"warcry_player_grenade_clusters_2",
 				"warcry_player_grenade_cluster_damage_3",
 				"warcry_player_grenade_cluster_range_3",
@@ -255,6 +256,8 @@ function WarcryTweakData:_init_clustertruck()
 		fire_opacity = 0.5,
 		hud_icon = "player_panel_warcry_cluster_truck",
 		ids_effect_name = Idstring("warcry_clustertruck"),
+		interrupt_penalty_multiplier = 0.7,
+		interrupt_penalty_percentage = 0.2,
 		lerp_duration = 0.75,
 		name_id = "warcry_clustertruck_name",
 		sound_switch = "warcry_spiral",

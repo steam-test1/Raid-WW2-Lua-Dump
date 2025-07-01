@@ -101,6 +101,28 @@ function ImpactDecoy:_on_collision(col_ray)
 	end
 end
 
+function ImpactDecoy:add_damage_result(unit, attacker, is_dead, damage_percent)
+	local thrower_peer_id = self:get_thrower_peer_id()
+
+	if is_dead and not unit:movement():cool() then
+		self:_award_achievement_decoy_kill(thrower_peer_id)
+	end
+end
+
+function ImpactDecoy:_award_achievement_decoy_kill(thrower_peer_id)
+	Application:info("[ImpactDecoy:achievements] ach_decoy_kill_anyone PEER:", thrower_peer_id)
+
+	local achievement_id = "ach_decoy_kill_anyone"
+
+	if thrower_peer_id == 1 then
+		managers.achievment:award(achievement_id)
+	else
+		local thrower_peer = managers.network:session():peer(thrower_peer_id)
+
+		managers.network:session():send_to_peer(thrower_peer, "sync_award_achievement", achievement_id)
+	end
+end
+
 function ImpactDecoy:clbk_pathing_results(search_id, path)
 	Application:debug("[ImpactDecoy:clbk_pathing_results] Whoop", search_id, path)
 

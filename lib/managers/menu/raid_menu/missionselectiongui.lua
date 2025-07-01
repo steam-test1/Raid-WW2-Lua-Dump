@@ -80,6 +80,10 @@ function MissionSelectionGui:_layout()
 		self:_layout_settings()
 	end
 
+	if managers.event_system:is_event_active() then
+		self:_layout_event()
+	end
+
 	self:_layout_operation_tutorialization()
 	self:_layout_difficulty_warning()
 	self:_layout_primary_paper()
@@ -273,16 +277,13 @@ function MissionSelectionGui:_layout_raid_wrapper_panel()
 end
 
 function MissionSelectionGui:_layout_right_panel()
-	local right_panel_params = {
-		h = 640,
+	self._right_panel = self._root_panel:panel({
+		h = 680,
 		layer = 1,
 		name = "right_panel",
 		w = 480,
-		x = 0,
 		y = 192,
-	}
-
-	self._right_panel = self._root_panel:panel(right_panel_params)
+	})
 
 	self._right_panel:set_x(self._root_panel:w() - self._right_panel:w())
 end
@@ -356,6 +357,17 @@ function MissionSelectionGui:_layout_settings()
 
 	self._team_ai_checkbox:set_value_and_render(Global.game_settings.selected_team_ai, true)
 	table.insert(self._settings_controls, self._team_ai_checkbox)
+end
+
+function MissionSelectionGui:_layout_event()
+	local event_name = managers.event_system:active_event()
+
+	self._event_display = self._right_panel:create_custom_control(RaidGUIControlEventDisplay, {
+		name = "special_event_display",
+	})
+
+	self._event_display:set_bottom(self._right_panel:h())
+	self._event_display:set_event(event_name)
 end
 
 function MissionSelectionGui:_layout_operation_tutorialization()
@@ -1273,6 +1285,10 @@ function MissionSelectionGui:_select_raids_tab()
 	self._raid_list_panel:set_alpha(1)
 	self._slot_list_panel:set_visible(false)
 	self._slot_list_panel:set_alpha(0)
+
+	if self._event_display then
+		self._event_display:set_visible(true)
+	end
 end
 
 function MissionSelectionGui:_select_operations_tab()
@@ -1282,6 +1298,10 @@ function MissionSelectionGui:_select_operations_tab()
 	self._raid_list_panel:set_alpha(0)
 	self._slot_list_panel:set_visible(true)
 	self._slot_list_panel:set_alpha(1)
+
+	if self._event_display then
+		self._event_display:set_visible(false)
+	end
 end
 
 function MissionSelectionGui:_select_raid(raid)
@@ -2387,23 +2407,20 @@ function MissionSelectionGui:_continue_operation()
 		managers.raid_job:continue_operation(self._continue_slot_selected)
 	end
 
-	local save_slot = managers.raid_job:get_save_slots()[self._continue_slot_selected]
-
-	if save_slot.difficulty then
-		tweak_data:set_difficulty(save_slot.difficulty)
-	end
-
-	if save_slot.team_ai then
-		Global.game_settings.team_ai = save_slot.team_ai
-	end
-
 	managers.raid_menu:close_all_menus()
 	managers.menu:input_enabled(false)
 end
 
 function MissionSelectionGui:_start_job(job_id)
+	local job = tweak_data.operations.missions[job_id]
 	local difficulty = self._difficulty_stepper:get_value()
 	local team_ai = self._team_ai_checkbox:get_value()
+	local event_enabled = self._event_display and self._event_display:get_value()
+
+	if job.job_type == OperationsTweakData.JOB_TYPE_OPERATION then
+		event_enabled = false
+	end
+
 	local permission = Global.DEFAULT_PERMISSION
 	local drop_in_allowed = true
 
@@ -2413,6 +2430,7 @@ function MissionSelectionGui:_start_job(job_id)
 	Global.game_settings.selected_team_ai = team_ai
 	Global.player_manager.game_settings_team_ai = team_ai
 	Global.player_manager.game_settings_difficulty = difficulty
+	Global.game_settings.event_enabled = event_enabled
 
 	if not Global.game_settings.single_player then
 		permission = self._permission_stepper:get_value()
@@ -2426,6 +2444,10 @@ function MissionSelectionGui:_start_job(job_id)
 	if Network:is_server() then
 		managers.network:session():chk_server_joinable_state()
 		managers.network:update_matchmake_attributes()
+
+		if event_enabled then
+			managers.event_system:activate_current_event()
+		end
 
 		if self._settings_selected.difficulty ~= Global.game_settings.difficulty or self._settings_selected.permission ~= Global.game_settings.permission or self._settings_selected.drop_in_allowed ~= Global.game_settings.drop_in_allowed or self._settings_selected.team_ai ~= Global.game_settings.team_ai then
 			managers.savefile:save_game(managers.savefile:get_save_progress_slot())

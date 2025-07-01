@@ -43,9 +43,9 @@ function RaycastWeaponBase:init(unit)
 	self._autohit_data = tweak_data.weapon[self._name_id].autohit
 	self._autohit_current = self._autohit_data.INIT_RATIO
 	self._shoot_through_data = {
-		_shooting = nil,
 		from = Vector3(),
 		kills = 0,
+		stop_shooting = nil,
 	}
 	self._can_shoot_through_shield = tweak_data.weapon[self._name_id].can_shoot_through_shield
 	self._can_shoot_through_enemy = tweak_data.weapon[self._name_id].can_shoot_through_enemy
@@ -114,6 +114,7 @@ function RaycastWeaponBase:get_shoot_through_enemies_count()
 	local pen_count = self._can_shoot_through_enemy or 0
 
 	pen_count = pen_count + managers.player:upgrade_value("player", "warcry_shoot_through_enemies", 0)
+	pen_count = pen_count + managers.player:temporary_upgrade_value("temporary", "candy_armor_pen", 0)
 
 	return pen_count
 end
@@ -392,6 +393,7 @@ function RaycastWeaponBase:fire(from_pos, direction, dmg_mul, shoot_player, spre
 
 	if self._setup.user_unit == managers.player:player_unit() then
 		consume_ammo = consume_ammo and not managers.player:has_category_upgrade("player", "warcry_no_reloads")
+		consume_ammo = consume_ammo and not managers.player:has_activate_temporary_upgrade("temporary", "candy_unlimited_ammo")
 
 		local active_warcry = managers.warcry:get_active_warcry()
 

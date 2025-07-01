@@ -13,6 +13,7 @@ RaidExperienceManager.SCRIPT_XP_EVENTS = {
 	"extra_objectives_bonus",
 	"tiny_objectives_bonus",
 	"tiny_loot_bonus",
+	"sugar_high_bonus",
 }
 
 function RaidExperienceManager:init()
@@ -151,7 +152,7 @@ function RaidExperienceManager:clear_loot_bonus_xp()
 	self._loot_bonus_xp = nil
 end
 
-function RaidExperienceManager:calculate_exp_brakedown(mission_id, operation_id, success)
+function RaidExperienceManager:calculate_exp_breakdown(mission_id, operation_id, success)
 	local exp_table = {
 		additive = {},
 		multiplicative = {},
@@ -213,11 +214,11 @@ function RaidExperienceManager:calculate_exp_brakedown(mission_id, operation_id,
 		table.insert(exp_table.multiplicative, event_fail_multiplicative)
 	end
 
-	Application:trace("[RaidExperienceManager:calculate_exp_brakedown] This runs stored mission_xp events:", inspect(self._global.mission_xp))
+	Application:trace("[RaidExperienceManager:calculate_exp_breakdown] This runs stored mission_xp events:", inspect(self._global.mission_xp))
 
 	for _, event_id in ipairs(self._global.mission_xp) do
 		if table.contains(RaidExperienceManager.SCRIPT_XP_EVENTS, event_id) then
-			Application:trace("[RaidExperienceManager:calculate_exp_brakedown] Event ID is a SCRIPT_XP_EVENTS id", event_id)
+			Application:trace("[RaidExperienceManager:calculate_exp_breakdown] Event ID is a SCRIPT_XP_EVENTS id", event_id)
 
 			local event_id_data = tweak_data:get_value("experience_manager", event_id)
 
@@ -229,12 +230,12 @@ function RaidExperienceManager:calculate_exp_brakedown(mission_id, operation_id,
 					local existing_event = false
 
 					for i, existing_event_multi in ipairs(exp_table.multiplicative) do
-						Application:trace("[RaidExperienceManager:calculate_exp_brakedown] Should modify? ", existing_event_multi.event_id, event_loc_id, existing_event_multi.event_id == event_loc_id)
+						Application:trace("[RaidExperienceManager:calculate_exp_breakdown] Should modify? ", existing_event_multi.event_id, event_loc_id, existing_event_multi.event_id == event_loc_id)
 
 						if existing_event_multi.id == event_loc_id then
 							existing_event_multi.amount = existing_event_multi.amount + event_amount
 
-							Application:trace("[RaidExperienceManager:calculate_exp_brakedown] Modified event multi", existing_event_multi.id, existing_event_multi.amount)
+							Application:trace("[RaidExperienceManager:calculate_exp_breakdown] Modified event multi", existing_event_multi.id, existing_event_multi.amount)
 
 							existing_event = true
 
@@ -249,11 +250,11 @@ function RaidExperienceManager:calculate_exp_brakedown(mission_id, operation_id,
 						event_multi.amount = event_amount
 
 						table.insert(exp_table.multiplicative, event_multi)
-						Application:trace("[RaidExperienceManager:calculate_exp_brakedown] Added event multi", event_loc_id, event_amount)
+						Application:trace("[RaidExperienceManager:calculate_exp_breakdown] Added event multi", event_loc_id, event_amount)
 					end
 				end
 			else
-				Application:trace("[RaidExperienceManager:calculate_exp_brakedown] Experience Manager does not have event id:", event_id)
+				Application:trace("[RaidExperienceManager:calculate_exp_breakdown] Experience Manager does not have event id:", event_id)
 			end
 		end
 	end
@@ -370,7 +371,7 @@ function RaidExperienceManager:_level_up()
 	managers.skilltree:create_breadcrumbs_for_level(self:current_level())
 
 	if managers.achievment then
-		self:_check_achievements()
+		managers.achievment:check_experience_achievements()
 	end
 
 	if managers.network:session() then
@@ -378,21 +379,6 @@ function RaidExperienceManager:_level_up()
 	end
 
 	managers.hud:set_player_level(self:current_level())
-end
-
-function RaidExperienceManager:_check_achievements()
-	if not managers.achievment.handler:initialized() then
-		return
-	end
-
-	local achievements = tweak_data.achievement.levels
-	local current_level = self:current_level()
-
-	for _, achievement_def in ipairs(achievements) do
-		if current_level >= achievement_def.level then
-			managers.achievment:award(achievement_def.achievement)
-		end
-	end
 end
 
 function RaidExperienceManager:current_level()
@@ -538,7 +524,6 @@ function RaidExperienceManager:load(data)
 	end
 
 	managers.network.account:experience_loaded()
-	self:_check_achievements()
 end
 
 function RaidExperienceManager:reset()

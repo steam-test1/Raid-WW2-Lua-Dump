@@ -653,15 +653,19 @@ function ReadyUpGui:_show_player_challenge_card_info()
 
 			self._negative_card_effect_label:set_h(h)
 			self._negative_card_effect_label:set_y(self._positive_card_effect_label:bottom() + 15)
+			self._negative_card_effect_label:set_visible(true)
+		else
+			self._negative_card_effect_label:set_visible(false)
 		end
 
 		self._card_control:set_visible(true)
 		self._empty_card_slot:set_visible(false)
 		self._card_not_selected_label:set_visible(false)
-		self._negative_card_effect_label:set_visible(true)
 
 		self._card_control_set_nil = false
-	elseif not self._card_control_set_nil then
+		self._card_control_is_blank = false
+	elseif not self._card_control_set_nil and not self._card_control_is_blank then
+		self._card_control_is_blank = true
 		self._card_control_set_nil = true
 
 		self._card_control:set_card(nil)
@@ -914,6 +918,8 @@ function ReadyUpGui:_update_controls_contining_mission()
 			self._card_control:set_visible(true)
 			self._card_control:set_card(active_card)
 
+			self._forced_card = active_card.locked_suggestion
+
 			local bonus_description, malus_description = managers.challenge_cards:get_card_description(active_card.key_name)
 
 			self._positive_card_effect_label:set_text("+ " .. bonus_description)
@@ -973,8 +979,10 @@ function ReadyUpGui:update(t, dt)
 		if not self._stinger_played then
 			Application:debug("[ReadyUpGui:update] Ready up stinger...")
 
-			if managers.challenge_cards:get_suggested_cards() and managers.challenge_cards:get_suggested_cards()[1] and managers.challenge_cards:get_suggested_cards()[1].selected_sound then
-				managers.menu_component:post_event(managers.challenge_cards:get_suggested_cards()[1].selected_sound)
+			local active_card = managers.challenge_cards:get_active_card()
+
+			if active_card and active_card.selected_sound then
+				managers.menu_component:post_event(active_card.selected_sound)
 			else
 				managers.menu_component:post_event("ready_up_stinger")
 			end
@@ -1002,7 +1010,7 @@ function ReadyUpGui:update(t, dt)
 			self._synced_document_spawn_chance_to_host = true
 		end
 
-		if self._continuing_mission then
+		if self._forced_card then
 			managers.global_state:fire_event(GlobalStateManager.EVENT_START_RAID)
 		elseif self._is_single_player then
 			managers.challenge_cards:select_challenge_card(self._current_peer_index)
@@ -1140,7 +1148,7 @@ function ReadyUpGui:bind_controller_inputs(is_current_player, can_leave)
 			key = Idstring("menu_controller_face_top"),
 		})
 
-		if not self._continuing_mission then
+		if not self._forced_card then
 			if self._is_single_player then
 				table.insert(controler_legend, "menu_legend_ready_up_select_card")
 			else

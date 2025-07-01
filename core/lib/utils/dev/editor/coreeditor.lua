@@ -925,7 +925,7 @@ end
 
 function CoreEditor:_fire_level_loaded_event()
 	Application:trace("[CoreEditor:_fire_level_loaded_event()]")
-	managers.global_state:fire_event("system_level_loaded")
+	managers.global_state:fire_event(GlobalStateManager.EVENT_LEVEL_LOADED)
 end
 
 function CoreEditor:_simulation_disable_continents()

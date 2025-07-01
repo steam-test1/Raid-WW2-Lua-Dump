@@ -170,8 +170,8 @@ function RaidGUIControlLootCardDetails:_create_card_details()
 
 	self._card_control:set_alpha(0)
 	self._bonus_image:set_alpha(0)
-	self._malus_image:set_alpha(0)
 	self._bonus_label:set_alpha(0)
+	self._malus_image:set_alpha(0)
 	self._malus_label:set_alpha(0)
 end
 

@@ -59,6 +59,16 @@ function DropLootManager:drop_item(tweak_table, position, rotation, world_id, we
 
 	local loot_tweak = tweak_table or "default_tier"
 
+	if tweak_data.drop_loot[loot_tweak].buff_table_override then
+		for effect, override_tweak in pairs(tweak_data.drop_loot[loot_tweak].buff_table_override) do
+			if managers.buff_effect:is_effect_active(effect) then
+				loot_tweak = override_tweak
+
+				break
+			end
+		end
+	end
+
 	if not weight_multiplier then
 		local multiplier = 1
 

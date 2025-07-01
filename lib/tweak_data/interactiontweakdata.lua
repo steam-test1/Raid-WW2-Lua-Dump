@@ -2123,6 +2123,9 @@ function InteractionTweakData:_init_carry()
 	self.take_flak_shell_pallete.timer = self.INTERACT_TIMER_CARRY
 	self.take_flak_shell_pallete.upgrade_timer_multipliers = self.TIMER_MULTIPLIERS_CARRY
 	self.take_flak_shell_pallete.start_active = false
+	self.eat_candy = {}
+	self.eat_candy.text_id = "hud_interact_eat_candy"
+	self.eat_candy.interact_distance = self.POWERUP_INTERACTION_DISTANCE
 	self.corpse_dispose = {}
 	self.corpse_dispose.icon = "develop"
 	self.corpse_dispose.text_id = "hud_int_dispose_corpse"

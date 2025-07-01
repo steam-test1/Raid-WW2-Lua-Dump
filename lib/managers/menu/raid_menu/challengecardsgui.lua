@@ -243,10 +243,12 @@ function ChallengeCardsGui:_layout()
 
 	self._filter_type = managers.raid_job:current_job_type()
 
-	if self._filter_type == OperationsTweakData.JOB_TYPE_RAID then
-		self._node.components.raid_menu_header:set_screen_name("menu_challenge_cards_suggest_raid_title")
-	elseif self._filter_type == OperationsTweakData.JOB_TYPE_OPERATION then
-		self._node.components.raid_menu_header:set_screen_name("menu_challenge_cards_suggest_operation_title")
+	local rm_head = self._node.components.raid_menu_header
+
+	if self._filter_type == OperationsTweakData.JOB_TYPE_OPERATION then
+		rm_head:set_screen_name("menu_challenge_cards_suggest_operation_title")
+	else
+		rm_head:set_screen_name("menu_challenge_cards_suggest_raid_title")
 	end
 
 	self:suggestions_changed()
@@ -289,8 +291,6 @@ function ChallengeCardsGui:_layout()
 			vertical = "top",
 			visible = true,
 			w = 200,
-			x = 0,
-			y = 0,
 		})
 
 		self._timer_label:set_right(self._root_panel:right())
@@ -318,12 +318,13 @@ end
 
 function ChallengeCardsGui:_setup_single_player()
 	self._is_single_player = managers.network:session():count_all_peers() == 1
-	self._suggest_button_string_id = "menu_suggest_card_buton"
-	self._disabled_suggest_button_string_id = "menu_suggested"
 
 	if self._is_single_player then
 		self._suggest_button_string_id = "menu_select_card_buton"
 		self._disabled_suggest_button_string_id = "menu_selected"
+	else
+		self._suggest_button_string_id = "menu_suggest_card_buton"
+		self._disabled_suggest_button_string_id = "menu_suggested"
 	end
 
 	self._suggest_card_button:set_text(self:translate(self._suggest_button_string_id, true))

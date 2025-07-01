@@ -79,6 +79,9 @@ function WeaponTweakData:init(tweak_data)
 	self:_init_data_decoy_coin(tweak_data)
 	self:_init_data_molotov(tweak_data)
 	self:_init_data_betty(tweak_data)
+	self:_init_data_gold_bar(tweak_data)
+	self:_init_data_thermite(tweak_data)
+	self:_init_data_anti_tank(tweak_data)
 	self:_init_data_kar98_npc(tweak_data)
 	self:_init_data_sniper_kar98_npc(tweak_data)
 	self:_init_data_ger_luger_npc(tweak_data)
@@ -788,6 +791,164 @@ function WeaponTweakData:_init_data_betty(tweak_data)
 	self.betty.stat_group = "mine"
 end
 
+function WeaponTweakData:_init_data_gold_bar(tweak_data)
+	self.gold_bar = {
+		alert_size = 0,
+		auto = {
+			fire_rate = 0.4,
+		},
+		crosshair = self._crosshairs.grenade,
+		damage_melee = 86,
+		damage_melee_effect_mul = 1,
+		exit_run_speed_multiplier = 1,
+		gui = {
+			icon_large = "weapon_gre_gold_bar_large",
+		},
+		hold = "grenade",
+		hud = {
+			icon = "weapons_panel_gre_gold_bar",
+			panel_class = "grenade",
+		},
+		name_id = "bm_gold_bar",
+		sound_event = "new_grenade_explode",
+		sounds = {
+			autofire_start = nil,
+			autofire_stop = nil,
+			prefix = "",
+			single = "new_grenade_explode",
+		},
+		stance = "mills",
+		stat_group = "brick",
+		suppression = 1,
+		throw_shout = "player_gen_thanks",
+		timers = {
+			equip = 0.3,
+			reload_empty = 1.65,
+			reload_not_empty = 1.25,
+			unequip = 0.25,
+		},
+		transition_duration = 0,
+		usage = "c45",
+		usage_anim = "c45",
+		use_data = {
+			equip = {
+				align_place = "right_hand",
+			},
+			selection_index = tweak_data.WEAPON_SLOT_GRENADE,
+			unequip = {
+				align_place = "back",
+			},
+		},
+		weapon_hold = "mills",
+		weapon_movement_penalty = 1,
+	}
+end
+
+function WeaponTweakData:_init_data_thermite(tweak_data)
+	self.thermite = {
+		alert_size = 0,
+		auto = {
+			fire_rate = 0.4,
+		},
+		crosshair = self._crosshairs.grenade,
+		damage_melee = 86,
+		damage_melee_effect_mul = 1,
+		exit_run_speed_multiplier = 1,
+		gui = {
+			icon_large = "weapon_gre_thermite_large",
+		},
+		hold = "grenade",
+		hud = {
+			icon = "weapons_panel_gre_thermite",
+			panel_class = "grenade",
+		},
+		name_id = "bm_grenade_thermite",
+		sound_event = "new_grenade_explode",
+		sounds = {
+			autofire_start = nil,
+			autofire_stop = nil,
+			prefix = "",
+			single = "new_grenade_explode",
+		},
+		stance = "d343",
+		stat_group = "thermite",
+		suppression = 1,
+		timers = {
+			equip = 0.3,
+			reload_empty = 1.65,
+			reload_not_empty = 1.25,
+			unequip = 0.25,
+		},
+		transition_duration = 0,
+		usage = "c45",
+		usage_anim = "c45",
+		use_data = {
+			equip = {
+				align_place = "right_hand",
+			},
+			selection_index = tweak_data.WEAPON_SLOT_GRENADE,
+			unequip = {
+				align_place = "back",
+			},
+		},
+		weapon_hold = "d343",
+		weapon_movement_penalty = 1,
+	}
+end
+
+function WeaponTweakData:_init_data_anti_tank(tweak_data)
+	self.anti_tank = {
+		alert_size = 0,
+		auto = {
+			fire_rate = 0.4,
+		},
+		category = self.WEAPON_CATEGORY_GRENADE,
+		crosshair = self._crosshairs.grenade,
+		damage_melee = 86,
+		damage_melee_effect_mul = 1,
+		exit_run_speed_multiplier = 1,
+		gui = {
+			icon_large = "weapon_gre_anti_tank_large",
+		},
+		hold = "grenade",
+		hud = {
+			icon = "weapons_panel_gre_anti_tank",
+			panel_class = "grenade",
+		},
+		name_id = "bm_grenade_anti_tank",
+		sound_event = "new_grenade_explode",
+		sounds = {
+			autofire_start = nil,
+			autofire_stop = nil,
+			prefix = "",
+			single = "new_grenade_explode",
+		},
+		stance = "m24",
+		stat_group = "anti_tank",
+		suppression = 1,
+		timers = {
+			equip = 0.3,
+			reload_empty = 1.65,
+			reload_not_empty = 1.25,
+			unequip = 0.25,
+		},
+		transition_duration = 0,
+		usage = "c45",
+		usage_anim = "c45",
+		use_data = {
+			equip = {
+				align_place = "right_hand",
+			},
+			selection_index = tweak_data.WEAPON_SLOT_GRENADE,
+			unequip = {
+				align_place = "back",
+			},
+		},
+		weapon_hold = "m24",
+		weapon_movement_penalty = 1,
+	}
+end
+
 function WeaponTweakData:_init_data_decoy_coin(tweak_data)
 	self.decoy_coin = {}
 	self.decoy_coin.sounds = {}
@@ -1422,10 +1583,10 @@ function WeaponTweakData:_init_data_tiger_main_gun_module_npc(difficulty_index)
 		main_cannon_lock_on = "tiger_npc_canon_reload",
 	}
 	self.tiger_main_gun_module.effect = {
-		lmg_dp28 = nil,
+		_all_fps_animation_weights = nil,
+		hidden = nil,
 		main_cannon_fire = "effects/vanilla/explosions/tank_turret_fire",
 		main_cannon_fire_hit = "effects/vanilla/explosions/exp_airbomb_explosion_002",
-		style = nil,
 	}
 	self.tiger_main_gun_module.turret = {
 		armor_piercing = true,

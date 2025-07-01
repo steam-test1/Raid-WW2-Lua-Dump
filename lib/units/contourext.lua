@@ -580,6 +580,16 @@ function ContourExt:_get_materials()
 		table.insert(check_units, self._unit)
 	end
 
+	local spawned_gear = self._unit:base().get_spawned_gear and self._unit:base():get_spawned_gear()
+
+	if spawned_gear then
+		for _, gear in ipairs(spawned_gear) do
+			if alive(gear.unit) and gear.unit:acc_gear() then
+				table.insert(check_units, gear.unit)
+			end
+		end
+	end
+
 	local inventory = self._unit:inventory()
 	local weapon = inventory and inventory.get_weapon and inventory:get_weapon()
 

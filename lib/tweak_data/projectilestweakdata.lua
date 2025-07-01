@@ -33,6 +33,9 @@ function ProjectilesTweakData:init(tweak_data)
 	self:_init_mills(tweak_data)
 	self:_init_decoy_coin(tweak_data)
 	self:_init_betty(tweak_data)
+	self:_init_gold_bar(tweak_data)
+	self:_init_thermite(tweak_data)
+	self:_init_anti_tank(tweak_data)
 	self:_add_desc_from_name_macro(self)
 end
 
@@ -371,6 +374,95 @@ function ProjectilesTweakData:_init_decoy_coin(tweak_data)
 	table.insert(self._projectiles_index, "decoy_coin")
 end
 
+function ProjectilesTweakData:_init_anti_tank(tweak_data)
+	table.insert(self._projectiles_index, "anti_tank")
+
+	self.anti_tank = {}
+	self.anti_tank.name_id = "bm_grenade_anti_tank"
+	self.anti_tank.weapon_id = "anti_tank_grenade"
+	self.anti_tank.unit = "units/upd_blaze/weapons/gre_anti_tank/wpn_prj_gre_anti_tank"
+	self.anti_tank.unit_hand = "units/upd_blaze/weapons/gre_anti_tank/wpn_fps_gre_anti_tank"
+	self.anti_tank.unit_dummy = "units/upd_blaze/weapons/gre_anti_tank/wpn_tps_gre_anti_tank"
+	self.anti_tank.icon = "frag_grenade"
+	self.anti_tank.anim_global_param = "projectile_frag"
+	self.anti_tank.throwable = true
+	self.anti_tank.max_amount = 2
+	self.anti_tank.pickup_filter = "nopickup"
+	self.anti_tank.upgrade_amounts = table.list_union(self.GRENADE_QUANTITY_UPGARDE, {
+		{
+			category = "player",
+			upgrade = "warcry_grenade_refill_amounts",
+		},
+	})
+	self.anti_tank.throw_allowed_expire_t = 0.662
+	self.anti_tank.expire_t = 0.455
+	self.anti_tank.repeat_expire_t = 1
+	self.anti_tank.is_a_grenade = true
+	self.anti_tank.damage = 600
+	self.anti_tank.player_damage = 20
+	self.anti_tank.launch_speed = 300
+	self.anti_tank.range = 850
+	self.anti_tank.can_airburst = true
+	self.anti_tank.enemy_proximity_range = self.anti_tank.range * 0.6
+	self.anti_tank.killzone_range = 0.66
+	self.anti_tank.init_timer = 3
+	self.anti_tank.animations = {}
+	self.anti_tank.animations.equip_id = "equip_welrod"
+	self.anti_tank.sound_event = "grenade_explode"
+	self.anti_tank.gui = {
+		display_offset = 10,
+		distance_offset = -80,
+		height_offset = -14,
+		initial_rotation = {
+			pitch = 60,
+			roll = 0,
+			yaw = -90,
+		},
+		rotation_offset = 3,
+	}
+end
+
+function ProjectilesTweakData:_init_thermite(tweak_data)
+	table.insert(self._projectiles_index, "thermite")
+
+	self.thermite = {}
+	self.thermite.name_id = "bm_grenade_thermite"
+	self.thermite.icon = "thermite_grenade"
+	self.thermite.unit = "units/upd_blaze/weapons/gre_thermite/wpn_prj_gre_thermite"
+	self.thermite.unit_hand = "units/upd_blaze/weapons/gre_thermite/wpn_fps_gre_thermite"
+	self.thermite.unit_dummy = "units/upd_blaze/weapons/gre_thermite/wpn_tps_gre_thermite"
+	self.thermite.no_cheat_count = true
+	self.thermite.time_cheat = 1
+	self.thermite.is_a_grenade = true
+	self.thermite.throwable = true
+	self.thermite.max_amount = 3
+	self.thermite.pickup_filter = "nopickup"
+	self.thermite.init_timer = 4.5
+	self.thermite.damage = 15
+	self.thermite.player_damage = 5
+	self.thermite.fire_dot_data = {
+		dot_damage = 10,
+		dot_length = 2.01,
+		dot_tick_period = 0.5,
+		dot_trigger_chance = 35,
+		dot_trigger_max_distance = 3000,
+	}
+	self.thermite.launch_speed = 240
+	self.thermite.range = 100
+	self.thermite.killzone_range = 0
+	self.thermite.burn_duration = 20
+	self.thermite.burn_tick_period = 0.665
+	self.thermite.sound_event_impact_duration = 4
+	self.thermite.alert_radius = 1500
+	self.thermite.fire_alert_radius = 1500
+	self.thermite.anim_global_param = "projectile_frag"
+	self.thermite.throw_allowed_expire_t = 0.662
+	self.thermite.expire_t = 0.46
+	self.thermite.repeat_expire_t = 1.5
+	self.thermite.animations = {}
+	self.thermite.animations.equip_id = "equip_welrod"
+end
+
 function ProjectilesTweakData:_init_mortar_shell(tweak_data)
 	self.mortar_shell = {}
 	self.mortar_shell.name_id = "bm_mortar_shell"
@@ -406,6 +498,51 @@ function ProjectilesTweakData:_init_flamer_death_fake(tweak_data)
 	self.flamer_death_fake.sound_event_impact_duration = 1
 
 	table.insert(self._projectiles_index, "flamer_death_fake")
+end
+
+function ProjectilesTweakData:_init_gold_bar(tweak_data)
+	self.gold_bar = {}
+	self.gold_bar.name_id = "bm_gold_bar"
+	self.gold_bar.unit = "units/upd_candy/weapons/gre_gold_bar/wpn_prj_gre_gold_bar"
+	self.gold_bar.unit_hand = "units/upd_candy/weapons/gre_gold_bar/wpn_fps_gre_gold_bar"
+	self.gold_bar.unit_dummy = "units/upd_candy/weapons/gre_gold_bar/wpn_tps_gre_gold_bar"
+	self.gold_bar.icon = "frag_grenade"
+	self.gold_bar.max_amount = 5
+	self.gold_bar.upgrade_amount = {
+		category = "player",
+		upgrade = "pack_mule_equipment_quantity",
+	}
+	self.gold_bar.pickup_filter = "gold_bar"
+	self.gold_bar.is_a_grenade = true
+	self.gold_bar.throwable = true
+	self.gold_bar.impact_detonation = true
+	self.gold_bar.instant_throw = true
+	self.gold_bar.remove_on_impact = false
+	self.gold_bar.attach_on_collision = false
+	self.gold_bar.anim_global_param = "projectile_molotov"
+	self.gold_bar.throw_allowed_expire_t = 0
+	self.gold_bar.expire_t = 0.46
+	self.gold_bar.repeat_expire_t = 1
+	self.gold_bar.launch_speed = 560
+	self.gold_bar.adjust_z = 40
+	self.gold_bar.damage = 150
+	self.gold_bar.headshot_multiplier = 3
+	self.gold_bar.range = 500
+	self.gold_bar.animations = {}
+	self.gold_bar.animations.equip_id = "equip_welrod"
+	self.gold_bar.gui = {
+		display_offset = 22,
+		distance_offset = -140,
+		height_offset = -14,
+		initial_rotation = {
+			pitch = 80,
+			roll = 0,
+			yaw = 52,
+		},
+		rotation_offset = 3,
+	}
+
+	table.insert(self._projectiles_index, "gold_bar")
 end
 
 function BlackMarketTweakData:get_projectiles_index()

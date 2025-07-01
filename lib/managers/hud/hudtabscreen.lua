@@ -943,6 +943,13 @@ function HUDTabScreen:reset_time()
 end
 
 function HUDTabScreen:_refresh_card_info()
+	if self._event_panel then
+		self._empty_card_panel:set_visible(false)
+		self._active_card_panel:set_visible(false)
+
+		return
+	end
+
 	local active_card = managers.challenge_cards:get_active_card()
 
 	if not active_card then
@@ -962,6 +969,32 @@ function HUDTabScreen:_refresh_card_info()
 			active_card_title:set_text(utf8.to_upper(managers.localization:text("hud_active_challenge_card_title")))
 			active_card_title:set_color(HUDTabScreen.CARD_INFO_TITLE_COLOR)
 		end
+	end
+end
+
+function HUDTabScreen:register_event_panel(control_class, params)
+	if self._event_panel then
+		self:remove_event_panel()
+	end
+
+	self._event_panel = control_class:new(self._card_info_panel, params)
+
+	self:_refresh_card_info()
+end
+
+function HUDTabScreen:remove_event_panel()
+	if self._event_panel then
+		self._event_panel:destroy()
+
+		self._event_panel = nil
+
+		self:_refresh_card_info()
+	end
+end
+
+function HUDTabScreen:set_event_panel_data(data)
+	if self._event_panel then
+		self._event_panel:set_data(data)
 	end
 end
 

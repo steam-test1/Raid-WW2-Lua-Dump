@@ -189,7 +189,7 @@ function EventCompleteState:at_enter(old_state, params)
 	end
 
 	self:_calculate_card_xp_bonuses()
-	self:check_complete_achievements()
+	self:_set_memory()
 	self:set_statistics_values()
 	managers.statistics:stop_session({
 		quit = false,
@@ -203,9 +203,13 @@ function EventCompleteState:at_enter(old_state, params)
 		managers.lootdrop:add_listener(LootScreenGui.EVENT_KEY_PEER_LOOT_RECEIVED, {
 			LootDropManager.EVENT_PEER_LOOT_RECEIVED,
 		}, callback(self, self, "on_loot_dropped_for_peer"))
-		self:on_loot_data_ready()
 
-		if managers.raid_job:current_job() and not managers.raid_job:current_job().consumable then
+		if self._current_job_data.consumable then
+			self._loot_ready = true
+
+			self:_check_complete_achievements()
+		else
+			self:on_loot_data_ready()
 			self:_calculate_extra_loot_secured()
 		end
 	end
@@ -340,10 +344,9 @@ function EventCompleteState:on_loot_data_ready()
 		total = self.loot_spawned,
 		total_value = self.loot_spawned * tweak_data.lootdrop.dog_tag.loot_value,
 	}
+	self._loot_ready = true
 
-	if self.loot_spawned == self.loot_acquired and self._success then
-		managers.achievment:check_achievement_group_bring_them_home(self._current_job_data)
-	end
+	self:_check_complete_achievements()
 end
 
 function EventCompleteState:drop_loot_for_player()
@@ -638,6 +641,7 @@ function EventCompleteState:on_top_stats_ready()
 
 	if self:is_success() then
 		self.special_honors = managers.statistics:get_top_stats()
+		self.downed_stats = managers.statistics:get_downed_stats()
 
 		if managers.network:session():amount_of_players() ~= 1 then
 			for index, stat in pairs(self.special_honors) do
@@ -675,15 +679,7 @@ function EventCompleteState:on_top_stats_ready()
 		managers.menu_component._raid_menu_special_honors_gui:show_honors()
 	end
 
-	if self.is_at_last_event and self._success and is_in_operation then
-		local operation_save_data = managers.raid_job:get_save_slots()[managers.raid_job:get_current_save_slot()]
-
-		if not operation_save_data then
-			return
-		end
-
-		managers.achievment:check_achievement_operation(operation_save_data)
-	end
+	self:_check_complete_achievements()
 end
 
 function EventCompleteState:update(t, dt)
@@ -793,7 +789,7 @@ function EventCompleteState:get_base_xp_breakdown()
 		current_event = self._current_job_data.job_id
 	end
 
-	self.xp_breakdown = managers.experience:calculate_exp_brakedown(current_event, current_operation, true)
+	self.xp_breakdown = managers.experience:calculate_exp_breakdown(current_event, current_operation, true)
 
 	if not self:is_success() then
 		for i = 1, #self.xp_breakdown.additive do
@@ -878,8 +874,10 @@ function EventCompleteState:at_exit(next_state)
 	self.xp_breakdown = nil
 	self.total_xp = nil
 	self.stats_ready = nil
+	self._loot_ready = nil
 	self.local_player_loot_drop = nil
 	self._level_difference_bonus = nil
+	self._achievements_awarded = nil
 	self._awarded_xp = 0
 	self.loot_acquired = 0
 	self.loot_spawned = 0
@@ -1047,23 +1045,58 @@ function EventCompleteState:game_ended()
 	return true
 end
 
-function EventCompleteState:check_complete_achievements()
+function EventCompleteState:_check_complete_achievements()
+	if self._achievements_awarded or not self.stats_ready or not self._loot_ready then
+		return
+	end
+
 	if self:is_success() then
+		local job_id = self._current_job_data.job_id
+		local peers_connected = managers.network:session():count_all_peers()
+		local dogtags_collected = self.loot_spawned == self.loot_acquired
+		local total_downs = self.downed_stats.total_downs or 0
+		local all_players_downed = self.downed_stats.all_players_downed or false
+		local mission_data = {
+			consumable = self._current_job_data.consumable,
+			difficulty = tweak_data:difficulty_to_index(Global.game_settings.difficulty),
+			dogtags_collected = dogtags_collected,
+			no_bleedout = total_downs == 0,
+			peers_connected = peers_connected,
+			stealthed = self._job_memory.stealth,
+		}
+
+		managers.achievment:check_mission_achievements(job_id, mission_data)
 		managers.achievment:check_achievement_complete_raid_with_4_different_classes()
 		managers.achievment:check_achievement_complete_raid_with_no_kills()
 		managers.achievment:check_achievement_kill_30_enemies_with_vehicle_on_bank_level()
+
+		if peers_connected > 1 and all_players_downed then
+			managers.achievment:award("ach_all_players_go_to_bleedout")
+		end
+
+		self._achievements_awarded = true
 	end
 end
 
-function EventCompleteState:set_statistics_values()
-	local usingChallengeCard = false
+function EventCompleteState:_set_memory()
+	self._job_memory = {
+		stealth = managers.raid_job:get_memory("stealth_completion"),
+	}
+end
 
-	if self._active_challenge_card ~= nil and self._active_challenge_card.key_name ~= nil and self._active_challenge_card.key_name ~= "empty" and self._active_challenge_card.card_category == ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD then
-		usingChallengeCard = true
+function EventCompleteState:set_statistics_values()
+	Application:info("[EventCompleteState:set_statistics_values] complete job with challenge card", self._active_challenge_card and inspect(self._active_challenge_card))
+
+	if self._active_challenge_card and self._active_challenge_card.event then
+		Application:info("[EventCompleteState:set_statistics_values] event", self._active_challenge_card and self._active_challenge_card.event)
+
+		return
 	end
 
-	if self:is_success() and usingChallengeCard then
-		managers.statistics:complete_job_with_challenge_card(self._job_type, self._active_challenge_card)
+	local used_challenge_card = self._active_challenge_card and self._active_challenge_card.key_name and self._active_challenge_card.key_name ~= "empty"
+
+	if self:is_success() and used_challenge_card then
+		managers.statistics:complete_job_with_card(self._job_type, self._active_challenge_card)
 	end
 end
 

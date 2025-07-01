@@ -1865,6 +1865,7 @@ function CopDamage:die(attack_data)
 		end
 	end
 
+	self._unit:base():set_gear_dead()
 	self._unit:inventory():drop_shield()
 
 	if self._unit:unit_data().mission_element then
@@ -3047,6 +3048,10 @@ function CopDamage:load(data)
 	end
 
 	self._dead = data.char_dmg.dead
+
+	if data.char_dmg.dead then
+		self._unit:base():set_gear_dead()
+	end
 
 	if data.char_dmg.health then
 		self._health = data.char_dmg.health
