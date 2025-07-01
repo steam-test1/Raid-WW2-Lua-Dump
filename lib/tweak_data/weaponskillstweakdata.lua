@@ -29,6 +29,7 @@ function WeaponSkillsTweakData:init()
 	self:_init_m1912_skill_tree()
 	self:_init_carbine_skill_tree()
 	self:_init_webley_skill_tree()
+	self:_init_geco_skill_tree()
 	self:_init_reedem_xp_values()
 end
 
@@ -666,6 +667,238 @@ function WeaponSkillsTweakData:_init_webley_skill_tree()
 	self.skill_trees.webley.tier_unlock = {
 		"weapon_tier_unlocked",
 		"weapon_tier_unlocked",
+	}
+end
+
+function WeaponSkillsTweakData:_init_geco_skill_tree()
+	self.skill_trees.geco = {}
+	self.skill_trees.geco[1] = {}
+	self.skill_trees.geco[1][1] = {
+		{
+			challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
+			challenge_done_text_id = "weapon_skill_headshot_kill_completed",
+			cost = 2,
+			value = 5,
+			challenge_tasks = {
+				{
+					target = 50,
+					modifiers = {
+						headshot = true,
+						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
+					},
+					reminders = {
+						25,
+						40,
+					},
+					type = ChallengeTweakData.TASK_KILL_ENEMIES,
+				},
+			},
+			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
+		},
+	}
+	self.skill_trees.geco[2] = {}
+	self.skill_trees.geco[2][1] = {
+		{
+			challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
+			challenge_done_text_id = "weapon_skill_headshot_kill_completed",
+			cost = 2,
+			value = 6,
+			challenge_tasks = {
+				{
+					target = 100,
+					modifiers = {
+						headshot = true,
+						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
+					},
+					reminders = {
+						40,
+						70,
+						90,
+					},
+					type = ChallengeTweakData.TASK_KILL_ENEMIES,
+				},
+			},
+			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
+			weapon_parts = {
+				"wpn_fps_sho_geco_b_short",
+			},
+		},
+	}
+	self.skill_trees.geco[2][2] = {
+		{
+			challenge_briefing_id = "weapon_skill_generic_kill_briefing",
+			challenge_done_text_id = "weapon_skill_generic_kill_completed",
+			cost = 2,
+			value = 2,
+			challenge_tasks = {
+				{
+					target = 1000,
+					reminders = {
+						250,
+						500,
+						750,
+						900,
+					},
+					type = ChallengeTweakData.TASK_KILL_ENEMIES,
+				},
+			},
+			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
+		},
+	}
+	self.skill_trees.geco[3] = {}
+	self.skill_trees.geco[3][1] = {
+		{
+			challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
+			challenge_done_text_id = "weapon_skill_headshot_kill_completed",
+			cost = 4,
+			value = 7,
+			challenge_tasks = {
+				{
+					target = 150,
+					modifiers = {
+						headshot = true,
+						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
+					},
+					reminders = {
+						50,
+						100,
+						130,
+					},
+					type = ChallengeTweakData.TASK_KILL_ENEMIES,
+				},
+			},
+			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
+		},
+	}
+	self.skill_trees.geco[3][2] = {
+		{
+			challenge_briefing_id = "weapon_skill_generic_kill_briefing",
+			challenge_done_text_id = "weapon_skill_generic_kill_completed",
+			cost = 4,
+			value = 3,
+			challenge_tasks = {
+				{
+					target = 1500,
+					reminders = {
+						375,
+						750,
+						1125,
+						1400,
+					},
+					type = ChallengeTweakData.TASK_KILL_ENEMIES,
+				},
+			},
+			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
+		},
+	}
+	self.skill_trees.geco[3][3] = {
+		{
+			challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
+			challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
+			cost = 3,
+			value = 3,
+			challenge_tasks = {
+				{
+					target = 750,
+					modifiers = {
+						hip_fire = true,
+						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
+					},
+					reminders = {
+						200,
+						400,
+						600,
+						700,
+					},
+					type = ChallengeTweakData.TASK_KILL_ENEMIES,
+				},
+			},
+			skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
+			weapon_parts = {
+				"wpn_fps_sho_geco_s_cheek_rest",
+			},
+		},
+	}
+	self.skill_trees.geco[4] = {}
+	self.skill_trees.geco[4][1] = {
+		{
+			challenge_briefing_id = "weapon_skill_headshot_ss_briefing",
+			challenge_done_text_id = "weapon_skill_headshot_ss_completed",
+			value = 8,
+			challenge_tasks = {
+				{
+					target = 50,
+					modifiers = {
+						headshot = true,
+						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
+						enemy_type = {
+							CharacterTweakData.SPECIAL_UNIT_TYPE_COMMANDER,
+						},
+					},
+					reminders = {
+						20,
+						40,
+					},
+					type = ChallengeTweakData.TASK_KILL_ENEMIES,
+				},
+			},
+			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
+		},
+	}
+	self.skill_trees.geco[4][2] = {
+		{
+			challenge_briefing_id = "weapon_skill_kill_flamers_briefing",
+			challenge_done_text_id = "weapon_skill_kill_flamers_completed",
+			cost = 4,
+			value = 4,
+			challenge_tasks = {
+				{
+					target = 30,
+					modifiers = {
+						enemy_type = {
+							CharacterTweakData.SPECIAL_UNIT_TYPE_FLAMER,
+						},
+					},
+					reminders = {
+						10,
+						20,
+					},
+					type = ChallengeTweakData.TASK_KILL_ENEMIES,
+				},
+			},
+			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
+		},
+	}
+	self.skill_trees.geco[4][3] = {
+		{
+			challenge_briefing_id = "weapon_skill_hip_fire_headshot_kill_briefing",
+			challenge_done_text_id = "weapon_skill_hip_fire_headshot_kill_completed",
+			cost = 3,
+			value = 4,
+			challenge_tasks = {
+				{
+					target = 100,
+					modifiers = {
+						headshot = true,
+						hip_fire = true,
+						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
+					},
+					reminders = {
+						20,
+						50,
+						80,
+					},
+					type = ChallengeTweakData.TASK_KILL_ENEMIES,
+				},
+			},
+			skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
+		},
+	}
+	self.skill_trees.geco.tier_unlock = {
+		"weapon_tier_unlocked",
+		"weapon_tier_unlocked",
+		"weapon_tier_unlocked",
+		"demolitions_tier_4_unlocked",
 	}
 end
 

@@ -105,6 +105,7 @@ function WeaponFactoryTweakData:init()
 	self:_init_vertical_grips()
 	self:_init_sights()
 	self:_init_m1911()
+	self:_init_webley()
 	self:_init_thompson()
 	self:_init_sten()
 	self:_init_garand()
@@ -118,9 +119,9 @@ function WeaponFactoryTweakData:init()
 	self:_init_welrod()
 	self:_init_mg42()
 	self:_init_c96()
-	self:_init_webley()
 	self:_init_mosin()
 	self:_init_sterling()
+	self:_init_geco()
 	self:create_ammunition()
 	self:_init_content_unfinished()
 	self:_cleanup_unfinished_content()
@@ -1560,6 +1561,145 @@ function WeaponFactoryTweakData:_init_m1911()
 	self.wpn_fps_pis_m1911_npc.unit = "units/vanilla/weapons/wpn_fps_pis_m1911/wpn_fps_pis_m1911_npc"
 end
 
+function WeaponFactoryTweakData:_init_geco()
+	self.parts.wpn_fps_sho_geco_b_standard = {
+		a_obj = "a_b",
+		name_id = "bm_wp_sho_geco_b_standard",
+		third_unit = "units/upd_001/weapons/wpn_third_sho_geco_pts/wpn_third_sho_geco_b_standard",
+		type = "barrel",
+		unit = "units/upd_001/weapons/wpn_fps_sho_geco_pts/wpn_fps_sho_geco_b_standard",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_sho_geco_b_short = {
+		a_obj = "a_b",
+		name_id = "bm_wp_sho_geco_b_short",
+		third_unit = "units/upd_001/weapons/wpn_third_sho_geco_pts/wpn_third_sho_geco_b_short",
+		type = "barrel",
+		unit = "units/upd_001/weapons/wpn_fps_sho_geco_pts/wpn_fps_sho_geco_b_short",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_sho_geco_s_standard = {
+		a_obj = "a_s",
+		name_id = "bm_wp_sho_geco_s_standard",
+		third_unit = "units/upd_001/weapons/wpn_third_sho_geco_pts/wpn_third_sho_geco_s_standard",
+		type = "stock",
+		unit = "units/upd_001/weapons/wpn_fps_sho_geco_pts/wpn_fps_sho_geco_s_standard",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_sho_geco_s_cheek_rest = {
+		a_obj = "a_s",
+		name_id = "bm_wp_sho_geco_s_cheek_rest",
+		third_unit = "units/upd_001/weapons/wpn_third_sho_geco_pts/wpn_third_sho_geco_s_cheek_rest",
+		type = "stock",
+		unit = "units/upd_001/weapons/wpn_fps_sho_geco_pts/wpn_fps_sho_geco_s_cheek_rest",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_sho_geco_lock = {
+		a_obj = "a_lock",
+		name_id = "bm_wp_sho_geco_lock",
+		third_unit = "units/upd_001/weapons/wpn_third_sho_geco_pts/wpn_third_sho_geco_lock",
+		type = "lock",
+		unit = "units/upd_001/weapons/wpn_fps_sho_geco_pts/wpn_fps_sho_geco_lock",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_sho_geco_body_standard = {
+		a_obj = "a_body",
+		name_id = "bm_wp_sho_geco_body_standard",
+		third_unit = "units/upd_001/weapons/wpn_third_sho_geco_pts/wpn_third_sho_geco_body_standard",
+		type = "lower_receiver",
+		unit = "units/upd_001/weapons/wpn_fps_sho_geco_pts/wpn_fps_sho_geco_body_standard",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_sho_geco_shell_1 = {
+		a_obj = "a_shell_1",
+		name_id = "bm_wp_sho_geco_shell_1",
+		third_unit = "units/upd_001/weapons/wpn_third_sho_geco_pts/wpn_third_sho_geco_shell_1",
+		type = "shell_1",
+		unit = "units/upd_001/weapons/wpn_fps_sho_geco_pts/wpn_fps_sho_geco_shell_1",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_sho_geco_shell_2 = {
+		a_obj = "a_shell_2",
+		name_id = "bm_wp_sho_geco_shell_2",
+		third_unit = "units/upd_001/weapons/wpn_third_sho_geco_pts/wpn_third_sho_geco_shell_2",
+		type = "shell_2",
+		unit = "units/upd_001/weapons/wpn_fps_sho_geco_pts/wpn_fps_sho_geco_shell_2",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_sho_geco_trigger_1 = {
+		a_obj = "a_trigger_1",
+		name_id = "bm_wp_sho_geco_trigger_1",
+		third_unit = "units/upd_001/weapons/wpn_third_sho_geco_pts/wpn_third_sho_geco_trigger_1",
+		type = "trigger_1",
+		unit = "units/upd_001/weapons/wpn_fps_sho_geco_pts/wpn_fps_sho_geco_trigger_1",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_sho_geco_trigger_2 = {
+		a_obj = "a_trigger_2",
+		name_id = "bm_wp_sho_geco_trigger_2",
+		third_unit = "units/upd_001/weapons/wpn_third_sho_geco_pts/wpn_third_sho_geco_trigger_2",
+		type = "trigger_2",
+		unit = "units/upd_001/weapons/wpn_fps_sho_geco_pts/wpn_fps_sho_geco_trigger_2",
+		stats = {
+			value = 1,
+		},
+	}
+	self.wpn_fps_sho_geco = {}
+	self.wpn_fps_sho_geco.unit = "units/upd_001/weapons/wpn_fps_sho_geco/wpn_fps_sho_geco"
+	self.wpn_fps_sho_geco.optional_types = {
+		"barrel_ext",
+		"gadget",
+	}
+	self.wpn_fps_sho_geco.animations = {
+		fire = "recoil",
+		fire_steelsight = "recoil",
+		reload = "reload",
+		reload_not_empty = "reload_not_empty",
+	}
+	self.wpn_fps_sho_geco.default_blueprint = {
+		"wpn_fps_sho_geco_b_standard",
+		"wpn_fps_sho_geco_s_standard",
+		"wpn_fps_sho_geco_lock",
+		"wpn_fps_sho_geco_body_standard",
+		"wpn_fps_sho_geco_shell_1",
+		"wpn_fps_sho_geco_shell_2",
+		"wpn_fps_sho_geco_trigger_1",
+		"wpn_fps_sho_geco_trigger_2",
+	}
+	self.wpn_fps_sho_geco.uses_parts = {
+		"wpn_fps_sho_geco_b_standard",
+		"wpn_fps_sho_geco_s_standard",
+		"wpn_fps_sho_geco_lock",
+		"wpn_fps_sho_geco_body_standard",
+		"wpn_fps_sho_geco_shell_1",
+		"wpn_fps_sho_geco_shell_2",
+		"wpn_fps_sho_geco_trigger_1",
+		"wpn_fps_sho_geco_trigger_2",
+		"wpn_fps_sho_geco_b_short",
+		"wpn_fps_sho_geco_s_cheek_rest",
+	}
+	self.wpn_fps_sho_geco_npc = deep_clone(self.wpn_fps_sho_geco)
+	self.wpn_fps_sho_geco_npc.unit = "units/upd_001/weapons/wpn_fps_sho_geco/wpn_fps_sho_geco_npc"
+end
+
 function WeaponFactoryTweakData:_init_m1912()
 	self.parts.wpn_fps_sho_m1912_b_standard = {
 		a_obj = "a_b",
@@ -2888,7 +3028,7 @@ function WeaponFactoryTweakData:_init_mosin()
 		stance_mod = {
 			wpn_fps_snp_mosin = {
 				lens_distortion_power = 1.04,
-				translation = Vector3(0, -23, -2.323),
+				translation = Vector3(0, -21, -2.323),
 			},
 		},
 		stats = {

@@ -18,7 +18,7 @@ function IngameSpecialInteraction:_setup_controller()
 	self._leave_cb = callback(self, self, "cb_leave")
 	self._interact_cb = callback(self, self, "cb_interact")
 
-	self._controller:add_trigger("cancel_lockpick", self._leave_cb)
+	self._controller:add_trigger("jump", self._leave_cb)
 	self._controller:add_trigger("interact", self._interact_cb)
 	self._controller:set_enabled(true)
 end
@@ -31,7 +31,7 @@ function IngameSpecialInteraction:_clear_controller()
 	end
 
 	if self._controller then
-		self._controller:remove_trigger("cancel_lockpick", self._leave_cb)
+		self._controller:remove_trigger("jump", self._leave_cb)
 		self._controller:remove_trigger("interact", self._interact_cb)
 		self._controller:set_enabled(false)
 		self._controller:destroy()

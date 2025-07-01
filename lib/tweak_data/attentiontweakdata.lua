@@ -799,8 +799,8 @@ function AttentionTweakData:_init_prop()
 		notice_requires_FOV = true,
 		reaction = "REACT_AIM",
 		release_delay = 1,
-		uncover_range = 200,
-		verification_interval = 0.4,
+		uncover_range = 300,
+		verification_interval = 0.1,
 	}
 	self.settings.prop_civ_ene_ntl = {
 		filter = "civilians_enemies",

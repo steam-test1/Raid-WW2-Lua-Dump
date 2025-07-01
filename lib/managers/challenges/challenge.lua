@@ -125,3 +125,15 @@ function Challenge:_on_completed()
 		end
 	end
 end
+
+function Challenge:force_complete()
+	if self:completed() then
+		return
+	end
+
+	self._state = Challenge.STATE_COMPLETED
+
+	for id, task in pairs(self._tasks) do
+		task:force_complete()
+	end
+end

@@ -845,10 +845,6 @@ function ConnectionNetworkHandler:select_challenge_card(peer_id)
 	managers.challenge_cards:select_challenge_card(peer_id)
 end
 
-function ConnectionNetworkHandler:sync_system_start_raid()
-	managers.raid_menu:_system_start_raid()
-end
-
 function ConnectionNetworkHandler:remove_challenge_card_from_inventory(challenge_card_key, peer_id)
 	local local_peer = managers.network:session():local_peer()
 
@@ -1022,6 +1018,7 @@ function ConnectionNetworkHandler:sync_external_start_mission(mission_id, event_
 		managers.raid_job._selected_job = managers.raid_job._current_job
 
 		managers.raid_job:on_mission_restart()
+		managers.raid_job:stop_sounds()
 	end
 
 	managers.raid_job:do_external_start_mission(mission, event_id)
@@ -1042,74 +1039,6 @@ function ConnectionNetworkHandler:restart(sender)
 	end
 
 	managers.raid_job:do_external_end_mission()
-end
-
-function ConnectionNetworkHandler:set_player_level(level, sender)
-	local sender_peer = self._verify_sender(sender)
-
-	if not sender_peer then
-		return
-	end
-
-	sender_peer:set_level(level)
-
-	local character_data = managers.criminals:character_data_by_peer_id(sender_peer:id())
-	local panel_id = character_data.panel_id
-
-	if panel_id then
-		managers.hud:set_teammate_level(panel_id, level)
-	else
-		debug_pause("[ConnectionNetworkHandler:set_player_level] Trying to set player level for a player without a HUD panel!")
-	end
-end
-
-function ConnectionNetworkHandler:set_player_nationality(nationality, sender)
-	local sender_peer = self._verify_sender(sender)
-
-	if not sender_peer then
-		return
-	end
-
-	sender_peer:set_nationality(nationality)
-end
-
-function ConnectionNetworkHandler:set_player_class(class, sender)
-	local sender_peer = self._verify_sender(sender)
-
-	if not sender_peer then
-		return
-	end
-
-	sender_peer:set_class(class)
-end
-
-function ConnectionNetworkHandler:set_active_warcry(warcry_name, fill_percentage, sender)
-	local sender_peer = self._verify_sender(sender)
-
-	if not sender_peer then
-		return
-	end
-
-	sender_peer:set_active_warcry(warcry_name)
-
-	local character_data = managers.criminals:character_data_by_peer_id(sender_peer:id())
-	local panel_id = character_data.panel_id
-	local name_label_id = sender_peer:unit() and sender_peer:unit():unit_data() and sender_peer:unit():unit_data().name_label_id
-
-	if panel_id then
-		if warcry_name then
-			managers.hud:set_teammate_active_warcry(character_data.panel_id, name_label_id, warcry_name)
-		end
-
-		if fill_percentage then
-			managers.hud:set_teammate_warcry_meter_fill(character_data.panel_id, {
-				total = 100,
-				current = fill_percentage,
-			})
-		end
-	else
-		debug_pause("[ConnectionNetworkHandler:set_player_level] Trying to set active warcry for a player without a HUD panel!")
-	end
 end
 
 function ConnectionNetworkHandler:sync_warcry_meter_fill_percentage(fill_percentage, sender)

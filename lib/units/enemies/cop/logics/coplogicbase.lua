@@ -1250,8 +1250,11 @@ function CopLogicBase._upd_look_for_player(data, attention_info)
 		attention_info.nearly_visible = true
 	end
 
-	if data.unit:movement():stance_name() ~= "cbt" then
-		Application:debug("[CopLogicBase._upd_look_for_player] Switch to cbt and equip weapon")
+	if data.unit:movement():stance_name() ~= "cbt" and not data.unit:brain()._switch_to_cbt_called then
+		Application:debug("[CopLogicBase._upd_look_for_player] Switch to cbt and equip weapon", data.unit)
+
+		data.unit:brain()._switch_to_cbt_called = true
+
 		managers.queued_tasks:queue(nil, data.unit:brain()._switch_to_cbt, data.unit:brain(), nil, 1.5, nil)
 	end
 end

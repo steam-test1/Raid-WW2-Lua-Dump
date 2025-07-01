@@ -83,6 +83,7 @@ function HUDManager:init()
 	end
 
 	self._visible_huds_states = {}
+	self._progress_target = {}
 
 	managers.system_event_listener:add_listener("peer_changed_level", {
 		CoreSystemEventListenerManager.SystemEventListenerManager.PEER_LEVEL_UP,
@@ -803,6 +804,10 @@ function HUDManager:remove_suspicion_indicator(id)
 		self._hud.suspicion_indicators[id] = nil
 	end
 
+	if self._progress_target then
+		self._progress_target[id] = nil
+	end
+
 	self._hud_suspicion_direction:remove_suspicion_indicator(id)
 end
 
@@ -811,12 +816,18 @@ function HUDManager:set_suspicion_indicator_state(id, state)
 		return
 	end
 
+	local old_state = self._hud.suspicion_indicators[id]:state()
+
+	if old_state == "calling" then
+		return
+	end
+
+	if old_state == "alarmed" and state ~= "calling" then
+		return
+	end
+
 	self._hud.suspicion_indicators[id]:set_state(state)
 	self._hud_suspicion_direction:set_state(id, state)
-
-	if Network:is_server() then
-		managers.network:session():send_to_peers_synched("set_hud_suspicion_state", id, state)
-	end
 end
 
 function HUDManager:_get_raid_icon(icon)
@@ -1736,6 +1747,8 @@ function HUDManager:_update_suspicion_indicators(t, dt)
 
 	if self._hud.suspicion_indicators then
 		for id, suspicion_indicator in pairs(self._hud.suspicion_indicators) do
+			suspicion_indicator:update_progress(t, dt)
+
 			local parent_panel = suspicion_indicator:parent()
 			local observer_position = suspicion_indicator:observer_position()
 
@@ -1867,7 +1880,6 @@ function HUDManager:_update_waypoints(t, dt)
 		local show_on_screen = data.show_on_screen
 
 		self:_upd_suspition_waypoint_state(data, show_on_screen)
-		self:_upd_suspition_progress(data, dt)
 
 		if show_on_screen == true then
 			local panel = data.bitmap:parent()
@@ -2242,7 +2254,7 @@ function HUDManager:set_investigate_icon(id, status)
 	end
 end
 
-function HUDManager:set_stealth_meter(id, progress)
+function HUDManager:set_stealth_meter(id, target_id, progress)
 	local suspicion_indicator = self._hud.suspicion_indicators[id]
 
 	if not suspicion_indicator then
@@ -2251,19 +2263,24 @@ function HUDManager:set_stealth_meter(id, progress)
 		return
 	end
 
-	suspicion_indicator:set_progress(progress)
+	local max_progress = self:_set_progress_for_target(id, target_id, progress)
 
-	local data = self._hud.waypoints[id]
+	suspicion_indicator:set_progress(max_progress)
+end
 
-	if not data then
-		return
+function HUDManager:_set_progress_for_target(id, target_id, progress)
+	self._progress_target[id] = self._progress_target[id] or {}
+	self._progress_target[id][target_id] = math.clamp(progress, 0, 1)
+
+	local max = 0
+
+	for _, p in pairs(self._progress_target[id]) do
+		if max < p then
+			max = p
+		end
 	end
 
-	if not data.stealth_over_rect then
-		return
-	end
-
-	data.stealth_target_h = math.floor(progress * 32)
+	return max
 end
 
 function HUDManager:_upd_suspition_progress(data, dt)

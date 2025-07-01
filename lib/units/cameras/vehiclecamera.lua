@@ -72,8 +72,10 @@ end
 function VehicleCamera:activate(player_unit)
 	self._active = true
 
-	self._viewport:set_camera(self._camera)
-	self._director:set_camera(self._camera_controller)
+	if self._viewport and self._viewport:name() == "playernil" then
+		self._viewport:set_camera(self._camera)
+		self._director:set_camera(self._camera_controller)
+	end
 
 	if alive(player_unit) then
 		player_unit:camera():set_listener_object(self._camera)

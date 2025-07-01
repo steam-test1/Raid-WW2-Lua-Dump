@@ -62,6 +62,14 @@ function ChallengeTask:type()
 	return self._type
 end
 
+function ChallengeTask:force_complete()
+	if self:completed() then
+		return
+	end
+
+	self._state = ChallengeTask.STATE_COMPLETED
+end
+
 ChallengeTaskKillEnemies = ChallengeTaskKillEnemies or class(ChallengeTask)
 
 function ChallengeTaskKillEnemies:init(challenge_category, challenge_id, task_data)
@@ -181,6 +189,17 @@ function ChallengeTaskKillEnemies:_on_completed()
 	managers.system_event_listener:remove_listener(self._id)
 end
 
+function ChallengeTaskKillEnemies:force_complete()
+	if self:completed() then
+		return
+	end
+
+	self._state = ChallengeTask.STATE_COMPLETED
+	self._count = self._target
+
+	managers.system_event_listener:remove_listener(self._id)
+end
+
 ChallengeTaskCollectAmmo = ChallengeTaskCollectAmmo or class(ChallengeTask)
 
 function ChallengeTaskCollectAmmo:init(challenge_category, challenge_id, task_data)
@@ -265,5 +284,16 @@ function ChallengeTaskCollectAmmo:_on_completed()
 	self._state = ChallengeTask.STATE_COMPLETED
 
 	managers.challenge:get_challenge(self._parent_challenge_category, self._parent_challenge_id):on_task_completed()
+	managers.system_event_listener:remove_listener(self._id)
+end
+
+function ChallengeTaskCollectAmmo:force_complete()
+	if self:completed() then
+		return
+	end
+
+	self._state = ChallengeTask.STATE_COMPLETED
+	self._count = self._target
+
 	managers.system_event_listener:remove_listener(self._id)
 end

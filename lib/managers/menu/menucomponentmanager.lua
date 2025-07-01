@@ -218,11 +218,6 @@ function MenuComponentManager:_setup_controller_input()
 		end
 
 		self._controller_connected = true
-
-		if SystemInfo:platform() == Idstring("WIN32") then
-			self._fullscreen_ws:connect_keyboard(Input:keyboard())
-			self._fullscreen_ws:panel():key_press(callback(self, self, "key_press_controller_support"))
-		end
 	end
 end
 
@@ -240,28 +235,6 @@ function MenuComponentManager:_destroy_controller_input()
 			self._fullscreen_ws:disconnect_keyboard()
 			self._fullscreen_ws:panel():key_press(nil)
 		end
-	end
-end
-
-function MenuComponentManager:key_press_controller_support(o, k)
-	if not MenuCallbackHandler:can_toggle_chat() then
-		return
-	end
-
-	local toggle_chat = Idstring(managers.controller:get_settings("pc"):get_connection("toggle_chat"):get_input_name_list()[1])
-
-	if k == toggle_chat then
-		if self._game_chat_gui and self._game_chat_gui:enabled() then
-			self._game_chat_gui:open_page()
-
-			return
-		end
-
-		if managers.hud and not managers.hud:chat_focus() and managers.menu:toggle_chatinput() then
-			managers.hud:set_chat_skip_first(true)
-		end
-
-		return
 	end
 end
 

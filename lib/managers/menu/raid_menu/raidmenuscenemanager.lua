@@ -467,14 +467,7 @@ function RaidMenuSceneManager:first_login_check()
 end
 
 function RaidMenuSceneManager:system_start_raid()
-	if Network:is_server() then
-		self:_system_start_raid()
-		managers.network:session():send_to_peers_synched("sync_system_start_raid")
-	end
-end
-
-function RaidMenuSceneManager:_system_start_raid()
-	Application:trace("[RaidMenuSceneManager:_system_start_raid]")
+	Application:trace("[RaidMenuSceneManager:system_start_raid]")
 
 	managers.challenge_cards._suggested_cards = nil
 	managers.challenge_cards._temp_steam_loot = nil

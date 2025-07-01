@@ -106,7 +106,7 @@ function UnitNetworkHandler:set_look_dir(unit, yaw_in, pitch_in, sender)
 end
 
 function UnitNetworkHandler:action_walk_start(unit, first_nav_point, nav_link_yaw, nav_link_act_index, from_idle, haste_code, end_yaw, no_walk, no_strafe, end_pose_code)
-	if not self._verify_character(unit) or not self._verify_gamestate(self._gamestate_filter.any_ingame) then
+	if not self._verify_character(unit) or not self._verify_gamestate(self._gamestate_filter.any_ingame_playing) then
 		return
 	end
 
@@ -168,7 +168,7 @@ function UnitNetworkHandler:action_walk_start(unit, first_nav_point, nav_link_ya
 end
 
 function UnitNetworkHandler:action_walk_nav_point(unit, nav_point, sender)
-	if not self._verify_character_and_sender(unit, sender) or not self._verify_gamestate(self._gamestate_filter.any_ingame) then
+	if not self._verify_character_and_sender(unit, sender) or not self._verify_gamestate(self._gamestate_filter.any_ingame_playing) then
 		return
 	end
 
@@ -176,7 +176,7 @@ function UnitNetworkHandler:action_walk_nav_point(unit, nav_point, sender)
 end
 
 function UnitNetworkHandler:action_walk_stop(unit)
-	if not self._verify_character(unit) or not self._verify_gamestate(self._gamestate_filter.any_ingame) then
+	if not self._verify_character(unit) or not self._verify_gamestate(self._gamestate_filter.any_ingame_playing) then
 		return
 	end
 
@@ -184,7 +184,7 @@ function UnitNetworkHandler:action_walk_stop(unit)
 end
 
 function UnitNetworkHandler:action_walk_nav_link(unit, pos, yaw, anim_index, from_idle)
-	if not self._verify_character(unit) or not self._verify_gamestate(self._gamestate_filter.any_ingame) then
+	if not self._verify_character(unit) or not self._verify_gamestate(self._gamestate_filter.any_ingame_playing) then
 		return
 	end
 
@@ -194,7 +194,7 @@ function UnitNetworkHandler:action_walk_nav_link(unit, pos, yaw, anim_index, fro
 end
 
 function UnitNetworkHandler:action_change_pose(unit, pose_code, pos)
-	if not self._verify_character(unit) or not self._verify_gamestate(self._gamestate_filter.any_ingame) then
+	if not self._verify_character(unit) or not self._verify_gamestate(self._gamestate_filter.any_ingame_playing) then
 		return
 	end
 
@@ -212,7 +212,7 @@ function UnitNetworkHandler:skill_action_knockdown(unit, hit_position, direction
 end
 
 function UnitNetworkHandler:action_warp_start(unit, has_pos, pos, has_rot, yaw, sender)
-	if not self._verify_character(unit) or not self._verify_gamestate(self._gamestate_filter.any_ingame) then
+	if not self._verify_character(unit) or not self._verify_gamestate(self._gamestate_filter.any_ingame_playing) then
 		return
 	end
 
@@ -1180,6 +1180,20 @@ function UnitNetworkHandler:revive_player(revive_health_level, revive_damage_red
 	end
 end
 
+function UnitNetworkHandler:pause_downed_teammate_timer(peer_id, pause, sender)
+	local sender_peer = self._verify_sender(sender)
+
+	if not sender_peer then
+		return
+	end
+
+	local criminals_data = managers.criminals:character_data_by_peer_id(peer_id)
+
+	if criminals_data then
+		managers.hud:pause_teammate_timer(peer_id, criminals_data.name_label_id, pause)
+	end
+end
+
 function UnitNetworkHandler:start_revive_player(timer, sender)
 	local peer = self._verify_sender(sender)
 
@@ -1793,6 +1807,90 @@ function UnitNetworkHandler:dangerzone_set_level(level)
 	end
 
 	managers.player:player_unit():character_damage():set_danger_level(level)
+end
+
+function UnitNetworkHandler:set_player_level(unit, level, unit_id_str)
+	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
+		return
+	end
+
+	self:_chk_unit_too_early(unit, unit_id_str, "set_player_level", 1, unit, level, unit_id_str)
+
+	if not alive(unit) then
+		return
+	end
+
+	unit:set_level(level)
+
+	local character_data = managers.criminals:character_data_by_peer_id(unit:id())
+	local panel_id = character_data.panel_id
+
+	if panel_id then
+		managers.hud:set_teammate_level(panel_id, level)
+	else
+		debug_pause("[UnitNetworkHandler:set_player_level] Trying to set player level for a player without a HUD panel!")
+	end
+end
+
+function UnitNetworkHandler:set_player_nationality(unit, nationality, unit_id_str)
+	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
+		return
+	end
+
+	self:_chk_unit_too_early(unit, unit_id_str, "set_player_nationality", 1, unit, nationality, unit_id_str)
+
+	if not alive(unit) then
+		return
+	end
+
+	unit:set_nationality(nationality)
+end
+
+function UnitNetworkHandler:set_player_class(unit, class, unit_id_str)
+	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
+		return
+	end
+
+	self:_chk_unit_too_early(unit, unit_id_str, "set_player_nationality", 1, unit, nationality, unit_id_str)
+
+	if not alive(unit) then
+		return
+	end
+
+	unit:set_class(class)
+end
+
+function UnitNetworkHandler:set_active_warcry(unit, warcry_name, fill_percentage, unit_id_str)
+	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
+		return
+	end
+
+	self:_chk_unit_too_early(unit, unit_id_str, "set_player_nationality", 1, unit, nationality, unit_id_str)
+
+	if not alive(unit) then
+		return
+	end
+
+	unit:set_active_warcry(warcry_name)
+
+	local character_data = managers.criminals:character_data_by_peer_id(unit:id())
+	local panel_id = character_data.panel_id
+	local name_label_id = sender_peer:unit() and sender_peer:unit():unit_data() and sender_peer:unit():unit_data().name_label_id
+
+	if panel_id then
+		if warcry_name then
+			managers.hud:set_teammate_active_warcry(character_data.panel_id, name_label_id, warcry_name)
+		end
+
+		if fill_percentage then
+			managers.hud:set_teammate_warcry_meter_fill(character_data.panel_id, {
+				total = 100,
+				current = fill_percentage,
+			})
+		end
+	else
+		debug_pause("[UnitNetworkHandler:set_player_level] Trying to set active warcry for a player without a HUD panel!")
+	end
 end
 
 function UnitNetworkHandler:sync_player_movement_state(unit, state, down_time, unit_id_str)
@@ -2655,7 +2753,7 @@ function UnitNetworkHandler:suspicion(suspect_peer_id, susp_value, sender)
 	suspect_unit:movement():on_suspicion(nil, susp_value)
 end
 
-function UnitNetworkHandler:suspicion_hud(suspect_unit, observer_unit, status)
+function UnitNetworkHandler:suspicion_hud(suspect_unit, observer_unit, status, suspect_id)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not alive(observer_unit) then
 		return
 	end
@@ -2670,6 +2768,13 @@ function UnitNetworkHandler:suspicion_hud(suspect_unit, observer_unit, status)
 		status = "called"
 	elseif status == 5 then
 		status = "call_interrupted"
+	elseif status == 6 then
+		managers.hud._progress_target[observer_unit:id()] = nil
+		status = false
+	end
+
+	if not suspect_unit and managers.hud._progress_target[observer_unit:id()] and managers.hud._progress_target[observer_unit:id()][suspect_id] then
+		managers.hud._progress_target[observer_unit:id()][suspect_id] = nil
 	end
 
 	managers.groupai:state():on_criminal_suspicion_progress(suspect_unit, observer_unit, status)
@@ -2748,20 +2853,14 @@ function UnitNetworkHandler:stop_timespeed_effect(effect_id, fade_out_duration, 
 	managers.time_speed:stop_effect(effect_id, fade_out_duration)
 end
 
-function UnitNetworkHandler:sync_upgrade(upgrade_category, upgrade_name, upgrade_level, sender)
-	local peer = self._verify_sender(sender)
-
-	if not peer then
-		Application:error("[UnitNetworkHandler:sync_upgrade] missing peer", upgrade_category, upgrade_name, upgrade_level, sender:ip_at_index(0))
-
+function UnitNetworkHandler:sync_upgrade(unit, upgrade_category, upgrade_name, upgrade_level, unit_id_str)
+	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
 	end
 
-	local unit = peer:unit()
+	self:_chk_unit_too_early(unit, unit_id_str, "sync_upgrade", 1, unit, upgrade_category, upgrade_name, upgrade_level, unit_id_str)
 
-	if not unit then
-		Application:error("[UnitNetworkHandler:sync_upgrade] missing unit", upgrade_category, upgrade_name, upgrade_level, sender:ip_at_index(0))
-
+	if not alive(unit) then
 		return
 	end
 

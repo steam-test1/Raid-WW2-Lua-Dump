@@ -728,6 +728,7 @@ function GamePlayCentralManager:restart_the_mission()
 	managers.raid_job._selected_job = managers.raid_job._current_job
 
 	managers.raid_job:on_mission_restart()
+	managers.raid_job:stop_sounds()
 	managers.global_state:fire_event("system_start_raid")
 end
 

@@ -191,7 +191,7 @@ function GlobalStateManager:fire_event(flag_name)
 			end
 
 			return
-		elseif managers.vote:is_restarting() then
+		elseif managers.vote:is_restarting() or not managers.raid_job.reload_mission_flag and managers.game_play_central:is_restarting() then
 			return
 		end
 	end

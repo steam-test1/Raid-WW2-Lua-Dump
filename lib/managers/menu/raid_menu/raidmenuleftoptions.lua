@@ -12,7 +12,12 @@ end
 function RaidMenuLeftOptions:_layout()
 	RaidMenuLeftOptions.super._layout(self)
 	self:_layout_list_menu()
-	self:bind_controller_inputs()
+
+	if RaidMenuCallbackHandler:is_in_main_menu() then
+		self:bind_controller_inputs_reset_progress()
+	else
+		self:bind_controller_inputs()
+	end
 end
 
 function RaidMenuLeftOptions:close()
@@ -103,6 +108,34 @@ function RaidMenuLeftOptions:_on_list_menu_options_item_selected(data)
 end
 
 function RaidMenuLeftOptions:bind_controller_inputs()
+	local bindings = {
+		{
+			callback = callback(self, self, "_on_list_menu_options_item_selected", {
+				callback = "menu_options_on_click_default",
+			}),
+			key = Idstring("menu_controller_face_top"),
+		},
+	}
+
+	self:set_controller_bindings(bindings, true)
+
+	local legend = {
+		controller = {
+			"menu_legend_back",
+			"menu_legend_default_options",
+		},
+		keyboard = {
+			{
+				key = "footer_back",
+				callback = callback(self, self, "_on_legend_pc_back", nil),
+			},
+		},
+	}
+
+	self:set_legend(legend)
+end
+
+function RaidMenuLeftOptions:bind_controller_inputs_reset_progress()
 	local bindings = {
 		{
 			callback = callback(self, self, "_on_list_menu_options_item_selected", {

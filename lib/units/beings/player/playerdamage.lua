@@ -1378,6 +1378,11 @@ function PlayerDamage:pause_downed_timer(timer, peer_id)
 
 	if self._downed_paused_counter == 1 then
 		managers.hud:pause_player_timer(true)
+
+		if Network:is_server() then
+			managers.network:session():send_to_peers_synched("pause_downed_teammate_timer", 1, true)
+		end
+
 		managers.hud:pd_start_progress(0, timer or tweak_data.interaction.revive.timer, "debug_interact_being_revived", "interaction_help")
 	end
 end
@@ -1389,6 +1394,11 @@ function PlayerDamage:unpause_downed_timer(peer_id)
 
 	if self._downed_paused_counter == 0 then
 		managers.hud:pause_player_timer(false)
+
+		if Network:is_server() then
+			managers.network:session():send_to_peers_synched("pause_downed_teammate_timer", 1, false)
+		end
+
 		managers.hud:pd_cancel_progress()
 	end
 end

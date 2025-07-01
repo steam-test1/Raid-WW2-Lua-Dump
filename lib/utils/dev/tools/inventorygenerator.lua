@@ -538,10 +538,11 @@ function InventoryGenerator._create_steam_itemdef(json_path, items, defid_data)
 		json:puts("\t\"icon_url_large\": \"https://s3-us-west-2.amazonaws.com/media.raidww2.com/steam_icons_challenge_cards/" .. item.key_name .. "_large.png\",")
 		json:puts("\t\"name_color\": \"" .. "2360D8" .. "\",")
 
-		local market = "true"
+		local tradable = "true"
+		local marketable = "false"
 
-		json:puts("\t\"tradable\": " .. market .. ",")
-		json:puts("\t\"marketable\": " .. market)
+		json:puts("\t\"tradable\": " .. tradable .. ",")
+		json:puts("\t\"marketable\": " .. marketable)
 
 		if count == #items then
 			json:puts("\t}")

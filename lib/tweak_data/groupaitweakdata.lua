@@ -200,7 +200,7 @@ function GroupAITweakData:_init_unit_categories(difficulty_index)
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_4 then
 		self.special_unit_spawn_limits = {
-			commander = 2,
+			commander = 1,
 			flamer = 3,
 		}
 	end

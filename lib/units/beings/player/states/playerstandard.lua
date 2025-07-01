@@ -2189,7 +2189,7 @@ function PlayerStandard:_do_melee_damage(t, bayonet_melee, col_ray)
 	local material_name, pos, norm = World:pick_decal_material(from, to, self._slotmask_bullet_impact_targets)
 	local material_string = managers.game_play_central:material_name(material_name)
 
-	if col_ray then
+	if col_ray and alive(col_ray.unit) then
 		local damage, damage_effect
 
 		if self._unit:inventory():equipped_selection() == PlayerInventory.SLOT_4 then

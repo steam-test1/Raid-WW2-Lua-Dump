@@ -20,8 +20,19 @@ function ChatManager:register_receiver(channel_id, receiver)
 
 	table.insert(self._receivers[channel_id], receiver)
 
-	for _, message_data in ipairs(self._message_buffer[channel_id]) do
-		receiver:receive_message(message_data.name, message_data.peer_id, message_data.message, message_data.color, message_data.icon, message_data.system_message)
+	local ct_cached_messages = #self._message_buffer[channel_id]
+	local ct_chat_cached_messages = receiver:ct_cached_messages()
+
+	if ct_chat_cached_messages < ct_cached_messages then
+		for i = ct_chat_cached_messages + 1, ct_cached_messages do
+			local message_data = self._message_buffer[channel_id][i]
+
+			receiver:receive_message(message_data.name, message_data.peer_id, message_data.message, message_data.color, message_data.icon, message_data.system_message)
+		end
+	elseif ct_cached_messages == ct_chat_cached_messages and ct_cached_messages == ChatManager.MESSAGE_BUFFER_SIZE then
+		for _, message_data in ipairs(self._message_buffer[channel_id]) do
+			receiver:receive_message(message_data.name, message_data.peer_id, message_data.message, message_data.color, message_data.icon, message_data.system_message)
+		end
 	end
 end
 

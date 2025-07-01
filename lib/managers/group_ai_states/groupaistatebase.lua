@@ -159,6 +159,7 @@ function GroupAIStateBase:_init_misc_data(clean_up)
 	self._player_weapons_hot = nil
 	self._enemy_weapons_hot = nil
 	self._police_called = nil
+	self._police_call_clbk_id = nil
 	self._spawn_points = {}
 	self._spawn_groups = {}
 	self._spawning_groups = {}
@@ -1726,7 +1727,7 @@ function GroupAIStateBase:_gameover_clbk_func()
 end
 
 function GroupAIStateBase:begin_gameover_fadeout()
-	if Network:is_server() and not managers.vote:is_restarting() then
+	if Network:is_server() and not managers.vote:is_restarting() and not managers.game_play_central:is_restarting() then
 		managers.raid_job:external_end_mission(false, true)
 	end
 end
@@ -5438,7 +5439,7 @@ end
 
 function GroupAIStateBase:_sync_status(sync_status_code, u_suspect, u_observer)
 	if Network:is_server() and managers.network:session() then
-		managers.network:session():send_to_peers_synched("suspicion_hud", u_suspect, u_observer, sync_status_code)
+		managers.network:session():send_to_peers_synched("suspicion_hud", u_suspect, u_observer, sync_status_code, alive(u_suspect) and u_suspect:id() or 0)
 	end
 end
 
@@ -5449,6 +5450,8 @@ function GroupAIStateBase:_sync_spotter_detection(sync_status_code, u_suspect, u
 end
 
 function GroupAIStateBase:on_criminal_suspicion_progress(u_suspect, u_observer, status)
+	local id = alive(u_suspect) and u_suspect:id()
+
 	if not self._ai_enabled or not self._whisper_mode then
 		return
 	end
@@ -5468,6 +5471,8 @@ function GroupAIStateBase:on_criminal_suspicion_progress(u_suspect, u_observer, 
 	local obs_susp_data = susp_data[obs_key]
 
 	if status == "called" then
+		self:_sync_status(4, u_suspect, u_observer)
+
 		if obs_susp_data then
 			if status == obs_susp_data.status then
 				return
@@ -5506,9 +5511,9 @@ function GroupAIStateBase:on_criminal_suspicion_progress(u_suspect, u_observer, 
 		obs_susp_data.alerted = true
 		obs_susp_data.expire_t = self._t + 6
 		obs_susp_data.persistent = true
-
-		self:_sync_status(4, u_suspect, u_observer)
 	elseif status == "calling" then
+		self:_sync_status(3, u_suspect, u_observer)
+
 		if obs_susp_data then
 			if status == obs_susp_data.status then
 				return
@@ -5537,9 +5542,10 @@ function GroupAIStateBase:on_criminal_suspicion_progress(u_suspect, u_observer, 
 
 		obs_susp_data.status = "calling"
 		obs_susp_data.alerted = true
-
-		self:_sync_status(3, u_suspect, u_observer)
 	elseif status == true or status == "call_interrupted" then
+		self:_sync_status(1, u_suspect, u_observer)
+		self:_sync_status(2, u_suspect, u_observer)
+
 		if obs_susp_data then
 			if obs_susp_data.status == status then
 				return
@@ -5562,16 +5568,21 @@ function GroupAIStateBase:on_criminal_suspicion_progress(u_suspect, u_observer, 
 			susp_data[obs_key] = obs_susp_data
 		end
 
-		managers.hud:set_stealth_meter(u_observer:id(), 1)
-		managers.hud:set_suspicion_indicator_progress(u_observer:id(), 1)
+		local s_id = alive(u_suspect) and u_suspect:id() or 0
+
+		managers.hud:set_stealth_meter(u_observer:id(), s_id, 1)
+		managers.hud:set_suspicion_indicator_progress(u_observer:id(), s_id, 1)
 
 		obs_susp_data.status = status
 		obs_susp_data.alerted = true
-
-		self:_sync_status(1, u_suspect, u_observer)
-		self:_sync_status(2, u_suspect, u_observer)
 	elseif not status then
+		self:_sync_status(0, u_suspect, u_observer)
+
 		if obs_susp_data then
+			local s_id = alive(u_suspect) and u_suspect:id() or 0
+
+			managers.hud:set_stealth_meter(obs_susp_data.u_observer:id(), s_id, 0)
+
 			if obs_susp_data.suspects and susp_key then
 				obs_susp_data.suspects[susp_key] = nil
 
@@ -5580,8 +5591,11 @@ function GroupAIStateBase:on_criminal_suspicion_progress(u_suspect, u_observer, 
 				end
 			end
 
-			if not susp_key or not obs_susp_data.alerted and (not obs_susp_data.suspects or not next(obs_susp_data.suspects)) then
+			if not obs_susp_data.expire_t then
 				obs_susp_data.expire_t = self._t + 3
+			end
+
+			if not susp_key or not obs_susp_data.alerted and (not obs_susp_data.suspects or not next(obs_susp_data.suspects)) then
 				obs_susp_data.u_suspect = u_suspect
 				obs_susp_data.u_observer = u_observer
 
@@ -5589,17 +5603,21 @@ function GroupAIStateBase:on_criminal_suspicion_progress(u_suspect, u_observer, 
 			end
 		end
 	else
+		status = math.clamp(status, 0, 1)
+
+		self:_sync_status(status, u_suspect, u_observer)
+
 		if obs_susp_data then
-			managers.hud:set_stealth_meter(obs_susp_data.u_observer:id(), status)
-			managers.hud:set_suspicion_indicator_progress(obs_susp_data.u_observer:id(), status)
+			local s_id = alive(u_suspect) and u_suspect:id() or 0
+
+			managers.hud:set_stealth_meter(obs_susp_data.u_observer:id(), s_id, status)
+			managers.hud:set_suspicion_indicator_progress(obs_susp_data.u_observer:id(), s_id, status)
 
 			obs_susp_data.expire_t = nil
 
 			if obs_susp_data.alerted then
 				Application:debug("[GroupAIStateBase:on_criminal_suspicion_progress] Already aleretd!")
 			end
-
-			self:_sync_status(status, u_suspect, u_observer)
 		elseif not obs_susp_data then
 			local icon_id = "susp1" .. tostring(obs_key)
 
@@ -5614,8 +5632,6 @@ function GroupAIStateBase:on_criminal_suspicion_progress(u_suspect, u_observer, 
 				u_observer = u_observer,
 			}
 			susp_data[obs_key] = obs_susp_data
-
-			self:_sync_status(status, u_suspect, u_observer)
 		end
 
 		if susp_key then
@@ -5805,11 +5821,11 @@ function GroupAIStateBase:_clear_character_criminal_suspicion_data(obs_key)
 	self._suspicion_hud_data[obs_key] = nil
 
 	if obs_susp_data.u_suspect then
-		self:_sync_status(0, obs_susp_data.u_suspect, obs_susp_data.u_observer)
+		self:_sync_status(6, obs_susp_data.u_suspect, obs_susp_data.u_observer)
 	end
 
 	if obs_susp_data.spotter then
-		self:_sync_spotter_detection(0, obs_susp_data.u_suspect, obs_susp_data.u_observer)
+		self:_sync_spotter_detection(6, obs_susp_data.u_suspect, obs_susp_data.u_observer)
 	end
 end
 

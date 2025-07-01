@@ -160,10 +160,6 @@ function RaidMainMenuGui:_layout_steam_group_button()
 	}
 
 	self._steam_group_panel = self._root_panel:panel(steam_group_panel_params)
-
-	self._steam_group_panel:set_right(self._root_panel:w() - 96)
-	self._steam_group_panel:set_bottom(self._root_panel:h() - 77)
-
 	self._steam_button_t = 0
 	self._steam_button_pressed_scale = 0.95
 
@@ -196,7 +192,7 @@ function RaidMainMenuGui:_layout_steam_group_button()
 	self._steam_group_button_image:set_center_x(self._steam_group_panel:w() / 2)
 	self._steam_group_panel:set_w(RaidMainMenuGui.STEAM_GROUP_BUTTON_W)
 	self._steam_group_panel:set_h(RaidMainMenuGui.STEAM_GROUP_BUTTON_H)
-	self._steam_group_panel:set_right(self._root_panel:w() - 96)
+	self._steam_group_panel:set_right(self._root_panel:w())
 	self._steam_group_panel:set_bottom(self._root_panel:h() - 77)
 end
 
@@ -273,7 +269,7 @@ function RaidMainMenuGui:_animate_steam_group_button_release(o)
 
 	self._steam_group_panel:set_w(RaidMainMenuGui.STEAM_GROUP_BUTTON_W)
 	self._steam_group_panel:set_h(RaidMainMenuGui.STEAM_GROUP_BUTTON_H)
-	self._steam_group_panel:set_right(self._root_panel:w() - 96)
+	self._steam_group_panel:set_right(self._root_panel:w())
 	self._steam_group_panel:set_bottom(self._root_panel:h() - 77)
 
 	self._steam_button_t = 0

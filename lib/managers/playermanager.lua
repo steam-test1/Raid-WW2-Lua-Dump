@@ -340,20 +340,20 @@ function PlayerManager:need_send_player_status()
 
 	local current_player_level = managers.experience:current_level()
 
-	managers.network:session():send_to_peers_synched("set_player_level", current_player_level)
+	player:send("set_player_level", current_player_level, player:id())
 
 	local nationality = managers.player:get_character_profile_nation()
 
-	managers.network:session():send_to_peers_synched("set_player_nationality", nationality)
+	player:send("set_player_nationality", nationality, player:id())
 
 	local class = managers.skilltree:get_character_profile_class()
 
-	managers.network:session():send_to_peers_synched("set_player_class", class)
+	player:send("set_player_class", class, player:id())
 
 	local active_warcry = managers.warcry:get_active_warcry_name()
 	local warcry_meter_percentage = managers.warcry:current_meter_percentage()
 
-	managers.network:session():send_to_peers_synched("set_active_warcry", active_warcry, warcry_meter_percentage)
+	player:send("set_active_warcry", active_warcry, warcry_meter_percentage, player:id())
 end
 
 function PlayerManager:_internal_load()
@@ -1059,11 +1059,13 @@ function PlayerManager:unaquire_incremental_upgrade(upgrade)
 end
 
 function PlayerManager:sync_upgrades()
-	managers.network:session():send_to_peers_synched("sync_upgrade", UpgradesTweakData.CLEAR_UPGRADES_FLAG, "", 1)
+	local player = self:local_player()
+
+	player:send("sync_upgrade", UpgradesTweakData.CLEAR_UPGRADES_FLAG, "", 1, player:id())
 
 	for category, upgrades in pairs(self._global.upgrades) do
 		for upgrade, level in pairs(upgrades) do
-			managers.network:session():send_to_peers_synched("sync_upgrade", category, upgrade, level)
+			player:send("sync_upgrade", category, upgrade, level, player:id())
 		end
 	end
 end
@@ -3853,13 +3855,17 @@ function PlayerManager:_exit_vehicle(peer_id, player)
 
 	player:unlink()
 
-	local vehicle_ext = vehicle_data.vehicle_unit:vehicle_driving()
+	if alive(vehicle_data.vehicle_unit) then
+		local vehicle_ext = vehicle_data.vehicle_unit:vehicle_driving()
 
-	vehicle_ext:exit_vehicle(player)
+		vehicle_ext:exit_vehicle(player)
+		managers.hud:update_vehicle_label_by_id(vehicle_data.vehicle_unit:unit_data().name_label_id, vehicle_ext:_number_in_the_vehicle())
+	else
+		Application:info("[PlayerManager:_exit_vehicle] Vehicle unit already destroyed!")
+	end
 
 	self._global.synced_vehicle_data[peer_id] = nil
 
-	managers.hud:update_vehicle_label_by_id(vehicle_data.vehicle_unit:unit_data().name_label_id, vehicle_ext:_number_in_the_vehicle())
 	managers.hud:peer_exit_vehicle(peer_id)
 	managers.vehicle:on_player_exited_vehicle(vehicle_data.vehicle, player)
 end

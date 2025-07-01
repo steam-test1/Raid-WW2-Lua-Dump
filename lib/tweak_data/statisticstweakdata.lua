@@ -183,6 +183,7 @@ function StatisticsTweakData:statistics_table()
 	}
 	local weapon_list = {
 		"m1911",
+		"webley",
 		"c96",
 		"thompson",
 		"sten",
@@ -197,6 +198,7 @@ function StatisticsTweakData:statistics_table()
 		"mg42",
 		"mosin",
 		"sterling",
+		"geco",
 	}
 	local melee_list = {
 		"weapon",

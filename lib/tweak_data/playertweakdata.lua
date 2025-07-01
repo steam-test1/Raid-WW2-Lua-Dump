@@ -411,6 +411,38 @@ function PlayerTweakData:_init_new_stances()
 	self.stances.m1911.crouched.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
 	self.stances.m1911.crouched.shoulders.rotation = pivot_head_rotation * pivot_shoulder_rotation:inverse()
 	self.stances.m1911.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -35, 0)
+	self.stances.geco = deep_clone(self.stances.default)
+
+	local pivot_shoulder_translation = Vector3(11.4127, 15.7764, -5.20036)
+	local pivot_shoulder_rotation = Rotation(-0.000176678, 0.000172462, 0.000184415)
+	local pivot_head_translation = Vector3(7, 18, -3)
+	local pivot_head_rotation = Rotation(0, 0, -1)
+
+	self.stances.geco.standard.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
+	self.stances.geco.standard.shoulders.rotation = pivot_head_rotation * pivot_shoulder_rotation:inverse()
+	self.stances.geco.standard.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -30, 0)
+	self.stances.geco.standard.vel_overshot.yaw_neg = 10
+	self.stances.geco.standard.vel_overshot.yaw_pos = -10
+	self.stances.geco.standard.vel_overshot.pitch_neg = -10
+	self.stances.geco.standard.vel_overshot.pitch_pos = 10
+
+	local pivot_head_translation = Vector3(0, 16, -1)
+	local pivot_head_rotation = Rotation(0, 0, 0)
+
+	self.stances.geco.steelsight.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
+	self.stances.geco.steelsight.shoulders.rotation = pivot_head_rotation * pivot_shoulder_rotation:inverse()
+	self.stances.geco.steelsight.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -18, 0)
+	self.stances.geco.steelsight.vel_overshot.yaw_neg = 10
+	self.stances.geco.steelsight.vel_overshot.yaw_pos = -10
+	self.stances.geco.steelsight.vel_overshot.pitch_neg = -10
+	self.stances.geco.steelsight.vel_overshot.pitch_pos = 10
+
+	local pivot_head_translation = Vector3(6, 17, -4)
+	local pivot_head_rotation = Rotation(0, 0, -6)
+
+	self.stances.geco.crouched.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
+	self.stances.geco.crouched.shoulders.rotation = pivot_head_rotation * pivot_shoulder_rotation:inverse()
+	self.stances.geco.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -25, 0)
 	self.stances.thompson = deep_clone(self.stances.default)
 
 	local pivot_shoulder_translation = Vector3(7.80842, -1.25716, 2.84058)

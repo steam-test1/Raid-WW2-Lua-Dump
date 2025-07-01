@@ -413,6 +413,10 @@ function MenuInput:mouse_pressed(o, button, x, y)
 end
 
 function MenuInput:mouse_released(o, button, x, y)
+	if not managers.menu:active_menu() then
+		return
+	end
+
 	x, y = self:_modified_mouse_pos(x, y)
 
 	if self._slider_marker then

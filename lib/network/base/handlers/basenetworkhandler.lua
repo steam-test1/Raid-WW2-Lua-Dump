@@ -47,7 +47,6 @@ BaseNetworkHandler._gamestate_filter = {
 		ingame_fatal = true,
 		ingame_freefall = true,
 		ingame_incapacitated = true,
-		ingame_loading = true,
 		ingame_menu = true,
 		ingame_parachuting = true,
 		ingame_special_interaction = true,

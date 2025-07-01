@@ -191,6 +191,7 @@ function WeaponSkillsManager:on_weapon_challenge_completed(weapon_id, tier_index
 		tier_index,
 		skill_index,
 	})
+	managers.savefile:save_game(SavefileManager.SETTING_SLOT)
 end
 
 function WeaponSkillsManager:has_new_weapon_upgrades(params)
@@ -319,6 +320,12 @@ end
 
 function WeaponSkillsManager:deactivate_skill(weapon_skill)
 	weapon_skill.active = nil
+end
+
+function WeaponSkillsManager:is_skill_active(weapon_id, tier_number, tier_skill_number)
+	local weapon_skill = self._global.weapon_skills_skill_tree[weapon_id][tier_number][tier_skill_number]
+
+	return weapon_skill and weapon_skill.active
 end
 
 function WeaponSkillsManager:get_weapon_skills_skill_tree()
@@ -594,6 +601,8 @@ function WeaponSkillsManager:load(data, version)
 	end
 
 	if not state.version or state.version and state.version ~= WeaponSkillsManager.VERSION then
+		Application:trace("[WeaponSkillsManager:load] The save data and manager version are mismatched! Migrating...")
+
 		Global.weapon_skills_manager.version = WeaponSkillsManager.VERSION
 		Global.weapon_skills_manager.available_weapon_skill_points = state.gained_weapon_skill_points or 0
 		Global.weapon_skills_manager.gained_weapon_skill_points = state.gained_weapon_skill_points or 0
@@ -605,10 +614,52 @@ function WeaponSkillsManager:load(data, version)
 		Global.weapon_skills_manager.available_weapon_skill_points = state.available_weapon_skill_points or 0
 		Global.weapon_skills_manager.gained_weapon_skill_points = state.gained_weapon_skill_points or 0
 		Global.weapon_skills_manager.weapon_skills_skill_tree = state.weapon_skills_skill_tree or deep_clone(tweak_data.weapon_skills.skill_trees)
+
+		local new_weapon_added = false
+
+		for weapon_id, weapon_skill_tree_data in pairs(tweak_data.weapon_skills.skill_trees) do
+			if not Global.weapon_skills_manager.weapon_skills_skill_tree[weapon_id] then
+				Global.weapon_skills_manager.weapon_skills_skill_tree[weapon_id] = deep_clone(weapon_skill_tree_data)
+				new_weapon_added = true
+			end
+		end
+
+		if new_weapon_added then
+			self:_initialize_weapon_skill_challenges()
+			managers.savefile:set_resave_required()
+		end
 	end
 
+	self:_force_complete_stuck_weapon_challenges()
 	self:update_weapon_skills(WeaponInventoryManager.BM_CATEGORY_PRIMARY_ID, managers.weapon_inventory:get_equipped_primary_weapon_id(), "activate")
 	self:update_weapon_skills(WeaponInventoryManager.BM_CATEGORY_SECONDARY_ID, managers.weapon_inventory:get_equipped_secondary_weapon_id(), "activate")
+end
+
+function WeaponSkillsManager:_force_complete_stuck_weapon_challenges()
+	local need_resave = false
+
+	for weapon_id, weapon_skill_tree in pairs(Global.weapon_skills_manager.weapon_skills_skill_tree) do
+		for tier_index, tier_skill_data in ipairs(weapon_skill_tree) do
+			for skill_index, skill_data in pairs(tier_skill_data) do
+				for mod_index, mod_data in pairs(skill_data) do
+					if mod_data.active == true then
+						local challenge = managers.challenge:get_challenge(ChallengeManager.CATEGORY_WEAPON_UPGRADE, mod_data.challenge_id)
+
+						if not challenge:completed() then
+							debug_pause("[WeaponSkillsManager][_force_complete_stuck_weapon_challenges] Stuck weapon challenge found: ", weapon_id, tier_index, skill_index)
+							challenge:force_complete()
+
+							need_resave = true
+						end
+					end
+				end
+			end
+		end
+	end
+
+	if need_resave then
+		managers.savefile:save_game(SavefileManager.SETTING_SLOT)
+	end
 end
 
 function WeaponSkillsManager:recreate_all_weapons_blueprints(weapon_category_id)

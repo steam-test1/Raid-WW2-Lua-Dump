@@ -81,9 +81,14 @@ end
 
 function ElementPlayerSpawner:_end_transition(client)
 	local cnt = managers.worldcollection.world_counter or 0
+	local player_spawned = true
 
-	if not managers.worldcollection:check_all_peers_synced_last_world(CoreWorldCollection.STAGE_LOAD_FINISHED) or cnt > 0 or client and not managers.player:player_unit() then
-		Application:debug("[ElementPlayerSpawner:_end_transition()] Waiting...")
+	if client and not managers.player:player_unit() then
+		player_spawned = false
+	end
+
+	if not managers.worldcollection:check_all_peers_synced_last_world(CoreWorldCollection.STAGE_LOAD_FINISHED) or cnt > 0 or not player_spawned then
+		Application:debug("[ElementPlayerSpawner:_end_transition()] Waiting...", client, player_spawned)
 		managers.queued_tasks:queue(nil, self._end_transition, self, client, 0.5)
 
 		return

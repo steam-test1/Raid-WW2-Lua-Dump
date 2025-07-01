@@ -2862,6 +2862,18 @@ function SkillTreeTweakData:_init_skill_list()
 			"mg42",
 		},
 	}
+	self.skills.weapon_unlock_geco = {
+		desc_id = "skill_weapon_unlock_geco_desc",
+		name_id = "skill_weapon_unlock_geco_name",
+		acquires = {},
+		icon_xy = {
+			1,
+			1,
+		},
+		upgrades = {
+			"geco",
+		},
+	}
 	self.skills.pistol_damage_multiplier_1 = {
 		desc_id = "skill_pistol_damage_multiplier_desc",
 		icon = "skills_dealing_damage_pistol_multiplier",
@@ -5326,6 +5338,11 @@ function SkillTreeTweakData:_init_infiltrator_unlock_progression()
 			"weapon_unlock_thompson",
 		},
 	}
+	self.automatic_unlock_progressions.infiltrator[13] = {
+		weapons = {
+			"weapon_unlock_geco",
+		},
+	}
 	self.automatic_unlock_progressions.infiltrator[15] = {
 		unlocks = {
 			"weapon_tier_unlocked_2",
@@ -5387,6 +5404,11 @@ function SkillTreeTweakData:_init_demolitions_unlock_progression()
 	self.automatic_unlock_progressions.demolitions[3] = {
 		weapons = {
 			"weapon_unlock_carbine",
+		},
+	}
+	self.automatic_unlock_progressions.demolitions[10] = {
+		weapons = {
+			"weapon_unlock_geco",
 		},
 	}
 	self.automatic_unlock_progressions.demolitions[15] = {

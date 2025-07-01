@@ -145,6 +145,14 @@ function ControllerManager:update(t, dt)
 	end
 
 	self:check_connect_change()
+
+	if self:is_using_controller() and managers.hud and managers.raid_menu and not managers.raid_menu:is_any_menu_open() then
+		local toggle_chat_key = Idstring(managers.controller:get_settings("pc"):get_connection("toggle_chat"):get_input_name_list()[1])
+
+		if Input:keyboard():pressed(toggle_chat_key) then
+			managers.hud:toggle_chatinput()
+		end
+	end
 end
 
 function ControllerManager:paused_update(t, dt)

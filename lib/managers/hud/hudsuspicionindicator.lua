@@ -166,13 +166,46 @@ function HUDSuspicionIndicator:suspect()
 end
 
 function HUDSuspicionIndicator:set_progress(progress)
-	self._progress = progress
+	if progress == self._progress then
+		return
+	end
 
-	self._eye_fill:set_position_z(progress)
+	if self._old_progress and progress < self._old_progress and (not self._current_progress or not (progress > self._current_progress)) then
+		-- block empty
+	else
+		self._old_progress = self._progress
+		self._cdt = 0
+	end
+
+	self._progress = math.clamp(progress, 0, 1)
+end
+
+function HUDSuspicionIndicator:update_progress(t, dt)
+	if self._progress and self._progress == 1 then
+		self._eye_fill:set_position_z(1)
+
+		return
+	end
+
+	if not self._old_progress or self._old_progress == 0 then
+		self._eye_fill:set_position_z(0)
+
+		return
+	end
+
+	self._current_progress = math.lerp(self._old_progress, self._progress, self._cdt)
+
+	self._eye_fill:set_position_z(self._current_progress)
+
+	self._cdt = self._cdt + dt
 end
 
 function HUDSuspicionIndicator:active_alpha()
 	return self._active_alpha
+end
+
+function HUDSuspicionIndicator:state()
+	return self._state
 end
 
 function HUDSuspicionIndicator:set_state(state, dont_animate)
@@ -205,6 +238,10 @@ function HUDSuspicionIndicator:set_state(state, dont_animate)
 	end
 
 	self._state = state
+
+	if Network:is_server() then
+		managers.network:session():send_to_peers_synched("set_hud_suspicion_state", self._observer:id(), state)
+	end
 end
 
 function HUDSuspicionIndicator:_rotate_eye_ring()

@@ -863,6 +863,11 @@ function UpgradesTweakData:_create_weapon_definitions()
 		free = true,
 		weapon_id = "m1911",
 	}
+	self.definitions.geco = {
+		category = "weapon",
+		factory_id = "wpn_fps_sho_geco",
+		weapon_id = "geco",
+	}
 	self.definitions.thompson = {
 		category = "weapon",
 		factory_id = "wpn_fps_smg_thompson",
@@ -948,6 +953,12 @@ function UpgradesTweakData:_create_weapon_definitions()
 		factory_id = "wpn_fps_pis_welrod",
 		free = true,
 		weapon_id = "welrod",
+	}
+	self.definitions.geco = {
+		category = "weapon",
+		factory_id = "wpn_fps_sho_geco",
+		free = true,
+		weapon_id = "geco",
 	}
 end
 
@@ -3830,6 +3841,7 @@ function UpgradesTweakData:_old_init()
 			"mosin",
 			"sterling",
 			"welrod",
+			"geco",
 		},
 	}
 

@@ -171,6 +171,9 @@ function OperationsTweakData:_init_loading_screens()
 	self._loading_screens.spies_test = {}
 	self._loading_screens.spies_test.image = "loading_screens_07"
 	self._loading_screens.spies_test.text = "loading_bridge"
+	self._loading_screens.spies_crash_test = {}
+	self._loading_screens.spies_crash_test.image = "loading_screens_07"
+	self._loading_screens.spies_crash_test.text = "loading_bridge"
 	self._loading_screens.sto = {}
 	self._loading_screens.sto.image = "loading_screens_07"
 	self._loading_screens.sto.text = "loading_bridge"
