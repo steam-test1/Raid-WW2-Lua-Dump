@@ -1349,11 +1349,11 @@ function NewRaycastWeaponBase:reload_speed_multiplier()
 		end
 	end
 
-	local raid_multiplier = self:_convert_add_to_mul(multiplier)
-
 	if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_PLAYER_RELOAD_SPEED) then
-		raid_multiplier = (managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_PLAYER_RELOAD_SPEED) or 1) / raid_multiplier
+		multiplier = multiplier + (1 - (managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_PLAYER_RELOAD_SPEED) or 1))
 	end
+
+	local raid_multiplier = self:_convert_add_to_mul(multiplier)
 
 	return raid_multiplier
 end

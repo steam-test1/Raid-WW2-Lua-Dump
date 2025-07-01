@@ -342,7 +342,7 @@ function RaidMenuOptionsControls:on_value_change_camera_zoom_sensitivity_horizon
 	if not enable_camera_zoom_sensitivity then
 		self._progress_bar_menu_camera_sensitivity_horizontal:set_value(camera_zoom_sensitivity_percentage)
 		self._progress_bar_menu_camera_sensitivity_vertical:set_value(camera_zoom_sensitivity_percentage)
-		self._progress_bar_menu_camera_zoom_sensitivity_horizontal:set_value(camera_zoom_sensitivity_percentage)
+		self._progress_bar_menu_camera_zoom_sensitivity_vertical:set_value(camera_zoom_sensitivity_percentage)
 	end
 end
 

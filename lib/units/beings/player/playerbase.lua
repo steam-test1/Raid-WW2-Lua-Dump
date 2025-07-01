@@ -119,7 +119,12 @@ function PlayerBase:controller_hotswap_triggered()
 
 	managers.rumble:register_controller(self._controller, self._rumble_pos_callback)
 	managers.controller:set_ingame_mode("main")
-	self:set_controller_enabled(true)
+
+	if managers.raid_menu:is_any_menu_open() then
+		self:set_controller_enabled(false)
+	else
+		self:set_controller_enabled(true)
+	end
 end
 
 function PlayerBase:id()

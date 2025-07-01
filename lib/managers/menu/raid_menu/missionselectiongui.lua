@@ -430,17 +430,10 @@ function MissionSelectionGui:_layout_settings_offline()
 	self._settings_controls = {}
 
 	local settings_panel_params = {
-		h = 352,
-		layer = 1,
 		name = "settings_panel",
-		w = 480,
-		x = 0,
-		y = 192,
 	}
 
-	self._settings_panel = self._raid_panel:panel(settings_panel_params)
-
-	self._settings_panel:set_x(self._raid_panel:w() - self._settings_panel:w())
+	self._settings_panel = self._right_panel:panel(settings_panel_params)
 
 	local difficulty_stepper_params = {
 		name = "difficulty_stepper",

@@ -744,6 +744,7 @@ function EventCompleteState:at_exit(next_state)
 	self.loot_data = {}
 
 	managers.statistics:clear_peer_statistics()
+	managers.savefile:save_game(SavefileManager.SETTING_SLOT)
 
 	local player = managers.player:player_unit()
 

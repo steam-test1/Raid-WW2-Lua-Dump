@@ -540,10 +540,8 @@ function GroupAITweakData:_init_enemy_spawn_groups(difficulty_index)
 			"ranged_fire",
 		},
 		fallschirm_chargers = {
-			"charge",
 			"provide_coverfire",
 			"provide_support",
-			"deathguard",
 		},
 		fallschirm_flankers = {
 			"ranged_fire",
@@ -565,16 +563,13 @@ function GroupAITweakData:_init_enemy_spawn_groups(difficulty_index)
 			"flank",
 		},
 		gerbish_chargers = {
-			"charge",
 			"provide_coverfire",
 			"provide_support",
-			"deathguard",
 		},
 		gerbish_flankers = {
 			"ranged_fire",
 			"provide_coverfire",
 			"provide_support",
-			"flank",
 		},
 		gerbish_rifle_range = {
 			"ranged_fire",
@@ -582,7 +577,6 @@ function GroupAITweakData:_init_enemy_spawn_groups(difficulty_index)
 			"provide_support",
 		},
 		grunt_chargers = {
-			"charge",
 			"provide_coverfire",
 			"provide_support",
 		},
@@ -590,7 +584,6 @@ function GroupAITweakData:_init_enemy_spawn_groups(difficulty_index)
 			"ranged_fire",
 			"provide_coverfire",
 			"provide_support",
-			"flank",
 		},
 		grunt_support_range = {
 			"ranged_fire",
@@ -603,10 +596,8 @@ function GroupAITweakData:_init_enemy_spawn_groups(difficulty_index)
 			"ranged_fire",
 		},
 		ss_chargers = {
-			"charge",
 			"provide_coverfire",
 			"provide_support",
-			"deathguard",
 		},
 		ss_flankers = {
 			"ranged_fire",

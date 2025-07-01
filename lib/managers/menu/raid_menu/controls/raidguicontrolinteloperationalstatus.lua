@@ -125,8 +125,8 @@ function RaidGUIControlIntelOperationalStatus:set_data(item_value)
 
 	self._title:set_h(h1)
 
-	text_top_coord = self._title:bottom()
-	content_panel_height = content_panel_height + self._title:h()
+	text_top_coord = self._title:bottom() + 32
+	content_panel_height = content_panel_height + self._title:h() + 32
 
 	if self._data.texture and self._data.texture_rect then
 		self._title_image:show()
@@ -139,7 +139,7 @@ function RaidGUIControlIntelOperationalStatus:set_data(item_value)
 	else
 		self._title_image:hide()
 
-		text_top_coord = self._title:bottom()
+		text_top_coord = self._title:bottom() + 32
 	end
 
 	local x2, y2, w2, h2 = self._text:text_rect()

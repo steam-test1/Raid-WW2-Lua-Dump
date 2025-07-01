@@ -132,6 +132,9 @@ function IntelGui:data_source_category_items_list()
 				}, {
 					list_item_data.id,
 				})
+			elseif self._selected_category == IntelGui.CATEGORY_OPERATIONAL_STATUS or self._selected_category == IntelGui.CATEGORY_BULLETINS then
+				list_item_index = #data_source_table - list_item_index + 1
+				list_item_data = data_source_table[list_item_index]
 			else
 				is_unlocked = true
 			end

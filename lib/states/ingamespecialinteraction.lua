@@ -24,7 +24,11 @@ function IngameSpecialInteraction:_setup_controller()
 end
 
 function IngameSpecialInteraction:_clear_controller()
-	managers.menu:get_controller():enable()
+	local menu_controller = managers.menu:get_controller()
+
+	if menu_controller then
+		menu_controller:enable()
+	end
 
 	if self._controller then
 		self._controller:remove_trigger("cancel_lockpick", self._leave_cb)
@@ -195,7 +199,7 @@ function IngameSpecialInteraction:at_exit()
 
 	managers.hud:hide_special_interaction(self._completed)
 
-	if not self._completed and not self._completed_by_other and self._tweak_data.target_unit:interaction() and self._tweak_data.target_unit:interaction():active() then
+	if not self._completed and not self._completed_by_other and alive(self._tweak_data.target_unit) and self._tweak_data.target_unit:interaction() and self._tweak_data.target_unit:interaction():active() then
 		managers.hud:show_interact()
 	end
 
