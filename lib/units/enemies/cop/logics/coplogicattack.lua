@@ -15,13 +15,14 @@ CopLogicAttack = class(CopLogicBase)
 CopLogicAttack.super = CopLogicBase
 
 function CopLogicAttack.enter(data, new_logic_name, enter_params)
-	CopLogicBase.enter(data, new_logic_name, enter_params)
-	data.unit:brain():cancel_all_pathing_searches()
-
-	local old_internal_data = data.internal_data
 	local my_data = {
 		unit = data.unit,
 	}
+
+	CopLogicBase.enter(data, new_logic_name, enter_params, my_data)
+	data.unit:brain():cancel_all_pathing_searches()
+
+	local old_internal_data = data.internal_data
 
 	data.internal_data = my_data
 	my_data.detection = data.char_tweak.detection.combat
@@ -38,8 +39,6 @@ function CopLogicAttack.enter(data, new_logic_name, enter_params)
 		my_data.firing = old_internal_data.firing
 		my_data.shooting = old_internal_data.shooting
 		my_data.attention_unit = old_internal_data.attention_unit
-
-		CopLogicAttack._set_best_cover(data, my_data, old_internal_data.best_cover)
 	end
 
 	my_data.peek_to_shoot_allowed = true
@@ -85,11 +84,6 @@ function CopLogicAttack.exit(data, new_logic_name, enter_params)
 	data.unit:brain():cancel_all_pathing_searches()
 	CopLogicBase.cancel_queued_tasks(my_data)
 	CopLogicBase.cancel_delayed_clbks(my_data)
-
-	if my_data.best_cover then
-		managers.navigation:release_cover(my_data.best_cover[1])
-	end
-
 	data.brain:rem_pos_rsrv("path")
 	data.unit:brain():set_update_enabled_state(true)
 end

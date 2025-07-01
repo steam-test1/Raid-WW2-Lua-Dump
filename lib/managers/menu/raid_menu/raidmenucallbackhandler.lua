@@ -10,6 +10,7 @@ RaidGUIItemAvailabilityFlag.IS_IN_CAMP = "is_in_camp"
 RaidGUIItemAvailabilityFlag.IS_MULTIPLAYER = "is_multiplayer"
 RaidGUIItemAvailabilityFlag.IS_SINGLEPLAYER = "is_singleplayer"
 RaidGUIItemAvailabilityFlag.IS_NOT_EDITOR = "is_not_editor"
+RaidGUIItemAvailabilityFlag.IS_NOT_CONSUMABLE = "is_not_consumable"
 RaidGUIItemAvailabilityFlag.IS_NOT_IN_CAMP = "is_not_in_camp"
 RaidGUIItemAvailabilityFlag.IS_NOT_MULTIPLAYER = "is_not_multiplayer"
 RaidGUIItemAvailabilityFlag.IS_NOT_PC_CONTROLLER = "is_not_pc_controller"
@@ -23,12 +24,14 @@ RaidGUIItemAvailabilityFlag.KICK_VOTE_VISIBLE = "kick_vote_visible"
 RaidGUIItemAvailabilityFlag.NON_OVERKILL_145 = "non_overkill_145"
 RaidGUIItemAvailabilityFlag.REPUTATION_CHECK = "reputation_check"
 RaidGUIItemAvailabilityFlag.RESTART_LEVEL_VISIBLE = "restart_level_visible"
+RaidGUIItemAvailabilityFlag.RESTART_LEVEL_VISIBLE_CLIENT = "restart_level_visible_client"
 RaidGUIItemAvailabilityFlag.RESTART_VOTE_VISIBLE = "restart_vote_visible"
 RaidGUIItemAvailabilityFlag.SINGLEPLAYER_RESTART = "singleplayer_restart"
 RaidGUIItemAvailabilityFlag.VOICE_ENABLED = "voice_enabled"
 RaidGUIItemAvailabilityFlag.IS_IN_MAIN_MENU = "is_in_main_menu"
 RaidGUIItemAvailabilityFlag.IS_NOT_IN_MAIN_MENU = "is_not_in_main_menu"
 RaidGUIItemAvailabilityFlag.SHOULD_SHOW_TUTORIAL = "should_show_tutorial"
+RaidGUIItemAvailabilityFlag.HAS_SPECIAL_EDITION = "has_special_edition"
 RaidMenuCallbackHandler = RaidMenuCallbackHandler or class(CoreMenuCallbackHandler.CallbackHandler)
 
 function RaidMenuCallbackHandler:menu_options_on_click_controls()
@@ -154,7 +157,11 @@ function RaidMenuCallbackHandler:on_select_challenge_cards_view_clicked()
 end
 
 function RaidMenuCallbackHandler:on_mission_selection_clicked()
-	managers.raid_menu:open_menu("mission_selection_menu")
+	if managers.progression:have_pending_missions_to_unlock() then
+		managers.raid_menu:open_menu("mission_unlock_menu")
+	else
+		managers.raid_menu:open_menu("mission_selection_menu")
+	end
 end
 
 function RaidMenuCallbackHandler:on_options_clicked()
@@ -165,10 +172,15 @@ function RaidMenuCallbackHandler:on_gold_asset_store_clicked()
 	managers.raid_menu:open_menu("gold_asset_store_menu")
 end
 
-function RaidMenuCallbackHandler:show_credits()
-	RaidMenuCreditsGui.FILE = nil
-	RaidMenuCreditsGui.INTRO_VIDEO = "movies/vanilla/credits/05_credits_v003"
+function RaidMenuCallbackHandler:on_intel_clicked()
+	managers.raid_menu:open_menu("intel_menu")
+end
 
+function RaidMenuCallbackHandler:on_comic_book_clicked()
+	managers.raid_menu:open_menu("comic_book_menu")
+end
+
+function RaidMenuCallbackHandler:show_credits()
 	managers.raid_menu:open_menu("raid_credits_menu")
 end
 
@@ -272,6 +284,10 @@ function RaidMenuCallbackHandler:is_not_in_main_menu()
 	return game_state_machine:current_state_name() ~= "menu_main"
 end
 
+function RaidMenuCallbackHandler:has_special_edition()
+	return managers.dlc:is_dlc_unlocked(DLCTweakData.DLC_NAME_SPECIAL_EDITION)
+end
+
 function RaidMenuCallbackHandler:should_show_tutorial()
 	return game_state_machine:current_state_name() == "menu_main" and managers.raid_job:played_tutorial()
 end
@@ -292,6 +308,26 @@ function RaidMenuCallbackHandler:restart_level_visible()
 	local res = self:is_server() and self:_restart_level_visible() and managers.vote:option_host_restart()
 
 	return res
+end
+
+function RaidMenuCallbackHandler:restart_level_visible_client()
+	local res = not self:is_server() and self:is_multiplayer() and not managers.raid_job:is_in_tutorial()
+
+	if not res then
+		return false
+	end
+
+	local state = game_state_machine:current_state_name()
+
+	return state ~= "ingame_waiting_for_players" and state ~= "ingame_lobby_menu" and state ~= "menu_main" and state ~= "empty"
+end
+
+function RaidMenuCallbackHandler:is_not_consumable()
+	if managers.raid_job:current_job() and managers.raid_job:current_job().consumable then
+		return false
+	end
+
+	return true
 end
 
 function RaidMenuCallbackHandler:_restart_level_visible()
@@ -334,6 +370,34 @@ function RaidMenuCallbackHandler:restart_mission(item)
 		end
 
 		managers.raid_menu:on_escape()
+	end
+
+	local no_button = {}
+
+	no_button.text = managers.localization:text("dialog_no")
+	no_button.class = RaidGUIControlButtonShortSecondary
+	no_button.cancel_button = true
+	dialog_data.button_list = {
+		yes_button,
+		no_button,
+	}
+
+	managers.system_menu:show(dialog_data)
+end
+
+function RaidMenuCallbackHandler:restart_to_camp_client(item)
+	local dialog_data = {}
+
+	dialog_data.title = managers.localization:text("dialog_mp_restart_level_title")
+	dialog_data.text = managers.localization:text("dialog_mp_restart_level_client_message")
+
+	local yes_button = {}
+
+	yes_button.text = managers.localization:text("dialog_yes")
+
+	function yes_button.callback_func()
+		managers.raid_menu:on_escape()
+		setup:return_to_camp_client()
 	end
 
 	local no_button = {}
@@ -413,7 +477,7 @@ function RaidMenuCallbackHandler:quit_game()
 end
 
 function RaidMenuCallbackHandler:quit_game_pause_menu()
-	self:_quit_game(managers.localization:text("dialog_are_you_sure_you_want_to_quit"))
+	self:_quit_game(managers.localization:text("dialog_are_you_sure_you_want_to_quit_pause_menu"))
 end
 
 function RaidMenuCallbackHandler:_quit_game(dialog_text)
@@ -454,6 +518,7 @@ function RaidMenuCallbackHandler:_dialog_quit_no()
 end
 
 function RaidMenuCallbackHandler:raid_play_online()
+	Global.game_settings.single_player = false
 	Global.exe_argument_level = "streaming_level"
 	Global.exe_argument_difficulty = Global.exe_argument_difficulty or Global.DEFAULT_DIFFICULTY
 
@@ -507,7 +572,11 @@ function MenuCallbackHandler:on_multiplayer_clicked()
 end
 
 function MenuCallbackHandler:on_mission_selection_clicked()
-	managers.raid_menu:open_menu("mission_selection_menu")
+	if managers.progression:have_pending_missions_to_unlock() then
+		managers.raid_menu:open_menu("mission_unlock_menu")
+	else
+		managers.raid_menu:open_menu("mission_selection_menu")
+	end
 end
 
 function MenuCallbackHandler:on_select_character_profile_clicked()
@@ -670,7 +739,7 @@ end
 function MenuCallbackHandler:set_voice_volume_raid(volume)
 	local old_volume = managers.user:get_setting("voice_volume")
 
-	managers.user:set_setting("voice_volume", volume)
+	managers.user:set_setting("voice_volume", volume / 100)
 
 	if old_volume < volume then
 		self._sound_source:post_event("slider_increase")
@@ -699,7 +768,7 @@ function MenuCallbackHandler:toggle_push_to_talk_raid(value)
 	managers.user:set_setting("push_to_talk", value)
 end
 
-function MenuCallbackHandler:change_resolution_raid(resolution)
+function MenuCallbackHandler:change_resolution_raid(resolution, no_dialog)
 	local old_resolution = RenderSettings.resolution
 
 	if resolution == old_resolution then
@@ -717,15 +786,19 @@ function MenuCallbackHandler:change_resolution_raid(resolution)
 	local blackborder_workspace = MenuRenderer.get_blackborder_workspace_instance()
 
 	blackborder_workspace:set_screen(resolution.x, resolution.y, 0, 0, resolution.x, resolution.y, resolution.x, resolution.y)
-	managers.menu:show_accept_gfx_settings_dialog(function()
-		managers.viewport:set_resolution(old_resolution)
-		managers.viewport:set_aspect_ratio(old_resolution.x / old_resolution.y)
-		managers.worldcamera:scale_worldcamera_fov(old_resolution.x / old_resolution.y)
 
-		local blackborder_workspace = MenuRenderer.get_blackborder_workspace_instance()
+	if not no_dialog then
+		managers.menu:show_accept_gfx_settings_dialog(function()
+			managers.viewport:set_resolution(old_resolution)
+			managers.viewport:set_aspect_ratio(old_resolution.x / old_resolution.y)
+			managers.worldcamera:scale_worldcamera_fov(old_resolution.x / old_resolution.y)
 
-		blackborder_workspace:set_screen(old_resolution.x, old_resolution.y, 0, 0, old_resolution.x, old_resolution.y, old_resolution.x, old_resolution.y)
-	end)
+			local blackborder_workspace = MenuRenderer.get_blackborder_workspace_instance()
+
+			blackborder_workspace:set_screen(old_resolution.x, old_resolution.y, 0, 0, old_resolution.x, old_resolution.y, old_resolution.x, old_resolution.y)
+		end)
+	end
+
 	self:_refresh_brightness()
 end
 
@@ -745,10 +818,8 @@ function MenuCallbackHandler:set_resolution_default_raid_no_dialog(resolution)
 	blackborder_workspace:set_screen(resolution.x, resolution.y, 0, 0, resolution.x, resolution.y, resolution.x, resolution.y)
 end
 
-function MenuCallbackHandler:toggle_fullscreen_raid(value, callback)
-	local fullscreen = value
-
-	if managers.viewport:is_fullscreen() == fullscreen then
+function MenuCallbackHandler:toggle_fullscreen_raid(fullscreen, current_fullscreen, borderless, current_borderless, callback)
+	if fullscreen and managers.viewport:is_fullscreen() then
 		return
 	end
 
@@ -759,8 +830,17 @@ function MenuCallbackHandler:toggle_fullscreen_raid(value, callback)
 	end
 
 	managers.viewport:set_fullscreen(fullscreen)
+	managers.viewport:set_borderless(borderless)
+
+	if borderless then
+		local monitor_res = Application:monitor_resolution()
+
+		self:change_resolution_raid(Vector3(monitor_res.x, monitor_res.y, RenderSettings.resolution.z), true)
+	end
+
 	managers.menu:show_accept_gfx_settings_dialog(function()
-		managers.viewport:set_fullscreen(not fullscreen)
+		managers.viewport:set_fullscreen(current_fullscreen)
+		managers.viewport:set_borderless(current_borderless)
 
 		if managers.viewport:is_fullscreen() then
 			managers.mouse_pointer:acquire_input()
@@ -848,6 +928,7 @@ end
 function MenuCallbackHandler:toggle_vsync_raid(vsync_value, buffer_count)
 	managers.viewport:set_vsync(vsync_value)
 	managers.viewport:set_buffer_count(buffer_count)
+	self:apply_and_save_render_settings()
 	self:_refresh_brightness()
 end
 

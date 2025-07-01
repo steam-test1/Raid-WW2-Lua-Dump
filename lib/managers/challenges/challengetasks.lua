@@ -69,6 +69,7 @@ function ChallengeTaskKillEnemies:init(challenge_category, challenge_id, task_da
 
 	self._count = 0
 	self._target = task_data.target
+	self._min_range = task_data.min_range
 	self._parent_challenge_category = challenge_category
 	self._parent_challenge_id = challenge_id
 	self._id = self._parent_challenge_id .. "_kill_enemies"
@@ -103,8 +104,16 @@ function ChallengeTaskKillEnemies:target()
 	return self._target
 end
 
+function ChallengeTaskKillEnemies:min_range()
+	return self._modifiers.min_range or 0
+end
+
 function ChallengeTaskKillEnemies:set_reminders(reminders)
 	self._reminders = reminders
+end
+
+function ChallengeTaskKillEnemies:set_modifiers(modifiers)
+	self._modifiers = modifiers
 end
 
 function ChallengeTaskKillEnemies:on_enemy_killed(kill_data)
@@ -124,11 +133,15 @@ function ChallengeTaskKillEnemies:on_enemy_killed(kill_data)
 		return
 	end
 
+	if self._modifiers.min_range and kill_data.enemy_distance < self._modifiers.min_range then
+		return true
+	end
+
 	if self._modifiers.enemy_type then
 		local is_correct_enemy_type = false
 
 		for i, enemy_type in pairs(self._modifiers.enemy_type) do
-			if kill_data.enemy_type == enemy_type then
+			if kill_data.enemy_type == enemy_type or kill_data.special_enemy_type == enemy_type then
 				is_correct_enemy_type = true
 			end
 		end
@@ -208,8 +221,16 @@ function ChallengeTaskCollectAmmo:target()
 	return self._target
 end
 
+function ChallengeTaskCollectAmmo:min_range()
+	return 0
+end
+
 function ChallengeTaskCollectAmmo:set_reminders(reminders)
 	self._reminders = reminders
+end
+
+function ChallengeTaskCollectAmmo:set_modifiers(modifiers)
+	self._modifiers = modifiers
 end
 
 function ChallengeTaskCollectAmmo:on_ammo_collected(ammo_info)

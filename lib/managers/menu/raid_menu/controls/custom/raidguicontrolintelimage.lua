@@ -12,6 +12,7 @@ function RaidGUIControlIntelImage:init(parent, params)
 	RaidGUIControlIntelImage.super.init(self, parent, params)
 
 	self._on_click_callback = params.on_click_callback
+	self._static = params.static
 
 	self:_create_panels()
 	self:_create_image()
@@ -28,7 +29,7 @@ function RaidGUIControlIntelImage:_create_panels()
 	panel_params.y = self._params.y or 0
 	panel_params.w = self._params.w or RaidGUIControlIntelImage.DEFAULT_W
 	panel_params.h = self._params.h or RaidGUIControlIntelImage.DEFAULT_H
-	panel_params.layer = 1
+	panel_params.alpha = panel_params.alpha or 1
 	self._object = self._panel:panel(panel_params)
 end
 
@@ -110,11 +111,19 @@ function RaidGUIControlIntelImage:_create_image()
 end
 
 function RaidGUIControlIntelImage:on_mouse_pressed(button)
+	if self._static then
+		return
+	end
+
 	self._object:stop()
 	self._object:animate(callback(self, self, "_animate_press"))
 end
 
 function RaidGUIControlIntelImage:on_mouse_released(button)
+	if self._static then
+		return
+	end
+
 	if self._on_click_callback and not self._params.no_click then
 		self._on_click_callback()
 	end
@@ -127,7 +136,7 @@ function RaidGUIControlIntelImage:on_mouse_released(button)
 end
 
 function RaidGUIControlIntelImage:highlight_on()
-	if self._active then
+	if self._active or self._static then
 		return
 	end
 
@@ -136,7 +145,7 @@ function RaidGUIControlIntelImage:highlight_on()
 end
 
 function RaidGUIControlIntelImage:highlight_off()
-	if self._active then
+	if self._active or self._static then
 		return
 	end
 
@@ -181,6 +190,10 @@ function RaidGUIControlIntelImage:set_center_y(center_y)
 end
 
 function RaidGUIControlIntelImage:select(skip_animation)
+	if self._static then
+		return
+	end
+
 	self._active = true
 
 	if skip_animation then
@@ -192,6 +205,10 @@ function RaidGUIControlIntelImage:select(skip_animation)
 end
 
 function RaidGUIControlIntelImage:unselect()
+	if self._static then
+		return
+	end
+
 	self._active = false
 
 	self._selector:stop()
@@ -199,6 +216,10 @@ function RaidGUIControlIntelImage:unselect()
 end
 
 function RaidGUIControlIntelImage:set_selected(value)
+	if self._static then
+		return
+	end
+
 	self._selected = value
 
 	if self._selected then
@@ -211,6 +232,10 @@ function RaidGUIControlIntelImage:set_selected(value)
 end
 
 function RaidGUIControlIntelImage:confirm_pressed()
+	if self._static then
+		return
+	end
+
 	if self._selected then
 		self:select()
 

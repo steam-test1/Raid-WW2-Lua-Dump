@@ -3,6 +3,7 @@ ManageSpawnedUnits = ManageSpawnedUnits or class()
 function ManageSpawnedUnits:init(unit)
 	self._unit = unit
 	self._spawned_units = {}
+	self._temp_link_units = {}
 end
 
 function ManageSpawnedUnits:spawn_unit(unit_id, align_obj_name, unit)
@@ -39,6 +40,12 @@ function ManageSpawnedUnits:spawn_unit(unit_id, align_obj_name, unit)
 	end
 end
 
+function ManageSpawnedUnits:sync_link_unit(align_obj_name, spawn_unit)
+	if align_obj_name and spawn_unit then
+		self._unit:link(Idstring(align_obj_name), spawn_unit, spawn_unit:orientation_object():name(), true)
+	end
+end
+
 function ManageSpawnedUnits:spawn_and_link_unit(joint_table, unit_id, unit)
 	if not self[joint_table] then
 		Application:error("No table named:", joint_table, "in unit file:", self._unit:name())
@@ -66,6 +73,10 @@ function ManageSpawnedUnits:spawn_and_link_unit(joint_table, unit_id, unit)
 	}
 
 	if Network:is_server() then
+		self:_link_joints(unit_id, joint_table)
+	elseif self._temp_link_units[unit_id] then
+		self._temp_link_units[unit_id] = nil
+
 		self:_link_joints(unit_id, joint_table)
 	end
 end
@@ -236,5 +247,8 @@ function ManageSpawnedUnits:sync_unit_spawn(unit_id)
 		self:_link_joints(unit_id, self._sync_spawn_and_link[unit_id].joint_table)
 
 		self._sync_spawn_and_link[unit_id] = nil
+	else
+		self._temp_link_units = self._temp_link_units or {}
+		self._temp_link_units[unit_id] = true
 	end
 end

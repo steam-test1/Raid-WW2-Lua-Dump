@@ -565,6 +565,12 @@ function IngameWaitingForRespawnState:cb_prev_player()
 	self._dis_curr = nil
 end
 
+function IngameWaitingForRespawnState:currently_spectated_unit()
+	if self._spectator_data and self._spectator_data.teammate_records and self._spectator_data.watch_u_key and self._spectator_data.teammate_records[self._spectator_data.watch_u_key] then
+		return self._spectator_data.teammate_records[self._spectator_data.watch_u_key].unit
+	end
+end
+
 function IngameWaitingForRespawnState:trade_death(respawn_delay, hostages_killed)
 	managers.hud:set_custody_can_be_trade_visible(false)
 

@@ -51,7 +51,7 @@ function MenuRenderer:open(...)
 	self._menu_stencil_default_image = "guis/textures/empty"
 	self._menu_stencil_image = self._menu_stencil_default_image
 
-	self:_layout_menu_bg()
+	self._create_blackborders()
 end
 
 function MenuRenderer.destroy_blackborder_workspace_instance()
@@ -94,16 +94,18 @@ end
 function MenuRenderer:close(...)
 	MenuRenderer.super.close(self, ...)
 
+	if managers.raid_menu:ct_open_menus() == 1 then
+		MenuRenderer._remove_blackborders()
+	end
+end
+
+function MenuRenderer._remove_blackborders()
 	local blackborder_workspace = MenuRenderer.get_blackborder_workspace_instance()
 
 	blackborder_workspace:panel():set_visible(false)
 end
 
-function MenuRenderer:_layout_menu_bg()
-	self:_create_blackborders()
-end
-
-function MenuRenderer:_create_blackborders()
+function MenuRenderer._create_blackborders()
 	Application:debug("[MenuRenderer][_create_blackborders]")
 
 	local blackborder_workspace = MenuRenderer.get_blackborder_workspace_instance()
@@ -213,7 +215,7 @@ end
 
 function MenuRenderer:resolution_changed(...)
 	MenuRenderer.super.resolution_changed(self, ...)
-	self:_layout_menu_bg()
+	self._create_blackborders()
 
 	local active_node_gui = self:active_node_gui()
 

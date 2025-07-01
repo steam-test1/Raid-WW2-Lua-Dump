@@ -24,6 +24,9 @@ local math_ceil = math.ceil
 local math_floor = math.floor
 local temp_vec1 = Vector3()
 local temp_vec2 = Vector3()
+local nav_seg_keys = {}
+local cone_height = Vector3(0, 0, 80)
+local arrow_height = Vector3(0, 0, 1)
 
 NavigationManager = NavigationManager or class()
 NavigationManager.nav_states = {
@@ -99,10 +102,7 @@ function NavigationManager:init()
 
 	self._pos_rsrv_filters = {}
 	self._obstacles = {}
-
-	if self._debug then
-		self._pos_reservations = {}
-	end
+	self._pos_reservations = {}
 
 	self:_init_draw_data()
 
@@ -190,12 +190,15 @@ function NavigationManager:_draw_pos_reservations(t)
 			table.insert(to_remove, key)
 		end
 
-		if not entry.expire_t and res.unit then
-			if alive(res.unit) then
-				Draw:brush(Color(1, 1, 0, 0), 0):cylinder(entry.position, res.unit:movement():m_pos(), 3)
+		if not entry.expire_t then
+			if res.unit then
+				if alive(res.unit) then
+					Draw:brush(Color(1, 1, 0, 0), 0):cylinder(entry.position, res.unit:movement():m_pos(), 3)
+				else
+					Draw:brush(Color(1, 1, 0, 0), 0):sphere(entry.position, entry.radius + 5)
+				end
 			else
-				debug_pause("[NavigationManager:_draw_pos_reservations] dead unit. reserved from:", res.stack, "unit name:", res.u_name)
-				Draw:brush(Color(1, 1, 0, 0), 0):sphere(entry.position, entry.radius + 5)
+				Draw:brush(Color(0.3, 1, 1, 0), 0):sphere(entry.position, entry.radius + 5)
 			end
 		end
 	end
@@ -812,20 +815,23 @@ function NavigationManager:_draw_covers()
 
 	for i_cover, cover in ipairs(self._covers) do
 		local draw_pos = cover[NavigationManager.COVER_POSITION]
-
-		Application:draw_rotation(draw_pos, Rotation(cover[NavigationManager.COVER_FORWARD], math.UP))
-
-		if cover[reserved] then
-			Application:draw_sphere(draw_pos, 18, 0, 0, 0)
-		end
-
 		local tracker = cover[NavigationManager.COVER_TRACKER]
 
 		if tracker:lost() then
+			Application:draw_cone(draw_pos, draw_pos + cone_height, 30, 1, 0, 0)
+
 			local placed_pos = tracker:position()
 
 			Application:draw_sphere(placed_pos, 20, 1, 0, 0)
 			Application:draw_line(placed_pos, draw_pos, 1, 0, 0)
+		else
+			Application:draw_cone(draw_pos, draw_pos + cone_height, 30, 0, 1, 0)
+		end
+
+		Application:draw_rotation(draw_pos + arrow_height, Rotation(cover[NavigationManager.COVER_FORWARD], math.UP))
+
+		if cover[reserved] then
+			Application:draw_sphere(draw_pos, 18, 0, 0, 0)
 		end
 	end
 end
@@ -900,6 +906,16 @@ function NavigationManager:find_random_position_in_segment(seg_id)
 	return self._quad_field:random_position_in_nav_segment(seg_id)
 end
 
+function NavigationManager:get_random_point_on_graph()
+	if #nav_seg_keys < 1 then
+		for key, value in pairs(self._nav_segments) do
+			nav_seg_keys[#nav_seg_keys + 1] = key
+		end
+	end
+
+	return self:find_random_position_in_segment(nav_seg_keys[math.random(#nav_seg_keys)])
+end
+
 function NavigationManager:register_cover_units(world_id)
 	Application:debug("[NavigationManager:register_cover_units] World:", world_id)
 
@@ -908,7 +924,9 @@ function NavigationManager:register_cover_units(world_id)
 	end
 
 	local rooms = self._rooms
-	local covers = {}
+
+	self._covers = self._covers or {}
+
 	local world_definition = managers.worldcollection:worlddefinition_by_id(world_id or 0)
 	local cover_data = world_definition:get_cover_data()
 	local t_ins = table.insert
@@ -922,9 +940,7 @@ function NavigationManager:register_cover_units(world_id)
 				nav_tracker,
 			}
 
-			if self._debug then
-				t_ins(covers, cover)
-			end
+			t_ins(self._covers, cover)
 
 			local location_script_data = self._quad_field:get_script_data(nav_tracker, true)
 
@@ -966,9 +982,7 @@ function NavigationManager:register_cover_units(world_id)
 				true,
 			}
 
-			if self._debug then
-				t_ins(covers, cover)
-			end
+			t_ins(self._covers, cover)
 
 			local location_script_data = self._quad_field:get_script_data(nav_tracker, true)
 
@@ -980,8 +994,17 @@ function NavigationManager:register_cover_units(world_id)
 			self:_safe_remove_unit(unit)
 		end
 	end
+end
 
-	self._covers = covers
+function NavigationManager:on_world_destroyed(world_id)
+	managers.navigation:unload_world_data(world_id)
+	managers.navigation:_unregister_cover_units()
+
+	for _, desc in pairs(managers.navigation._pos_reservations) do
+		if not desc[1].expire_t then
+			managers.navigation:unreserve_pos(desc[1])
+		end
+	end
 end
 
 function NavigationManager:_unregister_cover_units()
@@ -995,6 +1018,10 @@ function NavigationManager:_unregister_cover_units()
 	end
 
 	self._covers = {}
+end
+
+function NavigationManager:_unreserve_all_pos()
+	return
 end
 
 function NavigationManager:_safe_remove_unit(unit)
@@ -1152,10 +1179,15 @@ end
 function NavigationManager:release_cover(cover)
 	local reserved = cover[self.COVER_RESERVED]
 
-	if reserved == 1 then
-		cover[self.COVER_RESERVED] = nil
+	if not reserved then
+		return
+	end
 
+	if reserved == 1 then
 		self:unreserve_pos(cover[self.COVER_RESERVATION])
+
+		cover[self.COVER_RESERVED] = nil
+		cover[self.COVER_RESERVATION] = nil
 	else
 		cover[self.COVER_RESERVED] = reserved - 1
 	end
@@ -1866,43 +1898,47 @@ function NavigationManager:add_pos_reservation(desc)
 
 	desc.id = self._quad_field:add_position_reservation(desc)
 
-	if self._debug then
-		self._pos_reservations[desc.id] = {
-			desc,
-		}
+	if self._pos_reservations[desc.id] and not self._pos_reservations[desc.id][1].expire_t then
+		debug_pause("[NavigationManager:add_pos_reservation] LEAKING POS RESERVATION!!", inspect(self._pos_reservations[desc.id]))
 
-		if desc.filter then
-			for u_key, u_data in pairs(managers.enemy:all_enemies()) do
-				if u_data.unit:movement():pos_rsrv_id() == desc.filter then
-					self._pos_reservations[desc.id].unit = u_data.unit
-					self._pos_reservations[desc.id].u_name = u_data.unit:name()
-					self._pos_reservations[desc.id].stack = Application:stack()
+		return
+	end
 
-					return
-				end
+	self._pos_reservations[desc.id] = {
+		desc,
+	}
+
+	if self._debug and desc.filter then
+		for u_key, u_data in pairs(managers.enemy:all_enemies()) do
+			if u_data.unit:movement():pos_rsrv_id() == desc.filter then
+				self._pos_reservations[desc.id].unit = u_data.unit
+				self._pos_reservations[desc.id].u_name = u_data.unit:name()
+				self._pos_reservations[desc.id].stack = Application:stack()
+
+				return
 			end
 		end
 	end
 end
 
 function NavigationManager:unreserve_pos(desc)
-	if self._debug then
+	if not desc or desc.unreserved then
+		Application:debug("[NavigationManager:unreserve_pos] Reservation already unreserved:", desc.id)
+
+		return
+	end
+
+	if self._pos_reservations then
 		self._pos_reservations[desc.id] = nil
 	end
 
 	self._quad_field:remove_position_reservation(desc.id)
 
-	desc.id = nil
+	desc.unreserved = true
 end
 
 function NavigationManager:move_pos_rsrv(desc)
-	if self._debug then
-		if not self._pos_reservations[desc.id] then
-			self:add_pos_reservation(desc)
-		end
-
-		self._pos_reservations[desc.id].position = desc.position
-	end
+	self._pos_reservations[desc.id].position = desc.position
 
 	self._quad_field:move_position_reservation(desc.id, desc.position)
 end

@@ -795,7 +795,7 @@ function SkillTreeTweakData:_init_skill_list()
 			1,
 		},
 		upgrades = {
-			"warcry_team_damage_reduction_bonus_1",
+			"warcry_team_damage_reduction_bonus_on_activate_1",
 		},
 	}
 	self.skills.warcry_team_damage_reduction_buff_2 = {
@@ -809,7 +809,7 @@ function SkillTreeTweakData:_init_skill_list()
 			1,
 		},
 		upgrades = {
-			"warcry_team_damage_reduction_bonus_2",
+			"warcry_team_damage_reduction_bonus_on_activate_2",
 		},
 	}
 	self.skills.warcry_team_damage_reduction_buff_3 = {
@@ -823,7 +823,7 @@ function SkillTreeTweakData:_init_skill_list()
 			1,
 		},
 		upgrades = {
-			"warcry_team_damage_reduction_bonus_3",
+			"warcry_team_damage_reduction_bonus_on_activate_3",
 		},
 	}
 	self.skills.warcry_team_damage_reduction_buff_4 = {
@@ -837,7 +837,7 @@ function SkillTreeTweakData:_init_skill_list()
 			1,
 		},
 		upgrades = {
-			"warcry_team_damage_reduction_bonus_4",
+			"warcry_team_damage_reduction_bonus_on_activate_4",
 		},
 	}
 	self.skills.warcry_explosion_multiplier_bonus_1 = {
@@ -2766,6 +2766,18 @@ function SkillTreeTweakData:_init_skill_list()
 			"garand",
 		},
 	}
+	self.skills.weapon_unlock_garand_golden = {
+		desc_id = "skill_weapon_unlock_garand_golden_desc",
+		name_id = "skill_weapon_unlock_garand_golden_name",
+		acquires = {},
+		icon_xy = {
+			1,
+			1,
+		},
+		upgrades = {
+			"garand_golden",
+		},
+	}
 	self.skills.weapon_unlock_winchester = {
 		desc_id = "skill_weapon_unlock_winchester_desc",
 		name_id = "skill_weapon_unlock_winchester_name",
@@ -3610,6 +3622,263 @@ function SkillTreeTweakData:_init_recon_skill_tree()
 			skill_name = "warcry_duration_2",
 		},
 	}
+	self.skill_trees.recon[16] = {
+		{
+			skill_name = "stamina_multiplier_2",
+		},
+		{
+			skill_name = "crouching_damage_reduction_2",
+		},
+		{
+			skill_name = "revived_damage_reduction_1",
+		},
+	}
+	self.skill_trees.recon[17] = {
+		{
+			skill_name = "sniper_damage_multiplier_1",
+		},
+		{
+			skill_name = "assault_rifle_damage_multiplier_1",
+		},
+		{
+			skill_name = "pistol_damage_multiplier_1",
+		},
+	}
+	self.skill_trees.recon[18] = {
+		{
+			skill_name = "primary_ammo_capacity_increase_2",
+		},
+		{
+			skill_name = "secondary_ammo_capacity_increase_2",
+		},
+		{
+			skill_name = "revive_interaction_speed_multiplier_2",
+		},
+	}
+	self.skill_trees.recon[19] = {
+		{
+			skill_name = "interacting_damage_reduction_1",
+		},
+		{
+			skill_name = "bullet_damage_reduction_1",
+		},
+		{
+			skill_name = "melee_damage_reduction_1",
+		},
+	}
+	self.skill_trees.recon[20] = {
+		{
+			skill_name = "warcry_sharpshooter_level_increase",
+		},
+	}
+	self.skill_trees.recon[21] = {
+		{
+			skill_name = "reload_speed_multiplier_2",
+		},
+		{
+			skill_name = "pick_up_ammo_multiplier_2",
+		},
+		{
+			skill_name = "general_interaction_speed_multiplier_2",
+		},
+	}
+	self.skill_trees.recon[22] = {
+		{
+			skill_name = "stamina_regeneration_increase_2",
+		},
+		{
+			skill_name = "ready_weapon_speed_multiplier_3",
+		},
+		{
+			skill_name = "carry_penalty_decrease_2",
+		},
+	}
+	self.skill_trees.recon[23] = {
+		{
+			skill_name = "swap_speed_multiplier_2",
+		},
+		{
+			skill_name = "melee_damage_multiplier_1",
+		},
+		{
+			skill_name = "running_damage_reduction_2",
+		},
+	}
+	self.skill_trees.recon[24] = {
+		{
+			skill_name = "wheel_hotspot_increase_2",
+		},
+		{
+			skill_name = "crouching_damage_reduction_3",
+		},
+		{
+			skill_name = "increase_crouch_speed_3",
+		},
+	}
+	self.skill_trees.recon[25] = {
+		{
+			skill_name = "warcry_team_damage_buff_3",
+		},
+		{
+			skill_name = "warcry_long_range_multiplier_bonus_2",
+		},
+		{
+			skill_name = "warcry_duration_3",
+		},
+	}
+	self.skill_trees.recon[26] = {
+		{
+			skill_name = "stamina_multiplier_3",
+		},
+		{
+			skill_name = "headshot_damage_multiplier_3",
+		},
+		{
+			skill_name = "on_hit_flinch_reduction_2",
+		},
+	}
+	self.skill_trees.recon[27] = {
+		{
+			skill_name = "increase_general_speed_3",
+		},
+		{
+			skill_name = "highlight_enemy_damage_bonus_3",
+		},
+		{
+			skill_name = "revive_interaction_speed_multiplier_3",
+		},
+	}
+	self.skill_trees.recon[28] = {
+		{
+			skill_name = "primary_ammo_capacity_increase_3",
+		},
+		{
+			skill_name = "sniper_damage_multiplier_2",
+		},
+		{
+			skill_name = "increase_run_speed_3",
+		},
+	}
+	self.skill_trees.recon[29] = {
+		{
+			skill_name = "reload_speed_multiplier_3",
+		},
+		{
+			skill_name = "player_critical_hit_chance_3",
+		},
+		{
+			skill_name = "secondary_ammo_capacity_increase_3",
+		},
+	}
+	self.skill_trees.recon[30] = {
+		{
+			skill_name = "warcry_sharpshooter_level_increase",
+		},
+	}
+	self.skill_trees.recon[31] = {
+		{
+			skill_name = "max_health_multiplier_2",
+		},
+		{
+			skill_name = "smg_damage_multiplier_1",
+		},
+		{
+			skill_name = "pick_up_health_multiplier_2",
+		},
+	}
+	self.skill_trees.recon[32] = {
+		{
+			skill_name = "interacting_damage_reduction_2",
+		},
+		{
+			skill_name = "ready_weapon_speed_multiplier_4",
+		},
+		{
+			skill_name = "bleedout_timer_increase_2",
+		},
+	}
+	self.skill_trees.recon[33] = {
+		{
+			skill_name = "wheel_rotation_speed_increase_2",
+		},
+		{
+			skill_name = "revived_damage_reduction_2",
+		},
+		{
+			skill_name = "increase_crouch_speed_4",
+		},
+	}
+	self.skill_trees.recon[34] = {
+		{
+			skill_name = "headshot_damage_multiplier_4",
+		},
+		{
+			skill_name = "crouching_damage_reduction_4",
+		},
+		{
+			skill_name = "pick_up_ammo_multiplier_3",
+		},
+	}
+	self.skill_trees.recon[35] = {
+		{
+			skill_name = "warcry_team_damage_buff_4",
+		},
+		{
+			skill_name = "warcry_headshot_multiplier_bonus_2",
+		},
+		{
+			skill_name = "warcry_duration_4",
+		},
+	}
+	self.skill_trees.recon[36] = {
+		{
+			skill_name = "melee_damage_reduction_2",
+		},
+		{
+			skill_name = "on_hit_flinch_reduction_3",
+		},
+		{
+			skill_name = "highlight_enemy_damage_bonus_4",
+		},
+	}
+	self.skill_trees.recon[37] = {
+		{
+			skill_name = "reload_speed_multiplier_4",
+		},
+		{
+			skill_name = "assault_rifle_damage_multiplier_2",
+		},
+		{
+			skill_name = "running_damage_reduction_3",
+		},
+	}
+	self.skill_trees.recon[38] = {
+		{
+			skill_name = "stamina_multiplier_4",
+		},
+		{
+			skill_name = "primary_ammo_capacity_increase_4",
+		},
+		{
+			skill_name = "revive_interaction_speed_multiplier_4",
+		},
+	}
+	self.skill_trees.recon[39] = {
+		{
+			skill_name = "turret_reduced_overheat_2",
+		},
+		{
+			skill_name = "sniper_damage_multiplier_3",
+		},
+		{
+			skill_name = "bullet_damage_reduction_2",
+		},
+	}
+	self.skill_trees.recon[40] = {
+		{
+			skill_name = "warcry_sharpshooter_level_increase",
+		},
+	}
 end
 
 function SkillTreeTweakData:_init_assault_skill_tree()
@@ -3765,6 +4034,263 @@ function SkillTreeTweakData:_init_assault_skill_tree()
 		},
 		{
 			skill_name = "warcry_duration_2",
+		},
+	}
+	self.skill_trees.assault[16] = {
+		{
+			skill_name = "bullet_damage_reduction_2",
+		},
+		{
+			skill_name = "crouching_damage_reduction_2",
+		},
+		{
+			skill_name = "revived_damage_reduction_2",
+		},
+	}
+	self.skill_trees.assault[17] = {
+		{
+			skill_name = "assault_rifle_damage_multiplier_1",
+		},
+		{
+			skill_name = "smg_damage_multiplier_1",
+		},
+		{
+			skill_name = "lmg_damage_multiplier_1",
+		},
+	}
+	self.skill_trees.assault[18] = {
+		{
+			skill_name = "player_critical_hit_chance_2",
+		},
+		{
+			skill_name = "melee_damage_multiplier_1",
+		},
+		{
+			skill_name = "on_hit_flinch_reduction_2",
+		},
+	}
+	self.skill_trees.assault[19] = {
+		{
+			skill_name = "revive_interaction_speed_multiplier_1",
+		},
+		{
+			skill_name = "stamina_regeneration_increase_2",
+		},
+		{
+			skill_name = "carry_penalty_decrease_2",
+		},
+	}
+	self.skill_trees.assault[20] = {
+		{
+			skill_name = "warcry_berserk_level_increase",
+		},
+	}
+	self.skill_trees.assault[21] = {
+		{
+			skill_name = "melee_damage_reduction_2",
+		},
+		{
+			skill_name = "headshot_damage_multiplier_2",
+		},
+		{
+			skill_name = "secondary_ammo_capacity_increase_2",
+		},
+	}
+	self.skill_trees.assault[22] = {
+		{
+			skill_name = "turret_reduced_overheat_3",
+		},
+		{
+			skill_name = "pick_up_health_multiplier_3",
+		},
+		{
+			skill_name = "highlight_enemy_damage_bonus_2",
+		},
+	}
+	self.skill_trees.assault[23] = {
+		{
+			skill_name = "max_health_multiplier_3",
+		},
+		{
+			skill_name = "increase_crouch_speed_2",
+		},
+		{
+			skill_name = "crouching_damage_reduction_3",
+		},
+	}
+	self.skill_trees.assault[24] = {
+		{
+			skill_name = "swap_speed_multiplier_2",
+		},
+		{
+			skill_name = "revived_damage_reduction_3",
+		},
+		{
+			skill_name = "bleedout_timer_increase_3",
+		},
+	}
+	self.skill_trees.assault[25] = {
+		{
+			skill_name = "warcry_team_heal_buff_3",
+		},
+		{
+			skill_name = "warcry_low_health_multiplier_bonus_2",
+		},
+		{
+			skill_name = "warcry_duration_3",
+		},
+	}
+	self.skill_trees.assault[26] = {
+		{
+			skill_name = "stamina_multiplier_2",
+		},
+		{
+			skill_name = "increase_run_speed_2",
+		},
+		{
+			skill_name = "running_damage_reduction_2",
+		},
+	}
+	self.skill_trees.assault[27] = {
+		{
+			skill_name = "bullet_damage_reduction_3",
+		},
+		{
+			skill_name = "assault_rifle_damage_multiplier_2",
+		},
+		{
+			skill_name = "primary_ammo_capacity_increase_2",
+		},
+	}
+	self.skill_trees.assault[28] = {
+		{
+			skill_name = "player_critical_hit_chance_3",
+		},
+		{
+			skill_name = "reload_speed_multiplier_2",
+		},
+		{
+			skill_name = "turret_reduced_overheat_4",
+		},
+	}
+	self.skill_trees.assault[29] = {
+		{
+			skill_name = "wheel_hotspot_increase_2",
+		},
+		{
+			skill_name = "stamina_regeneration_increase_3",
+		},
+		{
+			skill_name = "on_hit_flinch_reduction_3",
+		},
+	}
+	self.skill_trees.assault[30] = {
+		{
+			skill_name = "warcry_berserk_level_increase",
+		},
+	}
+	self.skill_trees.assault[31] = {
+		{
+			skill_name = "pick_up_ammo_multiplier_2",
+		},
+		{
+			skill_name = "wheel_rotation_speed_increase_2",
+		},
+		{
+			skill_name = "melee_damage_multiplier_2",
+		},
+	}
+	self.skill_trees.assault[32] = {
+		{
+			skill_name = "max_health_multiplier_4",
+		},
+		{
+			skill_name = "smg_damage_multiplier_2",
+		},
+		{
+			skill_name = "grenade_quantity_1",
+		},
+	}
+	self.skill_trees.assault[33] = {
+		{
+			skill_name = "general_interaction_speed_multiplier_2",
+		},
+		{
+			skill_name = "pick_up_health_multiplier_4",
+		},
+		{
+			skill_name = "carry_penalty_decrease_3",
+		},
+	}
+	self.skill_trees.assault[34] = {
+		{
+			skill_name = "revive_interaction_speed_multiplier_2",
+		},
+		{
+			skill_name = "revived_damage_reduction_4",
+		},
+		{
+			skill_name = "bleedout_timer_increase_4",
+		},
+	}
+	self.skill_trees.assault[35] = {
+		{
+			skill_name = "warcry_team_heal_buff_4",
+		},
+		{
+			skill_name = "warcry_dismemberment_multiplier_bonus_2",
+		},
+		{
+			skill_name = "warcry_duration_4",
+		},
+	}
+	self.skill_trees.assault[36] = {
+		{
+			skill_name = "bullet_damage_reduction_4",
+		},
+		{
+			skill_name = "lmg_damage_multiplier_2",
+		},
+		{
+			skill_name = "ready_weapon_speed_multiplier_2",
+		},
+	}
+	self.skill_trees.assault[37] = {
+		{
+			skill_name = "melee_damage_reduction_3",
+		},
+		{
+			skill_name = "headshot_damage_multiplier_3",
+		},
+		{
+			skill_name = "on_hit_flinch_reduction_4",
+		},
+	}
+	self.skill_trees.assault[38] = {
+		{
+			skill_name = "player_critical_hit_chance_4",
+		},
+		{
+			skill_name = "assault_rifle_damage_multiplier_3",
+		},
+		{
+			skill_name = "interacting_damage_reduction_2",
+		},
+	}
+	self.skill_trees.assault[39] = {
+		{
+			skill_name = "highlight_enemy_damage_bonus_3",
+		},
+		{
+			skill_name = "increase_general_speed_2",
+		},
+		{
+			skill_name = "reload_speed_multiplier_3",
+		},
+	}
+	self.skill_trees.assault[40] = {
+		{
+			skill_name = "warcry_berserk_level_increase",
 		},
 	}
 end
@@ -3924,6 +4450,263 @@ function SkillTreeTweakData:_init_infiltrator_skill_tree()
 			skill_name = "warcry_duration_2",
 		},
 	}
+	self.skill_trees.infiltrator[16] = {
+		{
+			skill_name = "stamina_regeneration_increase_2",
+		},
+		{
+			skill_name = "on_hit_flinch_reduction_1",
+		},
+		{
+			skill_name = "revive_interaction_speed_multiplier_1",
+		},
+	}
+	self.skill_trees.infiltrator[17] = {
+		{
+			skill_name = "smg_damage_multiplier_1",
+		},
+		{
+			skill_name = "melee_damage_multiplier_1",
+		},
+		{
+			skill_name = "pistol_damage_multiplier_1",
+		},
+	}
+	self.skill_trees.infiltrator[18] = {
+		{
+			skill_name = "wheel_hotspot_increase_2",
+		},
+		{
+			skill_name = "wheel_rotation_speed_increase_2",
+		},
+		{
+			skill_name = "general_interaction_speed_multiplier_2",
+		},
+	}
+	self.skill_trees.infiltrator[19] = {
+		{
+			skill_name = "interacting_damage_reduction_2",
+		},
+		{
+			skill_name = "secondary_ammo_capacity_increase_2",
+		},
+		{
+			skill_name = "pick_up_health_multiplier_2",
+		},
+	}
+	self.skill_trees.infiltrator[20] = {
+		{
+			skill_name = "warcry_ghost_level_increase",
+		},
+	}
+	self.skill_trees.infiltrator[21] = {
+		{
+			skill_name = "bullet_damage_reduction_1",
+		},
+		{
+			skill_name = "shotgun_damage_multiplier_1",
+		},
+		{
+			skill_name = "carry_penalty_decrease_2",
+		},
+	}
+	self.skill_trees.infiltrator[22] = {
+		{
+			skill_name = "melee_damage_reduction_3",
+		},
+		{
+			skill_name = "turret_reduced_overheat_2",
+		},
+		{
+			skill_name = "highlight_enemy_damage_bonus_2",
+		},
+	}
+	self.skill_trees.infiltrator[23] = {
+		{
+			skill_name = "increase_general_speed_3",
+		},
+		{
+			skill_name = "pistol_damage_multiplier_2",
+		},
+		{
+			skill_name = "revived_damage_reduction_2",
+		},
+	}
+	self.skill_trees.infiltrator[24] = {
+		{
+			skill_name = "stamina_regeneration_increase_3",
+		},
+		{
+			skill_name = "increase_run_speed_3",
+		},
+		{
+			skill_name = "running_damage_reduction_3",
+		},
+	}
+	self.skill_trees.infiltrator[25] = {
+		{
+			skill_name = "warcry_team_movement_speed_buff_3",
+		},
+		{
+			skill_name = "warcry_short_range_multiplier_bonus_2",
+		},
+		{
+			skill_name = "warcry_duration_3",
+		},
+	}
+	self.skill_trees.infiltrator[26] = {
+		{
+			skill_name = "crouching_damage_reduction_1",
+		},
+		{
+			skill_name = "melee_damage_multiplier_2",
+		},
+		{
+			skill_name = "increase_crouch_speed_3",
+		},
+	}
+	self.skill_trees.infiltrator[27] = {
+		{
+			skill_name = "smg_damage_multiplier_2",
+		},
+		{
+			skill_name = "max_health_multiplier_2",
+		},
+		{
+			skill_name = "pick_up_ammo_multiplier_2",
+		},
+	}
+	self.skill_trees.infiltrator[28] = {
+		{
+			skill_name = "stamina_multiplier_2",
+		},
+		{
+			skill_name = "swap_speed_multiplier_3",
+		},
+		{
+			skill_name = "general_interaction_speed_multiplier_3",
+		},
+	}
+	self.skill_trees.infiltrator[29] = {
+		{
+			skill_name = "wheel_hotspot_increase_3",
+		},
+		{
+			skill_name = "secondary_ammo_capacity_increase_3",
+		},
+		{
+			skill_name = "ready_weapon_speed_multiplier_3",
+		},
+	}
+	self.skill_trees.infiltrator[30] = {
+		{
+			skill_name = "warcry_ghost_level_increase",
+		},
+	}
+	self.skill_trees.infiltrator[31] = {
+		{
+			skill_name = "reload_speed_multiplier_2",
+		},
+		{
+			skill_name = "wheel_rotation_speed_increase_3",
+		},
+		{
+			skill_name = "pick_up_health_multiplier_3",
+		},
+	}
+	self.skill_trees.infiltrator[32] = {
+		{
+			skill_name = "player_critical_hit_chance_2",
+		},
+		{
+			skill_name = "shotgun_damage_multiplier_2",
+		},
+		{
+			skill_name = "wheel_amount_decrease_1",
+		},
+	}
+	self.skill_trees.infiltrator[33] = {
+		{
+			skill_name = "stamina_regeneration_increase_4",
+		},
+		{
+			skill_name = "increase_run_speed_4",
+		},
+		{
+			skill_name = "running_damage_reduction_4",
+		},
+	}
+	self.skill_trees.infiltrator[34] = {
+		{
+			skill_name = "increase_general_speed_4",
+		},
+		{
+			skill_name = "headshot_damage_multiplier_2",
+		},
+		{
+			skill_name = "revived_damage_reduction_3",
+		},
+	}
+	self.skill_trees.infiltrator[35] = {
+		{
+			skill_name = "warcry_team_movement_speed_buff_4",
+		},
+		{
+			skill_name = "warcry_melee_multiplier_bonus_2",
+		},
+		{
+			skill_name = "warcry_duration_4",
+		},
+	}
+	self.skill_trees.infiltrator[36] = {
+		{
+			skill_name = "melee_damage_reduction_4",
+		},
+		{
+			skill_name = "melee_damage_multiplier_3",
+		},
+		{
+			skill_name = "revive_interaction_speed_multiplier_2",
+		},
+	}
+	self.skill_trees.infiltrator[37] = {
+		{
+			skill_name = "bleedout_timer_increase_2",
+		},
+		{
+			skill_name = "secondary_ammo_capacity_increase_4",
+		},
+		{
+			skill_name = "interacting_damage_reduction_3",
+		},
+	}
+	self.skill_trees.infiltrator[38] = {
+		{
+			skill_name = "crouching_damage_reduction_2",
+		},
+		{
+			skill_name = "on_hit_flinch_reduction_2",
+		},
+		{
+			skill_name = "assault_rifle_damage_multiplier_1",
+		},
+	}
+	self.skill_trees.infiltrator[39] = {
+		{
+			skill_name = "smg_damage_multiplier_3",
+		},
+		{
+			skill_name = "primary_ammo_capacity_increase_2",
+		},
+		{
+			skill_name = "bullet_damage_reduction_2",
+		},
+	}
+	self.skill_trees.infiltrator[40] = {
+		{
+			skill_name = "warcry_ghost_level_increase",
+		},
+	}
 end
 
 function SkillTreeTweakData:_init_demolitions_skill_tree()
@@ -4081,6 +4864,263 @@ function SkillTreeTweakData:_init_demolitions_skill_tree()
 			skill_name = "warcry_duration_2",
 		},
 	}
+	self.skill_trees.demolitions[16] = {
+		{
+			skill_name = "wheel_amount_decrease_1",
+		},
+		{
+			skill_name = "on_hit_flinch_reduction_1",
+		},
+		{
+			skill_name = "turret_reduced_overheat_2",
+		},
+	}
+	self.skill_trees.demolitions[17] = {
+		{
+			skill_name = "shotgun_damage_multiplier_1",
+		},
+		{
+			skill_name = "lmg_damage_multiplier_1",
+		},
+		{
+			skill_name = "assault_rifle_damage_multiplier_1",
+		},
+	}
+	self.skill_trees.demolitions[18] = {
+		{
+			skill_name = "stamina_multiplier_2",
+		},
+		{
+			skill_name = "max_health_multiplier_2",
+		},
+		{
+			skill_name = "bleedout_timer_increase_2",
+		},
+	}
+	self.skill_trees.demolitions[19] = {
+		{
+			skill_name = "pick_up_ammo_multiplier_2",
+		},
+		{
+			skill_name = "interacting_damage_reduction_2",
+		},
+		{
+			skill_name = "carry_penalty_decrease_2",
+		},
+	}
+	self.skill_trees.demolitions[20] = {
+		{
+			skill_name = "warcry_clustertruck_level_increase",
+		},
+	}
+	self.skill_trees.demolitions[21] = {
+		{
+			skill_name = "grenade_quantity_1",
+		},
+		{
+			skill_name = "headshot_damage_multiplier_2",
+		},
+		{
+			skill_name = "secondary_ammo_capacity_increase_2",
+		},
+	}
+	self.skill_trees.demolitions[22] = {
+		{
+			skill_name = "ready_weapon_speed_multiplier_2",
+		},
+		{
+			skill_name = "wheel_rotation_speed_increase_3",
+		},
+		{
+			skill_name = "turret_reduced_overheat_3",
+		},
+	}
+	self.skill_trees.demolitions[23] = {
+		{
+			skill_name = "wheel_hotspot_increase_3",
+		},
+		{
+			skill_name = "bullet_damage_reduction_2",
+		},
+		{
+			skill_name = "highlight_enemy_damage_bonus_2",
+		},
+	}
+	self.skill_trees.demolitions[24] = {
+		{
+			skill_name = "primary_ammo_capacity_increase_2",
+		},
+		{
+			skill_name = "revive_interaction_speed_multiplier_2",
+		},
+		{
+			skill_name = "general_interaction_speed_multiplier_3",
+		},
+	}
+	self.skill_trees.demolitions[25] = {
+		{
+			skill_name = "warcry_team_damage_reduction_buff_3",
+		},
+		{
+			skill_name = "warcry_explosion_multiplier_bonus_2",
+		},
+		{
+			skill_name = "warcry_duration_3",
+		},
+	}
+	self.skill_trees.demolitions[26] = {
+		{
+			skill_name = "melee_damage_reduction_2",
+		},
+		{
+			skill_name = "swap_speed_multiplier_3",
+		},
+		{
+			skill_name = "carry_penalty_decrease_3",
+		},
+	}
+	self.skill_trees.demolitions[27] = {
+		{
+			skill_name = "shotgun_damage_multiplier_2",
+		},
+		{
+			skill_name = "pick_up_health_multiplier_2",
+		},
+		{
+			skill_name = "interacting_damage_reduction_3",
+		},
+	}
+	self.skill_trees.demolitions[28] = {
+		{
+			skill_name = "pick_up_ammo_multiplier_3",
+		},
+		{
+			skill_name = "lmg_damage_multiplier_2",
+		},
+		{
+			skill_name = "increase_general_speed_2",
+		},
+	}
+	self.skill_trees.demolitions[29] = {
+		{
+			skill_name = "stamina_regeneration_increase_2",
+		},
+		{
+			skill_name = "increase_run_speed_2",
+		},
+		{
+			skill_name = "running_damage_reduction_2",
+		},
+	}
+	self.skill_trees.demolitions[30] = {
+		{
+			skill_name = "warcry_clustertruck_level_increase",
+		},
+	}
+	self.skill_trees.demolitions[31] = {
+		{
+			skill_name = "stamina_multiplier_3",
+		},
+		{
+			skill_name = "increase_crouch_speed_2",
+		},
+		{
+			skill_name = "crouching_damage_reduction_2",
+		},
+	}
+	self.skill_trees.demolitions[32] = {
+		{
+			skill_name = "revived_damage_reduction_2",
+		},
+		{
+			skill_name = "wheel_rotation_speed_increase_4",
+		},
+		{
+			skill_name = "bleedout_timer_increase_3",
+		},
+	}
+	self.skill_trees.demolitions[33] = {
+		{
+			skill_name = "wheel_hotspot_increase_4",
+		},
+		{
+			skill_name = "max_health_multiplier_3",
+		},
+		{
+			skill_name = "assault_rifle_damage_multiplier_2",
+		},
+	}
+	self.skill_trees.demolitions[34] = {
+		{
+			skill_name = "revive_interaction_speed_multiplier_3",
+		},
+		{
+			skill_name = "swap_speed_multiplier_4",
+		},
+		{
+			skill_name = "general_interaction_speed_multiplier_4",
+		},
+	}
+	self.skill_trees.demolitions[35] = {
+		{
+			skill_name = "warcry_team_damage_reduction_buff_4",
+		},
+		{
+			skill_name = "warcry_killstreak_multiplier_bonus_2",
+		},
+		{
+			skill_name = "warcry_duration_4",
+		},
+	}
+	self.skill_trees.demolitions[36] = {
+		{
+			skill_name = "grenade_quantity_2",
+		},
+		{
+			skill_name = "bullet_damage_reduction_3",
+		},
+		{
+			skill_name = "reload_speed_multiplier_2",
+		},
+	}
+	self.skill_trees.demolitions[37] = {
+		{
+			skill_name = "on_hit_flinch_reduction_2",
+		},
+		{
+			skill_name = "interacting_damage_reduction_4",
+		},
+		{
+			skill_name = "carry_penalty_decrease_4",
+		},
+	}
+	self.skill_trees.demolitions[38] = {
+		{
+			skill_name = "shotgun_damage_multiplier_3",
+		},
+		{
+			skill_name = "pick_up_ammo_multiplier_4",
+		},
+		{
+			skill_name = "player_critical_hit_chance_2",
+		},
+	}
+	self.skill_trees.demolitions[39] = {
+		{
+			skill_name = "primary_ammo_capacity_increase_3",
+		},
+		{
+			skill_name = "lmg_damage_multiplier_3",
+		},
+		{
+			skill_name = "wheel_amount_decrease_2",
+		},
+	}
+	self.skill_trees.demolitions[40] = {
+		{
+			skill_name = "warcry_clustertruck_level_increase",
+		},
+	}
 end
 
 function SkillTreeTweakData:get_weapon_unlock_levels()
@@ -4138,6 +5178,7 @@ function SkillTreeTweakData:_init_recon_unlock_progression()
 	self.automatic_unlock_progressions.recon[13] = {
 		weapons = {
 			"weapon_unlock_garand",
+			"weapon_unlock_garand_golden",
 		},
 	}
 	self.automatic_unlock_progressions.recon[15] = {
@@ -4146,6 +5187,44 @@ function SkillTreeTweakData:_init_recon_unlock_progression()
 		},
 		weapons = {
 			"weapon_unlock_thompson",
+		},
+	}
+	self.automatic_unlock_progressions.recon[18] = {
+		weapons = {
+			"weapon_unlock_webley",
+		},
+	}
+	self.automatic_unlock_progressions.recon[23] = {
+		weapons = {
+			"weapon_unlock_mosin",
+		},
+	}
+	self.automatic_unlock_progressions.recon[25] = {
+		unlocks = {
+			"weapon_tier_unlocked_3",
+		},
+		weapons = {
+			"weapon_unlock_mp38",
+		},
+	}
+	self.automatic_unlock_progressions.recon[30] = {
+		weapons = {
+			"weapon_unlock_m1911",
+		},
+	}
+	self.automatic_unlock_progressions.recon[35] = {
+		unlocks = {
+			"recon_tier_4_unlocked",
+		},
+	}
+	self.automatic_unlock_progressions.recon[38] = {
+		weapons = {
+			"weapon_unlock_sterling",
+		},
+	}
+	self.automatic_unlock_progressions.recon[40] = {
+		weapons = {
+			"weapon_unlock_mp44",
 		},
 	}
 	self.default_weapons.recon = {}
@@ -4170,6 +5249,7 @@ function SkillTreeTweakData:_init_assault_unlock_progression()
 	self.automatic_unlock_progressions.assault[10] = {
 		weapons = {
 			"weapon_unlock_garand",
+			"weapon_unlock_garand_golden",
 		},
 	}
 	self.automatic_unlock_progressions.assault[13] = {
@@ -4180,6 +5260,46 @@ function SkillTreeTweakData:_init_assault_unlock_progression()
 	self.automatic_unlock_progressions.assault[15] = {
 		unlocks = {
 			"weapon_tier_unlocked_2",
+		},
+	}
+	self.automatic_unlock_progressions.assault[18] = {
+		weapons = {
+			"weapon_unlock_webley",
+		},
+	}
+	self.automatic_unlock_progressions.assault[25] = {
+		unlocks = {
+			"weapon_tier_unlocked_3",
+		},
+	}
+	self.automatic_unlock_progressions.assault[28] = {
+		weapons = {
+			"weapon_unlock_mp38",
+		},
+	}
+	self.automatic_unlock_progressions.assault[30] = {
+		weapons = {
+			"weapon_unlock_m1911",
+		},
+	}
+	self.automatic_unlock_progressions.assault[33] = {
+		weapons = {
+			"weapon_unlock_mp44",
+		},
+	}
+	self.automatic_unlock_progressions.assault[35] = {
+		unlocks = {
+			"assault_tier_4_unlocked",
+		},
+	}
+	self.automatic_unlock_progressions.assault[38] = {
+		weapons = {
+			"weapon_unlock_mg42",
+		},
+	}
+	self.automatic_unlock_progressions.assault[40] = {
+		weapons = {
+			"weapon_unlock_sterling",
 		},
 	}
 	self.default_weapons.assault = {}
@@ -4212,6 +5332,17 @@ function SkillTreeTweakData:_init_infiltrator_unlock_progression()
 		},
 		weapons = {
 			"weapon_unlock_garand",
+			"weapon_unlock_garand_golden",
+		},
+	}
+	self.automatic_unlock_progressions.infiltrator[18] = {
+		weapons = {
+			"weapon_unlock_webley",
+		},
+	}
+	self.automatic_unlock_progressions.infiltrator[23] = {
+		weapons = {
+			"weapon_unlock_mp38",
 		},
 	}
 	self.automatic_unlock_progressions.infiltrator[25] = {
@@ -4219,9 +5350,24 @@ function SkillTreeTweakData:_init_infiltrator_unlock_progression()
 			"weapon_tier_unlocked_3",
 		},
 	}
+	self.automatic_unlock_progressions.infiltrator[30] = {
+		weapons = {
+			"weapon_unlock_m1911",
+		},
+	}
+	self.automatic_unlock_progressions.infiltrator[33] = {
+		weapons = {
+			"weapon_unlock_sterling",
+		},
+	}
 	self.automatic_unlock_progressions.infiltrator[35] = {
 		unlocks = {
 			"infiltrator_tier_4_unlocked",
+		},
+	}
+	self.automatic_unlock_progressions.infiltrator[38] = {
+		weapons = {
+			"weapon_unlock_mp44",
 		},
 	}
 	self.default_weapons.infiltrator = {}
@@ -4249,6 +5395,12 @@ function SkillTreeTweakData:_init_demolitions_unlock_progression()
 		},
 		weapons = {
 			"weapon_unlock_garand",
+			"weapon_unlock_garand_golden",
+		},
+	}
+	self.automatic_unlock_progressions.demolitions[18] = {
+		weapons = {
+			"weapon_unlock_webley",
 		},
 	}
 	self.automatic_unlock_progressions.demolitions[25] = {
@@ -4256,9 +5408,24 @@ function SkillTreeTweakData:_init_demolitions_unlock_progression()
 			"weapon_tier_unlocked_3",
 		},
 	}
+	self.automatic_unlock_progressions.demolitions[30] = {
+		weapons = {
+			"weapon_unlock_m1911",
+		},
+	}
 	self.automatic_unlock_progressions.demolitions[35] = {
 		unlocks = {
 			"demolitions_tier_4_unlocked",
+		},
+	}
+	self.automatic_unlock_progressions.demolitions[38] = {
+		weapons = {
+			"weapon_unlock_mp44",
+		},
+	}
+	self.automatic_unlock_progressions.demolitions[40] = {
+		weapons = {
+			"weapon_unlock_mg42",
 		},
 	}
 	self.default_weapons.demolitions = {}

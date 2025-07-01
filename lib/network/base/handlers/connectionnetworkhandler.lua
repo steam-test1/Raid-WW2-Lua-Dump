@@ -701,7 +701,7 @@ function ConnectionNetworkHandler:sync_explosion_results(count_cops, count_gangs
 			weapon_unit = weapon_unit,
 		})
 
-		for i = 1, enemies_hit do
+		if enemies_hit > 0 then
 			managers.statistics:shot_fired({
 				hit = true,
 				skip_bullet_count = true,
@@ -730,7 +730,7 @@ function ConnectionNetworkHandler:sync_fire_results(count_cops, count_gangsters,
 			weapon_unit = weapon_unit,
 		})
 
-		for i = 1, enemies_hit do
+		if enemies_hit > 0 then
 			managers.statistics:shot_fired({
 				hit = true,
 				skip_bullet_count = true,
@@ -809,22 +809,6 @@ function ConnectionNetworkHandler:send_loaded_packages(package, count, sender)
 	})
 end
 
-function ConnectionNetworkHandler:call_airdrop(unit, sender)
-	if not self._verify_sender(sender) then
-		return
-	end
-
-	managers.airdrop:call_drop(unit)
-end
-
-function ConnectionNetworkHandler:airdrop_spawn_unit_in_pod(unit, position, yaw, pitch, roll, sender)
-	if not self._verify_sender(sender) then
-		return
-	end
-
-	managers.airdrop:spawn_unit_inside_pod(unit, position, yaw, pitch, roll)
-end
-
 function ConnectionNetworkHandler:spawn_loot(tweak_table, position, yaw, pitch, roll, sender)
 	if not self._verify_sender(sender) then
 		return
@@ -855,14 +839,6 @@ function ConnectionNetworkHandler:sync_phase_two_execute_action(action, peer_id)
 	if managers.menu_component._raid_challenge_cards_gui then
 		managers.menu_component._raid_challenge_cards_gui:sync_phase_two_execute_action(action, peer_id)
 	end
-end
-
-function ConnectionNetworkHandler:players_reporting_inventory(peer_id, result)
-	managers.challenge_cards:players_reporting_inventory(peer_id, result)
-end
-
-function ConnectionNetworkHandler:all_players_inventory_resolution(result)
-	managers.challenge_cards:all_players_inventory_resolution(result)
 end
 
 function ConnectionNetworkHandler:select_challenge_card(peer_id)
@@ -945,6 +921,14 @@ function ConnectionNetworkHandler:sync_picked_up_loot_values(picked_up_current_l
 
 	managers.lootdrop:set_picked_up_current_leg(picked_up_current_leg)
 	managers.lootdrop:set_picked_up_total(picked_up_total)
+	managers.notification:add_notification({
+		duration = 2,
+		id = "hud_hint_grabbed_nazi_gold",
+		shelf_life = 5,
+		acquired = picked_up_current_leg,
+		notification_type = HUDNotification.DOG_TAG,
+		total = picked_up_total,
+	})
 end
 
 function ConnectionNetworkHandler:sync_spawned_loot_values(spawned_current_leg, spawned_total, sender)
@@ -985,6 +969,14 @@ function ConnectionNetworkHandler:sync_current_event_index(current_event_index, 
 	end
 
 	managers.raid_job:sync_current_event_index(current_event_index)
+end
+
+function ConnectionNetworkHandler:sync_complete_job(sender)
+	if not self._verify_sender(sender) then
+		return
+	end
+
+	managers.raid_job:complete_job()
 end
 
 function ConnectionNetworkHandler:sync_event_loot_data(loot_acquired, loot_spawned, sender)
@@ -1129,12 +1121,10 @@ function ConnectionNetworkHandler:sync_warcry_meter_fill_percentage(fill_percent
 
 	local character_data = managers.criminals:character_data_by_peer_id(sender_peer:id())
 
-	if character_data then
-		managers.hud:set_teammate_warcry_meter_fill(character_data.panel_id, {
-			total = 100,
-			current = fill_percentage,
-		})
-	end
+	managers.hud:set_teammate_warcry_meter_fill(character_data.panel_id, {
+		total = 100,
+		current = fill_percentage,
+	})
 end
 
 function ConnectionNetworkHandler:sync_warcry_meter_glow(value, sender)
@@ -1254,6 +1244,16 @@ function ConnectionNetworkHandler:sync_spotter_spawn_flare(flare, pos, rot, forw
 	managers.barrage:sync_spotter_spawn_flare(flare, pos, rot, forward, v)
 end
 
+function ConnectionNetworkHandler:sync_spotter_flare_disabled(unit, sender)
+	local sender_peer = self._verify_sender(sender)
+
+	if not sender_peer then
+		return
+	end
+
+	unit:damage():run_sequence_simple("state_interaction_disabled")
+end
+
 function ConnectionNetworkHandler:sync_randomize_operation(operation_id, string_delimited, sender)
 	local sender_peer = self._verify_sender(sender)
 
@@ -1330,4 +1330,18 @@ function ConnectionNetworkHandler:reset_document_spawn_chance_modifier(sender)
 	end
 
 	managers.consumable_missions:reset_document_spawn_modifier()
+end
+
+function ConnectionNetworkHandler:sync_warcry_team_buff(upgrade_id, identifier, acquired, sender)
+	if not self._verify_sender(sender) or not self._verify_gamestate(self._gamestate_filter.any_ingame_playing) then
+		return
+	end
+
+	identifier = identifier or "buff_" .. tostring(upgrade_id)
+
+	if acquired then
+		managers.upgrades:aquire(upgrade_id, nil, identifier)
+	else
+		managers.upgrades:unaquire(upgrade_id, identifier)
+	end
 end

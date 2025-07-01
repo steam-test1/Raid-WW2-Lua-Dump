@@ -4,6 +4,7 @@ RaidGUIControlSlider.DEFAULT_HEIGHT = 32
 RaidGUIControlSlider.TEXT_PADDING = 16
 RaidGUIControlSlider.TEXT_COLOR = tweak_data.gui.colors.raid_grey
 RaidGUIControlSlider.TEXT_HIGHLIGHT_COLOR = tweak_data.gui.colors.raid_white
+RaidGUIControlSlider.DISABLED_COLOR = tweak_data.gui.colors.raid_dark_grey
 RaidGUIControlSlider.SIDELINE_COLOR = tweak_data.gui.colors.raid_red
 RaidGUIControlSlider.SIDELINE_W = 3
 RaidGUIControlSlider.VALUE_LABEL_W = 64
@@ -33,6 +34,28 @@ end
 function RaidGUIControlSlider:set_selected(value)
 	RaidGUIControlSlider.super.set_selected(self, value)
 	self._slider:set_selected(value)
+end
+
+function RaidGUIControlSlider:set_enabled(enabled)
+	RaidGUIControlSlider.super.set_enabled(self, enabled)
+	self._slider:set_enabled(enabled)
+	self._slider:set_enabled(enabled)
+
+	if enabled then
+		if self._highlighted then
+			self._description:set_color(RaidGUIControlSlider.TEXT_HIGHLIGHT_COLOR)
+			self._value_label:set_color(RaidGUIControlSlider.TEXT_HIGHLIGHT_COLOR)
+			self._sideline:set_alpha(1)
+		else
+			self._description:set_color(RaidGUIControlSlider.TEXT_COLOR)
+			self._value_label:set_color(RaidGUIControlSlider.TEXT_COLOR)
+			self._sideline:set_alpha(0)
+		end
+	else
+		self._description:set_color(RaidGUIControlSlider.DISABLED_COLOR)
+		self._value_label:set_color(RaidGUIControlSlider.DISABLED_COLOR)
+		self._sideline:set_alpha(0)
+	end
 end
 
 function RaidGUIControlSlider:_create_slider_panel()
@@ -129,11 +152,23 @@ function RaidGUIControlSlider:_on_value_changed()
 end
 
 function RaidGUIControlSlider:highlight_on()
+	if not self._enabled then
+		return
+	end
+
+	self._highlighted = true
+
 	self._object:stop()
 	self._object:animate(callback(self, self, "_animate_highlight_on"))
 end
 
 function RaidGUIControlSlider:highlight_off()
+	if not self._enabled then
+		return
+	end
+
+	self._highlighted = false
+
 	self._object:stop()
 	self._object:animate(callback(self, self, "_animate_highlight_off"))
 end

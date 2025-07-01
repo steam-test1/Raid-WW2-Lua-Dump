@@ -145,6 +145,7 @@ function GenericUserManager:setup_setting_map()
 	self:setup_setting(61, "camera_zoom_sensitivity_x", 1)
 	self:setup_setting(62, "camera_zoom_sensitivity_y", 1)
 	self:setup_setting(63, "sticky_aim", true)
+	self:setup_setting(64, "use_camera_accel", true)
 end
 
 function GenericUserManager:setup_setting(id, name, default_value)
@@ -219,6 +220,7 @@ function GenericUserManager:reset_video_setting_map()
 		"brightness",
 		"effect_quality",
 		"use_headbob",
+		"use_camera_accel",
 	}
 
 	for _, name in pairs(settings) do

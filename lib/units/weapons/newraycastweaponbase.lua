@@ -1247,13 +1247,17 @@ function NewRaycastWeaponBase:_convert_add_to_mul(value)
 end
 
 function NewRaycastWeaponBase:_get_spread(user_unit)
+	if user_unit == managers.player:player_unit() and managers.player:upgrade_value("player", "warcry_nullify_spread", false) == true then
+		return 0
+	end
+
 	local current_state = user_unit:movement()._current_state
-	local spread = self._spread
-	local spread_multiplier = self:spread_multiplier(current_state)
+	local spread_stat = current_state and current_state._moving and self._spread_moving or self._spread
 	local spread_addend = self:spread_addend(current_state)
+	local spread_multiplier = self:spread_multiplier(current_state)
 	local spread_firing = self._spread_firing or 0
 
-	return math.max((spread + spread_addend) * spread_multiplier + spread_firing, 0)
+	return math.max(0, (spread_stat + spread_addend) * spread_multiplier + spread_firing)
 end
 
 function NewRaycastWeaponBase:fire_rate_multiplier()

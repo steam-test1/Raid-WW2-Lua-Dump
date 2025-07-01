@@ -1,8 +1,7 @@
 RaidExperienceManager = RaidExperienceManager or class()
-RaidExperienceManager.LEVEL_CAP = Application:digest_value(15, true)
+RaidExperienceManager.LEVEL_CAP = Application:digest_value(40, true)
 RaidExperienceManager.THOUSAND_SEPARATOR = "."
 RaidExperienceManager.SCRIPT_XP_EVENT_STEALTH = "stealth_bonus"
-RaidExperienceManager.VERSION = 2
 
 function RaidExperienceManager:init()
 	self:_setup()
@@ -121,6 +120,14 @@ function RaidExperienceManager:clear_loot_redeemed_xp()
 	self._loot_redeemed_xp = nil
 end
 
+function RaidExperienceManager:set_loot_bonus_xp(amount)
+	self._loot_bonus_xp = amount
+end
+
+function RaidExperienceManager:clear_loot_bonus_xp()
+	self._loot_bonus_xp = nil
+end
+
 function RaidExperienceManager:calculate_exp_brakedown(mission_id, operation_id, success)
 	local exp_table = {
 		additive = {},
@@ -132,7 +139,7 @@ function RaidExperienceManager:calculate_exp_brakedown(mission_id, operation_id,
 	event_additive.id = "xp_additive_event"
 
 	if operation_id then
-		if table.index_of(managers.raid_job:current_job().events_index, mission_id) == #managers.raid_job:current_job().events_index then
+		if table.index_of(game_state_machine:current_state():job_data().events_index, mission_id) == #game_state_machine:current_state():job_data().events_index then
 			local operation_additive = {}
 
 			operation_additive.id = "xp_additive_operation"
@@ -148,10 +155,20 @@ function RaidExperienceManager:calculate_exp_brakedown(mission_id, operation_id,
 
 	table.insert(exp_table.additive, event_additive)
 
+	if self._loot_bonus_xp then
+		local bonus_xp_additive = {}
+
+		bonus_xp_additive.id = "menu_loot_screen_bonus_xp_points"
+		bonus_xp_additive.amount = self._loot_bonus_xp
+
+		table.insert(exp_table.additive, bonus_xp_additive)
+		self:clear_loot_bonus_xp()
+	end
+
 	local card_additive = {}
 
 	card_additive.id = "xp_additive_card"
-	card_additive.amount = managers.challenge_cards:get_victory_xp_amount()
+	card_additive.amount = game_state_machine:current_state():card_bonus_xp()
 
 	table.insert(exp_table.additive, card_additive)
 
@@ -185,7 +202,7 @@ function RaidExperienceManager:calculate_exp_brakedown(mission_id, operation_id,
 	local card_multiplicative = {}
 
 	card_multiplicative.id = "xp_multiplicative_card"
-	card_multiplicative.amount = managers.challenge_cards:get_victory_xp_multiplier() - 1
+	card_multiplicative.amount = game_state_machine:current_state():card_xp_multiplier() - 1
 
 	table.insert(exp_table.multiplicative, card_multiplicative)
 
@@ -286,6 +303,10 @@ function RaidExperienceManager:_level_up()
 		player:base():replenish()
 	end
 
+	if managers.progression:operations_state() == ProgressionManager.OPERATIONS_STATE_LOCKED and self:current_level() >= tweak_data.operations.progression.operations_unlock_level then
+		managers.progression:set_operations_state(ProgressionManager.OPERATIONS_STATE_PENDING)
+	end
+
 	managers.skilltree:apply_automatic_unlocks_for_level(self:current_level())
 	managers.skilltree:create_breadcrumbs_for_level(self:current_level())
 	self:_check_achievements()
@@ -384,7 +405,6 @@ function RaidExperienceManager:save(data)
 		level = self._global.level,
 		next_level_data = self._global.next_level_data,
 		total = self._global.total,
-		version = RaidExperienceManager.VERSION,
 		xp_gained = self._global.xp_gained,
 	}
 
@@ -397,18 +417,7 @@ function RaidExperienceManager:load(data)
 	local state = data.RaidExperienceManager
 
 	if state then
-		if not state.version or state.version and state.version ~= RaidExperienceManager.VERSION then
-			self._global.version = RaidExperienceManager.VERSION
-
-			local total_xp = Application:digest_value(state.total, false)
-
-			total_xp = math.clamp(total_xp, 0, self:get_total_xp_for_level(10))
-			self._global.total = Application:digest_value(total_xp, true)
-		else
-			self._global.version = state.version
-			self._global.total = state.total
-		end
-
+		self._global.total = state.total
 		self._global.xp_gained = state.xp_gained or state.total
 		self._global.next_level_data = state.next_level_data
 		self._global.level = state.level or Application:digest_value(1, true)

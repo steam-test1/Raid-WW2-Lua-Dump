@@ -2,32 +2,19 @@ CopLogicArrest = class(CopLogicBase)
 CopLogicArrest.ARREST_RANGE = 2000
 
 function CopLogicArrest.enter(data, new_logic_name, enter_params)
-	CopLogicBase.enter(data, new_logic_name, enter_params)
-	data.unit:brain():cancel_all_pathing_searches()
-
-	local old_internal_data = data.internal_data
 	local my_data = {
 		unit = data.unit,
 	}
+
+	CopLogicBase.enter(data, new_logic_name, enter_params, my_data)
+	data.unit:brain():cancel_all_pathing_searches()
+
+	local old_internal_data = data.internal_data
 
 	data.internal_data = my_data
 	my_data.detection = data.char_tweak.detection.guard
 	my_data.vision = data.char_tweak.vision.combat
 	my_data.arrest_targets = {}
-
-	if old_internal_data then
-		if old_internal_data.best_cover then
-			my_data.best_cover = old_internal_data.best_cover
-
-			managers.navigation:reserve_cover(my_data.best_cover[1], data.pos_rsrv_id)
-		end
-
-		if old_internal_data.nearest_cover then
-			my_data.nearest_cover = old_internal_data.nearest_cover
-
-			managers.navigation:reserve_cover(my_data.nearest_cover[1], data.pos_rsrv_id)
-		end
-	end
 
 	local key_str = tostring(data.key)
 
@@ -75,14 +62,6 @@ function CopLogicArrest.exit(data, new_logic_name, enter_params)
 	data.unit:brain():cancel_all_pathing_searches()
 	CopLogicBase.cancel_queued_tasks(my_data)
 	CopLogicBase.cancel_delayed_clbks(my_data)
-
-	if my_data.best_cover then
-		managers.navigation:release_cover(my_data.best_cover[1])
-	end
-
-	if my_data.nearest_cover then
-		managers.navigation:release_cover(my_data.nearest_cover[1])
-	end
 
 	for u_key, enemy_arrest_data in pairs(my_data.arrest_targets) do
 		managers.groupai:state():on_arrest_end(data.key, u_key)

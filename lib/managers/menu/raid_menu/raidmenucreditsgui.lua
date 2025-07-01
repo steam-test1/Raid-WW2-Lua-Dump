@@ -6,11 +6,7 @@ RaidMenuCreditsGui.INTRO_VIDEO = "movies/vanilla/credits/05_credits_v003"
 function RaidMenuCreditsGui:init(ws, fullscreen_ws, node, component_name)
 	managers.music:stop()
 	RaidMenuOptionsControls.super.init(self, ws, fullscreen_ws, node, component_name)
-
-	if RaidMenuCreditsGui.INTRO_VIDEO then
-		self._node.components.raid_menu_header:set_screen_name("menu_credits")
-	end
-
+	self._node.components.raid_menu_header:set_screen_name("menu_credits")
 	self._node.components.raid_menu_footer:hide_name_and_gold_panel()
 
 	self._controller_list = {}
@@ -24,13 +20,7 @@ function RaidMenuCreditsGui:init(ws, fullscreen_ws, node, component_name)
 	end
 
 	self:_build_credits_panel(node._parameters.credits_file)
-
-	if RaidMenuCreditsGui.INTRO_VIDEO then
-		self:_show_intro_video()
-	else
-		self:_skip_video()
-	end
-
+	self:_show_intro_video()
 	self:bind_controller_inputs()
 	managers.controller:add_hotswap_callback("event_complete_state", callback(self, self, "on_controller_hotswap"))
 end
@@ -48,7 +38,7 @@ function RaidMenuCreditsGui:_build_credits_panel(file)
 		files[Idstring("english"):key()] = "_uk"
 	end
 
-	file = RaidMenuCreditsGui.FILE or (file == "eula" or file == "trial") and files[lang_key] and file .. files[lang_key] or file
+	file = (file == "eula" or file == "trial") and files[lang_key] and file .. files[lang_key] or file
 
 	local list = PackageManager:script_data(self.FILE_EXTENSION:id(), (self.PATH .. file):id())
 	local ypos = 0

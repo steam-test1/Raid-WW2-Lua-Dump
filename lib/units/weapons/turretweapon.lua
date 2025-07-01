@@ -70,6 +70,7 @@ function TurretWeapon:init(unit)
 	self._mode = nil
 	self._puppet_unit = nil
 	self._puppet_stance = tweak_data.weapon[self.name_id].puppet_stance or "sitting"
+	self._player_on = false
 	self._turret_info = {}
 	self._alert_events = {}
 	self._alert_size = 100000
@@ -214,9 +215,15 @@ function TurretWeapon:deactivate_sentry()
 	self._unit:movement():set_active(false)
 end
 
-function TurretWeapon:set_mountable()
-	Application:debug("[TurretWeapon:set_mountable()]")
+function TurretWeapon:player_on()
+	return self._player_on
+end
 
+function TurretWeapon:set_player_on(is_on)
+	self._player_on = is_on
+end
+
+function TurretWeapon:set_mountable()
 	if self._administered_unit_data then
 		return
 	end
@@ -690,7 +697,7 @@ function TurretWeapon:fire(blanks, expend_ammo, shoot_player, target_unit, damag
 	local fire_locator = self:_get_fire_locator()
 	local from_pos = fire_locator:position()
 	local fire_direction_fp = fire_locator:rotation():y()
-	local fire_direction_tp = not self._puppet_unit and self._player_rotation and self._player_rotation:y()
+	local fire_direction_tp = not self._puppet_unit and self._joint_pitch and self._joint_pitch:rotation():y()
 
 	if fire_direction_tp then
 		mvector3.negate(fire_direction_tp)
@@ -1042,6 +1049,7 @@ function TurretWeapon:save(save_data)
 	save_data.weapon = my_save_data
 	my_save_data.foe_teams = self._foe_teams
 	my_save_data.alert = self._alert_events and true or nil
+	my_save_data.player_on = self._player_on
 
 	if self._puppet_unit then
 		local peer = managers.network:session():dropin_peer()
@@ -1055,6 +1063,7 @@ function TurretWeapon:load(save_data)
 
 	self._foe_teams = my_save_data.foe_teams
 	self._auto_reload = my_save_data.auto_reload
+	self._player_on = my_save_data.player_on
 	self._setup = {
 		ignore_units = {
 			self._unit,
@@ -1322,6 +1331,8 @@ function TurretWeapon:enable_automatic_SO(enabled)
 end
 
 function TurretWeapon:on_player_enter()
+	self._player_on = true
+
 	if Network:is_server() then
 		if self._unit:damage() and self._unit:damage():has_sequence("turret_is_occupied") then
 			self._unit:damage():run_sequence_simple("turret_is_occupied")
@@ -1330,6 +1341,8 @@ function TurretWeapon:on_player_enter()
 		if self._unit:damage() and self._unit:damage():has_sequence("interact") then
 			self._unit:damage():run_sequence_simple("interact")
 		end
+
+		managers.network:session():send_to_peers_synched("sync_player_on", self._unit, self._player_on)
 	else
 		managers.network:session():send_to_host("sync_ground_turret_activate_triggers", self._unit)
 	end
@@ -1338,7 +1351,7 @@ function TurretWeapon:on_player_enter()
 
 	self._unit:movement():set_team(team)
 
-	if not self._lock_fire then
+	if not self._lock_fire and managers.player:get_turret_unit() == self._unit then
 		managers.hud:player_turret_flak_insert()
 	end
 
@@ -1346,6 +1359,8 @@ function TurretWeapon:on_player_enter()
 end
 
 function TurretWeapon:on_player_exit()
+	self._player_on = false
+
 	if self._shooting then
 		self:_sound_autofire_end()
 	end
@@ -1354,6 +1369,8 @@ function TurretWeapon:on_player_exit()
 		if self._unit:damage() and self._unit:damage():has_sequence("player_exit") then
 			self._unit:damage():run_sequence_simple("player_exit")
 		end
+
+		managers.network:session():send_to_peers_synched("sync_player_on", self._unit, self._player_on)
 	else
 		managers.network:session():send_to_host("sync_ground_turret_exit_triggers", self._unit)
 	end
@@ -1369,12 +1386,20 @@ function TurretWeapon:sync_activate_triggers()
 	if self._unit:damage() and self._unit:damage():has_sequence("interact") then
 		self._unit:damage():run_sequence_simple("interact")
 	end
+
+	self._player_on = true
+
+	managers.network:session():send_to_peers_synched("sync_player_on", self._unit, self._player_on)
 end
 
 function TurretWeapon:sync_exit_triggers()
 	if self._unit:damage() and self._unit:damage():has_sequence("player_exit") then
 		self._unit:damage():run_sequence_simple("player_exit")
 	end
+
+	self._player_on = false
+
+	managers.network:session():send_to_peers_synched("sync_player_on", self._unit, self._player_on)
 end
 
 function TurretWeapon:_cancel_active_SO()
@@ -1394,6 +1419,8 @@ function TurretWeapon:_cancel_active_SO()
 			managers.network:session():send_to_host("sync_ground_turret_cancel_SO", self._unit)
 		end
 	end
+
+	self:remove_administered_SO()
 end
 
 function TurretWeapon:on_puppet_damaged(data, damage_info)
@@ -1569,9 +1596,13 @@ end
 function TurretWeapon:lock_fire(lock)
 	self._lock_fire = lock
 
-	if not self._lock_fire then
+	if not self._lock_fire and managers.player:get_turret_unit() == self._unit then
 		managers.hud:player_turret_flak_insert()
 	end
+end
+
+function TurretWeapon:locked_fire()
+	return self._lock_fire
 end
 
 function TurretWeapon:weapon_unlocked()

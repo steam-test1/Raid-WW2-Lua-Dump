@@ -7,6 +7,7 @@ GlobalStateManager.EVENT_PRE_START_RAID = "system_pre_start_raid"
 GlobalStateManager.EVENT_START_RAID = "system_start_raid"
 GlobalStateManager.EVENT_END_RAID = "system_end_raid"
 GlobalStateManager.EVENT_END_TUTORIAL = "system_end_tutorial"
+GlobalStateManager.EVENT_RESTART_CAMP = "system_restart_camp"
 GlobalStateManager.EVENT_CHARACTER_CREATED = "system_character_created"
 GlobalStateManager.TYPE_BOOL = "bool"
 GlobalStateManager.TYPE_VALUE = "value"
@@ -40,7 +41,10 @@ function GlobalStateManager:init()
 	}, callback(managers.warcry, managers.warcry, "on_mission_end_callback"))
 	self:add_listener("TAI_END_MISSION", {
 		GlobalStateManager.EVENT_END_RAID,
-	}, callback(managers.criminals, managers.criminals, "set_teamAI_to_true"))
+	}, callback(managers.criminals, managers.criminals, "on_mission_end_callback"))
+	self:add_listener("TAI_START_MISSION", {
+		GlobalStateManager.EVENT_START_RAID,
+	}, callback(managers.criminals, managers.criminals, "on_mission_start_callback"))
 end
 
 function GlobalStateManager:add_listener(key, events, clbk)
@@ -166,26 +170,30 @@ function GlobalStateManager:fire_event(flag_name)
 		managers.raid_menu:set_pause_menu_enabled(false)
 	end
 
-	if (GlobalStateManager.EVENT_START_RAID == flag_name or GlobalStateManager.EVENT_END_RAID == flag_name) and not managers.network:session():chk_all_peers_spawned(true) then
-		Application:debug("[GlobalStateManager:fire_event] Reschedule level start!")
-		managers.queued_tasks:queue(nil, managers.global_state.fire_event, managers.global_state, flag_name, 1, nil)
+	if GlobalStateManager.EVENT_START_RAID == flag_name or GlobalStateManager.EVENT_END_RAID == flag_name then
+		if not managers.network:session():chk_all_peers_spawned(true) then
+			Application:debug("[GlobalStateManager:fire_event] Reschedule level start!")
+			managers.queued_tasks:queue(nil, managers.global_state.fire_event, managers.global_state, flag_name, 1, nil)
 
-		self._fire_event_delay = true
+			self._fire_event_delay = true
 
-		local t = Application:time()
+			local t = Application:time()
 
-		if not self._next_hint_t or t > self._next_hint_t then
-			self._next_hint_t = t + 6
+			if not self._next_hint_t or t > self._next_hint_t then
+				self._next_hint_t = t + 6
 
-			managers.notification:add_notification({
-				duration = 2,
-				id = "hud_waiting_for_player_dropin",
-				shelf_life = 5,
-				text = managers.localization:text("hud_waiting_for_player_dropin"),
-			})
+				managers.notification:add_notification({
+					duration = 2,
+					id = "hud_waiting_for_player_dropin",
+					shelf_life = 5,
+					text = managers.localization:text("hud_waiting_for_player_dropin"),
+				})
+			end
+
+			return
+		elseif managers.vote:is_restarting() then
+			return
 		end
-
-		return
 	end
 
 	if self._fire_event_delay then

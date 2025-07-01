@@ -201,23 +201,27 @@ function BaseInteractionExt:can_select(player)
 end
 
 function BaseInteractionExt:selected(player)
-	if not self:can_select(player) then
+	local can_select, block_text = self:can_select(player)
+
+	if not can_select then
 		return
 	end
 
 	self._is_selected = true
 
-	self:_show_interaction_text()
+	if block_text ~= false then
+		self:_show_interaction_text()
+	end
 
 	return true
 end
 
-function BaseInteractionExt:_show_interaction_text()
+function BaseInteractionExt:_show_interaction_text(custom_text_id)
 	local string_macros = {}
 
 	self:_add_string_macros(string_macros)
 
-	local text_id = self._tweak_data.text_id or alive(self._unit) and self._unit:base().interaction_text_id and self._unit:base():interaction_text_id()
+	local text_id = custom_text_id or self._tweak_data.text_id or alive(self._unit) and self._unit:base().interaction_text_id and self._unit:base():interaction_text_id()
 	local text = managers.localization:text(text_id, string_macros)
 	local icon = self._tweak_data.icon
 
@@ -335,6 +339,15 @@ function BaseInteractionExt:_interact_say(data)
 end
 
 function BaseInteractionExt:interact_start(player, locator)
+	local function show_hint(hint_id)
+		managers.notification:add_notification({
+			duration = 2,
+			shelf_life = 5,
+			id = hint_id,
+			text = managers.localization:text(hint_id),
+		})
+	end
+
 	local blocked, skip_hint, custom_hint = self:_interact_blocked(player)
 
 	if blocked then
@@ -347,6 +360,10 @@ function BaseInteractionExt:interact_start(player, locator)
 					skip_idle_check = true,
 					instigator = managers.player:local_player(),
 				})
+			end
+
+			if custom_hint or self._tweak_data.blocked_hint then
+				show_hint(custom_hint or self._tweak_data.blocked_hint)
 			end
 		end
 
@@ -373,12 +390,7 @@ function BaseInteractionExt:interact_start(player, locator)
 
 	if not self:can_interact(player) then
 		if self._tweak_data.blocked_hint then
-			managers.notification:add_notification({
-				duration = 2,
-				shelf_life = 5,
-				id = self._tweak_data.blocked_hint,
-				text = managers.localization:text(self._tweak_data.blocked_hint),
-			})
+			show_hint(self._tweak_data.blocked_hint)
 		end
 
 		return false
@@ -1002,30 +1014,6 @@ function DropInteractionExt:interact(player)
 	params.target_unit = self._unit
 
 	game_state_machine:change_state_by_name("ingame_multiple_choice_interaction", params)
-
-	return true
-end
-
-DropPodInteractionExt = DropPodInteractionExt or class(UseInteractionExt)
-
-function DropPodInteractionExt:_interact_blocked(player)
-	return false
-end
-
-function DropPodInteractionExt:set_unit(unit_id)
-	self._spawn_unit = unit_id
-end
-
-function DropPodInteractionExt:interact(player)
-	if not self:can_interact(player) then
-		return
-	end
-
-	DropPodInteractionExt.super.interact(self, player)
-
-	local spawn_location = self._unit:get_object(Idstring("spawn_location"))
-
-	managers.airdrop:spawn_unit_inside_pod(tostring(self._unit:id()), spawn_location:position(), spawn_location:rotation():yaw(), spawn_location:rotation():pitch(), spawn_location:rotation():roll())
 
 	return true
 end
@@ -1758,6 +1746,15 @@ function IntimitateInteractionExt:interact(player)
 		managers.player:set_carry(carry_name, 0)
 		managers.player:on_used_body_bag()
 
+		if player == managers.player:player_unit() then
+			local carry_tweak = tweak_data.carry[carry_name]
+			local carry_type = carry_tweak.type
+
+			if carry_tweak.is_corpse then
+				managers.player:set_carry_temporary_data(carry_name, self._unit:character_damage():dismembered_parts())
+			end
+		end
+
 		local u_id = self._unit:id()
 
 		if Network:is_server() then
@@ -2043,11 +2040,11 @@ function CarryInteractionExt:can_select(player)
 		return false
 	end
 
-	if managers.player:is_carrying() or managers.player:carry_blocked_by_cooldown() or self._unit:carry_data():is_attached_to_zipline_unit() then
+	if managers.player:carry_blocked_by_cooldown() or self._unit:carry_data():is_attached_to_zipline_unit() then
 		return false
 	end
 
-	return CarryInteractionExt.super.can_select(self, player)
+	return CarryInteractionExt.super.can_select(self, player), not managers.player:is_carrying()
 end
 
 function CarryInteractionExt:interact(player)
@@ -2057,6 +2054,7 @@ function CarryInteractionExt:interact(player)
 		managers.achievment:award("murphys_laws")
 	end
 
+	self._unit:carry_data():on_pickup()
 	managers.player:set_carry(self._unit:carry_data():carry_id(), self._unit:carry_data():multiplier(), self._unit:carry_data():dye_pack_data())
 	managers.network:session():send_to_peers_synched("sync_interacted", self._unit, self._unit:id(), self.tweak_data, 1)
 	self:sync_interacted(nil, player)
@@ -2505,6 +2503,12 @@ function DrivingInteractionExt:interact(player, locator)
 	return success
 end
 
+function DrivingInteractionExt:_add_string_macros(macros)
+	DrivingInteractionExt.super._add_string_macros(self, macros)
+
+	macros.LOOT = self._loot_text
+end
+
 function DrivingInteractionExt:selected(player, locator)
 	if locator == nil then
 		return false
@@ -2527,6 +2531,17 @@ function DrivingInteractionExt:selected(player, locator)
 		self._tweak_data.text_id = "hud_int_vehicle_drive"
 	elseif action == VehicleDrivingExt.INTERACT_LOOT and vehicle_ext:has_loot_stored() then
 		self._tweak_data.text_id = "hud_int_vehicle_loot"
+
+		local loot_data = vehicle_ext:get_loot() and vehicle_ext:get_loot()[vehicle_ext:get_current_loot_amount()]
+
+		if loot_data then
+			local carry_data = tweak_data.carry[loot_data.carry_id]
+
+			if carry_data and carry_data.carry_item_id then
+				self._tweak_data.text_id = "hud_int_vehicle_custom_loot"
+				self._loot_text = managers.localization:text(carry_data.carry_item_id)
+			end
+		end
 	elseif action == VehicleDrivingExt.INTERACT_REPAIR then
 		self._tweak_data.text_id = "hud_int_vehicle_repair"
 	elseif action == VehicleDrivingExt.INTERACT_TRUNK then
@@ -2659,6 +2674,22 @@ core:import("CoreMenuNode")
 
 MainMenuInteractionExt = MainMenuInteractionExt or class(UseInteractionExt)
 
+function MainMenuInteractionExt:init(unit)
+	MainMenuInteractionExt.super.init(self, unit)
+
+	if self._menu_item == "comic_book_menu" and not managers.dlc:is_dlc_unlocked(DLCTweakData.DLC_NAME_SPECIAL_EDITION) then
+		self._unit:set_slot(0)
+	end
+end
+
+function MainMenuInteractionExt:can_select(player, locator)
+	if self._menu_item == "comic_book_menu" then
+		return managers.dlc:is_dlc_unlocked(DLCTweakData.DLC_NAME_SPECIAL_EDITION)
+	end
+
+	return true
+end
+
 function MainMenuInteractionExt:interact(player)
 	MainMenuInteractionExt.super.super.interact(self, player)
 
@@ -2667,9 +2698,19 @@ function MainMenuInteractionExt:interact(player)
 
 	if self._menu_item == "mission_join_menu" and is_offline then
 		return false
+	elseif self._menu_item == "challenge_cards_view_menu" and is_offline then
+		return false
 	end
 
-	success = managers.raid_menu:open_menu(self._menu_item)
+	if self._menu_item == "mission_selection_menu" then
+		if managers.progression:have_pending_missions_to_unlock() then
+			success = managers.raid_menu:open_menu("mission_unlock_menu")
+		else
+			success = managers.raid_menu:open_menu(self._menu_item)
+		end
+	else
+		success = managers.raid_menu:open_menu(self._menu_item)
+	end
 
 	if success then
 		-- block empty
@@ -2682,9 +2723,15 @@ function MainMenuInteractionExt:selected(player)
 	if self._menu_item == "raid_menu_weapon_select" then
 		self._tweak_data.text_id = "hud_menu_interaction_select_weapon_select"
 	elseif self._menu_item == "challenge_cards_view_menu" then
-		self._tweak_data.text_id = "hud_menu_interaction_challenge_card_view"
+		if Global.game_settings.single_player then
+			self._tweak_data.text_id = "hud_menu_interaction_challenge_cards_offline"
+		else
+			self._tweak_data.text_id = "hud_menu_interaction_challenge_card_view"
+		end
 	elseif self._menu_item == "mission_selection_menu" then
-		if Network:is_server() then
+		if managers.progression:have_pending_missions_to_unlock() then
+			self._tweak_data.text_id = "hud_menu_interaction_unlock_missions"
+		elseif Network:is_server() then
 			self._tweak_data.text_id = "hud_menu_interaction_select_missions"
 		else
 			self._tweak_data.text_id = "hud_menu_interaction_view_missions"
@@ -2705,6 +2752,10 @@ function MainMenuInteractionExt:selected(player)
 		self._tweak_data.text_id = "hud_menu_interaction_select_skills_menu"
 	elseif self._menu_item == "gold_asset_store_menu" then
 		self._tweak_data.text_id = "hud_menu_interaction_select_gold_asset_store_menu"
+	elseif self._menu_item == "intel_menu" then
+		self._tweak_data.text_id = "hud_menu_interaction_select_intel_menu"
+	elseif self._menu_item == "comic_book_menu" then
+		self._tweak_data.text_id = "hud_menu_interaction_select_comic_book_menu"
 	end
 
 	local res = MainMenuInteractionExt.super.selected(self, player)
@@ -2726,6 +2777,110 @@ function SpotterFlareInteractionExt:interact(player)
 	})
 end
 
+GreedItemInteractionExt = GreedItemInteractionExt or class(UseInteractionExt)
+
+function GreedItemInteractionExt:interact(player)
+	Application:debug("[GreedItemInteractionExt:interact] Player picked up a greed item.")
+	GreedItemInteractionExt.super.interact(self, player)
+
+	local value = self._unit:greed():value()
+
+	managers.greed:pickup_greed_item(value, self._unit)
+	managers.network:session():send_to_peers("greed_item_picked_up", self._unit, value)
+end
+
+function GreedItemInteractionExt:on_peer_interacted(amount)
+	managers.greed:pickup_greed_item(amount, self._unit)
+end
+
+function GreedItemInteractionExt:can_select()
+	return true
+end
+
+GreedCacheItemInteractionExt = GreedCacheItemInteractionExt or class(BaseInteractionExt)
+
+function GreedCacheItemInteractionExt:init(unit)
+	GreedCacheItemInteractionExt.super.init(self, unit)
+
+	self._locked = true
+end
+
+function GreedCacheItemInteractionExt:interact(player)
+	if not self:can_interact(player) then
+		return
+	end
+
+	if self._locked then
+		local params = self._unit:greed():get_lockpick_parameters()
+
+		params.target_unit = self._unit
+		params.number_of_circles = math.max(params.number_of_circles - managers.player:upgrade_value("interaction", "wheel_amount_decrease", 0), 1)
+
+		local count = params.number_of_circles
+
+		for i = 1, count do
+			params.circle_difficulty[i] = params.circle_difficulty[i] * managers.player:upgrade_value("interaction", "wheel_hotspot_increase", 1)
+			params.circle_rotation_speed[i] = params.circle_rotation_speed[i] * managers.player:upgrade_value("interaction", "wheel_rotation_speed_increase", 1)
+		end
+
+		game_state_machine:change_state_by_name("ingame_special_interaction", params)
+	else
+		GreedCacheItemInteractionExt.super.interact(self, player)
+
+		local value = self._unit:greed():on_interacted()
+
+		managers.greed:pickup_cache_loot(value)
+		managers.network:session():send_to_peers("greed_cache_item_interacted_with", self._unit, value)
+	end
+
+	return true
+end
+
+function GreedCacheItemInteractionExt:on_peer_interacted(amount)
+	local amount_picked_up = self._unit:greed():on_interacted(amount)
+
+	managers.greed:pickup_cache_loot(amount_picked_up)
+end
+
+function GreedCacheItemInteractionExt:special_interaction_done()
+	self._locked = false
+
+	self._unit:greed():unlock()
+	self:set_dirty(true)
+	managers.network:session():send_to_peers("special_interaction_done", self._unit)
+end
+
+function GreedCacheItemInteractionExt:set_special_interaction_done()
+	self._locked = false
+
+	self._unit:greed():unlock()
+	self:set_dirty(true)
+end
+
+function GreedCacheItemInteractionExt:can_select()
+	return self._unit:greed():reserve_left() > 0
+end
+
+function GreedCacheItemInteractionExt:unselect()
+	UseInteractionExt.unselect(self)
+end
+
+function GreedCacheItemInteractionExt:_show_interaction_text()
+	if self._locked then
+		GreedCacheItemInteractionExt.super._show_interaction_text(self, "hud_greed_cache_locked_prompt")
+	else
+		GreedCacheItemInteractionExt.super._show_interaction_text(self, "hud_greed_cache_unlocked_prompt")
+	end
+end
+
+function GreedCacheItemInteractionExt:_timer_value()
+	if self._locked then
+		return 0
+	else
+		return self._unit:greed():interaction_timer_value()
+	end
+end
+
 ConsumableMissionInteractionExt = ConsumableMissionInteractionExt or class(UseInteractionExt)
 
 function ConsumableMissionInteractionExt:interact(player)
@@ -2744,10 +2899,23 @@ function ConsumableMissionInteractionExt:interact(player)
 	local chosen_consumable = math.random(1, #consumable_missions)
 
 	managers.consumable_missions:pickup_mission(consumable_missions[chosen_consumable])
+
+	local notification_data = {
+		duration = 4,
+		id = "hud_hint_consumable_mission",
+		priority = 3,
+		notification_type = HUDNotification.CONSUMABLE_MISSION_PICKED_UP,
+	}
+
+	managers.notification:add_notification(notification_data)
 end
 
-function ConsumableMissionInteractionExt:can_select(player)
-	return false
+function ConsumableMissionInteractionExt:can_interact(player)
+	if managers.consumable_missions:is_any_mission_unlocked() then
+		return false
+	end
+
+	return ConsumableMissionInteractionExt.super.can_interact(self, player)
 end
 
 function ConsumableMissionInteractionExt:on_load_complete()
@@ -2778,8 +2946,16 @@ function FoxholeInteractionExt:interact(player)
 	managers.player:set_player_state("foxhole")
 end
 
-DummyInteractionExt = DummyInteractionExt or class(UseInteractionExt)
+DummyInteractionExt = DummyInteractionExt or class(BaseInteractionExt)
 
 function DummyInteractionExt:interact_start()
+	return false
+end
+
+function DummyInteractionExt:can_select()
+	return false
+end
+
+function DummyInteractionExt:can_interact()
 	return false
 end

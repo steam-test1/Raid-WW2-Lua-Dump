@@ -12,7 +12,15 @@ function ConsumableMissionManager:init()
 	self._peer_document_spawn_chances = {}
 end
 
-function ConsumableMissionManager:system_start_raid(params)
+function ConsumableMissionManager:reset()
+	Global.consumable_missions_manager = {}
+	Global.consumable_missions_manager.inventory = {}
+	Global.consumable_missions_manager.intel_spawn_modifier = 0
+	self._registered_intel_documents = {}
+	self._peer_document_spawn_chances = {}
+end
+
+function ConsumableMissionManager:system_start_raid()
 	local current_job = managers.raid_job:current_job()
 
 	if not current_job or not current_job.consumable then
@@ -65,6 +73,15 @@ function ConsumableMissionManager:plant_document_on_level(world_id)
 	end
 
 	local chosen_document_unit
+
+	if math.random() <= math.clamp(document_spawn_chance, -1, 1) then
+		math.shuffle(self._registered_intel_documents[world_id])
+
+		chosen_document_unit = self._registered_intel_documents[world_id][1].unit
+
+		self:reset_document_spawn_modifier()
+		managers.network:session():send_to_peers("reset_document_spawn_chance_modifier")
+	end
 
 	for index, document in pairs(self._registered_intel_documents[world_id]) do
 		if alive(document.unit) and document.unit ~= chosen_document_unit then
@@ -153,6 +170,8 @@ end
 
 function ConsumableMissionManager:on_mission_started()
 	self._level_exit_handled = false
+
+	self:system_start_raid()
 end
 
 function ConsumableMissionManager:on_mission_completed(success)

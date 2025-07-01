@@ -1547,7 +1547,9 @@ function CopActionHurt:on_destroy()
 	if self._shooting_hurt then
 		self._shooting_hurt = false
 
-		self._weapon_unit:base():stop_autofire()
+		if alive(self._weapon_unit) then
+			self._weapon_unit:base():stop_autofire()
+		end
 	end
 
 	if self._delayed_shooting_hurt_clbk_id then

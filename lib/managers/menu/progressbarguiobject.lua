@@ -26,6 +26,7 @@ function ProgressBarGuiObject:init(panel, config)
 		blend_mode = "normal",
 		h = 0,
 		layer = 3,
+		name = "progress_bar",
 		w = 0,
 		color = tweak_data.gui.colors.interaction_bar,
 		x = self._x - self._width / 2,
@@ -41,6 +42,7 @@ function ProgressBarGuiObject:_create_description(description)
 	local description_params = {
 		align = "center",
 		h = 32,
+		name = "progress_bar_description",
 		valign = "bottom",
 		w = 256,
 		color = tweak_data.gui.colors.raid_white,

@@ -191,6 +191,18 @@ function MissionManager:find_alert_point(position)
 	return distances[min]
 end
 
+function MissionManager:debug_enabled_alert_points()
+	local distances = {}
+
+	for name, script in pairs(self._scripts) do
+		for _, alert_point in pairs(script._alert_points) do
+			if alert_point:value("enabled") and not alert_point.executing then
+				Application:debug("Enabled alert point at", alert_point:value("position"))
+			end
+		end
+	end
+end
+
 function MissionManager:find_closest_metal_object_position(position)
 	local distances = {}
 

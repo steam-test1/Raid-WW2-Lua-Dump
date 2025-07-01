@@ -119,6 +119,10 @@ function FPCameraPlayerBase:reset_properties()
 end
 
 function FPCameraPlayerBase:update(unit, t, dt)
+	if managers.menu.loading_screen_visible or managers.system_menu:is_active() then
+		return
+	end
+
 	if self._tweak_data.aim_assist_use_sticky_aim then
 		self:_update_aim_assist_sticky(t, dt)
 	end
@@ -646,6 +650,11 @@ end
 
 function FPCameraPlayerBase:_set_camera_position_in_vehicle()
 	local vehicle_data = managers.player:get_vehicle()
+
+	if not vehicle_data then
+		return
+	end
+
 	local vehicle_unit = vehicle_data.vehicle_unit
 
 	if not alive(vehicle_unit) then

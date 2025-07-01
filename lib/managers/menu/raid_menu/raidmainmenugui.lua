@@ -9,6 +9,7 @@ function RaidMainMenuGui:init(ws, fullscreen_ws, node, component_name)
 	RaidMainMenuGui.super.init(self, ws, fullscreen_ws, node, component_name)
 	managers.menu:mark_main_menu(true)
 	managers.raid_menu:show_background()
+	managers.gold_economy:get_gold_awards()
 end
 
 function RaidMainMenuGui:_setup_properties()
@@ -21,13 +22,11 @@ function RaidMainMenuGui:_layout()
 	self._display_invite_widget = SystemInfo:platform() ~= Idstring("WIN32")
 
 	RaidMainMenuGui.super._layout(self)
-	self:_layout_logo()
+	self:_layout_title_logo()
 	self:_layout_list_menu()
-	self:_layout_steam_group_button()
-	self:_layout_full_game_button()
 
 	if game_state_machine:current_state_name() == "menu_main" then
-		self:_layout_beta_updates_text()
+		self:_layout_steam_group_button()
 	end
 
 	if managers.platform:presence() == "Playing" then
@@ -48,27 +47,98 @@ function RaidMainMenuGui:close()
 	RaidMainMenuGui.super.close(self)
 end
 
-function RaidMainMenuGui:_layout_logo()
-	self._raid_logo_small = self._root_panel:image({
-		h = 180,
-		name = "raid_logo_small",
-		w = 400,
-		x = 64,
-		y = 64,
-		texture = tweak_data.gui.icons.raid_logo_small.texture,
-		texture_rect = tweak_data.gui.icons.raid_logo_small.texture_rect,
+function RaidMainMenuGui:_layout_title_logo()
+	self._title_label = self._root_panel:text({
+		h = 64,
+		text = "",
+		x = 0,
+		y = 0,
+		font = tweak_data.gui.fonts.din_compressed,
+		font_size = tweak_data.gui.font_sizes.size_56,
+		w = self._root_panel:w(),
 	})
+	self._title_icon = self._root_panel:bitmap({
+		h = 64,
+		w = 64,
+		x = 0,
+		y = 0,
+		texture = tweak_data.gui.icons.missions_camp.texture,
+		texture_rect = tweak_data.gui.icons.missions_camp.texture_rect,
+	})
+
+	local logo_texture = tweak_data.gui.icons.raid_logo_small.texture
+	local logo_texture_rect = tweak_data.gui.icons.raid_logo_small.texture_rect
+
+	if managers.dlc:is_dlc_unlocked(DLCTweakData.DLC_NAME_SPECIAL_EDITION) then
+		logo_texture = tweak_data.gui.icons.raid_se_logo_small.texture
+		logo_texture_rect = tweak_data.gui.icons.raid_se_logo_small.texture_rect
+	end
+
+	self._raid_logo_small = self._root_panel:image({
+		name = "raid_logo_small",
+		x = 0,
+		y = 0,
+		texture = logo_texture,
+		texture_rect = logo_texture_rect,
+	})
+
+	self._raid_logo_small:set_right(self._root_panel:w())
+
+	if RaidMenuCallbackHandler:is_in_main_menu() then
+		self._title_icon:hide()
+		self._title_label:set_x(0)
+		self._title_label:set_text(self:translate("menu_main_title", true))
+		self._title_label:set_color(tweak_data.gui.colors.raid_red)
+		self._raid_logo_small:show()
+	elseif RaidMenuCallbackHandler:is_in_camp() then
+		self._title_icon:set_image(tweak_data.gui.icons.missions_camp.texture)
+		self._title_icon:set_texture_rect(unpack(tweak_data.gui.icons.missions_camp.texture_rect))
+		self._title_icon:show()
+		self._title_label:set_x(90)
+		self._title_label:set_text(self:translate(tweak_data.operations.missions.camp.name_id, true))
+		self._title_label:set_color(tweak_data.gui.colors.raid_red)
+		self._raid_logo_small:hide()
+	elseif not RaidMenuCallbackHandler:is_in_main_menu() and not RaidMenuCallbackHandler:is_in_camp() then
+		local current_job = managers.raid_job:current_job()
+
+		if current_job and current_job.job_type == OperationsTweakData.JOB_TYPE_RAID then
+			self._title_icon:set_image(tweak_data.gui.icons[current_job.icon_menu].texture)
+			self._title_icon:set_texture_rect(unpack(tweak_data.gui.icons[current_job.icon_menu].texture_rect))
+			self._title_icon:show()
+			self._title_label:set_x(90)
+			self._title_label:set_text(self:translate(tweak_data.operations.missions[current_job.job_id].name_id, true))
+			self._title_label:set_color(tweak_data.gui.colors.raid_red)
+		elseif current_job and current_job.job_type == OperationsTweakData.JOB_TYPE_OPERATION then
+			self._title_icon:set_image(tweak_data.gui.icons[current_job.icon_menu].texture)
+			self._title_icon:set_texture_rect(unpack(tweak_data.gui.icons[current_job.icon_menu].texture_rect))
+			self._title_icon:show()
+
+			local operation_name = self:translate(tweak_data.operations.missions[current_job.job_id].name_id, true)
+			local operation_progress = current_job.current_event .. "/" .. #current_job.events_index
+			local level_name = self:translate(tweak_data.operations.missions[current_job.job_id].events[current_job.events_index[current_job.current_event]].name_id, true)
+
+			self._title_label:set_x(90)
+			self._title_label:set_text(operation_name .. " " .. operation_progress .. ": " .. level_name, true)
+			self._title_label:set_color(tweak_data.gui.colors.raid_red)
+		end
+
+		self._raid_logo_small:hide()
+	end
+end
+
+function RaidMainMenuGui:_layout_logo()
+	return
 end
 
 function RaidMainMenuGui:_layout_list_menu()
 	local list_menu_params = {
-		h = 640,
+		h = 972,
 		loop_items = true,
 		name = "list_menu",
 		selection_enabled = true,
 		w = 480,
-		x = 64,
-		y = 256,
+		x = 0,
+		y = 112,
 		data_source_callback = callback(self, self, "_list_menu_data_source"),
 		on_item_clicked_callback = callback(self, self, "_on_list_menu_item_selected"),
 		on_menu_move = {},
@@ -101,7 +171,7 @@ function RaidMainMenuGui:_layout_steam_group_button()
 		halign = "scale",
 		layer = 10,
 		name = "steam_group_button_frame",
-		texture = "ui/elements/banner_beta_frame_hud",
+		texture = "ui/elements/banner_steam_group_frame",
 		valign = "scale",
 	}
 
@@ -113,7 +183,7 @@ function RaidMainMenuGui:_layout_steam_group_button()
 		halign = "scale",
 		layer = 5,
 		name = "steam_group_button_image",
-		texture = "ui/elements/banner_beta_hud",
+		texture = "ui/elements/banner_steam_group",
 		valign = "scale",
 		on_mouse_enter_callback = callback(self, self, "mouse_over_steam_group_button"),
 		on_mouse_exit_callback = callback(self, self, "mouse_exit_steam_group_button"),
@@ -128,129 +198,6 @@ function RaidMainMenuGui:_layout_steam_group_button()
 	self._steam_group_panel:set_h(RaidMainMenuGui.STEAM_GROUP_BUTTON_H)
 	self._steam_group_panel:set_right(self._root_panel:w() - 96)
 	self._steam_group_panel:set_bottom(self._root_panel:h() - 77)
-end
-
-function RaidMainMenuGui:_layout_full_game_button()
-	local full_game_panel_params = {
-		h = 576,
-		halign = "right",
-		layer = 50,
-		name = "full_game_panel",
-		valign = "bottom",
-		w = 1024,
-	}
-
-	self._full_game_panel = self._root_panel:panel(full_game_panel_params)
-
-	self._full_game_panel:set_right(self._root_panel:w() - 96)
-	self._full_game_panel:set_bottom(self._root_panel:h() - 77)
-
-	self._steam_button_t = 0
-	self._steam_button_pressed_scale = 0.95
-
-	local group_button_frame_params = {
-		halign = "scale",
-		layer = 10,
-		name = "full_game_button_frame",
-		texture = "ui/elements/banner_beta_frame_hud",
-		valign = "scale",
-	}
-
-	self._full_game_button_frame = self._full_game_panel:bitmap(group_button_frame_params)
-
-	self._full_game_button_frame:set_center_x(self._full_game_panel:w() / 2)
-
-	local group_button_image_params = {
-		halign = "scale",
-		layer = 5,
-		name = "full_game_button_image",
-		texture = "ui/elements/banner_launch_release",
-		valign = "scale",
-		on_mouse_enter_callback = callback(self, self, "mouse_over_full_game_button"),
-		on_mouse_exit_callback = callback(self, self, "mouse_exit_full_game_button"),
-		on_mouse_pressed_callback = callback(self, self, "mouse_pressed_full_game_button"),
-		on_mouse_released_callback = callback(self, self, "mouse_released_full_game_button"),
-	}
-
-	self._full_game_button_image = self._full_game_panel:image(group_button_image_params)
-
-	self._full_game_button_image:set_center_x(self._full_game_panel:w() / 2)
-	self._full_game_panel:set_w(RaidMainMenuGui.STEAM_GROUP_BUTTON_W)
-	self._full_game_panel:set_h(RaidMainMenuGui.STEAM_GROUP_BUTTON_H)
-	self._full_game_panel:set_right(self._root_panel:w() - 96 - RaidMainMenuGui.STEAM_GROUP_BUTTON_W - 42)
-	self._full_game_panel:set_bottom(self._steam_group_panel:bottom())
-end
-
-function RaidMainMenuGui:_layout_beta_updates_text()
-	local beta_updates_scrollable_area_params = {
-		h = 500,
-		name = "challenge_cards_grid_scrollable_area",
-		scroll_step = 45,
-		x = 0,
-		y = 60,
-		w = self._steam_group_panel:w(),
-	}
-
-	self._beta_updates_scrollable_area = self._root_panel:scrollable_area(beta_updates_scrollable_area_params)
-
-	self._beta_updates_scrollable_area:set_right(self._steam_group_panel:right())
-
-	local panel = self._beta_updates_scrollable_area:get_panel()
-	local beta_updates_panel_params = {
-		halign = "right",
-		name = "beta_updates_panel",
-		valign = "top",
-		w = self._steam_group_panel:w() - 10,
-	}
-
-	self._beta_updates_panel = panel:panel(beta_updates_panel_params)
-
-	local beta_updates_title_params = {
-		align = "left",
-		h = 64,
-		halign = "left",
-		name = "beta_updates_panel",
-		vertical = "center",
-		color = tweak_data.gui.colors.raid_dirty_white,
-		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.menu_list),
-		font_size = tweak_data.gui.font_sizes.menu_list,
-		text = self:translate("patch_notes_title_11", true),
-		w = self._beta_updates_panel:w(),
-	}
-
-	self._beta_updates_title = self._beta_updates_panel:text(beta_updates_title_params)
-
-	local beta_updates_line_params = {
-		h = 3,
-		color = tweak_data.gui.colors.raid_red,
-		w = self._beta_updates_panel:w(),
-	}
-
-	self._beta_updates_line = self._beta_updates_panel:rect(beta_updates_line_params)
-
-	self._beta_updates_line:set_top(self._beta_updates_title:bottom())
-
-	local beta_update_notes_params = {
-		align = "left",
-		halign = "left",
-		name = "beta_updates_panel",
-		vertical = "top",
-		wrap = true,
-		color = tweak_data.gui.colors.raid_dirty_white,
-		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.extra_small),
-		font_size = tweak_data.gui.font_sizes.extra_small,
-		text = self:translate("patch_notes_text_11"),
-		w = self._beta_updates_panel:w(),
-		y = self._beta_updates_line:bottom() + 10,
-	}
-
-	self._beta_update_notes = self._beta_updates_panel:text(beta_update_notes_params)
-
-	local _, _, _, h = self._beta_update_notes:text_rect()
-
-	self._beta_update_notes:set_h(h)
-	self._beta_updates_panel:set_h(self._beta_update_notes:y() + h)
-	self._beta_updates_scrollable_area:setup_scroll_area()
 end
 
 function RaidMainMenuGui:mouse_over_steam_group_button()
@@ -328,89 +275,6 @@ function RaidMainMenuGui:_animate_steam_group_button_release(o)
 	self._steam_group_panel:set_h(RaidMainMenuGui.STEAM_GROUP_BUTTON_H)
 	self._steam_group_panel:set_right(self._root_panel:w() - 96)
 	self._steam_group_panel:set_bottom(self._root_panel:h() - 77)
-
-	self._steam_button_t = 0
-end
-
-function RaidMainMenuGui:mouse_over_full_game_button()
-	self._full_game_button_frame:set_color(Color("ff8880"))
-end
-
-function RaidMainMenuGui:mouse_exit_full_game_button()
-	self._full_game_button_frame:set_color(Color.white)
-	self._full_game_button_frame:stop()
-	self._full_game_button_frame:animate(callback(self, self, "_animate_full_game_button_release"))
-end
-
-function RaidMainMenuGui:mouse_pressed_full_game_button()
-	self._full_game_button_frame:stop()
-	self._full_game_button_frame:animate(callback(self, self, "_animate_full_game_button_press"))
-end
-
-function RaidMainMenuGui:mouse_released_full_game_button()
-	self._full_game_button_frame:stop()
-	self._full_game_button_frame:animate(callback(self, self, "_animate_full_game_button_release"))
-
-	RaidMenuCreditsGui.FILE = "full_game_info"
-	RaidMenuCreditsGui.INTRO_VIDEO = nil
-
-	managers.raid_menu:open_menu("raid_credits_menu")
-end
-
-function RaidMainMenuGui:_animate_full_game_button_press(o)
-	local duration = 0.15
-	local t = self._steam_button_t * duration
-	local center_x = self._full_game_panel:center_x()
-	local center_y = self._full_game_panel:center_y()
-
-	while t < duration do
-		local dt = coroutine.yield()
-
-		t = t + dt
-
-		local current_scale = Easing.quartic_out(t, 1, self._steam_button_pressed_scale - 1, duration)
-
-		self._full_game_panel:set_w(RaidMainMenuGui.STEAM_GROUP_BUTTON_W * current_scale)
-		self._full_game_panel:set_h(RaidMainMenuGui.STEAM_GROUP_BUTTON_H * current_scale)
-		self._full_game_panel:set_center_x(center_x)
-		self._full_game_panel:set_center_y(center_y)
-
-		self._steam_button_t = t / duration
-	end
-
-	self._full_game_panel:set_w(RaidMainMenuGui.STEAM_GROUP_BUTTON_W * self._steam_button_pressed_scale)
-	self._full_game_panel:set_h(RaidMainMenuGui.STEAM_GROUP_BUTTON_H * self._steam_button_pressed_scale)
-	self._full_game_panel:set_center_x(center_x)
-	self._full_game_panel:set_center_y(center_y)
-
-	self._steam_button_t = 1
-end
-
-function RaidMainMenuGui:_animate_full_game_button_release(o)
-	local duration = 0.15
-	local t = (1 - self._steam_button_t) * duration
-	local center_x = self._full_game_panel:center_x()
-	local center_y = self._full_game_panel:center_y()
-
-	while t < duration do
-		local dt = coroutine.yield()
-
-		t = t + dt
-
-		local current_scale = Easing.quartic_out(t, self._steam_button_pressed_scale, 1 - self._steam_button_pressed_scale, duration)
-
-		self._full_game_panel:set_w(RaidMainMenuGui.STEAM_GROUP_BUTTON_W * current_scale)
-		self._full_game_panel:set_h(RaidMainMenuGui.STEAM_GROUP_BUTTON_H * current_scale)
-		self._full_game_panel:set_center_x(center_x)
-		self._full_game_panel:set_center_y(center_y)
-
-		self._steam_button_t = t / duration
-	end
-
-	self._full_game_panel:set_w(RaidMainMenuGui.STEAM_GROUP_BUTTON_W)
-	self._full_game_panel:set_h(RaidMainMenuGui.STEAM_GROUP_BUTTON_H)
-	self._full_game_panel:set_right(self._root_panel:w() - 96 - RaidMainMenuGui.STEAM_GROUP_BUTTON_W - 42)
-	self._full_game_panel:set_bottom(self._root_panel:h() - 77)
 
 	self._steam_button_t = 0
 end
@@ -634,11 +498,27 @@ function RaidMainMenuGui:_list_menu_data_source()
 		text = utf8.to_upper(managers.localization:text("menu_resume_game")),
 	})
 	table.insert(_list_items, {
+		callback = "singleplayer_restart_mission",
+		availability_flags = {
+			RaidGUIItemAvailabilityFlag.SINGLEPLAYER_RESTART,
+		},
+		text = utf8.to_upper(managers.localization:text("menu_restart_mission")),
+	})
+	table.insert(_list_items, {
 		callback = "singleplayer_restart_game_to_camp",
 		availability_flags = {
 			RaidGUIItemAvailabilityFlag.SINGLEPLAYER_RESTART,
 		},
 		text = utf8.to_upper(managers.localization:text("menu_restart_to_camp")),
+	})
+	table.insert(_list_items, {
+		callback = "restart_mission",
+		availability_flags = {
+			RaidGUIItemAvailabilityFlag.RESTART_LEVEL_VISIBLE,
+			RaidGUIItemAvailabilityFlag.IS_NOT_IN_CAMP,
+			RaidGUIItemAvailabilityFlag.IS_NOT_CONSUMABLE,
+		},
+		text = utf8.to_upper(managers.localization:text("menu_restart_mission")),
 	})
 	table.insert(_list_items, {
 		callback = "restart_to_camp",
@@ -648,15 +528,38 @@ function RaidMainMenuGui:_list_menu_data_source()
 		text = utf8.to_upper(managers.localization:text("menu_restart_to_camp")),
 	})
 	table.insert(_list_items, {
+		callback = "restart_to_camp_client",
+		availability_flags = {
+			RaidGUIItemAvailabilityFlag.RESTART_LEVEL_VISIBLE_CLIENT,
+		},
+		text = utf8.to_upper(managers.localization:text("menu_restart_to_camp")),
+	})
+	table.insert(_list_items, {
+		callback = "restart_vote",
+		availability_flags = {
+			RaidGUIItemAvailabilityFlag.RESTART_VOTE_VISIBLE,
+			RaidGUIItemAvailabilityFlag.IS_NOT_IN_CAMP,
+		},
+		text = utf8.to_upper(managers.localization:text("menu_restart_vote")),
+	})
+	table.insert(_list_items, {
 		callback = "on_mission_selection_clicked",
 		availability_flags = {
 			RaidGUIItemAvailabilityFlag.IS_IN_CAMP,
 		},
 		breadcrumb = {
 			delay = 0.2,
-			category = BreadcrumbManager.CATEGORY_CONSUMABLE_MISSION,
+			category = BreadcrumbManager.CATEGORY_MISSIONS,
 		},
 		text = utf8.to_upper(managers.localization:text("menu_mission_selection")),
+	})
+	table.insert(_list_items, {
+		callback = "on_multiplayer_clicked",
+		availability_flags = {
+			RaidGUIItemAvailabilityFlag.IS_IN_CAMP,
+			RaidGUIItemAvailabilityFlag.IS_MULTIPLAYER,
+		},
+		text = utf8.to_upper(managers.localization:text("menu_servers")),
 	})
 	table.insert(_list_items, {
 		callback = "on_select_character_profile_clicked",
@@ -668,17 +571,6 @@ function RaidMainMenuGui:_list_menu_data_source()
 			category = BreadcrumbManager.CATEGORY_CHARACTER_CUSTOMIZATION,
 		},
 		text = utf8.to_upper(managers.localization:text("menu_character_setup")),
-	})
-	table.insert(_list_items, {
-		callback = "on_select_character_skills_clicked",
-		availability_flags = {
-			RaidGUIItemAvailabilityFlag.IS_IN_CAMP,
-		},
-		breadcrumb = {
-			delay = 0.2,
-			category = BreadcrumbManager.CATEGORY_RANK_REWARD,
-		},
-		text = utf8.to_upper(managers.localization:text("menu_skills")),
 	})
 	table.insert(_list_items, {
 		callback = "on_weapon_select_clicked",
@@ -693,23 +585,15 @@ function RaidMainMenuGui:_list_menu_data_source()
 		text = utf8.to_upper(managers.localization:text("menu_header_weapons_screen_name")),
 	})
 	table.insert(_list_items, {
-		callback = "on_select_challenge_cards_view_clicked",
+		callback = "on_select_character_skills_clicked",
 		availability_flags = {
 			RaidGUIItemAvailabilityFlag.IS_IN_CAMP,
 		},
 		breadcrumb = {
 			delay = 0.2,
-			category = BreadcrumbManager.CATEGORY_CARD,
+			category = BreadcrumbManager.CATEGORY_RANK_REWARD,
 		},
-		text = utf8.to_upper(managers.localization:text("menu_challenge_cards")),
-	})
-	table.insert(_list_items, {
-		callback = "on_multiplayer_clicked",
-		availability_flags = {
-			RaidGUIItemAvailabilityFlag.IS_IN_CAMP,
-			RaidGUIItemAvailabilityFlag.IS_MULTIPLAYER,
-		},
-		text = utf8.to_upper(managers.localization:text("menu_servers")),
+		text = utf8.to_upper(managers.localization:text("menu_skills")),
 	})
 	table.insert(_list_items, {
 		callback = "on_options_clicked",
@@ -752,14 +636,6 @@ function RaidMainMenuGui:_list_menu_data_source()
 		callback = "quit_game",
 		availability_flags = {
 			RaidGUIItemAvailabilityFlag.IS_NOT_EDITOR,
-			RaidGUIItemAvailabilityFlag.IS_IN_MAIN_MENU,
-		},
-		text = utf8.to_upper(managers.localization:text("menu_quit")),
-	})
-	table.insert(_list_items, {
-		callback = "quit_game",
-		availability_flags = {
-			RaidGUIItemAvailabilityFlag.IS_NOT_EDITOR,
 			RaidGUIItemAvailabilityFlag.IS_NOT_IN_MAIN_MENU,
 			RaidGUIItemAvailabilityFlag.IS_IN_CAMP,
 		},
@@ -773,6 +649,40 @@ function RaidMainMenuGui:_list_menu_data_source()
 			RaidGUIItemAvailabilityFlag.IS_NOT_IN_CAMP,
 		},
 		text = utf8.to_upper(managers.localization:text("menu_quit")),
+	})
+	table.insert(_list_items, {
+		callback = "quit_game",
+		availability_flags = {
+			RaidGUIItemAvailabilityFlag.IS_NOT_EDITOR,
+			RaidGUIItemAvailabilityFlag.IS_IN_MAIN_MENU,
+		},
+		text = utf8.to_upper(managers.localization:text("menu_quit")),
+	})
+	table.insert(_list_items, {
+		callback = "debug_main",
+		availability_flags = {
+			RaidGUIItemAvailabilityFlag.DEBUG_MENU_ENABLED,
+			RaidGUIItemAvailabilityFlag.IS_IN_MAIN_MENU,
+		},
+		text = utf8.to_upper(managers.localization:text("menu_debug")),
+	})
+	table.insert(_list_items, {
+		callback = "debug_camp",
+		availability_flags = {
+			RaidGUIItemAvailabilityFlag.DEBUG_MENU_ENABLED,
+			RaidGUIItemAvailabilityFlag.IS_IN_CAMP,
+			RaidGUIItemAvailabilityFlag.IS_NOT_IN_MAIN_MENU,
+		},
+		text = utf8.to_upper(managers.localization:text("menu_debug")),
+	})
+	table.insert(_list_items, {
+		callback = "debug_ingame",
+		availability_flags = {
+			RaidGUIItemAvailabilityFlag.DEBUG_MENU_ENABLED,
+			RaidGUIItemAvailabilityFlag.IS_NOT_IN_CAMP,
+			RaidGUIItemAvailabilityFlag.IS_NOT_IN_MAIN_MENU,
+		},
+		text = utf8.to_upper(managers.localization:text("menu_debug")),
 	})
 
 	return _list_items

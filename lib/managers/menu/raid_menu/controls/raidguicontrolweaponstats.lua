@@ -139,7 +139,7 @@ function RaidGUIControlWeaponStats:set_modified_stats(params)
 		item:set_value_delta(delta_value)
 
 		if delta_value < 0 then
-			item:set_color(tweak_data.gui.colors.turret_overheat)
+			item:set_color(tweak_data.gui.colors.progress_green)
 		elseif delta_value > 0 then
 			item:set_color(tweak_data.gui.colors.progress_green)
 		else

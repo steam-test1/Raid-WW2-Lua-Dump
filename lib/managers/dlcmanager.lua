@@ -1,7 +1,5 @@
 DLCManager = DLCManager or class()
 DLCManager.PLATFORM_CLASS_MAP = {}
-DLCManager.DLC_GRANT_TYPE_AUTO = 1
-DLCManager.DLC_GRANT_TYPE_DROP = 2
 
 function DLCManager:new(...)
 	local platform = SystemInfo:platform()
@@ -34,7 +32,7 @@ function GenericDLCManager:_create_achievement_locked_content_table()
 	self._achievement_locked_content = {}
 	self._dlc_locked_content = {}
 
-	for name, dlc in pairs(tweak_data.dlc) do
+	for name, dlc in pairs(tweak_data.dlc.descriptions) do
 		local content = dlc.content
 
 		if content then
@@ -88,7 +86,7 @@ function GenericDLCManager:_modify_locked_content()
 		end
 	end
 
-	for name, dlc in pairs(tweak_data.dlc) do
+	for name, dlc in pairs(tweak_data.dlc.descriptions) do
 		if not dlc.content_on_consoles then
 			local content = dlc.content
 
@@ -160,7 +158,7 @@ function GenericDLCManager:_load_done(...)
 end
 
 function GenericDLCManager:give_dlc_package()
-	for package_id, data in pairs(tweak_data.dlc) do
+	for package_id, data in pairs(tweak_data.dlc.descriptions) do
 		if self:is_dlc_unlocked(package_id) then
 			local identifier = UpgradesManager.AQUIRE_STRINGS[5] .. tostring(package_id)
 
@@ -184,7 +182,7 @@ end
 function GenericDLCManager:list_dlc_package(dlcs)
 	local t = {}
 
-	for package_id, data in pairs(tweak_data.dlc) do
+	for package_id, data in pairs(tweak_data.dlc.descriptions) do
 		if not dlcs or dlcs[package_id] or table.contains(dlcs, package_id) then
 			for _, loot_drop in ipairs(data.content.loot_drops or {}) do
 				t.items = t.items or {}
@@ -254,15 +252,17 @@ function GenericDLCManager:is_dlcs_unlocked(list_of_dlcs)
 end
 
 function GenericDLCManager:is_dlc_unlocked(dlc)
-	return tweak_data.dlc[dlc] and tweak_data.dlc[dlc].free or self:has_dlc(dlc)
+	return tweak_data.dlc.descriptions[dlc] and tweak_data.dlc.descriptions[dlc].free or self:has_dlc(dlc)
 end
 
 function GenericDLCManager:has_dlc(dlc)
-	if tweak_data.dlc[dlc] and tweak_data.dlc[dlc].dlc then
-		if self[tweak_data.dlc[dlc].dlc] then
-			return self[tweak_data.dlc[dlc].dlc](self, tweak_data.dlc[dlc])
+	local dlc_description = tweak_data.dlc.descriptions[dlc]
+
+	if dlc_description and dlc_description.dlc then
+		if self[dlc_description.dlc] then
+			return self[dlc_description.dlc](self, dlc_description)
 		else
-			Application:error("Didn't have dlc has function for", dlc, "has_dlc()", tweak_data.dlc[dlc].dlc)
+			Application:error("Didn't have dlc has function for", dlc, "has_dlc()", dlc_description.dlc)
 			Application:stack_dump()
 		end
 	end
@@ -872,15 +872,27 @@ function WINDLCManager:init()
 	if not Global.dlc_manager then
 		Global.dlc_manager = {}
 		Global.dlc_manager.all_dlc_data = {
-			beta = {
-				app_id = "123456",
-				no_install = true,
-			},
 			full_game = {
 				external = true,
 				no_install = true,
 				verified = true,
 				app_id = tostring(self:get_app_id()),
+			},
+			official_soundtrack = {
+				app_id = "720860",
+				no_install = true,
+			},
+			preorder = {
+				app_id = "707070",
+				no_install = true,
+			},
+			raid_community = {
+				no_install = true,
+				source_id = "103582791460014708",
+			},
+			special_edition = {
+				app_id = "707080",
+				no_install = true,
 			},
 		}
 
@@ -889,7 +901,7 @@ function WINDLCManager:init()
 end
 
 function WINDLCManager:get_app_id()
-	return 704580
+	return 414740
 end
 
 function WINDLCManager:_check_dlc_data(dlc_data)

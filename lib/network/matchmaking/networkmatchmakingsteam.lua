@@ -1,6 +1,6 @@
 NetworkMatchMakingSTEAM = NetworkMatchMakingSTEAM or class()
 NetworkMatchMakingSTEAM.OPEN_SLOTS = 4
-NetworkMatchMakingSTEAM._BUILD_SEARCH_INTEREST_KEY = "raid_ww2_beta_v1.3.1"
+NetworkMatchMakingSTEAM._BUILD_SEARCH_INTEREST_KEY = "raid_ww2_retail_1_0_0"
 NetworkMatchMakingSTEAM.EMPTY_PLAYER_INFO = "-,-,-,-"
 
 function NetworkMatchMakingSTEAM:init()
@@ -201,7 +201,20 @@ function NetworkMatchMakingSTEAM:get_friends_lobbies()
 					user_id_to_filter_out = managers.network:session():all_peers()[1]:user_id()
 				end
 
-				if user_id_to_filter_out ~= lobby:key_value("owner_id") then
+				local add_lobby = true
+				local filter_in_camp = tostring(self._lobby_filters.state.value)
+				local filter_difficulty = tostring(self._difficulty_filter)
+				local filter_job = tostring(self._lobby_filters.job_id.value)
+
+				if filter_in_camp == "1" and filter_in_camp ~= lobby:key_value("state") then
+					add_lobby = false
+				elseif filter_difficulty ~= "0" and filter_difficulty ~= lobby:key_value("difficulty") then
+					add_lobby = false
+				elseif filter_job ~= "-1" and filter_job ~= lobby:key_value("job_id") then
+					add_lobby = false
+				end
+
+				if user_id_to_filter_out ~= lobby:key_value("owner_id") and add_lobby then
 					table.insert(lobbies, lobby)
 				end
 			end
@@ -466,6 +479,8 @@ function NetworkMatchMakingSTEAM:join_server_with_check(room_id, is_invite)
 		else
 			managers.system_menu:close("join_server")
 
+			managers.worldcollection.level_transition_in_progress = false
+
 			if ok_error == 1 then
 				managers.menu:show_game_started_dialog()
 			elseif ok_error == 2 then
@@ -624,6 +639,8 @@ function NetworkMatchMakingSTEAM:join_server(room_id, skip_showing_dialog)
 		print("[NetworkMatchMakingSTEAM:join_server:f]", result, handler)
 		managers.system_menu:close("join_server")
 
+		managers.worldcollection.level_transition_in_progress = false
+
 		if result == "success" then
 			print("Success!")
 
@@ -659,6 +676,7 @@ function NetworkMatchMakingSTEAM:join_server(room_id, skip_showing_dialog)
 			})
 			managers.network:join_game_at_host_rpc(self._server_rpc, self._joined_game)
 		else
+			World:set_extensions_update_enabled(true)
 			managers.menu:show_failed_joining_dialog()
 			self:search_lobby(self:search_friends_only())
 		end
@@ -670,12 +688,13 @@ end
 
 function NetworkMatchMakingSTEAM:_retry_join()
 	Application:debug("[NetworkMatchMakingSTEAM:_retry_join]")
-	managers.network:join_game_at_host_rpc(self._server_rpc, self._joined_game)
+
+	if self._server_rpc then
+		managers.network:join_game_at_host_rpc(self._server_rpc, self._joined_game)
+	end
 end
 
 function NetworkMatchMakingSTEAM:_restart_network()
-	Application:debug("[NetworkMatchMakingSTEAM:_restart_network()]", debug.traceback(), self._join_called_from_camp)
-
 	if self._join_called_from_camp then
 		managers.menu:hide_loading_screen()
 
@@ -685,6 +704,8 @@ function NetworkMatchMakingSTEAM:_restart_network()
 		managers.network.voice_chat:destroy_voice()
 		managers.network:queue_stop_network()
 		managers.game_play_central:restart_the_game()
+	else
+		managers.network:prepare_stop_network()
 	end
 end
 
@@ -737,6 +758,7 @@ function NetworkMatchMakingSTEAM:create_lobby(settings, return_to_camp_client)
 					managers.network:session():local_peer():set_synched(true)
 					managers.network:session():local_peer():set_loaded(true)
 					managers.network:session():spawn_players()
+					managers.global_state:fire_event(GlobalStateManager.EVENT_RESTART_CAMP)
 				end
 			end
 		else

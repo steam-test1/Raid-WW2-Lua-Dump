@@ -543,7 +543,7 @@ function RaidGUIControl:_menu_move_to(target_control_name, direction)
 	for _, controls in pairs(component_controls) do
 		for _, control in pairs(controls) do
 			if control._name == target_control_name then
-				if control:visible() and control:selectable() then
+				if control:visible() and control:selectable() and control:enabled() then
 					self:set_selected(false)
 
 					if control._autoconfirm then
@@ -605,4 +605,8 @@ end
 
 function RaidGUIControl:enabled()
 	return self._enabled
+end
+
+function RaidGUIControl:set_enabled(enabled)
+	self._enabled = enabled
 end

@@ -219,7 +219,7 @@ function PlayerTweakData:init()
 	self.movement_state = {}
 	self.movement_state.interaction_delay = 1.5
 	self.camera = {}
-	self.camera.MIN_SENSITIVITY = 0.3
+	self.camera.MIN_SENSITIVITY = 0.1
 	self.camera.MAX_SENSITIVITY = 1.7
 	self.fov_multiplier = {}
 	self.fov_multiplier.MIN = 1
@@ -267,7 +267,7 @@ end
 function PlayerTweakData:_init_default_class_tweak_data()
 	self.class_defaults.default = {}
 	self.class_defaults.default.damage = {}
-	self.class_defaults.default.damage.BASE_HEALTH = 85
+	self.class_defaults.default.damage.BASE_HEALTH = 90
 	self.class_defaults.default.damage.BASE_LIVES = 4
 	self.class_defaults.default.damage.BASE_ARMOR = 2
 	self.class_defaults.default.damage.DODGE_INIT = 0
@@ -320,6 +320,7 @@ function PlayerTweakData:_init_assault_tweak_data()
 
 	self.class_defaults[assault] = deep_clone(self.class_defaults.default)
 	self.class_defaults[assault].damage.BASE_HEALTH = 100
+	self.class_defaults[assault].movement.stamina.STAMINA_REGENERATION_DELAY = 2.2
 	self.class_defaults[assault].movement.speed.WALKING_SPEED = 315
 	self.class_defaults[assault].movement.speed.RUNNING_SPEED = 517.5
 end
@@ -521,6 +522,7 @@ function PlayerTweakData:_init_new_stances()
 	self.stances.garand.crouched.vel_overshot.yaw_pos = 6
 	self.stances.garand.crouched.vel_overshot.pitch_neg = 5
 	self.stances.garand.crouched.vel_overshot.pitch_pos = -5
+	self.stances.garand_golden = deep_clone(self.stances.garand)
 	self.stances.m1918 = deep_clone(self.stances.default)
 
 	local pivot_shoulder_translation = Vector3(11.4138, 7.88427, 2.23107)
@@ -536,7 +538,7 @@ function PlayerTweakData:_init_new_stances()
 	self.stances.m1918.standard.vel_overshot.pitch_neg = 5
 	self.stances.m1918.standard.vel_overshot.pitch_pos = -5
 
-	local pivot_head_translation = Vector3(0, 6.5, 0)
+	local pivot_head_translation = Vector3(0, 10, 0)
 	local pivot_head_rotation = Rotation(0, 0, 0)
 
 	self.stances.m1918.steelsight.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)

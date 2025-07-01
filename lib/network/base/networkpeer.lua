@@ -773,6 +773,11 @@ function NetworkPeer:set_in_lobby(state)
 		self._default_timeout_check_reset = TimerManager:wall():time() + NetworkPeer.PRE_HANDSHAKE_CHK_TIME
 	end
 
+	if managers.network._synced_worlds_temp then
+		self._synced_worlds = managers.network._synced_worlds_temp
+		managers.network._synced_worlds_temp = nil
+	end
+
 	self:_chk_flush_msg_queues()
 end
 
@@ -816,6 +821,10 @@ end
 
 function NetworkPeer:has_statistics()
 	return self._statistics and true or false
+end
+
+function NetworkPeer:clear_statistics()
+	self._statistics = nil
 end
 
 function NetworkPeer:send(func_name, ...)

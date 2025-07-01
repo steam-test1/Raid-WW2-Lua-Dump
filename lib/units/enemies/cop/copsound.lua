@@ -1,8 +1,12 @@
 CopSound = CopSound or class()
+CopSound.MAX_DISTANCE_FROM_PLAYER = 2500
+CopSound.FOOTSTEP_COOLDOWN = 1.1
+CopSound.VO_COOLDOWN = 2
 
 function CopSound:init(unit)
 	self._unit = unit
 	self._speak_expire_t = 0
+	self._footstep_expire_t = 0
 
 	local char_tweak = tweak_data.character[unit:base()._tweak_table]
 
@@ -34,7 +38,31 @@ function CopSound:set_voice_prefix(index)
 	self._prefix = (char_tweak.speech_prefix_p1 or "") .. (nr_variations and tostring(index or math.random(nr_variations)) or "") .. (char_tweak.speech_prefix_p2 or "") .. "_"
 end
 
+function CopSound:_out_of_hearing_range()
+	local player_unit
+
+	if game_state_machine:current_state_name() == "ingame_waiting_for_respawn" then
+		player_unit = game_state_machine:current_state():currently_spectated_unit()
+	else
+		player_unit = managers.player:local_player()
+	end
+
+	if not player_unit then
+		Application:error("[CopSound:_out_of_hearing_range]: Player unit is nil; couldn't determine the distance. The sound won't be played.")
+
+		return true
+	end
+
+	local distance_vector = self._unit:position() - player_unit:position()
+
+	return distance_vector:length() > CopSound.MAX_DISTANCE_FROM_PLAYER
+end
+
 function CopSound:_play(sound_name, source_name)
+	if self:_out_of_hearing_range() then
+		return
+	end
+
 	local source
 
 	if source_name then
@@ -138,7 +166,7 @@ function CopSound:say(sound_name, sync, skip_prefix)
 		return
 	end
 
-	self._speak_expire_t = TimerManager:game():time() + 2
+	self._speak_expire_t = TimerManager:game():time() + CopSound.VO_COOLDOWN
 end
 
 function CopSound:sync_say_str(full_sound)
@@ -153,8 +181,14 @@ function CopSound:speaking(t)
 	return (t or TimerManager:game():time()) < self._speak_expire_t
 end
 
+function CopSound:playing_footsteps(t)
+	return (t or TimerManager:game():time()) < self._footstep_expire_t
+end
+
 function CopSound:anim_clbk_play_sound(unit, queue_name)
-	if not self:speaking() then
+	if not self:speaking() and not self:playing_footsteps() then
+		self._footstep_expire_t = self._footstep_expire_t + CopSound.FOOTSTEP_COOLDOWN
+
 		self:_play(queue_name)
 	end
 end

@@ -102,17 +102,7 @@ function PlayerMovement:post_init()
 		self._unit:network():send_to_host("sync_remote_position", self._m_head_pos, self._m_pos)
 	end
 
-	if self:other_players_in_foxhole() then
-		local units = World:find_units_quick("all", 39)
-
-		for _, unit in ipairs(units) do
-			if unit:foxhole() and not unit:foxhole():taken() then
-				unit:interaction():interact(self._unit)
-
-				break
-			end
-		end
-	end
+	self._check_other_players_in_foxhole = true
 end
 
 function PlayerMovement:attention_handler()
@@ -242,6 +232,32 @@ function PlayerMovement:change_state(name)
 end
 
 function PlayerMovement:update(unit, t, dt)
+	if self._check_other_players_in_foxhole then
+		local ready = true
+
+		for _, peer in pairs(managers.network:session():peers()) do
+			if peer:unit() and peer:unit():movement()._wait_load then
+				ready = false
+			end
+		end
+
+		if ready then
+			self._check_other_players_in_foxhole = nil
+
+			if self:other_players_in_foxhole() then
+				local units = World:find_units_quick("all", 39)
+
+				for _, unit in ipairs(units) do
+					if unit:foxhole() and not unit:foxhole():taken() then
+						unit:interaction():interact(self._unit)
+
+						break
+					end
+				end
+			end
+		end
+	end
+
 	self:_calculate_m_pose()
 
 	if self:_check_out_of_world(t) then

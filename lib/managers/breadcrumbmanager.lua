@@ -2,9 +2,24 @@ BreadcrumbManager = BreadcrumbManager or class()
 BreadcrumbManager.VERSION = 1
 BreadcrumbManager.SLOT_CHARACTER = "character"
 BreadcrumbManager.SLOT_PROFILE = "profile"
+BreadcrumbManager.CATEGORY_NEW_RAID = {
+	identifier = "new_raid",
+	slot = BreadcrumbManager.SLOT_PROFILE,
+}
 BreadcrumbManager.CATEGORY_CONSUMABLE_MISSION = {
 	identifier = "consumable_mission",
-	slot = BreadcrumbManager.SLOT_CHARACTER,
+	slot = BreadcrumbManager.SLOT_PROFILE,
+}
+BreadcrumbManager.CATEGORY_OPERATIONS = {
+	identifier = "operations",
+	slot = BreadcrumbManager.SLOT_PROFILE,
+}
+BreadcrumbManager.CATEGORY_MISSIONS = {
+	subcategories = {
+		BreadcrumbManager.CATEGORY_NEW_RAID,
+		BreadcrumbManager.CATEGORY_CONSUMABLE_MISSION,
+		BreadcrumbManager.CATEGORY_OPERATIONS,
+	},
 }
 BreadcrumbManager.CATEGORY_CHARACTER_CUSTOMIZATION_UPPER = {
 	identifier = CharacterCustomizationTweakData.PART_TYPE_UPPER,

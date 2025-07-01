@@ -18,9 +18,11 @@ require("lib/tweak_data/TimeSpeedEffectTweakData")
 require("lib/tweak_data/SoundTweakData")
 require("lib/tweak_data/LootDropTweakData")
 require("lib/tweak_data/GuiTweakData")
+require("lib/tweak_data/GreedTweakData")
 require("lib/tweak_data/DLCTweakData")
 require("lib/tweak_data/InteractionTweakData")
 require("lib/tweak_data/VehicleTweakData")
+require("lib/tweak_data/MountedWeaponTweakData")
 require("lib/tweak_data/CommWheelTweakData")
 require("lib/tweak_data/BarrageTweakData")
 require("lib/tweak_data/AchievementTweakData")
@@ -35,6 +37,7 @@ require("lib/tweak_data/WarcryTweakData")
 require("lib/tweak_data/WeaponInventoryTweakData")
 require("lib/tweak_data/SubtitlesTweakData")
 require("lib/tweak_data/InputTweakData")
+require("lib/tweak_data/IntelTweakData")
 
 TweakData = TweakData or class()
 TweakData.RELOAD = true
@@ -194,6 +197,10 @@ function TweakData:_set_difficulty_4()
 	self.difficulty_name_id = self.difficulty_name_ids.difficulty_4
 end
 
+function TweakData:number_of_difficulties()
+	return #self.difficulties
+end
+
 function TweakData:difficulty_to_index(difficulty)
 	return table.index_of(self.difficulties, difficulty)
 end
@@ -309,6 +316,7 @@ function TweakData:init()
 	self.dlc = DLCTweakData:new(self)
 	self.interaction = InteractionTweakData:new(self)
 	self.vehicle = VehicleTweakData:new(self)
+	self.mounted_weapon = MountedWeaponTweakData:new(self)
 	self.comm_wheel = CommWheelTweakData:new(self)
 	self.barrage = BarrageTweakData:new(self)
 	self.achievement = AchievementTweakData:new(self)
@@ -320,6 +328,8 @@ function TweakData:init()
 	self.weapon_inventory = WeaponInventoryTweakData:new(self)
 	self.subtitles = SubtitlesTweakData:new(self)
 	self.input = InputTweakData:new(self)
+	self.intel = IntelTweakData:new(self)
+	self.greed = GreedTweakData:new()
 	self.criminals = {}
 	self.criminals.character_names = {
 		"russian",
@@ -827,9 +837,6 @@ function TweakData:init()
 	self.experience_manager.levels[9] = {
 		points = 4400 * multiplier,
 	}
-	self.experience_manager.levels[10] = {
-		points = 5000 * multiplier,
-	}
 
 	local exp_step_start = 10
 	local exp_step_end = 40
@@ -840,6 +847,16 @@ function TweakData:init()
 	for i = exp_step_start, exp_step_end do
 		self.experience_manager.levels[i] = {
 			points = math.round((250000 - exp_step_last_points) * math.pow(exp_step * (i - exp_step_start), exp_step_curve) + exp_step_last_points) * multiplier,
+		}
+	end
+
+	local exp_step_start = 5
+	local exp_step_end = 193
+	local exp_step = 1 / (exp_step_end - exp_step_start)
+
+	for i = 146, exp_step_end do
+		self.experience_manager.levels[i] = {
+			points = math.round(22000 * (exp_step * (i - exp_step_start)) - 6000) * multiplier,
 		}
 	end
 

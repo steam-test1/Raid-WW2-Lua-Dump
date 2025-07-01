@@ -662,6 +662,15 @@ function CriminalsManager:is_character_as_AI_level_blocked(name)
 	return block_AIs and block_AIs[name] or false
 end
 
-function CriminalsManager:set_teamAI_to_true()
+function CriminalsManager:on_mission_end_callback()
 	Global.game_settings.team_ai = true
+end
+
+function CriminalsManager:on_mission_start_callback()
+	local current_save_slot = managers.raid_job:get_current_save_slot()
+	local operation_save_data = managers.raid_job:get_save_slots()[current_save_slot]
+
+	if operation_save_data then
+		Global.game_settings.team_ai = operation_save_data.team_ai
+	end
 end

@@ -6,7 +6,11 @@ CopLogicSniper.is_available_for_assignment = CopLogicAttack.is_available_for_ass
 CopLogicSniper.death_clbk = CopLogicAttack.death_clbk
 
 function CopLogicSniper.enter(data, new_logic_name, enter_params)
-	CopLogicBase.enter(data, new_logic_name, enter_params)
+	local my_data = {
+		unit = data.unit,
+	}
+
+	CopLogicBase.enter(data, new_logic_name, enter_params, my_data)
 
 	local objective = data.objective
 
@@ -32,18 +36,6 @@ function CopLogicSniper.enter(data, new_logic_name, enter_params)
 				body_part = 3,
 				type = "idle",
 			})
-		end
-
-		if old_internal_data.nearest_cover then
-			my_data.nearest_cover = old_internal_data.nearest_cover
-
-			managers.navigation:reserve_cover(my_data.nearest_cover[1], data.pos_rsrv_id)
-		end
-
-		if old_internal_data.best_cover then
-			my_data.best_cover = old_internal_data.best_cover
-
-			managers.navigation:reserve_cover(my_data.best_cover[1], data.pos_rsrv_id)
 		end
 	end
 
@@ -90,14 +82,6 @@ function CopLogicSniper.exit(data, new_logic_name, enter_params)
 
 	data.unit:brain():cancel_all_pathing_searches()
 	CopLogicBase.cancel_queued_tasks(my_data)
-
-	if my_data.nearest_cover then
-		managers.navigation:release_cover(my_data.nearest_cover[1])
-	end
-
-	if my_data.best_cover then
-		managers.navigation:release_cover(my_data.best_cover[1])
-	end
 
 	if my_data.weapon_laser_on then
 		if data.unit:inventory():equipped_unit() then

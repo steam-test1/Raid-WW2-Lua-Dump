@@ -4,24 +4,19 @@ TeamAILogicSurrender.on_alert = TeamAILogicIdle.on_alert
 TeamAILogicSurrender.on_recovered = TeamAILogicDisabled.on_recovered
 
 function TeamAILogicSurrender.enter(data, new_logic_name, enter_params)
-	TeamAILogicBase.enter(data, new_logic_name, enter_params)
-	data.unit:brain():cancel_all_pathing_searches()
-
-	local old_internal_data = data.internal_data
 	local my_data = {
 		unit = data.unit,
 	}
+
+	TeamAILogicBase.enter(data, new_logic_name, enter_params, my_data)
+	data.unit:brain():cancel_all_pathing_searches()
+
+	local old_internal_data = data.internal_data
 
 	my_data.enemy_detect_slotmask = managers.slot:get_mask("enemies")
 	my_data.vision = data.char_tweak.vision.idle
 
 	if old_internal_data then
-		if old_internal_data.nearest_cover then
-			my_data.nearest_cover = old_internal_data.nearest_cover
-
-			managers.navigation:reserve_cover(my_data.nearest_cover[1], data.pos_rsrv_id)
-		end
-
 		my_data.attention_unit = old_internal_data.attention_unit
 	end
 
@@ -57,10 +52,6 @@ function TeamAILogicSurrender.exit(data, new_logic_name, enter_params)
 	local my_data = data.internal_data
 
 	my_data.exiting = true
-
-	if my_data.nearest_cover then
-		managers.navigation:release_cover(my_data.nearest_cover[1])
-	end
 
 	TeamAILogicDisabled._unregister_revive_SO(my_data)
 

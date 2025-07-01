@@ -54,6 +54,7 @@ function SentryGunDamage:init(unit)
 	self._HEALTH_INIT_PERCENT = self._HEALTH_INIT / self._HEALTH_GRANULARITY
 	self._SHIELD_HEALTH_INIT_PERCENT = self._SHIELD_HEALTH_INIT / self._HEALTH_GRANULARITY
 	self._invulnerable = true
+	self._no_blood = true
 end
 
 function SentryGunDamage:set_health(amount, shield_health_amount)

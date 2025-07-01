@@ -77,6 +77,8 @@ function WeaponSelectionGui:close()
 	managers.weapon_skills:update_weapon_skills(WeaponInventoryManager.BM_CATEGORY_PRIMARY_ID, equipped_primary_weapon_id, WeaponSkillsManager.UPGRADE_ACTION_ACTIVATE)
 	managers.weapon_skills:update_weapon_skills(WeaponInventoryManager.BM_CATEGORY_SECONDARY_ID, equipped_secondary_weapon_id, WeaponSkillsManager.UPGRADE_ACTION_ACTIVATE)
 	managers.player:_internal_load()
+	managers.challenge:deactivate_all_challenges()
+	managers.weapon_skills:activate_current_challenges_for_weapon(managers.blackmarket:equipped_primary().weapon_id)
 	managers.player:local_player():camera():play_redirect(PlayerStandard.IDS_EQUIP)
 	self._rotate_weapon:set_unit(nil)
 	self:_enable_dof()
@@ -742,6 +744,10 @@ function WeaponSelectionGui:on_enable_scope_click()
 end
 
 function WeaponSelectionGui:on_upgrade_button_click()
+	if not self._weapon_select_allowed then
+		return
+	end
+
 	local weapon_factory_id = managers.weapon_factory:get_factory_id_by_weapon_id(self._selected_weapon_id)
 	local weapon_part_names = tweak_data.weapon.factory[weapon_factory_id].uses_parts
 	local weapon_part_unit_path = ""

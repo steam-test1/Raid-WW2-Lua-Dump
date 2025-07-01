@@ -100,6 +100,7 @@ function CopActionShoot:init(action_desc, common_data)
 	end
 
 	self._skipped_frames = 1
+	self._get_target_position = self._get_target_pos
 
 	return true
 end
@@ -173,13 +174,13 @@ function CopActionShoot:on_attention(attention, old_attention)
 
 			self._aim_transition = {
 				duration = 0.333,
-				start_t = t,
+				start_t = t + 0.0001,
 				start_vec = mvector3.copy(self._common_data.look_vec),
 			}
-			self._get_target_pos = self._get_transition_target_pos
+			self._get_target_position = self._get_transition_target_pos
 		else
 			self._aim_transition = nil
-			self._get_target_pos = nil
+			self._get_target_position = self._get_target_pos
 		end
 
 		self._mod_enable_t = TimerManager:game():time() + 0.5
@@ -235,7 +236,7 @@ function CopActionShoot:on_attention(attention, old_attention)
 
 		if self._aim_transition then
 			self._aim_transition = nil
-			self._get_target_pos = nil
+			self._get_target_position = self._get_target_pos
 		end
 	end
 
@@ -293,7 +294,7 @@ function CopActionShoot:update(t)
 	local target_vec, target_dis, autotarget, target_pos
 
 	if self._attention then
-		target_pos, target_vec, target_dis, autotarget = self:_get_target_pos(shoot_from_pos, self._attention, t)
+		target_pos, target_vec, target_dis, autotarget = self:_get_target_position(shoot_from_pos, self._attention, t)
 
 		local tar_vec_flat = temp_vec2
 
@@ -677,13 +678,23 @@ end
 
 function CopActionShoot:_get_transition_target_pos(shoot_from_pos, attention, t)
 	local transition = self._aim_transition
+
+	if not transition or not transition.start_t then
+		debug_pause("[CopActionShoot][_get_transition_target_pos]  Invalid params for _get_transition_target_pos:    ", inspect(transition))
+
+		self._aim_transition = nil
+		self._get_target_position = self._get_target_pos
+
+		return self:_get_target_position(shoot_from_pos, attention)
+	end
+
 	local prog = (t - transition.start_t) / transition.duration
 
 	if prog > 1 then
 		self._aim_transition = nil
-		self._get_target_pos = nil
+		self._get_target_position = self._get_target_pos
 
-		return self:_get_target_pos(shoot_from_pos, attention)
+		return self:_get_target_position(shoot_from_pos, attention)
 	end
 
 	prog = math.bezier(bezier_curve, prog)

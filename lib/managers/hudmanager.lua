@@ -19,6 +19,7 @@ HUDManager.ASSAULT_DIALOGS = {
 HUDManager.OVERHEAD_Y_OFFSET = 18
 HUDManager.SUSPICION_INDICATOR_Y_OFFSET = 40
 HUDManager.DEFAULT_ALPHA = 1
+HUDManager.DIFFERENT_SUSPICION_INDICATORS_FOR_TEAMMATES = true
 
 core:import("CoreEvent")
 
@@ -784,7 +785,7 @@ function HUDManager:add_suspicion_indicator(id, data)
 		return
 	end
 
-	self:create_suspicion_indicator(id, data.position, data.state)
+	self:create_suspicion_indicator(id, data.position, data.state, data.suspect)
 
 	local suspicion = HUDSuspicionIndicator:new(hud, data)
 
@@ -1742,93 +1743,104 @@ function HUDManager:_update_suspicion_indicators(t, dt)
 
 			local dot = mvector3.dot(wp_cam_forward, wp_dir_normalized)
 
-			if dot < 0 or parent_panel:outside(mvector3.x(wp_pos), mvector3.y(wp_pos)) then
-				if suspicion_indicator:onscreen() then
-					suspicion_indicator:go_offscreen()
-					self:show_suspicion_indicator(id)
+			if suspicion_indicator:suspect() == "player" or HUDManager.DIFFERENT_SUSPICION_INDICATORS_FOR_TEAMMATES ~= true then
+				if dot < 0 or parent_panel:outside(mvector3.x(wp_pos), mvector3.y(wp_pos)) then
+					if suspicion_indicator:onscreen() then
+						suspicion_indicator:go_offscreen()
+						self:show_suspicion_indicator(id)
 
-					suspicion_indicator.out_timer = 0 - (1 - suspicion_indicator.in_timer)
-				end
+						suspicion_indicator.out_timer = 0 - (1 - suspicion_indicator.in_timer)
+					end
 
-				if self:need_to_init_suspicion_indicator(id) then
-					self:initialize_suspicion_indicator(id, 1)
-				end
+					if self:need_to_init_suspicion_indicator(id) then
+						self:initialize_suspicion_indicator(id, 1)
+					end
 
-				local direction = wp_onscreen_direction
-				local panel_center_x, panel_center_y = parent_panel:center()
+					local direction = wp_onscreen_direction
+					local panel_center_x, panel_center_y = parent_panel:center()
 
-				mvector3.set_static(direction, wp_pos.x - panel_center_x, wp_pos.y - panel_center_y, 0)
-				mvector3.normalize(direction)
+					mvector3.set_static(direction, wp_pos.x - panel_center_x, wp_pos.y - panel_center_y, 0)
+					mvector3.normalize(direction)
 
-				local target_pos = wp_onscreen_target_pos
+					local target_pos = wp_onscreen_target_pos
 
-				mvector3.set_static(target_pos, panel_center_x + mvector3.x(direction) * HUDSuspicionDirection.RADIUS, panel_center_y + mvector3.y(direction) * HUDSuspicionDirection.RADIUS, 0)
+					mvector3.set_static(target_pos, panel_center_x + mvector3.x(direction) * HUDSuspicionDirection.RADIUS, panel_center_y + mvector3.y(direction) * HUDSuspicionDirection.RADIUS, 0)
 
-				if suspicion_indicator.out_timer ~= 1 then
-					suspicion_indicator.out_timer = math.clamp(suspicion_indicator.out_timer + dt, 0, 1)
+					if suspicion_indicator.out_timer ~= 1 then
+						suspicion_indicator.out_timer = math.clamp(suspicion_indicator.out_timer + dt, 0, 1)
 
-					mvector3.set(suspicion_indicator.current_position, math.bezier({
-						suspicion_indicator.current_position,
-						suspicion_indicator.current_position,
-						target_pos,
-						target_pos,
-					}, suspicion_indicator.out_timer))
+						mvector3.set(suspicion_indicator.current_position, math.bezier({
+							suspicion_indicator.current_position,
+							suspicion_indicator.current_position,
+							target_pos,
+							target_pos,
+						}, suspicion_indicator.out_timer))
 
-					local current_alpha = math.bezier({
-						suspicion_indicator:alpha(),
-						suspicion_indicator:alpha(),
-						0,
-						0,
-					}, suspicion_indicator.out_timer)
+						local current_alpha = math.bezier({
+							suspicion_indicator:alpha(),
+							suspicion_indicator:alpha(),
+							0,
+							0,
+						}, suspicion_indicator.out_timer)
 
-					suspicion_indicator:set_alpha(current_alpha)
+						suspicion_indicator:set_alpha(current_alpha)
+					else
+						mvector3.set(suspicion_indicator.current_position, target_pos)
+					end
+
+					suspicion_indicator:set_center(mvector3.x(suspicion_indicator.current_position), mvector3.y(suspicion_indicator.current_position))
 				else
-					mvector3.set(suspicion_indicator.current_position, target_pos)
-				end
+					if not suspicion_indicator:onscreen() then
+						suspicion_indicator:go_onscreen()
+						managers.hud:hide_suspicion_indicator(id)
 
-				suspicion_indicator:set_center(mvector3.x(suspicion_indicator.current_position), mvector3.y(suspicion_indicator.current_position))
+						suspicion_indicator.in_timer = 0 - (1 - suspicion_indicator.out_timer)
+					end
+
+					if self:need_to_init_suspicion_indicator(id) then
+						self:initialize_suspicion_indicator(id, 0)
+					end
+
+					local alpha = suspicion_indicator:active_alpha()
+
+					if dot > 0.99 then
+						alpha = math.clamp((1 - dot) / 0.01, 0.4, alpha)
+					end
+
+					suspicion_indicator:set_alpha(alpha)
+
+					if suspicion_indicator.in_timer ~= 1 then
+						suspicion_indicator.in_timer = math.clamp(suspicion_indicator.in_timer + dt, 0, 1)
+
+						mvector3.set(suspicion_indicator.current_position, math.bezier({
+							suspicion_indicator.current_position,
+							suspicion_indicator.current_position,
+							wp_pos,
+							wp_pos,
+						}, suspicion_indicator.in_timer))
+
+						local current_alpha = math.bezier({
+							suspicion_indicator:alpha(),
+							suspicion_indicator:alpha(),
+							suspicion_indicator:active_alpha(),
+							suspicion_indicator:active_alpha(),
+						}, suspicion_indicator.in_timer)
+
+						suspicion_indicator:set_alpha(current_alpha)
+					else
+						mvector3.set(suspicion_indicator.current_position, wp_pos)
+					end
+
+					suspicion_indicator:set_center(mvector3.x(suspicion_indicator.current_position), mvector3.y(suspicion_indicator.current_position) - HUDManager.SUSPICION_INDICATOR_Y_OFFSET)
+				end
 			else
-				if not suspicion_indicator:onscreen() then
-					suspicion_indicator:go_onscreen()
-					managers.hud:hide_suspicion_indicator(id)
-
-					suspicion_indicator.in_timer = 0 - (1 - suspicion_indicator.out_timer)
-				end
-
-				if self:need_to_init_suspicion_indicator(id) then
-					self:initialize_suspicion_indicator(id, 0)
-				end
-
-				local alpha = 1
-
-				if dot > 0.99 then
-					alpha = math.clamp((1 - dot) / 0.01, 0.4, alpha)
-				end
-
-				suspicion_indicator:set_alpha(alpha)
-
-				if suspicion_indicator.in_timer ~= 1 then
-					suspicion_indicator.in_timer = math.clamp(suspicion_indicator.in_timer + dt, 0, 1)
-
-					mvector3.set(suspicion_indicator.current_position, math.bezier({
-						suspicion_indicator.current_position,
-						suspicion_indicator.current_position,
-						wp_pos,
-						wp_pos,
-					}, suspicion_indicator.in_timer))
-
-					local current_alpha = math.bezier({
-						suspicion_indicator:alpha(),
-						suspicion_indicator:alpha(),
-						1,
-						1,
-					}, suspicion_indicator.in_timer)
-
-					suspicion_indicator:set_alpha(current_alpha)
+				if dot < 0 or parent_panel:outside(mvector3.x(wp_pos), mvector3.y(wp_pos)) then
+					suspicion_indicator:set_alpha(0)
 				else
-					mvector3.set(suspicion_indicator.current_position, wp_pos)
+					suspicion_indicator:set_alpha(suspicion_indicator:active_alpha())
 				end
 
+				mvector3.set(suspicion_indicator.current_position, wp_pos)
 				suspicion_indicator:set_center(mvector3.x(suspicion_indicator.current_position), mvector3.y(suspicion_indicator.current_position) - HUDManager.SUSPICION_INDICATOR_Y_OFFSET)
 			end
 		end

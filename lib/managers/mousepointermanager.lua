@@ -59,8 +59,14 @@ function MousePointerManager:unacquire_input()
 	Input:mouse():unacquire()
 	Input:mouse():set_deviceless(true)
 
-	local xscale = tweak_data.gui.base_resolution.x / RenderSettings.resolution.x
-	local yscale = tweak_data.gui.base_resolution.x / RenderSettings.resolution.x
+	local base_aspect = tweak_data.gui.base_resolution.x / tweak_data.gui.base_resolution.y
+	local xscale = tweak_data.gui.base_resolution.x / (RenderSettings.resolution.y * base_aspect)
+	local yscale = tweak_data.gui.base_resolution.x / (RenderSettings.resolution.y * base_aspect)
+
+	if RenderSettings.resolution.x / RenderSettings.resolution.y <= base_aspect + 0.0001 then
+		xscale = tweak_data.gui.base_resolution.x / RenderSettings.resolution.x
+		yscale = tweak_data.gui.base_resolution.x / RenderSettings.resolution.x
+	end
 
 	self._ws:set_absolute_mouse(xscale, yscale, 0, 0)
 end

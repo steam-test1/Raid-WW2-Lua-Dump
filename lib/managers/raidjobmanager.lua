@@ -152,6 +152,7 @@ function RaidJobManager:_on_restart_to_camp()
 		quit = true,
 		success = false,
 	})
+	managers.lootdrop:reset_loot_value_counters()
 	managers.global_state:reset_all_flags()
 
 	if managers.player:current_state() == "turret" then
@@ -213,6 +214,11 @@ function RaidJobManager:current_job_type()
 end
 
 function RaidJobManager:on_mission_restart()
+	managers.challenge_cards:remove_active_challenge_card()
+	managers.greed:on_level_exited(false)
+	managers.consumable_missions:on_level_exited(false)
+	managers.statistics:reset_session()
+	managers.lootdrop:reset_loot_value_counters()
 	self:on_mission_ended()
 	self:on_mission_started()
 end
@@ -241,7 +247,6 @@ end
 
 function RaidJobManager:do_external_start_mission(mission, event_index)
 	managers.player:set_local_player_in_camp(false)
-	managers.consumable_missions:on_mission_started()
 
 	local data = {}
 
@@ -275,7 +280,9 @@ function RaidJobManager:do_external_start_mission(mission, event_index)
 		return
 	end
 
-	managers.menu:show_loading_screen(data, callback(self, self, "external_start_mission_clbk"))
+	managers.consumable_missions:on_mission_started()
+	managers.menu:show_loading_screen(data)
+	managers.queued_tasks:queue(nil, self.external_start_mission_clbk, self, nil, 0.6, nil, true)
 end
 
 function RaidJobManager:external_start_mission_clbk()
@@ -375,6 +382,7 @@ function RaidJobManager:do_external_end_mission(restart_camp)
 	Application:debug("[RaidJobManager:external_end_mission()]", restart_camp)
 	managers.player:set_local_player_in_camp(true)
 	managers.consumable_missions:on_level_exited(self._current_job and self:stage_success())
+	managers.greed:on_level_exited(self._current_job and self:stage_success())
 
 	if restart_camp then
 		self:restart_camp()
@@ -404,19 +412,31 @@ function RaidJobManager:do_external_end_mission(restart_camp)
 		local data = {}
 
 		if not managers.worldcollection:first_pass() and mission.loading_success then
+			local at_last_stage = false
+
 			if not self._current_job then
 				data.mission = mission
 			elseif self._current_job.job_type == OperationsTweakData.JOB_TYPE_RAID then
 				data.mission = tweak_data.operations.missions[self._current_job.job_id]
+				at_last_stage = true
 			else
 				local operation_tweak_data = tweak_data.operations.missions[self._current_job.job_id]
 				local current_event_id = self._current_job.events_index[self._current_job.current_event]
 				local event_tweak_data = operation_tweak_data.events[current_event_id]
 
 				data.mission = event_tweak_data
+				at_last_stage = self._current_job.current_event == #self._current_job.events_index
 			end
 
 			if self._current_job and self:stage_success() then
+				if at_last_stage then
+					local difficulty = Global.game_settings and Global.game_settings.difficulty or Global.DEFAULT_DIFFICULTY
+					local difficulty_index = tweak_data:difficulty_to_index(difficulty)
+
+					Application:trace("finished it on difficulty", difficulty)
+					managers.progression:complete_mission_on_difficulty(self._current_job.job_type, self._current_job.job_id, difficulty_index)
+				end
+
 				data.success = true
 			elseif self._current_job and not self:stage_success() then
 				data.success = false
@@ -436,7 +456,8 @@ function RaidJobManager:do_external_end_mission(restart_camp)
 			self:complete_job()
 		end
 
-		managers.menu:show_loading_screen(data, callback(self, self, "external_end_mission_clbk"))
+		managers.menu:show_loading_screen(data)
+		managers.queued_tasks:queue(nil, self.external_end_mission_clbk, self, nil, 0.6, nil, true)
 	end
 end
 
@@ -444,6 +465,10 @@ function RaidJobManager:save_tutorial_played_flag(value)
 	self._play_tutorial = not value
 
 	managers.savefile:save_game(SavefileManager.SETTING_SLOT)
+end
+
+function RaidJobManager:set_tutorial_played_flag(value)
+	self._play_tutorial = not value
 end
 
 function RaidJobManager:restart_camp()
@@ -558,6 +583,8 @@ function RaidJobManager:is_at_last_event()
 end
 
 function RaidJobManager:complete_current_event()
+	Application:trace("[RaidJobManager][complete_current_event]")
+
 	if not self._current_job then
 		Application:error("[RaidJobManager:complete_current_event] It seems you are not in a mission.")
 
@@ -593,6 +620,8 @@ function RaidJobManager:sync_current_event_index(current_event)
 end
 
 function RaidJobManager:sync_event_loot_data(loot_acquired, loot_spawned)
+	Application:trace("[RaidJobManager][sync_event_loot_data]")
+
 	local event_loot_data = {}
 
 	event_loot_data.acquired = loot_acquired
@@ -684,8 +713,12 @@ function RaidJobManager:start_event(event_id)
 end
 
 function RaidJobManager:complete_job()
-	if self._current_job.job_type == OperationsTweakData.JOB_TYPE_OPERATION then
+	if Network:is_server() and self._current_job.job_type == OperationsTweakData.JOB_TYPE_OPERATION then
 		self:delete_save(self._current_save_slot)
+	end
+
+	if Network:is_server() then
+		managers.network:session():send_to_peers_synched("sync_complete_job")
 	end
 
 	self._current_save_slot = nil
@@ -849,6 +882,15 @@ function RaidJobManager:save_game(data)
 
 			save_data.difficulty = Global.game_settings.difficulty
 			save_data.difficulty_id = tweak_data:difficulty_to_index(save_data.difficulty)
+			save_data.permission = Global.game_settings.permission
+			save_data.drop_in_allowed = Global.game_settings.drop_in_allowed
+			save_data.team_ai = self._save_slots[self._current_save_slot].team_ai
+
+			if save_data.team_ai == nil then
+				save_data.team_ai = Global.game_settings.team_ai
+			end
+
+			save_data.auto_kick = Global.game_settings.auto_kick
 			save_data.events_index = current_job.events_index
 			self._save_slots[self._current_save_slot] = save_data
 		end
@@ -873,7 +915,7 @@ function RaidJobManager:_prepare_peer_save_data()
 	table.insert(peer_save_data, local_player_data)
 
 	for index, peer in pairs(managers.network:session():all_peers()) do
-		if peer:unit() ~= managers.player:player_unit() then
+		if peer ~= managers.network:session():local_peer() then
 			local peer_data = {}
 
 			peer_data.name = peer:name()

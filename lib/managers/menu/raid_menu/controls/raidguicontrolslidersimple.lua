@@ -5,6 +5,7 @@ RaidGUIControlSliderSimple.SLIDER_ICON = "ico_slider_thumb"
 RaidGUIControlSliderSimple.SLIDER_BACKGROUND_COLOR = tweak_data.gui.colors.raid_grey
 RaidGUIControlSliderSimple.SLIDER_COLOR = tweak_data.gui.colors.raid_white
 RaidGUIControlSliderSimple.SLIDER_HIGHLIGHT_COLOR = tweak_data.gui.colors.raid_red
+RaidGUIControlSliderSimple.DISABLED_COLOR = tweak_data.gui.colors.raid_dark_grey
 RaidGUIControlSliderSimple.SLIDER_LINE_HEIGHT = 4
 RaidGUIControlSliderSimple.CONTROLLER_STEP = 4
 
@@ -84,6 +85,10 @@ function RaidGUIControlSliderSimple:_create_slider_controls()
 end
 
 function RaidGUIControlSliderSimple:on_mouse_pressed()
+	if not self._enabled then
+		return
+	end
+
 	self._old_active_control = managers.raid_menu:get_active_control()
 
 	managers.raid_menu:set_active_control(self)
@@ -94,6 +99,10 @@ function RaidGUIControlSliderSimple:on_mouse_pressed()
 end
 
 function RaidGUIControlSliderSimple:on_mouse_released()
+	if not self._enabled then
+		return
+	end
+
 	managers.raid_menu:set_active_control(self._old_active_control)
 
 	self._active = false
@@ -102,6 +111,10 @@ function RaidGUIControlSliderSimple:on_mouse_released()
 end
 
 function RaidGUIControlSliderSimple:on_mouse_moved(o, x, y)
+	if not self._enabled then
+		return
+	end
+
 	RaidGUIControlSliderSimple.super.on_mouse_moved(o, x, y)
 
 	if self._active and alive(self._object._engine_panel) then
@@ -112,6 +125,20 @@ end
 function RaidGUIControlSliderSimple:on_mouse_out(x, y)
 	RaidGUIControlSliderSimple.super.on_mouse_out(self, x, y)
 	self:on_mouse_released()
+end
+
+function RaidGUIControlSliderSimple:set_enabled(enabled)
+	RaidGUIControlSliderSimple.super.set_enabled(self, enabled)
+
+	if enabled then
+		self._slider_thumb:set_color(Color.white)
+		self._slider_line:set_color(RaidGUIControlSliderSimple.SLIDER_BACKGROUND_COLOR)
+		self._slider_line_active:set_color(RaidGUIControlSliderSimple.SLIDER_COLOR)
+	else
+		self._slider_thumb:set_color(RaidGUIControlSliderSimple.DISABLED_COLOR)
+		self._slider_line:set_color(RaidGUIControlSliderSimple.DISABLED_COLOR)
+		self._slider_line_active:set_color(RaidGUIControlSliderSimple.DISABLED_COLOR)
+	end
 end
 
 function RaidGUIControlSliderSimple:set_value_by_x_coord(selected_coord_x)
@@ -155,11 +182,23 @@ function RaidGUIControlSliderSimple:render_value()
 end
 
 function RaidGUIControlSliderSimple:highlight_on()
+	if not self._enabled then
+		return
+	end
+
+	self._highlighted = true
+
 	self._object:stop()
 	self._object:animate(callback(self, self, "_animate_highlight_on"))
 end
 
 function RaidGUIControlSliderSimple:highlight_off()
+	if not self._enabled then
+		return
+	end
+
+	self._highlighted = true
+
 	self._object:stop()
 	self._object:animate(callback(self, self, "_animate_highlight_off"))
 end

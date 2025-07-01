@@ -368,6 +368,12 @@ function ExplosionManager:_apply_body_damage(is_server, hit_body, user_unit, dir
 		end
 
 		if sync_damage and managers.network:session() then
+			if hit_body:position():length() > 90000 then
+				debug_pause("[ExplosionManager][_apply_body_damage] Position of the hit body is outside of alowed range and wouldn't be transportable through the network: ", inspect(hit_body), hit_body:position())
+
+				return
+			end
+
 			if alive(user_unit) then
 				managers.network:session():send_to_peers_synched("sync_body_damage_explosion", hit_body, user_unit, normal, hit_body:position(), dir, math.min(32768, network_damage), armor_piercing)
 			else

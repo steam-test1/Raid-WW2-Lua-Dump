@@ -217,6 +217,10 @@ function HUDObjectiveSub:set_current_amount(current_amount)
 
 	if self._total_amount >= 10 then
 		amount_string = string.format("%02d", current_amount)
+	elseif self._total_amount == 0 then
+		Application:error("[HUDObjectiveSub:set_current_amount] Divison by zero! self._total_amount=0")
+
+		return
 	end
 
 	local amount_percentage = self._current_amount / self._total_amount * 100

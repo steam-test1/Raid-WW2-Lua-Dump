@@ -60,6 +60,16 @@ function WarcryBerserk:duration()
 	return self._tweak_data.base_duration * managers.player:upgrade_value("player", "warcry_duration", 1)
 end
 
+function WarcryBerserk:get_level_description(level)
+	level = math.clamp(level, 1, #self._tweak_data.buffs)
+
+	if level >= 2 then
+		return managers.localization:text("skill_warcry_berserk_level_" .. tostring(level) .. "_desc")
+	end
+
+	return "warcry_berserk_desc"
+end
+
 function WarcryBerserk:check_ammo_consumption()
 	self._ammo_consumption_counter = self._ammo_consumption_counter - 1
 

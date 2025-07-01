@@ -267,7 +267,6 @@ function ChallengeCardsGui:_layout()
 	if not managers.raid_menu:is_pc_controller() then
 		self._suggest_card_button:hide()
 		self._clear_card_button:hide()
-		self:bind_controller_inputs()
 	end
 
 	if ChallengeCardsGui.PHASE == 2 then
@@ -300,6 +299,7 @@ function ChallengeCardsGui:_layout()
 		self:redirect_to_phase_two_screen()
 	end
 
+	self:bind_controller_inputs()
 	managers.challenge_cards:set_automatic_steam_inventory_refresh(true)
 	managers.network.account:inventory_load()
 	self:_players_inventory_processed({
@@ -690,7 +690,12 @@ function ChallengeCardsGui:bind_controller_inputs()
 				"menu_legend_challenge_cards_select_card",
 				"menu_legend_challenge_cards_continue_without_card",
 			},
-			keyboard = {},
+			keyboard = {
+				{
+					key = "footer_back",
+					callback = callback(self, self, "_on_legend_pc_back", nil),
+				},
+			},
 		}
 	end
 

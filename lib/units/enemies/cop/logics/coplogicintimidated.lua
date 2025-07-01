@@ -3,13 +3,14 @@ local tmp_vec1 = Vector3()
 CopLogicIntimidated = class(CopLogicBase)
 
 function CopLogicIntimidated.enter(data, new_logic_name, enter_params)
-	CopLogicBase.enter(data, new_logic_name, enter_params)
-	data.unit:brain():cancel_all_pathing_searches()
-
-	local old_internal_data = data.internal_data
 	local my_data = {
 		unit = data.unit,
 	}
+
+	CopLogicBase.enter(data, new_logic_name, enter_params, my_data)
+	data.unit:brain():cancel_all_pathing_searches()
+
+	local old_internal_data = data.internal_data
 
 	data.internal_data = my_data
 	my_data.detection = data.char_tweak.detection.combat
@@ -18,12 +19,6 @@ function CopLogicIntimidated.enter(data, new_logic_name, enter_params)
 
 	if data.attention_obj then
 		CopLogicBase._set_attention_obj(data, nil, nil)
-	end
-
-	if old_internal_data and old_internal_data.nearest_cover then
-		my_data.nearest_cover = old_internal_data.nearest_cover
-
-		managers.navigation:reserve_cover(my_data.nearest_cover[1], data.pos_rsrv_id)
 	end
 
 	my_data.surrender_break_t = data.char_tweak.surrender_break_time and data.t + math.random(data.char_tweak.surrender_break_time[1], data.char_tweak.surrender_break_time[2], math.random())
@@ -74,10 +69,6 @@ function CopLogicIntimidated.exit(data, new_logic_name, enter_params)
 
 	if new_logic_name ~= "inactive" then
 		data.unit:base():set_slot(data.unit, 12)
-	end
-
-	if my_data.nearest_cover then
-		managers.navigation:release_cover(my_data.nearest_cover[1])
 	end
 
 	if new_logic_name ~= "inactive" then

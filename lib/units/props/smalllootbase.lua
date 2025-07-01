@@ -34,9 +34,9 @@ function SmallLootBase:take(unit)
 		duration = 2,
 		id = "hud_hint_grabbed_nazi_gold",
 		shelf_life = 5,
-		text = managers.localization:text("hud_hint_grabbed_nazi_gold", {
-			AMOUNT = string.format("%d", percentage_picked_up),
-		}),
+		acquired = managers.lootdrop:picked_up_current_leg(),
+		notification_type = HUDNotification.DOG_TAG,
+		total = managers.lootdrop:loot_spawned_current_leg(),
 	})
 end
 
@@ -44,8 +44,16 @@ function SmallLootBase:taken(skip_sync)
 	managers.lootdrop:pickup_loot(self._unit:loot_drop():value(), self._unit)
 
 	if Network:is_server() then
+		managers.notification:add_notification({
+			duration = 2,
+			id = "hud_hint_grabbed_nazi_gold",
+			shelf_life = 5,
+			acquired = managers.lootdrop:picked_up_current_leg(),
+			notification_type = HUDNotification.DOG_TAG,
+			total = managers.lootdrop:loot_spawned_current_leg(),
+		})
 		self:_set_empty()
-		managers.network:session():send_to_peers_synched("sync_picked_up_loot_values", managers.lootdrop:picked_up_current_leg(), managers.lootdrop:picked_up_total())
+		managers.network:session():send_to_peers_synched("sync_picked_up_loot_values", managers.lootdrop:picked_up_current_leg(), managers.lootdrop:loot_spawned_current_leg())
 	end
 end
 

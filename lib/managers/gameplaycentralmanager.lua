@@ -712,7 +712,7 @@ function GamePlayCentralManager:restart_the_game()
 	managers.raid_job:on_restart_to_camp()
 	managers.loot:on_restart_to_camp()
 	managers.mission:on_restart_to_camp()
-	managers.criminals:set_teamAI_to_true()
+	managers.criminals:on_mission_end_callback()
 	managers.vehicle:on_restart_to_camp()
 
 	local restart_camp = managers.raid_job:is_camp_loaded()
@@ -741,6 +741,7 @@ end
 
 function GamePlayCentralManager:stop_the_game()
 	Application:trace("[GamePlayCentralManager:stop_the_game()]")
+	World:set_extensions_update_enabled(false)
 	game_state_machine:change_state_by_name("ingame_standard")
 	managers.raid_job:stop_sounds()
 	managers.statistics:stop_session()

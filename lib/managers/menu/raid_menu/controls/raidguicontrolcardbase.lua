@@ -27,7 +27,7 @@ function RaidGUIControlCardBase:init(parent, params, item_data, grid_params)
 
 	self._card_panel = nil
 
-	local card = "ra_b_in_fine_feather"
+	local card = "ra_on_the_scrounge"
 
 	self._grid_params = grid_params
 	self._item_data = item_data
@@ -54,7 +54,7 @@ function RaidGUIControlCardBase:init(parent, params, item_data, grid_params)
 
 	local card_data = tweak_data.challenge_cards:get_card_by_key_name(card)
 	local card_rarity = card_data.rarity
-	local card_texture = tweak_data.challenge_cards.challenge_card_texture_path .. "ra_b_in_fine_feather"
+	local card_texture = tweak_data.challenge_cards.challenge_card_texture_path .. "cc_raid_common_on_the_scrounge_hud"
 	local card_texture_rect = tweak_data.challenge_cards.challenge_card_texture_rect
 	local card_rect = {}
 

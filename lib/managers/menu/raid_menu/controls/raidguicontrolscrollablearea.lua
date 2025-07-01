@@ -11,10 +11,11 @@ function RaidGUIControlScrollableArea:init(parent, params)
 	outer_panel_params.name = outer_panel_params.name .. "_outer"
 	self._object = self._panel:panel(outer_panel_params)
 
+	local scrollbar_x_offset = self._params.scrollbar_offset or 0
 	local inner_panel_params = clone(self._params)
 
 	inner_panel_params.name = inner_panel_params.name .. "_inner"
-	inner_panel_params.w = self._object:w() - RaidGUIControlScrollableArea.SCROLLBAR_WIDTH
+	inner_panel_params.w = self._object:w() - RaidGUIControlScrollableArea.SCROLLBAR_WIDTH - scrollbar_x_offset
 	inner_panel_params.scrollable = nil
 	inner_panel_params.scroll_step = nil
 	inner_panel_params.x = 0
@@ -23,9 +24,9 @@ function RaidGUIControlScrollableArea:init(parent, params)
 
 	local scrollbar_params = clone(self._params)
 
-	scrollbar_params.x = inner_panel_params.w
+	scrollbar_params.x = inner_panel_params.w + scrollbar_x_offset
 	scrollbar_params.y = 0
-	scrollbar_params.w = RaidGUIControlScrollableArea.SCROLLBAR_WIDTH
+	scrollbar_params.w = self._params.scrollbar_width or RaidGUIControlScrollableArea.SCROLLBAR_WIDTH
 	scrollbar_params.color = tweak_data.gui.colors.raid_dark_grey
 	scrollbar_params.scrollable = nil
 	scrollbar_params.scroll_step = nil
@@ -115,6 +116,42 @@ function RaidGUIControlScrollableArea:mouse_scroll_down(o, button, x, y)
 	end
 
 	return self._inner_panel:mouse_scroll_down(o, button, x, y)
+end
+
+function RaidGUIControlScrollableArea:scroll_up()
+	if self._scrolling_enabled then
+		local ep_h = self._inner_panel:h()
+		local top_clip_y = -self._inner_panel:y()
+		local scroll_move = math.clamp(top_clip_y, 0, self._scroll_step)
+		local new_y = self._inner_panel:y() + scroll_move
+
+		self._inner_panel:set_y(new_y)
+
+		local scroll_y = self._object:h() * (-new_y / ep_h)
+
+		self._scrollbar:set_y(scroll_y)
+
+		return
+	end
+end
+
+function RaidGUIControlScrollableArea:scroll_down()
+	if self._scrolling_enabled then
+		local ep_y = self._inner_panel:y()
+		local ep_h = self._inner_panel:h()
+		local s_h = self._object:h()
+		local bottom_clip_y = self._inner_panel:y() + self._inner_panel:h() - self._object:h()
+		local scroll_move = math.clamp(bottom_clip_y, 0, self._scroll_step)
+		local new_y = self._inner_panel:y() - scroll_move
+
+		self._inner_panel:set_y(new_y)
+
+		local scroll_y = self._object:h() * (-new_y / ep_h)
+
+		self._scrollbar:set_y(scroll_y)
+
+		return
+	end
 end
 
 function RaidGUIControlScrollableArea:highlight_on()

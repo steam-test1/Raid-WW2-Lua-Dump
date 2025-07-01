@@ -18,7 +18,7 @@ function CoreWorldCameraManager:init()
 	self._current_dof_clamp = self._default_dof_clamp
 
 	self:set_dof(self._default_near_dof, self._default_far_dof)
-	self._camera:set_near_range(managers.viewport.CAMERA_NEAR_RANGE)
+	self._camera:set_near_range(managers.viewport.WORLD_CAMERA_NEAR_RANGE)
 	self._camera:set_far_range(managers.viewport.CAMERA_FAR_RANGE)
 
 	self._viewport = managers.viewport:new_vp(0, 0, 1, 1, "worldcamera", CoreManagerBase.PRIO_WORLDCAMERA)

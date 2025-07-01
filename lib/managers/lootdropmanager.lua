@@ -73,8 +73,8 @@ end
 
 function LootDropManager:produce_loot_drop(loot_value, use_reroll_drop_tables)
 	local loot_group = self:_get_loot_group(loot_value, use_reroll_drop_tables)
-	local loot_category = self:_get_random_item_weighted(loot_group)
-	local loot = self:_get_random_item_weighted(loot_category)
+	local loot_category = self:get_random_item_weighted(loot_group)
+	local loot = self:get_random_item_weighted(loot_category)
 
 	return loot
 end
@@ -98,7 +98,7 @@ function LootDropManager:_get_loot_group(loot_value, use_reroll_drop_tables)
 	return loot_group
 end
 
-function LootDropManager:_get_random_item_weighted(collection)
+function LootDropManager:get_random_item_weighted(collection)
 	local total = 0
 
 	for _, item_entry in ipairs(collection) do
@@ -150,15 +150,20 @@ function LootDropManager:give_loot_to_player(loot_value, use_reroll_drop_tables)
 	Application:trace("[LootDropManager:give_loot_to_player]        loot drop 1: ", inspect(self._dropped_loot))
 
 	if drop.reward_type == LootDropTweakData.REWARD_CARD_PACK then
-		if not self._cards_already_rejected then
+		if not self._cards_already_rejected and not managers.raid_menu:is_offline_mode() then
 			managers.network.account:inventory_reward(drop.pack_type, callback(self, self, "card_drop_callback"))
 
 			self._card_drop_pack_type = drop.pack_type
 
+			managers.network.account:inventory_load()
+
 			return
 		end
 
-		need_reroll = true
+		Application:trace(" **** REROLLING CARDS **** ")
+		self:give_loot_to_player(self._loot_value, false)
+
+		return
 	elseif drop.reward_type == LootDropTweakData.REWARD_XP then
 		self:_give_xp_to_player(drop)
 	elseif drop.reward_type == LootDropTweakData.REWARD_CUSTOMIZATION then
@@ -277,7 +282,7 @@ end
 function LootDropManager:_give_xp_to_player(drop)
 	drop.awarded_xp = math.round(math.rand(drop.xp_min, drop.xp_max))
 
-	managers.experience:add_points(drop.awarded_xp)
+	managers.experience:set_loot_bonus_xp(drop.awarded_xp)
 	managers.network:session():send_to_peers_synched("sync_loot_to_peers", drop.reward_type, "", drop.awarded_xp, managers.network:session():local_peer():id())
 end
 

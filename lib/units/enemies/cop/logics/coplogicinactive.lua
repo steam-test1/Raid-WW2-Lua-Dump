@@ -1,13 +1,13 @@
 CopLogicInactive = class(CopLogicBase)
 
 function CopLogicInactive.enter(data, new_logic_name, enter_params)
-	CopLogicBase.enter(data, new_logic_name, enter_params)
-
-	local old_internal_data = data.internal_data
-
 	data.internal_data = {}
 
 	local my_data = data.internal_data
+
+	CopLogicBase.enter(data, new_logic_name, enter_params, my_data)
+
+	local old_internal_data = data.internal_data
 
 	if data.has_outline then
 		data.unit:contour():remove("highlight")
@@ -32,6 +32,28 @@ function CopLogicInactive.enter(data, new_logic_name, enter_params)
 	end
 
 	data.brain:rem_all_pos_rsrv()
+
+	if my_data.nearest_cover then
+		managers.navigation:release_cover(my_data.nearest_cover[1])
+	end
+
+	if my_data.best_cover then
+		managers.navigation:release_cover(my_data.best_cover[1])
+	end
+
+	if old_internal_data then
+		if old_internal_data.nearest_cover then
+			my_data.nearest_cover = old_internal_data.nearest_cover
+
+			managers.navigation:reserve_cover(my_data.nearest_cover[1], data.pos_rsrv_id)
+		end
+
+		if old_internal_data.best_cover then
+			my_data.best_cover = old_internal_data.best_cover
+
+			managers.navigation:reserve_cover(my_data.best_cover[1], data.pos_rsrv_id)
+		end
+	end
 
 	if data.objective and data.objective.type == "follow" and data.objective.destroy_clbk_key then
 		data.objective.follow_unit:base():remove_destroy_listener(data.objective.destroy_clbk_key)

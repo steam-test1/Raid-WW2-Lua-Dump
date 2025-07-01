@@ -145,20 +145,6 @@ end
 function ReadyUpGui:_layout_header()
 	local selected_job = managers.raid_job:selected_job()
 	local current_job = managers.raid_job:current_job()
-
-	if current_job then
-		local name_id = current_job.name_id
-		local total_events = #current_job.events_index
-		local current_event = math.clamp(current_job.current_event, 1, total_events)
-		local mission_progress_fraction = " " .. current_event .. "/" .. total_events .. ": "
-		local event_name = self:translate(current_job.current_event_data.name_id, true)
-		local title_text = self:translate(name_id, true) .. mission_progress_fraction .. event_name
-
-		self._node.components.raid_menu_header:set_screen_name_raw(title_text)
-	else
-		self._node.components.raid_menu_header:set_screen_name(tweak_data.operations.missions[selected_job.job_id].name_id)
-	end
-
 	local selected_level_data = selected_job or current_job
 	local mission_data = tweak_data.operations:mission_data(selected_level_data.job_id)
 	local item_icon_name = mission_data.icon_menu
@@ -170,44 +156,49 @@ function ReadyUpGui:_layout_header()
 
 	self._node.components.raid_menu_header:set_header_icon(item_icon)
 
-	self._difficulty_label = self._root_panel:label({
-		align = "right",
-		name = "difficulty_label",
-		x = 0,
+	local mission_name
+
+	if current_job then
+		local name_id = current_job.name_id
+		local total_events = #current_job.events_index
+		local current_event = math.clamp(current_job.current_event, 1, total_events)
+		local mission_progress_fraction = " " .. current_event .. "/" .. total_events .. ": "
+		local event_name = self:translate(current_job.current_event_data.name_id, true)
+		local title_text = self:translate(name_id, true) .. mission_progress_fraction .. event_name
+
+		mission_name = title_text
+	else
+		mission_name = utf8.to_upper(managers.localization:text(tweak_data.operations.missions[selected_job.job_id].name_id))
+	end
+
+	local mission_info_x = tweak_data.gui:icon_w(item_icon_name) + 16
+	local mission_name_params = {
+		align = "left",
+		h = 32,
+		name = "mission_name",
+		vertical = "center",
 		y = 0,
-		color = tweak_data.gui.colors.dirty_white,
+		color = tweak_data.gui.colors.raid_red,
 		font = tweak_data.gui.fonts.din_compressed,
-		font_size = tweak_data.gui.font_sizes.size_56,
-		h = RaidMenuHeader.HEIGHT,
-		text = self:translate("menu_" .. Global.game_settings.difficulty, true),
-		w = self._root_panel:w(),
-	})
-
-	local x, y, w, h = self._difficulty_label:text_rect()
-
-	self._difficulty_label:set_w(w)
-	self._difficulty_label:set_h(h)
-	self._difficulty_label:set_x(x)
-	self._difficulty_label:set_y(y)
-
-	local item_icon_name = Global.game_settings.difficulty
-	local icon_data = {
-		tex_rect = tweak_data.gui.icons[item_icon_name].texture_rect,
-		texture = tweak_data.gui.icons[item_icon_name].texture,
+		font_size = tweak_data.gui.font_sizes.small,
+		text = mission_name,
+		x = mission_info_x,
+	}
+	local mission_name = self._root_panel:label(mission_name_params)
+	local difficulty_params = {
+		name = "mission_difficulty",
+		amount = tweak_data:number_of_difficulties(),
 	}
 
-	self._difficulty_icon = self._root_panel:image({
-		name = "difficulty_icon",
-		x = 0,
-		y = 0,
-		color = tweak_data.gui.colors.dirty_white,
-		h = icon_data.tex_rect[4],
-		texture = icon_data.texture,
-		texture_rect = icon_data.tex_rect,
-		w = icon_data.tex_rect[3],
-	})
+	self._difficulty_indicator = RaidGuiControlDifficultyStars:new(self._root_panel, difficulty_params)
 
-	self._difficulty_icon:set_right(self._difficulty_label:left() - 16)
+	self._difficulty_indicator:set_x(mission_name:x())
+	self._difficulty_indicator:set_center_y(45)
+
+	local current_difficulty = tweak_data:difficulty_to_index(Global.game_settings.difficulty)
+
+	self._difficulty_indicator:set_active_difficulty(current_difficulty)
+	self._node.components.raid_menu_header:set_screen_name_raw("")
 end
 
 function ReadyUpGui:_get_list_index(peer_index)
@@ -447,6 +438,24 @@ function ReadyUpGui:_set_card_selection_controls()
 
 	if not managers.raid_menu:is_pc_controller() then
 		self:bind_controller_inputs(self._current_peer == managers.network:session():local_peer(), true)
+	elseif managers.raid_menu:is_offline_mode() then
+		self._suggest_card_button:hide()
+		self._suggest_card_button:disable()
+		self._no_cards_warning_label:hide()
+		self._card_not_selected_label:set_text(self:translate("menu_no_cards_in_offline_mode", true))
+		self._card_not_selected_label:show()
+		self._card_not_selected_label:set_center_x(self._empty_card_slot:center_x())
+		self._card_not_selected_label:set_center_y(self._empty_card_slot:center_y())
+
+		local x1, y1, w1, h1 = self._card_not_selected_label:text_rect()
+
+		self._card_not_selected_label:set_h(h1)
+
+		if not self._local_player_selected then
+			self._card_not_selected_label:hide()
+		end
+
+		self._positive_card_effect_label:hide()
 	elseif managers.raid_job:selected_job() and managers.raid_job:selected_job().job_type == OperationsTweakData.JOB_TYPE_RAID and self._raid_card_count > 0 or managers.raid_job:selected_job() and managers.raid_job:selected_job().job_type == OperationsTweakData.JOB_TYPE_OPERATION and self._operation_card_count > 0 then
 		self._suggest_card_button:show()
 		self._suggest_card_button:enable()
@@ -561,7 +570,7 @@ function ReadyUpGui:_show_characters()
 		self._suggest_card_button:enable()
 		self._leave_lobby_button:enable()
 
-		if self._player_control_list[self._current_peer]:params().is_current_player and not managers.controller:is_xbox_controller_present() and managers.menu:is_pc_controller() then
+		if self._player_control_list[self._current_peer]:params().is_current_player and managers.menu:is_pc_controller() then
 			self._leave_lobby_button:show()
 			self._suggest_card_button:show()
 		end
@@ -824,12 +833,31 @@ function ReadyUpGui:_update_controls_contining_mission()
 	end
 end
 
+function ReadyUpGui:_update_peers()
+	for control_peer, control in pairs(self._player_control_list) do
+		local peer_present = false
+
+		for _, peer in pairs(managers.network:session():all_peers()) do
+			if peer == control_peer then
+				peer_present = true
+			end
+		end
+
+		local control_enabled = control:enabled()
+
+		if not peer_present ~= not control_enabled then
+			self._peer_no_longer_in_lobby(control_peer, "left")
+		end
+	end
+end
+
 function ReadyUpGui:update(t, dt)
 	self:_show_characters()
 	self:_show_player_challenge_card_info()
 	self:_update_challenge_card_selected_icon()
 	self:_update_status()
 	self:_update_controls_contining_mission()
+	self:_update_peers()
 
 	if managers.challenge_cards:did_everyone_locked_sugested_card() then
 		if not self._stinger_played then
@@ -930,7 +958,7 @@ function ReadyUpGui:show_gamercard()
 end
 
 function ReadyUpGui:bind_controller_inputs(is_current_player, can_leave)
-	if not managers.controller:is_xbox_controller_present() or managers.menu:is_pc_controller() then
+	if managers.menu:is_pc_controller() then
 		if is_current_player and not self._ready then
 			local bindings = {
 				{

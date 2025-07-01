@@ -157,62 +157,11 @@ function ChallengeCardsManager:get_card_description(card_key_name)
 end
 
 function ChallengeCardsManager:_steam_challenge_cards_inventory_loaded(params)
-	self:players_inventory_loaded(params)
 	self:_process_fresh_steam_inventory(params)
 end
 
 function ChallengeCardsManager:system_pre_start_raid(params)
-	self._inventory_load_pre_start_check = true
-
 	managers.raid_menu:close_all_menus()
-
-	self._peer_inventory_has_cards = nil
-
-	managers.network.account:inventory_load()
-end
-
-function ChallengeCardsManager:players_inventory_loaded(params)
-	if not self._inventory_load_pre_start_check then
-		return
-	end
-
-	local peer_id = managers.network:session():local_peer():id()
-	local result = params.list and #params.list > 0 or false
-
-	if Network:is_server() then
-		self:players_reporting_inventory(peer_id, result)
-	else
-		managers.network:session():send_to_host("players_reporting_inventory", peer_id, result)
-	end
-
-	self._inventory_load_pre_start_check = false
-end
-
-function ChallengeCardsManager:players_reporting_inventory(peer_id, result)
-	if not self._peer_inventory_has_cards then
-		self._peer_inventory_has_cards = {}
-	end
-
-	self._peer_inventory_has_cards[peer_id] = result
-
-	local all_responded = true
-	local result = false
-
-	for peerid, _ in pairs(managers.network:session():all_peers()) do
-		if self._peer_inventory_has_cards[peerid] == nil then
-			all_responded = false
-		elseif self._peer_inventory_has_cards[peerid] then
-			result = true
-		end
-	end
-
-	if all_responded then
-		self:all_players_inventory_resolution(result)
-		managers.network:session():send_to_peers("all_players_inventory_resolution", result)
-	end
-end
-
-function ChallengeCardsManager:all_players_inventory_resolution(result)
 	managers.raid_menu:open_menu("ready_up_menu")
 end
 

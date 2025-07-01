@@ -37,21 +37,22 @@ function NotificationManager:add_notification(notification_data)
 
 	self:_clear_outdated_notifications()
 
-	if self._currently_displayed_notification and self._currently_displayed_notification.id and notification_data.id == self._currently_displayed_notification.id and managers.queued_tasks:has_task("notification_hide") then
-		managers.queued_tasks:unqueue("notification_hide")
-		managers.queued_tasks:queue("notification_hide", self.hide_current_notification, self, nil, notification_data.duration, nil, true)
+	if self._currently_displayed_notification and self._currently_displayed_notification.id and notification_data.id == self._currently_displayed_notification.id then
+		if managers.queued_tasks:has_task("notification_hide") or notification_data.duration then
+			managers.queued_tasks:unqueue("notification_hide")
 
-		if notification_data.text then
-			self._currently_displayed_notification.hud:update_data({
-				text = notification_data.text,
-			})
+			if notification_data.duration then
+				managers.queued_tasks:queue("notification_hide", self.hide_current_notification, self, nil, notification_data.duration, nil, true)
+			end
 		end
+
+		self._currently_displayed_notification.hud:update_data(notification_data)
 
 		return
 	end
 
 	for i = 1, #self._notification_queue do
-		if notification_data.id == self._notification_queue[i].id then
+		if self._notification_queue[i] and notification_data.id == self._notification_queue[i].id then
 			table.remove(self._notification_queue, i)
 		end
 	end
@@ -83,7 +84,10 @@ function NotificationManager:show_notification(index)
 	self._currently_displayed_notification = self._notification_queue[index]
 
 	table.remove(self._notification_queue, 1)
-	managers.queued_tasks:queue("notification_hide", self.hide_current_notification, self, nil, notification.duration, nil, true)
+
+	if notification.duration then
+		managers.queued_tasks:queue("notification_hide", self.hide_current_notification, self, nil, notification.duration, nil, true)
+	end
 end
 
 function NotificationManager:hide_current_notification()

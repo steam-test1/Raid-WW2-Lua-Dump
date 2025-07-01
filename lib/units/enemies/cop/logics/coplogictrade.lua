@@ -2,13 +2,14 @@ CopLogicTrade = class(CopLogicBase)
 CopLogicTrade.butchers_traded = 0
 
 function CopLogicTrade.enter(data, new_logic_name, enter_params)
-	CopLogicBase.enter(data, new_logic_name, enter_params)
-	data.unit:brain():cancel_all_pathing_searches()
-
-	local old_internal_data = data.internal_data
 	local my_data = {
 		unit = data.unit,
 	}
+
+	CopLogicBase.enter(data, new_logic_name, enter_params, my_data)
+	data.unit:brain():cancel_all_pathing_searches()
+
+	local old_internal_data = data.internal_data
 
 	data.internal_data = my_data
 

@@ -256,27 +256,11 @@ function HUDMapTab:peer_enter_vehicle(peer_id)
 	if not self._player_pins then
 		return
 	end
-
-	for index, player_pin in pairs(self._player_pins) do
-		if player_pin:id() == peer_id then
-			player_pin:set_hidden(true)
-
-			return
-		end
-	end
 end
 
 function HUDMapTab:peer_exit_vehicle(peer_id)
 	if not self._player_pins then
 		return
-	end
-
-	for index, player_pin in pairs(self._player_pins) do
-		if player_pin:id() == peer_id then
-			player_pin:set_hidden(false)
-
-			return
-		end
 	end
 end
 

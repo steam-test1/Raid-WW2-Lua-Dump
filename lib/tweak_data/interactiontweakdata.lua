@@ -780,7 +780,7 @@ function InteractionTweakData:init()
 	self.grenade_crate.text_id = "hud_interact_grenade_crate_take_grenades"
 	self.grenade_crate.contour = "deployable"
 	self.grenade_crate.timer = 0
-	self.grenade_crate.blocked_hint = "full_grenades"
+	self.grenade_crate.blocked_hint = "hint_full_grenades"
 	self.grenade_crate.blocked_hint_sound = "no_more_grenades"
 	self.grenade_crate.sound_done = "pickup_grenade"
 	self.grenade_crate.action_text_id = "hud_action_taking_grenades"
@@ -814,7 +814,7 @@ function InteractionTweakData:init()
 	self.ammo_bag.text_id = "hud_interact_ammo_bag_take_ammo"
 	self.ammo_bag.contour = "deployable"
 	self.ammo_bag.timer = 0
-	self.ammo_bag.blocked_hint = "full_ammo"
+	self.ammo_bag.blocked_hint = "hint_full_ammo"
 	self.ammo_bag.blocked_hint_sound = "no_more_ammo"
 	self.ammo_bag.sound_done = "pickup_ammo"
 	self.ammo_bag.action_text_id = "hud_action_taking_ammo"
@@ -848,7 +848,7 @@ function InteractionTweakData:init()
 	self.health_bag.text_id = "hud_interact_doctor_bag_heal"
 	self.health_bag.contour = "deployable"
 	self.health_bag.timer = 0
-	self.health_bag.blocked_hint = "full_health"
+	self.health_bag.blocked_hint = "hint_full_health"
 	self.health_bag.blocked_hint_sound = "no_more_health"
 	self.health_bag.sound_done = "pickup_health"
 	self.health_bag.action_text_id = "hud_action_healing"
@@ -882,7 +882,7 @@ function InteractionTweakData:init()
 	self.doctor_bag.text_id = "debug_interact_doctor_bag_heal"
 	self.doctor_bag.contour = "deployable"
 	self.doctor_bag.timer = 3.5
-	self.doctor_bag.blocked_hint = "full_health"
+	self.doctor_bag.blocked_hint = "hint_full_health"
 	self.doctor_bag.sound_start = "bar_helpup"
 	self.doctor_bag.sound_interupt = "bar_helpup_cancel"
 	self.doctor_bag.sound_done = "bar_helpup_finished"
@@ -1185,7 +1185,7 @@ function InteractionTweakData:init()
 	self.money_wrap.start_active = false
 	self.money_wrap.timer = 3
 	self.money_wrap.action_text_id = "hud_action_taking_money"
-	self.money_wrap.blocked_hint = "carry_block"
+	self.money_wrap.blocked_hint = "hud_hint_carry_block_interact"
 	self.money_wrap.sound_start = "bar_bag_money"
 	self.money_wrap.sound_interupt = "bar_bag_money_cancel"
 	self.money_wrap.sound_done = "bar_bag_money_finished"
@@ -1215,7 +1215,7 @@ function InteractionTweakData:init()
 	self.gold_pile.text_id = "hud_interact_gold_pile_take_money"
 	self.gold_pile.start_active = true
 	self.gold_pile.action_text_id = "hud_action_taking_gold"
-	self.gold_pile.blocked_hint = "carry_block"
+	self.gold_pile.blocked_hint = "hud_hint_carry_block_interact"
 	self.gold_pile.sound_done = "gold_crate_drop"
 	self.gold_pile.timer = 1
 	self.gold_pile_inactive = deep_clone(self.gold_pile)
@@ -1224,7 +1224,7 @@ function InteractionTweakData:init()
 	self.take_gold_bar.icon = "interaction_gold"
 	self.take_gold_bar.text_id = "hud_take_gold_bar"
 	self.take_gold_bar.start_active = true
-	self.take_gold_bar.blocked_hint = "carry_block"
+	self.take_gold_bar.blocked_hint = "hud_hint_carry_block_interact"
 	self.take_gold_bar.sound_done = "gold_crate_drop"
 	self.take_gold_bar.timer = 0
 	self.take_gold_bar_bag = {}
@@ -1233,7 +1233,7 @@ function InteractionTweakData:init()
 	self.take_gold_bar_bag.action_text_id = "hud_action_taking_gold_bar"
 	self.take_gold_bar_bag.timer = 0
 	self.take_gold_bar_bag.force_update_position = true
-	self.take_gold_bar_bag.blocked_hint = "carry_block"
+	self.take_gold_bar_bag.blocked_hint = "hud_hint_carry_block_interact"
 	self.take_gold_bar_bag.sound_start = "gold_crate_pickup"
 	self.take_gold_bar_bag.sound_interupt = "gold_crate_drop"
 	self.take_gold_bar_bag.sound_done = "gold_crate_drop"
@@ -1282,9 +1282,6 @@ function InteractionTweakData:init()
 	self.intimidate_with_contour.no_contour = false
 	self.intimidate_and_search_with_contour = deep_clone(self.intimidate_and_search)
 	self.intimidate_and_search_with_contour.no_contour = false
-	self.intimidate_escort = {}
-	self.intimidate_escort.text_id = "hud_int_interact"
-	self.intimidate_escort.interaction_obj = Idstring("Spine2")
 	self.computer_test = {}
 	self.computer_test.icon = "develop"
 	self.computer_test.text_id = "debug_interact_computer_test"
@@ -1299,14 +1296,14 @@ function InteractionTweakData:init()
 		upgrade = "carry_pickup_multiplier",
 	}
 	self.carry_drop.action_text_id = "hud_action_grabbing_bag"
-	self.carry_drop.blocked_hint = "carry_block"
+	self.carry_drop.blocked_hint = "hud_hint_carry_block_interact"
 	self.painting_carry_drop = {}
 	self.painting_carry_drop.icon = "develop"
 	self.painting_carry_drop.text_id = "hud_int_hold_grab_the_painting"
 	self.painting_carry_drop.timer = 1
 	self.painting_carry_drop.force_update_position = true
 	self.painting_carry_drop.action_text_id = "hud_action_grabbing_painting"
-	self.painting_carry_drop.blocked_hint = "carry_block"
+	self.painting_carry_drop.blocked_hint = "hud_hint_carry_block_interact"
 	self.corpse_alarm_pager = {}
 	self.corpse_alarm_pager.icon = "develop"
 	self.corpse_alarm_pager.text_id = "hud_int_disable_alarm_pager"
@@ -1391,7 +1388,7 @@ function InteractionTweakData:init()
 	self.hold_take_painting.sound_start = "bar_steal_painting"
 	self.hold_take_painting.sound_interupt = "bar_steal_painting_cancel"
 	self.hold_take_painting.sound_done = "bar_steal_painting_finished"
-	self.hold_take_painting.blocked_hint = "carry_block"
+	self.hold_take_painting.blocked_hint = "hud_hint_carry_block_interact"
 	self.barricade_fence = deep_clone(self.stash_planks)
 	self.barricade_fence.contour = "interactable_icon"
 	self.barricade_fence.sound_start = "bar_barricade_fence"
@@ -1547,7 +1544,7 @@ function InteractionTweakData:init()
 	self.gen_pku_fusion_reactor = {}
 	self.gen_pku_fusion_reactor.text_id = "hud_int_hold_take_reaktor"
 	self.gen_pku_fusion_reactor.action_text_id = "hud_action_taking_reaktor"
-	self.gen_pku_fusion_reactor.blocked_hint = "carry_block"
+	self.gen_pku_fusion_reactor.blocked_hint = "hud_hint_carry_block_interact"
 	self.gen_pku_fusion_reactor.start_active = false
 	self.gen_pku_fusion_reactor.timer = 3
 	self.gen_pku_fusion_reactor.no_contour = true
@@ -1561,12 +1558,12 @@ function InteractionTweakData:init()
 	self.gen_pku_cocaine.sound_start = "bar_bag_money"
 	self.gen_pku_cocaine.sound_interupt = "bar_bag_money_cancel"
 	self.gen_pku_cocaine.sound_done = "bar_bag_money_finished"
-	self.gen_pku_cocaine.blocked_hint = "carry_block"
+	self.gen_pku_cocaine.blocked_hint = "hud_hint_carry_block_interact"
 	self.gen_pku_painting = {}
 	self.gen_pku_painting.text_id = "hud_int_hold_take_cocaine"
 	self.gen_pku_painting.action_text_id = "hud_action_taking_cocaine"
 	self.gen_pku_painting.timer = 3
-	self.gen_pku_painting.blocked_hint = "carry_block"
+	self.gen_pku_painting.blocked_hint = "hud_hint_carry_block_interact"
 	self.gen_pku_artifact_statue = {}
 	self.gen_pku_artifact_statue.text_id = "hud_int_hold_take_artifact"
 	self.gen_pku_artifact_statue.action_text_id = "hud_action_taking_artifact"
@@ -1575,7 +1572,7 @@ function InteractionTweakData:init()
 	self.gen_pku_artifact_statue.sound_start = "bar_bag_money"
 	self.gen_pku_artifact_statue.sound_interupt = "bar_bag_money_cancel"
 	self.gen_pku_artifact_statue.sound_done = "bar_bag_money_finished"
-	self.gen_pku_artifact_statue.blocked_hint = "carry_block"
+	self.gen_pku_artifact_statue.blocked_hint = "hud_hint_carry_block_interact"
 	self.gen_pku_artifact = deep_clone(self.gen_pku_artifact_statue)
 	self.gen_pku_artifact.start_active = true
 	self.gen_pku_artifact.sound_start = "bar_bag_armor"
@@ -1593,7 +1590,7 @@ function InteractionTweakData:init()
 	self.gen_pku_jewelry.sound_start = "bar_bag_jewelry"
 	self.gen_pku_jewelry.sound_interupt = "bar_bag_jewelry_cancel"
 	self.gen_pku_jewelry.sound_done = "bar_bag_jewelry_finished"
-	self.gen_pku_jewelry.blocked_hint = "carry_block"
+	self.gen_pku_jewelry.blocked_hint = "hud_hint_carry_block_interact"
 	self.taking_meth = {}
 	self.taking_meth.text_id = "hud_int_hold_take_meth"
 	self.taking_meth.action_text_id = "hud_action_taking_meth"
@@ -1601,7 +1598,7 @@ function InteractionTweakData:init()
 	self.taking_meth.sound_start = "bar_bag_money"
 	self.taking_meth.sound_interupt = "bar_bag_money_cancel"
 	self.taking_meth.sound_done = "bar_bag_money_finished"
-	self.taking_meth.blocked_hint = "carry_block"
+	self.taking_meth.blocked_hint = "hud_hint_carry_block_interact"
 	self.gen_pku_crowbar = {}
 	self.gen_pku_crowbar.text_id = "hud_int_take_crowbar"
 	self.gen_pku_crowbar.special_equipment_block = "crowbar"
@@ -3086,7 +3083,7 @@ function InteractionTweakData:init()
 	self.carry_drop_gold.timer = 1
 	self.carry_drop_gold.force_update_position = true
 	self.carry_drop_gold.action_text_id = "hud_action_taking_gold"
-	self.carry_drop_gold.blocked_hint = "carry_block"
+	self.carry_drop_gold.blocked_hint = "hud_hint_carry_block_interact"
 	self.carry_drop_gold.sound_start = "gold_crate_pickup"
 	self.carry_drop_gold.sound_interupt = "gold_crate_drop"
 	self.carry_drop_gold.sound_done = "gold_crate_drop"
@@ -3340,7 +3337,7 @@ function InteractionTweakData:init()
 	self.take_gold_pile.start_active = true
 	self.take_gold_pile.timer = 1
 	self.take_gold_pile.action_text_id = "hud_action_taking_gold"
-	self.take_gold_pile.blocked_hint = "carry_block"
+	self.take_gold_pile.blocked_hint = "hud_hint_carry_block_interact"
 	self.open_toolbox = {}
 	self.open_toolbox.text_id = "hud_open_toolbox"
 	self.open_toolbox.action_text_id = "hud_action_opening_toolbox"
@@ -3409,25 +3406,25 @@ function InteractionTweakData:init()
 	self.pku_codemachine_part_01.action_text_id = "hud_action_taking_codemachine_part_01"
 	self.pku_codemachine_part_01.start_active = true
 	self.pku_codemachine_part_01.timer = 1
-	self.pku_codemachine_part_01.blocked_hint = "carry_block"
+	self.pku_codemachine_part_01.blocked_hint = "hud_hint_carry_block_interact"
 	self.pku_codemachine_part_02 = {}
 	self.pku_codemachine_part_02.text_id = "hud_take_codemachine_part_02"
 	self.pku_codemachine_part_02.action_text_id = "hud_action_taking_codemachine_part_03"
 	self.pku_codemachine_part_02.start_active = true
 	self.pku_codemachine_part_02.timer = 1
-	self.pku_codemachine_part_02.blocked_hint = "carry_block"
+	self.pku_codemachine_part_02.blocked_hint = "hud_hint_carry_block_interact"
 	self.pku_codemachine_part_03 = {}
 	self.pku_codemachine_part_03.text_id = "hud_take_codemachine_part_03"
 	self.pku_codemachine_part_03.action_text_id = "hud_action_taking_codemachine_part_03"
 	self.pku_codemachine_part_03.start_active = true
 	self.pku_codemachine_part_03.timer = 1
-	self.pku_codemachine_part_03.blocked_hint = "carry_block"
+	self.pku_codemachine_part_03.blocked_hint = "hud_hint_carry_block_interact"
 	self.pku_codemachine_part_04 = {}
 	self.pku_codemachine_part_04.text_id = "hud_take_codemachine_part_04"
 	self.pku_codemachine_part_04.action_text_id = "hud_action_taking_codemachine_part_04"
 	self.pku_codemachine_part_04.start_active = true
 	self.pku_codemachine_part_04.timer = 1
-	self.pku_codemachine_part_04.blocked_hint = "carry_block"
+	self.pku_codemachine_part_04.blocked_hint = "hud_hint_carry_block_interact"
 	self.take_gold_bar_mold = {}
 	self.take_gold_bar_mold.text_id = "hud_take_gold_bar_mold"
 	self.take_gold_bar_mold.action_text_id = "hud_action_taking_gold_bar_mold"
@@ -3928,48 +3925,6 @@ function InteractionTweakData:init()
 	self.take_turret_m2_gun_enabled.timer = 3
 	self.take_turret_m2_gun_enabled.sound_start = "turret_pick_up"
 	self.take_turret_m2_gun_enabled.sound_interupt = "turret_pick_up_stop"
-	self.drop_test = {}
-	self.drop_test.icon = "develop"
-	self.drop_test.text_id = "debug_interact_temp_interact_box"
-	self.drop_test.wheel_radius_inner = 120
-	self.drop_test.wheel_radius_outer = 150
-	self.drop_test.text_padding = 25
-	self.drop_test.options = {
-		{
-			clbk = "managers.airdrop:call_drop",
-			text = "bodybag",
-			clbk_data = {
-				"units/vanilla/pickups/pku_turret_m2/pku_turret_m2",
-			},
-			color = Color(0.8, 0.31, 0.35),
-		},
-		{
-			clbk = "managers.airdrop:call_drop",
-			text = "toolbag",
-			clbk_data = {
-				"units/vanilla/pickups/pku_turret_m2/pku_turret_m2",
-			},
-			color = Color(0.31, 0.62, 0.8),
-		},
-		{
-			clbk = "managers.airdrop:call_drop",
-			text = "cage bag",
-			clbk_data = {
-				"units/vanilla/pickups/pku_turret_m2/pku_turret_m2",
-			},
-			color = Color(0.47, 0.8, 0.31),
-		},
-		{
-			clbk = "managers.airdrop:call_drop",
-			text = "turret m2",
-			clbk_data = {
-				"units/vanilla/pickups/pku_turret_m2/pku_turret_m2",
-			},
-			color = Color(0.47, 0.8, 0.31),
-		},
-	}
-	self.drop_test.delay = 0
-	self.drop_test.cooldown = 31
 
 	local com_wheel_color = Color(1, 0.8, 0)
 
@@ -5031,6 +4986,11 @@ function InteractionTweakData:init()
 	self.carry_spy.start_active = false
 	self.carry_spy.timer = 3
 	self.carry_spy.sound_done = "spy_pickup"
+	self.carry_drop_spy = deep_clone(self.carry_drop)
+	self.carry_drop_spy.text_id = "hud_carry_spy"
+	self.carry_drop_spy.action_text_id = "hud_action_carring_spy"
+	self.carry_drop_spy.timer = 3
+	self.carry_drop_spy.sound_done = "spy_pickup"
 	self.hold_open_barrier = {}
 	self.hold_open_barrier.text_id = "hud_hold_open_barrier"
 	self.hold_open_barrier.action_text_id = "hud_action_opening_barrier"
@@ -5088,6 +5048,11 @@ function InteractionTweakData:init()
 	self.hold_take_loot.sound_done = "pickup_tools"
 	self.hold_take_loot.start_active = true
 	self.hold_take_loot.timer = 0.5
+	self.regular_cache_box = {}
+	self.regular_cache_box.text_id = "hud_int_regular_cache_box"
+	self.regular_cache_box.action_text_id = "hud_action_taking_cache_loot"
+	self.regular_cache_box.sound_done = "pickup_tools"
+	self.regular_cache_box.start_active = true
 	self.disconnect_hose = {}
 	self.disconnect_hose.text_id = "hud_disconnect_hose"
 	self.disconnect_hose.action_text_id = "hud_action_disconnecting_hose"

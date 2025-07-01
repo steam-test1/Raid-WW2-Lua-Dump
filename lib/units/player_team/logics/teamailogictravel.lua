@@ -20,31 +20,20 @@ TeamAILogicTravel.on_action_completed = CopLogicTravel.on_action_completed
 TeamAILogicTravel.on_intimidated = TeamAILogicIdle.on_intimidated
 
 function TeamAILogicTravel.enter(data, new_logic_name, enter_params)
-	CopLogicBase.enter(data, new_logic_name, enter_params)
-	data.unit:brain():cancel_all_pathing_searches()
-
-	local old_internal_data = data.internal_data
 	local my_data = {
 		unit = data.unit,
 	}
+
+	CopLogicBase.enter(data, new_logic_name, enter_params, my_data)
+	data.unit:brain():cancel_all_pathing_searches()
+
+	local old_internal_data = data.internal_data
 
 	my_data.detection = data.char_tweak.detection.recon
 	my_data.vision = data.char_tweak.vision.idle
 
 	if old_internal_data then
 		my_data.attention_unit = old_internal_data.attention_unit
-
-		if old_internal_data.nearest_cover then
-			my_data.nearest_cover = old_internal_data.nearest_cover
-
-			managers.navigation:reserve_cover(my_data.nearest_cover[1], data.pos_rsrv_id)
-		end
-
-		if old_internal_data.best_cover then
-			my_data.best_cover = old_internal_data.best_cover
-
-			managers.navigation:reserve_cover(my_data.best_cover[1], data.pos_rsrv_id)
-		end
 	end
 
 	data.internal_data = my_data
@@ -112,19 +101,6 @@ function TeamAILogicTravel.exit(data, new_logic_name, enter_params)
 	data.unit:brain():cancel_all_pathing_searches()
 	CopLogicBase.cancel_queued_tasks(my_data)
 	CopLogicBase.cancel_delayed_clbks(my_data)
-
-	if my_data.moving_to_cover then
-		managers.navigation:release_cover(my_data.moving_to_cover[1])
-	end
-
-	if my_data.nearest_cover then
-		managers.navigation:release_cover(my_data.nearest_cover[1])
-	end
-
-	if my_data.best_cover then
-		managers.navigation:release_cover(my_data.best_cover[1])
-	end
-
 	data.brain:rem_pos_rsrv("path")
 end
 

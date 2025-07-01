@@ -8,6 +8,7 @@ require("lib/managers/menu/raid_menu/ChallengeCardsViewGui")
 require("lib/managers/menu/raid_menu/ChallengeCardsLootRewardGui")
 require("lib/managers/menu/raid_menu/MissionJoinGui")
 require("lib/managers/menu/raid_menu/MissionSelectionGui")
+require("lib/managers/menu/raid_menu/MissionUnlockGui")
 require("lib/managers/menu/raid_menu/RaidMainMenuGui")
 require("lib/managers/menu/raid_menu/RaidMenuHeader")
 require("lib/managers/menu/raid_menu/RaidMenuFooter")
@@ -23,9 +24,12 @@ require("lib/managers/menu/raid_menu/RaidMenuCreditsGui")
 require("lib/managers/menu/raid_menu/RaidOptionsBackground")
 require("lib/managers/menu/raid_menu/ReadyUpGui")
 require("lib/managers/menu/raid_menu/LootScreenGui")
+require("lib/managers/menu/raid_menu/GreedLootScreenGui")
 require("lib/managers/menu/raid_menu/ExperienceGui")
 require("lib/managers/menu/raid_menu/PostGameBreakdownGui")
 require("lib/managers/menu/raid_menu/GoldAssetStoreGui")
+require("lib/managers/menu/raid_menu/IntelGui")
+require("lib/managers/menu/raid_menu/ComicBookGui")
 require("lib/managers/menu/raid_menu/SpecialHonorsGui")
 
 MenuComponentManager = MenuComponentManager or class()
@@ -50,6 +54,10 @@ function MenuComponentManager:init()
 	self._active_components.raid_menu_mission_selection = {
 		close = callback(self, self, "close_raid_menu_mission_selection_gui"),
 		create = callback(self, self, "create_raid_menu_mission_selection_gui"),
+	}
+	self._active_components.raid_menu_mission_unlock = {
+		close = callback(self, self, "close_raid_menu_mission_unlock_gui"),
+		create = callback(self, self, "create_raid_menu_mission_unlock_gui"),
 	}
 	self._active_components.raid_menu_mission_join = {
 		close = callback(self, self, "close_raid_menu_mission_join_gui"),
@@ -151,9 +159,21 @@ function MenuComponentManager:init()
 		close = callback(self, self, "close_raid_menu_loot"),
 		create = callback(self, self, "create_raid_menu_loot"),
 	}
+	self._active_components.raid_menu_greed_loot = {
+		close = callback(self, self, "close_raid_menu_greed_loot"),
+		create = callback(self, self, "create_raid_menu_greed_loot"),
+	}
 	self._active_components.raid_menu_gold_asset_store = {
 		close = callback(self, self, "close_raid_menu_gold_asset_store_gui"),
 		create = callback(self, self, "create_raid_menu_gold_asset_store_gui"),
+	}
+	self._active_components.raid_menu_intel = {
+		close = callback(self, self, "close_raid_menu_intel_gui"),
+		create = callback(self, self, "create_raid_menu_intel_gui"),
+	}
+	self._active_components.raid_menu_comic_book = {
+		close = callback(self, self, "close_raid_menu_comic_book_gui"),
+		create = callback(self, self, "create_raid_menu_comic_book_gui"),
 	}
 	self._active_components.raid_menu_credits = {
 		close = callback(self, self, "close_raid_menu_credits"),
@@ -1685,6 +1705,8 @@ function MenuComponentManager:_create_raid_menu_mission_selection_gui(node, comp
 
 	self._raid_menu_mission_selection_gui = MissionSelectionGui:new(self._ws, self._fullscreen_ws, node, component)
 
+	table.insert(self._update_components, self._raid_menu_mission_selection_gui)
+
 	if component then
 		self._active_controls[component] = {}
 
@@ -1712,9 +1734,61 @@ function MenuComponentManager:close_raid_menu_mission_selection_gui(node, compon
 	end
 
 	if self._raid_menu_mission_selection_gui then
+		self:removeFromUpdateTable(self._raid_menu_mission_selection_gui)
 		self._raid_menu_mission_selection_gui:close()
 
 		self._raid_menu_mission_selection_gui = nil
+
+		local active_menu = managers.menu:active_menu()
+
+		if active_menu then
+			active_menu.input:set_force_input(false)
+		end
+	end
+end
+
+function MenuComponentManager:create_raid_menu_mission_unlock_gui(node, component)
+	return self:_create_raid_menu_mission_unlock_gui(node, component)
+end
+
+function MenuComponentManager:_create_raid_menu_mission_unlock_gui(node, component)
+	self:close_raid_menu_mission_unlock_gui(node, component)
+
+	self._raid_menu_mission_unlock_gui = MissionUnlockGui:new(self._ws, self._fullscreen_ws, node, component)
+
+	if component then
+		self._active_controls[component] = {}
+
+		local final_list = self._active_controls[component]
+
+		for _, control in ipairs(self._raid_menu_mission_unlock_gui._root_panel._controls) do
+			self:_collect_controls(control, final_list)
+		end
+
+		final_list.raid_list = self._raid_menu_mission_unlock_gui._raid_list
+	end
+
+	local active_menu = managers.menu:active_menu()
+
+	if active_menu then
+		active_menu.input:set_force_input(true)
+	end
+
+	table.insert(self._update_components, self._raid_menu_mission_unlock_gui)
+
+	return self._raid_menu_mission_unlock_gui
+end
+
+function MenuComponentManager:close_raid_menu_mission_unlock_gui(node, component)
+	if component then
+		self._active_controls[component] = {}
+	end
+
+	if self._raid_menu_mission_unlock_gui then
+		self:removeFromUpdateTable(self._raid_menu_mission_unlock_gui)
+		self._raid_menu_mission_unlock_gui:close()
+
+		self._raid_menu_mission_unlock_gui = nil
 
 		local active_menu = managers.menu:active_menu()
 
@@ -2051,9 +2125,107 @@ function MenuComponentManager:close_raid_menu_gold_asset_store_gui(node, compone
 	end
 
 	if self._raid_menu_gold_asset_store_gui then
+		self:removeFromUpdateTable(self._raid_menu_gold_asset_store_gui)
 		self._raid_menu_gold_asset_store_gui:close()
 
 		self._raid_menu_gold_asset_store_gui = nil
+
+		local active_menu = managers.menu:active_menu()
+
+		if active_menu then
+			active_menu.input:set_force_input(false)
+		end
+	end
+end
+
+function MenuComponentManager:create_raid_menu_intel_gui(node, component)
+	return self:_create_raid_menu_intel_gui(node, component)
+end
+
+function MenuComponentManager:_create_raid_menu_intel_gui(node, component)
+	self:close_raid_menu_intel_gui(node, component)
+
+	self._raid_menu_intel_gui = IntelGui:new(self._ws, self._fullscreen_ws, node, component)
+
+	if component then
+		self._active_controls[component] = {}
+
+		local final_list = self._active_controls[component]
+
+		for _, control in ipairs(self._raid_menu_intel_gui._root_panel._controls) do
+			self:_collect_controls(control, final_list)
+		end
+
+		final_list.intel_grid = self._raid_menu_intel_gui._intel_grid
+	end
+
+	local active_menu = managers.menu:active_menu()
+
+	if active_menu then
+		active_menu.input:set_force_input(true)
+	end
+
+	table.insert(self._update_components, self._raid_menu_intel_gui)
+
+	return self._raid_menu_intel_gui
+end
+
+function MenuComponentManager:close_raid_menu_intel_gui(node, component)
+	if component then
+		self._active_controls[component] = {}
+	end
+
+	if self._raid_menu_intel_gui then
+		self:removeFromUpdateTable(self._raid_menu_intel_gui)
+		self._raid_menu_intel_gui:close()
+
+		self._raid_menu_intel_gui = nil
+
+		local active_menu = managers.menu:active_menu()
+
+		if active_menu then
+			active_menu.input:set_force_input(false)
+		end
+	end
+end
+
+function MenuComponentManager:create_raid_menu_comic_book_gui(node, component)
+	return self:_create_raid_menu_comic_book_gui(node, component)
+end
+
+function MenuComponentManager:_create_raid_menu_comic_book_gui(node, component)
+	self:close_raid_menu_comic_book_gui(node, component)
+
+	self._raid_menu_comic_book_gui = ComicBookGui:new(self._ws, self._fullscreen_ws, node, component)
+
+	if component then
+		self._active_controls[component] = {}
+
+		local final_list = self._active_controls[component]
+
+		for _, control in ipairs(self._raid_menu_comic_book_gui._root_panel._controls) do
+			self:_collect_controls(control, final_list)
+		end
+	end
+
+	local active_menu = managers.menu:active_menu()
+
+	if active_menu then
+		active_menu.input:set_force_input(true)
+	end
+
+	return self._raid_menu_comic_book_gui
+end
+
+function MenuComponentManager:close_raid_menu_comic_book_gui(node, component)
+	if component then
+		self._active_controls[component] = {}
+	end
+
+	if self._raid_menu_comic_book_gui then
+		self._raid_menu_comic_book_gui:close()
+
+		self._raid_menu_comic_book_gui = nil
 
 		local active_menu = managers.menu:active_menu()
 
@@ -2894,6 +3066,52 @@ function MenuComponentManager:close_raid_menu_loot(node, component)
 	end
 end
 
+function MenuComponentManager:create_raid_menu_greed_loot(node, component)
+	return self:_create_raid_menu_greed_loot(node, component)
+end
+
+function MenuComponentManager:_create_raid_menu_greed_loot(node, component)
+	self:close_raid_menu_loot(node, component)
+
+	self._raid_menu_greed_loot_gui = GreedLootScreenGui:new(self._ws, self._fullscreen_ws, node, component)
+
+	if component then
+		self._active_controls[component] = {}
+
+		local final_list = self._active_controls[component]
+
+		for _, control in ipairs(self._raid_menu_greed_loot_gui._root_panel._controls) do
+			self:_collect_controls(control, final_list)
+		end
+	end
+
+	local active_menu = managers.menu:active_menu()
+
+	if active_menu then
+		active_menu.input:set_force_input(true)
+	end
+
+	return self._raid_menu_greed_loot_gui
+end
+
+function MenuComponentManager:close_raid_menu_greed_loot(node, component)
+	if component then
+		self._active_controls[component] = {}
+	end
+
+	if self._raid_menu_greed_loot_gui then
+		self._raid_menu_greed_loot_gui:close()
+
+		self._raid_menu_greed_loot_gui = nil
+
+		local active_menu = managers.menu:active_menu()
+
+		if active_menu then
+			active_menu.input:set_force_input(false)
+		end
+	end
+end
+
 function MenuComponentManager:create_raid_menu_credits(node, component)
 	return self:_create_raid_menu_credits(node, component)
 end
@@ -2920,6 +3138,7 @@ function MenuComponentManager:close_raid_menu_credits(node, component)
 	end
 
 	if self._raid_menu_credits_gui then
+		self:removeFromUpdateTable(self._raid_menu_credits_gui)
 		self._raid_menu_credits_gui:close()
 
 		self._raid_menu_credits_gui = nil

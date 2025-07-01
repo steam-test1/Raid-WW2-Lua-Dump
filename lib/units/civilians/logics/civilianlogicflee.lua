@@ -1,13 +1,14 @@
 CivilianLogicFlee = class(CivilianLogicBase)
 
 function CivilianLogicFlee.enter(data, new_logic_name, enter_params)
-	CopLogicBase.enter(data, new_logic_name, enter_params)
-	data.unit:brain():cancel_all_pathing_searches()
-
-	local old_internal_data = data.internal_data
 	local my_data = {
 		unit = data.unit,
 	}
+
+	CopLogicBase.enter(data, new_logic_name, enter_params, my_data)
+	data.unit:brain():cancel_all_pathing_searches()
+
+	local old_internal_data = data.internal_data
 
 	data.internal_data = my_data
 	my_data.detection = data.char_tweak.detection.cbt
@@ -115,14 +116,6 @@ function CivilianLogicFlee.exit(data, new_logic_name, enter_params)
 	CopLogicBase.cancel_delayed_clbks(my_data)
 	managers.groupai:state():unregister_fleeing_civilian(data.key)
 	CopLogicBase.cancel_queued_tasks(my_data)
-
-	if my_data.best_cover then
-		managers.navigation:release_cover(my_data.best_cover[1])
-	end
-
-	if my_data.nearest_cover then
-		managers.navigation:release_cover(my_data.nearest_cover[1])
-	end
 
 	if my_data.enemy_weapons_hot_listen_id then
 		managers.groupai:state():remove_listener(my_data.enemy_weapons_hot_listen_id)

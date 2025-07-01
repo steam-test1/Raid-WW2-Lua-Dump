@@ -69,6 +69,14 @@ function ChallengeManager:deactivate_challenge(challenge_category, challenge_id)
 	self._challenges[challenge_category][challenge_id]:deactivate()
 end
 
+function ChallengeManager:deactivate_all_challenges()
+	for category_index, category in pairs(self._challenges) do
+		for challenge_id, challenge in pairs(category) do
+			self:deactivate_challenge(category_index, challenge_id)
+		end
+	end
+end
+
 function ChallengeManager:reset_challenge(challenge_category, challenge_id)
 	if not self._challenges[challenge_category] or not self._challenges[challenge_category][challenge_id] then
 		debug_pause("CANNOT RESET CHALLENGE", challenge_category, challenge_id)

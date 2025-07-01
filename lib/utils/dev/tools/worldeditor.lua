@@ -141,7 +141,7 @@ function WorldEditor:_init_mission_difficulties()
 			"Overkill",
 		},
 	}
-	self._mission_difficulty = Global.DEAFULT_DIFFICULTY
+	self._mission_difficulty = Global.DEFAULT_DIFFICULTY
 end
 
 function WorldEditor:_init_mission_players()
@@ -226,7 +226,6 @@ function WorldEditor:project_stop_simulation()
 	managers.global_state:on_simulation_ended()
 	managers.voice_over:on_simulation_ended()
 	managers.barrage:on_simulation_ended()
-	managers.airdrop:on_simulation_ended()
 	managers.queued_tasks:on_simulation_ended()
 	managers.drop_loot:on_simulation_ended()
 	managers.raid_job:on_simulation_ended()

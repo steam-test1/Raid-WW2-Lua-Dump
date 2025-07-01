@@ -473,6 +473,10 @@ function SequenceManager:remove_startup_callback(id)
 end
 
 function SequenceManager:update(t, dt)
+	if managers.menu.loading_screen_visible then
+		return
+	end
+
 	self:update_startup_callbacks()
 	self:update_start_time_callbacks(dt)
 	self:update_retry_callbacks()

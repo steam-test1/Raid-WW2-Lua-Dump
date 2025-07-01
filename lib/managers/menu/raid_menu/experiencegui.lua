@@ -399,12 +399,16 @@ function ExperienceGui:_prepare_skill_description(button_data)
 	local skill = tweak_data.skilltree.skills[button_data.skill]
 	local upgrade_tweak_data = tweak_data.upgrades.definitions[skill.upgrades[1]]
 
-	if not upgrade_tweak_data then
+	if skill.acquires and skill.acquires[1] and skill.acquires[1].warcry_level then
+		return self:_prepare_warcry_upgrade_description(button_data.level, skill.acquires[1].warcry_level)
+	elseif not upgrade_tweak_data then
 		return managers.localization:text(button_data.skill_description)
 	end
 
 	local upgrade = tweak_data.upgrades.definitions[skill.upgrades[1]].upgrade
 	local current_upgrade_level = managers.player:upgrade_level(upgrade.category, upgrade.upgrade)
+	local current_selected_level = self:_upgrade_level_from_selected_skills(skill, button_data.level, button_data.index)
+	local total_upgrade_level = current_upgrade_level + current_selected_level
 	local color_changes = {}
 	local stat_line
 
@@ -412,33 +416,37 @@ function ExperienceGui:_prepare_skill_description(button_data)
 		local macros = {}
 		local pending = false
 
-		if (button_data.state == RaidGUIControlBranchingBarNode.STATE_HOVER or button_data.state == RaidGUIControlBranchingBarNode.STATE_SELECTED or button_data.state == RaidGUIControlBranchingBarNode.STATE_PENDING) and tweak_data.upgrades.values[upgrade.category][upgrade.upgrade][current_upgrade_level + 1] then
-			macros.LEVEL = current_upgrade_level + 1
+		if (button_data.state == RaidGUIControlBranchingBarNode.STATE_HOVER or button_data.state == RaidGUIControlBranchingBarNode.STATE_SELECTED or button_data.state == RaidGUIControlBranchingBarNode.STATE_PENDING) and tweak_data.upgrades.values[upgrade.category][upgrade.upgrade][total_upgrade_level + 1] then
+			macros.LEVEL = total_upgrade_level + 1
 			pending = true
 		else
-			macros.LEVEL = current_upgrade_level
+			macros.LEVEL = total_upgrade_level
 		end
+
+		local str_raw = managers.localization:text(skill.stat_desc_id, macros)
+		local str_utf8 = utf8.sub(str_raw, 0, string.len(str_raw))
 
 		if upgrade_tweak_data.description_data then
 			if upgrade_tweak_data.description_data.upgrade_type == UpgradesTweakData.UPGRADE_TYPE_MULTIPLIER then
-				self:_prepare_upgrade_stats_type_multiplier(managers.localization:text(skill.stat_desc_id, macros), current_upgrade_level, pending, upgrade_tweak_data, macros, color_changes)
+				self:_prepare_upgrade_stats_type_multiplier(str_utf8, total_upgrade_level, pending, upgrade_tweak_data, macros, color_changes)
 			elseif upgrade_tweak_data.description_data.upgrade_type == UpgradesTweakData.UPGRADE_TYPE_REDUCTIVE_MULTIPLIER then
-				self:_prepare_upgrade_stats_type_reductive_multiplier(managers.localization:text(skill.stat_desc_id, macros), current_upgrade_level, pending, upgrade_tweak_data, macros, color_changes)
+				self:_prepare_upgrade_stats_type_reductive_multiplier(str_utf8, total_upgrade_level, pending, upgrade_tweak_data, macros, color_changes)
 			elseif upgrade_tweak_data.description_data.upgrade_type == UpgradesTweakData.UPGRADE_TYPE_MULTIPLIER_REDUCTIVE_STRING then
-				self:_prepare_upgrade_stats_type_multiplier_reductive_string(managers.localization:text(skill.stat_desc_id, macros), current_upgrade_level, pending, upgrade_tweak_data, macros, color_changes)
+				self:_prepare_upgrade_stats_type_multiplier_reductive_string(str_utf8, total_upgrade_level, pending, upgrade_tweak_data, macros, color_changes)
 			elseif upgrade_tweak_data.description_data.upgrade_type == UpgradesTweakData.UPGRADE_TYPE_RAW_VALUE_REDUCTION then
-				self:_prepare_upgrade_stats_type_raw_value_reduction(managers.localization:text(skill.stat_desc_id, macros), current_upgrade_level, pending, upgrade_tweak_data, macros, color_changes)
+				self:_prepare_upgrade_stats_type_raw_value_reduction(str_utf8, total_upgrade_level, pending, upgrade_tweak_data, macros, color_changes)
 			elseif upgrade_tweak_data.description_data.upgrade_type == UpgradesTweakData.UPGRADE_TYPE_RAW_VALUE_AMOUNT then
-				self:_prepare_upgrade_stats_type_raw_value_amount(managers.localization:text(skill.stat_desc_id, macros), current_upgrade_level, pending, upgrade_tweak_data, macros, color_changes)
+				self:_prepare_upgrade_stats_type_raw_value_amount(str_utf8, total_upgrade_level, pending, upgrade_tweak_data, macros, color_changes)
 			elseif upgrade_tweak_data.description_data.upgrade_type == UpgradesTweakData.UPGRADE_TYPE_TEMPORARY_REDUCTION then
-				self:_prepare_upgrade_stats_type_temporary_reduction(managers.localization:text(skill.stat_desc_id, macros), current_upgrade_level, pending, upgrade_tweak_data, macros, color_changes)
+				self:_prepare_upgrade_stats_type_temporary_reduction(str_utf8, total_upgrade_level, pending, upgrade_tweak_data, macros, color_changes)
 			end
 		end
 
 		stat_line = managers.localization:text(skill.stat_desc_id, macros)
 	end
 
-	local description = managers.localization:text(button_data.skill_description)
+	local description_raw = managers.localization:text(button_data.skill_description)
+	local description = utf8.sub(description_raw, 0, string.len(description_raw))
 
 	if stat_line then
 		description = description .. "\n"
@@ -454,6 +462,28 @@ function ExperienceGui:_prepare_skill_description(button_data)
 	end
 
 	return description, color_changes
+end
+
+function ExperienceGui:_prepare_warcry_upgrade_description(level, warcry_level_increase)
+	local active_warcry = managers.warcry:get_active_warcry()
+	local target_warcry_level = math.round(level / 10) + 1
+
+	return active_warcry:get_level_description(target_warcry_level)
+end
+
+function ExperienceGui:_upgrade_level_from_selected_skills(skill, skill_button_level, skill_button_index)
+	local selected_nodes = self._skilltrack_progress_bar:get_selected_nodes()
+	local selected_num = 0
+
+	for index, node_data in pairs(selected_nodes) do
+		local same_button = node_data.level == skill_button_level and node_data.index == skill_button_index
+
+		if skill.name_id == node_data.skill_title and not same_button then
+			selected_num = selected_num + 1
+		end
+	end
+
+	return selected_num
 end
 
 function ExperienceGui:_prepare_upgrade_stats_type_raw_value_reduction(string, current_level, pending, upgrade_tweak_data, macros, color_changes)

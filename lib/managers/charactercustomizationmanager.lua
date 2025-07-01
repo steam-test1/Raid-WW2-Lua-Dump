@@ -11,9 +11,11 @@ function CharacterCustomizationManager:init()
 	if not Global.character_customization_manager then
 		Global.character_customization_manager = {}
 		Global.character_customization_manager.VERSION = CharacterCustomizationManager.VERSION
-		Global.character_customization_manager.owned_customizations = nil
+		Global.character_customization_manager.owned_customizations = tweak_data.character_customization:get_defaults()
+		Global.character_customization_manager.random_customization_awards = {}
 	end
 
+	self._global = Global.character_customization_manager
 	self._character_customization_version_to_attach = 1
 end
 
@@ -30,24 +32,32 @@ function CharacterCustomizationManager:increase_current_version_to_attach()
 end
 
 function CharacterCustomizationManager:get_all_owned_customizations()
-	if Global.character_customization_manager.owned_customizations == nil then
-		Global.character_customization_manager.owned_customizations = tweak_data.character_customization:get_defaults()
+	if self._global.owned_customizations == nil then
+		self._global.owned_customizations = tweak_data.character_customization:get_defaults()
 	end
 
-	return Global.character_customization_manager.owned_customizations
+	return self._global.owned_customizations
 end
 
 function CharacterCustomizationManager:set_all_owned_customizations(customizations)
-	self:_append_default_customizations(customizations)
-	self:_append_dlc_customizations(customizations)
+	self:_filter_customizations(customizations)
+	self:_append_customizations(customizations, tweak_data.character_customization:get_defaults())
 
-	Global.character_customization_manager.owned_customizations = customizations
+	self._global.owned_customizations = customizations
+
+	self:_award_random_customizations()
 end
 
-function CharacterCustomizationManager:_append_default_customizations(customizations)
-	local default_customizations = tweak_data.character_customization:get_defaults()
+function CharacterCustomizationManager:_filter_customizations(customizations)
+	local locked_customizations = tweak_data.dlc:get_locked_customizations()
 
-	for name, data in pairs(default_customizations) do
+	for name, _ in pairs(locked_customizations) do
+		customizations[name] = nil
+	end
+end
+
+function CharacterCustomizationManager:_append_customizations(customizations, to_append)
+	for name, data in pairs(to_append) do
 		if not customizations[name] then
 			customizations[name] = data
 			customizations[name].key_name = name
@@ -55,11 +65,45 @@ function CharacterCustomizationManager:_append_default_customizations(customizat
 	end
 end
 
-function CharacterCustomizationManager:_append_dlc_customizations(customizations)
-	for name, data in pairs(tweak_data.character_customization.customizations) do
-		if data.dlc and data.dlc_lock_type == DLCManager.DLC_GRANT_TYPE_AUTO and managers.dlc:has_dlc(data.dlc) then
-			customizations[name] = data
-			customizations[name].key_name = name
+function CharacterCustomizationManager:_award_random_customizations()
+	Application:debug("[CharacterCustomizationManager][_award_random_customizations]")
+
+	local eligible_awards = tweak_data.dlc:get_eligible_random_customizations()
+
+	if #eligible_awards == 0 then
+		return
+	end
+
+	local droppable_customizations = tweak_data.character_customization:get_droppable_customizations()
+	local awardable_customizations = {}
+
+	for _, key in ipairs(droppable_customizations) do
+		if not self._global.owned_customizations[key] and tweak_data.character_customization.customizations[key].part_type == CharacterCustomizationTweakData.PART_TYPE_UPPER then
+			table.insert(awardable_customizations, key)
+		end
+	end
+
+	Application:debug("[CharacterCustomizationManager][_award_random_customizations] eligible_awards: ", inspect(eligible_awards))
+
+	for _, award in pairs(eligible_awards) do
+		local awarded_customization = self._global.random_customization_awards[award.item]
+
+		if not awarded_customization then
+			Application:debug("[CharacterCustomizationManager][_award_random_customizations]    awarding ", inspect(award))
+
+			if #awardable_customizations > 0 then
+				local random_index = math.random(#awardable_customizations)
+				local customization = awardable_customizations[random_index]
+
+				self:add_character_customization_to_inventory(customization, false)
+				Application:debug("[CharacterCustomizationManager][_award_random_customizations]    giving ", customization)
+
+				self._global.random_customization_awards[award.item] = customization
+
+				managers.savefile:set_resave_required()
+			end
+		elseif not self._global.owned_customizations[awarded_customization] then
+			self:add_character_customization_to_inventory(awarded_customization, false)
 		end
 	end
 end
@@ -134,19 +178,19 @@ function CharacterCustomizationManager:get_equiped_part_from_character_save_slot
 
 	if part_type == CharacterCustomizationTweakData.PART_TYPE_HEAD then
 		if not self:get_all_owned_customizations()[equiped_head_name] then
-			result = character_nationality_name .. "_default_head"
+			result = self:get_default_part_key_name(character_nationality_name, part_type)
 		else
 			result = equiped_head_name
 		end
 	elseif part_type == CharacterCustomizationTweakData.PART_TYPE_UPPER then
 		if not self:get_all_owned_customizations()[equiped_upper_name] then
-			result = character_nationality_name .. "_default_upper"
+			result = self:get_default_part_key_name(character_nationality_name, part_type)
 		else
 			result = equiped_upper_name
 		end
 	elseif part_type == CharacterCustomizationTweakData.PART_TYPE_LOWER then
 		if not self:get_all_owned_customizations()[equiped_lower_name] then
-			result = character_nationality_name .. "_default_lower"
+			result = self:get_default_part_key_name(character_nationality_name, part_type)
 		else
 			result = equiped_lower_name
 		end
@@ -155,23 +199,42 @@ function CharacterCustomizationManager:get_equiped_part_from_character_save_slot
 	return result
 end
 
-function CharacterCustomizationManager:get_equiped_part_index(nationality, part_type, equiped_name)
-	local result = 1
+function CharacterCustomizationManager:get_equiped_part_index(character_nationality_name, part_type, equiped_name)
 	local parts_table = {}
 
-	parts_table = self:get_owned_customizations_indexed(part_type, nationality)
+	parts_table = self:get_owned_customizations_indexed(part_type, character_nationality_name)
 
 	if parts_table then
 		for index, value in pairs(parts_table) do
 			if value.key_name == equiped_name then
-				result = index
-
-				break
+				return index
 			end
 		end
 	end
 
-	return result
+	local default_name = self:get_default_part_key_name(character_nationality_name, part_type)
+
+	if parts_table then
+		for index, value in pairs(parts_table) do
+			if value.key_name == default_name then
+				return index
+			end
+		end
+	end
+
+	debug_pause("[CharacterCustomizationManager][get_equiped_part_index] No customization part found, both equipped and default failed: ", character_nationality_name, part_type, equiped_name)
+
+	return 1
+end
+
+function CharacterCustomizationManager:verify_customization_ownership(character_nationality_name, part_type, equiped_name)
+	local owned_customizations = self:get_all_owned_customizations()
+
+	if owned_customizations[equiped_name] then
+		return equiped_name
+	end
+
+	return self:get_default_part_key_name(character_nationality_name, part_type)
 end
 
 function CharacterCustomizationManager:get_all_parts_indexed(part_type)
@@ -185,17 +248,20 @@ end
 function CharacterCustomizationManager:get_all_parts_indexed_filtered(part_type, nationality, owned_only)
 	local data = tweak_data.character_customization:get_all_parts_indexed(part_type)
 	local result = {}
+	local owned_customizations = self:get_all_owned_customizations()
+	local unlocked_customizations = tweak_data.dlc:get_unlocked_customizations()
 	local counter = 1
 
 	for index, part_data in pairs(data) do
 		local new_data = clone(part_data)
-		local owned_customizations = self:get_all_owned_customizations()
+
+		Application:trace("[CharacterCustomizationManager:get_all_parts_indexed_filtered] new_data ", inspect(new_data))
 
 		if (not owned_only or owned_customizations[new_data.key_name]) and nationality and self:_can_nationality_use_customization(new_data, nationality) then
 			local should_show = true
 
 			if not owned_customizations[new_data.key_name] then
-				if new_data.dlc and not managers.dlc:has_dlc(new_data.dlc) then
+				if new_data.dlc and not unlocked_customizations[new_data.key_name] then
 					if not new_data.dlc_show_if_locked then
 						should_show = false
 					end
@@ -213,25 +279,24 @@ function CharacterCustomizationManager:get_all_parts_indexed_filtered(part_type,
 				new_data.status = RaidGUIControlGridItem.STATUS_OWNED_OR_PURCHASED
 			end
 
-			new_data.breadcrumb = {}
-
-			local breadcrumb_category
-
-			for i, category in pairs(BreadcrumbManager.CATEGORY_CHARACTER_CUSTOMIZATION.subcategories) do
-				if category.identifier == new_data.part_type then
-					breadcrumb_category = category
-
-					break
-				end
-			end
-
-			new_data.breadcrumb.category = breadcrumb_category
-			new_data.breadcrumb.identifiers = {}
-
-			table.insert(new_data.breadcrumb.identifiers, new_data.nationalities[1])
-			table.insert(new_data.breadcrumb.identifiers, new_data.key_name)
-
 			if should_show then
+				new_data.breadcrumb = {}
+
+				local breadcrumb_category
+
+				for i, category in pairs(BreadcrumbManager.CATEGORY_CHARACTER_CUSTOMIZATION.subcategories) do
+					if category.identifier == new_data.part_type then
+						breadcrumb_category = category
+
+						break
+					end
+				end
+
+				new_data.breadcrumb.category = breadcrumb_category
+				new_data.breadcrumb.identifiers = {}
+
+				table.insert(new_data.breadcrumb.identifiers, new_data.nationalities[1])
+				table.insert(new_data.breadcrumb.identifiers, new_data.key_name)
 				table.insert(result, new_data)
 			end
 		end
@@ -294,9 +359,7 @@ function CharacterCustomizationManager:check_part_key_name(part_type, part_key_n
 end
 
 function CharacterCustomizationManager:get_default_part_key_name(nationality, part_type)
-	local defaults = tweak_data.character_customization:get_defaults()
-	local nationality_defaults = {}
-	local result = {}
+	local result = ""
 
 	if part_type == CharacterCustomizationTweakData.PART_TYPE_HEAD then
 		result = nationality .. "_default_head"
@@ -311,16 +374,16 @@ end
 
 function CharacterCustomizationManager:reset()
 	self:set_all_owned_customizations(tweak_data.character_customization:get_defaults())
-	managers.savefile:save_game(SavefileManager.SETTING_SLOT, false)
 end
 
 function CharacterCustomizationManager:save(data)
 	local state = {
 		owned_customizations = self:get_all_owned_customizations(),
+		random_customization_awards = self._global.random_customization_awards,
 	}
 
-	if Global.character_customization_manager.VERSION then
-		state.VERSION = Global.character_customization_manager.VERSION
+	if self._global.VERSION then
+		state.VERSION = self._global.VERSION
 	end
 
 	data.CharacterCustomizationManager = state
@@ -330,47 +393,35 @@ function CharacterCustomizationManager:load(data)
 	local state = data.CharacterCustomizationManager
 
 	if state then
+		self._global.random_customization_awards = state.random_customization_awards or {}
+
 		if state.VERSION and state.VERSION == CharacterCustomizationManager.VERSION then
 			self:set_all_owned_customizations(state.owned_customizations)
-
-			Global.character_customization_manager.VERSION = state.VERSION
 		else
 			self:reset_customizations_on_load(state.owned_customizations)
-
-			Global.character_customization_manager.VERSION = CharacterCustomizationManager.VERSION
-
 			managers.savefile:set_resave_required()
 		end
 	end
 end
 
-function CharacterCustomizationManager:reset_customizations_on_load(owned_customizations)
-	local customization_count = 0
-	local temp_customizations = clone(owned_customizations)
-	local owned_customizations = {}
+function CharacterCustomizationManager:reset_customizations_on_load(previously_owned)
+	local currently_owned = {}
 
-	for customization_name, customization_data in pairs(temp_customizations) do
-		if not tweak_data.character_customization.customizations[customization_name] then
-			owned_customizations[customization_name] = nil
-		else
-			owned_customizations[customization_name] = tweak_data.character_customization.customizations[customization_name]
-			customization_count = customization_count + 1
+	for customization_name, customization_data in pairs(previously_owned) do
+		if tweak_data.character_customization.customizations[customization_name] then
+			currently_owned[customization_name] = tweak_data.character_customization.customizations[customization_name]
 		end
 	end
 
-	if customization_count == 0 then
-		owned_customizations = tweak_data.character_customization:get_defaults()
-	end
-
-	self:set_all_owned_customizations(owned_customizations)
+	self:set_all_owned_customizations(currently_owned)
 end
 
 function CharacterCustomizationManager:is_character_customization_owned(part_key)
-	return Global.character_customization_manager.owned_customizations[part_key] ~= nil
+	return self._global.owned_customizations[part_key] ~= nil
 end
 
 function CharacterCustomizationManager:add_character_customization_to_inventory(part_key, bought)
-	Global.character_customization_manager.owned_customizations[part_key] = tweak_data.character_customization.customizations[part_key]
+	self._global.owned_customizations[part_key] = tweak_data.character_customization.customizations[part_key]
 
 	local breadcrumb_category
 
@@ -405,7 +456,7 @@ function CharacterCustomizationManager:add_character_customization_to_inventory(
 end
 
 function CharacterCustomizationManager:remove_character_customization_from_inventory(part_key)
-	Global.character_customization_manager.owned_customizations[part_key] = nil
+	self._global.owned_customizations[part_key] = nil
 end
 
 function CharacterCustomizationManager:reaply_character_criminal(preferred_character_name)

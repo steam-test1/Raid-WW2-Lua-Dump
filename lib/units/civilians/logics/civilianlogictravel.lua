@@ -5,13 +5,14 @@ CivilianLogicTravel.on_action_completed = CopLogicTravel.on_action_completed
 CivilianLogicTravel.is_available_for_assignment = CopLogicTravel.is_available_for_assignment
 
 function CivilianLogicTravel.enter(data, new_logic_name, enter_params)
-	CopLogicBase.enter(data, new_logic_name, enter_params)
-	data.unit:brain():cancel_all_pathing_searches()
-
-	local old_internal_data = data.internal_data
 	local my_data = {
 		unit = data.unit,
 	}
+
+	CopLogicBase.enter(data, new_logic_name, enter_params, my_data)
+	data.unit:brain():cancel_all_pathing_searches()
+
+	local old_internal_data = data.internal_data
 
 	data.internal_data = my_data
 

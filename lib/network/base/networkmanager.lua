@@ -409,7 +409,21 @@ function NetworkManager:stop_network(clean)
 		managers.network.matchmake._restart_in_camp = true
 
 		managers.network.matchmake:create_lobby(managers.network:get_matchmake_attributes())
+
+		managers.worldcollection.level_transition_in_progress = false
+
+		self:on_camp_restarted()
 	end
+end
+
+function NetworkManager:on_camp_restarted()
+	local last_world_id = managers.worldcollection._world_id_counter
+
+	self._synced_worlds_temp = {}
+	self._synced_worlds_temp[last_world_id] = {}
+	self._synced_worlds_temp[last_world_id][CoreWorldCollection.STAGE_LOAD] = true
+	self._synced_worlds_temp[last_world_id][CoreWorldCollection.STAGE_LOAD_FINISHED] = true
+	self._synced_worlds_temp[last_world_id][CoreWorldCollection.STAGE_PREPARE] = true
 end
 
 function NetworkManager:queue_stop_network()

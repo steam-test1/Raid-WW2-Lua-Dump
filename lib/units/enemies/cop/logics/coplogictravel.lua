@@ -10,13 +10,14 @@ function CopLogicTravel.enter(data, new_logic_name, enter_params)
 		return
 	end
 
-	CopLogicBase.enter(data, new_logic_name, enter_params)
-	data.unit:brain():cancel_all_pathing_searches()
-
-	local old_internal_data = data.internal_data
 	local my_data = {
 		unit = data.unit,
 	}
+
+	CopLogicBase.enter(data, new_logic_name, enter_params, my_data)
+	data.unit:brain():cancel_all_pathing_searches()
+
+	local old_internal_data = data.internal_data
 	local is_cool = data.unit:movement():cool()
 
 	if is_cool then
@@ -32,18 +33,6 @@ function CopLogicTravel.enter(data, new_logic_name, enter_params)
 		my_data.firing = old_internal_data.firing
 		my_data.shooting = old_internal_data.shooting
 		my_data.attention_unit = old_internal_data.attention_unit
-
-		if old_internal_data.nearest_cover then
-			my_data.nearest_cover = old_internal_data.nearest_cover
-
-			managers.navigation:reserve_cover(my_data.nearest_cover[1], data.pos_rsrv_id)
-		end
-
-		if old_internal_data.best_cover then
-			my_data.best_cover = old_internal_data.best_cover
-
-			managers.navigation:reserve_cover(my_data.best_cover[1], data.pos_rsrv_id)
-		end
 	end
 
 	if data.char_tweak.announce_incomming then
@@ -196,19 +185,6 @@ function CopLogicTravel.exit(data, new_logic_name, enter_params)
 	data.unit:brain():cancel_all_pathing_searches()
 	CopLogicBase.cancel_queued_tasks(my_data)
 	CopLogicBase.cancel_delayed_clbks(my_data)
-
-	if my_data.moving_to_cover then
-		managers.navigation:release_cover(my_data.moving_to_cover[1])
-	end
-
-	if my_data.nearest_cover then
-		managers.navigation:release_cover(my_data.nearest_cover[1])
-	end
-
-	if my_data.best_cover then
-		managers.navigation:release_cover(my_data.best_cover[1])
-	end
-
 	data.brain:rem_pos_rsrv("path")
 	data.unit:brain():set_update_enabled_state(true)
 end
@@ -291,7 +267,9 @@ function CopLogicTravel.upd_advance(data)
 			end
 		end
 	elseif objective and (objective.nav_seg or objective.type == "follow") then
-		if my_data.coarse_path then
+		local path_ok = CopLogicTravel._verifiy_coarse_path(objective.nav_seg, my_data.coarse_path)
+
+		if my_data.coarse_path and path_ok then
 			if my_data.coarse_path_index == #my_data.coarse_path then
 				CopLogicTravel._on_destination_reached(data)
 
@@ -307,6 +285,18 @@ function CopLogicTravel.upd_advance(data)
 
 		return
 	end
+end
+
+function CopLogicTravel._verifiy_coarse_path(nav_seg, path)
+	if not nav_seg or not path then
+		return true
+	end
+
+	if path[#path][1] == nav_seg then
+		return true
+	end
+
+	return false
 end
 
 function CopLogicTravel._upd_enemy_detection(data)
@@ -721,7 +711,7 @@ function CopLogicTravel._reserve_pos_along_vec(look_pos, wanted_pos)
 		step_vec = step_vec,
 	}
 	local step_clbk = callback(CopLogicTravel, CopLogicTravel, "_rsrv_pos_along_vec_step_clbk", data)
-	local res_data = managers.navigation:reserve_pos(nil, nil, wanted_pos, step_clbk, 30, data.pos_rsrv_id)
+	local res_data = managers.navigation:reserve_pos(TimerManager:game():time(), 1, wanted_pos, step_clbk, 30, data.pos_rsrv_id)
 
 	return res_data
 end
@@ -1533,6 +1523,10 @@ function CopLogicTravel._get_exact_move_pos(data, nav_index)
 
 					if data.char_tweak.wall_fwd_offset then
 						to_pos = CopLogicTravel.apply_wall_offset_to_cover(data, my_data, new_occupation.cover[1], data.char_tweak.wall_fwd_offset)
+					end
+
+					if my_data.moving_to_cover then
+						managers.navigation:release_cover(my_data.moving_to_cover[1])
 					end
 
 					local new_cover = new_occupation.cover

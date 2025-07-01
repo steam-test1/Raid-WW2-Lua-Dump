@@ -163,7 +163,7 @@ function ShieldLogicAttack.queued_update(data)
 				my_data.pathing_to_optimal_pos = true
 				my_data.optimal_path_search_id = tostring(unit:key()) .. "optimal"
 
-				local reservation = managers.navigation:reserve_pos(nil, nil, to_pos, callback(ShieldLogicAttack, ShieldLogicAttack, "_reserve_pos_step_clbk", {
+				local reservation = managers.navigation:reserve_pos(TimerManager:game():time(), 1, to_pos, callback(ShieldLogicAttack, ShieldLogicAttack, "_reserve_pos_step_clbk", {
 					unit_pos = data.m_pos,
 				}), 70, data.pos_rsrv_id)
 

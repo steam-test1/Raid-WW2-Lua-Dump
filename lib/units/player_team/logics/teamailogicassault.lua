@@ -13,13 +13,14 @@ TeamAILogicAssault.is_available_for_assignment = TeamAILogicIdle.is_available_fo
 TeamAILogicAssault.clbk_heat = TeamAILogicIdle.clbk_heat
 
 function TeamAILogicAssault.enter(data, new_logic_name, enter_params)
-	TeamAILogicBase.enter(data, new_logic_name, enter_params)
-	data.unit:brain():cancel_all_pathing_searches()
-
-	local old_internal_data = data.internal_data
 	local my_data = {
 		unit = data.unit,
 	}
+
+	TeamAILogicBase.enter(data, new_logic_name, enter_params, my_data)
+	data.unit:brain():cancel_all_pathing_searches()
+
+	local old_internal_data = data.internal_data
 
 	data.internal_data = my_data
 	my_data.detection = data.char_tweak.detection.combat
@@ -61,15 +62,6 @@ function TeamAILogicAssault.exit(data, new_logic_name, enter_params)
 	data.unit:brain():cancel_all_pathing_searches()
 	CopLogicBase.cancel_queued_tasks(my_data)
 	CopLogicBase.cancel_delayed_clbks(my_data)
-
-	if my_data.best_cover then
-		managers.navigation:release_cover(my_data.best_cover[1])
-	end
-
-	if my_data.nearest_cover then
-		managers.navigation:release_cover(my_data.nearest_cover[1])
-	end
-
 	data.brain:rem_pos_rsrv("path")
 end
 

@@ -129,8 +129,6 @@ end
 function ElementFilter:_check_alarm()
 	local alarm = managers.worldcollection:get_alarm_for_world(self._sync_id)
 
-	Application:debug("[ElementFilter:_check_alarm()]", alarm, self._values.alarm_on, self._values.alarm_off)
-
 	if self._values.alarm_on == nil or self._values.alarm_off == nil then
 		return true
 	end

@@ -215,7 +215,7 @@ function MenuSetup:init_game()
 			end
 
 			if Global.exe_argument_level and not Global.exe_argument_difficulty then
-				Global.exe_argument_difficulty = Global.DEAFULT_DIFFICULTY
+				Global.exe_argument_difficulty = Global.DEFAULT_DIFFICULTY
 			end
 
 			Global.exe_arguments_parsed = true

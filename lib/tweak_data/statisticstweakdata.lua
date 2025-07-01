@@ -187,6 +187,7 @@ function StatisticsTweakData:statistics_table()
 		"thompson",
 		"sten",
 		"garand",
+		"garand_golden",
 		"m1918",
 		"m1903",
 		"m1912",
@@ -206,12 +207,10 @@ function StatisticsTweakData:statistics_table()
 		"lockwood_brothers_push_dagger",
 		"bc41_knuckle_knife",
 		"km_dagger",
+		"marching_mace",
 	}
 	local grenade_list = {
 		"m24",
-		"mills",
-		"d343",
-		"concrete",
 	}
 	local enemy_list = {
 		"german_black_waffen_sentry_gasmask",

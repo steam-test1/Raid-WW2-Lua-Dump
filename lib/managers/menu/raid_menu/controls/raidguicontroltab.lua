@@ -45,7 +45,7 @@ function RaidGUIControlTab:init(parent, params)
 		y = 0,
 		color = RaidGUIControlTab.INACTIVE_COLOR,
 		font = tweak_data.gui.fonts.din_compressed,
-		font_size = tweak_data.gui.font_sizes.large,
+		font_size = self._params.tab_font_size or tweak_data.gui.font_sizes.large,
 		h = params.h,
 		layer = self._object:layer() + 1,
 		name = "tab_control_label_" .. self._name,

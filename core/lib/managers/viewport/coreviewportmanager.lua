@@ -8,6 +8,7 @@ core:import("CoreEnvironmentManager")
 
 ViewportManager = ViewportManager or class(CoreManagerBase.ManagerBase)
 ViewportManager.CAMERA_NEAR_RANGE = 3
+ViewportManager.WORLD_CAMERA_NEAR_RANGE = 20
 ViewportManager.CAMERA_FAR_RANGE = 100000
 
 function ViewportManager:init(aspect_ratio)
@@ -333,10 +334,25 @@ function ViewportManager:is_fullscreen()
 	end
 end
 
+function ViewportManager:is_borderless()
+	if self._render_settings_change_map and self._render_settings_change_map.borderless ~= nil then
+		return self._render_settings_change_map.borderless
+	else
+		return RenderSettings.borderless
+	end
+end
+
 function ViewportManager:set_fullscreen(fullscreen)
 	if not RenderSettings.fullscreen ~= not fullscreen or self._render_settings_change_map and not self._render_settings_change_map.fullscreen ~= not fullscreen then
 		self._render_settings_change_map = self._render_settings_change_map or {}
 		self._render_settings_change_map.fullscreen = not not fullscreen
+	end
+end
+
+function ViewportManager:set_borderless(borderless)
+	if not RenderSettings.borderless ~= not borderless or self._render_settings_change_map and not self._render_settings_change_map.borderless ~= not borderless then
+		self._render_settings_change_map = self._render_settings_change_map or {}
+		self._render_settings_change_map.borderless = not not borderless
 	end
 end
 

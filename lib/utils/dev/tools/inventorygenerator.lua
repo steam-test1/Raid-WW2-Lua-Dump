@@ -526,7 +526,14 @@ function InventoryGenerator._create_steam_itemdef(json_path, items, defid_data)
 
 		local description_positive_text, description_negative_text = managers.challenge_cards:get_card_description(item.key_name)
 
-		json:puts("\t\"description\": \"" .. description_positive_text .. "; " .. description_negative_text .. "\",")
+		if description_positive_text ~= "" and description_negative_text ~= "" then
+			json:puts("\t\"description\": \"" .. description_positive_text .. "; " .. description_negative_text .. "\",")
+		elseif description_positive_text ~= "" and description_negative_text == "" then
+			json:puts("\t\"description\": \"" .. description_positive_text .. "\",")
+		elseif description_positive_text == "" and description_negative_text ~= "" then
+			json:puts("\t\"description\": \"" .. description_negative_text .. "\",")
+		end
+
 		json:puts("\t\"icon_url\": \"https://s3-us-west-2.amazonaws.com/media.raidww2.com/steam_icons_challenge_cards/" .. item.key_name .. "_small.png\",")
 		json:puts("\t\"icon_url_large\": \"https://s3-us-west-2.amazonaws.com/media.raidww2.com/steam_icons_challenge_cards/" .. item.key_name .. "_large.png\",")
 		json:puts("\t\"name_color\": \"" .. "2360D8" .. "\",")

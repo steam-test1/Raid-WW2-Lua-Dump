@@ -60,6 +60,19 @@ function GrenadeBase:sync_net_event(event_id)
 	end
 end
 
+function GrenadeBase:throw(...)
+	GrenadeBase.super.throw(self, ...)
+
+	local weapon_id = tweak_data.projectiles[self:projectile_entry()].weapon_id
+
+	if weapon_id then
+		managers.statistics:shot_fired({
+			hit = false,
+			name_id = weapon_id,
+		})
+	end
+end
+
 function GrenadeBase:add_damage_result(unit, is_dead, damage_percent)
 	if not alive(self._thrower_unit) or self._thrower_unit ~= managers.player:player_unit() then
 		return
@@ -76,12 +89,14 @@ function GrenadeBase:add_damage_result(unit, is_dead, damage_percent)
 
 	local weapon_id = tweak_data.projectiles[self:projectile_entry()].weapon_id
 
-	if weapon_id then
+	if weapon_id and not self._recorded_hit then
 		managers.statistics:shot_fired({
 			hit = true,
 			skip_bullet_count = true,
 			name_id = weapon_id,
 		})
+
+		self._recorded_hit = true
 	end
 
 	table.insert(self._damage_results, is_dead)

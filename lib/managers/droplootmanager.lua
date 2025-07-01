@@ -87,6 +87,10 @@ function DropLootManager:drop_item(tweak_table, position, rotation)
 	return nil
 end
 
+function DropLootManager:clear()
+	self._spawned_units = {}
+end
+
 function DropLootManager:set_enabled(enabled)
 	self._enabled = enabled
 end

@@ -173,17 +173,16 @@ function SavefileManager:clear_progress_data()
 	managers.blackmarket:reset_equipped()
 	managers.character_customization:reset()
 	managers.raid_job:reset()
-	managers.raid_job:save_tutorial_played_flag(false)
+	managers.raid_job:set_tutorial_played_flag(false)
 	managers.statistics:reset()
 	managers.challenge:reset()
 	managers.weapon_skills:_setup(true)
-
-	if Global.consumable_missions_manager then
-		Global.consumable_missions_manager.inventory = {}
-	end
-
+	managers.consumable_missions:reset()
 	managers.gold_economy:reset()
 	managers.breadcrumb:reset()
+	managers.progression:reset()
+	managers.greed:reset()
+	managers.unlock:reset()
 	self:_clean_meta_data_list(false)
 	self:save_game(SavefileManager.SETTING_SLOT, false)
 end
@@ -515,6 +514,9 @@ function SavefileManager:_save_cache(slot)
 		managers.breadcrumb:save_profile_slot(cache)
 		managers.consumable_missions:save(cache)
 		managers.gold_economy:save(cache)
+		managers.progression:save_profile_slot(cache)
+		managers.unlock:save_profile_slot(cache)
+		managers.greed:save_profile_slot(cache)
 	else
 		managers.player:save(cache)
 		managers.experience:save(cache)
@@ -862,6 +864,13 @@ function SavefileManager:_load_done(slot, cache_only, wrong_user, wrong_version)
 		else
 			Global.savefile_manager.meta_data_list[slot].is_cached_slot = false
 		end
+
+		if self._resave_required then
+			Application:trace("[SavefileManager][_load_cache] Resave was required when loading slot ", slot)
+			self:_save(slot, false)
+
+			self._resave_required = false
+		end
 	end
 end
 
@@ -920,6 +929,9 @@ function SavefileManager:_load_cache(slot)
 			managers.breadcrumb:load_profile_slot(cache, version)
 			managers.consumable_missions:load(cache, version)
 			managers.gold_economy:load(cache, version)
+			managers.progression:load_profile_slot(cache, version)
+			managers.unlock:load_profile_slot(cache)
+			managers.greed:load_profile_slot(cache)
 		else
 			managers.experience:load(cache, version)
 			managers.blackmarket:load(cache, version)
@@ -933,11 +945,6 @@ function SavefileManager:_load_cache(slot)
 			managers.weapon_skills:load(cache, version)
 			managers.breadcrumb:load_character_slot(cache, version)
 		end
-	end
-
-	if self._resave_required then
-		Application:trace("[SavefileManager][_load_cache] Resave was required when loading slot ", slot)
-		self:_save_cache(slot)
 	end
 end
 

@@ -162,6 +162,7 @@ function BarrageManager:_check_flare_start_barrage(t)
 			data.called = true
 
 			data.unit:damage():run_sequence_simple("state_interaction_disabled")
+			managers.network:session():send_to_peers_synched("sync_spotter_flare_disabled", data.unit)
 		end
 
 		if alive(data.unit) and t > data.barrage_time + 20 then

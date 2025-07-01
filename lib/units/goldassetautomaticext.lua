@@ -14,6 +14,13 @@ function GoldAssetAutomaticExt:init(unit)
 end
 
 function GoldAssetAutomaticExt:apply_upgrade_level(level)
+	if Network:is_server() then
+		managers.network:session():send_to_peers_synched("sync_automatic_camp_asset", self._unit, level)
+		self:_apply_upgrade_level(level)
+	end
+end
+
+function GoldAssetAutomaticExt:_apply_upgrade_level(level)
 	self._unit:set_enabled(true)
 
 	if self._unit:damage() and self._unit:damage():has_sequence("reset") then

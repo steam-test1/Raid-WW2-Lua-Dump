@@ -1,5 +1,5 @@
 SkillTreeManager = SkillTreeManager or class()
-SkillTreeManager.VERSION = 22
+SkillTreeManager.VERSION = 21
 
 function SkillTreeManager:init()
 	self:_setup()
@@ -243,7 +243,8 @@ function SkillTreeManager:set_character_profile_base_class(character_profile_bas
 end
 
 function SkillTreeManager:_equip_class_default_weapons()
-	managers.blackmarket:equip_class_default_weapons()
+	managers.blackmarket:equip_class_default_primary()
+	managers.blackmarket:equip_class_default_secondary()
 end
 
 function SkillTreeManager:set_character_profile_subclass(character_profile_subclass)
@@ -466,6 +467,8 @@ function SkillTreeManager:load(data, version)
 	end
 
 	self:apply_automatic_unlocks_for_levels_up_to(managers.experience:current_level())
+	managers.blackmarket:_verfify_equipped_category(WeaponInventoryManager.BM_CATEGORY_PRIMARY_NAME)
+	managers.blackmarket:_verfify_equipped_category(WeaponInventoryManager.BM_CATEGORY_SECONDARY_NAME)
 end
 
 function SkillTreeManager:_activate_skill_tree(skill_tree)

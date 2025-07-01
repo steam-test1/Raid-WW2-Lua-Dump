@@ -16,6 +16,7 @@ function VehicleDamage:init(unit)
 	self._team_police = "law1"
 	self._team_criminal = "criminal1"
 	self._half_damaged_squence_played = false
+	self._no_blood = true
 end
 
 function VehicleDamage:set_tweak_data(data)

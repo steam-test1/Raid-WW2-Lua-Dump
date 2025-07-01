@@ -274,3 +274,48 @@ function LocalizationManager:check_translation()
 
 	io.close(out_file)
 end
+
+function LocalizationManager:check_keybind_translation(binding)
+	self._keybind_translations = {
+		"left ctrl",
+		"right ctrl",
+		"confirm",
+		"enter",
+		"esc",
+		"left",
+		"right",
+		"up",
+		"down",
+		"space",
+		"delete",
+		"left shift",
+		"right shift",
+		"left alt",
+		"right alt",
+		"num",
+		"mouse",
+		"caps lock",
+		"backspace",
+		"insert",
+		"home",
+		"end",
+		"page up",
+		"page down",
+		"scroll lock",
+		"pause",
+	}
+
+	local translation = binding
+
+	for _, binding_record in ipairs(self._keybind_translations) do
+		if binding_record == "num" and string.sub(binding, 1, 3) == binding_record then
+			translation = managers.localization:text("menu_keybind_" .. string.sub(binding, 1, 3)) .. string.sub(binding, 4, 5)
+		elseif binding_record == "mouse" and string.sub(binding, 1, 5) == binding_record then
+			translation = managers.localization:text("menu_keybind_" .. string.sub(binding, 1, 5)) .. string.sub(binding, 6, 7)
+		elseif binding_record == binding then
+			translation = managers.localization:text("menu_keybind_" .. string.gsub(binding, " ", "_"))
+		end
+	end
+
+	return translation
+end

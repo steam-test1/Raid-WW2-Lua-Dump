@@ -137,6 +137,7 @@ function HUDMultipleChoiceWheel:show()
 
 	self:_create_options()
 	self:_activate_pointer(false)
+	self:_setup_controller()
 	self._ws:connect_controller(self._controller, true)
 	self:_fade_in_options()
 	self._object:set_center(self._object:parent():w() / 2, self._object:parent():h() / 2)

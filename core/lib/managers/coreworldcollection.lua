@@ -42,6 +42,8 @@ function CoreWorldCollection:init(params)
 	self._atleast_one_world_loaded = false
 	self._stitcher_counter = CoreWorldCollection.MAX_STITCHER_ID
 	self._first_pass = true
+
+	World:occlusion_manager():set_max_occluder_tests(25)
 end
 
 function CoreWorldCollection:first_pass()
@@ -386,9 +388,21 @@ function CoreWorldCollection:check_all_worlds_prepared()
 	return result
 end
 
+function CoreWorldCollection:reset_global_ref_counter()
+	self._temp_package_ref_added = false
+
+	if Global.package_ref_counter then
+		for key, _ in pairs(Global.package_ref_counter) do
+			Global.package_ref_counter[key] = 0
+		end
+	end
+end
+
 function CoreWorldCollection:add_one_package_ref_to_all()
 	for key, _ in pairs(Global.package_ref_counter) do
-		Global.package_ref_counter[key] = Global.package_ref_counter[key] + 1
+		if Global.package_ref_counter[key] > 0 then
+			Global.package_ref_counter[key] = Global.package_ref_counter[key] + 1
+		end
 	end
 
 	self._temp_package_ref_added = true
@@ -397,7 +411,9 @@ end
 function CoreWorldCollection:delete_one_package_ref_from_all()
 	if self._temp_package_ref_added then
 		for key, _ in pairs(Global.package_ref_counter) do
-			Global.package_ref_counter[key] = Global.package_ref_counter[key] - 1
+			if Global.package_ref_counter[key] > 1 then
+				Global.package_ref_counter[key] = Global.package_ref_counter[key] - 1
+			end
 		end
 	end
 
@@ -460,7 +476,7 @@ function CoreWorldCollection:complete_world_loading_stage(world_id, stage)
 	peer._synced_worlds[world_id] = peer._synced_worlds[world_id] or {}
 	peer._synced_worlds[world_id][stage] = true
 
-	Application:debug("[CoreWorldCollection:update] Sending world spawn sync: (world_id, peer)", world_id, peer)
+	Application:debug("[CoreWorldCollection:update] Sending world spawn sync: (world_id, peer)", world_id, peer:id())
 	managers.network:session():send_to_peers("sync_prepare_world", world_id, peer:id(), stage)
 end
 
@@ -562,11 +578,17 @@ function CoreWorldCollection:update(t, dt, paused_update)
 		self._skip_one_loading_frame = false
 	end
 
-	if not paused_update then
+	if not paused_update and not self.level_transition_in_progress then
 		for key, definition in pairs(self._world_definitions) do
 			if definition.is_created and not definition.destroyed then
 				self._missions[key]:update(t, dt)
 				self._motion_paths[key]:update(t, dt)
+			end
+
+			local now = Application:time()
+
+			if now > definition._next_cleanup_t then
+				definition:cleanup_spawned_units()
 			end
 		end
 	end
@@ -595,6 +617,7 @@ function CoreWorldCollection:check_drop_in_sync()
 			managers.network:session():chk_send_local_player_ready(true)
 			local_peer:set_drop_in(false)
 			managers.mission:start_root_level_script()
+			self:remove_dropin_package_references()
 		end
 
 		managers.vehicle:process_state_change_queue()
@@ -791,7 +814,7 @@ function CoreWorldCollection:destroy_world(id)
 	managers.world_instance:remove_instance_params(id)
 	managers.world_instance:unregister_input_elements(id)
 	managers.world_instance:unregister_output_event_elements(id)
-	managers.navigation:unload_world_data(id)
+	managers.navigation:on_world_destroyed(id)
 	self:complete_world_loading_stage(id, CoreWorldCollection.STAGE_DESTROY)
 end
 
@@ -1056,6 +1079,37 @@ function CoreWorldCollection:get_unit_with_id(id, cb, world_id)
 	return unit
 end
 
+function CoreWorldCollection:debug_print_stats()
+	local all_units = World:unit_manager():get_units()
+	local i = 0
+
+	for key, u in pairs(all_units) do
+		i = i + 1
+	end
+
+	local j = 0
+	local k = 0
+
+	for _, definition in pairs(managers.worldcollection._world_definitions) do
+		for _, _ in pairs(definition._all_units) do
+			j = j + 1
+		end
+
+		k = k + #definition._spawned_units
+	end
+
+	local l = 0
+
+	for _, _ in pairs(managers.navigation._pos_reservations) do
+		l = l + 1
+	end
+
+	Application:debug("World:unit_manager(): ", i)
+	Application:debug("WorldDefinition:all_units:", j)
+	Application:debug("WorldDefinition:spawned_units:", k)
+	Application:debug("NavigationManager:pos_reservations:", l)
+end
+
 function CoreWorldCollection:get_unit_with_real_id(id)
 	local all_units = World:unit_manager():get_units()
 	local unit
@@ -1123,15 +1177,14 @@ function CoreWorldCollection:add_package_ref(package)
 	Global.package_ref_counter = Global.package_ref_counter or {}
 	Global.package_ref_counter[package] = Global.package_ref_counter[package] or 0
 	Global.package_ref_counter[package] = Global.package_ref_counter[package] + 1
-
-	Application:trace("[CoreWorldCollection:add_package_ref]", package, Global.package_ref_counter[package])
 end
 
 function CoreWorldCollection:delete_package_ref(package)
 	Global.package_ref_counter[package] = Global.package_ref_counter[package] or 1
-	Global.package_ref_counter[package] = Global.package_ref_counter[package] - 1
 
-	Application:trace("[CoreWorldCollection:delete_package_ref]", package, Global.package_ref_counter[package])
+	if Global.package_ref_counter[package] > 0 then
+		Global.package_ref_counter[package] = Global.package_ref_counter[package] - 1
+	end
 end
 
 function CoreWorldCollection:has_queued_unloads()
@@ -1163,7 +1216,13 @@ function CoreWorldCollection:register_spawned_unit(unit, pos)
 end
 
 function CoreWorldCollection:register_spawned_unit_on_last_world(unit)
-	local definition = self._world_definitions[self._world_id_counter]
+	local definition
+
+	if Application:editor() then
+		definition = managers.worlddefinition
+	else
+		definition = self._world_definitions[self._world_id_counter]
+	end
 
 	definition:register_spawned_unit(unit)
 end
@@ -1242,6 +1301,20 @@ function CoreWorldCollection:send_loaded_packages(peer)
 	end
 end
 
+function CoreWorldCollection:remove_dropin_package_references()
+	if not self._packages_packed then
+		return
+	end
+
+	for _, pkg in ipairs(self._packages_packed) do
+		if pkg.count > 0 then
+			Global.package_ref_counter[pkg.package] = Global.package_ref_counter[pkg.package] - pkg.count
+		end
+	end
+
+	self._packages_packed = nil
+end
+
 function CoreWorldCollection:sync_loaded_packages(packages_packed)
 	Application:trace("[CoreWorldCollection:sync_loaded_packages]", inspect(packages_packed))
 
@@ -1253,9 +1326,14 @@ function CoreWorldCollection:sync_loaded_packages(packages_packed)
 
 	self._sync_loading_packages = 0
 
+	self:reset_global_ref_counter()
+
+	self._packages_packed = packages_packed
+
 	for _, pkg in ipairs(packages_packed) do
 		if pkg.count > 0 then
-			self:add_package_ref(pkg.package)
+			Global.package_ref_counter = Global.package_ref_counter or {}
+			Global.package_ref_counter[pkg.package] = pkg.count
 
 			if not PackageManager:loaded(pkg.package) then
 				Application:trace("[CoreWorldCollection:sync_loaded_packages] Loading package:", pkg.package)
@@ -1327,6 +1405,8 @@ function CoreWorldCollection:level_transition_cleanup()
 	managers.groupai:kill_all_AI()
 	managers.queued_tasks:queue(nil, managers.groupai:state().clean_up, managers.groupai:state(), nil, 0.1, nil, true)
 	managers.game_play_central:on_level_tranistion()
+	managers.portal:clear()
+	managers.drop_loot:clear()
 end
 
 function CoreWorldCollection:level_transition_started()
@@ -1401,6 +1481,7 @@ function CoreWorldCollection:level_transition_ended()
 		self:_plant_loot_on_spawned_levels()
 		managers.queued_tasks:queue(nil, self._do_spawn_players, self, nil, 0.1)
 		managers.gold_economy:layout_camp()
+		managers.progression:layout_camp()
 	else
 		self.level_transition_in_progress = false
 	end
@@ -1456,6 +1537,7 @@ function CoreWorldCollection:_plant_loot_on_spawned_levels()
 	if not self._world_spawns or self:count_world_spawns() == 0 then
 		managers.lootdrop:plant_loot_on_level(0, total_value, job_id)
 		managers.consumable_missions:plant_document_on_level(0)
+		managers.greed:plant_greed_items_on_level(world_id)
 	else
 		local count = 0
 
@@ -1471,8 +1553,10 @@ function CoreWorldCollection:_plant_loot_on_spawned_levels()
 			if data.active and data.plant_loot then
 				managers.lootdrop:plant_loot_on_level(world_id, loot_per_level, job_id)
 				managers.consumable_missions:plant_document_on_level(world_id)
+				managers.greed:plant_greed_items_on_level(world_id)
 			elseif data.active then
 				managers.lootdrop:remove_loot_from_level(world_id)
+				managers.greed:remove_greed_items_from_level(world_id)
 			end
 		end
 	end

@@ -1,4 +1,12 @@
 WarcryClustertruck = WarcryClustertruck or class(Warcry)
+WarcryClustertruck.team_buffs = {
+	{
+		category = "player",
+		id = "warcry_team_damage_reduction_bonus_on_activate",
+		upgrade = "warcry_team_damage_reduction_bonus",
+		use_levels = true,
+	},
+}
 
 function WarcryClustertruck:init()
 	WarcryClustertruck.super.init(self)
@@ -28,6 +36,16 @@ end
 
 function WarcryClustertruck:duration()
 	return self._tweak_data.base_duration * managers.player:upgrade_value("player", "warcry_duration", 1)
+end
+
+function WarcryClustertruck:get_level_description(level)
+	level = math.clamp(level, 1, #self._tweak_data.buffs)
+
+	if level >= 2 then
+		return managers.localization:text("skill_warcry_clustertruck_level_" .. tostring(level) .. "_desc")
+	end
+
+	return "warcry_clustertruck_desc"
 end
 
 function WarcryClustertruck:activate()
@@ -73,5 +91,6 @@ function WarcryClustertruck:_on_enemy_killed(params)
 end
 
 function WarcryClustertruck:cleanup()
+	WarcryClustertruck.super.cleanup(self)
 	managers.system_event_listener:remove_listener("warcry_clustertruck_enemy_killed")
 end

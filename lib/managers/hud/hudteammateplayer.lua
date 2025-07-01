@@ -466,7 +466,18 @@ function HUDTeammatePlayer:set_stamina(value)
 	local stamina_percentage = math.clamp(value / self._max_stamina, 0, 1)
 
 	self._stamina_bar:set_position_z(stamina_percentage)
-	self._stamina_bar:set_color(self:_get_color_for_percentage(HUDTeammatePlayer.STAMINA_COLORS, stamina_percentage))
+
+	local player_unit = managers.player:player_unit()
+
+	if player_unit and player_unit:movement() then
+		if player_unit:movement():is_above_stamina_threshold() then
+			self._stamina_bar:set_color(self:_get_color_for_percentage(HUDTeammatePlayer.STAMINA_COLORS, 1))
+		else
+			self._stamina_bar:set_color(self:_get_color_for_percentage(HUDTeammatePlayer.STAMINA_COLORS, 0.001))
+		end
+	else
+		self._stamina_bar:set_color(self:_get_color_for_percentage(HUDTeammatePlayer.STAMINA_COLORS, stamina_percentage))
+	end
 end
 
 function HUDTeammatePlayer:set_max_stamina(value)

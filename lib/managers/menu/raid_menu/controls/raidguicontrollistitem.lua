@@ -23,8 +23,8 @@ function RaidGUIControlListItem:init(parent, params, data)
 		x = 32,
 		y = 0,
 		color = params.color or tweak_data.gui.colors.raid_white,
-		font = tweak_data.gui.fonts.din_compressed,
-		font_size = tweak_data.gui.font_sizes.menu_list,
+		font = self._params.item_font or tweak_data.gui.fonts.din_compressed,
+		font_size = self._params.item_font_size or tweak_data.gui.font_sizes.menu_list,
 		h = params.h,
 		name = "list_item_label_" .. self._name,
 		text = data.text,
@@ -89,7 +89,7 @@ function RaidGUIControlListItem:selected()
 	return self._selected
 end
 
-function RaidGUIControlListItem:select()
+function RaidGUIControlListItem:select(dont_trigger_selected_callback)
 	self._selected = true
 
 	self:highlight_on()
@@ -98,7 +98,7 @@ function RaidGUIControlListItem:select()
 		self._item_highlight_marker:show()
 	end
 
-	if self._on_item_selected_callback then
+	if self._on_item_selected_callback and not dont_trigger_selected_callback then
 		self._on_item_selected_callback(self, self._data)
 	end
 

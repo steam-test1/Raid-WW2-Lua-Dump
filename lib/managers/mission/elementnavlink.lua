@@ -294,7 +294,16 @@ function ElementNavLink:operation_remove()
 end
 
 function ElementNavLink:destroy()
+	ElementNavLink.super.destroy(self)
 	managers.navigation:unregister_anim_nav_link(self)
+
+	if self._pos_rsrv then
+		for _, unit_rsrv in pairs(self._pos_rsrv) do
+			managers.navigation:unreserve_pos(unit_rsrv)
+		end
+
+		self._pos_rsrv = nil
+	end
 end
 
 function ElementNavLink:get_objective(instigator)

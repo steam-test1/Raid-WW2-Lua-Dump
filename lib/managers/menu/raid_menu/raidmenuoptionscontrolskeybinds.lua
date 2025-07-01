@@ -2,12 +2,14 @@ RaidMenuOptionsControlsKeybinds = RaidMenuOptionsControlsKeybinds or class(RaidG
 
 function RaidMenuOptionsControlsKeybinds:init(ws, fullscreen_ws, node, component_name)
 	RaidMenuOptionsControlsKeybinds.super.init(self, ws, fullscreen_ws, node, component_name)
+	managers.raid_menu:register_on_escape_callback(callback(self, self, "_on_escape_callback"))
 end
 
 function RaidMenuOptionsControlsKeybinds:_set_initial_data()
 	self._node.components.raid_menu_header:set_screen_name("menu_header_options_main_screen_name", "menu_header_options_controls_keybinds_subtitle")
 
 	self._controller_category = "normal"
+	self._keybind_controls_table = {}
 end
 
 function RaidMenuOptionsControlsKeybinds:_layout()
@@ -64,12 +66,27 @@ function RaidMenuOptionsControlsKeybinds:on_click_tabs_keybind_types(controller_
 	self:_layout_controls_keybinds()
 end
 
+function RaidMenuOptionsControlsKeybinds:_on_escape_callback()
+	local result = false
+
+	for _, control in ipairs(self._keybind_controls_table) do
+		local control_result = control:is_listening_to_input()
+
+		if control_result then
+			result = true
+		end
+	end
+
+	return result
+end
+
 function RaidMenuOptionsControlsKeybinds:close()
 	self:_save_controls_keybinds_values()
 
 	Global.savefile_manager.setting_changed = true
 
 	managers.savefile:save_setting(true)
+	managers.raid_menu:register_on_escape_callback(nil)
 	RaidMenuOptionsControlsKeybinds.super.close(self)
 end
 
@@ -78,6 +95,8 @@ function RaidMenuOptionsControlsKeybinds:_save_controls_keybinds_values()
 end
 
 function RaidMenuOptionsControlsKeybinds:_layout_controls_keybinds()
+	self._keybind_controls_table = {}
+
 	local default_controller_type = managers.controller:get_default_wrapper_type()
 
 	if default_controller_type ~= "pc" then
@@ -118,7 +137,7 @@ function RaidMenuOptionsControlsKeybinds:_layout_controls_keybinds()
 		})
 
 		for row, keybind_params in ipairs(self._keybinds[keybind_type]) do
-			self._keybind_panel:keybind({
+			local keybind_control = self._keybind_panel:keybind({
 				keybind_w = 120,
 				h = MenuManager.MENU_ITEM_HEIGHT,
 				keybind_params = keybind_params,
@@ -129,6 +148,8 @@ function RaidMenuOptionsControlsKeybinds:_layout_controls_keybinds()
 				x = start_x,
 				y = start_y + row * RaidGuiBase.PADDING,
 			})
+
+			table.insert(self._keybind_controls_table, keybind_control)
 		end
 	end
 end

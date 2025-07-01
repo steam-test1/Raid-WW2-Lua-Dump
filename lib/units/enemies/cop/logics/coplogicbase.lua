@@ -41,13 +41,41 @@ CopLogicBase._SUSPICIOUS_SO_ANIMS.pistol = {
 	"e_so_suspicious_pistol_v02",
 }
 
-function CopLogicBase.enter(data, new_logic_name, enter_params)
-	return
+function CopLogicBase.enter(data, new_logic_name, enter_params, my_data)
+	local old_internal_data = data.internal_data
+
+	if old_internal_data then
+		if old_internal_data.nearest_cover then
+			my_data.nearest_cover = old_internal_data.nearest_cover
+
+			managers.navigation:reserve_cover(my_data.nearest_cover[1], data.pos_rsrv_id)
+		end
+
+		if old_internal_data.best_cover then
+			my_data.best_cover = old_internal_data.best_cover
+
+			managers.navigation:reserve_cover(my_data.best_cover[1], data.pos_rsrv_id)
+		end
+	end
 end
 
 function CopLogicBase.exit(data, new_logic_name, enter_params)
+	local my_data = data.internal_data
+
 	if data.internal_data then
 		data.internal_data.exiting = true
+	end
+
+	if my_data.nearest_cover then
+		managers.navigation:release_cover(my_data.nearest_cover[1])
+	end
+
+	if my_data.best_cover then
+		managers.navigation:release_cover(my_data.best_cover[1])
+	end
+
+	if my_data.moving_to_cover then
+		managers.navigation:release_cover(my_data.moving_to_cover[1])
 	end
 end
 
@@ -358,16 +386,18 @@ function CopLogicBase.draw_reserved_positions(data)
 	local rsrv_pos = data.pos_rsrv
 
 	if rsrv_pos.path then
-		Application:draw_cylinder(rsrv_pos.path.pos, my_pos, 6, 0, 0.3, 0.3)
+		Application:draw_cylinder(rsrv_pos.path.position, my_pos, 6, 0, 0.3, 0.3)
 	end
 
 	if rsrv_pos.move_dest then
-		Application:draw_cylinder(rsrv_pos.move_dest.pos, my_pos, 6, 0.3, 0.3, 0)
+		Application:draw_cylinder(rsrv_pos.move_dest.position, my_pos, 6, 0.3, 0.3, 0)
 	end
 
 	if rsrv_pos.stand then
-		Application:draw_cylinder(rsrv_pos.stand.pos, my_pos, 6, 0.3, 0, 0.3)
+		Application:draw_cylinder(rsrv_pos.stand.position, my_pos, 6, 0.3, 0, 0.3)
 	end
+
+	do return end
 
 	if my_data.best_cover then
 		local cover_pos = my_data.best_cover[1][NavigationManager.COVER_RESERVATION].pos
@@ -392,6 +422,32 @@ function CopLogicBase.draw_reserved_positions(data)
 end
 
 function CopLogicBase.draw_reserved_covers(data)
+	local my_pos = data.m_pos
+	local my_data = data.internal_data
+
+	if my_data.best_cover then
+		local cover_pos = my_data.best_cover[1][5].pos
+
+		Application:draw_cylinder(cover_pos, my_pos, 2, 0.2, 0.3, 0.6)
+		Application:draw_sphere(cover_pos, 10, 0.2, 0.3, 0.6)
+	end
+
+	if my_data.nearest_cover then
+		local cover_pos = my_data.nearest_cover[1][5].pos
+
+		Application:draw_cylinder(cover_pos, my_pos, 2, 0.2, 0.6, 0.3)
+		Application:draw_sphere(cover_pos, 8, 0.2, 0.6, 0.3)
+	end
+
+	if my_data.moving_to_cover then
+		local cover_pos = my_data.moving_to_cover[1][5].pos
+
+		Application:draw_cylinder(cover_pos, my_pos, 2, 0.3, 0.6, 0.2)
+		Application:draw_sphere(cover_pos, 8, 0.3, 0.6, 0.2)
+	end
+end
+
+function CopLogicBase.release_reserved_covers(data)
 	local my_pos = data.m_pos
 	local my_data = data.internal_data
 

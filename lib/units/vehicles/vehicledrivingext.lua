@@ -104,7 +104,13 @@ function VehicleDrivingExt:init(unit)
 
 	self:enable_loot_interaction()
 	self:enable_accepting_loot()
+	self:_setup_sound()
 
+	self._loot = {}
+	self.hud_label_offset = self._tweak_data.hud_label_offset or self._unit:oobb():size().z
+end
+
+function VehicleDrivingExt:_setup_sound()
 	self._playing_slip_sound_dt = 0
 	self._playing_reverse_sound_dt = 0
 	self._playing_engine_sound = false
@@ -151,8 +157,6 @@ function VehicleDrivingExt:init(unit)
 	self._hit_sound = self._tweak_data.sound.hit
 	self._hit_rtpc = self._tweak_data.sound.hit_rtpc
 	self._hit_enemy = self._tweak_data.sound.hit_enemy
-	self._loot = {}
-	self.hud_label_offset = self._tweak_data.hud_label_offset or self._unit:oobb():size().z
 end
 
 function VehicleDrivingExt:_setup_states()
@@ -200,6 +204,38 @@ function VehicleDrivingExt:set_tweak_data(data)
 	end
 
 	self._last_drop_position = self._unit:get_object(Idstring(self._tweak_data.loot_drop_point)):position()
+
+	if Network:is_server() and self._tweak_data.skins then
+		for skin_name, skin in pairs(self._tweak_data.skins) do
+			if not skin.sequence then
+				Application:error("[VehicleDrivingExt][set_tweak_data] Vehicle skin without a sequence:  ", skin_name)
+
+				break
+			end
+
+			if skin.dlc and managers.dlc:is_dlc_unlocked(skin.dlc) then
+				if not self._unit:damage():has_sequence(skin.sequence) then
+					Application:error("[VehicleDrivingExt][set_tweak_data] Vehicle doesn't have a sequence for the skin:  ", skin_name, inspect(skin))
+
+					break
+				end
+
+				if managers.network and managers.network:session() then
+					managers.network:session():send_to_peers_synched("sync_vehicle_skin", self._unit, skin.sequence)
+				end
+
+				self:set_skin(skin.sequence)
+
+				break
+			end
+		end
+	end
+end
+
+function VehicleDrivingExt:set_skin(skin_name)
+	self._unit:damage():run_sequence_simple(skin_name)
+
+	self._skin_sequence = skin_name
 end
 
 function VehicleDrivingExt:get_view()
@@ -967,9 +1003,11 @@ function VehicleDrivingExt:_move_ai_to_seat(from_seat, to_seat, previous_occupan
 
 		ai_movement:set_position(to_seat.third_object:position())
 		ai_movement:set_rotation(to_seat.third_object:rotation())
-		ai_movement.vehicle_unit:link(Idstring(VehicleDrivingExt.THIRD_PREFIX .. ai_movement.vehicle_seat.name), ai_unit, ai_unit:orientation_object():name())
 
-		ai_movement.vehicle_seat.occupant = ai_unit
+		ai_movement.vehicle_unit = self._unit
+		ai_movement.vehicle_seat = to_seat
+
+		ai_movement.vehicle_unit:link(Idstring(VehicleDrivingExt.THIRD_PREFIX .. ai_movement.vehicle_seat.name), ai_unit, ai_unit:orientation_object():name())
 
 		local team_ai_animation = self._tweak_data.animations[to_seat.name]
 
@@ -2176,6 +2214,7 @@ function VehicleDrivingExt:save(data)
 	data.vehicle_driving = {
 		accepting_loot_enabled = self._accepting_loot_enabled,
 		loot_interaction_enabled = self._loot_interaction_enabled,
+		sequence_applied = self._skin_sequence,
 	}
 end
 
@@ -2190,5 +2229,11 @@ function VehicleDrivingExt:load(data)
 		self:enable_accepting_loot()
 	else
 		self:disable_accepting_loot()
+	end
+
+	local sequence_applied = data.vehicle_driving.sequence_applied
+
+	if sequence_applied then
+		self:set_skin(sequence_applied)
 	end
 end

@@ -257,12 +257,6 @@ function PlayerDriving:update(t, dt)
 		self:_update_check_actions_passenger_no_shoot(t, dt, input)
 	end
 
-	if self._seat.turret_control then
-		local rot = self._unit:camera():rotation()
-
-		self._vehicle_unit:mounted_weapon():set_turret_target_rot(rot, dt)
-	end
-
 	self:_upd_nav_data()
 end
 
@@ -318,6 +312,10 @@ function PlayerDriving:_check_warcry(t, input)
 	return
 end
 
+function PlayerDriving:on_action_reload_success()
+	self._can_reload_prompt_hidden = false
+end
+
 function PlayerDriving:_check_action_jump(t, input)
 	return false
 end
@@ -337,6 +335,8 @@ end
 function PlayerDriving:_check_action_shooting_stance(t, input)
 	if self._vehicle_ext:shooting_stance_allowed() and not self._vehicle_ext:shooting_stance_mandatory() then
 		if input.btn_vehicle_shooting_stance_press and self._seat.shooting_pos and self._seat.has_shooting_mode and not self._unit:base():stats_screen_visible() then
+			self:_interupt_action_reload()
+
 			if self._stance == PlayerDriving.STANCE_NORMAL then
 				self:enter_shooting_stance()
 			else
@@ -398,7 +398,7 @@ function PlayerDriving:_apply_allowed_shooting()
 end
 
 function PlayerDriving:_check_action_exit_vehicle(t, input)
-	if input.btn_interact_press then
+	if input.btn_vehicle_exit_press then
 		if self._vehicle_ext.respawn_available then
 			if self._seat.driving then
 				self._vehicle_ext:respawn_vehicle()
@@ -410,7 +410,7 @@ function PlayerDriving:_check_action_exit_vehicle(t, input)
 		end
 	end
 
-	if input.btn_interact_release then
+	if input.btn_vehicle_exit_release then
 		self:_interupt_action_exit_vehicle()
 	end
 end
@@ -528,6 +528,11 @@ end
 
 function PlayerDriving:_move_to_next_seat()
 	managers.player:move_to_next_seat(self._vehicle_unit)
+	self._vehicle_ext:stop_horn_sound()
+
+	if self._equipped_unit and self._equipped_unit.base and self._equipped_unit:base() and self._equipped_unit:base().stop_shooting then
+		self._equipped_unit:base():stop_shooting()
+	end
 end
 
 function PlayerDriving:sync_move_to_next_seat()
@@ -563,9 +568,9 @@ function PlayerDriving:cb_leave()
 		print("[DRIVING] PlayerDriving: Could not found valid exit position, aborting exit.")
 		managers.notification:add_notification({
 			duration = 3,
-			id = "hud_hint_cant_exit_vehicle",
+			id = "hint_cant_exit_vehicle",
 			shelf_life = 5,
-			text = managers.localization:text("hud_hint_cant_exit_vehicle"),
+			text = managers.localization:text("hint_cant_exit_vehicle"),
 		})
 
 		return
@@ -584,6 +589,7 @@ function PlayerDriving:_update_input(dt)
 	local btn_vehicle_change_seat = pressed and self._controller:get_input_pressed("vehicle_change_seat")
 
 	if btn_vehicle_change_seat then
+		self:_interupt_action_reload()
 		self:_move_to_next_seat()
 	end
 

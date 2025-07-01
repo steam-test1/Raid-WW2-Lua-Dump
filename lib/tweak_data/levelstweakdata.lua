@@ -27,12 +27,12 @@ function LevelsTweakData:init()
 	self.flakturm.world_name = "vanilla/flakturm"
 	self.flakturm.predefined_world = "germany_flakturm"
 	self.flakturm.cube = "cube_apply_heist_bank"
-	self.hunters = {}
-	self.hunters.name_id = "hunters"
-	self.hunters.briefing_id = "hunters_briefing"
-	self.hunters.world_name = "vanilla/hunters"
-	self.hunters.predefined_world = "hunters"
-	self.hunters.cube = "cube_apply_heist_bank"
+	self.gold_rush = {}
+	self.gold_rush.name_id = "menu_ger_miss_03_ld_hl"
+	self.gold_rush.briefing_id = "menu_ger_miss_03_ld_desc"
+	self.gold_rush.world_name = "vanilla/gold_rush"
+	self.gold_rush.predefined_world = "germany_gold_rush"
+	self.gold_rush.cube = "cube_apply_heist_bank"
 	self.train_yard = {}
 	self.train_yard.name_id = "menu_ger_miss_04_hl"
 	self.train_yard.briefing_id = "menu_ger_miss_04_desc"
@@ -45,20 +45,230 @@ function LevelsTweakData:init()
 	self.ger_bridge.world_name = "vanilla/bridge"
 	self.ger_bridge.predefined_world = "germany_bridge"
 	self.ger_bridge.cube = "cube_apply_heist_bank"
+	self.ger_bridge_operation = {}
+	self.ger_bridge_operation.name_id = "menu_ger_bridge_00_hl"
+	self.ger_bridge_operation.briefing_id = "menu_ger_bridge_00_desc"
+	self.ger_bridge_operation.world_name = "vanilla/bridge"
+	self.ger_bridge_operation.predefined_world = "germany_bridge_operation"
+	self.ger_bridge_operation.cube = "cube_apply_heist_bank"
+	self.radio_defense = {}
+	self.radio_defense.name_id = "menu_afr_miss_04_hl"
+	self.radio_defense.briefing_id = "menu_afr_miss_04_desc"
+	self.radio_defense.world_name = "vanilla/radio_defense"
+	self.radio_defense.predefined_world = "germany_radio"
+	self.radio_defense.cube = "cube_apply_heist_bank"
+	self.settlement = {}
+	self.settlement.name_id = "menu_afr_miss_05_hl"
+	self.settlement.briefing_id = "menu_afr_miss_05_desc"
+	self.settlement.world_name = "vanilla/castle"
+	self.settlement.predefined_world = "germany_castle"
+	self.settlement.cube = "cube_apply_heist_bank"
+	self.forest_gumpy = {}
+	self.forest_gumpy.name_id = "forest_gumpy"
+	self.forest_gumpy.briefing_id = "tank_radio_test_briefing"
+	self.forest_gumpy.world_name = "vanilla/forest_gumpy"
+	self.forest_gumpy.predefined_world = "forest_gumpy"
+	self.forest_gumpy.cube = "cube_apply_heist_bank"
+	self.zone_germany_park = {}
+	self.zone_germany_park.name_id = "menu_germany_hl"
+	self.zone_germany_park.briefing_id = "menu_germany_desc"
+	self.zone_germany_park.world_name = "vanilla/zone_germany_park"
+	self.zone_germany_park.predefined_world = "zone_germany_park"
+	self.zone_germany_park.cube = "cube_apply_heist_bank"
+	self.zone_germany_park.floor_coordinates = {
+		-10000,
+	}
+	self.zone_germany_park.map = {
+		base_icon = "map_camp",
+		texture = "map",
+		base_location = {
+			x = -200,
+			y = -2850,
+		},
+		panel_shape = {
+			h = 710,
+			w = 885,
+			x = 105,
+			y = 220,
+		},
+		world_borders = {
+			down = -28846,
+			left = -29736,
+			right = 34700,
+			up = 23122,
+		},
+	}
+	self.zone_germany_destroyed = {}
+	self.zone_germany_destroyed.name_id = "menu_germany_hl"
+	self.zone_germany_destroyed.briefing_id = "menu_germany_desc"
+	self.zone_germany_destroyed.world_name = "vanilla/zone_germany_destroyed"
+	self.zone_germany_destroyed.predefined_world = "zone_germany_destroyed"
+	self.zone_germany_destroyed.cube = "cube_apply_heist_bank"
+	self.zone_germany_destroyed.floor_coordinates = {
+		-10000,
+	}
+	self.zone_germany_destroyed.map = {
+		base_icon = "map_camp",
+		texture = "map",
+		base_location = {
+			x = -200,
+			y = -2850,
+		},
+		panel_shape = {
+			h = 710,
+			w = 885,
+			x = 105,
+			y = 220,
+		},
+		world_borders = {
+			down = -28846,
+			left = -29736,
+			right = 34700,
+			up = 23122,
+		},
+	}
+	self.zone_germany_destroyed_fuel = {}
+	self.zone_germany_destroyed_fuel.name_id = "menu_germany_hl"
+	self.zone_germany_destroyed_fuel.briefing_id = "menu_germany_desc"
+	self.zone_germany_destroyed_fuel.world_name = "vanilla/zone_germany_destroyed_fuel"
+	self.zone_germany_destroyed_fuel.predefined_world = "zone_germany_destroyed_fuel"
+	self.zone_germany_destroyed_fuel.cube = "cube_apply_heist_bank"
+	self.zone_germany_destroyed_fuel.floor_coordinates = {
+		-10000,
+	}
+	self.zone_germany_destroyed_fuel.map = {
+		base_icon = "map_camp",
+		texture = "map",
+		base_location = {
+			x = -200,
+			y = -2850,
+		},
+		panel_shape = {
+			h = 710,
+			w = 885,
+			x = 105,
+			y = 220,
+		},
+		world_borders = {
+			down = -28846,
+			left = -29736,
+			right = 34700,
+			up = 23122,
+		},
+	}
+	self.zone_germany_roundabout = {}
+	self.zone_germany_roundabout.name_id = "menu_germany_hl"
+	self.zone_germany_roundabout.briefing_id = "menu_germany_desc"
+	self.zone_germany_roundabout.world_name = "vanilla/zone_germany_roundabout"
+	self.zone_germany_roundabout.predefined_world = "zone_germany_roundabout"
+	self.zone_germany_roundabout.cube = "cube_apply_heist_bank"
+	self.zone_germany_roundabout.floor_coordinates = {
+		-10000,
+	}
+	self.zone_germany_roundabout.map = {
+		base_icon = "map_camp",
+		texture = "map",
+		base_location = {
+			x = -200,
+			y = -2850,
+		},
+		panel_shape = {
+			h = 710,
+			w = 885,
+			x = 105,
+			y = 220,
+		},
+		world_borders = {
+			down = -28846,
+			left = -29736,
+			right = 34700,
+			up = 23122,
+		},
+	}
+	self.zone_germany_roundabout_fuel = {}
+	self.zone_germany_roundabout_fuel.name_id = "menu_germany_hl"
+	self.zone_germany_roundabout_fuel.briefing_id = "menu_germany_desc"
+	self.zone_germany_roundabout_fuel.world_name = "vanilla/zone_germany_roundabout_fuel"
+	self.zone_germany_roundabout_fuel.predefined_world = "zone_germany_roundabout_fuel"
+	self.zone_germany_roundabout_fuel.cube = "cube_apply_heist_bank"
+	self.zone_germany_roundabout_fuel.floor_coordinates = {
+		-10000,
+	}
+	self.zone_germany_roundabout_fuel.map = {
+		base_icon = "map_camp",
+		texture = "map",
+		base_location = {
+			x = -200,
+			y = -2850,
+		},
+		panel_shape = {
+			h = 710,
+			w = 885,
+			x = 105,
+			y = 220,
+		},
+		world_borders = {
+			down = -28846,
+			left = -29736,
+			right = 34700,
+			up = 23122,
+		},
+	}
+	self.bunker_test = {}
+	self.bunker_test.name_id = "bunker_test"
+	self.bunker_test.briefing_id = "bunker_test_briefing"
+	self.bunker_test.world_name = "vanilla/bunker_test"
+	self.bunker_test.cube = "cube_apply_heist_bank"
+	self.bunker_test.predefined_world = "bunker_test"
 	self.tnd = {}
 	self.tnd.name_id = "tnd"
 	self.tnd.briefing_id = "tnd_briefing"
 	self.tnd.world_name = "vanilla/tnd"
 	self.tnd.cube = "cube_apply_heist_bank"
 	self.tnd.predefined_world = "tnd"
+	self.hunters = {}
+	self.hunters.name_id = "hunters"
+	self.hunters.briefing_id = "hunters_briefing"
+	self.hunters.world_name = "vanilla/hunters"
+	self.hunters.cube = "cube_apply_heist_bank"
+	self.hunters.predefined_world = "hunters"
+	self.convoy = {}
+	self.convoy.name_id = "convoy"
+	self.convoy.briefing_id = "convoy_briefing"
+	self.convoy.world_name = "vanilla/convoy"
+	self.convoy.cube = "cube_apply_heist_bank"
+	self.convoy.predefined_world = "convoy"
+	self.spies_test = {}
+	self.spies_test.name_id = "spies_test"
+	self.spies_test.briefing_id = "spies_test_briefing"
+	self.spies_test.world_name = "vanilla/spies_test_layout"
+	self.spies_test.cube = "cube_apply_heist_bank"
+	self.spies_test.predefined_world = "spies_test"
+	self.sto = {}
+	self.sto.name_id = "sto"
+	self.sto.briefing_id = "sto_briefing"
+	self.sto.world_name = "vanilla/sto"
+	self.sto.cube = "cube_apply_heist_bank"
+	self.sto.predefined_world = "sto"
 	self._level_index = {
 		"streaming_level",
+		"germany_zone",
+		"zone_germany",
 		"flakturm",
+		"gold_rush",
+		"train_yard",
 		"ger_bridge",
+		"ger_bridge_operation",
+		"radio_defense",
+		"settlement",
+		"forest_gumpy",
 		"tutorial",
+		"bunker_test",
 		"tnd",
 		"hunters",
-		"train_yard",
+		"convoy",
+		"spies_test",
+		"sto",
 	}
 	self.escape_levels = {}
 end

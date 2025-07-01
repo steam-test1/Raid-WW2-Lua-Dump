@@ -1,5 +1,5 @@
 WeaponSkillsManager = WeaponSkillsManager or class()
-WeaponSkillsManager.VERSION = 80
+WeaponSkillsManager.VERSION = 85
 WeaponSkillsManager.SCOPE_WEAPON_PART_TYPE = "scope"
 WeaponSkillsManager.UPGRADE_ACTION_ACTIVATE = "activate"
 WeaponSkillsManager.UPGRADE_ACTION_DEACTIVATE = "deactivate"
@@ -65,6 +65,10 @@ function WeaponSkillsManager:_initialize_weapon_skill_challenges()
 							local reminders = skill[1].challenge_tasks[task_index].reminders or {}
 
 							task:set_reminders(reminders)
+
+							local modifiers = skill[1].challenge_tasks[task_index].modifiers or {}
+
+							task:set_modifiers(modifiers)
 						end
 					end
 

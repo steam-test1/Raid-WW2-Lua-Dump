@@ -120,7 +120,7 @@ function EnemyManager:update(t, dt)
 	self._queued_task_executed = nil
 
 	self:_update_gfx_lod()
-	self:_update_queued_tasks(t)
+	self:_update_queued_tasks(t, dt)
 	self:_cleanup_queued_tasks()
 end
 
@@ -597,21 +597,36 @@ function EnemyManager:_execute_queued_task(i)
 	task.clbk(task.data)
 end
 
-function EnemyManager:_update_queued_tasks(t)
+local m_ceil = math.ceil
+local t_remove = table.remove
+
+function EnemyManager:_update_queued_tasks(t, dt)
 	local i_asap_task, asp_task_t
+	local queue_remaining = m_ceil(dt * tweak_data.group_ai.ai_tick_rate)
 
 	for i_task, task_data in ipairs(self._queued_tasks) do
 		if not task_data.t or t > task_data.t then
 			self:_execute_queued_task(i_task)
+
+			queue_remaining = queue_remaining - 1
+
+			if queue_remaining <= 0 then
+				break
+			end
 		elseif task_data.asap and (not asp_task_t or asp_task_t > task_data.t) then
-			self:_execute_queued_task(i_task)
+			i_asap_task = i_task
+			asp_task_t = task_data.t
 		end
+	end
+
+	if i_asap_task and not self._queued_task_executed then
+		self:_execute_queued_task(i_asap_task)
 	end
 
 	local all_clbks = self._delayed_clbks
 
 	if all_clbks[1] and t > all_clbks[1][2] then
-		local clbk = table.remove(all_clbks, 1)[3]
+		local clbk = t_remove(all_clbks, 1)[3]
 
 		clbk()
 	end
@@ -945,7 +960,7 @@ function EnemyManager:_upd_corpse_disposal()
 				local u_pos = u_data.m_pos
 				local dis = mvec3_dis(cam_pos, u_pos)
 
-				if dis > 1500 or dis > 200 and mvector3.dot(cam_fwd, u_pos - cam_pos) < 0 then
+				if (dis > 1500 or dis > 200 and mvector3.dot(cam_fwd, u_pos - cam_pos) < 0) and t - u_data.death_t > 10 then
 					to_dispose[u_key] = to_dispose[u_key] or 0
 					to_dispose[u_key] = to_dispose[u_key] + 1
 				end

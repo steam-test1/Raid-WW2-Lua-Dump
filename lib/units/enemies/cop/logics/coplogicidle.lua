@@ -23,11 +23,12 @@ CopLogicIdle.allowed_transitional_actions = {
 }
 
 function CopLogicIdle.enter(data, new_logic_name, enter_params)
-	CopLogicBase.enter(data, new_logic_name, enter_params)
-
 	local my_data = {
 		unit = data.unit,
 	}
+
+	CopLogicBase.enter(data, new_logic_name, enter_params, my_data)
+
 	local is_cool = data.unit:movement():cool()
 
 	if is_cool then
@@ -63,18 +64,6 @@ function CopLogicIdle.enter(data, new_logic_name, enter_params)
 			my_data.advancing = lower_body_action
 		else
 			my_data.advancing = nil
-		end
-
-		if old_internal_data.best_cover then
-			my_data.best_cover = old_internal_data.best_cover
-
-			managers.navigation:reserve_cover(my_data.best_cover[1], data.pos_rsrv_id)
-		end
-
-		if old_internal_data.nearest_cover then
-			my_data.nearest_cover = old_internal_data.nearest_cover
-
-			managers.navigation:reserve_cover(my_data.nearest_cover[1], data.pos_rsrv_id)
 		end
 	end
 
@@ -153,15 +142,6 @@ function CopLogicIdle.exit(data, new_logic_name, enter_params)
 	data.unit:brain():cancel_all_pathing_searches()
 	CopLogicBase.cancel_queued_tasks(my_data)
 	CopLogicBase.cancel_delayed_clbks(my_data)
-
-	if my_data.best_cover then
-		managers.navigation:release_cover(my_data.best_cover[1])
-	end
-
-	if my_data.nearest_cover then
-		managers.navigation:release_cover(my_data.nearest_cover[1])
-	end
-
 	data.brain:rem_pos_rsrv("path")
 	managers.voice_over:guard_unregister_idle(data.unit)
 end

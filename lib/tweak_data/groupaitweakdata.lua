@@ -7,6 +7,9 @@ function GroupAITweakData:init(tweak_data)
 	local difficulty_index = tweak_data:difficulty_to_index(difficulty)
 
 	print("[GroupAITweakData:init] difficulty", difficulty, "difficulty_index", difficulty_index)
+
+	self.ai_tick_rate = 180
+
 	self:_read_mission_preset(tweak_data)
 	self:_create_table_structure()
 	self:_init_task_data(difficulty_index)
@@ -529,6 +532,9 @@ function GroupAITweakData:_init_enemy_spawn_groups(difficulty_index)
 		commander = {
 			"ranged_fire",
 		},
+		commander = {
+			"flank",
+		},
 		defend = {
 			"flank",
 			"ranged_fire",
@@ -750,7 +756,7 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		self.enemy_spawn_groups.german.grunt_flankers = {
 			amount = {
 				3,
-				5,
+				4,
 			},
 			spawn = {
 				{
@@ -998,7 +1004,7 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 		self.enemy_spawn_groups.german.gerbish_chargers = {
 			amount = {
 				3,
-				5,
+				4,
 			},
 			spawn = {
 				{
@@ -2088,7 +2094,7 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 					freq = 1,
 					rank = 2,
 					unit = "german_commander",
-					tactics = self._tactics.gerbish_chargers,
+					tactics = self._tactics.commander,
 				},
 			},
 		}
@@ -2104,15 +2110,15 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 					freq = 1,
 					rank = 2,
 					unit = "german_commander",
-					tactics = self._tactics.gerbish_chargers,
+					tactics = self._tactics.commander,
 				},
 			},
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_3 then
 		self.enemy_spawn_groups.german.commanders = {
 			amount = {
-				3,
-				3,
+				1,
+				1,
 			},
 			spawn = {
 				{
@@ -2120,15 +2126,15 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 					freq = 1,
 					rank = 2,
 					unit = "german_commander",
-					tactics = self._tactics.gerbish_chargers,
+					tactics = self._tactics.commander,
 				},
 			},
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_4 then
 		self.enemy_spawn_groups.german.commanders = {
 			amount = {
-				4,
-				4,
+				1,
+				1,
 			},
 			spawn = {
 				{
@@ -2136,7 +2142,7 @@ function GroupAITweakData:_init_enemy_spawn_groups_german(difficulty_index)
 					freq = 1,
 					rank = 2,
 					unit = "german_commander",
-					tactics = self._tactics.gerbish_chargers,
+					tactics = self._tactics.commander,
 				},
 			},
 		}

@@ -496,18 +496,18 @@ function RaycastWeaponBase:get_damage_falloff(col_ray, user_unit)
 		end
 
 		if prev_idx == nil or prev_idx < 1 then
-			return damage_profile[current_idx].damage, distance
+			return damage_profile[current_idx].damage * self:damage_multiplier(), distance
 		else
 			local a = damage_profile[current_idx - 1]
 			local b = damage_profile[current_idx]
 			local t = (distance - a.range) / (b.range - a.range)
 
-			return math.lerp(a.damage, b.damage, t), distance
+			return math.lerp(a.damage, b.damage, t) * self:damage_multiplier(), distance
 		end
 	else
 		Application:error("No damage profile for weapon: ", self._name_id)
 
-		return 1, distance
+		return 1 * self:damage_multiplier(), distance
 	end
 end
 
@@ -518,6 +518,10 @@ local mvec1 = Vector3()
 function RaycastWeaponBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul, shoot_through_data)
 	local result = {}
 	local hit_unit
+
+	shoot_player = shoot_player or false
+	self._weapon_range = self._weapon_range or 20000
+
 	local spread = self:_get_spread(user_unit)
 
 	mvector3.set(mvec_spread_direction, direction)
@@ -526,7 +530,7 @@ function RaycastWeaponBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul
 		mvector3.spread(mvec_spread_direction, spread * (spread_mul or 1))
 	end
 
-	local ray_distance = shoot_through_data and shoot_through_data.ray_distance or self._weapon_range or 20000
+	local ray_distance = shoot_through_data and shoot_through_data.ray_distance or self._weapon_range
 
 	mvector3.set(mvec_to, mvec_spread_direction)
 	mvector3.multiply(mvec_to, ray_distance)
@@ -584,9 +588,13 @@ function RaycastWeaponBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul
 		self._shot_fired_stats_table.hit = hit_unit and true or false
 
 		if (not shoot_through_data or hit_unit) and (not self._ammo_data or not self._ammo_data.ignore_statistic) and not self._rays then
-			self._shot_fired_stats_table.skip_bullet_count = shoot_through_data and true
+			if ray_distance == self._weapon_range then
+				self._shot_fired_stats_table.skip_bullet_count = shoot_through_data and true
 
-			managers.statistics:shot_fired(self._shot_fired_stats_table)
+				managers.statistics:shot_fired(self._shot_fired_stats_table)
+			end
+		else
+			self._shot_fired_stats_table.skip_bullet_count = nil
 		end
 	elseif col_ray then
 		damage = self:get_damage_falloff(col_ray, user_unit)
@@ -1567,6 +1575,10 @@ function RaycastWeaponBase:destroy(unit)
 end
 
 function RaycastWeaponBase:_get_spread(user_unit)
+	if user_unit == managers.player:player_unit() and managers.player:upgrade_value("player", "warcry_nullify_spread", false) == true then
+		return 0
+	end
+
 	local spread_multiplier = self:spread_multiplier()
 	local current_state = user_unit:movement()._current_state
 
@@ -1630,6 +1642,12 @@ function InstantBulletBase:on_collision(col_ray, weapon_unit, user_unit, damage,
 		if sync_damage then
 			local normal_vec_yaw, normal_vec_pitch = self._get_vector_sync_yaw_pitch(col_ray.normal, 128, 64)
 			local dir_vec_yaw, dir_vec_pitch = self._get_vector_sync_yaw_pitch(col_ray.ray, 128, 64)
+
+			if col_ray.position:length() > 90000 then
+				debug_pause("[InstantBulletBase][on_collision] Position of the hit body is outside of alowed range and wouldn't be transportable through the network: ", inspect(col_ray), col_ray:position())
+
+				return
+			end
 
 			managers.network:session():send_to_peers_synched("sync_body_damage_bullet", col_ray.unit:id() ~= -1 and col_ray.body or nil, user_unit:id() ~= -1 and user_unit or nil, normal_vec_yaw, normal_vec_pitch, col_ray.position, dir_vec_yaw, dir_vec_pitch, math.min(16384, network_damage))
 		end
@@ -1852,7 +1870,7 @@ function InstantExplosiveBulletBase:on_collision_server(position, normal, damage
 			weapon_unit = weapon_unit,
 		})
 
-		for i = 1, enemies_hit do
+		if enemies_hit > 0 then
 			managers.statistics:shot_fired({
 				hit = true,
 				skip_bullet_count = true,

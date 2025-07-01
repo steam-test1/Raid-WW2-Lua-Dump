@@ -5,7 +5,11 @@ function TurretInteractionExt:interact_distance(...)
 end
 
 function TurretInteractionExt:can_select(player)
-	return TurretInteractionExt.super.can_select(self, player)
+	local super_condition = TurretInteractionExt.super.can_select(self, player)
+	local taken = self._unit:weapon():player_on()
+	local locked = self._unit:weapon():locked_fire()
+
+	return super_condition and not taken and not locked
 end
 
 function TurretInteractionExt:check_interupt()

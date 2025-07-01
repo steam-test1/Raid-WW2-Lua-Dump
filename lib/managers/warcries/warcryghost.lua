@@ -60,6 +60,20 @@ function WarcryGhost:duration()
 	return self._tweak_data.base_duration * managers.player:upgrade_value("player", "warcry_duration", 1)
 end
 
+function WarcryGhost:get_level_description(level)
+	level = math.clamp(level, 1, #self._tweak_data.buffs)
+
+	if level >= 2 then
+		local percentage = tostring(tweak_data.upgrades.values.player.warcry_dodge[level] * 100) .. "%"
+
+		return managers.localization:text("skill_warcry_ghost_level_" .. tostring(level) .. "_desc", {
+			PERCENTAGE = percentage,
+		})
+	end
+
+	return "warcry_ghost_team_desc"
+end
+
 local ids_desaturation = Idstring("desaturation")
 local ids_contour_post_processor = Idstring("contour_post_processor")
 local ids_contour = Idstring("contour")

@@ -1,13 +1,14 @@
 CivilianLogicEscort = class(CivilianLogicBase)
 
 function CivilianLogicEscort.enter(data, new_logic_name, enter_params)
-	CopLogicBase.enter(data, new_logic_name, enter_params)
-	data.unit:brain():cancel_all_pathing_searches()
-
-	local old_internal_data = data.internal_data
 	local my_data = {
 		unit = data.unit,
 	}
+
+	CopLogicBase.enter(data, new_logic_name, enter_params, my_data)
+	data.unit:brain():cancel_all_pathing_searches()
+
+	local old_internal_data = data.internal_data
 
 	data.unit:brain():set_update_enabled_state(true)
 
@@ -113,10 +114,6 @@ function CivilianLogicEscort.update(data)
 		if not data.unit:anim_data().panic then
 			my_data.commanded_to_move = nil
 
-			if data.unit:interaction() then
-				data.unit:interaction():set_active(true, true)
-			end
-
 			data.unit:movement():action_request({
 				body_part = 1,
 				clamp_to_graph = true,
@@ -129,6 +126,8 @@ function CivilianLogicEscort.update(data)
 			"civ_enemy_cbt",
 			"civ_civ_cbt",
 		})
+
+		my_data.commanded_to_move = true
 	end
 
 	if my_data.processing_advance_path or my_data.processing_coarse_path then
@@ -187,17 +186,7 @@ function CivilianLogicEscort.update(data)
 end
 
 function CivilianLogicEscort.on_intimidated(data, amount, aggressor_unit)
-	local scared_reason = CivilianLogicEscort.too_scared_to_move(data)
-
-	if scared_reason then
-		data.unit:sound():say("a01x_any", true)
-	else
-		data.internal_data.commanded_to_move = true
-
-		if data.unit:interaction() then
-			data.unit:interaction():set_active(false, true)
-		end
-	end
+	return
 end
 
 function CivilianLogicEscort.on_action_completed(data, action)

@@ -3,14 +3,14 @@ core:import("CoreMissionScriptElement")
 ElementPlayerSpawner = ElementPlayerSpawner or class(CoreMissionScriptElement.MissionScriptElement)
 
 if SystemInfo:platform() == Idstring("PS4") then
-	ElementPlayerSpawner.HIDE_LOADING_SCREEN_DELAY = 2
+	ElementPlayerSpawner.HIDE_LOADING_SCREEN_DELAY = 3.5
 elseif SystemInfo:platform() == Idstring("XB1") then
-	ElementPlayerSpawner.HIDE_LOADING_SCREEN_DELAY = 2
+	ElementPlayerSpawner.HIDE_LOADING_SCREEN_DELAY = 3.5
 else
-	ElementPlayerSpawner.HIDE_LOADING_SCREEN_DELAY = 2
+	ElementPlayerSpawner.HIDE_LOADING_SCREEN_DELAY = 3.5
 end
 
-ElementPlayerSpawner.BASE_DELAY = 3.5
+ElementPlayerSpawner.BASE_DELAY = 2
 
 function ElementPlayerSpawner:init(...)
 	ElementPlayerSpawner.super.init(self, ...)

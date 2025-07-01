@@ -865,6 +865,12 @@ function StatisticsManager:get_session_time_seconds()
 	return t - (self._start_session_time or t)
 end
 
+function StatisticsManager:clear_peer_statistics()
+	for _, peer in pairs(managers.network:session():all_peers()) do
+		peer:clear_statistics()
+	end
+end
+
 function StatisticsManager:stop_session(data)
 	if not self._session_started then
 		if data and data.quit then
@@ -1609,8 +1615,23 @@ function StatisticsManager:check_version()
 	local resolution_list = tweak_data.statistics:resolution_statistics_table()
 
 	for _, res in pairs(resolution_list) do
-		-- block empty
+		stats["option_resolution_" .. res] = {
+			method = "set",
+			type = "int",
+			value = 0,
+		}
 	end
+
+	stats.option_resolution_other = {
+		method = "set",
+		type = "int",
+		value = 0,
+	}
+	stats[table.contains(resolution_list, resolution) and "option_resolution_" .. resolution or "option_resolution_other"] = {
+		method = "set",
+		type = "int",
+		value = 1,
+	}
 
 	if CURRENT_VERSION > managers.network.account:get_stat("stat_version") then
 		self:publish_skills_to_steam(true)

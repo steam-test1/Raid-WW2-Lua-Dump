@@ -9,9 +9,6 @@ function PlayerFoxhole:enter(state_data, enter_data)
 	self:_start_action_unequip_weapon(managers.player:player_timer():time(), {
 		selection_wanted = 1,
 	})
-
-	self._state_data.ducking = true
-
 	self:_stance_entered()
 
 	local velocity = self._unit:mover():velocity()
@@ -26,9 +23,6 @@ function PlayerFoxhole:exit(state_data, new_state_name)
 	self._ext_movement:foxhole_unit():foxhole():unregister_player()
 	self._ext_movement:set_foxhole_unit(nil)
 	self:_start_action_equip(self.IDS_EQUIP)
-
-	self._state_data.ducking = false
-
 	self:_stance_entered()
 	self:_activate_mover(PlayerStandard.MOVER_STAND)
 	self._unit:character_damage():set_invulnerable(false)

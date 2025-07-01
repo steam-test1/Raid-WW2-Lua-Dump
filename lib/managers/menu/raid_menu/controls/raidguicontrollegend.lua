@@ -1,7 +1,7 @@
 RaidGUIControlLegend = RaidGUIControlLegend or class(RaidGUIControl)
 RaidGUIControlLegend.X = 0
 RaidGUIControlLegend.y = 0
-RaidGUIControlLegend.W = 1000
+RaidGUIControlLegend.W = 1200
 RaidGUIControlLegend.H = 32
 RaidGUIControlLegend.FONT = tweak_data.gui.fonts.din_compressed
 RaidGUIControlLegend.FONT_SIZE = tweak_data.gui.font_sizes.large

@@ -1,7 +1,14 @@
 CopLogicTurret = class(CopLogicBase)
 
 function CopLogicTurret.enter(data, new_logic_name, enter_params)
-	CopLogicBase.enter(data, new_logic_name, enter_params)
+	local my_data = {
+		unit = data.unit,
+	}
+
+	CopLogicBase.enter(data, new_logic_name, enter_params, my_data)
+
+	data.internal_data = my_data
+
 	data.unit:inventory():set_weapon_enabled(false)
 end
 

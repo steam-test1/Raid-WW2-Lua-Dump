@@ -190,6 +190,8 @@ function WorldDefinition:init(params)
 		PackageManager:set_resource_loaded_clbk(Idstring("unit"), callback(managers.sequence, managers.sequence, "clbk_pkg_manager_unit_loaded"))
 	end
 
+	self._next_cleanup_t = 0
+
 	self:_remove_loading_counter("on_world_package_loaded")
 	self:_measure_lap_time("start end")
 end
@@ -1966,6 +1968,19 @@ end
 
 function WorldDefinition:register_spawned_unit(unit)
 	table.insert(self._spawned_units, unit)
+end
+
+function WorldDefinition:cleanup_spawned_units(unit)
+	local new_spawend_units = {}
+
+	for _, unit in ipairs(self._spawned_units) do
+		if alive(unit) then
+			table.insert(new_spawend_units, unit)
+		end
+	end
+
+	self._spawned_units = new_spawend_units
+	self._next_cleanup_t = Application:time() + 5
 end
 
 function WorldDefinition:add_mission_element_unit(unit)

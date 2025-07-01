@@ -44,6 +44,12 @@ function GroupAIStateBesiege:_init_misc_data(clean_up)
 			"navigation_ready",
 		}, callback(self, self, "_assign_enemies"))
 	end
+
+	self._disable_teleport_ai = false
+end
+
+function GroupAIStateBesiege:set_disable_teleport_ai(value)
+	self._disable_teleport_ai = value
 end
 
 function GroupAIStateBesiege:clean_up()
@@ -206,6 +212,10 @@ function GroupAIStateBesiege:_upd_police_activity()
 end
 
 function GroupAIStateBesiege:_check_and_teleport_team_ai()
+	if self._disable_teleport_ai then
+		return
+	end
+
 	local now = Application:time()
 
 	self._next_teleport_teamai_t = self._next_teleport_teamai_t or now

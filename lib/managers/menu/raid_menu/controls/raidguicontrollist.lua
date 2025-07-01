@@ -56,7 +56,7 @@ function RaidGUIControlList:_create_items()
 	end
 
 	local selected_item
-	local y = 0
+	local y = self._params.padding_top or 0
 	local counter = 1
 
 	for i, item_data in ipairs(self._list_data) do
@@ -79,6 +79,8 @@ function RaidGUIControlList:_create_items()
 			item_params.selectable = self._selection_enabled
 			item_params.color = item_data.color
 			item_params.selected_color = item_data.selected_color
+			item_params.item_font = self._params.item_font
+			item_params.item_font_size = self._params.item_font_size
 			item_params.on_click_callback = callback(self, self, "on_item_clicked")
 			item_params.on_double_click_callback = callback(self, self, "on_item_double_clicked")
 			item_params.on_item_selected_callback = callback(self, self, "on_item_selected")
@@ -269,6 +271,8 @@ function RaidGUIControlList:select_item_by_value(item_value)
 				self._selected_item:select()
 
 				self._selected_item_idx = item_index
+
+				self:_reposition_selected_item()
 
 				if self._on_item_selected_callback then
 					-- block empty

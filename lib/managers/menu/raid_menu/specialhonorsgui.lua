@@ -7,6 +7,7 @@ SpecialHonorsGui.TOP_STATS_TITLE_H = 96
 SpecialHonorsGui.TOP_STATS_TITLE_FONT_SIZE = tweak_data.gui.font_sizes.size_76
 SpecialHonorsGui.TOP_STATS_TITLE_COLOR = tweak_data.gui.colors.raid_red
 SpecialHonorsGui.TOP_STATS_TITLE_TEXT = "top_stats_title_label"
+SpecialHonorsGui.TOP_STATS_TITLE_TEXT_FAILURE = "top_stats_title_label_failure"
 SpecialHonorsGui.FONT = tweak_data.gui.fonts.din_compressed
 SpecialHonorsGui.GAMERCARD_BUTTONS = {
 	{
@@ -62,6 +63,7 @@ function SpecialHonorsGui:_layout_first_screen()
 
 	self._top_stats_big_panel = self._root_panel:panel(top_stats_big_panel_params)
 
+	local title_text = game_state_machine:current_state():is_success() and SpecialHonorsGui.TOP_STATS_TITLE_TEXT or SpecialHonorsGui.TOP_STATS_TITLE_TEXT_FAILURE
 	local top_stats_title_params = {
 		align = "center",
 		alpha = 0,
@@ -71,7 +73,7 @@ function SpecialHonorsGui:_layout_first_screen()
 		font = SpecialHonorsGui.FONT,
 		font_size = SpecialHonorsGui.TOP_STATS_TITLE_FONT_SIZE,
 		h = SpecialHonorsGui.TOP_STATS_TITLE_H,
-		text = self:translate(SpecialHonorsGui.TOP_STATS_TITLE_TEXT, true),
+		text = self:translate(title_text, true),
 	}
 	local top_stats_title = self._top_stats_big_panel:text(top_stats_title_params)
 

@@ -4,6 +4,9 @@ HUDSuspicionDirection.H = 362
 HUDSuspicionDirection.RADIUS = 195
 HUDSuspicionDirection.ICON_FILL = "stealth_indicator_fill"
 HUDSuspicionDirection.ICON_STROKE = "stealth_indicator_stroke"
+HUDSuspicionDirection.PLAYER_ACTIVE_ALPHA = 1
+HUDSuspicionDirection.TEAMMATE_ACTIVE_ALPHA = 0.6
+HUDSuspicionDirection.USE_STATE_COLORS = true
 HUDSuspicionDirection.STATE_COLORS = {
 	alarmed = Color("b8392e"),
 	calling = Color("b8392e"),
@@ -40,18 +43,21 @@ function HUDSuspicionDirection:_create_panel(hud)
 	self._suspicion_direction_panel:set_center(self._suspicion_direction_panel:parent():w() / 2, self._suspicion_direction_panel:parent():h() / 2)
 end
 
-function HUDSuspicionDirection:create_suspicion_indicator(observer_key, observer_position, initial_state)
+function HUDSuspicionDirection:create_suspicion_indicator(observer_key, observer_position, initial_state, suspect)
 	if self._indicators[observer_key] then
 		return
 	end
 
 	local indicator = self:_create_suspicion_indicator(observer_key)
+	local indicator_active_alpha = HUDManager.DIFFERENT_SUSPICION_INDICATORS_FOR_TEAMMATES == true and suspect == "teammate" and HUDSuspicionDirection.TEAMMATE_ACTIVE_ALPHA or HUDSuspicionDirection.PLAYER_ACTIVE_ALPHA
 
 	self._indicators[observer_key] = {
 		need_to_init = true,
 		state = "heard_something",
+		active_alpha = indicator_active_alpha,
 		indicator = indicator,
 		position = observer_position,
+		suspect = suspect,
 	}
 	self._number_of_indicators = self._number_of_indicators + 1
 
@@ -92,7 +98,7 @@ end
 
 function HUDSuspicionDirection:initialize(observer_key, alpha)
 	if alpha == 1 then
-		self._indicators[observer_key].indicator:animate(callback(self, self, "_animate_alpha"), 1, 0.5)
+		self._indicators[observer_key].indicator:animate(callback(self, self, "_animate_alpha"), self._indicators[observer_key].active_alpha, 0.5)
 	end
 
 	self._indicators[observer_key].need_to_init = false
@@ -104,6 +110,11 @@ function HUDSuspicionDirection:set_state(observer_key, state)
 	end
 
 	self._indicators[observer_key].state = state
+
+	if HUDSuspicionDirection.STATE_COLORS[state] and HUDSuspicionDirection.USE_STATE_COLORS then
+		self._indicators[observer_key].indicator:child("indicator_fill"):stop()
+		self._indicators[observer_key].indicator:child("indicator_fill"):animate(callback(self, self, "_animate_color"), HUDSuspicionDirection.STATE_COLORS[state])
+	end
 end
 
 function HUDSuspicionDirection:set_suspicion_indicator_progress(observer_key, progress)
@@ -113,7 +124,7 @@ end
 function HUDSuspicionDirection:show_suspicion_indicator(observer_key)
 	if self._indicators[observer_key] ~= nil then
 		self._indicators[observer_key].indicator:stop()
-		self._indicators[observer_key].indicator:animate(callback(self, self, "_animate_alpha"), 1, 0.2)
+		self._indicators[observer_key].indicator:animate(callback(self, self, "_animate_alpha"), self._indicators[observer_key].active_alpha, 0.2)
 	end
 end
 
@@ -206,6 +217,26 @@ function HUDSuspicionDirection:_animate_alpha(indicator, new_alpha, duration, cl
 	if clbk ~= nil then
 		clbk(self, unpack(clbk_data))
 	end
+end
+
+function HUDSuspicionDirection:_animate_color(indicator, new_color)
+	local duration = 0.2
+	local t = 0
+	local initial_color = indicator:color()
+
+	while t < duration do
+		local dt = coroutine.yield()
+
+		t = t + dt
+
+		local current_r = Easing.cubic_in_out(t, initial_color.r, new_color.r - initial_color.r, duration)
+		local current_g = Easing.cubic_in_out(t, initial_color.g, new_color.g - initial_color.g, duration)
+		local current_b = Easing.cubic_in_out(t, initial_color.b, new_color.b - initial_color.b, duration)
+
+		indicator:set_color(Color(current_r, current_g, current_b))
+	end
+
+	indicator:set_color(new_color)
 end
 
 function HUDSuspicionDirection:_remove_indicator(id)

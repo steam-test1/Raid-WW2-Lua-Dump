@@ -23,8 +23,6 @@ end
 function FlamerBrain:add_pos_rsrv(rsrv_name, pos_rsrv)
 	pos_rsrv.radius = pos_rsrv.radius * 2
 
-	FlamerBrain.super.add_pos_rsrv(self, rsrv_name, pos_rsrv)
-
 	local pos_reservations = self._logic_data.pos_rsrv
 
 	if pos_reservations[rsrv_name] then

@@ -12,6 +12,9 @@ RaidMenuSceneManager.menus.raid_main_menu.camera = nil
 RaidMenuSceneManager.menus.mission_selection_menu = {}
 RaidMenuSceneManager.menus.mission_selection_menu.name = "mission_selection_menu"
 RaidMenuSceneManager.menus.mission_selection_menu.camera = nil
+RaidMenuSceneManager.menus.mission_unlock_menu = {}
+RaidMenuSceneManager.menus.mission_unlock_menu.name = "mission_unlock_menu"
+RaidMenuSceneManager.menus.mission_unlock_menu.camera = nil
 RaidMenuSceneManager.menus.mission_join_menu = {}
 RaidMenuSceneManager.menus.mission_join_menu.name = "mission_join_menu"
 RaidMenuSceneManager.menus.mission_join_menu.camera = nil
@@ -70,6 +73,10 @@ RaidMenuSceneManager.menus.raid_menu_loot_screen = {}
 RaidMenuSceneManager.menus.raid_menu_loot_screen.name = "raid_menu_loot_screen"
 RaidMenuSceneManager.menus.raid_menu_loot_screen.camera = nil
 RaidMenuSceneManager.menus.raid_menu_loot_screen.keep_state = true
+RaidMenuSceneManager.menus.raid_menu_greed_loot_screen = {}
+RaidMenuSceneManager.menus.raid_menu_greed_loot_screen.name = "raid_menu_greed_loot_screen"
+RaidMenuSceneManager.menus.raid_menu_greed_loot_screen.camera = nil
+RaidMenuSceneManager.menus.raid_menu_greed_loot_screen.keep_state = true
 RaidMenuSceneManager.menus.raid_menu_xp = {}
 RaidMenuSceneManager.menus.raid_menu_xp.name = "raid_menu_xp"
 RaidMenuSceneManager.menus.raid_menu_xp.camera = nil
@@ -90,6 +97,10 @@ RaidMenuSceneManager.menus.raid_credits_menu.camera = nil
 RaidMenuSceneManager.menus.gold_asset_store_menu = {}
 RaidMenuSceneManager.menus.gold_asset_store_menu.name = "gold_asset_store_menu"
 RaidMenuSceneManager.menus.gold_asset_store_menu.camera = "gold_test"
+RaidMenuSceneManager.menus.intel_menu = {}
+RaidMenuSceneManager.menus.intel_menu.name = "intel_menu"
+RaidMenuSceneManager.menus.comic_book_menu = {}
+RaidMenuSceneManager.menus.comic_book_menu.name = "comic_book_menu"
 
 function _get_background_image_instance()
 	if not Global.background_image then
@@ -110,6 +121,12 @@ function RaidMenuSceneManager:init()
 	self._pause_menu_enabled = true
 
 	self:hide_background()
+end
+
+function RaidMenuSceneManager:is_offline_mode()
+	local callback_handler = RaidMenuCallbackHandler:new()
+
+	return callback_handler:is_singleplayer()
 end
 
 function RaidMenuSceneManager:register_on_escape_callback(callback_ref)
@@ -141,6 +158,14 @@ function RaidMenuSceneManager:is_any_menu_open()
 	local menu_open = self._menu_stack and #self._menu_stack > 0
 
 	return menu_open
+end
+
+function RaidMenuSceneManager:ct_open_menus()
+	if not self._menu_stack then
+		return 0
+	end
+
+	return #self._menu_stack
 end
 
 function RaidMenuSceneManager:open_menu(name, dont_add_on_stack)
@@ -184,6 +209,8 @@ function RaidMenuSceneManager:open_menu(name, dont_add_on_stack)
 end
 
 function RaidMenuSceneManager:close_all_menus()
+	managers.mouse_pointer:acquire_input()
+
 	if self._menu_stack and #self._menu_stack > 0 then
 		Application:trace("[RaidMenuSceneManager:close_all_menus] self._menu_stack ", inspect(self._menu_stack))
 
@@ -192,10 +219,12 @@ function RaidMenuSceneManager:close_all_menus()
 			self:close_menu(false)
 		end
 	end
+
+	MenuRenderer._remove_blackborders()
 end
 
 function RaidMenuSceneManager:close_menu(dont_remove_from_stack)
-	if not is_editor and not dont_remove_from_stack then
+	if not is_editor and #self._menu_stack == 1 and not dont_remove_from_stack then
 		managers.mouse_pointer:acquire_input()
 	end
 
@@ -255,6 +284,16 @@ function RaidMenuSceneManager:add_menu_name_on_stack(menu_name)
 		elseif managers.subtitle:is_showing_subtitles() then
 			managers.dialog:set_subtitles_shown(false)
 			managers.subtitle:set_enabled(false)
+		end
+	end
+end
+
+function RaidMenuSceneManager:remove_menu_name_from_stack(menu_name)
+	for i = 1, #self._menu_stack do
+		if self._menu_stack[i] == menu_name then
+			table.remove(self._menu_stack, i)
+
+			return
 		end
 	end
 end
@@ -437,8 +476,6 @@ end
 function RaidMenuSceneManager:_system_start_raid()
 	Application:trace("[RaidMenuSceneManager:_system_start_raid]")
 
-	managers.challenge_cards._inventory_load_pre_start_check = nil
-	managers.challenge_cards._peer_inventory_has_cards = nil
 	managers.challenge_cards._suggested_cards = nil
 	managers.challenge_cards._temp_steam_loot = nil
 
@@ -492,6 +529,24 @@ function RaidMenuSceneManager:show_dialog_join_others_forbidden()
 
 	dialog_data.title = managers.localization:text("dialog_warning_title")
 	dialog_data.text = managers.localization:text("dialog_join_others_forbidden_message")
+
+	local ok_button = {}
+
+	ok_button.text = managers.localization:text("dialog_ok")
+	ok_button.class = RaidGUIControlButtonShortSecondary
+	ok_button.cancel_button = true
+	dialog_data.button_list = {
+		ok_button,
+	}
+
+	managers.system_menu:show(dialog_data)
+end
+
+function RaidMenuSceneManager:show_dialog_disconnected_from_steam()
+	local dialog_data = {}
+
+	dialog_data.title = managers.localization:text("dialog_warning_title")
+	dialog_data.text = managers.localization:text("dialog_disconnected_from_steam")
 
 	local ok_button = {}
 

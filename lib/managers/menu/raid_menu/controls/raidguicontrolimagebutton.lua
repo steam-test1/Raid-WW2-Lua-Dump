@@ -1,4 +1,5 @@
 RaidGUIControlImageButton = RaidGUIControlImageButton or class(RaidGUIControlImage)
+RaidGUIControlImageButton.DISABLED_COLOR = tweak_data.gui.colors.raid_dark_grey
 
 function RaidGUIControlImageButton:init(parent, params)
 	RaidGUIControlImageButton.super.init(self, parent, params)
@@ -14,6 +15,7 @@ function RaidGUIControlImageButton:init(parent, params)
 	self._on_click_callback = params.on_click_callback
 	self._color = params.color or Color.red
 	self._highlight_color = params.highlight_color or Color.red
+	self._disabled_color = params.disabled_color or RaidGUIControlImageButton.DISABLED_COLOR
 
 	self:_create_highlight_image()
 
@@ -23,6 +25,7 @@ function RaidGUIControlImageButton:init(parent, params)
 	self._h = self._object:h()
 
 	self:highlight_off()
+	self._object:set_color(self._color)
 end
 
 function RaidGUIControlImageButton:_create_highlight_image()
@@ -41,6 +44,16 @@ function RaidGUIControlImageButton:_create_highlight_image()
 end
 
 function RaidGUIControlImageButton:highlight_on()
+	if self._params.no_highlight then
+		return
+	end
+
+	self._highlighted = true
+
+	if not self._enabled then
+		return
+	end
+
 	if self._highlight_image then
 		self._object:hide()
 		self._highlight_image:show()
@@ -54,6 +67,12 @@ function RaidGUIControlImageButton:highlight_on()
 end
 
 function RaidGUIControlImageButton:highlight_off()
+	self._highlighted = false
+
+	if not self._enabled then
+		return
+	end
+
 	if self._highlight_image then
 		self._object:show()
 		self._highlight_image:hide()
@@ -67,6 +86,14 @@ function RaidGUIControlImageButton:highlight_off()
 end
 
 function RaidGUIControlImageButton:on_mouse_pressed(button)
+	if not self._enabled then
+		return
+	end
+
+	if self._active_click_animation then
+		self._object:stop(self._active_click_animation)
+	end
+
 	if self._active_click_animation then
 		self._object:stop(self._active_click_animation)
 	end
@@ -75,6 +102,14 @@ function RaidGUIControlImageButton:on_mouse_pressed(button)
 end
 
 function RaidGUIControlImageButton:mouse_released(o, button, x, y)
+	if not self._enabled then
+		return
+	end
+
+	if self._active_click_animation then
+		self._object:stop(self._active_click_animation)
+	end
+
 	self:on_mouse_released(button)
 
 	return true
@@ -90,11 +125,25 @@ function RaidGUIControlImageButton:on_mouse_released(button)
 	self._on_click_callback(button, self, self._data)
 end
 
+function RaidGUIControlImageButton:set_enabled(enabled)
+	RaidGUIControlImageButton.super.set_enabled(self, enabled)
+
+	if enabled then
+		if self._highlighted then
+			self._object:set_color(self._highlight_color)
+		else
+			self._object:set_color(self._color)
+		end
+	else
+		self._object:set_color(self._disabled_color)
+	end
+end
+
 function RaidGUIControlImageButton:_animate_highlight_on()
-	local starting_r = self._object:color().r
-	local current_state = (starting_r - self._color.r) / (self._highlight_color.r - self._color.r)
+	self._highlight_animation_t = self._highlight_animation_t or 0
+
 	local duration = 0.2
-	local t = duration - (1 - current_state) * duration
+	local t = self._highlight_animation_t * duration
 
 	while t < duration do
 		local dt = coroutine.yield()
@@ -106,16 +155,20 @@ function RaidGUIControlImageButton:_animate_highlight_on()
 		local border_b = Easing.quartic_out(t, self._color.b, self._highlight_color.b - self._color.b, duration)
 
 		self._object:set_color(Color(border_r, border_g, border_b))
+
+		self._highlight_animation_t = t / duration
 	end
 
 	self._object:set_color(self._highlight_color)
+
+	self._highlight_animation_t = 1
 end
 
 function RaidGUIControlImageButton:_animate_highlight_off()
-	local starting_r = self._object:color().r
-	local current_state = (starting_r - self._color.r) / (self._highlight_color.r - self._color.r)
+	self._highlight_animation_t = self._highlight_animation_t or 0
+
 	local duration = 0.2
-	local t = duration - current_state * duration
+	local t = (1 - self._highlight_animation_t) * duration
 
 	while t < duration do
 		local dt = coroutine.yield()
@@ -127,9 +180,13 @@ function RaidGUIControlImageButton:_animate_highlight_off()
 		local border_b = Easing.quartic_out(t, self._highlight_color.b, self._color.b - self._highlight_color.b, duration)
 
 		self._object:set_color(Color(border_r, border_g, border_b))
+
+		self._highlight_animation_t = 1 - t / duration
 	end
 
 	self._object:set_color(self._color)
+
+	self._highlight_animation_t = 0
 end
 
 function RaidGUIControlImageButton:_animate_press()

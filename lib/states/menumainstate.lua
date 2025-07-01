@@ -7,13 +7,7 @@ function MenuMainState:init(game_state_machine)
 end
 
 function MenuMainState:at_enter(old_state)
-	if Global.reset_progress then
-		Application:debug("[MenuMainState:at_enter] Global.reset_progress")
-		managers.savefile:clear_progress_data()
-
-		Global.reset_progress = nil
-	end
-
+	managers.worldcollection:reset_global_ref_counter()
 	managers.platform:set_playing(false)
 	managers.platform:set_rich_presence("Idle")
 

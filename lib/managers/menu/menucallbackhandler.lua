@@ -838,10 +838,10 @@ function MenuCallbackHandler:lobby_create_campaign(item)
 	Application:debug("[MenuCallbackHandler:lobby_create_campaign]", job_id)
 
 	Global.exe_argument_level = job_id
-	Global.exe_argument_difficulty = Global.exe_argument_difficulty or Global.DEAFULT_DIFFICULTY
+	Global.exe_argument_difficulty = Global.exe_argument_difficulty or Global.DEFAULT_DIFFICULTY
 
 	MenuCallbackHandler:start_job({
-		difficulty = Global.DEAFULT_DIFFICULTY,
+		difficulty = Global.DEFAULT_DIFFICULTY,
 		job_id = job_id,
 	})
 end
@@ -1341,7 +1341,7 @@ function MenuCallbackHandler:restart_mission(item)
 
 	local dialog_data = {}
 
-	dialog_data.title = managers.localization:text("dialog_mp_restart_level_title")
+	dialog_data.title = managers.localization:text("dialog_mp_restart_mission_title")
 	dialog_data.text = managers.localization:text(managers.vote:option_vote_restart() and "dialog_mp_restart_level_message" or "dialog_mp_restart_level_host_message")
 
 	local yes_button = {}
@@ -1584,6 +1584,8 @@ function MenuCallbackHandler:_dialog_end_game_yes()
 	managers.raid_job:deactivate_current_job()
 	managers.raid_job:cleanup()
 	managers.lootdrop:reset_loot_value_counters()
+	managers.consumable_missions:on_level_exited(false)
+	managers.greed:on_level_exited(false)
 	managers.worldcollection:on_simulation_ended()
 
 	if Network:multiplayer() then
@@ -2162,14 +2164,14 @@ end
 function MenuCallbackHandler:play_single_player_job(item)
 	self:play_single_player()
 	self:start_single_player_job({
-		difficulty = Global.DEAFULT_DIFFICULTY,
+		difficulty = Global.DEFAULT_DIFFICULTY,
 		job_id = item:parameter("job_id"),
 	})
 end
 
 function MenuCallbackHandler:play_quick_start_job(item)
 	self:start_job({
-		difficulty = Global.DEAFULT_DIFFICULTY,
+		difficulty = Global.DEFAULT_DIFFICULTY,
 		job_id = item:parameter("job_id"),
 	})
 end

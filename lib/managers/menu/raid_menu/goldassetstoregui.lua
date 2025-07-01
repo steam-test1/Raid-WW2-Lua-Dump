@@ -1,5 +1,6 @@
 GoldAssetStoreGui = GoldAssetStoreGui or class(RaidGuiBase)
 GoldAssetStoreGui.CONFIRM_PRESSED_STATE_BUY = "state_buy"
+GoldAssetStoreGui.CONFIRM_PRESSED_STATE_APPLY = "state_apply"
 
 function GoldAssetStoreGui:init(ws, fullscreen_ws, node, component_name)
 	GoldAssetStoreGui.super.init(self, ws, fullscreen_ws, node, component_name)
@@ -29,9 +30,10 @@ function GoldAssetStoreGui:_layout()
 		h = 612,
 		name = "gold_asset_store_grid_scrollable_area",
 		scroll_step = 30,
-		w = 484,
+		scrollbar_offset = 14,
+		w = 498,
 		x = 0,
-		y = 128,
+		y = 120,
 	}
 
 	self._gold_asset_store_grid_scrollable_area = self._root_panel:scrollable_area(gold_asset_store_grid_scrollable_area_params)
@@ -46,13 +48,14 @@ function GoldAssetStoreGui:_layout()
 			vertical_spacing = 5,
 			data_source_callback = callback(self, self, "_data_source_gold_asset_store"),
 			on_click_callback = callback(self, self, "_on_click_gold_asset_store"),
+			on_double_click_callback = callback(self, self, "_on_double_click_gold_asset_store"),
 			on_select_callback = callback(self, self, "_on_selected_gold_asset_store"),
 		},
 		item_params = {
 			grid_item_icon = "grid_icon",
 			item_h = 134,
 			item_w = 134,
-			key_value_field = "upgrade_name",
+			key_value_field = "key_name",
 			selected_marker_h = 148,
 			selected_marker_w = 148,
 			row_class = RaidGUIControlGridItem,
@@ -72,15 +75,15 @@ function GoldAssetStoreGui:_layout()
 
 	self._rotate_gold_item = self._root_panel:rotate_unit(params_rotate_gold_item)
 	self._item_title = self._root_panel:label({
-		align = "right",
+		align = "left",
 		h = 64,
 		text = "",
 		w = 352,
 		x = 0,
 		y = 0,
-		color = tweak_data.gui.colors.raid_white,
+		color = tweak_data.gui.colors.raid_dirty_white,
 		font = tweak_data.gui.fonts.din_compressed,
-		font_size = tweak_data.gui.font_sizes.large,
+		font_size = tweak_data.gui.font_sizes.size_38,
 	})
 	self._item_description = self._root_panel:label({
 		h = 352,
@@ -88,15 +91,15 @@ function GoldAssetStoreGui:_layout()
 		w = 352,
 		wrap = true,
 		x = 0,
-		y = 192,
+		y = 176,
 		color = tweak_data.gui.colors.raid_grey,
 		font = tweak_data.gui.fonts.lato,
 		font_size = tweak_data.gui.font_sizes.size_20,
 	})
 
-	self._item_title:set_right(self._root_panel:w())
-	self._item_title:set_center_y(128)
 	self._item_description:set_right(self._root_panel:w())
+	self._item_title:set_x(self._item_description:x())
+	self._item_title:set_center_y(140)
 
 	self._coord_center_y = 864
 	self._buy_button = self._root_panel:short_primary_gold_button({
@@ -105,10 +108,21 @@ function GoldAssetStoreGui:_layout()
 		x = 0,
 		layer = RaidGuiBase.FOREGROUND_LAYER,
 		on_click_callback = callback(self, self, "_on_click_button_buy"),
-		text = self:translate("gold_item_buy_button", true),
+		text = self:translate("gold_asset_store_buy_button", true),
 	})
 
 	self._buy_button:set_center_y(self._coord_center_y)
+
+	self._apply_button = self._root_panel:short_primary_gold_button({
+		name = "buy_button",
+		visible = false,
+		x = 0,
+		layer = RaidGuiBase.FOREGROUND_LAYER,
+		on_click_callback = callback(self, self, "_on_click_button_apply"),
+		text = self:translate("gold_asset_store_apply_button", true),
+	})
+
+	self._apply_button:set_center_y(self._coord_center_y)
 
 	self._info_label = self._root_panel:label({
 		name = "info_label",
@@ -141,7 +155,7 @@ function GoldAssetStoreGui:_layout()
 	self._gold_currency_label:set_h(h2)
 	self._gold_currency_label:set_w(w2)
 	self._gold_currency_label:set_center_y(self._coord_center_y)
-	self._gold_currency_label:set_right(512)
+	self._gold_currency_label:set_right(self._gold_asset_store_grid_scrollable_area:x() + self._gold_asset_store_grid:x() + self._gold_asset_store_grid:w())
 
 	self._gold_currency_icon = self._root_panel:bitmap({
 		name = "gold_currency_icon",
@@ -167,6 +181,7 @@ function GoldAssetStoreGui:_layout()
 
 	self._gold_item_bought_icon:set_center_y(self._coord_center_y)
 	self._gold_item_bought_icon:set_right(self._gold_currency_label:x() - 14)
+	self:_layout_greed_info()
 	self:bind_controller_inputs()
 	self._gold_asset_store_grid_scrollable_area:setup_scroll_area()
 	self._gold_asset_store_grid:set_selected(true)
@@ -180,13 +195,61 @@ function GoldAssetStoreGui:_layout()
 	end
 end
 
+function GoldAssetStoreGui:_layout_greed_info()
+	local greed_panel_default_h = 288
+	local greed_panel_bottom = 896
+	local greed_info_panel_params = {
+		name = "greed_info_panel",
+		w = 352,
+		h = greed_panel_default_h,
+	}
+
+	self._greed_info_panel = self._root_panel:panel(greed_info_panel_params)
+
+	self._greed_info_panel:set_right(self._root_panel:w())
+
+	local greed_bar = self._greed_info_panel:create_custom_control(RaidGUIControlGreedBarSmall, {})
+
+	greed_bar:set_data_from_manager()
+
+	local greed_description_params = {
+		halign = "left",
+		name = "greed_description",
+		valign = "top",
+		wrap = true,
+		color = tweak_data.gui.colors.raid_grey,
+		font = tweak_data.gui.fonts.lato,
+		font_size = tweak_data.gui.font_sizes.size_20,
+		h = self._greed_info_panel:h() - greed_bar:h(),
+		text = self:translate("menu_greed_description", false),
+		y = greed_bar:h(),
+	}
+	local greed_description = self._greed_info_panel:text(greed_description_params)
+	local _, _, _, h = greed_description:text_rect()
+
+	greed_description:set_h(h)
+
+	local greed_panel_h = math.max(greed_description:y() + greed_description:h(), greed_panel_default_h)
+
+	self._greed_info_panel:set_h(greed_panel_h)
+	self._greed_info_panel:set_bottom(greed_panel_bottom)
+end
+
 function GoldAssetStoreGui:_data_source_gold_asset_store()
 	local gold_items_data_source = managers.gold_economy:get_store_items_data()
+
+	for _, gold_item in pairs(gold_items_data_source) do
+		gold_item.key_name = gold_item.upgrade_name .. "_level_" .. gold_item.level
+	end
 
 	return gold_items_data_source
 end
 
 function GoldAssetStoreGui:_on_click_gold_asset_store(item_data)
+	self:_grid_item_clicked_selected(item_data)
+end
+
+function GoldAssetStoreGui:_on_double_click_gold_asset_store(item_data)
 	self:_grid_item_clicked_selected(item_data)
 end
 
@@ -204,6 +267,13 @@ function GoldAssetStoreGui:_on_click_button_buy()
 	}
 
 	managers.menu:show_gold_asset_store_purchase_dialog(dialog_params)
+end
+
+function GoldAssetStoreGui:_on_click_button_apply()
+	local selected_item = self._gold_asset_store_grid:selected_grid_item()
+	local selected_item_data = selected_item:get_data()
+
+	self:_apply_upgrade_to_camp(selected_item_data.upgrade_name, selected_item_data.level)
 end
 
 function GoldAssetStoreGui:update(t, dt)
@@ -229,8 +299,16 @@ end
 
 function GoldAssetStoreGui:_populate_selected_item_data_and_load(item_data)
 	self:_load_scene_camp_unit(item_data)
-	self._item_title:set_text(self:translate(item_data.name_id, true))
 	self._item_description:set_text(self:translate(item_data.description_id, false))
+	self._item_title:set_text(self:translate(item_data.name_id, true))
+
+	local _, _, w, _ = self._item_title:text_rect()
+
+	self._item_title:set_w(w)
+
+	local title_x = math.min(self._item_description:x(), self._root_panel:w() - w)
+
+	self._item_title:set_x(title_x)
 	self:_process_controls_states()
 end
 
@@ -302,48 +380,60 @@ function GoldAssetStoreGui:_process_controls_states()
 		self._gold_currency_label:set_h(h2)
 		self._gold_currency_label:set_w(w2)
 		self._gold_currency_label:set_center_y(self._coord_center_y)
-		self._gold_currency_label:set_right(512)
+		self._gold_currency_label:set_right(self._gold_asset_store_grid_scrollable_area:x() + self._gold_asset_store_grid:x() + self._gold_asset_store_grid:w())
 		self._gold_currency_icon:set_center_y(self._coord_center_y)
 		self._gold_currency_icon:set_right(self._gold_currency_label:x() - 14)
 		self._gold_item_bought_icon:set_center_y(self._coord_center_y)
 		self._gold_item_bought_icon:set_right(self._gold_currency_label:x() - 14)
 	end
 
-	if Network:is_server() then
-		if selected_item_data.status == RaidGUIControlGridItem.STATUS_OWNED_OR_PURCHASED then
-			self._buy_button:show()
-			self._buy_button:disable()
-			self._buy_button:set_text(self:translate("gold_asset_store_purchased_button", true))
-			self._info_label:hide()
-			self._gold_currency_icon:hide()
-			self._gold_currency_label:show()
-			self._gold_item_bought_icon:show()
-			self:bind_controller_inputs()
-		elseif selected_item_data.status == RaidGUIControlGridItem.STATUS_PURCHASABLE then
-			self._buy_button:show()
-			self._buy_button:enable()
-			self._buy_button:set_text(self:translate("gold_asset_store_buy_button", true))
-			self._info_label:hide()
-			self._gold_currency_icon:show()
-			self._gold_currency_label:show()
-			self._gold_item_bought_icon:hide()
-			self:bind_controller_inputs_buy()
-		elseif selected_item_data.status == RaidGUIControlGridItem.STATUS_NOT_ENOUGHT_RESOURCES then
-			self._buy_button:hide()
-			self._info_label:show()
-			self._info_label:set_text(self:translate("gold_asset_store_insuficient_gold_label", true))
-			self._info_label:set_color(tweak_data.gui.colors.raid_red)
-			self._gold_currency_icon:show()
-			self._gold_currency_label:show()
-			self._gold_item_bought_icon:hide()
-			self:bind_controller_inputs()
-		end
-	else
+	if not Network:is_server() then
 		self._info_label:show()
 		self._info_label:set_text(self:translate("gold_asset_store_only_host", true))
 		self._info_label:set_color(tweak_data.gui.colors.raid_red)
 		self._gold_currency_icon:hide()
 		self._gold_currency_label:hide()
+		self._gold_item_bought_icon:hide()
+		self:bind_controller_inputs()
+
+		return
+	end
+
+	if selected_item_data.status == RaidGUIControlGridItem.STATUS_OWNED_OR_PURCHASED then
+		self._buy_button:hide()
+		self._gold_currency_icon:hide()
+		self._gold_currency_label:hide()
+		self._gold_item_bought_icon:hide()
+
+		if managers.gold_economy:is_upgrade_applied(selected_item_data.upgrade_name, selected_item_data.level) then
+			self._apply_button:hide()
+			self._info_label:show()
+			self._info_label:set_text(self:translate("gold_asset_store_upgrade_is_applied", true))
+			self._info_label:set_color(tweak_data.gui.colors.raid_white)
+			self:bind_controller_inputs()
+		else
+			self._apply_button:show()
+			self._info_label:hide()
+			self:bind_controller_inputs_apply()
+		end
+	elseif selected_item_data.status == RaidGUIControlGridItem.STATUS_PURCHASABLE then
+		self._apply_button:hide()
+		self._buy_button:show()
+		self._buy_button:enable()
+		self._buy_button:set_text(self:translate("gold_asset_store_buy_button", true))
+		self._info_label:hide()
+		self._gold_currency_icon:show()
+		self._gold_currency_label:show()
+		self._gold_item_bought_icon:hide()
+		self:bind_controller_inputs_buy()
+	elseif selected_item_data.status == RaidGUIControlGridItem.STATUS_NOT_ENOUGHT_RESOURCES then
+		self._apply_button:hide()
+		self._buy_button:hide()
+		self._info_label:show()
+		self._info_label:set_text(self:translate("gold_asset_store_insuficient_gold_label", true))
+		self._info_label:set_color(tweak_data.gui.colors.raid_red)
+		self._gold_currency_icon:show()
+		self._gold_currency_label:show()
 		self._gold_item_bought_icon:hide()
 		self:bind_controller_inputs()
 	end
@@ -352,11 +442,15 @@ end
 function GoldAssetStoreGui:_buy_gold_item_yes_callback(item_data)
 	Application:trace("[GoldAssetStoreGui:_buy_gold_item_yes_callback] item_data ", inspect(item_data))
 	managers.gold_economy:spend_gold(item_data.gold_price)
-	managers.gold_economy:update_camp_upgrade(item_data.upgrade_name, item_data.level)
+	self:_apply_upgrade_to_camp(item_data.upgrade_name, item_data.level)
+end
+
+function GoldAssetStoreGui:_apply_upgrade_to_camp(upgrade_name, level)
+	managers.gold_economy:update_camp_upgrade(upgrade_name, level)
 	self._gold_asset_store_grid:refresh_data()
 	self._gold_asset_store_grid:select_grid_item_by_key_value({
-		key = "upgrade_name",
-		value = item_data.upgrade_name,
+		key = "key_name",
+		value = upgrade_name .. "_level_" .. level,
 	})
 	self:_process_controls_states()
 	managers.savefile:setting_changed()
@@ -415,11 +509,34 @@ function GoldAssetStoreGui:bind_controller_inputs_buy()
 	self._confirm_pressed_state = GoldAssetStoreGui.CONFIRM_PRESSED_STATE_BUY
 end
 
+function GoldAssetStoreGui:bind_controller_inputs_apply()
+	local legend = {
+		controller = {
+			"menu_legend_back",
+			"menu_legend_gold_asset_store_apply",
+		},
+		keyboard = {
+			{
+				key = "footer_back",
+				callback = callback(self, self, "_on_legend_pc_back", nil),
+			},
+		},
+	}
+
+	self:set_legend(legend)
+
+	self._confirm_pressed_state = GoldAssetStoreGui.CONFIRM_PRESSED_STATE_APPLY
+end
+
 function GoldAssetStoreGui:confirm_pressed()
 	local selected_item = self._gold_asset_store_grid:selected_grid_item()
 
-	if selected_item and selected_item:get_data() and self._confirm_pressed_state == GoldAssetStoreGui.CONFIRM_PRESSED_STATE_BUY then
-		self:_on_click_button_buy()
+	if selected_item and selected_item:get_data() then
+		if self._confirm_pressed_state == GoldAssetStoreGui.CONFIRM_PRESSED_STATE_BUY then
+			self:_on_click_button_buy()
+		elseif self._confirm_pressed_state == GoldAssetStoreGui.CONFIRM_PRESSED_STATE_APPLY then
+			self:_on_click_button_apply()
+		end
 	end
 
 	return true

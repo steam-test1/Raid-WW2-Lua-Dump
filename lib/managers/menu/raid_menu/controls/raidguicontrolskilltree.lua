@@ -295,7 +295,6 @@ function RaidGUIControlSkilltree:move_up()
 		local skill_node = self:get_skill_tree_node(self._selected_level_idx, self._selected_node_idx)
 
 		self:_select_skill_tree_node(skill_node)
-		Application:trace("skill_node._state ", skill_node._state)
 	end
 
 	return true
@@ -316,7 +315,6 @@ function RaidGUIControlSkilltree:move_down()
 		local skill_node = self:get_skill_tree_node(self._selected_level_idx, self._selected_node_idx)
 
 		self:_select_skill_tree_node(skill_node)
-		Application:trace("skill_node._state ", skill_node._state)
 	end
 
 	return true
@@ -365,7 +363,6 @@ function RaidGUIControlSkilltree:_move_left(value)
 		if skill_node then
 			self:_select_skill_tree_node(skill_node)
 			self:_set_scrollable_panel_x(skill_node)
-			Application:trace("skill_node._state ", skill_node._state)
 
 			return true
 		end
@@ -401,7 +398,6 @@ function RaidGUIControlSkilltree:_move_right(value)
 		if skill_node then
 			self:_select_skill_tree_node(skill_node)
 			self:_set_scrollable_panel_x(skill_node)
-			Application:trace("skill_node._state ", skill_node._state)
 
 			return true
 		end

@@ -127,7 +127,7 @@ function RaidGUIControlServerPlayerDescription:set_data(data)
 		self._player_name:show()
 
 		if class and tweak_data.skilltree.classes[class] and nationality then
-			self._player_class_nation:set_text(utf8.to_upper(self:translate(tweak_data.skilltree.classes[class].name_id, true) .. "  |  " .. nationality))
+			self._player_class_nation:set_text(utf8.to_upper(self:translate(tweak_data.skilltree.classes[class].name_id, true) .. "  |  " .. self:translate("nationality_" .. nationality, true)))
 			self._player_class_nation:show()
 		else
 			self._player_class_nation:hide()

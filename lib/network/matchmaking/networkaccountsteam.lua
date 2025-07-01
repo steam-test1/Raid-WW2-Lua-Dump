@@ -325,6 +325,16 @@ function NetworkAccountSTEAM._on_disconnected(lobby_id, friend_id)
 		return
 	end
 
+	if Network:is_server() then
+		managers.raid_menu:show_dialog_disconnected_from_steam()
+
+		Global.game_settings.single_player = true
+
+		if managers.network.matchmake.lobby_handler then
+			managers.network.matchmake.lobby_handler:leave_lobby()
+		end
+	end
+
 	Application:warn("Disconnected from Steam!! Please wait", 12)
 end
 
@@ -459,6 +469,12 @@ end
 
 function NetworkAccountSTEAM:inventory_load(callback_ref)
 	if self._inventory_is_loading then
+		return
+	end
+
+	if managers.raid_menu:is_offline_mode() then
+		self:_clbk_inventory_load(nil, {})
+
 		return
 	end
 

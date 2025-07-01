@@ -6,36 +6,40 @@ HUDLoadingScreen.LOADING_TEXT_H = 64
 HUDLoadingScreen.LOADING_TEXT_FONT = tweak_data.gui.fonts.din_compressed
 HUDLoadingScreen.LOADING_TEXT_FONT_SIZE = tweak_data.gui.font_sizes.medium
 HUDLoadingScreen.LOADING_TEXT_COLOR = tweak_data.gui.colors.raid_grey
-HUDLoadingScreen.RAID_INFO_Y = 736
+HUDLoadingScreen.RAID_INFO_Y = 670
 HUDLoadingScreen.RAID_INFO_W = 1184
-HUDLoadingScreen.RAID_INFO_H = 200
+HUDLoadingScreen.RAID_INFO_H = 264
 HUDLoadingScreen.INFO_TITLE_Y = 0
 HUDLoadingScreen.INFO_TITLE_H = 64
 HUDLoadingScreen.INFO_TITLE_FONT = tweak_data.gui.fonts.din_compressed
 HUDLoadingScreen.INFO_TITLE_FONT_SIZE = tweak_data.gui.font_sizes.size_56
 HUDLoadingScreen.INFO_TITLE_COLOR = tweak_data.gui.colors.raid_red
-HUDLoadingScreen.RAID_INFO_TEXT_Y = 96
+HUDLoadingScreen.RAID_INFO_TITLE_CENTER_Y = 48
+HUDLoadingScreen.RAID_INFO_TEXT_Y = 160
 HUDLoadingScreen.RAID_INFO_TEXT_FONT = tweak_data.gui.fonts.lato
 HUDLoadingScreen.RAID_INFO_TEXT_FONT_SIZE = tweak_data.gui.font_sizes.medium
 HUDLoadingScreen.RAID_INFO_TEXT_COLOR = Color("878787")
-HUDLoadingScreen.RAID_COMPLETED_Y = 717
-HUDLoadingScreen.OPERATION_COMPLETED_Y = 181
-HUDLoadingScreen.MISSION_COMPLETED_Y = 101
+HUDLoadingScreen.RAID_DIFFICULTY_CENTER_Y = 128
+HUDLoadingScreen.RAID_COMPLETED_Y = 653
+HUDLoadingScreen.RAID_COMPLETED_H = 328
+HUDLoadingScreen.OPERATION_COMPLETED_Y = 245
+HUDLoadingScreen.MISSION_COMPLETED_Y = 165
 HUDLoadingScreen.MISSION_COMPLETED_H = 160
 HUDLoadingScreen.MISSION_COMPLETED_FONT = tweak_data.gui.fonts.din_compressed
 HUDLoadingScreen.MISSION_COMPLETED_FONT_SIZE = tweak_data.gui.font_sizes.size_84
 HUDLoadingScreen.MISSION_COMPLETED_COLOR_SUCCESS = tweak_data.gui.colors.raid_grey
 HUDLoadingScreen.MISSION_COMPLETED_COLOR_FAIL = tweak_data.gui.colors.raid_red
 HUDLoadingScreen.MISSION_ICON_PADDING_RIGHT = 10
-HUDLoadingScreen.OPERATION_INFO_Y = 640
+HUDLoadingScreen.OPERATION_INFO_Y = 576
 HUDLoadingScreen.OPERATION_INFO_W = 1184
-HUDLoadingScreen.OPERATION_INFO_H = 320
-HUDLoadingScreen.OPERATION_EVENT_TITLE_Y = 96
+HUDLoadingScreen.OPERATION_INFO_H = 384
+HUDLoadingScreen.OPERATION_EVENT_TITLE_Y = 80
 HUDLoadingScreen.OPERATION_EVENT_TITLE_H = 64
 HUDLoadingScreen.OPERATION_EVENT_TITLE_FONT = tweak_data.gui.fonts.din_compressed
-HUDLoadingScreen.OPERATION_EVENT_TITLE_FONT_SIZE = tweak_data.gui.font_sizes.menu_list
+HUDLoadingScreen.OPERATION_EVENT_TITLE_FONT_SIZE = tweak_data.gui.font_sizes.size_32
 HUDLoadingScreen.OPERATION_EVENT_TITLE_COLOR = Color("ececec")
-HUDLoadingScreen.OPERATION_INFO_TEXT_Y = 192
+HUDLoadingScreen.OPERATION_DIFFICULTY_CENTER_Y = 192
+HUDLoadingScreen.OPERATION_INFO_TEXT_Y = 256
 HUDLoadingScreen.OPERATION_INFO_TEXT_FONT = tweak_data.gui.fonts.lato
 HUDLoadingScreen.OPERATION_INFO_TEXT_FONT_SIZE = tweak_data.gui.font_sizes.medium
 HUDLoadingScreen.OPERATION_INFO_TEXT_COLOR = Color("878787")
@@ -185,9 +189,11 @@ function HUDLoadingScreen:_layout_raid(current_job)
 		name = "raid_title_panel",
 		h = HUDLoadingScreen.INFO_TITLE_H,
 		layer = self._info_panel:layer() + 1,
-		y = HUDLoadingScreen.INFO_TITLE_Y,
 	}
 	local raid_title_panel = self._info_panel:panel(raid_title_panel_params)
+
+	raid_title_panel:set_center_y(HUDLoadingScreen.RAID_INFO_TITLE_CENTER_Y)
+
 	local raid_icon_params = {
 		name = "raid_icon",
 		x = 0,
@@ -217,6 +223,18 @@ function HUDLoadingScreen:_layout_raid(current_job)
 	raid_title_panel:set_w(title:x() + title:w())
 	raid_title_panel:set_center_x(self._info_panel:w() / 2)
 
+	local difficulty_params = {
+		amount = tweak_data:number_of_difficulties(),
+	}
+	local difficulty_indicator = RaidGuiControlDifficultyStars:new(self._info_panel, difficulty_params)
+
+	difficulty_indicator:set_center_x(self._info_panel:w() / 2)
+	difficulty_indicator:set_center_y(HUDLoadingScreen.RAID_DIFFICULTY_CENTER_Y)
+
+	local current_difficulty = tweak_data:difficulty_to_index(Global.game_settings.difficulty)
+
+	difficulty_indicator:set_active_difficulty(current_difficulty)
+
 	local raid_description_params = {
 		align = "center",
 		name = "raid_description",
@@ -236,7 +254,7 @@ function HUDLoadingScreen:_layout_raid_finished(current_job, success)
 	local info_panel_params = {
 		alpha = 0,
 		name = "info_panel",
-		h = HUDLoadingScreen.RAID_INFO_H,
+		h = HUDLoadingScreen.RAID_COMPLETED_H,
 		layer = self._bg:layer() + 1,
 		w = HUDLoadingScreen.RAID_INFO_W,
 		x = self._panel:w() / 2 - HUDLoadingScreen.RAID_INFO_W / 2,
@@ -280,6 +298,18 @@ function HUDLoadingScreen:_layout_raid_finished(current_job, success)
 	title:set_w(w)
 	raid_title_panel:set_w(title:x() + title:w())
 	raid_title_panel:set_center_x(self._info_panel:w() / 2)
+
+	local difficulty_params = {
+		amount = tweak_data:number_of_difficulties(),
+	}
+	local difficulty_indicator = RaidGuiControlDifficultyStars:new(self._info_panel, difficulty_params)
+
+	difficulty_indicator:set_center_x(self._info_panel:w() / 2)
+	difficulty_indicator:set_center_y(HUDLoadingScreen.RAID_DIFFICULTY_CENTER_Y - 16)
+
+	local current_difficulty = tweak_data:difficulty_to_index(Global.game_settings.difficulty)
+
+	difficulty_indicator:set_active_difficulty(current_difficulty)
 
 	local mission_status_panel_params = {
 		name = "mission_status_panel",
@@ -369,6 +399,18 @@ function HUDLoadingScreen:_layout_operation(current_job)
 	title:set_w(w)
 	title:set_center_x(self._info_panel:w() / 2)
 
+	local difficulty_params = {
+		amount = tweak_data:number_of_difficulties(),
+	}
+	local difficulty_indicator = RaidGuiControlDifficultyStars:new(self._info_panel, difficulty_params)
+
+	difficulty_indicator:set_center_x(self._info_panel:w() / 2)
+	difficulty_indicator:set_center_y(HUDLoadingScreen.OPERATION_DIFFICULTY_CENTER_Y)
+
+	local current_difficulty = tweak_data:difficulty_to_index(Global.game_settings.difficulty)
+
+	difficulty_indicator:set_active_difficulty(current_difficulty)
+
 	local event_description_params = {
 		align = "center",
 		name = "raid_description",
@@ -452,6 +494,18 @@ function HUDLoadingScreen:_layout_operation_finished(current_job, success)
 
 	title:set_w(w)
 	title:set_center_x(self._info_panel:w() / 2)
+
+	local difficulty_params = {
+		amount = tweak_data:number_of_difficulties(),
+	}
+	local difficulty_indicator = RaidGuiControlDifficultyStars:new(self._info_panel, difficulty_params)
+
+	difficulty_indicator:set_center_x(self._info_panel:w() / 2)
+	difficulty_indicator:set_center_y(HUDLoadingScreen.OPERATION_DIFFICULTY_CENTER_Y)
+
+	local current_difficulty = tweak_data:difficulty_to_index(Global.game_settings.difficulty)
+
+	difficulty_indicator:set_active_difficulty(current_difficulty)
 
 	local mission_status_panel_params = {
 		name = "mission_status_panel",
@@ -582,7 +636,7 @@ function HUDLoadingScreen:show(data, clbk)
 	self:setup(data)
 
 	if managers.queued_tasks then
-		managers.queued_tasks:queue("menu_background_destruction", managers.raid_menu.clean_up_background, managers.raid_menu, nil, 0.5, nil)
+		managers.queued_tasks:queue("menu_background_destruction", managers.raid_menu.clean_up_background, managers.raid_menu, nil, 0.5, nil, true)
 	end
 
 	if self._state == "hidden" then

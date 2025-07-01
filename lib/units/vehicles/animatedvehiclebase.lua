@@ -12,6 +12,9 @@ function AnimatedVehicleBase:init(unit)
 	SoundDevice:set_rtpc("TRD_npc", 0)
 
 	self._body_name = self._body_name or "a_body"
+	self._sync_objects = self._sync_objects or {
+		"anim_body",
+	}
 	self._allow_sync = true
 	self._stored_pos = nil
 	self._stored_rot = nil
@@ -305,10 +308,14 @@ function AnimatedVehicleBase:save(save_data)
 		save_data.anim_vehicle_base.sync_objects = {}
 
 		for _, name in ipairs(self._sync_objects) do
-			save_data.anim_vehicle_base.sync_objects[name] = {
-				pos = self._unit:get_object(Idstring(name)):position(),
-				rot = self._unit:get_object(Idstring(name)):rotation(),
-			}
+			local object = self._unit:get_object(Idstring(name))
+
+			if object then
+				save_data.anim_vehicle_base.sync_objects[name] = {
+					pos = object:position(),
+					rot = object:rotation(),
+				}
+			end
 		end
 	end
 

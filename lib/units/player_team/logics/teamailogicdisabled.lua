@@ -4,13 +4,14 @@ TeamAILogicDisabled = class(TeamAILogicAssault)
 TeamAILogicDisabled.on_long_dis_interacted = TeamAILogicIdle.on_long_dis_interacted
 
 function TeamAILogicDisabled.enter(data, new_logic_name, enter_params)
-	TeamAILogicBase.enter(data, new_logic_name, enter_params)
-	data.unit:brain():cancel_all_pathing_searches()
-
-	local old_internal_data = data.internal_data
 	local my_data = {
 		unit = data.unit,
 	}
+
+	TeamAILogicBase.enter(data, new_logic_name, enter_params, my_data)
+	data.unit:brain():cancel_all_pathing_searches()
+
+	local old_internal_data = data.internal_data
 
 	data.internal_data = my_data
 	my_data.detection = data.char_tweak.detection.combat
@@ -68,14 +69,6 @@ function TeamAILogicDisabled.exit(data, new_logic_name, enter_params)
 	end
 
 	CopLogicBase.cancel_queued_tasks(my_data)
-
-	if my_data.best_cover then
-		managers.navigation:release_cover(my_data.best_cover[1])
-	end
-
-	if my_data.nearest_cover then
-		managers.navigation:release_cover(my_data.nearest_cover[1])
-	end
 
 	if new_logic_name ~= "inactive" then
 		data.unit:brain():set_update_enabled_state(true)

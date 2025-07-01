@@ -204,7 +204,6 @@ function SentryGunBase:setup(owner, ammo_multiplier, armor_multiplier, damage_mu
 	}
 
 	self._unit:weapon():setup(setup_data, damage_multiplier)
-	Application:debug("SentryGunBase:setup")
 	self:_setup_contour()
 
 	return true

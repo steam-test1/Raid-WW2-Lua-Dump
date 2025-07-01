@@ -712,6 +712,14 @@ function CarryData:_on_load_attach_to_zipline(zipline_unit)
 	end
 end
 
+function CarryData:on_thrown()
+	return
+end
+
+function CarryData:on_pickup()
+	return
+end
+
 function CarryData:save(data)
 	local state = {}
 

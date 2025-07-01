@@ -8,6 +8,7 @@ RaidGUIControlStepper.BUTTON_COLOR = tweak_data.gui.colors.raid_grey
 RaidGUIControlStepper.BUTTON_HIGHLIGHT_COLOR = tweak_data.gui.colors.raid_red
 RaidGUIControlStepper.TEXT_COLOR = tweak_data.gui.colors.raid_grey
 RaidGUIControlStepper.TEXT_HIGHLIGHT_COLOR = tweak_data.gui.colors.raid_white
+RaidGUIControlStepper.TEXT_COLOR_DISABLED = tweak_data.gui.colors.raid_dark_grey
 RaidGUIControlStepper.SIDELINE_COLOR = tweak_data.gui.colors.raid_red
 RaidGUIControlStepper.SIDELINE_W = 3
 
@@ -94,8 +95,16 @@ function RaidGUIControlStepper:_create_stepper_controls()
 	})
 end
 
+function RaidGUIControlStepper:set_disabled_items(data)
+	self._stepper:set_disabled_items(data)
+end
+
 function RaidGUIControlStepper:selected_item()
 	return self._stepper:selected_item()
+end
+
+function RaidGUIControlStepper:label_x()
+	return self._description:x()
 end
 
 function RaidGUIControlStepper:_select_item(index)
@@ -119,6 +128,12 @@ function RaidGUIControlStepper:mouse_released(o, button, x, y)
 end
 
 function RaidGUIControlStepper:highlight_on()
+	self._highlighted = true
+
+	if not self._enabled then
+		return
+	end
+
 	self._object:stop()
 	self._object:animate(callback(self, self, "_animate_highlight_on"))
 
@@ -130,6 +145,12 @@ function RaidGUIControlStepper:highlight_on()
 end
 
 function RaidGUIControlStepper:highlight_off()
+	self._highlighted = false
+
+	if not self._enabled then
+		return
+	end
+
 	self._object:stop()
 	self._object:animate(callback(self, self, "_animate_highlight_off"))
 
@@ -137,10 +158,18 @@ function RaidGUIControlStepper:highlight_off()
 end
 
 function RaidGUIControlStepper:on_mouse_scroll_up()
+	if not self._enabled then
+		return
+	end
+
 	self._stepper:on_right_arrow_clicked()
 end
 
 function RaidGUIControlStepper:on_mouse_scroll_down()
+	if not self._enabled then
+		return
+	end
+
 	self._stepper:on_left_arrow_clicked()
 end
 
@@ -240,4 +269,22 @@ function RaidGUIControlStepper:_animate_highlight_off()
 	end
 
 	self._sideline:set_alpha(0)
+end
+
+function RaidGUIControlStepper:set_enabled(enabled)
+	RaidGUIControlStepper.super.set_enabled(self, enabled)
+	self._stepper:set_enabled(enabled)
+
+	if enabled then
+		if self._highlighted then
+			self._description:set_color(RaidGUIControlStepper.TEXT_HIGHLIGHT_COLOR)
+			self._sideline:set_alpha(1)
+		else
+			self._description:set_color(RaidGUIControlStepper.TEXT_COLOR)
+			self._sideline:set_alpha(0)
+		end
+	else
+		self._description:set_color(RaidGUIControlStepper.TEXT_COLOR_DISABLED)
+		self._sideline:set_alpha(0)
+	end
 end

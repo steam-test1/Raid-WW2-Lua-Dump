@@ -250,7 +250,7 @@ end
 local tmp_vec1 = Vector3()
 
 function PlayerStandard:update(t, dt)
-	if managers.menu.loading_screen_visible then
+	if managers.menu.loading_screen_visible or managers.system_menu:is_active() then
 		return
 	end
 
@@ -526,6 +526,8 @@ function PlayerStandard:_get_input(t, dt)
 		btn_throw_grenade_press = pressed and self._controller:get_input_pressed("throw_grenade"),
 		btn_use_item_press = pressed and self._controller:get_input_pressed("use_item"),
 		btn_use_item_release = released and self._controller:get_input_released("use_item"),
+		btn_vehicle_exit_press = pressed and self._controller:get_input_pressed("vehicle_exit"),
+		btn_vehicle_exit_release = released and self._controller:get_input_released("vehicle_exit"),
 		btn_vehicle_rear_view_press = pressed and self._controller:get_input_pressed("vehicle_rear_camera"),
 		btn_vehicle_rear_view_release = released and self._controller:get_input_released("vehicle_rear_camera"),
 		btn_vehicle_shooting_stance_press = pressed and self._controller:get_input_pressed("vehicle_shooting_stance"),
@@ -1280,7 +1282,7 @@ function PlayerStandard:_start_action_running(t)
 		return
 	end
 
-	if (not self._state_data.shake_player_start_running or not self._ext_camera:shaker():is_playing(self._state_data.shake_player_start_running)) and managers.user:get_setting("use_headbob") then
+	if (not self._state_data.shake_player_start_running or not self._ext_camera:shaker():is_playing(self._state_data.shake_player_start_running)) and managers.user:get_setting("use_camera_accel") then
 		self._state_data.shake_player_start_running = self._ext_camera:play_shaker("player_start_running", 0.75)
 	end
 
@@ -2204,7 +2206,9 @@ function PlayerStandard:_do_melee_damage(t, bayonet_melee, col_ray)
 		local hit_unit = col_ray.unit
 
 		if hit_unit:character_damage() then
-			if bayonet_melee then
+			if hit_unit:character_damage()._no_blood then
+				self:_play_melee_sound(melee_entry, "hit_gen", material_string)
+			elseif bayonet_melee then
 				self._unit:sound():play("fairbairn_hit_body", nil, false)
 			else
 				self:_play_melee_sound(melee_entry, "hit_body")
@@ -2527,6 +2531,8 @@ function PlayerStandard:_update_reload_timers(t, dt, input)
 					self._ext_camera:play_redirect(self.IDS_START_RUNNING)
 				end
 			end
+
+			self:on_action_reload_success()
 		end
 	end
 
@@ -2544,6 +2550,10 @@ function PlayerStandard:_update_reload_timers(t, dt, input)
 			end
 		end
 	end
+end
+
+function PlayerStandard:on_action_reload_success()
+	return
 end
 
 function PlayerStandard:_check_use_item(t, input)

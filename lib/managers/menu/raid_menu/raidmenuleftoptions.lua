@@ -26,8 +26,8 @@ function RaidMenuLeftOptions:_layout_list_menu()
 		name = "list_menu_options",
 		selection_enabled = true,
 		w = 480,
-		x = 64,
-		y = 320,
+		x = 0,
+		y = 144,
 		data_source_callback = callback(self, self, "_list_menu_options_data_source"),
 		on_item_clicked_callback = callback(self, self, "_on_list_menu_options_item_selected"),
 	}
@@ -61,6 +61,8 @@ function RaidMenuLeftOptions:_layout_list_menu()
 	}
 
 	self._reset_progress_button = self._root_panel:long_secondary_button(reset_progress_params)
+
+	self._reset_progress_button:set_visible(RaidMenuCallbackHandler:is_in_main_menu())
 end
 
 function RaidMenuLeftOptions:_list_menu_options_data_source()

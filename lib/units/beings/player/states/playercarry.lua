@@ -166,9 +166,16 @@ function PlayerCarry:_update_check_actions(t, dt)
 	self:_check_stats_screen(t, dt, input)
 end
 
-function PlayerCarry:_check_action_run(...)
+function PlayerCarry:_check_action_run(t, input)
 	if tweak_data.carry.types[self._tweak_data_name].can_run or managers.player:has_category_upgrade("carry", "movement_penalty_nullifier") or managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_BAGS_DONT_SLOW_PLAYERS_DOWN) then
-		PlayerCarry.super._check_action_run(self, ...)
+		PlayerCarry.super._check_action_run(self, t, input)
+	elseif input.btn_run_press then
+		managers.notification:add_notification({
+			duration = 2,
+			id = "hint_cant_run",
+			shelf_life = 5,
+			text = managers.localization:text("hint_cant_run"),
+		})
 	end
 end
 

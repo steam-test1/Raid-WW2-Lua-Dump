@@ -111,6 +111,7 @@ function CopDamage:init(unit)
 		parent = self._spine2_obj,
 	}
 	self._last_damage_direction = nil
+	self._dismembered_parts = {}
 end
 
 function CopDamage:get_last_damage_direction()
@@ -190,18 +191,28 @@ function CopDamage:_dismember_body_part(attack_data)
 		return
 	end
 
+	self:dismember(dismember_part, attack_data.variant, true)
+end
+
+function CopDamage:dismember(dismember_part, variant, allow_network)
+	table.insert(self._dismembered_parts, dismember_part)
+
 	local decal_data = tweak_data.character.dismemberment_data.blood_decal_data[dismember_part]
 
-	self:_dismember_part(dismember_part, decal_data, attack_data.variant)
+	self:_dismember_part(dismember_part, decal_data, variant)
 
-	if attack_data.variant == "explosion" then
+	if variant == "explosion" then
 		local force_left_right = string.match(dismember_part, "_l_")
 
 		force_left_right = force_left_right and "r" or "l"
 
 		local additional_part = self:_random_dismember_part(force_left_right)
 
-		self:_dismember_part(additional_part, tweak_data.character.dismemberment_data.blood_decal_data[additional_part], attack_data.variant)
+		self:_dismember_part(additional_part, tweak_data.character.dismemberment_data.blood_decal_data[additional_part], variant)
+	end
+
+	if allow_network and false then
+		managers.network:session():send_to_peers("sync_part_dismemberment", self._unit, dismember_part, variant)
 	end
 end
 
@@ -262,6 +273,10 @@ function CopDamage:_dismember_part(dismember_part, decal_data, variant)
 	end
 end
 
+function CopDamage:dismembered_parts()
+	return self._dismembered_parts
+end
+
 function CopDamage:damage_knockdown(attack_data)
 	if self._dead or self._invulnerable then
 		return
@@ -306,6 +321,7 @@ function CopDamage:damage_bullet(attack_data)
 
 	death_event_params.damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET
 	death_event_params.enemy_type = tweak_data.character[self._unit:base()._tweak_table].type
+	death_event_params.special_enemy_type = tweak_data.character[self._unit:base()._tweak_table].special_type
 
 	if self._has_plate and attack_data.col_ray.body and attack_data.col_ray.body:name() == self._ids_plate_name then
 		local armor_pierce_roll = math.rand(1)
@@ -617,8 +633,6 @@ function CopDamage:_show_death_hint(type)
 end
 
 function CopDamage:_comment_death(unit, type)
-	Application:trace("CopDamage:_comment_death: unity_type: ", type)
-
 	if type == "tank" then
 		-- block empty
 	elseif type == "taser" then

@@ -90,17 +90,18 @@ function RaidGUIControlOperationProgress:_create_part(i, y, header_id, paragraph
 
 	part_header:set_w(w)
 	part_header:set_h(h)
+	part_header:set_center_y(16)
 
 	local paragraph_params = {
 		name = "paragraph",
 		wrap = true,
 		x = 0,
+		y = 32,
 		color = RaidGUIControlOperationProgress.PARAGRAPH_COLOR,
 		font = RaidGUIControlOperationProgress.PARAGRAPH_FONT,
 		font_size = RaidGUIControlOperationProgress.PARAGRAPH_FONT_SIZE,
 		text = self:translate(paragraph_id),
 		w = part_panel:w(),
-		y = part_header:h() + RaidGUIControlOperationProgress.HEADING_PADDING_DOWN,
 	}
 	local part_paragraph = part_panel:text(paragraph_params)
 	local _, _, w, h = part_paragraph:text_rect()

@@ -157,6 +157,40 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.empty.achievement_id = ""
 	self.cards.empty.bonus_xp = nil
 	self.cards.empty.steam_skip = true
+	self.cards.ra_on_the_scrounge = {}
+	self.cards.ra_on_the_scrounge.name = "card_ra_on_the_scrounge_name_id"
+	self.cards.ra_on_the_scrounge.description = "card_ra_on_the_scrounge_desc_id"
+	self.cards.ra_on_the_scrounge.effects = {
+		{
+			value = 1.15,
+			name = BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_REWARD_INCREASE,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+		},
+		{
+			value = 0.8,
+			name = BuffEffectManager.EFFECT_PLAYER_ALL_AMMO_CAPACITY,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+		},
+	}
+	self.cards.ra_on_the_scrounge.positive_description = {
+		desc_id = "effect_loot_drop_effect_increased",
+		desc_params = {
+			EFFECT_VALUE_1 = "+15%",
+		},
+	}
+	self.cards.ra_on_the_scrounge.negative_description = {
+		desc_id = "effect_player_primary_and_secondary_ammo_capacity_lowered",
+		desc_params = {
+			EFFECT_VALUE_1 = "20%",
+		},
+	}
+	self.cards.ra_on_the_scrounge.rarity = LootDropTweakData.RARITY_COMMON
+	self.cards.ra_on_the_scrounge.card_type = ChallengeCardsTweakData.CARD_TYPE_RAID
+	self.cards.ra_on_the_scrounge.texture = "cc_raid_common_on_the_scrounge_hud"
+	self.cards.ra_on_the_scrounge.achievement_id = ""
+	self.cards.ra_on_the_scrounge.bonus_xp = 300
+	self.cards.ra_on_the_scrounge.def_id = 20001
+	self.cards.ra_on_the_scrounge.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
 	self.cards.ra_no_backups = {}
 	self.cards.ra_no_backups.name = "card_ra_no_backups_name_id"
 	self.cards.ra_no_backups.description = "card_ra_no_backups_desc_id"
@@ -188,6 +222,105 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.ra_no_backups.bonus_xp = 250
 	self.cards.ra_no_backups.def_id = 20002
 	self.cards.ra_no_backups.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
+	self.cards.ra_this_is_gonna_hurt = {}
+	self.cards.ra_this_is_gonna_hurt.name = "card_ra_this_is_gonna_hurt_name_id"
+	self.cards.ra_this_is_gonna_hurt.description = "card_ra_this_is_gonna_hurt_desc_id"
+	self.cards.ra_this_is_gonna_hurt.effects = {
+		{
+			value = 1.15,
+			name = BuffEffectManager.EFFECT_ENEMIES_RECEIVE_DAMAGE,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+		},
+		{
+			value = 15,
+			name = BuffEffectManager.EFFECT_SET_BLEEDOUT_TIMER,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+		},
+	}
+	self.cards.ra_this_is_gonna_hurt.positive_description = {
+		desc_id = "effect_enemies_take_more_damage",
+		desc_params = {
+			EFFECT_VALUE_1 = "15%",
+		},
+	}
+	self.cards.ra_this_is_gonna_hurt.negative_description = {
+		desc_id = "effect_set_bleedout_timer",
+		desc_params = {
+			EFFECT_VALUE_1 = "15",
+		},
+	}
+	self.cards.ra_this_is_gonna_hurt.rarity = LootDropTweakData.RARITY_COMMON
+	self.cards.ra_this_is_gonna_hurt.card_type = ChallengeCardsTweakData.CARD_TYPE_RAID
+	self.cards.ra_this_is_gonna_hurt.texture = "cc_raid_common_this_is_gonna_hurt_hud"
+	self.cards.ra_this_is_gonna_hurt.achievement_id = ""
+	self.cards.ra_this_is_gonna_hurt.bonus_xp = 230
+	self.cards.ra_this_is_gonna_hurt.def_id = 20003
+	self.cards.ra_this_is_gonna_hurt.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
+	self.cards.ra_not_in_the_face = {}
+	self.cards.ra_not_in_the_face.name = "card_ra_not_in_the_face_name_id"
+	self.cards.ra_not_in_the_face.description = "card_ra_not_in_the_face_desc_id"
+	self.cards.ra_not_in_the_face.effects = {
+		{
+			value = 1.1,
+			name = BuffEffectManager.EFFECT_PLAYER_CRITICAL_HIT_CHANCE,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+		},
+		{
+			value = true,
+			name = BuffEffectManager.EFFECT_PLAYER_HEADSHOT_DOESNT_DO_DAMAGE,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+		},
+	}
+	self.cards.ra_not_in_the_face.positive_description = {
+		desc_id = "effect_critical_hit_chance_increase",
+		desc_params = {
+			EFFECT_VALUE_1 = "10%",
+		},
+	}
+	self.cards.ra_not_in_the_face.negative_description = {
+		desc_id = "effect_headshot_doesnt_do_damage",
+	}
+	self.cards.ra_not_in_the_face.rarity = LootDropTweakData.RARITY_COMMON
+	self.cards.ra_not_in_the_face.card_type = ChallengeCardsTweakData.CARD_TYPE_RAID
+	self.cards.ra_not_in_the_face.texture = "cc_raid_common_not_in_the_face_hud"
+	self.cards.ra_not_in_the_face.achievement_id = ""
+	self.cards.ra_not_in_the_face.bonus_xp = 250
+	self.cards.ra_not_in_the_face.def_id = 20004
+	self.cards.ra_not_in_the_face.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
+	self.cards.ra_loaded_for_bear = {}
+	self.cards.ra_loaded_for_bear.name = "card_ra_loaded_for_bear_name_id"
+	self.cards.ra_loaded_for_bear.description = "card_ra_loaded_for_bear_desc_id"
+	self.cards.ra_loaded_for_bear.effects = {
+		{
+			value = 1.2,
+			name = BuffEffectManager.EFFECT_PLAYER_ALL_AMMO_CAPACITY,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+		},
+		{
+			value = 0.85,
+			name = BuffEffectManager.EFFECT_PLAYER_MOVEMENT_SPEED,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+		},
+	}
+	self.cards.ra_loaded_for_bear.positive_description = {
+		desc_id = "effect_player_primary_and_secondary_ammo_capacity_increased",
+		desc_params = {
+			EFFECT_VALUE_1 = "20%",
+		},
+	}
+	self.cards.ra_loaded_for_bear.negative_description = {
+		desc_id = "effect_player_movement_speed_reduced",
+		desc_params = {
+			EFFECT_VALUE_1 = "15%",
+		},
+	}
+	self.cards.ra_loaded_for_bear.rarity = LootDropTweakData.RARITY_COMMON
+	self.cards.ra_loaded_for_bear.card_type = ChallengeCardsTweakData.CARD_TYPE_RAID
+	self.cards.ra_loaded_for_bear.texture = "cc_raid_common_loaded_for_bear_hud"
+	self.cards.ra_loaded_for_bear.achievement_id = ""
+	self.cards.ra_loaded_for_bear.bonus_xp = 250
+	self.cards.ra_loaded_for_bear.def_id = 20005
+	self.cards.ra_loaded_for_bear.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
 	self.cards.ra_total_carnage = {}
 	self.cards.ra_total_carnage.name = "card_ra_total_carnage_name_id"
 	self.cards.ra_total_carnage.description = "card_ra_total_carnage_desc_id"
@@ -221,6 +354,257 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.ra_total_carnage.bonus_xp_multiplier = 1.4
 	self.cards.ra_total_carnage.def_id = 20006
 	self.cards.ra_total_carnage.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
+	self.cards.ra_switch_hitter = {}
+	self.cards.ra_switch_hitter.name = "card_ra_switch_hitter_name_id"
+	self.cards.ra_switch_hitter.description = "card_ra_switch_hitter_desc_id"
+	self.cards.ra_switch_hitter.effects = {
+		{
+			value = 1,
+			name = BuffEffectManager.EFFECT_SHOOTING_SECONDARY_WEAPON_FILLS_PRIMARY_AMMO,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+		},
+		{
+			value = true,
+			name = BuffEffectManager.EFFECT_SHOOTING_PRIMARY_WEAPON_CONSUMES_BOTH_AMMOS,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+		},
+	}
+	self.cards.ra_switch_hitter.positive_description = {
+		desc_id = "effect_shooting_secondary_weapon_fills_primary_ammo",
+	}
+	self.cards.ra_switch_hitter.negative_description = {
+		desc_id = "effect_shooting_your_primary_weapon_consumes_both_ammos",
+	}
+	self.cards.ra_switch_hitter.rarity = LootDropTweakData.RARITY_UNCOMMON
+	self.cards.ra_switch_hitter.card_type = ChallengeCardsTweakData.CARD_TYPE_RAID
+	self.cards.ra_switch_hitter.texture = "cc_raid_uncommon_switch_hitter_hud"
+	self.cards.ra_switch_hitter.achievement_id = ""
+	self.cards.ra_switch_hitter.bonus_xp_multiplier = 1.45
+	self.cards.ra_switch_hitter.def_id = 20007
+	self.cards.ra_switch_hitter.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
+	self.cards.ra_gunslingers = {}
+	self.cards.ra_gunslingers.name = "card_ra_gunslingers_name_id"
+	self.cards.ra_gunslingers.description = "card_ra_gunslingers_desc_id"
+	self.cards.ra_gunslingers.effects = {
+		{
+			value = 1.15,
+			name = BuffEffectManager.EFFECT_PLAYER_PISTOL_DAMAGE,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+		},
+		{
+			value = 0,
+			name = BuffEffectManager.EFFECT_PLAYER_PRIMARY_AMMO_CAPACITY,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+		},
+	}
+	self.cards.ra_gunslingers.positive_description = {
+		desc_id = "effect_pistol_damage_increased",
+		desc_params = {
+			EFFECT_VALUE_1 = "15%",
+		},
+	}
+	self.cards.ra_gunslingers.negative_description = {
+		desc_id = "effect_player_no_primary_ammo",
+	}
+	self.cards.ra_gunslingers.rarity = LootDropTweakData.RARITY_UNCOMMON
+	self.cards.ra_gunslingers.card_type = ChallengeCardsTweakData.CARD_TYPE_RAID
+	self.cards.ra_gunslingers.texture = "cc_raid_uncommon_gunslingers_hud"
+	self.cards.ra_gunslingers.achievement_id = ""
+	self.cards.ra_gunslingers.bonus_xp_multiplier = 1.45
+	self.cards.ra_gunslingers.def_id = 20008
+	self.cards.ra_gunslingers.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
+	self.cards.ra_fresh_troops = {}
+	self.cards.ra_fresh_troops.name = "card_ra_fresh_troops_name_id"
+	self.cards.ra_fresh_troops.description = "card_ra_fresh_troops_desc_id"
+	self.cards.ra_fresh_troops.effects = {
+		{
+			value = 1.25,
+			name = BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_CHANCE,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+		},
+		{
+			value = 1.5,
+			name = BuffEffectManager.EFFECT_ENEMY_HEALTH,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+		},
+	}
+	self.cards.ra_fresh_troops.positive_description = {
+		desc_id = "effect_loot_drop_chance_increased",
+		desc_params = {
+			EFFECT_VALUE_1 = "25%",
+		},
+	}
+	self.cards.ra_fresh_troops.negative_description = {
+		desc_id = "effect_enemies_health_increased",
+		desc_params = {
+			EFFECT_VALUE_1 = "50%",
+		},
+	}
+	self.cards.ra_fresh_troops.rarity = LootDropTweakData.RARITY_UNCOMMON
+	self.cards.ra_fresh_troops.card_type = ChallengeCardsTweakData.CARD_TYPE_RAID
+	self.cards.ra_fresh_troops.texture = "cc_raid_uncommon_fresh_troops_hud"
+	self.cards.ra_fresh_troops.achievement_id = ""
+	self.cards.ra_fresh_troops.bonus_xp_multiplier = 1.45
+	self.cards.ra_fresh_troops.def_id = 20009
+	self.cards.ra_fresh_troops.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
+	self.cards.ra_dont_you_die_on_me = {}
+	self.cards.ra_dont_you_die_on_me.name = "card_ra_dont_you_die_on_me_name_id"
+	self.cards.ra_dont_you_die_on_me.description = "card_ra_dont_you_die_on_me_desc_id"
+	self.cards.ra_dont_you_die_on_me.effects = {
+		{
+			value = 10,
+			name = BuffEffectManager.EFFECT_MODIFY_BLEEDOUT_TIMER,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+		},
+		{
+			value = true,
+			fail_message = BuffEffectManager.FAIL_EFFECT_MESSAGE_PLAYER_DIED,
+			name = BuffEffectManager.EFFECT_PLAYER_DIED,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+		},
+	}
+	self.cards.ra_dont_you_die_on_me.positive_description = {
+		desc_id = "effect_bleedout_timer_increased",
+		desc_params = {
+			EFFECT_VALUE_1 = "10",
+		},
+	}
+	self.cards.ra_dont_you_die_on_me.negative_description = {
+		desc_id = "effect_players_cannot_die_during_raid",
+	}
+	self.cards.ra_dont_you_die_on_me.rarity = LootDropTweakData.RARITY_UNCOMMON
+	self.cards.ra_dont_you_die_on_me.card_type = ChallengeCardsTweakData.CARD_TYPE_RAID
+	self.cards.ra_dont_you_die_on_me.texture = "cc_raid_uncommon_dont_you_die_on_me_hud"
+	self.cards.ra_dont_you_die_on_me.achievement_id = ""
+	self.cards.ra_dont_you_die_on_me.bonus_xp_multiplier = 1.5
+	self.cards.ra_dont_you_die_on_me.def_id = 20010
+	self.cards.ra_dont_you_die_on_me.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
+	self.cards.ra_no_second_chances = {}
+	self.cards.ra_no_second_chances.name = "card_ra_no_second_chances_name_id"
+	self.cards.ra_no_second_chances.description = "card_ra_no_second_chances_desc_id"
+	self.cards.ra_no_second_chances.effects = {
+		{
+			value = 1.1,
+			name = BuffEffectManager.EFFECT_PLAYER_HEALTH,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+		},
+		{
+			value = true,
+			fail_message = BuffEffectManager.FAIL_EFFECT_MESSAGE_PLAYER_WENT_TO_BLEEDOUT,
+			name = BuffEffectManager.EFFECT_PLAYER_BLEEDOUT,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+		},
+	}
+	self.cards.ra_no_second_chances.positive_description = {
+		desc_id = "effect_player_health_increased",
+		desc_params = {
+			EFFECT_VALUE_1 = "10",
+		},
+	}
+	self.cards.ra_no_second_chances.negative_description = {
+		desc_id = "effect_players_cannot_bleedout_during_raid",
+	}
+	self.cards.ra_no_second_chances.rarity = LootDropTweakData.RARITY_RARE
+	self.cards.ra_no_second_chances.card_type = ChallengeCardsTweakData.CARD_TYPE_RAID
+	self.cards.ra_no_second_chances.texture = "cc_raid_rare_no_second_chances_hud"
+	self.cards.ra_no_second_chances.achievement_id = ""
+	self.cards.ra_no_second_chances.bonus_xp_multiplier = 1.75
+	self.cards.ra_no_second_chances.def_id = 20011
+	self.cards.ra_no_second_chances.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
+	self.cards.ra_a_perfect_score = {}
+	self.cards.ra_a_perfect_score.name = "card_ra_a_perfect_score_name_id"
+	self.cards.ra_a_perfect_score.description = "card_ra_a_perfect_score_desc_id"
+	self.cards.ra_a_perfect_score.effects = {
+		{
+			value = true,
+			name = BuffEffectManager.EFFECT_ALL_CHESTS_ARE_LOCKED,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+		},
+		{
+			value = true,
+			fail_message = BuffEffectManager.FAIL_EFFECT_MESSAGE_PLAYER_FAILED_INTERACTION_MINI_GAME,
+			name = BuffEffectManager.EFFECT_PLAYER_FAILED_INTERACTION_MINI_GAME,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+		},
+	}
+	self.cards.ra_a_perfect_score.positive_description = {
+		desc_id = "effect_all_chests_are_locked",
+	}
+	self.cards.ra_a_perfect_score.negative_description = {
+		desc_id = "effect_players_cant_fail_minigame",
+	}
+	self.cards.ra_a_perfect_score.rarity = LootDropTweakData.RARITY_RARE
+	self.cards.ra_a_perfect_score.card_type = ChallengeCardsTweakData.CARD_TYPE_RAID
+	self.cards.ra_a_perfect_score.texture = "cc_raid_rare_a_perfect_score_hud"
+	self.cards.ra_a_perfect_score.achievement_id = ""
+	self.cards.ra_a_perfect_score.bonus_xp_multiplier = 2
+	self.cards.ra_a_perfect_score.def_id = 20012
+	self.cards.ra_a_perfect_score.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
+	self.cards.ra_helmet_shortage = {}
+	self.cards.ra_helmet_shortage.name = "card_ra_helmet_shortage_name_id"
+	self.cards.ra_helmet_shortage.description = "card_ra_helmet_shortage_desc_id"
+	self.cards.ra_helmet_shortage.effects = {
+		{
+			value = true,
+			name = BuffEffectManager.EFFECT_PLAYER_HEADSHOT_AUTO_KILL,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+		},
+		{
+			value = 0.5,
+			name = BuffEffectManager.EFFECT_PLAYER_HEALTH,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+		},
+	}
+	self.cards.ra_helmet_shortage.positive_description = {
+		desc_id = "effect_headshots_are_instakills",
+	}
+	self.cards.ra_helmet_shortage.negative_description = {
+		desc_id = "effect_player_health_reduced",
+		desc_params = {
+			EFFECT_VALUE_1 = "50%",
+		},
+	}
+	self.cards.ra_helmet_shortage.rarity = LootDropTweakData.RARITY_RARE
+	self.cards.ra_helmet_shortage.card_type = ChallengeCardsTweakData.CARD_TYPE_RAID
+	self.cards.ra_helmet_shortage.texture = "cc_raid_rare_helmet_shortage_hud"
+	self.cards.ra_helmet_shortage.achievement_id = ""
+	self.cards.ra_helmet_shortage.bonus_xp_multiplier = 2
+	self.cards.ra_helmet_shortage.def_id = 20013
+	self.cards.ra_helmet_shortage.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
+	self.cards.ra_hemorrhaging = {}
+	self.cards.ra_hemorrhaging.name = "card_ra_hemorrhaging_name_id"
+	self.cards.ra_hemorrhaging.description = "card_ra_hemorrhaging_desc_id"
+	self.cards.ra_hemorrhaging.effects = {
+		{
+			value = 0.1,
+			name = BuffEffectManager.EFFECT_PLAYER_MELEE_KILL_REGENERATES_HEALTH,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+		},
+		{
+			value = -0.00333,
+			name = BuffEffectManager.EFFECT_PLAYER_HEALTH_REGEN,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+		},
+	}
+	self.cards.ra_hemorrhaging.positive_description = {
+		desc_id = "effect_melee_kills_regenerate_health",
+		desc_params = {
+			EFFECT_VALUE_1 = "10%",
+		},
+	}
+	self.cards.ra_hemorrhaging.negative_description = {
+		desc_id = "effect_health_drain_per_minute",
+		desc_params = {
+			EFFECT_VALUE_1 = "20%",
+		},
+	}
+	self.cards.ra_hemorrhaging.rarity = LootDropTweakData.RARITY_RARE
+	self.cards.ra_hemorrhaging.card_type = ChallengeCardsTweakData.CARD_TYPE_RAID
+	self.cards.ra_hemorrhaging.texture = "cc_raid_rare_hemorrhaging_hud"
+	self.cards.ra_hemorrhaging.achievement_id = ""
+	self.cards.ra_hemorrhaging.bonus_xp_multiplier = 2.15
+	self.cards.ra_hemorrhaging.def_id = 20014
+	self.cards.ra_hemorrhaging.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
 	self.cards.ra_crab_people = {}
 	self.cards.ra_crab_people.name = "card_ra_crab_people_name_id"
 	self.cards.ra_crab_people.description = "card_ra_crab_people_desc_id"
@@ -249,6 +633,506 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.ra_crab_people.bonus_xp_multiplier = 2.3
 	self.cards.ra_crab_people.def_id = 20015
 	self.cards.ra_crab_people.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
+	self.cards.op_limited_supplies = {}
+	self.cards.op_limited_supplies.name = "card_op_limited_supplies_name_id"
+	self.cards.op_limited_supplies.description = "card_op_limited_supplies_desc_id"
+	self.cards.op_limited_supplies.effects = {
+		{
+			value = 1.15,
+			name = BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_REWARD_INCREASE,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+		},
+		{
+			value = 0.8,
+			name = BuffEffectManager.EFFECT_PLAYER_ALL_AMMO_CAPACITY,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+		},
+	}
+	self.cards.op_limited_supplies.positive_description = {
+		desc_id = "effect_loot_drop_effect_increased",
+		desc_params = {
+			EFFECT_VALUE_1 = "15%",
+		},
+	}
+	self.cards.op_limited_supplies.negative_description = {
+		desc_id = "effect_player_primary_and_secondary_ammo_capacity_lowered",
+		desc_params = {
+			EFFECT_VALUE_1 = "20%",
+		},
+	}
+	self.cards.op_limited_supplies.rarity = LootDropTweakData.RARITY_COMMON
+	self.cards.op_limited_supplies.card_type = ChallengeCardsTweakData.CARD_TYPE_OPERATION
+	self.cards.op_limited_supplies.texture = "cc_operation_common_limited_supplies_hud"
+	self.cards.op_limited_supplies.achievement_id = ""
+	self.cards.op_limited_supplies.bonus_xp = 300
+	self.cards.op_limited_supplies.def_id = 30001
+	self.cards.op_limited_supplies.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
+	self.cards.op_take_the_cannoli = {}
+	self.cards.op_take_the_cannoli.name = "card_op_take_the_cannoli_name_id"
+	self.cards.op_take_the_cannoli.description = "card_op_take_the_cannoli_desc_id"
+	self.cards.op_take_the_cannoli.effects = {
+		{
+			value = true,
+			name = BuffEffectManager.EFFECT_BAGS_DONT_SLOW_PLAYERS_DOWN,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+		},
+		{
+			value = 0.85,
+			name = BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_CHANCE,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+		},
+	}
+	self.cards.op_take_the_cannoli.positive_description = {
+		desc_id = "effect_no_movement_penalty_for_carrying_heavy_objects",
+	}
+	self.cards.op_take_the_cannoli.negative_description = {
+		desc_id = "effect_loot_drop_chance_decreased",
+		desc_params = {
+			EFFECT_VALUE_1 = "15%",
+		},
+	}
+	self.cards.op_take_the_cannoli.rarity = LootDropTweakData.RARITY_COMMON
+	self.cards.op_take_the_cannoli.card_type = ChallengeCardsTweakData.CARD_TYPE_OPERATION
+	self.cards.op_take_the_cannoli.texture = "cc_operation_common_take_the_canonoli_hud"
+	self.cards.op_take_the_cannoli.achievement_id = ""
+	self.cards.op_take_the_cannoli.bonus_xp = 350
+	self.cards.op_take_the_cannoli.def_id = 30002
+	self.cards.op_take_the_cannoli.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
+	self.cards.op_everyones_a_tough_guy = {}
+	self.cards.op_everyones_a_tough_guy.name = "card_op_everyones_a_tough_guy_name_id"
+	self.cards.op_everyones_a_tough_guy.description = "card_op_everyones_a_tough_guy_desc_id"
+	self.cards.op_everyones_a_tough_guy.effects = {
+		{
+			value = 5,
+			name = BuffEffectManager.EFFECT_MODIFY_BLEEDOUT_TIMER,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+		},
+		{
+			value = 1.1,
+			name = BuffEffectManager.EFFECT_ENEMY_HEALTH,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+		},
+	}
+	self.cards.op_everyones_a_tough_guy.positive_description = {
+		desc_id = "effect_bleedout_timer_increased",
+		desc_params = {
+			EFFECT_VALUE_1 = "5",
+		},
+	}
+	self.cards.op_everyones_a_tough_guy.negative_description = {
+		desc_id = "effect_enemies_health_increased",
+		desc_params = {
+			EFFECT_VALUE_1 = "10%",
+		},
+	}
+	self.cards.op_everyones_a_tough_guy.rarity = LootDropTweakData.RARITY_COMMON
+	self.cards.op_everyones_a_tough_guy.card_type = ChallengeCardsTweakData.CARD_TYPE_OPERATION
+	self.cards.op_everyones_a_tough_guy.texture = "cc_operation_common_everyones_a_tough_guy_hud"
+	self.cards.op_everyones_a_tough_guy.achievement_id = ""
+	self.cards.op_everyones_a_tough_guy.bonus_xp = 500
+	self.cards.op_everyones_a_tough_guy.def_id = 30003
+	self.cards.op_everyones_a_tough_guy.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
+	self.cards.op_nichtsplosions = {}
+	self.cards.op_nichtsplosions.name = "card_op_nichtsplosions_name_id"
+	self.cards.op_nichtsplosions.description = "card_op_nichtsplosions_desc_id"
+	self.cards.op_nichtsplosions.effects = {
+		{
+			value = 1.15,
+			name = BuffEffectManager.EFFECT_PLAYER_RELOAD_SPEED,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+		},
+		{
+			value = true,
+			name = BuffEffectManager.EFFECT_ENEMIES_IMPERVIOUS_TO_EXPLOSIVE_DAMAGE,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+		},
+	}
+	self.cards.op_nichtsplosions.positive_description = {
+		desc_id = "effect_player_faster_reload",
+		desc_params = {
+			EFFECT_VALUE_1 = "15%",
+		},
+	}
+	self.cards.op_nichtsplosions.negative_description = {
+		desc_id = "effect_enemies_impervious_to_explosive_damage",
+	}
+	self.cards.op_nichtsplosions.rarity = LootDropTweakData.RARITY_COMMON
+	self.cards.op_nichtsplosions.card_type = ChallengeCardsTweakData.CARD_TYPE_OPERATION
+	self.cards.op_nichtsplosions.texture = "cc_operation_common_nichtsplosions_hud"
+	self.cards.op_nichtsplosions.achievement_id = ""
+	self.cards.op_nichtsplosions.bonus_xp = 400
+	self.cards.op_nichtsplosions.def_id = 30004
+	self.cards.op_nichtsplosions.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
+	self.cards.op_war_weary = {}
+	self.cards.op_war_weary.name = "card_op_war_weary_name_id"
+	self.cards.op_war_weary.description = "card_op_war_weary_desc_id"
+	self.cards.op_war_weary.effects = {
+		{
+			value = 1.1,
+			name = BuffEffectManager.EFFECT_ENEMIES_RECEIVE_DAMAGE,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+		},
+		{
+			value = 0.75,
+			name = BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_REWARD_INCREASE,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+		},
+	}
+	self.cards.op_war_weary.positive_description = {
+		desc_id = "effect_enemies_take_more_damage",
+		desc_params = {
+			EFFECT_VALUE_1 = "10%",
+		},
+	}
+	self.cards.op_war_weary.negative_description = {
+		desc_id = "effect_loot_drop_effect_decreased",
+		desc_params = {
+			EFFECT_VALUE_1 = "25%",
+		},
+	}
+	self.cards.op_war_weary.rarity = LootDropTweakData.RARITY_COMMON
+	self.cards.op_war_weary.card_type = ChallengeCardsTweakData.CARD_TYPE_OPERATION
+	self.cards.op_war_weary.texture = "cc_operation_common_war_weary_hud"
+	self.cards.op_war_weary.achievement_id = ""
+	self.cards.op_war_weary.bonus_xp = 400
+	self.cards.op_war_weary.def_id = 30005
+	self.cards.op_war_weary.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
+	self.cards.op_special_for_a_reason = {}
+	self.cards.op_special_for_a_reason.name = "card_op_special_for_a_reason_name_id"
+	self.cards.op_special_for_a_reason.description = "card_op_special_for_a_reason_desc_id"
+	self.cards.op_special_for_a_reason.effects = {
+		{
+			value = 1.1,
+			name = BuffEffectManager.EFFECT_PLAYER_MOVEMENT_SPEED,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+		},
+		{
+			value = 1.5,
+			name = BuffEffectManager.EFFECT_ENEMY_DOES_DAMAGE,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+		},
+	}
+	self.cards.op_special_for_a_reason.positive_description = {
+		desc_id = "effect_player_movement_speed_increased",
+		desc_params = {
+			EFFECT_VALUE_1 = "10%",
+		},
+	}
+	self.cards.op_special_for_a_reason.negative_description = {
+		desc_id = "effect_special_enemies_deal_increased_damage",
+		desc_params = {
+			EFFECT_VALUE_1 = "50%",
+		},
+	}
+	self.cards.op_special_for_a_reason.rarity = LootDropTweakData.RARITY_UNCOMMON
+	self.cards.op_special_for_a_reason.card_type = ChallengeCardsTweakData.CARD_TYPE_OPERATION
+	self.cards.op_special_for_a_reason.texture = "cc_operation_uncommon_special_for_a_reason_hud"
+	self.cards.op_special_for_a_reason.achievement_id = ""
+	self.cards.op_special_for_a_reason.bonus_xp_multiplier = 1.25
+	self.cards.op_special_for_a_reason.def_id = 30006
+	self.cards.op_special_for_a_reason.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
+	self.cards.op_dont_blink = {}
+	self.cards.op_dont_blink.name = "card_op_dont_blink_name_id"
+	self.cards.op_dont_blink.description = "card_op_dont_blink_desc_id"
+	self.cards.op_dont_blink.effects = {
+		{
+			value = 1.1,
+			name = BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_CHANCE,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+		},
+		{
+			value = 5,
+			name = BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_DESPAWN_HEALTH,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+		},
+		{
+			value = 5,
+			name = BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_DESPAWN_AMMO,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+		},
+	}
+	self.cards.op_dont_blink.positive_description = {
+		desc_id = "effect_loot_drop_chance_increased",
+		desc_params = {
+			EFFECT_VALUE_1 = "10%",
+		},
+	}
+	self.cards.op_dont_blink.negative_description = {
+		desc_id = "effect_loot_drop_pickups_desappear",
+		desc_params = {
+			EFFECT_VALUE_1 = "5",
+		},
+	}
+	self.cards.op_dont_blink.rarity = LootDropTweakData.RARITY_UNCOMMON
+	self.cards.op_dont_blink.card_type = ChallengeCardsTweakData.CARD_TYPE_OPERATION
+	self.cards.op_dont_blink.texture = "cc_operation_uncommon_dont_blink_hud"
+	self.cards.op_dont_blink.achievement_id = ""
+	self.cards.op_dont_blink.bonus_xp_multiplier = 1.35
+	self.cards.op_dont_blink.def_id = 30007
+	self.cards.op_dont_blink.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
+	self.cards.op_bad_coffee = {}
+	self.cards.op_bad_coffee.name = "card_op_bad_coffee_name_id"
+	self.cards.op_bad_coffee.description = "card_op_bad_coffee_desc_id"
+	self.cards.op_bad_coffee.effects = {
+		{
+			value = 1.1,
+			name = BuffEffectManager.EFFECT_PLAYER_RELOAD_SPEED,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+		},
+		{
+			value = 15,
+			name = BuffEffectManager.EFFECT_SET_BLEEDOUT_TIMER,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+		},
+	}
+	self.cards.op_bad_coffee.positive_description = {
+		desc_id = "effect_player_faster_reload",
+		desc_params = {
+			EFFECT_VALUE_1 = "10%",
+		},
+	}
+	self.cards.op_bad_coffee.negative_description = {
+		desc_id = "effect_set_bleedout_timer",
+		desc_params = {
+			EFFECT_VALUE_1 = "15",
+		},
+	}
+	self.cards.op_bad_coffee.rarity = LootDropTweakData.RARITY_UNCOMMON
+	self.cards.op_bad_coffee.card_type = ChallengeCardsTweakData.CARD_TYPE_OPERATION
+	self.cards.op_bad_coffee.texture = "cc_operation_uncommon_bad_coffee_hud"
+	self.cards.op_bad_coffee.achievement_id = ""
+	self.cards.op_bad_coffee.bonus_xp_multiplier = 1.4
+	self.cards.op_bad_coffee.def_id = 30008
+	self.cards.op_bad_coffee.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
+	self.cards.op_playing_for_keeps = {}
+	self.cards.op_playing_for_keeps.name = "card_op_playing_for_keeps_name_id"
+	self.cards.op_playing_for_keeps.description = "card_op_playing_for_keeps_desc_id"
+	self.cards.op_playing_for_keeps.effects = {
+		{
+			value = 1.1,
+			name = BuffEffectManager.EFFECT_ENEMIES_RECEIVE_DAMAGE,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+		},
+		{
+			value = 0.75,
+			name = BuffEffectManager.EFFECT_PLAYER_HEALTH,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+		},
+	}
+	self.cards.op_playing_for_keeps.positive_description = {
+		desc_id = "effect_enemies_take_more_damage",
+		desc_params = {
+			EFFECT_VALUE_1 = "10%",
+		},
+	}
+	self.cards.op_playing_for_keeps.negative_description = {
+		desc_id = "effect_player_health_reduced",
+		desc_params = {
+			EFFECT_VALUE_1 = "25",
+		},
+	}
+	self.cards.op_playing_for_keeps.rarity = LootDropTweakData.RARITY_UNCOMMON
+	self.cards.op_playing_for_keeps.card_type = ChallengeCardsTweakData.CARD_TYPE_OPERATION
+	self.cards.op_playing_for_keeps.texture = "cc_operation_uncommon_playing_for_keeps_hud"
+	self.cards.op_playing_for_keeps.achievement_id = ""
+	self.cards.op_playing_for_keeps.bonus_xp_multiplier = 1.4
+	self.cards.op_playing_for_keeps.def_id = 30009
+	self.cards.op_playing_for_keeps.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
+	self.cards.op_silent_shout = {}
+	self.cards.op_silent_shout.name = "card_op_silent_shout_name_id"
+	self.cards.op_silent_shout.description = "card_op_silent_shout_desc_id"
+	self.cards.op_silent_shout.effects = {
+		{
+			value = 0.1,
+			name = BuffEffectManager.EFFECT_PLAYER_MELEE_KILL_REGENERATES_HEALTH,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+		},
+		{
+			value = true,
+			fail_message = BuffEffectManager.FAIL_EFFECT_MESSAGE_PLAYER_USED_WARCRY,
+			name = BuffEffectManager.EFFECT_PLAYERS_CANT_USE_WARCRIES,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+		},
+	}
+	self.cards.op_silent_shout.positive_description = {
+		desc_id = "effect_melee_kills_regenerate_health",
+		desc_params = {
+			EFFECT_VALUE_1 = "10%",
+		},
+	}
+	self.cards.op_silent_shout.negative_description = {
+		desc_id = "effect_players_cant_use_warcry",
+	}
+	self.cards.op_silent_shout.rarity = LootDropTweakData.RARITY_UNCOMMON
+	self.cards.op_silent_shout.card_type = ChallengeCardsTweakData.CARD_TYPE_OPERATION
+	self.cards.op_silent_shout.texture = "cc_operation_uncommon_silent_shout_hud"
+	self.cards.op_silent_shout.achievement_id = ""
+	self.cards.op_silent_shout.bonus_xp_multiplier = 1.55
+	self.cards.op_silent_shout.def_id = 30010
+	self.cards.op_silent_shout.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
+	self.cards.op_blow_me = {}
+	self.cards.op_blow_me.name = "card_op_blow_me_name_id"
+	self.cards.op_blow_me.description = "card_op_blow_me_desc_id"
+	self.cards.op_blow_me.effects = {
+		{
+			value = 2,
+			name = BuffEffectManager.EFFECT_GRENADE_DAMAGE,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+		},
+		{
+			value = 0.5,
+			name = BuffEffectManager.EFFECT_PLAYER_ALL_AMMO_CAPACITY,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+		},
+	}
+	self.cards.op_blow_me.positive_description = {
+		desc_id = "effect_player_grenade_damage_increased",
+		desc_params = {
+			EFFECT_VALUE_1 = "100%",
+		},
+	}
+	self.cards.op_blow_me.negative_description = {
+		desc_id = "effect_player_primary_and_secondary_ammo_capacity_lowered",
+		desc_params = {
+			EFFECT_VALUE_1 = "50%",
+		},
+	}
+	self.cards.op_blow_me.rarity = LootDropTweakData.RARITY_RARE
+	self.cards.op_blow_me.card_type = ChallengeCardsTweakData.CARD_TYPE_OPERATION
+	self.cards.op_blow_me.texture = "cc_operation_rare_blow_me_hud"
+	self.cards.op_blow_me.achievement_id = ""
+	self.cards.op_blow_me.bonus_xp_multiplier = 1.75
+	self.cards.op_blow_me.def_id = 30011
+	self.cards.op_blow_me.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
+	self.cards.op_you_only_live_once = {}
+	self.cards.op_you_only_live_once.name = "card_op_you_only_live_once_name_id"
+	self.cards.op_you_only_live_once.description = "card_op_you_only_live_once_desc_id"
+	self.cards.op_you_only_live_once.effects = {
+		{
+			value = 0.05,
+			name = BuffEffectManager.EFFECT_PLAYER_KILL_REGENERATES_HEALTH,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+		},
+		{
+			value = true,
+			fail_message = BuffEffectManager.FAIL_EFFECT_MESSAGE_PLAYER_DIED,
+			name = BuffEffectManager.EFFECT_PLAYER_DIED,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+		},
+	}
+	self.cards.op_you_only_live_once.positive_description = {
+		desc_id = "effect_player_health_regenerates_on_every_kill",
+		desc_params = {
+			EFFECT_VALUE_1 = "5%",
+		},
+	}
+	self.cards.op_you_only_live_once.negative_description = {
+		desc_id = "effect_players_cannot_die_during_operation",
+	}
+	self.cards.op_you_only_live_once.rarity = LootDropTweakData.RARITY_RARE
+	self.cards.op_you_only_live_once.card_type = ChallengeCardsTweakData.CARD_TYPE_OPERATION
+	self.cards.op_you_only_live_once.texture = "cc_operation_rare_you_only_live_once_hud"
+	self.cards.op_you_only_live_once.achievement_id = ""
+	self.cards.op_you_only_live_once.bonus_xp_multiplier = 2
+	self.cards.op_you_only_live_once.def_id = 30012
+	self.cards.op_you_only_live_once.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
+	self.cards.op_short_controlled_bursts = {}
+	self.cards.op_short_controlled_bursts.name = "card_op_short_controlled_bursts_name_id"
+	self.cards.op_short_controlled_bursts.description = "card_op_short_controlled_bursts_desc_id"
+	self.cards.op_short_controlled_bursts.effects = {
+		{
+			value = 1.07,
+			name = BuffEffectManager.EFFECT_PLAYER_CRITICAL_HIT_CHANCE,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+		},
+		{
+			value = true,
+			fail_message = BuffEffectManager.FAIL_EFFECT_MESSAGE_PLAYER_EMPTIED_A_CLIP,
+			name = BuffEffectManager.EFFECT_PLAYERS_CANT_EMPTY_CLIPS,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+		},
+	}
+	self.cards.op_short_controlled_bursts.positive_description = {
+		desc_id = "effect_critical_hit_chance_increase",
+		desc_params = {
+			EFFECT_VALUE_1 = "7%",
+		},
+	}
+	self.cards.op_short_controlled_bursts.negative_description = {
+		desc_id = "effect_players_cant_empty_any_clips",
+	}
+	self.cards.op_short_controlled_bursts.rarity = LootDropTweakData.RARITY_RARE
+	self.cards.op_short_controlled_bursts.card_type = ChallengeCardsTweakData.CARD_TYPE_OPERATION
+	self.cards.op_short_controlled_bursts.texture = "cc_operation_rare_short_controlled_bursts_hud"
+	self.cards.op_short_controlled_bursts.achievement_id = ""
+	self.cards.op_short_controlled_bursts.bonus_xp_multiplier = 2
+	self.cards.op_short_controlled_bursts.def_id = 30013
+	self.cards.op_short_controlled_bursts.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
+	self.cards.op_elite_opponents = {}
+	self.cards.op_elite_opponents.name = "card_op_elite_opponents_name_id"
+	self.cards.op_elite_opponents.description = "card_op_elite_opponents_desc_id"
+	self.cards.op_elite_opponents.effects = {
+		{
+			value = 1.25,
+			name = BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_CHANCE,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+		},
+		{
+			value = 1.5,
+			name = BuffEffectManager.EFFECT_ENEMY_HEALTH,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+		},
+	}
+	self.cards.op_elite_opponents.positive_description = {
+		desc_id = "effect_loot_drop_chance_increased",
+		desc_params = {
+			EFFECT_VALUE_1 = "25%",
+		},
+	}
+	self.cards.op_elite_opponents.negative_description = {
+		desc_id = "effect_enemies_health_increased",
+		desc_params = {
+			EFFECT_VALUE_1 = "50%",
+		},
+	}
+	self.cards.op_elite_opponents.rarity = LootDropTweakData.RARITY_RARE
+	self.cards.op_elite_opponents.card_type = ChallengeCardsTweakData.CARD_TYPE_OPERATION
+	self.cards.op_elite_opponents.texture = "cc_operation_rare_elite_opponents_hud"
+	self.cards.op_elite_opponents.achievement_id = ""
+	self.cards.op_elite_opponents.bonus_xp_multiplier = 2
+	self.cards.op_elite_opponents.def_id = 30014
+	self.cards.op_elite_opponents.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
+	self.cards.op_and_headaches_for_all = {}
+	self.cards.op_and_headaches_for_all.name = "card_op_and_headaches_for_all_name_id"
+	self.cards.op_and_headaches_for_all.description = "card_op_and_headaches_for_all_desc_id"
+	self.cards.op_and_headaches_for_all.effects = {
+		{
+			value = 1.5,
+			name = BuffEffectManager.EFFECT_PLAYER_HEADSHOT_DAMAGE,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+		},
+		{
+			value = true,
+			name = BuffEffectManager.EFFECT_ENEMIES_DIE_ONLY_ON_HEADSHOT,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+		},
+	}
+	self.cards.op_and_headaches_for_all.positive_description = {
+		desc_id = "effect_headshots_damage_increased",
+		desc_params = {
+			EFFECT_VALUE_1 = "50%",
+		},
+	}
+	self.cards.op_and_headaches_for_all.negative_description = {
+		desc_id = "effect_enemies_vulnerable_only_to_headshots",
+	}
+	self.cards.op_and_headaches_for_all.rarity = LootDropTweakData.RARITY_RARE
+	self.cards.op_and_headaches_for_all.card_type = ChallengeCardsTweakData.CARD_TYPE_OPERATION
+	self.cards.op_and_headaches_for_all.texture = "cc_operation_rare_headaches_for_all_hud"
+	self.cards.op_and_headaches_for_all.achievement_id = ""
+	self.cards.op_and_headaches_for_all.bonus_xp_multiplier = 2.5
+	self.cards.op_and_headaches_for_all.def_id = 30015
+	self.cards.op_and_headaches_for_all.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
 	self.cards.ra_b_walk_it_off = {}
 	self.cards.ra_b_walk_it_off.name = "challenge_card_ra_b_walk_it_off_name_id"
 	self.cards.ra_b_walk_it_off.description = "challenge_card_ra_b_walk_it_off_desc_id"
@@ -295,12 +1179,135 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.ra_b_in_fine_feather.bonus_xp = 0
 	self.cards.ra_b_in_fine_feather.def_id = 40004
 	self.cards.ra_b_in_fine_feather.card_category = ChallengeCardsTweakData.CARD_CATEGORY_BOOSTER
+	self.cards.ra_b_precision_fire = {}
+	self.cards.ra_b_precision_fire.name = "challenge_card_ra_b_precision_fire_name_id"
+	self.cards.ra_b_precision_fire.description = "challenge_card_ra_b_precision_fire_desc_id"
+	self.cards.ra_b_precision_fire.effects = {
+		{
+			value = 1.1,
+			name = BuffEffectManager.EFFECT_ENEMIES_RECEIVE_DAMAGE,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+		},
+	}
+	self.cards.ra_b_precision_fire.positive_description = {
+		desc_id = "effect_enemies_take_increased_damage",
+		desc_params = {
+			EFFECT_VALUE_1 = "10%",
+		},
+	}
+	self.cards.ra_b_precision_fire.rarity = LootDropTweakData.RARITY_RARE
+	self.cards.ra_b_precision_fire.card_type = ChallengeCardsTweakData.CARD_TYPE_RAID
+	self.cards.ra_b_precision_fire.texture = "cc_booster_raid_rare_precision_shooting_hud"
+	self.cards.ra_b_precision_fire.achievement_id = ""
+	self.cards.ra_b_precision_fire.bonus_xp = 0
+	self.cards.ra_b_precision_fire.def_id = 40005
+	self.cards.ra_b_precision_fire.card_category = ChallengeCardsTweakData.CARD_CATEGORY_BOOSTER
+	self.cards.op_b_recycle_for_victory = {}
+	self.cards.op_b_recycle_for_victory.name = "challenge_card_op_b_recycle_for_victory_name_id"
+	self.cards.op_b_recycle_for_victory.description = "challenge_card_op_b_recycle_for_victory_desc_id"
+	self.cards.op_b_recycle_for_victory.effects = {
+		{
+			value = 1.1,
+			name = BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_REWARD_INCREASE,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+		},
+	}
+	self.cards.op_b_recycle_for_victory.positive_description = {
+		desc_id = "effect_loot_drop_effect_increased",
+		desc_params = {
+			EFFECT_VALUE_1 = "10%",
+		},
+	}
+	self.cards.op_b_recycle_for_victory.rarity = LootDropTweakData.RARITY_COMMON
+	self.cards.op_b_recycle_for_victory.card_type = ChallengeCardsTweakData.CARD_TYPE_OPERATION
+	self.cards.op_b_recycle_for_victory.texture = "cc_booster_operation_common_recycle_for_victory_hud"
+	self.cards.op_b_recycle_for_victory.achievement_id = ""
+	self.cards.op_b_recycle_for_victory.bonus_xp = 0
+	self.cards.op_b_recycle_for_victory.def_id = 50001
+	self.cards.op_b_recycle_for_victory.card_category = ChallengeCardsTweakData.CARD_CATEGORY_BOOSTER
+	self.cards.op_b_will_not_go_quietly = {}
+	self.cards.op_b_will_not_go_quietly.name = "challenge_card_op_b_will_not_go_quietly_name_id"
+	self.cards.op_b_will_not_go_quietly.description = "challenge_card_op_b_will_not_go_quietly_desc_id"
+	self.cards.op_b_will_not_go_quietly.effects = {
+		{
+			value = 7.5,
+			name = BuffEffectManager.EFFECT_MODIFY_BLEEDOUT_TIMER,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+		},
+	}
+	self.cards.op_b_will_not_go_quietly.positive_description = {
+		desc_id = "effect_bleedout_timer_increased",
+		desc_params = {
+			EFFECT_VALUE_1 = "7.5",
+		},
+	}
+	self.cards.op_b_will_not_go_quietly.rarity = LootDropTweakData.RARITY_UNCOMMON
+	self.cards.op_b_will_not_go_quietly.card_type = ChallengeCardsTweakData.CARD_TYPE_OPERATION
+	self.cards.op_b_will_not_go_quietly.texture = "cc_booster_operation_uncommon_will_not_go_quietly_hud"
+	self.cards.op_b_will_not_go_quietly.achievement_id = ""
+	self.cards.op_b_will_not_go_quietly.bonus_xp = 0
+	self.cards.op_b_will_not_go_quietly.def_id = 50003
+	self.cards.op_b_will_not_go_quietly.card_category = ChallengeCardsTweakData.CARD_CATEGORY_BOOSTER
+	self.cards.op_b_on_top_form = {}
+	self.cards.op_b_on_top_form.name = "challenge_card_op_b_on_top_form_name_id"
+	self.cards.op_b_on_top_form.description = "challenge_card_op_b_on_top_form_desc_id"
+	self.cards.op_b_on_top_form.effects = {
+		{
+			value = 1.15,
+			name = BuffEffectManager.EFFECT_PLAYER_HEALTH,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+		},
+	}
+	self.cards.op_b_on_top_form.positive_description = {
+		desc_id = "effect_player_health_increased",
+		desc_params = {
+			EFFECT_VALUE_1 = "15%",
+		},
+	}
+	self.cards.op_b_on_top_form.rarity = LootDropTweakData.RARITY_RARE
+	self.cards.op_b_on_top_form.card_type = ChallengeCardsTweakData.CARD_TYPE_OPERATION
+	self.cards.op_b_on_top_form.texture = "cc_booster_operation_rare_on_top_form_hud"
+	self.cards.op_b_on_top_form.achievement_id = ""
+	self.cards.op_b_on_top_form.bonus_xp = 0
+	self.cards.op_b_on_top_form.def_id = 50006
+	self.cards.op_b_on_top_form.card_category = ChallengeCardsTweakData.CARD_CATEGORY_BOOSTER
 	self.cards_index = {
+		"ra_on_the_scrounge",
 		"ra_no_backups",
+		"ra_this_is_gonna_hurt",
+		"ra_not_in_the_face",
+		"ra_loaded_for_bear",
 		"ra_total_carnage",
+		"ra_switch_hitter",
+		"ra_gunslingers",
+		"ra_fresh_troops",
+		"ra_dont_you_die_on_me",
+		"ra_no_second_chances",
+		"ra_a_perfect_score",
+		"ra_helmet_shortage",
+		"ra_hemorrhaging",
 		"ra_crab_people",
+		"op_limited_supplies",
+		"op_take_the_cannoli",
+		"op_everyones_a_tough_guy",
+		"op_nichtsplosions",
+		"op_war_weary",
+		"op_special_for_a_reason",
+		"op_dont_blink",
+		"op_bad_coffee",
+		"op_playing_for_keeps",
+		"op_silent_shout",
+		"op_blow_me",
+		"op_you_only_live_once",
+		"op_short_controlled_bursts",
+		"op_elite_opponents",
+		"op_and_headaches_for_all",
 		"ra_b_walk_it_off",
 		"ra_b_in_fine_feather",
+		"ra_b_precision_fire",
+		"op_b_recycle_for_victory",
+		"op_b_will_not_go_quietly",
+		"op_b_on_top_form",
 	}
 end
 

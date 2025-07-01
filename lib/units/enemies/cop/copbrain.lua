@@ -222,6 +222,10 @@ function CopBrain:update(unit, t, dt)
 		return
 	end
 
+	if managers.game_play_central:is_restarting() then
+		return
+	end
+
 	local logic = self._current_logic
 
 	if logic.update then
