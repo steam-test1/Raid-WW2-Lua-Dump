@@ -202,6 +202,7 @@ function StatisticsTweakData:statistics_table()
 		"dp28",
 		"tt33",
 		"kar_98k",
+		"bren",
 	}
 	local melee_list = {
 		"weapon",

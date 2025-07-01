@@ -2910,6 +2910,18 @@ function SkillTreeTweakData:_init_skill_list()
 			"dp28",
 		},
 	}
+	self.skills.weapon_unlock_bren = {
+		desc_id = "skill_weapon_unlock_bren_desc",
+		name_id = "skill_weapon_unlock_bren_name",
+		acquires = {},
+		icon_xy = {
+			1,
+			1,
+		},
+		upgrades = {
+			"bren",
+		},
+	}
 	self.skills.weapon_unlock_tt33 = {
 		desc_id = "skill_weapon_unlock_tt33_desc",
 		name_id = "skill_weapon_unlock_tt33_name",
@@ -5381,6 +5393,9 @@ function SkillTreeTweakData:_init_assault_unlock_progression()
 		unlocks = {
 			"weapon_tier_unlocked_3",
 		},
+		weapons = {
+			"weapon_unlock_bren",
+		},
 	}
 	self.automatic_unlock_progressions.assault[28] = {
 		weapons = {
@@ -5561,6 +5576,11 @@ function SkillTreeTweakData:_init_demolitions_unlock_progression()
 	self.automatic_unlock_progressions.demolitions[25] = {
 		unlocks = {
 			"weapon_tier_unlocked_3",
+		},
+	}
+	self.automatic_unlock_progressions.demolitions[28] = {
+		weapons = {
+			"weapon_unlock_bren",
 		},
 	}
 	self.automatic_unlock_progressions.demolitions[30] = {

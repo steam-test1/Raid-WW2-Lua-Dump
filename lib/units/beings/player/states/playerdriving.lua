@@ -536,7 +536,6 @@ function PlayerDriving:_move_to_next_seat()
 
 	if self._equipped_unit and self._equipped_unit.base and self._equipped_unit:base() and self._equipped_unit:base():shooting() then
 		self:_check_stop_shooting()
-		self._equipped_unit:base():stop_shooting_veh()
 	end
 end
 

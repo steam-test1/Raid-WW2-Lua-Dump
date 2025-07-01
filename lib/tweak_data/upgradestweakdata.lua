@@ -888,6 +888,11 @@ function UpgradesTweakData:_create_weapon_definitions()
 		factory_id = "wpn_fps_lmg_dp28",
 		weapon_id = "dp28",
 	}
+	self.definitions.bren = {
+		category = "weapon",
+		factory_id = "wpn_fps_lmg_bren",
+		weapon_id = "bren",
+	}
 	self.definitions.tt33 = {
 		category = "weapon",
 		factory_id = "wpn_fps_pis_tt33",
@@ -3884,6 +3889,7 @@ function UpgradesTweakData:_old_init()
 			"dp28",
 			"tt33",
 			"kar_98k",
+			"bren",
 		},
 	}
 

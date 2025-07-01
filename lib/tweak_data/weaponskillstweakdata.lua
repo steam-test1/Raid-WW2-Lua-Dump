@@ -33,6 +33,7 @@ function WeaponSkillsTweakData:init()
 	self:_init_dp28_skill_tree()
 	self:_init_tt33_skill_tree()
 	self:_init_kar_98k_skill_tree()
+	self:_init_bren_skill_tree()
 	self:_init_reedem_xp_values()
 end
 
@@ -3722,6 +3723,192 @@ function WeaponSkillsTweakData:_init_m1918_skill_tree()
 		},
 	}
 	self.skill_trees.m1918.tier_unlock = {
+		"weapon_tier_unlocked",
+		"weapon_tier_unlocked",
+	}
+end
+
+function WeaponSkillsTweakData:_init_bren_skill_tree()
+	self.skill_trees.bren = {}
+	self.skill_trees.bren[1] = {}
+	self.skill_trees.bren[1][1] = {
+		{
+			challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
+			challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
+			cost = 1,
+			value = 1,
+			challenge_tasks = {
+				{
+					target = 250,
+					modifiers = {
+						hip_fire = true,
+						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
+					},
+					reminders = {
+						80,
+						160,
+						220,
+					},
+					type = ChallengeTweakData.TASK_KILL_ENEMIES,
+				},
+			},
+			skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
+			weapon_parts = {
+				"wpn_fps_lmg_bren_bipod",
+			},
+		},
+	}
+	self.skill_trees.bren[1][2] = {
+		{
+			challenge_briefing_id = "weapon_skill_generic_kill_briefing",
+			challenge_done_text_id = "weapon_skill_generic_kill_completed",
+			cost = 2,
+			value = 1,
+			challenge_tasks = {
+				{
+					target = 500,
+					reminders = {
+						125,
+						250,
+						375,
+						450,
+					},
+					type = ChallengeTweakData.TASK_KILL_ENEMIES,
+				},
+			},
+			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
+		},
+	}
+	self.skill_trees.bren[1][3] = {
+		{
+			challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
+			challenge_done_text_id = "weapon_skill_headshot_kill_completed",
+			cost = 2,
+			value = 1,
+			challenge_tasks = {
+				{
+					target = 50,
+					modifiers = {
+						headshot = true,
+						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
+					},
+					reminders = {
+						25,
+						40,
+					},
+					type = ChallengeTweakData.TASK_KILL_ENEMIES,
+				},
+			},
+			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
+			weapon_parts = {
+				"wpn_fps_lmg_bren_b_long",
+			},
+		},
+	}
+	self.skill_trees.bren[2] = {}
+	self.skill_trees.bren[2][1] = {
+		{
+			challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
+			challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
+			cost = 2,
+			value = 2,
+			challenge_tasks = {
+				{
+					target = 500,
+					modifiers = {
+						hip_fire = true,
+						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
+					},
+					reminders = {
+						100,
+						250,
+						400,
+						450,
+					},
+					type = ChallengeTweakData.TASK_KILL_ENEMIES,
+				},
+			},
+			skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
+			weapon_parts = {
+				"wpn_fps_lmg_bren_pad_buffered",
+			},
+		},
+	}
+	self.skill_trees.bren[2][2] = {
+		{
+			challenge_briefing_id = "weapon_skill_generic_kill_briefing",
+			challenge_done_text_id = "weapon_skill_generic_kill_completed",
+			cost = 2,
+			value = 2,
+			challenge_tasks = {
+				{
+					target = 1000,
+					reminders = {
+						250,
+						500,
+						750,
+						900,
+					},
+					type = ChallengeTweakData.TASK_KILL_ENEMIES,
+				},
+			},
+			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
+			weapon_parts = {
+				"wpn_fps_lmg_bren_ns_brake",
+			},
+		},
+	}
+	self.skill_trees.bren[2][3] = {
+		{
+			challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
+			challenge_done_text_id = "weapon_skill_headshot_kill_completed",
+			cost = 3,
+			value = 2,
+			challenge_tasks = {
+				{
+					target = 100,
+					modifiers = {
+						headshot = true,
+						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
+					},
+					reminders = {
+						40,
+						70,
+						90,
+					},
+					type = ChallengeTweakData.TASK_KILL_ENEMIES,
+				},
+			},
+			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
+			weapon_parts = {
+				"wpn_fps_lmg_bren_support",
+			},
+		},
+	}
+	self.skill_trees.bren[2][4] = {
+		{
+			challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
+			challenge_done_text_id = "weapon_skill_collect_ammo_completed",
+			cost = 6,
+			value = 4,
+			challenge_tasks = {
+				{
+					target = 3000,
+					reminders = {
+						750,
+						1500,
+						2750,
+					},
+					type = ChallengeTweakData.TASK_COLLECT_AMMO,
+				},
+			},
+			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
+			weapon_parts = {
+				"wpn_fps_lmg_bren_m_extended",
+			},
+		},
+	}
+	self.skill_trees.bren.tier_unlock = {
 		"weapon_tier_unlocked",
 		"weapon_tier_unlocked",
 	}

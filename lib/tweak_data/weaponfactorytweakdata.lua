@@ -125,6 +125,7 @@ function WeaponFactoryTweakData:init()
 	self:_init_dp28()
 	self:_init_tt33()
 	self:_init_kar_98k()
+	self:_init_bren()
 	self:create_ammunition()
 	self:_init_content_unfinished()
 	self:_cleanup_unfinished_content()
@@ -2193,6 +2194,161 @@ function WeaponFactoryTweakData:_init_dp28()
 	}
 	self.wpn_fps_lmg_dp28_npc = deep_clone(self.wpn_fps_lmg_dp28)
 	self.wpn_fps_lmg_dp28_npc.unit = "units/upd_001/weapons/wpn_fps_lmg_dp28/wpn_fps_lmg_dp28_npc"
+end
+
+function WeaponFactoryTweakData:_init_bren()
+	self.parts.wpn_fps_lmg_bren_b_standard = {
+		a_obj = "a_b",
+		name_id = "bm_wp_lmg_bren_b_standard",
+		third_unit = "units/upd_005/weapons/wpn_third_lmg_bren_pts/wpn_third_lmg_bren_b_standard",
+		type = "barrel",
+		unit = "units/upd_005/weapons/wpn_fps_lmg_bren_pts/wpn_fps_lmg_bren_b_standard",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_lmg_bren_b_long = {
+		a_obj = "a_b",
+		name_id = "bm_wp_lmg_bren_b_long",
+		third_unit = "units/upd_005/weapons/wpn_third_lmg_bren_pts/wpn_third_lmg_bren_b_long",
+		type = "barrel",
+		unit = "units/upd_005/weapons/wpn_fps_lmg_bren_pts/wpn_fps_lmg_bren_b_long",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_lmg_bren_ns_brake = {
+		a_obj = "a_ns",
+		name_id = "bm_wp_lmg_bren_ns_brake",
+		parent = "barrel",
+		third_unit = "units/upd_005/weapons/wpn_third_lmg_bren_pts/wpn_third_lmg_bren_ns_brake",
+		type = "barrel_ext",
+		unit = "units/upd_005/weapons/wpn_fps_lmg_bren_pts/wpn_fps_lmg_bren_ns_brake",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_lmg_bren_bipod = {
+		a_obj = "a_bp",
+		name_id = "bm_wp_lmg_bren_bipod",
+		parent = "barrel",
+		third_unit = "units/upd_005/weapons/wpn_third_lmg_bren_pts/wpn_third_lmg_bren_bipod",
+		type = "bipod",
+		unit = "units/upd_005/weapons/wpn_fps_lmg_bren_pts/wpn_fps_lmg_bren_bipod",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_lmg_bren_support = {
+		a_obj = "a_support",
+		name_id = "bm_wp_lmg_bren_support",
+		third_unit = "units/upd_005/weapons/wpn_third_lmg_bren_pts/wpn_third_lmg_bren_support",
+		type = "support",
+		unit = "units/upd_005/weapons/wpn_fps_lmg_bren_pts/wpn_fps_lmg_bren_support",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_lmg_bren_body_standard = {
+		a_obj = "a_body",
+		name_id = "bm_wp_lmg_bren_body_standard",
+		third_unit = "units/upd_005/weapons/wpn_third_lmg_bren_pts/wpn_third_lmg_bren_body_standard",
+		type = "receiver",
+		unit = "units/upd_005/weapons/wpn_fps_lmg_bren_pts/wpn_fps_lmg_bren_body_standard",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_lmg_bren_dh_standard = {
+		a_obj = "a_dh",
+		name_id = "bm_wp_lmg_bren_dh_standard",
+		third_unit = "units/upd_005/weapons/wpn_third_lmg_bren_pts/wpn_third_lmg_bren_dh_standard",
+		type = "drag_handle",
+		unit = "units/upd_005/weapons/wpn_fps_lmg_bren_pts/wpn_fps_lmg_bren_dh_standard",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_lmg_bren_m_standard = {
+		a_obj = "a_m",
+		name_id = "bm_wp_lmg_bren_m_standard",
+		third_unit = "units/upd_005/weapons/wpn_third_lmg_bren_pts/wpn_third_lmg_bren_m_standard",
+		type = "magazine",
+		unit = "units/upd_005/weapons/wpn_fps_lmg_bren_pts/wpn_fps_lmg_bren_m_standard",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_lmg_bren_m_extended = {
+		a_obj = "a_m",
+		name_id = "bm_wp_lmg_bren_m_extended",
+		third_unit = "units/upd_005/weapons/wpn_third_lmg_bren_pts/wpn_third_lmg_bren_m_extended",
+		type = "magazine",
+		unit = "units/upd_005/weapons/wpn_fps_lmg_bren_pts/wpn_fps_lmg_bren_m_extended",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_lmg_bren_s_standard = {
+		a_obj = "a_s",
+		name_id = "bm_wp_lmg_bren_s_standard",
+		third_unit = "units/upd_005/weapons/wpn_third_lmg_bren_pts/wpn_third_lmg_bren_s_standard",
+		type = "stock",
+		unit = "units/upd_005/weapons/wpn_fps_lmg_bren_pts/wpn_fps_lmg_bren_s_standard",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_lmg_bren_pad_standard = {
+		a_obj = "a_pad",
+		name_id = "bm_wp_lmg_bren_pad_standard",
+		third_unit = "units/upd_005/weapons/wpn_third_lmg_bren_pts/wpn_third_lmg_bren_pad_standard",
+		type = "stock_ext",
+		unit = "units/upd_005/weapons/wpn_fps_lmg_bren_pts/wpn_fps_lmg_bren_pad_standard",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_lmg_bren_pad_buffered = {
+		a_obj = "a_pad",
+		name_id = "bm_wp_lmg_bren_pad_buffered",
+		third_unit = "units/upd_005/weapons/wpn_third_lmg_bren_pts/wpn_third_lmg_bren_pad_buffered",
+		type = "stock_ext",
+		unit = "units/upd_005/weapons/wpn_fps_lmg_bren_pts/wpn_fps_lmg_bren_pad_buffered",
+		stats = {
+			value = 1,
+		},
+	}
+	self.wpn_fps_lmg_bren = {}
+	self.wpn_fps_lmg_bren.unit = "units/upd_005/weapons/wpn_fps_lmg_bren/wpn_fps_lmg_bren"
+	self.wpn_fps_lmg_bren.animations = {
+		reload = "reload",
+		reload_not_empty = "reload_not_empty",
+	}
+	self.wpn_fps_lmg_bren.default_blueprint = {
+		"wpn_fps_lmg_bren_b_standard",
+		"wpn_fps_lmg_bren_body_standard",
+		"wpn_fps_lmg_bren_dh_standard",
+		"wpn_fps_lmg_bren_m_standard",
+		"wpn_fps_lmg_bren_s_standard",
+		"wpn_fps_lmg_bren_pad_standard",
+	}
+	self.wpn_fps_lmg_bren.uses_parts = {
+		"wpn_fps_lmg_bren_b_standard",
+		"wpn_fps_lmg_bren_body_standard",
+		"wpn_fps_lmg_bren_dh_standard",
+		"wpn_fps_lmg_bren_m_standard",
+		"wpn_fps_lmg_bren_s_standard",
+		"wpn_fps_lmg_bren_pad_standard",
+		"wpn_fps_lmg_bren_b_long",
+		"wpn_fps_lmg_bren_ns_brake",
+		"wpn_fps_lmg_bren_bipod",
+		"wpn_fps_lmg_bren_support",
+		"wpn_fps_lmg_bren_m_extended",
+		"wpn_fps_lmg_bren_pad_buffered",
+	}
+	self.wpn_fps_lmg_bren_npc = deep_clone(self.wpn_fps_lmg_bren)
+	self.wpn_fps_lmg_bren_npc.unit = "units/upd_005/weapons/wpn_fps_lmg_bren/wpn_fps_lmg_bren_npc"
 end
 
 function WeaponFactoryTweakData:_init_tt33()

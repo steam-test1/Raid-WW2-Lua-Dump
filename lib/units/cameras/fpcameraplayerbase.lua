@@ -1921,7 +1921,37 @@ function FPCameraPlayerBase:anim_clbk_reset_dp28_mag_pos()
 	local weapon = self._parent_unit:inventory():equipped_unit()
 
 	weapon:base():reset_magazine_anim_pos()
-	print("-------------------FPCameraPlayerBase:anim_clbk_reset_dp28_mag_pos")
+end
+
+function FPCameraPlayerBase:anim_clbk_punch_bren_mag()
+	local align_obj = self._parent_unit:inventory():equipped_unit():base()._unit:get_object(Idstring("align_mag"))
+	local position = align_obj:position()
+	local rotation = align_obj:rotation()
+
+	self:_unspawn_bren_mag_shell()
+
+	local weapon_unit = self._parent_unit:inventory():equipped_unit():base()
+	local mag_unit
+
+	if weapon_unit and weapon_unit._parts and weapon_unit._parts.wpn_fps_lmg_bren_m_extended then
+		mag_unit = Idstring("units/upd_005/weapons/wpn_fps_lmg_bren_pts/wpn_fps_lmg_bren_m_extended_prop")
+	else
+		mag_unit = Idstring("units/upd_005/weapons/wpn_fps_lmg_bren_pts/wpn_fps_lmg_bren_m_standard_prop")
+	end
+
+	self._bren_magazine = World:spawn_unit(mag_unit, position, rotation)
+
+	self._bren_magazine:push_at(30, self._parent_unit:camera()._m_cam_fwd * 5, self._bren_magazine:position())
+end
+
+function FPCameraPlayerBase:_unspawn_bren_mag_shell()
+	if not alive(self._bren_magazine) then
+		return
+	end
+
+	World:delete_unit(self._bren_magazine)
+
+	self._bren_magazine = nil
 end
 
 function FPCameraPlayerBase:anim_clbk_spawn_shotgun_shell()

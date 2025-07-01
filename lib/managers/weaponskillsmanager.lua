@@ -680,12 +680,56 @@ function WeaponSkillsManager:load(data, version)
 		for weapon_id, weapon_skill_tree_data in pairs(tweak_data.weapon_skills.skill_trees) do
 			if not Global.weapon_skills_manager.weapon_skills_skill_tree[weapon_id] then
 				Global.weapon_skills_manager.weapon_skills_skill_tree[weapon_id] = deep_clone(weapon_skill_tree_data)
+
+				local skill_tree = Global.weapon_skills_manager.weapon_skills_skill_tree[weapon_id]
+
+				for tier_index = 1, #skill_tree do
+					local tier_skills = skill_tree[tier_index]
+
+					for skill_index, skill in pairs(tier_skills) do
+						if skill[1].challenge_tasks then
+							local challenge_id = weapon_id .. "_" .. skill[1].skill_name .. "_" .. tostring(tier_index)
+							local challenge_tasks = skill[1].challenge_tasks
+							local challenge_callback = {
+								method = "on_weapon_challenge_completed",
+								target = "managers.weapon_skills",
+								params = {
+									weapon_id,
+									tier_index,
+									skill_index,
+								},
+							}
+							local challenge_data = {
+								skill_index = skill_index,
+								tier = tier_index,
+								weapon = weapon_id,
+							}
+
+							managers.challenge:create_challenge(ChallengeManager.CATEGORY_WEAPON_UPGRADE, challenge_id, challenge_tasks, challenge_callback, challenge_data)
+
+							skill[1].challenge_id = challenge_id
+							skill[1].weapon_id = weapon_id
+							skill[1].tier = tier_index
+							skill[1].index_in_tier = skill_index
+
+							local previous_challenge_unlocked = tier_skills[skill_index - 1] and managers.challenge:get_challenge(ChallengeManager.CATEGORY_WEAPON_UPGRADE, tier_skills[skill_index - 1][1].challenge_id):completed()
+
+							if tier_index == 1 or previous_challenge_unlocked then
+								skill[1].challenge_unlocked = true
+							elseif skill_tree[tier_index - 1][skill_index] == nil then
+								skill[1].challenge_unlocked = true
+							else
+								skill[1].challenge_unlocked = false
+							end
+						end
+					end
+				end
+
 				new_weapon_added = true
 			end
 		end
 
 		if new_weapon_added then
-			self:_initialize_weapon_skill_challenges()
 			managers.savefile:set_resave_required()
 		end
 	end
