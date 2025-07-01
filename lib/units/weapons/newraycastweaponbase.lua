@@ -1114,7 +1114,7 @@ function NewRaycastWeaponBase:fire(from_pos, direction, dmg_mul, shoot_player, s
 
 	local ray_res = NewRaycastWeaponBase.super.fire(self, from_pos, mvec_direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul, target_unit)
 
-	self._spread_firing = (self._spread_firing or 0) + self:_get_fire_spread_add(shoot_player)
+	self._spread_firing = math.min((self._spread_firing or 0) + self:_get_fire_spread_add(shoot_player), self:weapon_tweak_data().spread.max or 2)
 	self._spread_last_shot_t = (weapon_tweak.fire_mode_data and weapon_tweak.fire_mode_data.fire_rate or 0) / self:fire_rate_multiplier() * (weapon_tweak.spread.recovery_wait_multiplier or 1)
 	self._recoil_firing = self:_get_fire_recoil()
 	self._recoil_last_shot_t = (weapon_tweak.fire_mode_data and weapon_tweak.fire_mode_data.fire_rate or 0) / self:fire_rate_multiplier() * (weapon_tweak.kick.recovery_wait_multiplier or 1)

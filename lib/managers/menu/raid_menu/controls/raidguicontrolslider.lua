@@ -1,6 +1,6 @@
 RaidGUIControlSlider = RaidGUIControlSlider or class(RaidGUIControl)
 RaidGUIControlSlider.DEFAULT_WIDTH = 576
-RaidGUIControlSlider.DEFAULT_HEIGHT = 64
+RaidGUIControlSlider.DEFAULT_HEIGHT = 32
 RaidGUIControlSlider.TEXT_PADDING = 16
 RaidGUIControlSlider.TEXT_COLOR = tweak_data.gui.colors.raid_grey
 RaidGUIControlSlider.TEXT_HIGHLIGHT_COLOR = tweak_data.gui.colors.raid_white
@@ -16,6 +16,14 @@ function RaidGUIControlSlider:init(parent, params)
 		Application:error("[RaidGUIControlSlider:init] Parameters not specified for slider " .. tostring(self._name))
 
 		return
+	end
+
+	if string.find(self._params.description, "\r\n") or string.find(self._params.description, "\n") then
+		RaidGUIControlSlider.DEFAULT_HEIGHT = 64
+		self._double_height = true
+	else
+		RaidGUIControlSlider.DEFAULT_HEIGHT = 32
+		self._double_height = false
 	end
 
 	self._value = self._params.value or 0

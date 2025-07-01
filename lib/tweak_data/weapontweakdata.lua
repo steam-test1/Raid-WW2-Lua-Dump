@@ -3435,6 +3435,7 @@ function WeaponTweakData:_init_sten_mk2(weapon_data)
 	self.sten.spread.per_shot_steelsight = 0.05
 	self.sten.spread.recovery = 8
 	self.sten.spread.recovery_wait_multiplier = 2
+	self.sten.spread.max = 2
 	self.sten.kick = {}
 	self.sten.kick.standing = {
 		1.2,
@@ -3601,6 +3602,7 @@ function WeaponTweakData:_init_thompson(weapon_data)
 	self.thompson.spread.per_shot_steelsight = 0.05
 	self.thompson.spread.recovery = 10
 	self.thompson.spread.recovery_wait_multiplier = 3
+	self.thompson.spread.max = 2
 	self.thompson.kick = {}
 	self.thompson.kick.standing = {
 		1,
@@ -3765,6 +3767,7 @@ function WeaponTweakData:_init_mp38(weapon_data)
 	self.mp38.spread.per_shot_steelsight = 0.048
 	self.mp38.spread.recovery = 10
 	self.mp38.spread.recovery_wait_multiplier = 2
+	self.mp38.spread.max = 2
 	self.mp38.kick = {}
 	self.mp38.kick.standing = {
 		2.4,
@@ -4718,6 +4721,7 @@ function WeaponTweakData:_init_dp28(weapon_data)
 	self.dp28.spread.per_shot_steelsight = 0.052
 	self.dp28.spread.recovery = 10
 	self.dp28.spread.recovery_wait_multiplier = 1
+	self.dp28.spread.max = 2
 	self.dp28.kick = {}
 	self.dp28.kick.standing = {
 		1.2,
@@ -4878,6 +4882,7 @@ function WeaponTweakData:_init_mg42(weapon_data)
 	self.mg42.spread.moving_steelsight = 3.13
 	self.mg42.spread.per_shot = 0.12
 	self.mg42.spread.per_shot_steelsight = 0.036
+	self.mg42.spread.max = 2
 	self.mg42.kick = {}
 	self.mg42.kick.standing = {
 		-1.2,

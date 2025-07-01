@@ -561,8 +561,8 @@ function CopDamage:damage_bullet(attack_data)
 					unit:character_damage():set_health(current_health + hp_pickup_amount)
 				end
 
-				if attack_data and attack_data.attacker_unit and attack_data.attacker_unit:sound() then
-					attack_data.attacker_unit:sound():play(tweak_data.warcry.sharpshooter.health_boost_sound)
+				if managers.hud and managers.hud._sound_source and managers.hud._sound_source.post_event then
+					managers.hud._sound_source:post_event(tweak_data.warcry.sharpshooter.health_boost_sound)
 				end
 			end
 

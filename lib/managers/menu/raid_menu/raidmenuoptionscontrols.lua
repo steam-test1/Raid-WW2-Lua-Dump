@@ -30,7 +30,7 @@ function RaidMenuOptionsControls:_layout_controls()
 	local start_y = 320
 	local default_width = 512
 
-	self.SLIDER_PADDING = RaidGuiBase.PADDING + 24
+	RaidMenuOptionsControls.SLIDER_PADDING = RaidGuiBase.PADDING + 24
 
 	local btn_keybinding_params = {
 		name = "btn_keybinding",
@@ -71,7 +71,7 @@ function RaidMenuOptionsControls:_layout_controls()
 		},
 		on_value_change_callback = callback(self, self, "on_value_change_camera_sensitivity_vertical"),
 		x = start_x,
-		y = look_sensitivity_horizontal_params.y + self.SLIDER_PADDING,
+		y = look_sensitivity_horizontal_params.y + (self._progress_bar_menu_camera_sensitivity_horizontal._double_height and RaidMenuOptionsControls.SLIDER_PADDING or RaidGuiBase.PADDING),
 	}
 
 	self._progress_bar_menu_camera_sensitivity_vertical = self._root_panel:slider(look_sensitivity_vertical_params)
@@ -86,7 +86,7 @@ function RaidMenuOptionsControls:_layout_controls()
 		},
 		on_value_change_callback = callback(self, self, "on_value_change_camera_zoom_sensitivity_horizontal"),
 		x = start_x,
-		y = look_sensitivity_vertical_params.y + self.SLIDER_PADDING,
+		y = look_sensitivity_vertical_params.y + (self._progress_bar_menu_camera_sensitivity_vertical._double_height and RaidMenuOptionsControls.SLIDER_PADDING or RaidGuiBase.PADDING),
 	}
 
 	self._progress_bar_menu_camera_zoom_sensitivity_horizontal = self._root_panel:slider(aiming_sensitivity_horizontal_params)
@@ -101,7 +101,7 @@ function RaidMenuOptionsControls:_layout_controls()
 		},
 		on_value_change_callback = callback(self, self, "on_value_change_camera_zoom_sensitivity_vertical"),
 		x = start_x,
-		y = aiming_sensitivity_horizontal_params.y + self.SLIDER_PADDING,
+		y = aiming_sensitivity_horizontal_params.y + (self._progress_bar_menu_camera_zoom_sensitivity_horizontal._double_height and RaidMenuOptionsControls.SLIDER_PADDING or RaidGuiBase.PADDING),
 	}
 
 	self._progress_bar_menu_camera_zoom_sensitivity_vertical = self._root_panel:slider(aiming_sensitivity_vertical_params)
@@ -116,7 +116,7 @@ function RaidMenuOptionsControls:_layout_controls()
 		},
 		w = default_width,
 		x = start_x,
-		y = aiming_sensitivity_vertical_params.y + self.SLIDER_PADDING,
+		y = aiming_sensitivity_vertical_params.y + (self._progress_bar_menu_camera_zoom_sensitivity_vertical._double_height and RaidMenuOptionsControls.SLIDER_PADDING or RaidGuiBase.PADDING),
 	}
 
 	self._toggle_menu_toggle_zoom_sensitivity = self._root_panel:toggle_button(separate_aiming_settings)

@@ -1214,7 +1214,7 @@ function ConnectionNetworkHandler:restore_health_by_percentage(health_percentage
 		return
 	end
 
-	if managers.player:player_unit() then
+	if managers.player:player_unit() and not managers.player:player_unit():character_damage():bleed_out() then
 		managers.player:player_unit():character_damage():restore_health(health_percentage / 100)
 	end
 end
