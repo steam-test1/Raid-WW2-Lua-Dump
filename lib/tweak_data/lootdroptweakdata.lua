@@ -368,6 +368,8 @@ function LootDropTweakData:_init_groups_challenges()
 		chance = 100,
 		value = self.loot_categories.category_halloween_2017,
 	}
+	self.loot_groups.loot_group_halloween_2017.min_loot_value = 9999998
+	self.loot_groups.loot_group_halloween_2017.max_loot_value = 9999999
 end
 
 function LootDropTweakData:_init_loot_values()
