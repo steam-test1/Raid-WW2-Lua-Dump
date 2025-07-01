@@ -241,6 +241,12 @@ function UpgradesTweakData:_create_boost_definitions()
 
 	self:_create_definition_levels("player_greed_loot_bonus", UpgradesTweakData.DEF_CAT_FEATURE, "greed_loot_bonus", UpgradesTweakData.UPG_CAT_PLAYER, true, self.values.player.greed_loot_bonus, self.description_data_types.generic_multiplier)
 
+	self.values.player.midas_gold_bar_quantity = {
+		1,
+	}
+
+	self:_create_definition("player_midas_gold_bar_quantity", UpgradesTweakData.DEF_CAT_FEATURE, "midas_gold_bar_quantity", UpgradesTweakData.UPG_CAT_PLAYER, false, 1)
+
 	self.values.team.player.warcry_team_damage_reduction_bonus_on_activate = {
 		1,
 		2,

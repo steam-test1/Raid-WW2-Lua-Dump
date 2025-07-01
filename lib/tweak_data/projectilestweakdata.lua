@@ -508,9 +508,15 @@ function ProjectilesTweakData:_init_gold_bar(tweak_data)
 	self.gold_bar.unit_dummy = "units/upd_candy/weapons/gre_gold_bar/wpn_tps_gre_gold_bar"
 	self.gold_bar.icon = "frag_grenade"
 	self.gold_bar.max_amount = 5
-	self.gold_bar.upgrade_amount = {
-		category = "player",
-		upgrade = "pack_mule_equipment_quantity",
+	self.gold_bar.upgrade_amounts = {
+		{
+			category = "player",
+			upgrade = "pack_mule_equipment_quantity",
+		},
+		{
+			category = "player",
+			upgrade = "midas_gold_bar_quantity",
+		},
 	}
 	self.gold_bar.pickup_filter = "gold_bar"
 	self.gold_bar.is_a_grenade = true

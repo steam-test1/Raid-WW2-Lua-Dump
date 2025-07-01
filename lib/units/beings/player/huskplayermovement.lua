@@ -518,12 +518,6 @@ function HuskPlayerMovement:enable_update()
 end
 
 function HuskPlayerMovement:sync_look_dir(fwd)
-	mvector3.normalize(fwd)
-
-	if self._vehicle then
-		mvector3.rotate_with(fwd, Rotation(-90, 0, 0))
-	end
-
 	self._sync_look_dir = fwd
 end
 

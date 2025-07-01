@@ -1030,7 +1030,7 @@ function VehicleDrivingExt:place_player_on_seat(player, seat_name, move, previou
 		self._interaction_enter_vehicle = false
 
 		managers.dialog:queue_dialog("gen_vehicle_good_to_go", {
-			done_cbk = nil,
+			[""] = nil,
 			skip_idle_check = true,
 		})
 	end
@@ -1344,7 +1344,7 @@ function VehicleDrivingExt:get_next_seat(player)
 	local next_seat = self._seats[seat.next_seat]
 
 	while next_seat and next_seat ~= seat do
-		if not next_seat.occupant or next_seat.occupant and next_seat.occupant:brain() then
+		if not next_seat.occupant or alive(next_seat.occupant) and next_seat.occupant:brain() then
 			return next_seat
 		end
 

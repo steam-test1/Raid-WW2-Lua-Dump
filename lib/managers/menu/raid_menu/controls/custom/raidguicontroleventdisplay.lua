@@ -67,7 +67,7 @@ function RaidGUIControlEventDisplay:_create_inner_panel()
 		h = self.INNER_HEIGHT,
 		halign = "grow",
 		layer = 1,
-		name = "weapon_challenge_inner_panel",
+		name = "event_inner_panel",
 		valign = "grow",
 		w = self._object:w() - self.INNER_PADDING,
 	})
@@ -81,9 +81,6 @@ function RaidGUIControlEventDisplay:_create_toggle()
 		description = self:translate("menu_enable_event_title", true),
 		layer = self._background:layer() + 1,
 		name = "event_checkbox",
-		on_menu_move = {
-			up = "drop_in_checkbox",
-		},
 		value = true,
 		y = 14,
 	})
@@ -241,6 +238,22 @@ function RaidGUIControlEventDisplay:set_event(event_name)
 		end
 
 		self._progress_text:set_text(progress_text)
+	end
+end
+
+function RaidGUIControlEventDisplay:highlight_on()
+	self._event_checkbox:set_selected(true)
+end
+
+function RaidGUIControlEventDisplay:confirm_pressed()
+	return self._event_checkbox:confirm_pressed()
+end
+
+function RaidGUIControlEventDisplay:move_up()
+	if self._selected and self._on_menu_move and self._on_menu_move.up then
+		self._event_checkbox:set_selected(false)
+
+		return self:_menu_move_to(self._on_menu_move.up, "up")
 	end
 end
 

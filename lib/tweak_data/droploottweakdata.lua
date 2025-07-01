@@ -41,7 +41,7 @@ function DropLootTweakData:_init_pickups_properties()
 	self.ammo_small = {}
 	self.ammo_small.ammo_multiplier = 1
 	self.candy_simple = {
-		ammo_multiplier = 1.2,
+		ammo_multiplier = 1.4,
 		candy_value = 1,
 		grenades_amount = 1,
 		health_restored = 20,
@@ -410,11 +410,11 @@ function DropLootTweakData:_init_basic_crate_tier()
 	self.basic_crate_tier.units.health.drop_rate = 40
 	self.basic_crate_tier.units.health.subtypes = {}
 	self.basic_crate_tier.units.health.subtypes.medium = {
-		drop_rate = 30,
+		drop_rate = 35,
 		unit = "health_medium",
 	}
 	self.basic_crate_tier.units.health.subtypes.small = {
-		drop_rate = 60,
+		drop_rate = 65,
 		unit = "health_small",
 	}
 	self.basic_crate_tier.units.grenade = {}
@@ -432,11 +432,11 @@ function DropLootTweakData:_init_basic_crate_tier()
 	self.basic_crate_tier.units.ammo.drop_rate = 45
 	self.basic_crate_tier.units.ammo.subtypes = {}
 	self.basic_crate_tier.units.ammo.subtypes.medium = {
-		drop_rate = 30,
+		drop_rate = 35,
 		unit = "ammo_medium",
 	}
 	self.basic_crate_tier.units.ammo.subtypes.small = {
-		drop_rate = 60,
+		drop_rate = 65,
 		unit = "ammo_small",
 	}
 end

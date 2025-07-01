@@ -469,6 +469,10 @@ function PlayerTurret:_update_movement(t, dt)
 	return
 end
 
+function PlayerTurret:force_change_weapon_slot(slot, instant)
+	return
+end
+
 function PlayerTurret:_update_fwd_ray()
 	PlayerTurret.super._update_fwd_ray(self, self._use_dof)
 end

@@ -824,3 +824,7 @@ function PlayerDriving:smoothstep(a, b, step, n)
 
 	return x
 end
+
+function PlayerDriving:force_change_weapon_slot(slot, instant)
+	return
+end

@@ -364,10 +364,15 @@ function MissionSelectionGui:_layout_event()
 
 	self._event_display = self._right_panel:create_custom_control(RaidGUIControlEventDisplay, {
 		name = "special_event_display",
+		on_menu_move = {
+			up = "team_ai_checkbox",
+		},
 	})
 
 	self._event_display:set_bottom(self._right_panel:h())
 	self._event_display:set_event(event_name)
+
+	self._team_ai_checkbox._on_menu_move.down = "special_event_display"
 end
 
 function MissionSelectionGui:_layout_operation_tutorialization()

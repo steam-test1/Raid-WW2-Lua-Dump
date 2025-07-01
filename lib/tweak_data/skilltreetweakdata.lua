@@ -443,6 +443,7 @@ function SkillTreeTweakData:_init_skill_list_boosts()
 		upgrades = {
 			{
 				"player_greed_loot_bonus_1",
+				"player_midas_gold_bar_quantity",
 			},
 			{
 				"player_greed_loot_bonus_2",

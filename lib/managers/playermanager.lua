@@ -1204,7 +1204,7 @@ function PlayerManager:activate_temporary_upgrade(category, upgrade)
 
 		if tweak_data.gui.icons[icon_id] then
 			managers.hud:add_status_effect({
-				color = tweak_data.gui.colors.progress_green,
+				color = tweak_data.gui.colors.raid_skill_boost,
 				icon = icon_id,
 				id = upgrade,
 				lifetime = lifetime,
@@ -1240,7 +1240,7 @@ function PlayerManager:activate_temporary_upgrade_by_level(category, upgrade, le
 
 		if tweak_data.gui.icons[icon_id] then
 			managers.hud:add_status_effect({
-				color = tweak_data.gui.colors.progress_green,
+				color = tweak_data.gui.colors.raid_skill_boost,
 				icon = icon_id,
 				id = upgrade,
 				lifetime = lifetime,
@@ -4322,6 +4322,12 @@ function PlayerManager:sync_move_to_next_seat(vehicle, peer_id, player, seat_nam
 end
 
 function PlayerManager:_move_to_next_seat(vehicle, peer_id, player, seat, previous_seat, previous_occupant)
+	if player:movement():current_state_name() ~= "driving" then
+		Application:error("[PlayerManager:_move_to_next_seat] Tried to swap seat for character not in a vehicle!")
+
+		return
+	end
+
 	self._global.synced_vehicle_data[peer_id] = {
 		seat = seat.name,
 		vehicle_unit = vehicle,

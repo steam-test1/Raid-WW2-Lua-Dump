@@ -45,7 +45,7 @@ function RaycastWeaponBase:init(unit)
 	self._shoot_through_data = {
 		from = Vector3(),
 		kills = 0,
-		stop_shooting = nil,
+		trigger_held = nil,
 	}
 	self._can_shoot_through_shield = tweak_data.weapon[self._name_id].can_shoot_through_shield
 	self._can_shoot_through_enemy = tweak_data.weapon[self._name_id].can_shoot_through_enemy
@@ -1645,7 +1645,7 @@ function RaycastWeaponBase:on_reload()
 		local reload_full_magazine = managers.player:has_category_upgrade("weapon", "clipazines_reload_full_magazine")
 
 		if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_PLAYER_RANDOM_RELOAD) then
-			ammo_max_per_clip = math.random(0, ammo_max_per_clip)
+			ammo_max_per_clip = math.random(1, ammo_max_per_clip)
 		end
 
 		if reload_full_magazine then

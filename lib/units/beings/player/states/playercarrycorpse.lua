@@ -142,3 +142,7 @@ function PlayerCarryCorpse:_update_check_actions(t, dt)
 	self:_check_comm_wheel(t, input)
 	self:_check_stats_screen(t, dt, input)
 end
+
+function PlayerCarryCorpse:force_change_weapon_slot(slot, instant)
+	return
+end
