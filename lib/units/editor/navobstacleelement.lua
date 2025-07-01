@@ -195,6 +195,7 @@ function NavObstacleElement:_add_unit(unit, all_object_names, obstacle_list_data
 
 	panel_sizer:add(h_sizer, 0, 1, "EXPAND,LEFT")
 
+	local default_obj_idstr = self._get_unit_default_obstacle_object(unit) or obstacle_list_data.obj_name
 	local obj_names_params = {
 		ctrlr_proportions = 2,
 		name = "Object:",
@@ -205,7 +206,7 @@ function NavObstacleElement:_add_unit(unit, all_object_names, obstacle_list_data
 		options = all_object_names,
 		panel = panel,
 		sizer = h_sizer,
-		value = self._get_indented_obj_name(nil, unit, obstacle_list_data.obj_name),
+		value = self._get_indented_obj_name(nil, unit, default_obj_idstr),
 	}
 	local obj_names = CoreEws.combobox(obj_names_params)
 
@@ -352,4 +353,8 @@ function NavObstacleElement._get_indented_obj_name(obj, parent, obj_name)
 	end
 
 	return obj_name
+end
+
+function NavObstacleElement._get_unit_default_obstacle_object(unit)
+	return unit:unit_data().default_obstacle_object and Idstring(unit:unit_data().default_obstacle_object) or nil
 end

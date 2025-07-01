@@ -69,6 +69,7 @@ function LevelSettingsLayer:build_panel(notebook)
 	self._sizer = EWS:BoxSizer("VERTICAL")
 
 	self:_add_chunk_name(self._ews_panel, self._sizer)
+	self:_add_simulation_mission_flag(self._sizer)
 	self:_add_simulation_level_id(self._sizer)
 	self:_add_simulation_mission_filter(self._sizer)
 	self._main_sizer:add(self._sizer, 1, 0, "EXPAND")
@@ -87,6 +88,35 @@ function LevelSettingsLayer:_add_simulation_level_id(sizer)
 		tooltip = "Select a level id to use when simulating the level.",
 		value = "none",
 		options = rawget(_G, "tweak_data").levels:get_level_index(),
+		panel = self._ews_panel,
+		sizer = sizer,
+	}
+	local ctrlr = CoreEws.combobox(params)
+
+	ctrlr:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "_set_data"), {
+		ctrlr = ctrlr,
+		value = id,
+	})
+
+	self._settings_ctrlrs[id] = {
+		default = "none",
+		type = "combobox",
+		ctrlr = ctrlr,
+		params = params,
+	}
+end
+
+function LevelSettingsLayer:_add_simulation_mission_flag(sizer)
+	local id = "simulation_mission_flag"
+	local params = {
+		ctrlr_proportions = 2,
+		default = "none",
+		name = "Simulation mission flag:",
+		name_proportions = 1,
+		sorted = true,
+		tooltip = "Select a mission flag to use when simulating the level.",
+		value = "none",
+		options = rawget(_G, "tweak_data").operations:get_all_mission_flags(),
 		panel = self._ews_panel,
 		sizer = sizer,
 	}

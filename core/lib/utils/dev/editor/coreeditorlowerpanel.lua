@@ -233,6 +233,7 @@ function CoreEditor:unit_output(unit)
 
 		text = text .. "NameID:" .. t .. unit:unit_data().name_id .. n
 		text = text .. "Type / Slot:" .. t .. unit:type():s() .. " / " .. unit:slot() .. n
+		text = text .. "Portaled:" .. t .. t .. tostring(managers.portal:unit_in_any_unit_group(unit)) .. n
 		text = text .. "Mass:" .. t .. t .. unit:mass() .. n
 		text = text .. "Author:" .. t .. t .. unit:author():s() .. n
 		text = text .. "Damage types:" .. t .. t .. managers.sequence:editor_info(unit:name()) .. n
@@ -293,7 +294,7 @@ end
 function CoreEditor:_unit_materials(unit)
 	local names = {}
 
-	for _, material in ipairs(unit:get_objects_by_type(Idstring("material"))) do
+	for _, material in ipairs(unit:get_objects_by_type(IDS_MATERIAL)) do
 		if not table.contains(names, material:name():s()) then
 			table.insert(names, material:name():s())
 		end

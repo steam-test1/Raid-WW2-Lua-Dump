@@ -185,6 +185,7 @@ function WeaponInventoryTweakData:init()
 		},
 		{
 			droppable = true,
+			is_challenge_reward = true,
 			redeemed_gold = 5,
 			redeemed_xp = 80,
 			slot = 8,

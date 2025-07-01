@@ -2,7 +2,7 @@ require("lib/states/GameState")
 
 BootupState = BootupState or class(GameState)
 BootupState.MAX_WAIT_TIME = 25
-BootupState.NUM_SPLASH_SCREENS = 2
+BootupState.NUM_SPLASH_SCREENS = 3
 
 function BootupState:init(game_state_machine, setup)
 	GameState.init(self, "bootup", game_state_machine)
@@ -18,8 +18,7 @@ function BootupState:setup()
 	local res = RenderSettings.resolution
 	local safe_rect_pixels = managers.gui_data:scaled_size()
 	local gui = Overlay:gui()
-	local is_win32 = _G.IS_PC
-	local is_x360 = _G.IS_XB360
+	local is_win32 = IS_PC
 	local show_esrb = false
 
 	self._full_workspace = gui:create_screen_workspace()
@@ -29,40 +28,63 @@ function BootupState:setup()
 	self._full_workspace:hide()
 	managers.gui_data:layout_workspace(self._workspace)
 
-	local esrb_y = safe_rect_pixels.height / 1.9
+	local image_w = safe_rect_pixels.width
+	local image_h = safe_rect_pixels.height
 	local can_skip = true
 	local has_full_game = managers.dlc:has_full_game()
 	local legal_text = managers.localization:text("legal_text")
 	local item_layer = 10
+	local fade_time = 0.85
 
 	self._play_data_list = {}
 
+	if not is_win32 then
+		table.insert(self._play_data_list, {
+			can_skip = false,
+			duration = 6,
+			height = 200,
+			width = 600,
+			fade_in = fade_time,
+			fade_out = fade_time,
+			gui = Idstring("guis/autosave_warning"),
+			layer = item_layer,
+		})
+	end
+
 	table.insert(self._play_data_list, {
-		can_skip = true,
-		padding = 200,
-		video = "movies/vanilla/splash/splash",
-		height = res.y,
-		layer = item_layer,
-		width = res.x,
-	})
-	table.insert(self._play_data_list, {
-		can_skip = true,
-		padding = 200,
-		video = "movies/vanilla/raid_trailer_1080p_final",
-		height = res.y,
-		layer = item_layer,
-		width = res.x,
-	})
-	table.insert(self._play_data_list, {
-		fade_in = 1.25,
-		fade_out = 1.25,
-		texture = "guis/textures/esrb_rating",
+		duration = 4.5,
 		can_skip = has_full_game,
-		duration = show_esrb and 6.5 or 0,
-		height = esrb_y,
+		fade_in = fade_time,
+		fade_out = fade_time,
+		height = image_h,
 		layer = item_layer,
-		visible = show_esrb,
-		width = esrb_y * 2,
+		texture = tweak_data.gui.icons.bootup_logo_sb.texture,
+		texture_rect = tweak_data.gui.icons.bootup_logo_sb.texture_rect,
+		width = image_h,
+	})
+	table.insert(self._play_data_list, {
+		auto_skip = true,
+		duration = 4.5,
+		can_skip = has_full_game,
+		fade_in = fade_time,
+		fade_out = fade_time,
+		height = image_h,
+		layer = item_layer,
+		texture = tweak_data.gui.icons.bootup_logo_lgl.texture,
+		texture_rect = tweak_data.gui.icons.bootup_logo_lgl.texture_rect,
+		width = image_h,
+	})
+	table.insert(self._play_data_list, {
+		auto_skip = true,
+		duration = 5,
+		can_skip = has_full_game,
+		fade_in = fade_time,
+		fade_out = fade_time,
+		height = image_w / 2,
+		layer = item_layer,
+		texture = tweak_data.gui.icons.bootup_logo_third_parties.texture,
+		texture_rect = tweak_data.gui.icons.bootup_logo_third_parties.texture_rect,
+		width = image_w,
 	})
 
 	local lato_path = tweak_data.gui:get_font_path(tweak_data.gui.fonts.lato, tweak_data.gui.font_sizes.size_16)
@@ -88,7 +110,7 @@ function BootupState:setup()
 		font = tweak_data.gui:get_font_path(MenuTitlescreenState.FONT, press_any_key_font_size),
 		font_size = press_any_key_font_size,
 		h = press_any_key_font_size,
-		text = utf8.to_upper(managers.localization:text(_G.IS_PC and "press_any_key" or "press_any_key_to_skip_controller")),
+		text = utf8.to_upper(managers.localization:text(IS_PC and "press_any_key" or "press_any_key_to_skip_controller")),
 		w = self._full_panel:w(),
 	}
 
@@ -97,7 +119,7 @@ function BootupState:setup()
 	local _, _, _, h = self._press_any_key_text:text_rect()
 
 	self._press_any_key_text:set_h(h)
-	self._press_any_key_text:set_center_y(self._full_panel:h() * MenuTitlescreenState.LEGAL_TEXT_CENTER_Y)
+	self._press_any_key_text:set_center_y(self._full_panel:h() - MenuTitlescreenState.LEGAL_TEXT_CENTER_Y)
 	self._press_any_key_text:set_alpha(0)
 
 	self._controller_list = {}
@@ -146,7 +168,7 @@ end
 function BootupState:update(t, dt)
 	local now = Application:time()
 
-	self.next_message_t = self.next_message_t or Application:time() + 1
+	self.next_message_t = self.next_message_t or now + 1
 
 	if now > self.next_message_t and not PackageManager:all_packages_loaded() then
 		Application:debug("[BootupState:update] Waiting for packages to load...")
@@ -154,7 +176,7 @@ function BootupState:update(t, dt)
 		self.next_message_t = now + 1
 	end
 
-	if not _G.IS_PC and PackageManager:all_packages_loaded() and self._play_index == 2 and self._press_any_key_text:alpha() == 0 then
+	if not IS_PC and PackageManager:all_packages_loaded() and self._play_index == 2 and self._press_any_key_text:alpha() == 0 then
 		self._full_panel:animate(callback(self, self, "_animate_press_any_key"))
 	end
 
@@ -240,7 +262,7 @@ function BootupState:apply_fade()
 end
 
 function BootupState:is_skipped()
-	if not _G.IS_PC and not PackageManager:all_packages_loaded() and self._play_index > 1 and self._bootup_t + BootupState.MAX_WAIT_TIME > Application:time() then
+	if not IS_PC and not PackageManager:all_packages_loaded() and self._play_index > 1 and self._bootup_t + BootupState.MAX_WAIT_TIME > Application:time() then
 		return false
 	end
 
@@ -289,8 +311,9 @@ function BootupState:play_next(is_skipped)
 	self._play_index = (self._play_index or 0) + 1
 	self._play_data = self._play_data_list[self._play_index]
 
-	if self._play_index == 2 then
-		Application:set_file_streamer_settings(4194304, 1)
+	if self._play_index == 1 then
+		managers.dyn_resource:set_file_streaming_profile(self._file_streaming_profile())
+		Application:debug("[BootupState:play_next] file streamer started")
 	end
 
 	if is_skipped then
@@ -360,6 +383,7 @@ function BootupState:play_next(is_skipped)
 			self._gui_obj:play()
 		elseif self._play_data.texture then
 			gui_config.texture = self._play_data.texture
+			gui_config.texture_rect = self._play_data.texture_rect
 			gui_config.layer = self._play_data.layer or gui_config.layer
 			self._gui_obj = self._panel:bitmap(gui_config)
 		elseif self._play_data.text then
@@ -428,4 +452,8 @@ end
 
 function BootupState:is_joinable()
 	return false
+end
+
+function BootupState._file_streaming_profile()
+	return DynamicResourceManager.STREAMING_PROFILE_LOADING
 end

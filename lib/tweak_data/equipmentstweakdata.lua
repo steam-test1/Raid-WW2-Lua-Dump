@@ -16,16 +16,6 @@ function EquipmentsTweakData:init()
 		},
 	}
 	self.specials = {}
-	self.specials.cable_tie = {
-		icon = "equipment_cable_ties",
-		quantity = 2,
-		text_id = "debug_equipment_cable_tie",
-		extra_quantity = {
-			category = "extra_cable_tie",
-			equipped_upgrade = "extra_cable_tie",
-			upgrade = "quantity",
-		},
-	}
 	self.specials.planks = {
 		icon = "equipment_planks",
 		sync_possession = true,
@@ -43,12 +33,8 @@ function EquipmentsTweakData:init()
 		sync_possession = true,
 		text_id = "hud_equipment_crowbar",
 	}
-	self.specials.crowbar_stack = {
-		icon = "equipment_crowbar",
-		sync_possession = true,
-		text_id = "hud_equipment_crowbar",
-		transfer_quantity = 4,
-	}
+	self.specials.crowbar_stack = deep_clone(self.specials.crowbar)
+	self.specials.crowbar_stack.transfer_quantity = 4
 	self.specials.dynamite = {
 		icon = "equipment_panel_dynamite_stick",
 		sync_possession = true,
@@ -238,7 +224,7 @@ function EquipmentsTweakData:init()
 		transfer_quantity = 4,
 	}
 	self.specials.scrap_parts = {
-		icon = "equipment_scrap_parts",
+		icon = "equipment_panel_tools",
 		max_quantity = 100,
 		quantity = 1,
 		sync_possession = true,
@@ -293,11 +279,9 @@ function EquipmentsTweakData:init()
 	self.max_amount = {
 		ammo_bag = 2,
 		asset_ammo_bag = 4,
-		asset_bodybags_bag = 3,
 		asset_doctor_bag = 3,
 		asset_grenade_crate = 3,
 		asset_sentry_gun = 4,
-		bodybags_bag = 2,
 		doctor_bag = 2,
 		ecm_jammer = 2,
 		first_aid_kit = 14,

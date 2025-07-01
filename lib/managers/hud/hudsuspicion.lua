@@ -25,7 +25,7 @@ function HUDSuspicion:init(hud, sound_source)
 		blend_mode = "add",
 		h = 256,
 		name = "ring",
-		texture = "ui/ingame/textures/hud/hud_circle",
+		texture = "ui/icons/hud_circle",
 		valign = "center",
 		visible = true,
 		w = 256,

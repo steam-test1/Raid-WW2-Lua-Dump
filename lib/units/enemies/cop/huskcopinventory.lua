@@ -16,15 +16,15 @@ function HuskCopInventory:add_unit_by_name(new_unit_name, equip)
 	local setup_data = {}
 
 	setup_data.user_unit = self._unit
+	setup_data.expend_ammo = false
+	setup_data.hit_slotmask = managers.slot:get_mask("bullet_impact_targets_no_AI")
+	setup_data.hit_player = true
+	setup_data.user_sound_variant = tweak_data.character[self._unit:base()._tweak_table].weapon_voice
 	setup_data.ignore_units = {
 		self._unit,
 		new_unit,
 		self._shield_unit,
 	}
-	setup_data.expend_ammo = false
-	setup_data.hit_slotmask = managers.slot:get_mask("bullet_impact_targets_no_AI")
-	setup_data.hit_player = true
-	setup_data.user_sound_variant = tweak_data.character[self._unit:base()._tweak_table].weapon_voice
 
 	new_unit:base():setup(setup_data)
 	CopInventory.add_unit(self, new_unit, equip)

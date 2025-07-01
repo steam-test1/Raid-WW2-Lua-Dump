@@ -72,7 +72,7 @@ function WeaponSelectionGui:close()
 
 	if self._loading_units then
 		for unit_name, unit_loading_flag in pairs(self._loading_units) do
-			managers.dyn_resource:unload(Idstring("unit"), Idstring(unit_name), DynamicResourceManager.DYN_RESOURCES_PACKAGE, false)
+			managers.dyn_resource:unload(IDS_UNIT, Idstring(unit_name), DynamicResourceManager.DYN_RESOURCES_PACKAGE, false)
 		end
 	end
 
@@ -113,11 +113,11 @@ function WeaponSelectionGui:_layout()
 	self:_layout_equip_button()
 	self:_layout_skill_panel()
 	self:_layout_rotate_unit()
-	self:_layout_scope_switch()
 	self:_layout_available_points()
 	self:_layout_upgrade_button()
 	self:_layout_skins_button()
 	self:_layout_weapon_name()
+	self:_layout_weapon_desc()
 	self:bind_controller_inputs_choose_weapon()
 	self:set_weapon_select_allowed(true)
 	self._weapon_list:set_selected(true, true)
@@ -179,8 +179,7 @@ function WeaponSelectionGui:_layout_category_tabs()
 			{
 				name = "tab_primary",
 				breadcrumb = {
-					category = BreadcrumbManager.CATEGORY_WEAPON_PRIMARY,
-					check_callback = callback(managers.weapon_skills, managers.weapon_skills, "has_new_weapon_upgrades", {
+					check_callback = callback(managers.weapon_skills, managers.weapon_skills, "has_weapon_breadcrumbs", {
 						weapon_category = WeaponInventoryManager.CATEGORY_NAME_PRIMARY,
 					}),
 				},
@@ -190,8 +189,7 @@ function WeaponSelectionGui:_layout_category_tabs()
 			{
 				name = "tab_secondary",
 				breadcrumb = {
-					category = BreadcrumbManager.CATEGORY_WEAPON_SECONDARY,
-					check_callback = callback(managers.weapon_skills, managers.weapon_skills, "has_new_weapon_upgrades", {
+					check_callback = callback(managers.weapon_skills, managers.weapon_skills, "has_weapon_breadcrumbs", {
 						weapon_category = WeaponInventoryManager.CATEGORY_NAME_SECONDARY,
 					}),
 				},
@@ -340,7 +338,7 @@ function WeaponSelectionGui:_layout_equip_button()
 
 	self._equip_disabled_button = self._weapon_selection_panel:short_primary_button_disabled(equip_disabled_button_params)
 
-	if managers.controller:is_xbox_controller_present() then
+	if managers.controller:is_controller_present() then
 		self._equip_button:hide()
 		self._equip_disabled_button:hide()
 	end
@@ -465,31 +463,6 @@ function WeaponSelectionGui:_layout_rotate_unit()
 	self._rotate_weapon = self._root_panel:rotate_unit(params_rotate_weapon)
 end
 
-function WeaponSelectionGui:_layout_scope_switch()
-	local scope_switch_params = {
-		align = "right",
-		h = 66,
-		layer = 1,
-		name = "scope_switch",
-		text_align = "right",
-		w = 192,
-		x = 420,
-		y = 180,
-		description = self:translate("menu_enable_disable_scope", true),
-		on_click_callback = callback(self, self, "on_enable_scope_click"),
-	}
-
-	self._scope_switch = self._root_panel:switch_button(scope_switch_params)
-end
-
-function WeaponSelectionGui:toggle_scope_switch()
-	self._scope_switch:confirm_pressed()
-end
-
-function WeaponSelectionGui:toggle_weapon_parts()
-	self._weapon_parts_toggle:confirm_pressed()
-end
-
 function WeaponSelectionGui:_layout_available_points()
 	local available_points_params = {
 		h = 90,
@@ -583,8 +556,8 @@ function WeaponSelectionGui:_get_skins_list()
 				local name_id = tweak_data.weapon:get_weapon_skin_name_id(skin)
 
 				table.insert(list, {
-					info = utf8.to_upper(managers.localization:text("menu_weapon_skin_" .. name_id)),
-					text = utf8.to_upper(managers.localization:text("menu_weapon_skin_" .. name_id)),
+					info = utf8.to_upper(managers.localization:text(name_id)),
+					text = utf8.to_upper(managers.localization:text(name_id)),
 					value = skin,
 				})
 			end
@@ -602,6 +575,7 @@ function WeaponSelectionGui:on_skins_button_click(item)
 	managers.weapon_inventory:set_weapons_skin(weapon_factory_id, item.value)
 	Application:debug("[WeaponSelectionGui] on_skins_button_click", weapon_factory_id, item.value)
 	self:_recreate_and_show_weapon_parts()
+	self:_update_weapon_stats(false)
 	managers.menu_component:post_event("weapon_click")
 	managers.savefile:save_game(Global.savefile_manager.save_progress_slot)
 end
@@ -640,7 +614,7 @@ function WeaponSelectionGui:_show_weapon_list_panel()
 			if self._preloaded_weapon_part_names[weapon_part_name] then
 				weapon_part_unit_path = tweak_data.weapon.factory.parts[weapon_part_name].unit
 
-				managers.dyn_resource:unload(Idstring("unit"), Idstring(weapon_part_unit_path), DynamicResourceManager.DYN_RESOURCES_PACKAGE, false)
+				managers.dyn_resource:unload(IDS_UNIT, Idstring(weapon_part_unit_path), DynamicResourceManager.DYN_RESOURCES_PACKAGE, false)
 			end
 		end
 	end
@@ -667,23 +641,31 @@ function WeaponSelectionGui:_layout_weapon_name()
 	self._weapon_name_label = self._root_panel:label(weapon_name_params)
 
 	self._weapon_name_label:set_right(self._root_panel:right())
-	self._weapon_name_label:set_bottom(58)
+	self._weapon_name_label:set_bottom(100)
 end
 
-function WeaponSelectionGui:_update_scope_switch()
-	if self._scope_switch then
-		self._scope_switch:hide()
-	end
-end
+function WeaponSelectionGui:_layout_weapon_desc()
+	local font_size = tweak_data.gui.font_sizes.size_24
+	local weapon_name_params = {
+		align = "right",
+		name = "weapon_desc",
+		text = "Despite Sterlings attitude he is infact a right bugger.\nSlap his buns for me.\nOk but seriously now what is up with space?\nI am not joking about the buns thing.",
+		vertical = "top",
+		w = 520,
+		word_wrap = true,
+		wrap = true,
+		x = 1500,
+		y = 0,
+		color = tweak_data.gui.colors.raid_dirty_white,
+		font = tweak_data.gui.fonts.din_compressed,
+		font_size = font_size,
+		h = font_size * 6,
+	}
 
-function WeaponSelectionGui:on_toggle_weapon_parts_click()
-	Application:trace("[WeaponSelectionGui:on_toggle_weapon_parts_click] ", self._weapon_parts_toggle:get_value())
+	self._weapon_desc_label = self._root_panel:label(weapon_name_params)
 
-	local is_toggle_button_active = self._weapon_parts_toggle:get_value()
-
-	if self._selected_weapon_id then
-		self:_recreate_and_show_weapon_parts()
-	end
+	self._weapon_desc_label:set_right(self._root_panel:right())
+	self._weapon_desc_label:set_top(self._weapon_name_label:bottom())
 end
 
 function WeaponSelectionGui:on_weapon_category_selected(selected_category)
@@ -800,7 +782,7 @@ function WeaponSelectionGui:data_source_weapon_list()
 					if weapon_data.unlocked then
 						breadcrumb = {
 							category = breadcrumb_category,
-							check_callback = callback(managers.weapon_skills, managers.weapon_skills, "has_new_weapon_upgrades", {
+							check_callback = callback(managers.weapon_skills, managers.weapon_skills, "has_weapon_breadcrumbs", {
 								weapon_category = weapon_category,
 								weapon_id = weapon_data.weapon_id,
 							}),
@@ -905,18 +887,6 @@ function WeaponSelectionGui:on_equip_button_click()
 	end
 end
 
-function WeaponSelectionGui:on_enable_scope_click()
-	local checked = self._scope_switch:get_value()
-
-	managers.weapon_skills:set_player_using_scope(self._selected_weapon_id, checked)
-
-	local weapon_id = managers.weapon_inventory:get_equipped_primary_weapon_id()
-
-	managers.weapon_skills:recreate_weapon_blueprint(weapon_id, WeaponInventoryManager.BM_CATEGORY_PRIMARY_ID, nil, true)
-	self:_recreate_and_show_weapon_parts()
-	self:_equip_weapon()
-end
-
 function WeaponSelectionGui:on_upgrade_button_click()
 	if not self._weapon_select_allowed then
 		return
@@ -934,7 +904,7 @@ function WeaponSelectionGui:on_upgrade_button_click()
 	for _, weapon_part_name in ipairs(weapon_part_names) do
 		weapon_part_unit_path = tweak_data.weapon.factory.parts[weapon_part_name].unit
 
-		managers.dyn_resource:load(Idstring("unit"), Idstring(weapon_part_unit_path), DynamicResourceManager.DYN_RESOURCES_PACKAGE, callback(self, self, "_on_weapon_part_unit_loaded", weapon_part_name))
+		managers.dyn_resource:load(IDS_UNIT, Idstring(weapon_part_unit_path), DynamicResourceManager.DYN_RESOURCES_PACKAGE, callback(self, self, "_on_weapon_part_unit_loaded", weapon_part_name))
 	end
 
 	self._weapon_selection_panel:hide()
@@ -1103,7 +1073,8 @@ function WeaponSelectionGui:_update_weapon_stats(reset_applied_stats)
 	local selected_weapon_data = self._weapon_list:selected_item():data().value
 	local weapon_name = ""
 	local weapon_category = managers.weapon_inventory:get_weapon_category_by_weapon_category_id(self._selected_weapon_category_id)
-	local weapon_string = ""
+	local weapon_name_string = ""
+	local weapon_desc_string = ""
 
 	if weapon_category == WeaponInventoryManager.BM_CATEGORY_PRIMARY_NAME or weapon_category == WeaponInventoryManager.BM_CATEGORY_SECONDARY_NAME then
 		local ammo_max_multiplier = 1
@@ -1114,6 +1085,8 @@ function WeaponSelectionGui:_update_weapon_stats(reset_applied_stats)
 			ammo_max_multiplier = managers.player:upgrade_value("player", "secondary_ammo_increase", 1)
 		end
 
+		ammo_max_multiplier = ammo_max_multiplier * managers.player:upgrade_value("player", "pack_mule_ammo_total_increase", 1)
+
 		local base_stats, mods_stats, skill_stats = managers.weapon_inventory:get_weapon_stats(selected_weapon_data.weapon_id, weapon_category, selected_weapon_data.slot, nil)
 		local damage = f2s(base_stats.damage.value) + f2s(skill_stats.damage.value)
 		local magazine = f2s(base_stats.magazine.value) + f2s(skill_stats.magazine.value)
@@ -1121,7 +1094,11 @@ function WeaponSelectionGui:_update_weapon_stats(reset_applied_stats)
 		local fire_rate = f2s(base_stats.fire_rate.value) + f2s(skill_stats.fire_rate.value)
 		local accuracy = f2s(100 / (1 + tweak_data.weapon[selected_weapon_data.weapon_id].spread.steelsight)) + f2s(skill_stats.spread.value)
 		local stability = f2s(base_stats.recoil.value) + f2s(skill_stats.recoil.value)
-		local accuracy_as_spread = tweak_data.weapon[selected_weapon_data.weapon_id].category == WeaponTweakData.WEAPON_CATEGORY_SHOTGUN
+		local accuracy_as_spread = false
+
+		if tweak_data.weapon[selected_weapon_data.weapon_id].category == WeaponTweakData.WEAPON_CATEGORY_SHOTGUN then
+			accuracy_as_spread = true
+		end
 
 		if reset_applied_stats then
 			self._weapon_stats:set_applied_stats({
@@ -1145,8 +1122,17 @@ function WeaponSelectionGui:_update_weapon_stats(reset_applied_stats)
 			total_ammo_modified_value = total_ammo,
 		})
 
-		weapon_name = tweak_data.weapon[selected_weapon_data.weapon_id].name_id
-		weapon_string = self:translate(weapon_name, true) .. " - " .. self:translate("weapon_catagory_" .. tweak_data.weapon[selected_weapon_data.weapon_id].category, true)
+		local weapon_factory_id = managers.weapon_factory:get_factory_id_by_weapon_id(selected_weapon_data.weapon_id)
+		local weapon_skin = managers.weapon_inventory:get_weapons_skin(weapon_factory_id)
+
+		if weapon_skin and weapon_skin ~= "default" then
+			weapon_name = tweak_data.weapon.weapon_skins[weapon_skin].name_id
+		else
+			weapon_name = tweak_data.weapon[selected_weapon_data.weapon_id].name_id
+		end
+
+		weapon_name_string = self:translate(weapon_name, true) .. " - " .. self:translate("weapon_catagory_" .. tweak_data.weapon[selected_weapon_data.weapon_id].category, true)
+		weapon_desc_string = self:translate(weapon_name .. "_desc", true)
 	elseif weapon_category == WeaponInventoryManager.BM_CATEGORY_MELEE_NAME then
 		local base_stats, mods_stats, skill_stats = managers.weapon_inventory:get_melee_weapon_stats(selected_weapon_data.weapon_id)
 		local damage = f2s(base_stats.damage.min_value) .. "-" .. f2s(base_stats.damage.max_value)
@@ -1157,21 +1143,28 @@ function WeaponSelectionGui:_update_weapon_stats(reset_applied_stats)
 		self._melee_weapon_stats:set_stats(damage, knockback, range, charge_time)
 
 		weapon_name = tweak_data.blackmarket.melee_weapons[selected_weapon_data.weapon_id].name_id
-		weapon_string = self:translate(weapon_name, true)
 	elseif weapon_category == WeaponInventoryManager.BM_CATEGORY_GRENADES_NAME then
 		local proj_tweak_data = tweak_data.projectiles[selected_weapon_data.weapon_id]
 		local damage = f2s(proj_tweak_data.damage or 0)
-		local range = f2s(proj_tweak_data.range)
+		local range = f2s(proj_tweak_data.range or 0)
 		local distance = f2s(proj_tweak_data.launch_speed or 250)
+		local capacity = f2s(proj_tweak_data.max_amount or 0)
 
 		weapon_name = proj_tweak_data.name_id
 
-		self._grenade_weapon_stats:set_stats(damage, range, distance)
-
-		weapon_string = self:translate(weapon_name, true)
+		self._grenade_weapon_stats:set_stats(damage, range, distance, capacity)
 	end
 
-	self._weapon_name_label:set_text(weapon_string)
+	if weapon_name_string == "" then
+		weapon_name_string = self:translate(weapon_name, true)
+	end
+
+	if weapon_desc_string == "" then
+		weapon_desc_string = self:translate(weapon_name .. "_desc", true)
+	end
+
+	self._weapon_name_label:set_text(weapon_name_string)
+	self._weapon_desc_label:set_text(weapon_desc_string)
 end
 
 function WeaponSelectionGui:_recreate_and_show_weapon_parts(temp_skills)
@@ -1239,11 +1232,6 @@ function WeaponSelectionGui:_select_weapon(weapon_id, weapon_category_switched)
 
 	self._selected_weapon_id = weapon_id
 
-	if self._weapon_parts_toggle then
-		self._weapon_parts_toggle:show()
-		self._weapon_parts_toggle:set_value_and_render(use_cosmetics)
-	end
-
 	self:_update_selected_weapon_skins()
 
 	if weapon_category_switched then
@@ -1276,7 +1264,6 @@ function WeaponSelectionGui:_select_weapon(weapon_id, weapon_category_switched)
 	end
 
 	self:_update_weapon_stats(true)
-	self:_update_scope_switch()
 
 	local selected_weapon = self._weapon_list:selected_item()
 
@@ -1328,7 +1315,15 @@ function WeaponSelectionGui:_select_weapon(weapon_id, weapon_category_switched)
 				})))
 			end
 		else
-			self._cant_equip_explanation_label:set_text(self:translate("character_customization_locked_drop_label", true))
+			local info_label_text
+
+			if selected_weapon:data().value.is_challenge_reward then
+				info_label_text = self:translate("character_customization_locked_cc_label", true)
+			else
+				info_label_text = self:translate("character_customization_locked_drop_label", true)
+			end
+
+			self._cant_equip_explanation_label:set_text(info_label_text)
 		end
 
 		self._cant_equip_explanation_label:show()
@@ -1404,7 +1399,7 @@ function WeaponSelectionGui:_show_weapon(weapon_id, pre_created_blueprint, weapo
 
 	self._loading_units[unit_path] = true
 
-	managers.dyn_resource:load(Idstring("unit"), unit_path_id, DynamicResourceManager.DYN_RESOURCES_PACKAGE, callback(self, self, "_unit_loading_complete", {
+	managers.dyn_resource:load(IDS_UNIT, unit_path_id, DynamicResourceManager.DYN_RESOURCES_PACKAGE, callback(self, self, "_unit_loading_complete", {
 		display_offset = display_offset,
 		distance_offset = distance_offset,
 		height_offset = height_offset,
@@ -1453,11 +1448,6 @@ function WeaponSelectionGui:_unit_loading_complete(params)
 	local weapon_category = managers.weapon_inventory:get_weapon_category_by_weapon_category_id(self._selected_weapon_category_id)
 	local weapon_blueprint = params.pre_created_blueprint or managers.blackmarket:get_weapon_blueprint(weapon_category, selected_weapon_slot)
 	local weapon_factory_id = managers.weapon_factory:get_factory_id_by_weapon_id(params.weapon_id)
-	local default_blueprint = clone(managers.weapon_factory:get_default_blueprint_by_factory_id(weapon_factory_id))
-	local use_default_blueprint = self._weapon_parts_toggle and not self._weapon_parts_toggle:get_value() or false
-
-	weapon_blueprint = not use_default_blueprint and weapon_blueprint or default_blueprint
-
 	local parts, blueprint = managers.weapon_factory:preload_blueprint(params.weapon_factory_id, weapon_blueprint, false, callback(self, self, "_preload_blueprint_completed", {
 		direction_forward = direction_forward,
 		direction_up = direction_up,
@@ -1507,7 +1497,7 @@ function WeaponSelectionGui:_show_unit(weapon_id)
 
 	unit_path = Idstring(unit_path)
 
-	managers.dyn_resource:load(Idstring("unit"), unit_path, DynamicResourceManager.DYN_RESOURCES_PACKAGE, false)
+	managers.dyn_resource:load(IDS_UNIT, unit_path, DynamicResourceManager.DYN_RESOURCES_PACKAGE, false)
 
 	local rotation_offset = weapon_tweak_data.gui and weapon_tweak_data.gui.rotation_offset or 0
 	local distance_offset = weapon_tweak_data.gui and weapon_tweak_data.gui.distance_offset or 0

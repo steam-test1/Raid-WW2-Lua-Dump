@@ -48,11 +48,7 @@ function RaidGUIControlCardSuggestedLarge:set_card(card_data)
 
 	self._object:clear()
 
-	local card_rarity = self._item_data.rarity
-	local rarity_definition = tweak_data.challenge_cards.rarity_definition[card_rarity]
-	local card_type = self._item_data.card_type
-	local type_definition = tweak_data.challenge_cards.type_definition[card_type]
-	local card_texture = tweak_data.challenge_cards.challenge_card_texture_path .. card_data.texture
+	local card_texture = tweak_data.challenge_cards.challenge_card_texture_path .. (card_data.texture or "cc_raid_common_on_the_scrounge_hud")
 	local card_texture_rect = tweak_data.challenge_cards.challenge_card_texture_rect
 	local card_x = math.floor((self._params.selected_marker_w - self._params.item_width) / 2)
 	local card_y = 32
@@ -99,8 +95,6 @@ function RaidGUIControlCardSuggestedLarge:set_card(card_data)
 		y = self._select_marker_panel:h() - RaidGUIControlCardSuggestedLarge.SELECT_TRINGLE_SIZE,
 	})
 	self._card_image = self._challenge_card_panel:bitmap({
-		x = 0,
-		y = 0,
 		h = self._challenge_card_panel:h(),
 		layer = self._select_marker_panel:layer() + 1,
 		name = "suggested_card_image_" .. self._name,
@@ -108,29 +102,34 @@ function RaidGUIControlCardSuggestedLarge:set_card(card_data)
 		texture_rect = card_texture_rect,
 		w = self._challenge_card_panel:w(),
 	})
+
+	local card_type = self._item_data.card_type or "card_type_none"
+	local type_definitions_icon = tweak_data.challenge_cards.type_definition[card_type].texture_gui
+
 	self._type_icon = self._challenge_card_panel:image({
 		h = RaidGUIControlCardSuggestedLarge.ICON_WIDTH,
 		layer = self._card_image:layer() + 1,
 		name = "suggested_card_type_icon_" .. self._name,
-		texture = type_definition.texture_path,
-		texture_rect = type_definition.texture_rect,
+		texture = type_definitions_icon.texture,
+		texture_rect = type_definitions_icon.texture_rect,
 		w = RaidGUIControlCardSuggestedLarge.ICON_WIDTH,
 		x = RaidGUIControlCardSuggestedLarge.ICON_PADDING,
 		y = RaidGUIControlCardSuggestedLarge.ICON_PADDING - 3,
 	})
 
-	if rarity_definition.texture_path_icon then
-		self._rarity_icon = self._challenge_card_panel:image({
-			h = RaidGUIControlCardSuggestedLarge.ICON_WIDTH,
-			layer = self._card_image:layer() + 1,
-			name = "suggested_card_rarity_icon_" .. self._name,
-			texture = rarity_definition.texture_path_icon,
-			texture_rect = rarity_definition.texture_rect_icon,
-			w = RaidGUIControlCardSuggestedLarge.ICON_WIDTH,
-			x = self._challenge_card_panel:w() - RaidGUIControlCardSuggestedLarge.ICON_PADDING - RaidGUIControlCardSuggestedLarge.ICON_WIDTH,
-			y = RaidGUIControlCardSuggestedLarge.ICON_PADDING - 3,
-		})
-	end
+	local card_rarity = self._item_data.rarity
+	local rarity_definitions_icon = tweak_data.challenge_cards.rarity_definition[card_rarity].texture_gui
+
+	self._rarity_icon = self._challenge_card_panel:image({
+		h = RaidGUIControlCardSuggestedLarge.ICON_WIDTH,
+		layer = self._card_image:layer() + 1,
+		name = "suggested_card_rarity_icon_" .. self._name,
+		texture = rarity_definitions_icon.texture,
+		texture_rect = rarity_definitions_icon.texture_rect,
+		w = RaidGUIControlCardSuggestedLarge.ICON_WIDTH,
+		x = self._challenge_card_panel:w() - RaidGUIControlCardSuggestedLarge.ICON_PADDING - RaidGUIControlCardSuggestedLarge.ICON_WIDTH,
+		y = RaidGUIControlCardSuggestedLarge.ICON_PADDING - 3,
+	})
 
 	if not self._item_data.title_in_texture then
 		local title_h = self._card_image:h() * RaidGUIControlCardBase.TITLE_H

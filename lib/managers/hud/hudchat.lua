@@ -67,12 +67,11 @@ function HUDChat:_create_panel(panel)
 end
 
 function HUDChat:_create_background()
-	local background_params = {
+	local background = self._object:bitmap({
 		name = "background",
 		texture = tweak_data.gui.icons[HUDChat.BACKGROUND_IMAGE].texture,
 		texture_rect = tweak_data.gui.icons[HUDChat.BACKGROUND_IMAGE].texture_rect,
-	}
-	local background = self._object:bitmap(background_params)
+	})
 end
 
 function HUDChat:_create_input()
@@ -135,6 +134,7 @@ function HUDChat:_create_input()
 	local caret_params = {
 		layer = 10,
 		name = "caret",
+		visible = false,
 		color = HUDChat.PLAYER_MESSAGE_COLOR,
 		h = HUDChat.CARET_H,
 		w = HUDChat.CARET_W,
@@ -753,8 +753,11 @@ function HUDChat:receive_message(name, peer_id, message, color, icon, system_mes
 				localized_message = managers.localization:text(message_data[1])
 			end
 		end
+
+		message = localized_message
 	end
 
+	Application:debug("[HUDChat:receive_message] localized message:", message)
 	table.insert(self._recieved_messages, message)
 
 	if #self._recieved_messages > ChatManager.MESSAGE_BUFFER_SIZE then

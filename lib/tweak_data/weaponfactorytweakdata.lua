@@ -1,11 +1,9 @@
-local ids_unit = Idstring("unit")
-
 function preload_all()
 	for id, part in pairs(tweak_data.weapon.factory.parts) do
 		if part.third_unit then
 			local ids_unit_name = Idstring(part.third_unit)
 
-			managers.dyn_resource:load(ids_unit, ids_unit_name, "packages/dyn_resources", false)
+			managers.dyn_resource:load(IDS_UNIT, ids_unit_name, "packages/dyn_resources", false)
 		else
 			print(id, "didn't have third")
 		end
@@ -17,7 +15,7 @@ function preload_all_units()
 		if part.unit then
 			local ids_unit_name = Idstring(part.unit)
 
-			managers.dyn_resource:load(ids_unit, ids_unit_name, "packages/dyn_resources", false)
+			managers.dyn_resource:load(IDS_UNIT, ids_unit_name, "packages/dyn_resources", false)
 		else
 			print(id, "didn't have unit")
 		end
@@ -52,7 +50,7 @@ function preload_all_first()
 		if part.unit then
 			local ids_unit_name = Idstring(part.unit)
 
-			managers.dyn_resource:load(ids_unit, ids_unit_name, "packages/dyn_resources", false)
+			managers.dyn_resource:load(IDS_UNIT, ids_unit_name, "packages/dyn_resources", false)
 		else
 			print(id, "didn't have unit")
 		end
@@ -90,7 +88,7 @@ function print_parts_without_texture()
 	Application:debug("---------------------------")
 end
 
-local is_win_32 = _G.IS_PC
+local is_win_32 = IS_PC
 local is_not_win_32 = not is_win_32
 
 WeaponFactoryTweakData = WeaponFactoryTweakData or class()
@@ -1355,7 +1353,7 @@ function WeaponFactoryTweakData:_init_m1903()
 		stance_mod = {
 			wpn_fps_snp_m1903 = {
 				lens_distortion_power = 1.02,
-				translation = Vector3(0.015, -30, -1.665),
+				translation = Vector3(0.015, -30, -1.69),
 			},
 		},
 		stats = {
@@ -1607,7 +1605,7 @@ function WeaponFactoryTweakData:_init_kar_98k()
 		},
 		stats = {
 			value = 1,
-			zoom = 10,
+			zoom = 9,
 		},
 	}
 	self.wpn_fps_snp_kar_98k = {}
@@ -1811,7 +1809,7 @@ function WeaponFactoryTweakData:_init_lee_enfield()
 		},
 		stats = {
 			value = 1,
-			zoom = 10,
+			zoom = 9,
 		},
 	}
 	self.wpn_fps_snp_lee_enfield = {}
@@ -3474,7 +3472,7 @@ function WeaponFactoryTweakData:_init_mp44()
 		stance_mod = {
 			wpn_fps_ass_mp44 = {
 				lens_distortion_power = 1.01,
-				translation = Vector3(0, -12.5, -1.64784),
+				translation = Vector3(0, -10, -1.64784),
 			},
 		},
 		stats = {
@@ -3531,6 +3529,24 @@ function WeaponFactoryTweakData:_init_mp44()
 end
 
 function WeaponFactoryTweakData:_init_carbine()
+	self.parts.wpn_fps_ass_carbine_b_short = {
+		a_obj = "a_b",
+		name_id = "bm_wp_ass_carbine_b_standard",
+		type = "barrel",
+		unit = "units/vanilla/weapons/wpn_fps_ass_carbine_pts/wpn_fps_ass_carbine_b_short",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_ass_carbine_b_medium = {
+		a_obj = "a_b",
+		name_id = "bm_wp_ass_carbine_b_standard",
+		type = "barrel",
+		unit = "units/vanilla/weapons/wpn_fps_ass_carbine_pts/wpn_fps_ass_carbine_b_medium",
+		stats = {
+			value = 1,
+		},
+	}
 	self.parts.wpn_fps_ass_carbine_b_standard = {
 		a_obj = "a_b",
 		name_id = "bm_wp_ass_carbine_b_standard",
@@ -3625,6 +3641,8 @@ function WeaponFactoryTweakData:_init_carbine()
 			value = 1,
 		},
 	}
+	self.parts.wpn_fps_ass_carbine_b_short.third_unit = "units/vanilla/weapons/wpn_third_ass_carbine_pts/wpn_third_ass_carbine_b_short"
+	self.parts.wpn_fps_ass_carbine_b_medium.third_unit = "units/vanilla/weapons/wpn_third_ass_carbine_pts/wpn_third_ass_carbine_b_medium"
 	self.parts.wpn_fps_ass_carbine_b_standard.third_unit = "units/vanilla/weapons/wpn_third_ass_carbine_pts/wpn_third_ass_carbine_b_standard"
 	self.parts.wpn_fps_ass_carbine_body_standard.third_unit = "units/vanilla/weapons/wpn_third_ass_carbine_pts/wpn_third_ass_carbine_body_standard"
 	self.parts.wpn_fps_ass_carbine_body_wooden.third_unit = "units/vanilla/weapons/wpn_third_ass_carbine_pts/wpn_third_ass_carbine_body_wooden"
@@ -3649,7 +3667,7 @@ function WeaponFactoryTweakData:_init_carbine()
 		"lower_receiver",
 	}
 	self.wpn_fps_ass_carbine.default_blueprint = {
-		"wpn_fps_ass_carbine_b_standard",
+		"wpn_fps_ass_carbine_b_short",
 		"wpn_fps_ass_carbine_body_standard",
 		"wpn_fps_ass_carbine_dh_standard",
 		"wpn_fps_ass_carbine_bolt_standard",
@@ -3658,6 +3676,8 @@ function WeaponFactoryTweakData:_init_carbine()
 		"wpn_fps_ass_carbine_s_standard",
 	}
 	self.wpn_fps_ass_carbine.uses_parts = {
+		"wpn_fps_ass_carbine_b_short",
+		"wpn_fps_ass_carbine_b_medium",
 		"wpn_fps_ass_carbine_b_standard",
 		"wpn_fps_ass_carbine_body_standard",
 		"wpn_fps_ass_carbine_dh_standard",
@@ -4386,13 +4406,13 @@ function WeaponFactoryTweakData:_init_mosin()
 		unit = "units/vanilla/weapons/wpn_fps_snp_mosin_pts/wpn_fps_snp_mosin_o_scope",
 		stance_mod = {
 			wpn_fps_snp_mosin = {
-				lens_distortion_power = 1.02,
+				lens_distortion_power = 1.015,
 				translation = Vector3(0, -21, -2.323),
 			},
 		},
 		stats = {
 			value = 1,
-			zoom = 8,
+			zoom = 7,
 		},
 	}
 	self.parts.wpn_fps_snp_mosin_b_standard.third_unit = "units/vanilla/weapons/wpn_third_snp_mosin_pts/wpn_third_snp_mosin_b_standard"

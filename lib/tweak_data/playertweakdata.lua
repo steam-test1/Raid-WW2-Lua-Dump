@@ -2,45 +2,73 @@ PlayerTweakData = PlayerTweakData or class()
 
 function PlayerTweakData:_set_difficulty_1()
 	self.damage.automatic_respawn_time = 30
+	self.damage.MIN_DAMAGE_INTERVAL = 0.36
 end
 
 function PlayerTweakData:_set_difficulty_2()
 	self.damage.automatic_respawn_time = 60
 	self.damage.DOWNED_TIME_DEC = 7
 	self.damage.DOWNED_TIME_MIN = 5
+	self.damage.MIN_DAMAGE_INTERVAL = 0.32
 end
 
 function PlayerTweakData:_set_difficulty_3()
 	self.damage.automatic_respawn_time = 90
 	self.damage.DOWNED_TIME_DEC = 10
 	self.damage.DOWNED_TIME_MIN = 5
+	self.damage.MIN_DAMAGE_INTERVAL = 0.3
 end
 
 function PlayerTweakData:_set_difficulty_4()
-	self.damage.automatic_respawn_time = 220
+	self.damage.automatic_respawn_time = 90
 	self.damage.DOWNED_TIME_DEC = 15
 	self.damage.DOWNED_TIME_MIN = 1
+	self.damage.MIN_DAMAGE_INTERVAL = 0.28
 end
 
 function PlayerTweakData:_set_singleplayer()
-	self.damage.REGENERATE_TIME = 1.75
+	self.damage.REGENERATE_TIME = 0.75
 
-	if _G.IS_CONSOLE then
-		self.damage.REGENERATE_TIME = self.damage.REGENERATE_TIME - 0.35
+	if IS_CONSOLE then
+		self.damage.REGENERATE_TIME = self.damage.REGENERATE_TIME - 0.25
 	end
+
+	self.surprise_kill_leeway = 0.25
 end
 
 function PlayerTweakData:_set_multiplayer()
-	return
+	self.damage.REGENERATE_TIME = 1
+
+	if IS_CONSOLE then
+		self.damage.REGENERATE_TIME = self.damage.REGENERATE_TIME - 0.25
+	end
+
+	self.surprise_kill_leeway = Network:is_server() and 0.25 or 0.35
 end
 
 function PlayerTweakData:init()
-	self.run_move_dir_treshold = 0.7
-	self.arrest = {
-		aggression_timeout = 60,
-		arrest_timeout = 240,
+	self.killzones = {}
+	self.killzones.fire = {
+		damage = 4,
+		timer = 0.15,
 	}
-	self.put_on_mask_time = 2
+	self.killzones.inferno = {
+		damage = 8,
+		death_on_down = true,
+		timer = 0.15,
+	}
+	self.killzones.gas = {
+		damage = 3,
+		timer = 0.25,
+	}
+	self.killzones.sniper = {
+		damage = 50,
+		timer = 1.5,
+		warning_chance = 0.75,
+		warning_timer = 4,
+	}
+	self.run_move_dir_treshold = 0.7
+	self.surprise_kill_leeway = 0.25
 	self.damage = {}
 	self.damage.DODGE_INIT = 0
 	self.damage.HEALTH_REGEN = 0
@@ -60,22 +88,24 @@ function PlayerTweakData:init()
 	}
 	self.damage.REGENERATE_TIME = 3
 
-	if _G.IS_CONSOLE then
+	if IS_CONSOLE then
 		self.damage.REGENERATE_TIME = self.damage.REGENERATE_TIME - 0.35
 	end
 
-	self.damage.REVIVE_HEALTH_STEPS = {
-		1,
-	}
+	self.damage.DOWNED_WARCRY_REDUCTION = 0.5
 	self.damage.TASED_TIME = 10
 	self.damage.TASED_RECOVER_TIME = 1
 	self.damage.BLEED_OUT_HEALTH_INIT = 10
 	self.damage.DOWNED_TIME = 30
 	self.damage.DOWNED_TIME_DEC = 5
 	self.damage.DOWNED_TIME_MIN = 10
-	self.damage.ARRESTED_TIME = 60
 	self.damage.INCAPACITATED_TIME = 30
-	self.damage.MIN_DAMAGE_INTERVAL = 0.45
+	self.damage.MIN_DAMAGE_INTERVAL = 0.36
+
+	if IS_CONSOLE then
+		self.damage.MIN_DAMAGE_INTERVAL = self.damage.MIN_DAMAGE_INTERVAL + 0.1
+	end
+
 	self.damage.respawn_time_penalty = 30
 	self.damage.base_respawn_time_penalty = 5
 	self.damage.automatic_assault_ai_trade_time = 120
@@ -83,17 +113,18 @@ function PlayerTweakData:init()
 	self.fall_health_damage = 4
 	self.fall_damage_alert_size = 250
 	self.SUSPICION_OFFSET_LERP = 0.75
+	self.MANTLE_PRECISION = 3
 	self.long_dis_interaction = {
-		highlight_range = 3000,
+		highlight_range = 8000,
 		intimidate_range_civilians = 1000,
-		intimidate_range_enemies = 1000,
+		intimidate_range_enemies = 1,
 		intimidate_strength = 0.5,
 	}
 	self.suppression = {
-		autohit_chance_mul = 1,
-		decay_start_delay = 1,
-		max_value = 20,
-		receive_mul = 10,
+		autohit_chance_mul = 0.9,
+		decay_start_delay = 0.15,
+		max_value = 9,
+		receive_mul = 7,
 		spread_mul = 1,
 		tolerance = 1,
 	}
@@ -102,44 +133,14 @@ function PlayerTweakData:init()
 		max_value = 8,
 		range_mul = 1,
 	}
-	self.alarm_pager = {
-		bluff_success_chance = {
-			1,
-			1,
-			1,
-			1,
-			0,
-		},
-		bluff_success_chance_w_skill = {
-			1,
-			1,
-			1,
-			1,
-			0,
-		},
-		call_duration = {
-			{
-				6,
-				6,
-			},
-			{
-				6,
-				6,
-			},
-		},
-		first_call_delay = {
-			2,
-			4,
-		},
-		nr_of_calls = {
-			2,
-			2,
-		},
-	}
 	self.max_nr_following_hostages = 1
-	self.TRANSITION_DURATION = 0.23
+	self.max_floor_jump_angle = 58
+	self.reload_interupt_buffer = 0.58
+	self.TRANSITION_DURATION = 0.26
+	self.STANCE_FOV_OFFSET_MAX = Vector3(0, -9, -4.5)
 	self.PLAYER_EYE_HEIGHT = 155
 	self.PLAYER_EYE_HEIGHT_CROUCH = 75
+	self.PLAYER_EYE_HEIGHT_BLEED_OUT = 58
 	self.stances = {
 		default = {
 			crouched = {
@@ -158,7 +159,7 @@ function PlayerTweakData:init()
 			},
 		},
 	}
-	self.stances.default.standard.head.translation = Vector3(0, 0, self.PLAYER_EYE_HEIGHT)
+	self.stances.default.standard.head.translation = math.UP * self.PLAYER_EYE_HEIGHT
 	self.stances.default.standard.head.rotation = Rotation()
 	self.stances.default.standard.shakers = {}
 	self.stances.default.standard.shakers.breathing = {}
@@ -169,10 +170,9 @@ function PlayerTweakData:init()
 	self.stances.default.steelsight.shakers = {}
 	self.stances.default.steelsight.shakers.breathing = {}
 	self.stances.default.steelsight.shakers.breathing.amplitude = 0.025
-	self.stances.default.mask_off = deep_clone(self.stances.default.standard)
-	self.stances.default.mask_off.head.translation = Vector3(0, 0, self.PLAYER_EYE_HEIGHT)
-	self.stances.default.clean = deep_clone(self.stances.default.mask_off)
-	self.stances.default.civilian = deep_clone(self.stances.default.mask_off)
+	self.stances.default.bleed_out = deep_clone(self.stances.default.standard)
+	self.stances.default.bleed_out.head.translation = math.UP * self.PLAYER_EYE_HEIGHT_BLEED_OUT
+	self.stances.default.bleed_out.transition_duration = 0.32
 
 	local pivot_head_translation = Vector3()
 	local pivot_head_rotation = Rotation()
@@ -185,26 +185,18 @@ function PlayerTweakData:init()
 	self.stances.default.standard.vel_overshot.yaw_pos = -6
 	self.stances.default.standard.vel_overshot.pitch_neg = -10
 	self.stances.default.standard.vel_overshot.pitch_pos = 10
-	self.stances.default.standard.vel_overshot.pivot = Vector3(0, 0, 0)
+	self.stances.default.standard.vel_overshot.pivot = Vector3()
 	self.stances.default.standard.FOV = 60
-	self.stances.default.crouched.head.translation = Vector3(0, 0, self.PLAYER_EYE_HEIGHT_CROUCH)
+	self.stances.default.crouched.head.translation = math.UP * self.PLAYER_EYE_HEIGHT_CROUCH
 	self.stances.default.crouched.head.rotation = Rotation()
-
-	local pivot_head_translation = Vector3()
-	local pivot_head_rotation = Rotation()
-
 	self.stances.default.crouched.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
 	self.stances.default.crouched.shoulders.rotation = pivot_head_rotation * pivot_shoulder_rotation:inverse()
 	self.stances.default.crouched.vel_overshot.yaw_neg = 6
 	self.stances.default.crouched.vel_overshot.yaw_pos = -6
 	self.stances.default.crouched.vel_overshot.pitch_neg = -10
 	self.stances.default.crouched.vel_overshot.pitch_pos = 10
-	self.stances.default.crouched.vel_overshot.pivot = Vector3(0, 0, 0)
+	self.stances.default.crouched.vel_overshot.pivot = Vector3()
 	self.stances.default.crouched.FOV = self.stances.default.standard.FOV
-
-	local pivot_head_translation = Vector3(0, 0, 0)
-	local pivot_head_rotation = Rotation(0, 0, 0)
-
 	self.stances.default.steelsight.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
 	self.stances.default.steelsight.shoulders.rotation = pivot_head_rotation * pivot_shoulder_rotation:inverse()
 	self.stances.default.steelsight.vel_overshot.yaw_neg = 4
@@ -229,16 +221,13 @@ function PlayerTweakData:init()
 	self.fov_multiplier = {}
 	self.fov_multiplier.MIN = 1
 	self.fov_multiplier.MAX = 1.83333
-	self.omniscience = {}
-	self.omniscience.start_t = 3.5
-	self.omniscience.interval_t = 1
-	self.omniscience.sense_radius = 1000
-	self.omniscience.target_resense_t = 15
 	self.damage_indicator_duration = 1
+	self.gravity = 1275
 
 	self:_init_parachute()
 	self:_init_class_specific_tweak_data()
 	self:_init_team_ai_tweak_data()
+	self:_init_run_delay_tweak_data()
 end
 
 function PlayerTweakData:get_tweak_data_for_class(class)
@@ -269,18 +258,27 @@ function PlayerTweakData:_init_team_ai_tweak_data()
 	self.team_ai.movement.speed.WALKING_SPEED = 375
 end
 
+function PlayerTweakData:_init_run_delay_tweak_data()
+	self.run_delay = {}
+	self.run_delay.use_generic = 0.75
+	self.run_delay.equip = 0.25
+	self.run_delay.distance_interact = 1
+	self.run_delay.cmd_come = 1.4
+end
+
 function PlayerTweakData:_init_default_class_tweak_data()
 	self.class_defaults.default = {}
 	self.class_defaults.default.damage = {}
-	self.class_defaults.default.damage.BASE_HEALTH = 90
+	self.class_defaults.default.damage.BASE_HEALTH = 100
 	self.class_defaults.default.damage.BASE_LIVES = 4
 	self.class_defaults.default.damage.BASE_ARMOR = 2
 	self.class_defaults.default.damage.DODGE_INIT = 0
 	self.class_defaults.default.damage.HEALTH_REGEN = 0
-	self.class_defaults.default.damage.LOW_HEALTH_REGEN = 0.01
-	self.class_defaults.default.damage.LOW_HEALTH_REGEN_LIMIT = 0.1
+	self.class_defaults.default.damage.LOW_HEALTH_REGEN = 0.03
+	self.class_defaults.default.damage.LOW_HEALTH_REGEN_LIMIT = 0.25
 	self.class_defaults.default.damage.FALL_DAMAGE_MIN_HEIGHT = 310
-	self.class_defaults.default.damage.FALL_DAMAGE_FATAL_HEIGHT = 1000
+	self.class_defaults.default.damage.FALL_DAMAGE_FATAL_HEIGHT = 850
+	self.class_defaults.default.damage.FALL_DAMAGE_DEATH_HEIGHT = 1100
 	self.class_defaults.default.damage.FALL_DAMAGE_MIN = 10
 	self.class_defaults.default.damage.FALL_DAMAGE_MAX = 85
 	self.class_defaults.default.stealth = {}
@@ -291,62 +289,66 @@ function PlayerTweakData:_init_default_class_tweak_data()
 	self.class_defaults.default.movement = {}
 	self.class_defaults.default.movement.speed = {}
 	self.class_defaults.default.movement.speed.WALKING_SPEED = 350
-	self.class_defaults.default.movement.speed.RUNNING_SPEED = 525
-	self.class_defaults.default.movement.speed.CROUCHING_SPEED = 225
+	self.class_defaults.default.movement.speed.RUNNING_SPEED = 500
+	self.class_defaults.default.movement.speed.CROUCHING_SPEED = 230
 	self.class_defaults.default.movement.speed.STEELSIGHT_SPEED = 185
 	self.class_defaults.default.movement.speed.AIR_SPEED = 185
 	self.class_defaults.default.movement.speed.CLIMBING_SPEED = 200
+	self.class_defaults.default.movement.carry = {}
+	self.class_defaults.default.movement.carry.CARRY_WEIGHT_MAX = 5
 	self.class_defaults.default.movement.jump_velocity = {
 		xy = {},
 	}
-	self.class_defaults.default.movement.jump_velocity.z = 520
-	self.class_defaults.default.movement.jump_velocity.xy.run = self.class_defaults.default.movement.speed.RUNNING_SPEED
+	self.class_defaults.default.movement.jump_velocity.z = 572
+	self.class_defaults.default.movement.jump_velocity.xy.run = self.class_defaults.default.movement.speed.RUNNING_SPEED * 1.1
 	self.class_defaults.default.movement.jump_velocity.xy.walk = self.class_defaults.default.movement.speed.WALKING_SPEED * 1.2
 	self.class_defaults.default.movement.stamina = {}
-	self.class_defaults.default.movement.stamina.BASE_STAMINA = 20
+	self.class_defaults.default.movement.stamina.BASE_STAMINA = 28
 	self.class_defaults.default.movement.stamina.BASE_STAMINA_REGENERATION_RATE = 3
 	self.class_defaults.default.movement.stamina.BASE_STAMINA_DRAIN_RATE = 2
-	self.class_defaults.default.movement.stamina.STAMINA_REGENERATION_DELAY = 2
+	self.class_defaults.default.movement.stamina.STAMINA_REGENERATION_DELAY = 1.5
 	self.class_defaults.default.movement.stamina.MIN_STAMINA_THRESHOLD = 4
 	self.class_defaults.default.movement.stamina.JUMP_STAMINA_DRAIN = 2
+	self.class_defaults.default.movement.mantle = {}
+	self.class_defaults.default.movement.mantle.MIN_CHECK_HEIGHT = math.UP * 68
+	self.class_defaults.default.movement.mantle.MAX_CHECK_HEIGHT = math.UP * 138
+	self.class_defaults.default.movement.mantle.CLOSE_CHECK_DISTANCE = 42
+	self.class_defaults.default.movement.mantle.MID_CHECK_DISTANCE = 60
+	self.class_defaults.default.movement.mantle.FAR_CHECK_DISTANCE = 92
+	self.class_defaults.default.movement.mantle.MANTLING_SPEED = 420
 end
 
 function PlayerTweakData:_init_recon_tweak_data()
 	local recon = SkillTreeTweakData.CLASS_RECON
 
 	self.class_defaults[recon] = deep_clone(self.class_defaults.default)
-	self.class_defaults[recon].damage.BASE_HEALTH = 80
-	self.class_defaults[recon].movement.stamina.BASE_STAMINA = 22
-	self.class_defaults[recon].movement.stamina.STAMINA_REGENERATION_DELAY = 3
-	self.class_defaults[recon].movement.speed.CROUCHING_SPEED = 235
+	self.class_defaults[recon].damage.BASE_HEALTH = 90
+	self.class_defaults[recon].movement.stamina.BASE_STAMINA = 32
+	self.class_defaults[recon].movement.speed.CROUCHING_SPEED = 240
 	self.class_defaults[recon].movement.speed.STEELSIGHT_SPEED = 200
-	self.class_defaults[recon].damage.LOW_HEALTH_REGEN = 0.01
-	self.class_defaults[recon].damage.LOW_HEALTH_REGEN_LIMIT = 0.075
+	self.class_defaults[recon].movement.carry.CARRY_WEIGHT_MAX = 5
 end
 
 function PlayerTweakData:_init_assault_tweak_data()
 	local assault = SkillTreeTweakData.CLASS_ASSAULT
 
 	self.class_defaults[assault] = deep_clone(self.class_defaults.default)
-	self.class_defaults[assault].damage.BASE_HEALTH = 100
-	self.class_defaults[assault].movement.stamina.STAMINA_REGENERATION_DELAY = 2.2
+	self.class_defaults[assault].damage.BASE_HEALTH = 125
+	self.class_defaults[assault].movement.stamina.BASE_STAMINA = 30
 	self.class_defaults[assault].movement.speed.WALKING_SPEED = 310
-	self.class_defaults[assault].movement.speed.RUNNING_SPEED = 510
-	self.class_defaults[assault].damage.LOW_HEALTH_REGEN = 0.015
-	self.class_defaults[assault].damage.LOW_HEALTH_REGEN_LIMIT = 0.1
+	self.class_defaults[assault].movement.speed.RUNNING_SPEED = 480
+	self.class_defaults[assault].movement.carry.CARRY_WEIGHT_MAX = 3
 end
 
 function PlayerTweakData:_init_insurgent_tweak_data()
 	local insurgent = SkillTreeTweakData.CLASS_INFILTRATOR
 
 	self.class_defaults[insurgent] = deep_clone(self.class_defaults.default)
-	self.class_defaults[insurgent].damage.BASE_HEALTH = 85
-	self.class_defaults[insurgent].movement.stamina.BASE_STAMINA = 18
-	self.class_defaults[insurgent].movement.stamina.STAMINA_REGENERATION_DELAY = 1
-	self.class_defaults[insurgent].movement.speed.WALKING_SPEED = 350
-	self.class_defaults[insurgent].movement.speed.RUNNING_SPEED = 560
-	self.class_defaults[insurgent].damage.LOW_HEALTH_REGEN = 0.01
-	self.class_defaults[insurgent].damage.LOW_HEALTH_REGEN_LIMIT = 0.075
+	self.class_defaults[insurgent].damage.BASE_HEALTH = 110
+	self.class_defaults[insurgent].movement.stamina.BASE_STAMINA = 28
+	self.class_defaults[insurgent].movement.speed.WALKING_SPEED = 330
+	self.class_defaults[insurgent].movement.speed.RUNNING_SPEED = 490
+	self.class_defaults[insurgent].movement.carry.CARRY_WEIGHT_MAX = 4
 end
 
 function PlayerTweakData:_init_demolitions_tweak_data()
@@ -640,7 +642,7 @@ function PlayerTweakData:_init_smg_stances()
 	self.stances.sterling.standard.vel_overshot.pitch_neg = -10
 	self.stances.sterling.standard.vel_overshot.pitch_pos = 10
 
-	local pivot_head_translation = Vector3(0, 16, 0)
+	local pivot_head_translation = Vector3(0, 13, 0)
 	local pivot_head_rotation = Rotation(0, 0, 0)
 
 	self.stances.sterling.steelsight.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
@@ -709,7 +711,7 @@ function PlayerTweakData:_init_smg_stances()
 	self.stances.sten.standard.vel_overshot.pitch_neg = 5
 	self.stances.sten.standard.vel_overshot.pitch_pos = -5
 
-	local pivot_head_translation = Vector3(0, 15, 0)
+	local pivot_head_translation = Vector3(0, 12, 0)
 	local pivot_head_rotation = Rotation(0, 0, 0)
 
 	self.stances.sten.steelsight.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
@@ -775,7 +777,7 @@ function PlayerTweakData:_init_shotgun_stances()
 
 	local pivot_shoulder_translation = Vector3(11.4127, 15.7764, -5.20036)
 	local pivot_shoulder_rotation = Rotation(-0.000176678, 0.000172462, 0.000184415)
-	local pivot_head_translation = Vector3(6, 15, -4)
+	local pivot_head_translation = Vector3(6, 15, -8)
 	local pivot_head_rotation = Rotation(0, 0, -4.5)
 
 	self.stances.geco.standard.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
@@ -787,7 +789,7 @@ function PlayerTweakData:_init_shotgun_stances()
 	self.stances.geco.standard.vel_overshot.pitch_pos = 10
 
 	local pivot_head_translation = Vector3(0, 13.5, -1)
-	local pivot_head_rotation = Rotation(0, 0, 0)
+	local pivot_head_rotation = Rotation(0, 1.3, 0)
 
 	self.stances.geco.steelsight.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
 	self.stances.geco.steelsight.shoulders.rotation = pivot_head_rotation * pivot_shoulder_rotation:inverse()
@@ -807,7 +809,7 @@ function PlayerTweakData:_init_shotgun_stances()
 
 	local pivot_shoulder_translation = Vector3(11.2001, 15.3999, 2.75509)
 	local pivot_shoulder_rotation = Rotation(5.25055e-05, 0.00056349, -0.000322727)
-	local pivot_head_translation = Vector3(7, 18, -3)
+	local pivot_head_translation = Vector3(7, 18, -6)
 	local pivot_head_rotation = Rotation(0, 0, -1)
 
 	self.stances.m1912.standard.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
@@ -818,8 +820,8 @@ function PlayerTweakData:_init_shotgun_stances()
 	self.stances.m1912.standard.vel_overshot.pitch_neg = -10
 	self.stances.m1912.standard.vel_overshot.pitch_pos = 10
 
-	local pivot_head_translation = Vector3(0, 11, -1)
-	local pivot_head_rotation = Rotation(0, 0, 0)
+	local pivot_head_translation = Vector3(0, 16, -1.55)
+	local pivot_head_rotation = Rotation(0, 2.62, 0)
 
 	self.stances.m1912.steelsight.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
 	self.stances.m1912.steelsight.shoulders.rotation = pivot_head_rotation * pivot_shoulder_rotation:inverse()
@@ -839,7 +841,7 @@ function PlayerTweakData:_init_shotgun_stances()
 
 	local pivot_shoulder_translation = Vector3(11.2001, 10.9188, 2.99868)
 	local pivot_shoulder_rotation = Rotation(0.000153332, 0.000313466, -0.00140905)
-	local pivot_head_translation = Vector3(7, 12, -6)
+	local pivot_head_translation = Vector3(7, 12, -6.5)
 	local pivot_head_rotation = Rotation(0, 0, -1)
 
 	self.stances.ithaca.standard.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
@@ -851,7 +853,7 @@ function PlayerTweakData:_init_shotgun_stances()
 	self.stances.ithaca.standard.vel_overshot.pitch_pos = 10
 
 	local pivot_head_translation = Vector3(0, 13, -1)
-	local pivot_head_rotation = Rotation(0, 0, 0)
+	local pivot_head_rotation = Rotation(0, 1.11, 0)
 
 	self.stances.ithaca.steelsight.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
 	self.stances.ithaca.steelsight.shoulders.rotation = pivot_head_rotation * pivot_shoulder_rotation:inverse()
@@ -871,7 +873,7 @@ function PlayerTweakData:_init_shotgun_stances()
 
 	local pivot_shoulder_translation = Vector3(11.2002, 5.61833, 3.24215)
 	local pivot_shoulder_rotation = Rotation(0.000383849, 0.000530845, -0.000579741)
-	local pivot_head_translation = Vector3(7, 18, -4)
+	local pivot_head_translation = Vector3(7, 15, -8)
 	local pivot_head_rotation = Rotation(0, 0, -1)
 
 	self.stances.browning.standard.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
@@ -883,7 +885,7 @@ function PlayerTweakData:_init_shotgun_stances()
 	self.stances.browning.standard.vel_overshot.pitch_pos = 10
 
 	local pivot_head_translation = Vector3(0, 15, -1)
-	local pivot_head_rotation = Rotation(0, 0, 0)
+	local pivot_head_rotation = Rotation(0, 0.8, 0)
 
 	self.stances.browning.steelsight.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
 	self.stances.browning.steelsight.shoulders.rotation = pivot_head_rotation * pivot_shoulder_rotation:inverse()
@@ -943,7 +945,7 @@ function PlayerTweakData:_init_new_stances()
 
 	local pivot_shoulder_translation = Vector3(12.6977, 8.8, -6.68822)
 	local pivot_shoulder_rotation = Rotation(-0.0120528, 0.00306297, -0.00256367)
-	local pivot_head_translation = Vector3(8, 18, -8)
+	local pivot_head_translation = Vector3(11, 18, -10)
 	local pivot_head_rotation = Rotation(0, 0, -1)
 
 	self.stances.dp28.standard.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
@@ -954,7 +956,7 @@ function PlayerTweakData:_init_new_stances()
 	self.stances.dp28.standard.vel_overshot.pitch_neg = 5
 	self.stances.dp28.standard.vel_overshot.pitch_pos = -5
 
-	local pivot_head_translation = Vector3(0, 18, 0)
+	local pivot_head_translation = Vector3(0, 13, 0)
 	local pivot_head_rotation = Rotation(0, 0, 0)
 
 	self.stances.dp28.steelsight.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
@@ -1016,9 +1018,9 @@ function PlayerTweakData:_init_new_stances()
 	self.stances.garand = deep_clone(self.stances.default)
 
 	local pivot_shoulder_translation = Vector3(10.895, 12.5645, 3.42763)
-	local pivot_shoulder_rotation = Rotation(0.000152489, 0.000367234, -0.000803142)
+	local pivot_shoulder_rotation = Rotation(0, 0, 0)
 	local pivot_head_translation = Vector3(11, 18, -3.25)
-	local pivot_head_rotation = Rotation(0, 0, -1)
+	local pivot_head_rotation = Rotation(0, 0, -4)
 
 	self.stances.garand.standard.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
 	self.stances.garand.standard.shoulders.rotation = pivot_head_rotation * pivot_shoulder_rotation:inverse()
@@ -1029,7 +1031,7 @@ function PlayerTweakData:_init_new_stances()
 	self.stances.garand.standard.vel_overshot.pitch_pos = -5
 
 	local pivot_head_translation = Vector3(0, 15, 0)
-	local pivot_head_rotation = Rotation(0, 0, 0)
+	local pivot_head_rotation = Rotation(0, 0.2, 0)
 
 	self.stances.garand.steelsight.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
 	self.stances.garand.steelsight.shoulders.rotation = pivot_head_rotation * pivot_shoulder_rotation:inverse()
@@ -1041,7 +1043,7 @@ function PlayerTweakData:_init_new_stances()
 	self.stances.garand.steelsight.vel_overshot.pitch_pos = -5
 
 	local pivot_head_translation = Vector3(9, 16, -2.5)
-	local pivot_head_rotation = Rotation(0, 0, -4)
+	local pivot_head_rotation = Rotation(0, 0, -7)
 
 	self.stances.garand.crouched.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
 	self.stances.garand.crouched.shoulders.rotation = pivot_head_rotation * pivot_shoulder_rotation:inverse()
@@ -1089,7 +1091,7 @@ function PlayerTweakData:_init_new_stances()
 	self.stances.m1918.crouched.vel_overshot.pitch_pos = -5
 	self.stances.m1903 = deep_clone(self.stances.default)
 
-	local pivot_shoulder_translation = Vector3(11.408, 15.8596, 3.03369)
+	local pivot_shoulder_translation = Vector3(11.408, 19.22, 3.03369)
 	local pivot_shoulder_rotation = Rotation(0.000389178, 2.90312e-05, 0.000851212)
 	local pivot_head_translation = Vector3(10.5, 20, -4)
 	local pivot_head_rotation = Rotation(0, 0, -1)
@@ -1102,7 +1104,7 @@ function PlayerTweakData:_init_new_stances()
 	self.stances.m1903.standard.vel_overshot.pitch_neg = 5
 	self.stances.m1903.standard.vel_overshot.pitch_pos = -5
 
-	local pivot_head_translation = Vector3(0, 24, 0)
+	local pivot_head_translation = Vector3(0, 24.8, 0)
 	local pivot_head_rotation = Rotation(0, 0, 0)
 
 	self.stances.m1903.steelsight.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
@@ -1127,9 +1129,9 @@ function PlayerTweakData:_init_new_stances()
 	self.stances.m1903.crouched.vel_overshot.pitch_pos = -5
 	self.stances.kar_98k = deep_clone(self.stances.default)
 
-	local pivot_shoulder_translation = Vector3(8.60602, 42.8494, -5.313)
+	local pivot_shoulder_translation = Vector3(8.60602, 40, -5.313)
 	local pivot_shoulder_rotation = Rotation(0.000198704, 0.00070511, -0.000360721)
-	local pivot_head_translation = Vector3(8, 40, -4)
+	local pivot_head_translation = Vector3(8, 41, -3)
 	local pivot_head_rotation = Rotation(0, 0, -1)
 
 	self.stances.kar_98k.standard.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
@@ -1140,7 +1142,7 @@ function PlayerTweakData:_init_new_stances()
 	self.stances.kar_98k.standard.vel_overshot.pitch_neg = -5
 	self.stances.kar_98k.standard.vel_overshot.pitch_pos = 5
 
-	local pivot_head_translation = Vector3(0, 46, 0)
+	local pivot_head_translation = Vector3(0, 42.3, 0)
 	local pivot_head_rotation = Rotation(0, 0, 0)
 
 	self.stances.kar_98k.steelsight.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
@@ -1153,8 +1155,8 @@ function PlayerTweakData:_init_new_stances()
 	self.stances.kar_98k.steelsight.vel_overshot.pitch_pos = 0.3
 	self.stances.kar_98k.steelsight.camera_sensitivity_multiplier = 0.35
 
-	local pivot_head_translation = Vector3(6, 38, -3)
-	local pivot_head_rotation = Rotation(0, 0, -6)
+	local pivot_head_translation = Vector3(7, 38, -3)
+	local pivot_head_rotation = Rotation(0, 0, -8)
 
 	self.stances.kar_98k.crouched.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
 	self.stances.kar_98k.crouched.shoulders.rotation = pivot_head_rotation * pivot_shoulder_rotation:inverse()
@@ -1165,9 +1167,9 @@ function PlayerTweakData:_init_new_stances()
 	self.stances.kar_98k.crouched.vel_overshot.pitch_pos = 5
 	self.stances.lee_enfield = deep_clone(self.stances.default)
 
-	local pivot_shoulder_translation = Vector3(8.60614, 16.0214, -6.67986)
+	local pivot_shoulder_translation = Vector3(8.60614, 12.0214, -6.67986)
 	local pivot_shoulder_rotation = Rotation(6.09262e-05, 0.000580366, -0.000366323)
-	local pivot_head_translation = Vector3(6, 13, -5)
+	local pivot_head_translation = Vector3(8, 18, -4.3)
 	local pivot_head_rotation = Rotation(0, 0, -1)
 
 	self.stances.lee_enfield.standard.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
@@ -1178,7 +1180,7 @@ function PlayerTweakData:_init_new_stances()
 	self.stances.lee_enfield.standard.vel_overshot.pitch_neg = 5
 	self.stances.lee_enfield.standard.vel_overshot.pitch_pos = -5
 
-	local pivot_head_translation = Vector3(0, 10, 0)
+	local pivot_head_translation = Vector3(0, 5.8, 0)
 	local pivot_head_rotation = Rotation(0, 0, 0)
 
 	self.stances.lee_enfield.steelsight.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
@@ -1216,7 +1218,7 @@ function PlayerTweakData:_init_new_stances()
 	self.stances.mp44.standard.vel_overshot.pitch_neg = 5
 	self.stances.mp44.standard.vel_overshot.pitch_pos = -5
 
-	local pivot_head_translation = Vector3(0, 24, 0)
+	local pivot_head_translation = Vector3(0, 19, 0)
 	local pivot_head_rotation = Rotation(0, 0, 0)
 
 	self.stances.mp44.steelsight.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
@@ -1327,7 +1329,7 @@ function PlayerTweakData:_init_new_stances()
 
 	local pivot_shoulder_translation = Vector3(8.60685, 34.9764, -4.03669)
 	local pivot_shoulder_rotation = Rotation(-6.75058e-05, 0.000460611, -0.000241724)
-	local pivot_head_translation = Vector3(8, 32, -4)
+	local pivot_head_translation = Vector3(9, 37, -3.9)
 	local pivot_head_rotation = Rotation(0, 0, -1.5)
 
 	self.stances.mosin.standard.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
@@ -1350,7 +1352,7 @@ function PlayerTweakData:_init_new_stances()
 	self.stances.mosin.steelsight.vel_overshot.pitch_pos = 0.9
 	self.stances.mosin.steelsight.camera_sensitivity_multiplier = 0.45
 
-	local pivot_head_translation = Vector3(7, 31, -5)
+	local pivot_head_translation = Vector3(7, 35, -5)
 	local pivot_head_rotation = Rotation(0, 0, -6)
 
 	self.stances.mosin.crouched.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)

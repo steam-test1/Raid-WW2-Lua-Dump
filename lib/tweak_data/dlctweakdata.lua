@@ -5,22 +5,26 @@ DLCTweakData.DLC_GRANT_TYPE_BUY = 3
 DLCTweakData.DLC_NAME_FULL_GAME = "full_game"
 DLCTweakData.DLC_NAME_PREORDER = "preorder"
 DLCTweakData.DLC_NAME_SPECIAL_EDITION = "special_edition"
-DLCTweakData.DLC_NAME_RAID_COMMUNITY = "raid_community"
 DLCTweakData.DLC_NAME_OFFICIAL_SOUNDTRACK = "official_soundtrack"
 DLCTweakData.DLC_NAME_STARTER_KIT = "starter_kit"
 
 function DLCTweakData:init(tweak_data)
-	if managers.dlc:is_installing() then
-		tweak_data.BUNDLED_DLC_PACKAGES = {}
-	else
-		tweak_data.BUNDLED_DLC_PACKAGES = {}
-	end
+	tweak_data.BUNDLED_DLC_PACKAGES = {}
 
 	self:_init_descriptions()
 end
 
 function DLCTweakData:_init_descriptions()
 	self.descriptions = {}
+	self.descriptions[DLCTweakData.DLC_NAME_STARTER_KIT] = {}
+	self.descriptions[DLCTweakData.DLC_NAME_STARTER_KIT].free = true
+	self.descriptions[DLCTweakData.DLC_NAME_STARTER_KIT].content = {
+		loot_global_value = "normal",
+		gold_award = {
+			amount = 50,
+			item = "starter_kit_army_crate",
+		},
+	}
 	self.descriptions[DLCTweakData.DLC_NAME_PREORDER] = {}
 	self.descriptions[DLCTweakData.DLC_NAME_PREORDER].content = {
 		customizations = {
@@ -106,14 +110,11 @@ function DLCTweakData:_init_descriptions()
 		},
 		gold_award = {
 			amount = 50,
-			item = "preorder_army_crate",
+			item = "special_edition_army_crate",
 		},
 		melee_weapons = {
 			{
 				item = "km_dagger",
-			},
-			{
-				item = "marching_mace",
 			},
 		},
 		vehicle_skins = {
@@ -126,16 +127,6 @@ function DLCTweakData:_init_descriptions()
 			{
 				item = "garand_special_edition",
 			},
-		},
-	}
-	self.descriptions[DLCTweakData.DLC_NAME_RAID_COMMUNITY] = {}
-	self.descriptions[DLCTweakData.DLC_NAME_RAID_COMMUNITY].content = {
-		gold_award = {
-			amount = 100,
-			item = "raid_community_group",
-		},
-		random_customization = {
-			item = "raid_community_group",
 		},
 	}
 	self.descriptions[DLCTweakData.DLC_NAME_OFFICIAL_SOUNDTRACK] = {}

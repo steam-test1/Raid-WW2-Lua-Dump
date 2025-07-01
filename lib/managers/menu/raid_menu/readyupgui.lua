@@ -8,6 +8,7 @@ function ReadyUpGui:init(ws, fullscreen_ws, node, component_name)
 		self._synced_document_spawn_chance_to_host = false
 	end
 
+	self._card_control_set_nil = false
 	self._continuing_mission = managers.raid_job:current_job() ~= nil
 
 	ReadyUpGui.super.init(self, ws, fullscreen_ws, node, component_name)
@@ -371,6 +372,8 @@ function ReadyUpGui:_spawn_weapon(params)
 	local weapon_blueprint = params.peer:blackmarket_outfit().primary.blueprint
 	local peer_id = managers.network:session():local_peer():id()
 
+	Application:debug("[WEPTEST], params.peer:id() == peer_id", params.peer:id(), peer_id, params.peer:id() == peer_id)
+
 	if params.peer:id() == peer_id then
 		weapon_blueprint = managers.weapon_factory:modify_skin_blueprint(params.weapon_factory_id, weapon_blueprint)
 	end
@@ -392,30 +395,12 @@ function ReadyUpGui:_assemble_completed(params, parts, blueprint)
 end
 
 function ReadyUpGui:_load_character_empty_skeleton()
-	managers.dyn_resource:load(Idstring("unit"), Idstring(CharacterCustomizationTweakData.CRIMINAL_MENU_SELECT_UNIT), DynamicResourceManager.DYN_RESOURCES_PACKAGE, callback(self, self, "_spawn_character_units"))
-end
-
-function ReadyUpGui:_are_peer_visuals_assembled()
-	if not self._spawned_character_units or not self._weapon_assembled then
-		return false
-	end
-
-	for k, v in pairs(self._spawned_character_units) do
-		if not alive(v) then
-			return false
-		end
-	end
-
-	for k, v in pairs(self._weapon_assembled) do
-		if not v then
-			return false
-		end
-	end
-
-	return true
+	Application:debug("[ReadyUpGui:_load_character_empty_skeleton] Loading skeleton...")
+	managers.dyn_resource:load(IDS_UNIT, Idstring(CharacterCustomizationTweakData.CRIMINAL_MENU_SELECT_UNIT), DynamicResourceManager.DYN_RESOURCES_PACKAGE, callback(self, self, "_spawn_character_units"))
 end
 
 function ReadyUpGui:_spawn_character_units()
+	Application:debug("[ReadyUpGui:_spawn_character_units] Spawning skeleton to dress as player...")
 	self:_get_character_spawn_locations()
 
 	self._spawned_character_units = {}
@@ -444,7 +429,7 @@ function ReadyUpGui:_spawn_character_units()
 
 		self._weapon_assembled[peer] = false
 
-		managers.dyn_resource:load(Idstring("unit"), unit_path, DynamicResourceManager.DYN_RESOURCES_PACKAGE, callback(self, self, "_spawn_weapon", {
+		managers.dyn_resource:load(IDS_UNIT, unit_path, DynamicResourceManager.DYN_RESOURCES_PACKAGE, callback(self, self, "_spawn_weapon", {
 			character_unit = spawned_unit,
 			peer = peer,
 			unit_path = unit_path,
@@ -456,6 +441,26 @@ function ReadyUpGui:_spawn_character_units()
 		local at_time = math.random() * 10
 		local state = spawned_unit:play_redirect(Idstring(anim_state_name), at_time)
 	end
+end
+
+function ReadyUpGui:_are_peer_visuals_assembled()
+	if not self._spawned_character_units or not self._weapon_assembled then
+		return false
+	end
+
+	for k, v in pairs(self._spawned_character_units) do
+		if not alive(v) then
+			return false
+		end
+	end
+
+	for k, v in pairs(self._weapon_assembled) do
+		if not v then
+			return false
+		end
+	end
+
+	return true
 end
 
 function ReadyUpGui:_get_character_spawn_index(control_list_index)
@@ -654,7 +659,11 @@ function ReadyUpGui:_show_player_challenge_card_info()
 		self._empty_card_slot:set_visible(false)
 		self._card_not_selected_label:set_visible(false)
 		self._negative_card_effect_label:set_visible(true)
-	else
+
+		self._card_control_set_nil = false
+	elseif not self._card_control_set_nil then
+		self._card_control_set_nil = true
+
 		self._card_control:set_card(nil)
 		self._positive_card_effect_label:set_text(self:translate("hud_no_challenge_card_text", false))
 
@@ -735,7 +744,7 @@ function ReadyUpGui:_reset_ready_ups()
 
 	if self._player_control_list then
 		for i, control in ipairs(self._player_control_list) do
-			control:set_state("not_ready")
+			control:set_state(RaidGUIControlReadyUpPlayerDescription.STATE_NOT_READY)
 		end
 	end
 end
@@ -849,6 +858,7 @@ function ReadyUpGui:_on_leave_ready_up_button()
 end
 
 function ReadyUpGui:close()
+	Application:debug("[ReadyUpGui:close] Closing")
 	managers.challenge_cards:set_automatic_steam_inventory_refresh(false)
 	managers.menu_component:_voice_panel_align_bottom_right()
 
@@ -957,6 +967,8 @@ function ReadyUpGui:update(t, dt)
 
 	if managers.challenge_cards:did_everyone_locked_sugested_card() then
 		if not self._stinger_played then
+			Application:debug("[ReadyUpGui:update] Ready up stinger...")
+
 			if managers.challenge_cards:get_suggested_cards() and managers.challenge_cards:get_suggested_cards()[1] and managers.challenge_cards:get_suggested_cards()[1].selected_sound then
 				managers.menu_component:post_event(managers.challenge_cards:get_suggested_cards()[1].selected_sound)
 			else
@@ -968,6 +980,8 @@ function ReadyUpGui:update(t, dt)
 
 		for _, unit in pairs(self._spawned_character_units) do
 			if not unit:anim_data().ready_transition_anim_finished then
+				Application:debug("[ReadyUpGui:update] Awaiting animation to finish...")
+
 				return
 			end
 		end
@@ -1058,7 +1072,7 @@ function ReadyUpGui:show_gamercard()
 end
 
 function ReadyUpGui:bind_controller_inputs(is_current_player, can_leave)
-	if not managers.controller:is_xbox_controller_present() or managers.menu:is_pc_controller() then
+	if not managers.controller:is_controller_present() or managers.menu:is_pc_controller() then
 		if is_current_player and not self._ready then
 			local bindings = {
 				{
@@ -1146,7 +1160,7 @@ function ReadyUpGui:bind_controller_inputs(is_current_player, can_leave)
 		end
 	end
 
-	if not is_current_player and _G.IS_XB1 then
+	if not is_current_player and IS_XB1 then
 		local gamercard_key = {
 			callback = callback(self, self, "show_gamercard"),
 			key = Idstring("menu_controller_face_top"),

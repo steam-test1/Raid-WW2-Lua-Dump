@@ -1525,7 +1525,7 @@ function WeaponSkillsTweakData:_init_mp38_skill_tree(tweak_data)
 			challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
 			challenge_done_text_id = "weapon_skill_collect_ammo_completed",
 			cost = 6,
-			value = 5,
+			value = 4,
 			challenge_tasks = {
 				{
 					target = 650,
@@ -2107,7 +2107,7 @@ function WeaponSkillsTweakData:_init_sten_skill_tree(tweak_data)
 			challenge_briefing_id = "weapon_skill_last_round_kill_briefing",
 			challenge_done_text_id = "weapon_skill_last_round_kill_completed",
 			cost = 6,
-			value = 5,
+			value = 4,
 			challenge_tasks = {
 				{
 					target = 20,
@@ -5261,6 +5261,9 @@ function WeaponSkillsTweakData:_init_carbine_skill_tree(tweak_data)
 				},
 			},
 			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
+			weapon_parts = {
+				"wpn_fps_ass_carbine_b_medium",
+			},
 		},
 	}
 	self.skill_trees.carbine[2] = {}
@@ -5283,6 +5286,9 @@ function WeaponSkillsTweakData:_init_carbine_skill_tree(tweak_data)
 				},
 			},
 			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
+			weapon_parts = {
+				"wpn_fps_ass_carbine_b_standard",
+			},
 		},
 	}
 	self.skill_trees.carbine[2][2] = {

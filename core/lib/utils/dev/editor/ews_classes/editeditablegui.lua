@@ -46,7 +46,6 @@ function EditUnitEditableGui:init(editor)
 
 	local ctrlrs_sizer = EWS:BoxSizer("VERTICAL")
 
-	self:_create_color_button(panel, ctrlrs_sizer)
 	self:_create_text_box(panel, ctrlrs_sizer)
 	self:_create_font_combobox(panel, ctrlrs_sizer)
 	self:_create_font_size_slider(panel, ctrlrs_sizer)
@@ -66,7 +65,7 @@ function EditUnitEditableGui:_create_color_button(panel, sizer)
 	sizer:add(horizontal_sizer, 0, 1, "EXPAND")
 	horizontal_sizer:add(EWS:StaticText(panel, "Color:", 0, ""), 0.5, 1, "EXPAND")
 
-	local color_button = EWS:Button(panel, "", "")
+	local color_button = EWS:Button(panel, "Color", "")
 
 	color_button:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "show_color_dialog"), "")
 	horizontal_sizer:add(color_button, 1, 1, "EXPAND")
@@ -98,7 +97,6 @@ function EditUnitEditableGui:_create_font_size_slider(panel, sizer)
 		min = 0.1,
 		name = "Font size:",
 		name_proportions = 1,
-		slider_ctrlr_proportions = 4,
 		tooltip = "Set the font size using the slider",
 		value = 1,
 		panel = panel,
@@ -135,6 +133,13 @@ function EditUnitEditableGui:_create_font_combobox(panel, sizer)
 	ctrlr:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "update_font"), nil)
 
 	self._ctrls.font_list = ctrlr
+
+	local color_button = EWS:Button(panel, "Color", "BU_EXACTFIT")
+
+	color_button:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "show_color_dialog"), "")
+	horizontal_sizer:add(color_button, 0, 5, "EXPAND,LEFT")
+
+	self._ctrls.color_button = color_button
 end
 
 function EditUnitEditableGui:_create_text_aligns_combobox(panel, sizer)
@@ -270,7 +275,6 @@ function EditUnitEditableGui:_create_alpha_slider(panel, sizer)
 		min = 0,
 		name = "Alpha:",
 		name_proportions = 1,
-		slider_ctrlr_proportions = 4,
 		tooltip = "Set the alpha using the slider",
 		value = 1,
 		panel = panel,
@@ -303,7 +307,6 @@ function EditUnitEditableGui:_create_shape_sliders(panel, sizer)
 			max = 1,
 			min = 0,
 			name_proportions = 1,
-			slider_ctrlr_proportions = 4,
 			tooltip = "Set shape using the slider",
 			value = 1,
 			name = "Shape " .. shape .. ":",

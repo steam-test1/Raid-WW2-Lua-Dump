@@ -129,13 +129,14 @@ function RaidGUIControlListItemSaveSlots:_layout_raid_name(params, data)
 end
 
 function RaidGUIControlListItemSaveSlots:_layout_difficulty_locked()
+	local locked_subtext = "--"
 	local difficulty_locked_params = {
-		text = "--",
 		vertical = "center",
 		color = tweak_data.gui.colors.raid_dark_grey,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.extra_small,
 		name = "list_item_label_" .. self._name,
+		text = locked_subtext,
 		x = self._item_icon:x() + self._item_icon:w() + RaidGUIControlListItemSaveSlots.ICON_PADDING,
 	}
 

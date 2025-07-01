@@ -25,7 +25,7 @@ function RaidGUIControlKickMuteWidget:init(parent, params)
 	self:_create_kick_button()
 	self:_create_mute_button()
 
-	if _G.IS_XB1 then
+	if IS_XB1 then
 		self:_create_gamercard_button()
 	end
 
@@ -120,7 +120,7 @@ function RaidGUIControlKickMuteWidget:_create_mute_button()
 		on_unselected_callback = callback(self, self, "on_button_unselected", "mute"),
 	}
 
-	if _G.IS_XB1 then
+	if IS_XB1 then
 		mute_button_params.on_menu_move.left = "gamercard_button_" .. tostring(self._index)
 	else
 		mute_button_params.on_menu_move.left = "list_menu"
@@ -229,7 +229,7 @@ function RaidGUIControlKickMuteWidget:set_peer(peer, mute_button, kick_button)
 		self._mute_button:show()
 	end
 
-	if SystemInfo:platform() == Idstring("XB1") then
+	if IS_XB1 then
 		self._gamercard_button:show()
 	end
 
@@ -290,7 +290,7 @@ function RaidGUIControlKickMuteWidget:_fit_size()
 
 	local button_panel_left
 
-	if _G.IS_XB1 then
+	if IS_XB1 then
 		self._gamercard_button:set_center_x(self._mute_button:center_x() - RaidGUIControlKickMuteWidget.BUTTON_PADDING)
 
 		button_panel_left = self._gamercard_button:x()
@@ -369,7 +369,7 @@ function RaidGUIControlKickMuteWidget:set_move_controls(number_of_widgets_shown,
 	local is_invite_down = invite_widget_shown and self._index == number_of_widgets_shown - 1
 	local on_menu_move
 
-	if _G.IS_XB1 then
+	if IS_XB1 then
 		on_menu_move = {
 			left = "list_menu",
 			down = is_invite_down and "invite_button_" .. tostring(move_down_index) or "gamercard_button_" .. tostring(move_down_index),
@@ -382,7 +382,7 @@ function RaidGUIControlKickMuteWidget:set_move_controls(number_of_widgets_shown,
 
 	on_menu_move = {
 		down = is_invite_down and "invite_button_" .. tostring(move_down_index) or "mute_button_" .. tostring(move_down_index),
-		left = _G.IS_XB1 and "gamercard_button_" .. tostring(self._index) or "list_menu",
+		left = IS_XB1 and "gamercard_button_" .. tostring(self._index) or "list_menu",
 		right = Network:is_server() and "kick_button_" .. tostring(self._index),
 		up = is_invite_up and "invite_button_" .. tostring(move_up_index) or "mute_button_" .. tostring(move_up_index),
 	}

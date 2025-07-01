@@ -212,7 +212,10 @@ function SoundLayer:update(t, dt)
 end
 
 function SoundLayer:build_panel(notebook)
-	SoundLayer.super.build_panel(self, notebook)
+	SoundLayer.super.build_panel(self, notebook, {
+		units_noteboook_proportion = 0,
+		units_notebook_min_size = Vector3(-1, 160, 0),
+	})
 
 	self._sound_panel = EWS:Panel(self._ews_panel, "", "TAB_TRAVERSAL")
 	self._sound_sizer = EWS:BoxSizer("VERTICAL")
@@ -245,7 +248,9 @@ function SoundLayer:build_panel(notebook)
 	local default_emitter_path = managers.sound_environment:game_default_emitter_path()
 	local emitter_paths = managers.sound_environment:emitter_paths()
 	local ctrlr, combobox_params = CoreEws.combobox_and_list({
+		ctrlr_proportions = 3,
 		name = "Categories",
+		sizer_proportions = 1,
 		options = #emitter_paths > 0 and emitter_paths or {
 			"- No emitter paths in project -",
 		},
@@ -260,7 +265,9 @@ function SoundLayer:build_panel(notebook)
 	self._emitter_path_combobox = combobox_params
 
 	local ctrlr, combobox_params = CoreEws.combobox_and_list({
+		ctrlr_proportions = 3,
 		name = "Events",
+		sizer_proportions = 1,
 		sorted = true,
 		options = default_emitter_path and managers.sound_environment:emitter_events(default_emitter_path) or {
 			"- Talk to your sound designer -",
@@ -365,12 +372,13 @@ function SoundLayer:_build_environment()
 	local sound_environment_sizer = EWS:StaticBoxSizer(self._sound_panel, "VERTICAL", "Sound Environment")
 
 	self._priority_params = {
-		ctrlr_proportions = 2,
+		ctrlr_proportions = 3,
 		floats = 0,
 		max = 9,
 		min = 1,
 		name = "Priority:",
 		name_proportions = 1,
+		sizer_proportions = 1,
 		tooltip = "DISABLED",
 		value = 9,
 		panel = self._sound_panel,
@@ -385,7 +393,7 @@ function SoundLayer:_build_environment()
 	local environment_sizer = EWS:BoxSizer("HORIZONTAL")
 
 	self._effect_params = {
-		ctrlr_proportions = 2,
+		ctrlr_proportions = 3,
 		name = "Effect:",
 		name_proportions = 1,
 		sizer_proportions = 1,
@@ -405,13 +413,13 @@ function SoundLayer:_build_environment()
 
 	self._use_environment:set_value(true)
 	self._use_environment:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "toggle_use_environment"), nil)
-	environment_sizer:add(self._use_environment, 0, 0, "EXPAND")
+	environment_sizer:add(self._use_environment, 0, 2, "EXPAND,LEFT")
 	sound_environment_sizer:add(environment_sizer, 1, 0, "EXPAND")
 
 	local ambience_sizer = EWS:BoxSizer("HORIZONTAL")
 
 	self._ambience_params = {
-		ctrlr_proportions = 2,
+		ctrlr_proportions = 3,
 		name = "Ambience:",
 		name_proportions = 1,
 		sizer_proportions = 1,
@@ -431,13 +439,13 @@ function SoundLayer:_build_environment()
 
 	self._use_ambience:set_value(true)
 	self._use_ambience:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "toggle_use_ambience"), nil)
-	ambience_sizer:add(self._use_ambience, 0, 0, "EXPAND")
+	ambience_sizer:add(self._use_ambience, 0, 2, "EXPAND,LEFT")
 	sound_environment_sizer:add(ambience_sizer, 1, 0, "EXPAND")
 
 	local occasional_sizer = EWS:BoxSizer("HORIZONTAL")
 
 	self._occasional_params = {
-		ctrlr_proportions = 2,
+		ctrlr_proportions = 3,
 		name = "Occasional:",
 		name_proportions = 1,
 		sizer_proportions = 1,
@@ -457,7 +465,7 @@ function SoundLayer:_build_environment()
 
 	self._use_occasional:set_value(true)
 	self._use_occasional:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "toggle_use_occasional"), nil)
-	occasional_sizer:add(self._use_occasional, 0, 0, "EXPAND")
+	occasional_sizer:add(self._use_occasional, 0, 2, "EXPAND,LEFT")
 	sound_environment_sizer:add(occasional_sizer, 1, 0, "EXPAND")
 
 	self._sound_environment_sizer = sound_environment_sizer

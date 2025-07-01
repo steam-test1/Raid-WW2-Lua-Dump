@@ -1,14 +1,12 @@
 ContourExt = ContourExt or class()
 
 local idstr_contour = Idstring("contour")
-local idstr_material = Idstring("material")
 local idstr_contour_color = Idstring("contour_color")
 local idstr_contour_opacity = Idstring("contour_opacity")
+local idstr_contour_distance = Idstring("contour_distance")
 
+ContourExt.UNSET_CONTOUR_DISTANCE = 200000
 ContourExt._types = {
-	boris = {
-		priority = 5,
-	},
 	deployable_active = {
 		priority = 3,
 		unique = true,
@@ -29,21 +27,15 @@ ContourExt._types = {
 		unique = true,
 		color = tweak_data.contour.deployable.selected_color,
 	},
-	drunk_pilot = {
-		priority = 5,
-	},
 	friendly = {
-		material_swap_required = true,
 		priority = 3,
 		color = tweak_data.contour.character.friendly_color,
 	},
 	generic_interactable = {
-		material_swap_required = true,
 		priority = 2,
 		color = tweak_data.contour.character_interactable.standard_color,
 	},
 	generic_interactable_selected = {
-		material_swap_required = true,
 		priority = 1,
 		color = tweak_data.contour.character_interactable.selected_color,
 	},
@@ -52,43 +44,49 @@ ContourExt._types = {
 		color = tweak_data.contour.interactable.standard_color,
 	},
 	highlight_character = {
-		material_swap_required = true,
 		priority = 6,
 		color = tweak_data.contour.interactable.standard_color,
 	},
 	hostage_trade = {
-		material_swap_required = true,
 		priority = 1,
 		color = tweak_data.contour.character_interactable.standard_color,
 	},
 	mark_enemy = {
 		fadeout = 4.5,
 		fadeout_silent = 13.5,
-		material_swap_required = true,
 		priority = 5,
 		color = tweak_data.contour.character.dangerous_color,
 	},
 	mark_enemy_damage_bonus = {
-		damage_bonus = true,
-		fadeout = 4.5,
-		fadeout_silent = 13.5,
-		material_swap_required = true,
+		fadeout = 16,
 		priority = 4,
 		color = tweak_data.contour.character.more_dangerous_color,
 	},
 	mark_enemy_ghost = {
+		distance = 3200,
 		fadeout = 0,
-		material_swap_required = true,
-		persistence = 0,
-		priority = 2,
+		persistence = 0.1,
+		priority = 6,
 		color = tweak_data.contour.character.ghost_warcry,
 	},
 	mark_enemy_sharpshooter = {
 		fadeout = 0,
-		material_swap_required = true,
-		persistence = 0,
-		priority = 0,
+		persistence = 0.1,
+		priority = 3,
 		color = tweak_data.contour.character.sharpshooter_warcry,
+	},
+	mark_enemy_silver_bullet = {
+		distance = 3000,
+		fadeout = 0,
+		persistence = 0.1,
+		priority = 6,
+		color = tweak_data.contour.character.silver_bullet_warcry,
+	},
+	mark_enemy_turret = {
+		fadeout = 4.5,
+		fadeout_silent = 13.5,
+		priority = 5,
+		color = tweak_data.contour.character.dangerous_color,
 	},
 	mark_unit = {
 		fadeout = 4.5,
@@ -105,20 +103,10 @@ ContourExt._types = {
 		priority = 3,
 		color = tweak_data.contour.character.friendly_color,
 	},
-	taxman = {
-		priority = 5,
-		color = tweak_data.contour.character_interactable.standard_color,
-	},
 	teammate = {
-		off_opacity = 1,
-		persistence = 0.3,
+		persistence = 0.1,
 		priority = 5,
 		ray_check = true,
-		off_color = Vector3(0, 0, 0),
-	},
-	teammate_cuffed = {
-		priority = 4,
-		color = tweak_data.contour.character.downed_color,
 	},
 	teammate_dead = {
 		priority = 4,
@@ -159,25 +147,19 @@ function ContourExt:init(unit)
 	end
 end
 
-function ContourExt:enabled()
-	return self._enabled > 0
-end
-
 function ContourExt:add(type, sync, multiplier, damage_multiplier)
 	if Global.debug_contour_enabled then
 		return
 	end
 
 	local data = self._types[type]
-	local fadeout = data.fadeout
-
-	if data.fadeout_silent and self._unit:base():char_tweak().silent_priority_shout then
-		fadeout = data.fadeout_silent
-	end
+	local fadeout = data.fadeout_silent or data.fadeout
 
 	if multiplier and multiplier > 1 then
 		fadeout = fadeout * multiplier
 	end
+
+	self:_upd_distance(data.distance or ContourExt.UNSET_CONTOUR_DISTANCE)
 
 	self._contour_list = self._contour_list or {}
 
@@ -199,7 +181,7 @@ function ContourExt:add(type, sync, multiplier, damage_multiplier)
 		end
 	end
 
-	if damage_multiplier and damage_multiplier > 1 then
+	if damage_multiplier and self._unit:character_damage().on_marked_state then
 		self._unit:character_damage():on_marked_state(true, damage_multiplier)
 
 		self._damage_bonus = true
@@ -241,29 +223,10 @@ function ContourExt:change_color(type, color)
 			setup.color = color
 
 			self:_upd_color()
+			self:_material_applied()
 
 			break
 		end
-	end
-end
-
-function ContourExt:_set_color(type, color)
-	if not self._contour_list then
-		return
-	end
-
-	for i, setup in ipairs(self._contour_list) do
-		if setup.type == type then
-			self._materials = self:_get_materials()
-
-			for _, material in ipairs(self._materials) do
-				if alive(material) then
-					material:set_variable(idstr_contour_color, color * self._enabled)
-				end
-			end
-		end
-
-		return
 	end
 end
 
@@ -285,28 +248,30 @@ function ContourExt:flash(type_or_id, frequency)
 	end
 end
 
-function ContourExt:is_flashing()
-	if not self._contour_list then
-		return
-	end
-
-	for i, setup in ipairs(self._contour_list) do
-		if setup.flash_frequency then
-			return true
-		end
-	end
-end
-
 function ContourExt:disable()
 	self._materials = self:_get_materials()
 	self._enabled = 0
 
 	for _, material in pairs(self._materials) do
 		if alive(material) then
-			material:set_variable(idstr_contour_opacity, 0)
 			material:set_variable(idstr_contour_color, Vector3(0, 0, 0))
-			material:set_variable(Idstring("contour_distance"), 0)
+			material:set_variable(idstr_contour_opacity, 0)
+			material:set_variable(idstr_contour_distance, 0)
 		end
+	end
+end
+
+function ContourExt:update_materials()
+	if self._contour_list and next(self._contour_list) then
+		self._materials = nil
+		self._last_color = nil
+		self._last_opacity = nil
+		self._last_distance = nil
+		self._target_color = nil
+		self._target_opacity = nil
+		self._target_distance = nil
+
+		self:_material_applied()
 	end
 end
 
@@ -348,9 +313,193 @@ function ContourExt:remove_by_id(id, sync)
 	end
 end
 
-function ContourExt:_clear()
-	self._contour_list = nil
-	self._materials = nil
+function ContourExt:enabled()
+	return self._enabled > 0
+end
+
+function ContourExt:is_flashing()
+	if not self._contour_list then
+		return
+	end
+
+	for i, setup in ipairs(self._contour_list) do
+		if setup.flash_frequency then
+			return true
+		end
+	end
+end
+
+function ContourExt:update(unit, t, dt)
+	local index = 1
+
+	while self._contour_list and index <= #self._contour_list do
+		local setup = self._contour_list[index]
+		local data = self._types[setup.type]
+		local is_current = index == 1
+
+		if data.ray_check and is_current then
+			self:_upd_ray_check(t, dt, data, setup)
+		end
+
+		if setup.flash_t and t > setup.flash_t then
+			setup.flash_t = t + setup.flash_frequency
+			setup.flash_on = not setup.flash_on
+
+			self:_upd_opacity(setup.flash_on and 1 or 0)
+		end
+
+		if setup.fadeout_t and t > setup.fadeout_t then
+			self:_remove(index)
+			self:_chk_update_state()
+		else
+			index = index + 1
+		end
+	end
+end
+
+function ContourExt:_upd_ray_check(t, dt, data, setup)
+	if not alive(self._unit) or not self._unit:movement() then
+		return
+	end
+
+	local turn_on
+	local cam_pos = managers.viewport:get_current_camera_position()
+
+	if cam_pos then
+		turn_on = mvector3.distance_sq(cam_pos, self._unit:movement():m_com()) > 16000000
+		turn_on = turn_on or self._unit:raycast("ray", self._unit:movement():m_com(), cam_pos, "slot_mask", self._slotmask_world_geometry, "report")
+	end
+
+	if setup.turned_on ~= turn_on then
+		if turn_on then
+			setup.turned_on = turn_on
+			setup.turn_off_t = nil
+			self._target_color = setup.color
+			self._target_opacity = 1
+			self._target_distance = ContourExt.UNSET_CONTOUR_DISTANCE
+		elseif data.persistence and not setup.turn_off_t then
+			setup.turn_off_t = t + data.persistence
+		elseif not data.persistence or t >= setup.turn_off_t then
+			setup.turned_on = turn_on
+			setup.turn_off_t = nil
+			self._target_color = data.off_color
+			self._target_opacity = data.off_opacity or 0
+			self._target_distance = ContourExt.UNSET_CONTOUR_DISTANCE
+		end
+	end
+
+	if self._target_color and self._last_color ~= self._target_color then
+		local color = math.step(self._last_color or setup.color, self._target_color, 5 * dt)
+
+		self:_upd_color(color)
+	end
+
+	if self._target_opacity and self._last_opacity ~= self._target_opacity then
+		local opacity = math.step(self._last_opacity or 0, self._target_opacity, 5 * dt)
+
+		self:_upd_opacity(opacity)
+	end
+
+	if self._target_distance and self._last_distance ~= self._target_distance then
+		local distance = self._target_distance
+
+		self:_upd_distance(distance)
+	end
+end
+
+function ContourExt:_upd_color(color, is_retry)
+	color = color or self._types[self._contour_list[1].type].color or self._contour_list[1].color
+
+	if not color or color == self._last_color then
+		return
+	end
+
+	self._last_color = color
+	self._materials = self:_get_materials()
+
+	for _, material in ipairs(self._materials) do
+		if not alive(material) then
+			self:update_materials()
+
+			if not is_retry then
+				self:_upd_color(color, true)
+			end
+
+			return
+		end
+
+		material:set_variable(idstr_contour_color, color * self._enabled)
+	end
+end
+
+function ContourExt:_upd_opacity(opacity, is_retry)
+	if opacity == self._last_opacity then
+		return
+	end
+
+	if Global.debug_contour_enabled and opacity == 1 then
+		return
+	end
+
+	self._last_opacity = opacity
+	self._materials = self:_get_materials()
+
+	for _, material in ipairs(self._materials) do
+		if not alive(material) then
+			self:update_materials()
+
+			if not is_retry then
+				self:_upd_opacity(opacity, true)
+			end
+
+			return
+		end
+
+		material:set_variable(idstr_contour_opacity, opacity * self._enabled)
+	end
+end
+
+function ContourExt:_upd_distance(distance, is_retry)
+	if distance == self._last_distance then
+		return
+	end
+
+	self._last_distance = distance
+	self._materials = self:_get_materials()
+
+	for _, material in ipairs(self._materials) do
+		if not alive(material) then
+			self:update_materials()
+
+			if not is_retry then
+				self:_upd_distance(distance, true)
+			end
+
+			return
+		end
+
+		material:set_variable(idstr_contour_distance, distance * self._enabled)
+	end
+end
+
+function ContourExt:_chk_update_state()
+	local needs_update
+
+	if self._contour_list and next(self._contour_list) then
+		for i, setup in ipairs(self._contour_list) do
+			if setup.fadeout_t or self._types[setup.type].ray_check or setup.flash_t then
+				needs_update = true
+
+				break
+			end
+		end
+	end
+
+	if self._update_enabled ~= needs_update then
+		self._update_enabled = needs_update
+
+		self._unit:set_extension_update_enabled(idstr_contour, needs_update and true or false)
+	end
 end
 
 function ContourExt:_remove(index, sync)
@@ -377,7 +526,11 @@ function ContourExt:_remove(index, sync)
 			self._unit:base():set_allow_invisible(true)
 		else
 			for _, material in ipairs(self._materials) do
-				material:set_variable(idstr_contour_opacity, 0)
+				if alive(material) then
+					material:set_variable(idstr_contour_opacity, 0)
+				else
+					Application:error("[function ContourExt:_remove] Tried setting vars on a dead material", material)
+				end
 			end
 		end
 
@@ -388,7 +541,12 @@ function ContourExt:_remove(index, sync)
 		end
 	end
 
+	self._last_color = nil
 	self._last_opacity = nil
+	self._last_distance = nil
+	self._target_color = nil
+	self._target_opacity = nil
+	self._target_distance = nil
 
 	table.remove(self._contour_list, index)
 
@@ -405,156 +563,69 @@ function ContourExt:_remove(index, sync)
 	end
 end
 
-function ContourExt:update(unit, t, dt)
-	local index = 1
-
-	while self._contour_list and index <= #self._contour_list do
-		local setup = self._contour_list[index]
-		local data = self._types[setup.type]
-		local is_current = index == 1
-
-		if data.ray_check then
-			local turn_on
-
-			if is_current then
-				local cam_pos = managers.viewport:get_current_camera_position()
-
-				if cam_pos then
-					turn_on = mvector3.distance_sq(cam_pos, unit:movement():m_com()) > 16000000
-					turn_on = turn_on or unit:raycast("ray", unit:movement():m_com(), cam_pos, "slot_mask", self._slotmask_world_geometry, "report")
-				end
-			end
-
-			if turn_on then
-				self:_upd_color()
-				self:_upd_opacity(1)
-
-				setup.last_turned_on_t = t
-			elseif not setup.last_turned_on_t or t - setup.last_turned_on_t > data.persistence then
-				local color = data.off_color or setup.color
-
-				self:_set_color(setup.type, color)
-
-				if is_current then
-					local op = data.off_opacity or 0
-
-					self:_upd_opacity(op)
-				end
-
-				setup.last_turned_on_t = nil
-			end
-		end
-
-		if setup.flash_t and t > setup.flash_t then
-			setup.flash_t = t + setup.flash_frequency
-			setup.flash_on = not setup.flash_on
-
-			self:_upd_opacity(setup.flash_on and 1 or 0)
-		end
-
-		if setup.fadeout_t and t > setup.fadeout_t then
-			self:_remove(index)
-			self:_chk_update_state()
-		else
-			index = index + 1
-		end
-	end
-end
-
 function ContourExt:_get_materials()
+	if self._materials then
+		return self._materials
+	end
+
+	local check_units = {}
+	local materials = {}
 	local customization = self._unit:customization()
 
-	if customization and customization._attached_units then
-		local materials = {}
+	if customization and customization:has_attached_units() then
+		table.map_append(check_units, customization:attached_units())
+	else
+		table.insert(check_units, self._unit)
+	end
 
-		for _, attached_unit in pairs(customization._attached_units) do
-			if alive(attached_unit) then
-				for _, material in ipairs(attached_unit:materials()) do
-					table.insert(materials, material)
+	local inventory = self._unit:inventory()
+	local weapon = inventory and inventory.get_weapon and inventory:get_weapon()
+
+	if weapon then
+		table.insert(check_units, weapon)
+	end
+
+	if check_units then
+		for _, u in pairs(check_units) do
+			if alive(u) then
+				for _, m in ipairs(u:materials()) do
+					if m:variable_exists(idstr_contour_color) then
+						table.insert(materials, m)
+					end
 				end
 			end
 		end
-
-		return materials
-	else
-		return self._materials or self._unit:get_objects_by_type(idstr_material)
-	end
-end
-
-function ContourExt:_upd_opacity(opacity, is_retry)
-	if opacity == self._last_opacity then
-		return
 	end
 
-	if Global.debug_contour_enabled and opacity == 1 then
-		return
-	end
-
-	self._materials = self:_get_materials()
-
-	for _, material in ipairs(self._materials) do
-		if not alive(material) then
-			self:update_materials()
-
-			if not is_retry then
-				self:_upd_opacity(opacity, true)
-
-				self._last_opacity = opacity
-			end
-
-			return
-		end
-
-		material:set_variable(idstr_contour_opacity, opacity * self._enabled)
-	end
-end
-
-function ContourExt:_upd_color(is_retry)
-	local color = self._types[self._contour_list[1].type].color or self._contour_list[1].color
-
-	if not color then
-		return
-	end
-
-	self._materials = self:_get_materials()
-
-	for _, material in ipairs(self._materials) do
-		if not alive(material) then
-			self:update_materials()
-
-			if not is_retry then
-				self:_upd_color(true)
-			end
-
-			return
-		end
-
-		material:set_variable(idstr_contour_color, color * self._enabled)
-	end
+	return materials
 end
 
 function ContourExt:_apply_top_preset()
 	local setup = self._contour_list[1]
 	local data = self._types[setup.type]
 
+	self._last_color = nil
 	self._last_opacity = nil
+	self._last_distance = nil
+	self._target_color = nil
+	self._target_opacity = nil
+	self._target_distance = nil
 
 	if data.material_swap_required then
 		self._materials = nil
-		self._last_opacity = nil
 
 		if self._unit:base():is_in_original_material() then
-			self._unit:base():swap_material_config(callback(self, ContourExt, "material_applied", true))
+			self._unit:base():swap_material_config(callback(self, ContourExt, "_material_applied", true))
 		else
-			self:material_applied()
+			self:_material_applied()
 		end
 	else
 		managers.occlusion:remove_occlusion(self._unit)
-		self:material_applied()
+		self:_material_applied()
 	end
 end
 
-function ContourExt:material_applied()
+function ContourExt:_material_applied()
 	if not self._contour_list then
 		return
 	end
@@ -564,43 +635,22 @@ function ContourExt:material_applied()
 
 	self._materials = nil
 
-	self:_upd_color()
+	if data.ray_check then
+		setup.turned_on = nil
 
-	if not data.ray_check then
-		self:_upd_opacity(1)
-	end
-end
-
-function ContourExt:_chk_update_state()
-	local needs_update
-
-	if self._contour_list and next(self._contour_list) then
-		for i, setup in ipairs(self._contour_list) do
-			if setup.fadeout_t or self._types[setup.type].ray_check or setup.flash_t then
-				needs_update = true
-
-				break
-			end
-		end
-	end
-
-	if self._update_enabled ~= needs_update then
-		self._update_enabled = needs_update
-
-		self._unit:set_extension_update_enabled(idstr_contour, needs_update and true or false)
-	end
-end
-
-function ContourExt:update_materials()
-	if self._contour_list and next(self._contour_list) then
-		self._materials = nil
-
+		self:_upd_color(data.off_color)
+		self:_upd_opacity(data.off_opacity or 0)
+		self:_upd_distance(data.off_distance or 0)
+	else
 		self:_upd_color()
-
-		self._last_opacity = nil
-
 		self:_upd_opacity(1)
+		self:_upd_distance(ContourExt.UNSET_CONTOUR_DISTANCE)
 	end
+end
+
+function ContourExt:_clear()
+	self._contour_list = nil
+	self._materials = nil
 end
 
 function ContourExt:save(data)

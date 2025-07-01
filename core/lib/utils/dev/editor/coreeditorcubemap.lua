@@ -44,19 +44,25 @@ function CoreEditor:create_projection_light(type)
 	for _, data in ipairs(units) do
 		local unit = data.unit
 		local light = unit:get_object(Idstring(data.light_name))
-		local enabled = light:enable()
+		local is_spot = string.find(light:properties(), "spot") and true or false
 		local resolution = unit:unit_data().projection_lights and unit:unit_data().projection_lights[light:name():s()] and unit:unit_data().projection_lights[light:name():s()].x
 
 		resolution = resolution or EditUnitLight.DEFAULT_SHADOW_RESOLUTION
 
+		if not is_spot then
+			unit:set_rotation(Rotation(0, 0, 0))
+			Application:debug("[CoreEditor:create_projection_light] TEMPFIX: Unit was rotated to fix light baking!", unit)
+		end
+
 		table.insert(lights, {
 			name = "",
-			enabled = enabled,
+			enabled = light:enable(),
 			light = light,
 			output_name = unit:unit_data().unit_id,
 			position = light:position(),
 			resolution = resolution,
-			spot = string.find(light:properties(), "spot") and true or false,
+			rotation = light:rotation(),
+			spot = is_spot,
 			unit = unit,
 		})
 		light:set_enable(false)
@@ -86,6 +92,8 @@ function CoreEditor:create_projection_light(type)
 		cubes = lights,
 		saved_environment = saved_environment,
 	})
+
+	self._cube_map_done = false
 end
 
 function CoreEditor:_create_cube_light(params)
@@ -117,6 +125,7 @@ function CoreEditor:create_cube_map(params)
 		table.insert(self._cubes_que, {
 			name = "camera",
 			position = self:camera():position(),
+			rotation = self:camera():rotation(),
 		})
 	end
 
@@ -130,6 +139,7 @@ function CoreEditor:create_cube_map(params)
 
 	self:camera():set_aspect_ratio(1)
 	self:camera():set_width_multiplier(1)
+	self:camera():set_near_range(1)
 	self:set_show_camera_info(false)
 	self._layers[self._mission_layer_name]:set_enabled(false)
 
@@ -137,6 +147,7 @@ function CoreEditor:create_cube_map(params)
 	self._show_center = false
 
 	self:on_hide_helper_units({
+		ignore_max_per_frame = true,
 		vis = false,
 	})
 
@@ -178,7 +189,11 @@ function CoreEditor:next_cube()
 	if #self._cubes_que > 0 then
 		local cube = table.remove(self._cubes_que, 1)
 
-		self:set_camera(cube.position, self._saved_camera.rot)
+		if cube.unit then
+			cube.rotation = Rotation(cube.rotation:x() + cube.unit:rotation():x(), cube.rotation:y() + cube.unit:rotation():y(), cube.rotation:z() + cube.unit:rotation():z())
+		end
+
+		self:set_camera(cube.position, cube.rotation)
 
 		local resolution = cube.resolution or 512
 
@@ -209,9 +224,21 @@ function CoreEditor:cube_map_done()
 		return
 	end
 
+	self._cube_map_done = true
+
 	if self._cubemap_params.saved_environment then
 		managers.viewport:set_default_environment(self._cubemap_params.saved_environment, nil, nil)
 	end
+
+	self:viewport():vp():set_post_processor_effect("World", Idstring("dof_prepare_post_processor"), self._default_post_processor_effect)
+
+	local bloom_combine_effect = self._default_post_processor_effect == Idstring("empty") and Idstring("bloom_combine_empty") or Idstring("bloom_DOF_combine")
+
+	self:viewport():vp():set_post_processor_effect("World", Idstring("bloom_combine_post_processor"), bloom_combine_effect)
+	self:viewport():vp():set_post_processor_effect("World", Idstring("deferred"), Idstring("deferred_lighting"))
+	self:viewport():vp():set_post_processor_effect("World", Idstring("depth_projection"), Idstring("depth_project_empty"))
+	self:viewport():vp():set_post_processor_effect("World", Idstring("volumetric_light_scatter"), Idstring("volumetric_light_scatter"))
+	self:viewport():vp():set_post_processor_effect("World", Idstring("post_motion_blur"), Idstring("motion_blur"))
 
 	if self._saved_all_lights then
 		for _, data in ipairs(self._saved_all_lights) do
@@ -222,15 +249,6 @@ function CoreEditor:cube_map_done()
 	end
 
 	if self._cubemap_params.lights then
-		self:viewport():vp():set_post_processor_effect("World", Idstring("dof_prepare_post_processor"), self._default_post_processor_effect)
-
-		local bloom_combine_effect = self._default_post_processor_effect == Idstring("empty") and Idstring("bloom_combine_empty") or Idstring("bloom_DOF_combine")
-
-		self:viewport():vp():set_post_processor_effect("World", Idstring("bloom_combine_post_processor"), bloom_combine_effect)
-		self:viewport():vp():set_post_processor_effect("World", Idstring("deferred"), Idstring("deferred_lighting"))
-		self:viewport():vp():set_post_processor_effect("World", Idstring("depth_projection"), Idstring("depth_project_empty"))
-		self:viewport():vp():set_post_processor_effect("World", Idstring("volumetric_light_scatter"), Idstring("volumetric_light_scatter"))
-		self:viewport():vp():set_post_processor_effect("World", Idstring("post_motion_blur"), Idstring("motion_blur"))
 		self:_recompile(self._cubemap_params.output_path)
 
 		for _, cube in ipairs(self._cubemap_params.cubes) do
@@ -248,6 +266,7 @@ function CoreEditor:cube_map_done()
 	self._show_center = self._saved_show_center
 
 	self:on_hide_helper_units({
+		ignore_max_per_frame = false,
 		vis = true,
 	})
 

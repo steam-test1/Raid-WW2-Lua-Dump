@@ -185,31 +185,23 @@ function MissionJoinGui:_layout_server_list_table()
 		name = "servers_title_label",
 		vertical = "top",
 		w = 320,
-		x = 0,
-		y = 0,
 		color = tweak_data.gui.colors.raid_red,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.title,
 		text = utf8.to_upper(managers.localization:text("menu_mission_join_server_list_title")),
 	})
-
-	local server_list_scrollable_area_params = {
+	self._server_list_scrollable_area = self._list_panel:scrollable_area({
 		h = 720,
 		name = "servers_table_scrollable_area",
 		scroll_step = 35,
 		w = 1216,
-		x = 0,
 		y = 96,
-	}
-
-	self._server_list_scrollable_area = self._list_panel:scrollable_area(server_list_scrollable_area_params)
+	})
 	self._params_servers_table = {
 		loop_items = true,
 		name = "servers_table",
 		use_row_dividers = true,
 		use_selector_mark = true,
-		x = 0,
-		y = 0,
 		on_selected_callback = callback(self, self, "bind_controller_inputs"),
 		scrollable_area_ref = self._server_list_scrollable_area,
 		table_params = {
@@ -293,7 +285,7 @@ function MissionJoinGui:_layout_server_list_table()
 		w = self._server_list_scrollable_area:w(),
 	}
 
-	if _G.IS_XB1 or _G.IS_XB360 then
+	if IS_XB1 then
 		self._params_servers_table.on_menu_move = {
 			right = "player_description_1",
 		}
@@ -385,7 +377,7 @@ function MissionJoinGui:_layout_game_description()
 			y = (counter - 1) * 96,
 		}
 
-		if _G.IS_XB1 or _G.IS_XB360 then
+		if IS_XB1 then
 			player_description_params.on_menu_move = {
 				left = "servers_table",
 				down = "player_description_" .. tostring(counter % 3 + 1),
@@ -537,9 +529,6 @@ end
 function MissionJoinGui:_layout_footer_buttons()
 	self._join_button = self._footer_buttons_panel:short_primary_button({
 		name = "join_button",
-		visible = true,
-		x = 0,
-		y = 0,
 		on_click_callback = callback(self, self, "on_click_join_button"),
 		on_menu_move = {
 			left = "friends_only_button",
@@ -552,10 +541,8 @@ function MissionJoinGui:_layout_footer_buttons()
 		h = 28,
 		name = "apply_filters_button",
 		vertical = "center",
-		visible = true,
 		w = 128,
 		x = 1280,
-		y = 0,
 		color = Color.black,
 		highlight_color = Color.white,
 		on_click_callback = callback(self, self, "on_click_apply_filters_button"),
@@ -568,10 +555,8 @@ function MissionJoinGui:_layout_footer_buttons()
 		h = 28,
 		name = "show_filters_button",
 		vertical = "center",
-		visible = true,
 		w = 128,
 		x = 1536,
-		y = 0,
 		color = Color.black,
 		highlight_color = Color.white,
 		on_click_callback = callback(self, self, "on_click_show_filters_button"),
@@ -587,7 +572,6 @@ function MissionJoinGui:_layout_footer_buttons()
 		vertical = "center",
 		w = 320,
 		x = 960,
-		y = 0,
 		color = tweak_data.gui.colors.raid_white,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.large,
@@ -608,10 +592,6 @@ function MissionJoinGui:close()
 	MissionJoinGui.super.close(self)
 	managers.network.matchmake:register_callback("search_lobby", nil)
 	self:_remove_active_controls()
-end
-
-function MissionJoinGui:update(t, dt)
-	return
 end
 
 function MissionJoinGui:friends_only_button_on_click()
@@ -979,7 +959,7 @@ function MissionJoinGui:_set_game_description_data(data)
 		end
 	end
 
-	if _G.IS_XB1 or _G.IS_XB360 then
+	if IS_XB1 then
 		for i = 1, control_counter do
 			if not self._player_controls[i] then
 				break
@@ -1043,7 +1023,7 @@ function MissionJoinGui:_set_game_description_data(data)
 		local type_definition = tweak_data.challenge_cards.type_definition[card_data.card_type]
 
 		self._desc_challenge_card_type_icon_on_card:set_image(type_definition.texture_path)
-		self._desc_challenge_card_type_icon_on_card:set_texture_rect(type_definition.texture_rect)
+		self._desc_challenge_card_type_icon_on_card:set_texture_rect(type_definition.texture_rect or tweak_data.challenge_cards.challenge_card_texture_rect)
 
 		local bonus_description, malus_description = managers.challenge_cards:get_card_description(card_key_name)
 		local card_effect_y = 64
@@ -1081,9 +1061,9 @@ function MissionJoinGui:_set_game_description_data(data)
 	end
 end
 
-local is_win32 = _G.IS_PC
-local is_xb1 = _G.IS_XB1
-local is_ps4 = _G.IS_PS4
+local is_win32 = IS_PC
+local is_xb1 = IS_XB1
+local is_ps4 = IS_PS4
 
 function MissionJoinGui:_find_online_games(friends_only)
 	if is_win32 then

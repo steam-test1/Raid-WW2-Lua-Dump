@@ -19,7 +19,7 @@ function MountedWeaponTweakData:_init_data_sherman()
 	self.sherman.turret = {
 		armor_piercing = true,
 		damage = 25,
-		damage_radius = 1000,
+		damage_radius = 750,
 		gun_locator = "anim_gun",
 		locator = "anim_turret",
 		player_damage = 15,
@@ -43,7 +43,7 @@ function MountedWeaponTweakData:_init_data_tiger()
 	self.tiger.turret = {
 		armor_piercing = true,
 		damage = 75,
-		damage_radius = 1000,
+		damage_radius = 750,
 		gun_locator = "anim_gun",
 		locator = "anim_turret",
 		player_damage = 15,
@@ -67,7 +67,7 @@ function MountedWeaponTweakData:_init_data_luchs()
 	self.luchs.turret = {
 		armor_piercing = true,
 		damage = 35,
-		damage_radius = 1000,
+		damage_radius = 750,
 		gun_locator = "anim_turret_pitch",
 		locator = "anim_turret_heading",
 		player_damage = 15,

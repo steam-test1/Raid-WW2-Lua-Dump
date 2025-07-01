@@ -1,4 +1,15 @@
 HUDPlayerCustody = HUDPlayerCustody or class()
+HUDPlayerCustody.SPECTATOR_PANEL_W = 520
+HUDPlayerCustody.SPECTATOR_PANEL_H = 72
+HUDPlayerCustody.SPECTATOR_TEXT = "hud_spectator_prompt_current"
+HUDPlayerCustody.SPECTATOR_TEXT_FONT = tweak_data.gui.fonts.din_compressed_outlined_38
+HUDPlayerCustody.SPECTATOR_TEXT_FONT_SIZE = tweak_data.gui.font_sizes.dialg_title
+HUDPlayerCustody.SPECTATOR_BACKGROUND = "backgrounds_chat_bg"
+HUDPlayerCustody.SPECTATOR_BACKGROUND_H = 44
+HUDPlayerCustody.BUTTON_PROMPT_TEXT_FONT = tweak_data.gui.fonts.din_compressed_outlined_24
+HUDPlayerCustody.BUTTON_PROMPT_TEXT_FONT_SIZE = tweak_data.gui.font_sizes.extra_small
+HUDPlayerCustody.BUTTON_PROMPT_TEXT_COLOR = tweak_data.gui.colors.raid_white
+HUDPlayerCustody.BUTTON_PROMPT_CYCLE = "hud_spectator_prompt_cycle"
 
 function HUDPlayerCustody:init(hud)
 	self._hud = hud
@@ -56,6 +67,89 @@ function HUDPlayerCustody:init(hud)
 	self._last_trade_delay_time = -1
 end
 
+function HUDPlayerCustody:set_spectator_info(unit)
+	if not self._spectator_panel then
+		self:_create_spectator_info(self._hud_panel:child("custody_panel"))
+	end
+
+	if alive(unit) then
+		local nick_name = unit:base():nick_name()
+
+		self._spectator_text:set_text(utf8.to_upper(nick_name))
+		self._spectator_panel:set_visible(true)
+		self:_refresh_button_prompt()
+	else
+		self._spectator_panel:set_visible(false)
+	end
+end
+
+function HUDPlayerCustody:_create_spectator_info(parent)
+	self._spectator_panel = parent:panel({
+		halign = "left",
+		name = "spectator_panel",
+		valign = "bottom",
+		h = HUDPlayerCustody.SPECTATOR_PANEL_H,
+		w = HUDPlayerCustody.SPECTATOR_PANEL_W,
+	})
+
+	self._spectator_panel:set_center_x(parent:w() / 2)
+	self._spectator_panel:set_bottom(parent:h() - 25)
+
+	local spectator_background = self._spectator_panel:bitmap({
+		name = "spectator_background",
+		h = HUDPlayerCustody.SPECTATOR_BACKGROUND_H,
+		texture = tweak_data.gui.icons[HUDPlayerCustody.SPECTATOR_BACKGROUND].texture,
+		texture_rect = tweak_data.gui.icons[HUDPlayerCustody.SPECTATOR_BACKGROUND].texture_rect,
+		w = HUDPlayerCustody.SPECTATOR_PANEL_W,
+	})
+
+	self._spectator_text = self._spectator_panel:text({
+		align = "center",
+		halign = "center",
+		name = "spectator_text",
+		text = "SPECTATING",
+		valign = "center",
+		vertical = "center",
+		font = HUDPlayerCustody.SPECTATOR_TEXT_FONT,
+		font_size = HUDPlayerCustody.SPECTATOR_TEXT_FONT_SIZE,
+		h = HUDPlayerCustody.SPECTATOR_BACKGROUND_H,
+		layer = spectator_background:layer() + 1,
+	})
+	self._button_prompt = self._spectator_panel:text({
+		align = "center",
+		halign = "center",
+		name = "prompt_previous",
+		text = "",
+		valign = "center",
+		vertical = "bottom",
+		color = HUDPlayerCustody.BUTTON_PROMPT_TEXT_COLOR,
+		font = HUDPlayerCustody.BUTTON_PROMPT_TEXT_FONT,
+		font_size = HUDPlayerCustody.BUTTON_PROMPT_TEXT_FONT_SIZE,
+	})
+
+	self:_refresh_button_prompt()
+end
+
+function HUDPlayerCustody:_refresh_button_prompt()
+	local btn_macros
+
+	if managers.controller:is_using_controller() then
+		btn_macros = {
+			BTN_LEFT = managers.localization:get_default_macros().BTN_PRIMARY,
+			BTN_RIGHT = managers.localization:get_default_macros().BTN_SECONDARY,
+		}
+	else
+		btn_macros = {
+			BTN_LEFT = managers.localization:btn_macro("left"),
+			BTN_RIGHT = managers.localization:btn_macro("right"),
+		}
+	end
+
+	local prompt_text = managers.localization:text(HUDPlayerCustody.BUTTON_PROMPT_CYCLE, btn_macros)
+
+	self._button_prompt:set_text(utf8.to_upper(prompt_text))
+end
+
 function HUDPlayerCustody:set_pumpkin_challenge()
 	local top_text = utf8.to_upper(managers.localization:text("card_ra_season_of_resurrection_name_id"))
 
@@ -82,26 +176,6 @@ function HUDPlayerCustody:set_respawn_time(time)
 	local time_text = self:_get_time_text(time)
 
 	self._timer:set_text(utf8.to_upper(tostring(time_text)))
-end
-
-function HUDPlayerCustody:set_civilians_killed(amount)
-	return
-end
-
-function HUDPlayerCustody:set_trade_delay(time)
-	return
-end
-
-function HUDPlayerCustody:set_trade_delay_visible(visible)
-	return
-end
-
-function HUDPlayerCustody:set_negotiating_visible(visible)
-	return
-end
-
-function HUDPlayerCustody:set_can_be_trade_visible(visible)
-	return
 end
 
 function HUDPlayerCustody:_get_time_text(time)
@@ -139,4 +213,24 @@ function HUDPlayerCustody:set_respawn_type(is_ai_trade)
 
 		self._last_respawn_type_is_ai_trade = is_ai_trade
 	end
+end
+
+function HUDPlayerCustody:set_civilians_killed(amount)
+	return
+end
+
+function HUDPlayerCustody:set_trade_delay(time)
+	return
+end
+
+function HUDPlayerCustody:set_trade_delay_visible(visible)
+	return
+end
+
+function HUDPlayerCustody:set_negotiating_visible(visible)
+	return
+end
+
+function HUDPlayerCustody:set_can_be_trade_visible(visible)
+	return
 end

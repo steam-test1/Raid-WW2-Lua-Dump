@@ -19,6 +19,7 @@ require("lib/managers/menu/raid_menu/RaidMenuOptionsControlsControllerMapping")
 require("lib/managers/menu/raid_menu/RaidMenuOptionsVideo")
 require("lib/managers/menu/raid_menu/RaidMenuOptionsVideoAdvanced")
 require("lib/managers/menu/raid_menu/RaidMenuOptionsSound")
+require("lib/managers/menu/raid_menu/RaidMenuOptionsInterface")
 require("lib/managers/menu/raid_menu/RaidMenuOptionsNetwork")
 require("lib/managers/menu/raid_menu/RaidMenuCreditsGui")
 require("lib/managers/menu/raid_menu/RaidOptionsBackground")
@@ -125,6 +126,10 @@ function MenuComponentManager:init()
 		close = callback(self, self, "close_raid_menu_options_video_advanced_gui"),
 		create = callback(self, self, "create_raid_menu_options_video_advanced_gui"),
 	}
+	self._active_components.raid_menu_options_interface = {
+		close = callback(self, self, "close_raid_menu_options_interface_gui"),
+		create = callback(self, self, "create_raid_menu_options_interface_gui"),
+	}
 	self._active_components.raid_options_background = {
 		close = callback(self, self, "close_raid_options_background_gui"),
 		create = callback(self, self, "create_raid_options_background_gui"),
@@ -183,6 +188,8 @@ function MenuComponentManager:init()
 	}
 	self._active_controls = {}
 	self._update_components = {}
+
+	self._sound_source:post_event("close_pause_menu")
 end
 
 function MenuComponentManager:save(data)
@@ -233,7 +240,7 @@ function MenuComponentManager:_destroy_controller_input()
 
 		self._controller_connected = nil
 
-		if _G.IS_PC then
+		if IS_PC then
 			self._fullscreen_ws:disconnect_keyboard()
 			self._fullscreen_ws:panel():key_press(nil)
 		end
@@ -964,7 +971,7 @@ function MenuComponentManager:on_peer_removed(peer, reason)
 end
 
 function MenuComponentManager:_create_chat_gui()
-	if _G.IS_PC and MenuCallbackHandler:is_multiplayer() and managers.network:session() then
+	if IS_PC and MenuCallbackHandler:is_multiplayer() and managers.network:session() then
 		if self._game_chat_gui then
 			self:show_game_chat_gui()
 		else
@@ -1002,7 +1009,7 @@ function MenuComponentManager:create_chat_gui()
 end
 
 function MenuComponentManager:add_game_chat()
-	if _G.IS_PC then
+	if IS_PC then
 		self._game_chat_gui = ChatGui:new(self._ws)
 
 		if self._game_chat_params then
@@ -1130,55 +1137,6 @@ function MenuComponentManager:close_view_character_profile_gui()
 		self:remove_minimized(self._view_character_profile_gui_minimized_id)
 
 		self._view_character_profile_gui_minimized_id = nil
-	end
-end
-
-function MenuComponentManager:get_texture_from_mod_type(type, sub_type, gadget, silencer, is_auto, equipped, mods, types, is_a_path)
-	local texture
-
-	if is_a_path then
-		texture = type
-	elseif silencer then
-		texture = "guis/textures/pd2/blackmarket/inv_mod_silencer"
-	elseif type == "gadget" then
-		texture = "guis/textures/pd2/blackmarket/inv_mod_" .. (gadget or "flashlight")
-	elseif type == "upper_reciever" or type == "lower_reciever" then
-		texture = "guis/textures/pd2/blackmarket/inv_mod_custom"
-	elseif type == "custom" then
-		texture = "guis/textures/pd2/blackmarket/inv_mod_" .. (sub_type or is_auto and "autofire" or "singlefire")
-	elseif type == "sight" then
-		texture = "guis/textures/pd2/blackmarket/inv_mod_scope"
-	elseif type == "ammo" then
-		if equipped then
-			texture = "guis/textures/pd2/blackmarket/inv_mod_" .. tostring(sub_type or type)
-		elseif mods and #mods > 0 then
-			local weapon_factory_tweak_data = tweak_data.weapon.factory.parts
-			local part_id = mods[1][1]
-
-			type = weapon_factory_tweak_data[part_id].type
-			sub_type = weapon_factory_tweak_data[part_id].sub_type
-			texture = "guis/textures/pd2/blackmarket/inv_mod_" .. tostring(sub_type or type)
-		end
-
-		texture = "guis/textures/pd2/blackmarket/inv_mod_" .. tostring(sub_type or type)
-	elseif type == "bonus" then
-		if equipped then
-			texture = "guis/textures/pd2/blackmarket/inv_mod_" .. tostring(sub_type or type)
-		else
-			texture = "guis/textures/pd2/blackmarket/inv_mod_bonus"
-		end
-
-		texture = "guis/textures/pd2/blackmarket/inv_mod_" .. tostring(sub_type or type)
-	else
-		texture = "guis/textures/pd2/blackmarket/inv_mod_" .. type
-	end
-
-	return texture
-end
-
-function MenuComponentManager:set_blackmarket_tradable_loaded(error)
-	if self._blackmarket_gui then
-		self._blackmarket_gui:set_tradable_loaded(error)
 	end
 end
 
@@ -1523,6 +1481,7 @@ function MenuComponentManager:close()
 	end
 
 	self:_destroy_controller_input()
+	self:close_menu_alert()
 
 	if self._requested_textures then
 		for key, entry in pairs(self._requested_textures) do
@@ -1532,143 +1491,6 @@ function MenuComponentManager:close()
 
 	self._requested_textures = {}
 	self._block_texture_requests = true
-end
-
-function MenuComponentManager:play_transition(run_in_pause)
-	if self._transition_panel then
-		self._transition_panel:parent():remove(self._transition_panel)
-	end
-
-	self._transition_panel = self._fullscreen_ws:panel():panel({
-		layer = 10000,
-		name = "transition_panel",
-	})
-
-	self._transition_panel:rect({
-		halign = "scale",
-		name = "fade1",
-		valign = "scale ",
-		color = Color.black,
-	})
-
-	local function animate_transition(o)
-		local fade1 = o:child("fade1")
-		local seconds = 0.5
-		local t = 0
-		local dt, p
-
-		while t < seconds do
-			dt = coroutine.yield()
-
-			if dt == 0 and run_in_pause then
-				dt = TimerManager:main():delta_time()
-			end
-
-			t = t + dt
-			p = t / seconds
-
-			fade1:set_alpha(1 - p)
-		end
-	end
-
-	self._transition_panel:animate(animate_transition)
-end
-
-function MenuComponentManager:test_camera_shutter_tech()
-	if not self._tcst then
-		self._tcst = managers.gui_data:create_fullscreen_16_9_workspace()
-
-		local o = self._tcst:panel():panel({
-			layer = 10000,
-		})
-		local b = o:rect({
-			halign = "scale",
-			layer = 5,
-			name = "black",
-			valign = "scale",
-			color = Color.black,
-		})
-
-		local function one_frame_hide(o)
-			o:hide()
-			coroutine.yield()
-			o:show()
-		end
-
-		b:animate(one_frame_hide)
-	end
-
-	local o = self._tcst:panel():children()[1]
-
-	local function animate_fade(o)
-		local black = o:child("black")
-
-		over(0.5, function(p)
-			black:set_alpha(1 - p)
-		end)
-	end
-
-	o:stop()
-	o:animate(animate_fade)
-end
-
-function MenuComponentManager:create_test_gui()
-	if alive(Global.test_gui) then
-		Overlay:gui():destroy_workspace(Global.test_gui)
-
-		Global.test_gui = nil
-	end
-
-	Global.test_gui = managers.gui_data:create_fullscreen_16_9_workspace()
-
-	local panel = Global.test_gui:panel()
-	local bg = panel:rect({
-		layer = 1000,
-		color = Color.black,
-	})
-	local size = 48
-	local x = 0
-
-	for i = 3, 3 do
-		local bitmap = panel:bitmap({
-			layer = 1001,
-			name = "bitmap",
-			render_template = "TextDistanceField",
-			rotation = 360,
-			texture = "guis/dlcs/big_bank/textures/pd2/pre_planning/mezzanine_test",
-		})
-
-		bitmap:set_size(bitmap:texture_width() * i, bitmap:texture_height() * i)
-		bitmap:set_position(x, 0)
-
-		x = bitmap:right() + 10
-	end
-end
-
-function MenuComponentManager:destroy_test_gui()
-	if alive(Global.test_gui) then
-		Overlay:gui():destroy_workspace(Global.test_gui)
-
-		Global.test_gui = nil
-	end
-end
-
-function MenuComponentManager:close_raid_menu_test_gui(node, component)
-	if component then
-		self._active_controls[component] = {}
-	end
-
-	if self._raid_menu_test_gui then
-		self._raid_menu_test_gui:close()
-
-		self._raid_menu_test_gui = nil
-
-		local active_menu = managers.menu:active_menu()
-
-		if active_menu then
-			active_menu.input:set_force_input(false)
-		end
-	end
 end
 
 function MenuComponentManager:create_raid_menu_mission_selection_gui(node, component)
@@ -1798,8 +1620,6 @@ function MenuComponentManager:_create_raid_menu_mission_join_gui(node, component
 		active_menu.input:set_force_input(true)
 	end
 
-	table.insert(self._update_components, self._raid_menu_mission_join_gui)
-
 	return self._raid_menu_mission_join_gui
 end
 
@@ -1809,7 +1629,6 @@ function MenuComponentManager:close_raid_menu_mission_join_gui(node, component)
 	end
 
 	if self._raid_menu_mission_join_gui then
-		self:removeFromUpdateTable(self._raid_menu_mission_join_gui)
 		self._raid_menu_mission_join_gui:close()
 
 		self._raid_menu_mission_join_gui = nil
@@ -2726,6 +2545,52 @@ function MenuComponentManager:close_raid_menu_options_video_advanced_gui(node, c
 	end
 end
 
+function MenuComponentManager:create_raid_menu_options_interface_gui(node, component)
+	return self:_create_raid_menu_options_interface_gui(node, component)
+end
+
+function MenuComponentManager:_create_raid_menu_options_interface_gui(node, component)
+	self:close_raid_menu_options_interface_gui(node, component)
+
+	self._raid_options_interface_gui = RaidMenuOptionsInterface:new(self._ws, self._fullscreen_ws, node, component)
+
+	if component then
+		self._active_controls[component] = {}
+
+		local final_list = self._active_controls[component]
+
+		for _, control in ipairs(self._raid_options_interface_gui._root_panel._controls) do
+			self:_collect_controls(control, final_list)
+		end
+	end
+
+	local active_menu = managers.menu:active_menu()
+
+	if active_menu then
+		active_menu.input:set_force_input(true)
+	end
+
+	return self._raid_options_interface_gui
+end
+
+function MenuComponentManager:close_raid_menu_options_interface_gui(node, component)
+	if component then
+		self._active_controls[component] = {}
+	end
+
+	if self._raid_options_interface_gui then
+		self._raid_options_interface_gui:close()
+
+		self._raid_options_interface_gui = nil
+
+		local active_menu = managers.menu:active_menu()
+
+		if active_menu then
+			active_menu.input:set_force_input(false)
+		end
+	end
+end
+
 function MenuComponentManager:create_raid_ready_up_gui(node, component)
 	self:close_raid_ready_up_gui(node, component)
 
@@ -2851,6 +2716,7 @@ function MenuComponentManager:create_raid_challenge_cards_loot_reward_gui(node, 
 end
 
 function MenuComponentManager:_create_raid_challenge_cards_loot_reward_gui(node, component)
+	Application:debug("[MenuComponentManager:_create_raid_challenge_cards_loot_reward_gui] CREATE RAID CHALLENGE CARDS REWARD GUI")
 	self:close_raid_challenge_cards_loot_reward_gui(node, component)
 
 	self._raid_challenge_cards_loot_reward_gui = ChallengeCardsLootRewardGui:new(self._ws, self._fullscreen_ws, node, component)
@@ -2912,6 +2778,8 @@ function MenuComponentManager:_create_raid_menu_xp(node, component)
 		for _, control in ipairs(self._raid_menu_xp_gui._root_panel._controls) do
 			self:_collect_controls(control, final_list)
 		end
+
+		final_list._equippable_upgrades = self._raid_menu_xp_gui._equippable_upgrades
 	end
 
 	local active_menu = managers.menu:active_menu()
@@ -3322,9 +3190,9 @@ function MenuComponentManager:_update_voice_chat_ui(params)
 	local user_data = params.user_data
 	local is_local_user = false
 
-	if SystemInfo:platform() == Idstring("XB1") then
+	if IS_XB1 then
 		is_local_user = managers.network.account:player_id() == user_data.user_xuid
-	elseif SystemInfo:platform() == Idstring("PS4") then
+	elseif IS_PS4 then
 		is_local_user = managers.network.account:username_id() == user_data.user_name
 	end
 
@@ -3332,9 +3200,9 @@ function MenuComponentManager:_update_voice_chat_ui(params)
 
 	if is_local_user then
 		peer_to_update = managers.network:session():local_peer()
-	elseif SystemInfo:platform() == Idstring("XB1") then
+	elseif IS_XB1 then
 		peer_to_update = managers.network:session():peer_by_xuid(user_data.user_xuid)
-	elseif SystemInfo:platform() == Idstring("PS4") then
+	elseif IS_PS4 then
 		peer_to_update = managers.network:session():peer_by_name(user_data.user_name)
 	end
 
@@ -3351,5 +3219,24 @@ function MenuComponentManager:_update_voice_chat_ui(params)
 				self._voice_chat_widgets[peer_id]:hide_chat_indicator()
 			end
 		end
+	end
+end
+
+function MenuComponentManager:create_menu_alert(params)
+	if self._raid_menu_alert and self._raid_menu_alert:name() == params.name then
+		-- block empty
+	else
+		self:close_menu_alert()
+
+		params = params or {}
+		self._raid_menu_alert = RaidGUIControlMenuAlert:new(self._fullscreen_ws, params)
+	end
+end
+
+function MenuComponentManager:close_menu_alert()
+	if self._raid_menu_alert then
+		self._raid_menu_alert:close()
+
+		self._raid_menu_alert = nil
 	end
 end

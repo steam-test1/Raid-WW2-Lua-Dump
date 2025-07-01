@@ -8,9 +8,14 @@ RaidMainMenuGui.STEAM_GROUP_BUTTON_H = 306
 function RaidMainMenuGui:init(ws, fullscreen_ws, node, component_name)
 	RaidMainMenuGui.super.init(self, ws, fullscreen_ws, node, component_name)
 	managers.menu:mark_main_menu(true)
-	managers.raid_menu:show_background()
+
+	if RaidMenuCallbackHandler:is_in_main_menu() then
+		managers.raid_menu:show_background_video()
+	else
+		managers.raid_menu:show_background()
+	end
+
 	self:_mod_overrides_warning()
-	managers.gold_economy:get_gold_awards()
 end
 
 function RaidMainMenuGui:_mod_overrides_warning()
@@ -37,16 +42,12 @@ function RaidMainMenuGui:_setup_properties()
 end
 
 function RaidMainMenuGui:_layout()
-	self._display_invite_widget = not _G.IS_PC
+	self._display_invite_widget = not IS_PC
 
 	RaidMainMenuGui.super._layout(self)
 	self:_layout_title_logo()
 	self:_layout_list_menu()
 	self:_layout_version_id()
-
-	if game_state_machine:current_state_name() == "menu_main" and not managers.dlc:is_dlc_unlocked(DLCTweakData.DLC_NAME_RAID_COMMUNITY) then
-		self:_layout_steam_group_button()
-	end
 
 	local playing_tutorial = false
 
@@ -55,7 +56,7 @@ function RaidMainMenuGui:_layout()
 	end
 
 	if not playing_tutorial and (managers.platform:rich_presence() == "MPPlaying" or managers.platform:rich_presence() == "MPLobby") then
-		Application:trace("MPPlaying MPPlaying MPPlaying MPPlaying MPPlaying!!")
+		Application:trace("[RaidMainMenuGui:_layout] MPPlaying!!")
 		self:_layout_kick_mute_widget()
 		managers.system_event_listener:add_listener("main_menu_drop_in", {
 			CoreSystemEventListenerManager.SystemEventListenerManager.EVENT_DROP_IN,
@@ -94,8 +95,12 @@ function RaidMainMenuGui:_layout_title_logo()
 
 	local logo_texture, logo_texture_rect
 	local is_halloween = tweak_data.lootdrop:get_month_event() == LootDropTweakData.EVENT_MONTH_HALLOWEEN
+	local is_freeweek = Steam:is_subscribed_from_free_weekend()
 
-	if is_halloween then
+	if is_freeweek then
+		logo_texture = tweak_data.gui.icons.raid_logo_small.texture
+		logo_texture_rect = tweak_data.gui.icons.raid_logo_small.texture_rect
+	elseif is_halloween then
 		logo_texture = tweak_data.gui.icons.raid_hw_logo_small.texture
 		logo_texture_rect = tweak_data.gui.icons.raid_hw_logo_small.texture_rect
 	elseif managers.dlc:is_dlc_unlocked(DLCTweakData.DLC_NAME_SPECIAL_EDITION) then
@@ -177,7 +182,7 @@ function RaidMainMenuGui:_layout_list_menu()
 			on_menu_move = {},
 		}
 
-		if SystemInfo:platform() == Idstring("XB1") then
+		if IS_XB1 then
 			list_menu_params_multiplayer.on_menu_move.right = "gamercard_button_1"
 		else
 			list_menu_params_multiplayer.on_menu_move.right = "mute_button_1"
@@ -209,9 +214,9 @@ function RaidMainMenuGui:_layout_version_id()
 	local debug_show_all = false
 	local GAP = " | "
 
-	if SystemInfo:distribution() == Idstring("STEAM") then
+	if IS_STEAM then
 		text = NetworkMatchMakingSTEAM._BUILD_SEARCH_INTEREST_KEY or "Network Key Missing!"
-	elseif _G.IS_PC then
+	elseif IS_PC then
 		text = NetworkMatchMaking._BUILD_SEARCH_INTEREST_KEY or "Network Key Missing!"
 	end
 
@@ -232,53 +237,6 @@ function RaidMainMenuGui:_layout_version_id()
 	}
 
 	self._version_id = self._root_panel:label(item_params)
-end
-
-function RaidMainMenuGui:_layout_steam_group_button()
-	local steam_group_panel_params = {
-		h = 576,
-		halign = "right",
-		layer = 50,
-		name = "steam_group_panel",
-		valign = "bottom",
-		w = 1024,
-	}
-
-	self._steam_group_panel = self._root_panel:panel(steam_group_panel_params)
-	self._steam_button_t = 0
-	self._steam_button_pressed_scale = 0.95
-
-	local group_button_frame_params = {
-		halign = "scale",
-		layer = 10,
-		name = "steam_group_button_frame",
-		texture = "ui/elements/banner_steam_group_frame",
-		valign = "scale",
-	}
-
-	self._steam_group_button_frame = self._steam_group_panel:bitmap(group_button_frame_params)
-
-	self._steam_group_button_frame:set_center_x(self._steam_group_panel:w() / 2)
-
-	local group_button_image_params = {
-		halign = "scale",
-		layer = 5,
-		name = "steam_group_button_image",
-		texture = "ui/elements/banner_steam_group",
-		valign = "scale",
-		on_mouse_enter_callback = callback(self, self, "mouse_over_steam_group_button"),
-		on_mouse_exit_callback = callback(self, self, "mouse_exit_steam_group_button"),
-		on_mouse_pressed_callback = callback(self, self, "mouse_pressed_steam_group_button"),
-		on_mouse_released_callback = callback(self, self, "mouse_released_steam_group_button"),
-	}
-
-	self._steam_group_button_image = self._steam_group_panel:image(group_button_image_params)
-
-	self._steam_group_button_image:set_center_x(self._steam_group_panel:w() / 2)
-	self._steam_group_panel:set_w(RaidMainMenuGui.STEAM_GROUP_BUTTON_W)
-	self._steam_group_panel:set_h(RaidMainMenuGui.STEAM_GROUP_BUTTON_H)
-	self._steam_group_panel:set_right(self._root_panel:w())
-	self._steam_group_panel:set_bottom(self._root_panel:h() - 77)
 end
 
 function RaidMainMenuGui:mouse_over_steam_group_button()
@@ -515,7 +473,7 @@ function RaidMainMenuGui:_layout_kick_mute_widget()
 
 		if self._widget_label_panel:visible() then
 			if widget_index > 1 then
-				if _G.IS_XB1 then
+				if IS_XB1 then
 					menu_move.right = "gamercard_button_1"
 				else
 					menu_move.right = "mute_button_1"
@@ -654,6 +612,14 @@ function RaidMainMenuGui:_list_menu_data_source()
 	table.insert(_list_items, {
 		callback = "on_multiplayer_clicked",
 		availability_flags = {
+			RaidGUIItemAvailabilityFlag.IS_IN_MAIN_MENU,
+			RaidGUIItemAvailabilityFlag.SHOULD_NOT_SHOW_TUTORIAL,
+		},
+		text = utf8.to_upper(managers.localization:text("menu_servers")),
+	})
+	table.insert(_list_items, {
+		callback = "on_multiplayer_clicked",
+		availability_flags = {
 			RaidGUIItemAvailabilityFlag.IS_IN_CAMP,
 			RaidGUIItemAvailabilityFlag.IS_MULTIPLAYER,
 		},
@@ -677,8 +643,7 @@ function RaidMainMenuGui:_list_menu_data_source()
 		},
 		breadcrumb = {
 			delay = 0.2,
-			category = BreadcrumbManager.CATEGORY_WEAPON,
-			check_callback = callback(managers.weapon_skills, managers.weapon_skills, "has_new_weapon_upgrades"),
+			check_callback = callback(managers.weapon_skills, managers.weapon_skills, "has_weapon_breadcrumbs"),
 		},
 		text = utf8.to_upper(managers.localization:text("menu_header_weapons_screen_name")),
 	})
@@ -692,6 +657,18 @@ function RaidMainMenuGui:_list_menu_data_source()
 			category = BreadcrumbManager.CATEGORY_RANK_REWARD,
 		},
 		text = utf8.to_upper(managers.localization:text("menu_skills")),
+	})
+	table.insert(_list_items, {
+		callback = "on_select_challenge_cards_view_clicked",
+		availability_flags = {
+			RaidGUIItemAvailabilityFlag.IS_IN_CAMP,
+			RaidGUIItemAvailabilityFlag.IS_MULTIPLAYER,
+		},
+		breadcrumb = {
+			delay = 0.2,
+			category = BreadcrumbManager.CATEGORY_CARD,
+		},
+		text = utf8.to_upper(managers.localization:text("menu_challenge_cards")),
 	})
 	table.insert(_list_items, {
 		callback = "on_options_clicked",

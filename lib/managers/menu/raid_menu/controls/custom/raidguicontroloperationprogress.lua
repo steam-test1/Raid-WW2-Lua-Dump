@@ -1,6 +1,6 @@
 RaidGUIControlOperationProgress = RaidGUIControlOperationProgress or class(RaidGUIControl)
 RaidGUIControlOperationProgress.HEADING_FONT = tweak_data.gui.fonts.din_compressed
-RaidGUIControlOperationProgress.HEADING_FONT_SIZE = 22
+RaidGUIControlOperationProgress.HEADING_FONT_SIZE = 28
 RaidGUIControlOperationProgress.HEADING_COLOR = tweak_data.gui.colors.raid_light_red
 RaidGUIControlOperationProgress.HEADING_PADDING_DOWN = 5
 RaidGUIControlOperationProgress.PARAGRAPH_FONT = tweak_data.gui.fonts.lato
@@ -90,13 +90,13 @@ function RaidGUIControlOperationProgress:_create_part(i, y, header_id, paragraph
 
 	part_header:set_w(w)
 	part_header:set_h(h)
-	part_header:set_center_y(16)
+	part_header:set_center_y(20)
 
 	local paragraph_params = {
 		name = "paragraph",
 		wrap = true,
 		x = 0,
-		y = 32,
+		y = 48,
 		color = RaidGUIControlOperationProgress.PARAGRAPH_COLOR,
 		font = RaidGUIControlOperationProgress.PARAGRAPH_FONT,
 		font_size = RaidGUIControlOperationProgress.PARAGRAPH_FONT_SIZE,

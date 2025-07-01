@@ -1329,6 +1329,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.british_ace_jacket_001_upper.rarity = LootDropTweakData.RARITY_HALLOWEEN_2017
 	self.customizations.british_ace_jacket_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
 	self.customizations.british_ace_jacket_001_upper.droppable = true
+	self.customizations.british_ace_jacket_001_upper.is_challenge_reward = true
 	self.customizations.british_ace_jacket_001_lower = {}
 	self.customizations.british_ace_jacket_001_lower.name = "character_customization_british_ace_jacket_001_lower_name"
 	self.customizations.british_ace_jacket_001_lower.description = "character_customization_british_ace_jacket_001_lower_desc"
@@ -1343,6 +1344,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.british_ace_jacket_001_lower.redeem_xp = 0
 	self.customizations.british_ace_jacket_001_lower.rarity = LootDropTweakData.RARITY_HALLOWEEN_2017
 	self.customizations.british_ace_jacket_001_lower.droppable = true
+	self.customizations.british_ace_jacket_001_lower.is_challenge_reward = true
 	self.customizations.german_ace_jacket_001_upper = {}
 	self.customizations.german_ace_jacket_001_upper.name = "character_customization_german_ace_jacket_001_upper_name"
 	self.customizations.german_ace_jacket_001_upper.description = "character_customization_german_ace_jacket_001_upper_desc"
@@ -1358,6 +1360,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.german_ace_jacket_001_upper.rarity = LootDropTweakData.RARITY_HALLOWEEN_2017
 	self.customizations.german_ace_jacket_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
 	self.customizations.german_ace_jacket_001_upper.droppable = true
+	self.customizations.german_ace_jacket_001_upper.is_challenge_reward = true
 	self.customizations.german_ace_jacket_001_lower = {}
 	self.customizations.german_ace_jacket_001_lower.name = "character_customization_german_ace_jacket_001_lower_name"
 	self.customizations.german_ace_jacket_001_lower.description = "character_customization_german_ace_jacket_001_lower_desc"
@@ -1372,6 +1375,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.german_ace_jacket_001_lower.redeem_xp = 0
 	self.customizations.german_ace_jacket_001_lower.rarity = LootDropTweakData.RARITY_HALLOWEEN_2017
 	self.customizations.german_ace_jacket_001_lower.droppable = true
+	self.customizations.german_ace_jacket_001_lower.is_challenge_reward = true
 	self.customizations.russian_ace_jacket_001_upper = {}
 	self.customizations.russian_ace_jacket_001_upper.name = "character_customization_soviet_ace_jacket_001_upper_name"
 	self.customizations.russian_ace_jacket_001_upper.description = "character_customization_soviet_ace_jacket_001_upper_desc"
@@ -1387,6 +1391,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.russian_ace_jacket_001_upper.rarity = LootDropTweakData.RARITY_HALLOWEEN_2017
 	self.customizations.russian_ace_jacket_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
 	self.customizations.russian_ace_jacket_001_upper.droppable = true
+	self.customizations.russian_ace_jacket_001_upper.is_challenge_reward = true
 	self.customizations.russian_ace_jacket_001_lower = {}
 	self.customizations.russian_ace_jacket_001_lower.name = "character_customization_soviet_ace_jacket_001_lower_name"
 	self.customizations.russian_ace_jacket_001_lower.description = "character_customization_soviet_ace_jacket_001_lower_desc"
@@ -1401,6 +1406,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.russian_ace_jacket_001_lower.redeem_xp = 0
 	self.customizations.russian_ace_jacket_001_lower.rarity = LootDropTweakData.RARITY_HALLOWEEN_2017
 	self.customizations.russian_ace_jacket_001_lower.droppable = true
+	self.customizations.russian_ace_jacket_001_lower.is_challenge_reward = true
 	self.customizations.american_ace_jacket_001_upper = {}
 	self.customizations.american_ace_jacket_001_upper.name = "character_customization_usa_ace_jacket_001_upper_name"
 	self.customizations.american_ace_jacket_001_upper.description = "character_customization_usa_ace_jacket_001_upper_desc"
@@ -1416,6 +1422,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.american_ace_jacket_001_upper.rarity = LootDropTweakData.RARITY_HALLOWEEN_2017
 	self.customizations.american_ace_jacket_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
 	self.customizations.american_ace_jacket_001_upper.droppable = true
+	self.customizations.american_ace_jacket_001_upper.is_challenge_reward = true
 	self.customizations.american_ace_jacket_001_lower = {}
 	self.customizations.american_ace_jacket_001_lower.name = "character_customization_usa_ace_jacket_001_lower_name"
 	self.customizations.american_ace_jacket_001_lower.description = "character_customization_usa_ace_jacket_001_lower_desc"
@@ -1430,6 +1437,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.american_ace_jacket_001_lower.redeem_xp = 0
 	self.customizations.american_ace_jacket_001_lower.rarity = LootDropTweakData.RARITY_HALLOWEEN_2017
 	self.customizations.american_ace_jacket_001_lower.droppable = true
+	self.customizations.american_ace_jacket_001_lower.is_challenge_reward = true
 	self.customizations.british_bomber_jacket_001_upper = {}
 	self.customizations.british_bomber_jacket_001_upper.name = "character_customization_british_bomber_jacket_001_upper_name"
 	self.customizations.british_bomber_jacket_001_upper.description = "character_customization_british_bomber_jacket_001_upper_desc"
@@ -1738,33 +1746,33 @@ function CharacterCustomizationTweakData:initialization()
 		"british_default_lower",
 		"russian_default_lower",
 		"american_gangbanger_001_lower",
-		"russian_commisar_001_lower",
+		"british_gangbanger_001_lower",
 		"german_officer_001_lower",
 		"british_officer_001_lower",
 		"british_casual_001_lower",
 		"british_casual_003_lower",
 		"british_casual_004_lower",
-		"british_gangbanger_001_lower",
+		"russian_commisar_001_lower",
 		"russian_commisar_002_lower",
+		"russian_commisar_003_lower",
 		"german_gangbanger_001_lower",
 		"american_gangbanger_002_lower",
-		"german_officer_002_lower",
 		"russian_casual_001_lower",
 		"american_casual_001_lower",
 		"american_officer_001_lower",
 		"american_officer_002_lower",
+		"german_officer_002_lower",
+		"british_officer_002_lower",
 		"american_grunt_001_lower",
 		"german_grunt_001_lower",
-		"german_grunt_002_lower",
-		"russian_commisar_003_lower",
-		"russian_mech_001_lower",
 		"russian_grunt_001_lower",
+		"german_grunt_002_lower",
+		"russian_grunt_002_lower",
+		"russian_mech_001_lower",
 		"british_casual_002_lower",
 		"german_gangbanger_002_lower",
 		"american_gangbanger_003_lower",
-		"russian_grunt_002_lower",
 		"german_grunt_003_lower",
-		"british_officer_002_lower",
 		"british_bomber_jacket_001_lower",
 		"american_bomber_jacket_001_lower",
 		"german_bomber_jacket_001_lower",

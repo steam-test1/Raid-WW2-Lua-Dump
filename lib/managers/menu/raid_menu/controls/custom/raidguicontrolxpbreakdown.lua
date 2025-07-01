@@ -70,9 +70,8 @@ function RaidGUIControlXPBreakdown:_create_experience_label()
 end
 
 function RaidGUIControlXPBreakdown:_create_breakdown_table(params)
-	local breakdown_table_params = {
+	self._breakdown_table = self._control_panel:table({
 		name = "breakdown_table",
-		x = 0,
 		table_params = {
 			columns = {
 				{
@@ -99,10 +98,8 @@ function RaidGUIControlXPBreakdown:_create_breakdown_table(params)
 			},
 		},
 		w = RaidGUIControlXPBreakdown.DEFAULT_W,
-		y = self._experience_label:y() + self._experience_label:h() + RaidGUIControlXPBreakdown.LABEL_PADDING_DOWN,
-	}
-
-	self._breakdown_table = self._control_panel:table(breakdown_table_params)
+		y = self._experience_label:bottom() + RaidGUIControlXPBreakdown.LABEL_PADDING_DOWN,
+	})
 end
 
 function RaidGUIControlXPBreakdown:_create_total()
@@ -186,8 +183,4 @@ function RaidGUIControlXPBreakdown:_animate_table_fade_in()
 	end
 
 	self._breakdown_table._table_panel:set_alpha(1)
-end
-
-function RaidGUIControlXPBreakdown:set_debug(value)
-	self._control_border:set_debug(value)
 end

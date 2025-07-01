@@ -3,19 +3,90 @@ SkillTreeTweakData.CLASS_RECON = "recon"
 SkillTreeTweakData.CLASS_ASSAULT = "assault"
 SkillTreeTweakData.CLASS_INFILTRATOR = "infiltrator"
 SkillTreeTweakData.CLASS_DEMOLITIONS = "demolitions"
-SkillTreeTweakData.STARTING_SUBCLASS_LEVEL = 5
+SkillTreeTweakData.TYPE_WARCRY = 1
+SkillTreeTweakData.TYPE_BOOSTS = 2
+SkillTreeTweakData.TYPE_TALENT = 3
+SkillTreeTweakData.TYPE_WEAPON = 4
+SkillTreeTweakData.TYPE_UNLOCKS = 5
+SkillTreeTweakData.TYPE_TRANSLATIONS = {}
+SkillTreeTweakData.TYPE_TRANSLATIONS[SkillTreeTweakData.TYPE_WARCRY] = "warcry"
+SkillTreeTweakData.TYPE_TRANSLATIONS[SkillTreeTweakData.TYPE_BOOSTS] = "boost"
+SkillTreeTweakData.TYPE_TRANSLATIONS[SkillTreeTweakData.TYPE_TALENT] = "talent"
+SkillTreeTweakData.TYPE_TRANSLATIONS[SkillTreeTweakData.TYPE_WEAPON] = "weapon"
+SkillTreeTweakData.TYPE_TRANSLATIONS[SkillTreeTweakData.TYPE_UNLOCKS] = "unlock"
+SkillTreeTweakData._EXP_REQS = {
+	{
+		17500,
+		20000,
+		23500,
+		27000,
+	},
+	{
+		60000,
+		70000,
+		80000,
+		90000,
+	},
+}
+SkillTreeTweakData._GOLD_REQS = {
+	10,
+	350,
+}
+SkillTreeTweakData._GOLD_REQ_RAMPUP = {
+	0,
+	0,
+	0.3,
+	1,
+}
 
 function SkillTreeTweakData:init(tweak_data)
+	self.skill_warcry_tiers = {
+		[1] = 0,
+	}
+	self.skill_boost_tiers = {
+		[1] = 0,
+	}
+	self.skill_talent_tiers = {
+		0,
+		0,
+		5,
+		10,
+		15,
+		20,
+		30,
+		40,
+	}
+	self.skill_category_colors = {
+		tweak_data.gui.colors.raid_skill_warcry,
+		tweak_data.gui.colors.raid_skill_boost,
+		tweak_data.gui.colors.raid_skill_talent,
+	}
+	self.migration_reward = 22
+	self.exp_overlevel_penalty = {
+		max = 0.85,
+		min = 0.1,
+	}
+
 	self:_init_classes(tweak_data)
 	self:_init_skill_list()
 
-	self.skill_trees = {}
-
-	self:_init_recon_skill_tree()
-	self:_init_assault_skill_tree()
-	self:_init_infiltrator_skill_tree()
-	self:_init_demolitions_skill_tree()
-
+	self.class_warcry_data = {
+		[SkillTreeTweakData.CLASS_RECON] = {
+			"sharpshooter",
+			"silver_bullet",
+		},
+		[SkillTreeTweakData.CLASS_ASSAULT] = {
+			"berserk",
+			"sentry",
+		},
+		[SkillTreeTweakData.CLASS_INFILTRATOR] = {
+			"ghost",
+			"pain_train",
+		},
+		[SkillTreeTweakData.CLASS_DEMOLITIONS] = {
+			"clustertruck",
+		},
+	}
 	self.automatic_unlock_progressions = {}
 	self.default_weapons = {}
 
@@ -23,44 +94,16 @@ function SkillTreeTweakData:init(tweak_data)
 	self:_init_assault_unlock_progression()
 	self:_init_infiltrator_unlock_progression()
 	self:_init_demolitions_unlock_progression()
-	self:_create_class_warcry_data()
-end
-
-function SkillTreeTweakData:_create_class_warcry_data()
-	self.class_warcry_data = {}
-
-	for class_name, class_data in pairs(self.classes) do
-		self.class_warcry_data[class_name] = {}
-
-		for level, skilltree_data in pairs(self.skill_trees[class_name]) do
-			for _, skill_data in pairs(skilltree_data) do
-				local aquires_field = self.skills[skill_data.skill_name] and self.skills[skill_data.skill_name].acquires
-
-				if aquires_field then
-					for _, acquires_item in pairs(aquires_field) do
-						if acquires_item.warcry then
-							self.class_warcry_data[class_name] = acquires_item.warcry
-						end
-					end
-				else
-					Application:debug("[SkillTreeTweakData:_create_class_warcry_data] no aquires_field")
-				end
-			end
-		end
-	end
 end
 
 function SkillTreeTweakData:_init_classes(tweak_data)
-	self.classes = {}
 	self.base_classes = {
-		"recon",
-		"assault",
-		"infiltrator",
-		"demolitions",
+		SkillTreeTweakData.CLASS_RECON,
+		SkillTreeTweakData.CLASS_ASSAULT,
+		SkillTreeTweakData.CLASS_INFILTRATOR,
+		SkillTreeTweakData.CLASS_DEMOLITIONS,
 	}
-	self.icon_texture = "ui/main_menu/textures/class_stats_icons"
-	self.icon_size_width = 128
-	self.icon_size_height = 96
+	self.classes = {}
 	self.classes.recon = {
 		default_natioanlity = "british",
 		desc_id = "skill_class_recon_desc",
@@ -81,28 +124,6 @@ function SkillTreeTweakData:_init_classes(tweak_data)
 			health = 12,
 			speed = 162,
 			stamina = 68,
-		},
-	}
-	self.classes.recon.subclasses = {
-		"scout",
-		"sniper",
-	}
-	self.classes.recon.subclasses.scout = {
-		desc_id = "skill_class_scout_desc",
-		name = "scout",
-		name_id = "skill_class_scout_name",
-		icon = {
-			x = 256,
-			y = 0,
-		},
-	}
-	self.classes.recon.subclasses.sniper = {
-		desc_id = "skill_class_sniper_desc",
-		name = "sniper",
-		name_id = "skill_class_sniper_name",
-		icon = {
-			x = 128,
-			y = 0,
 		},
 	}
 	self.classes.assault = {
@@ -127,28 +148,6 @@ function SkillTreeTweakData:_init_classes(tweak_data)
 			stamina = 69,
 		},
 	}
-	self.classes.assault.subclasses = {
-		"rifleman",
-		"sentry",
-	}
-	self.classes.assault.subclasses.rifleman = {
-		desc_id = "skill_class_rifleman_desc",
-		name = "rifleman",
-		name_id = "skill_class_rifleman_name",
-		icon = {
-			x = 640,
-			y = 0,
-		},
-	}
-	self.classes.assault.subclasses.sentry = {
-		desc_id = "skill_class_sentry_desc",
-		name = "sentry",
-		name_id = "skill_class_sentry_name",
-		icon = {
-			x = 512,
-			y = 0,
-		},
-	}
 	self.classes.demolitions = {
 		default_natioanlity = "german",
 		desc_id = "skill_class_demolitions_desc",
@@ -169,28 +168,6 @@ function SkillTreeTweakData:_init_classes(tweak_data)
 			health = 14,
 			speed = 164,
 			stamina = 70,
-		},
-	}
-	self.classes.demolitions.subclasses = {
-		"sapper",
-		"grenadier",
-	}
-	self.classes.demolitions.subclasses.sapper = {
-		desc_id = "skill_class_sapper_desc",
-		name = "sapper",
-		name_id = "skill_class_sapper_name",
-		icon = {
-			x = 256,
-			y = 96,
-		},
-	}
-	self.classes.demolitions.subclasses.grenadier = {
-		desc_id = "skill_class_grenadier_desc",
-		name = "grenadier",
-		name_id = "skill_class_grenadier_name",
-		icon = {
-			x = 128,
-			y = 96,
 		},
 	}
 	self.classes.infiltrator = {
@@ -217,5104 +194,2121 @@ function SkillTreeTweakData:_init_classes(tweak_data)
 	}
 end
 
+function SkillTreeTweakData:get_skills_organised(class_id)
+	local t = {}
+
+	t[SkillTreeTweakData.TYPE_WARCRY] = {}
+	t[SkillTreeTweakData.TYPE_BOOSTS] = {}
+	t[SkillTreeTweakData.TYPE_TALENT] = {}
+	t[SkillTreeTweakData.TYPE_WEAPON] = {}
+	t[SkillTreeTweakData.TYPE_UNLOCKS] = {}
+
+	for id, skill_data in pairs(self.skills) do
+		local class_lock = skill_data.class_lock
+
+		if (not class_lock or table.contains(class_lock, class_id)) and skill_data.upgrades_type and t[skill_data.upgrades_type] then
+			t[skill_data.upgrades_type][id] = skill_data
+		end
+	end
+
+	return t
+end
+
 function SkillTreeTweakData:_init_skill_list()
 	self.skills = {}
-	self.skills.skill_empty_placeholder = {
-		desc_id = "skill_empty_placeholder_desc",
-		icon = "skill_warcry_placeholder",
-		icon_large = "skill_warcry_placeholder",
-		name_id = "skill_empty_placeholder_name",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {},
-	}
-	self.skills.skill_empty_placeholder_garand = {
-		desc_id = "skill_empty_placeholder_desc",
-		name_id = "skill_empty_placeholder_name",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"garand",
-		},
-	}
-	self.skills.warcry_level_increase = {
-		desc_id = "skill_warcry_level_increase_desc",
-		icon = "skill_warcry_placeholder",
-		icon_large = "skill_warcry_placeholder",
-		name_id = "skill_warcry_level_increase_name",
-		acquires = {
-			{
-				warcry_level = 1,
-			},
-		},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {},
-	}
+
+	self:_init_skill_list_warcries()
+	self:_init_skill_list_boosts()
+	self:_init_skill_list_talents()
+	self:_init_skill_list_weapons()
+
+	for skill_id, skill_data in pairs(self.skills) do
+		if self:is_skill_levelable(skill_id) then
+			local multi = skill_data.value_multiplier or 1
+
+			if not skill_data.exp_requirements then
+				skill_data.exp_requirements = self.get_skill_exp_requirements(skill_data.level_required or 1, multi)
+			end
+
+			if not skill_data.gold_requirements then
+				skill_data.gold_requirements = self.get_skill_gold_requirements(skill_data.level_required or 1, multi)
+			end
+		end
+	end
+end
+
+function SkillTreeTweakData:is_skill_levelable(skill_id)
+	local skill_data = self.skills[skill_id]
+
+	if skill_data and skill_data.upgrades_type then
+		return skill_data.upgrades_type == SkillTreeTweakData.TYPE_WARCRY or skill_data.upgrades_type == SkillTreeTweakData.TYPE_BOOSTS or skill_data.upgrades_type == SkillTreeTweakData.TYPE_TALENT
+	end
+
+	return false
+end
+
+function SkillTreeTweakData:_init_skill_list_warcries()
 	self.skills.warcry_sharpshooter = {
+		default_unlocked = true,
 		desc_id = "skill_warcry_sharpshooter_desc",
-		icon = "skills_warcry_recon_sharpshooter",
-		icon_large = "skills_warcry_recon_sharpshooter_large",
+		icon = "skills_warcry_sharpshooter",
 		name_id = "skill_warcry_sharpshooter_name",
-		acquires = {
-			{
-				warcry = "sharpshooter",
-			},
-		},
-		icon_xy = {
-			1,
-			1,
+		value_multiplier = 2,
+		warcry_id = "sharpshooter",
+		class_lock = {
+			SkillTreeTweakData.CLASS_RECON,
 		},
 		upgrades = {
-			"player_can_use_scope",
-			"player_highlight_enemy",
+			{},
+			{},
+			{},
+			{},
 		},
+		upgrades_desc = {
+			"skill_warcry_sharpshooter_stat_line_1",
+			"skill_warcry_sharpshooter_stat_line_2",
+			"skill_warcry_sharpshooter_stat_line_3",
+			"skill_warcry_sharpshooter_stat_line_4",
+		},
+		upgrades_type = SkillTreeTweakData.TYPE_WARCRY,
 	}
-	self.skills.warcry_sharpshooter_level_increase = {
-		desc_id = "skill_warcry_level_increase_desc",
-		icon = "skills_warcry_recon_sharpshooter",
-		icon_large = "skills_warcry_recon_sharpshooter_large",
-		name_id = "skill_warcry_sharpshooter_level_increase_name",
-		acquires = {
-			{
-				warcry_level = 1,
-			},
+	self.skills.warcry_silver_bullet = {
+		desc_id = "skill_warcry_silver_bullet_desc",
+		icon = "skills_warcry_silver_bullet",
+		info_id = "skill_warcry_silver_bullet_info",
+		level_required = 10,
+		name_id = "skill_warcry_silver_bullet_name",
+		value_multiplier = 2.25,
+		warcry_id = "silver_bullet",
+		class_lock = {
+			SkillTreeTweakData.CLASS_RECON,
 		},
-		icon_xy = {
-			1,
-			1,
+		upgrades = {
+			{},
+			{},
+			{},
+			{},
 		},
-		upgrades = {},
+		upgrades_desc = {
+			"skill_warcry_silver_bullet_stat_line_1",
+			"skill_warcry_silver_bullet_stat_line_2",
+			"skill_warcry_silver_bullet_stat_line_3",
+			"skill_warcry_silver_bullet_stat_line_4",
+		},
+		upgrades_type = SkillTreeTweakData.TYPE_WARCRY,
 	}
 	self.skills.warcry_berserk = {
+		default_unlocked = true,
 		desc_id = "skill_warcry_berserk_desc",
-		icon = "skills_warcry_assault_berserk",
-		icon_large = "skills_warcry_assault_berserk_large",
+		icon = "skills_warcry_berserk",
 		name_id = "skill_warcry_berserk_name",
-		acquires = {
-			{
-				warcry = "berserk",
-			},
-		},
-		icon_xy = {
-			1,
-			1,
+		value_multiplier = 2,
+		warcry_id = "berserk",
+		class_lock = {
+			SkillTreeTweakData.CLASS_ASSAULT,
 		},
 		upgrades = {
-			"player_can_use_scope",
-			"player_highlight_enemy",
+			{},
+			{},
+			{},
+			{},
 		},
+		upgrades_desc = {
+			"skill_warcry_berserk_stat_line_1",
+			"skill_warcry_berserk_stat_line_2",
+			"skill_warcry_berserk_stat_line_3",
+			"skill_warcry_berserk_stat_line_4",
+		},
+		upgrades_type = SkillTreeTweakData.TYPE_WARCRY,
 	}
-	self.skills.warcry_berserk_level_increase = {
-		desc_id = "skill_warcry_level_increase_desc",
-		icon = "skills_warcry_assault_berserk",
-		icon_large = "skills_warcry_assault_berserk_large",
-		name_id = "skill_warcry_berserk_level_increase_name",
-		acquires = {
-			{
-				warcry_level = 1,
-			},
+	self.skills.warcry_sentry = {
+		desc_id = "skill_warcry_sentry_desc",
+		icon = "skills_warcry_sentry",
+		info_id = "skill_warcry_sentry_info",
+		level_required = 10,
+		name_id = "skill_warcry_sentry_name",
+		value_multiplier = 2.25,
+		warcry_id = "sentry",
+		class_lock = {
+			SkillTreeTweakData.CLASS_ASSAULT,
 		},
-		icon_xy = {
-			1,
-			1,
+		upgrades = {
+			{},
+			{},
+			{},
+			{},
 		},
-		upgrades = {},
+		upgrades_desc = {
+			"skill_warcry_sentry_stat_line_1",
+			"skill_warcry_sentry_stat_line_2",
+			"skill_warcry_sentry_stat_line_3",
+			"skill_warcry_sentry_stat_line_4",
+		},
+		upgrades_type = SkillTreeTweakData.TYPE_WARCRY,
 	}
 	self.skills.warcry_ghost = {
+		default_unlocked = true,
 		desc_id = "skill_warcry_ghost_desc",
-		icon = "skills_warcry_infilitrator_invisibility",
-		icon_large = "skills_warcry_infilitrator_invisibility_large",
+		icon = "skills_warcry_ghost",
 		name_id = "skill_warcry_ghost_name",
-		acquires = {
-			{
-				warcry = "ghost",
-			},
-		},
-		icon_xy = {
-			1,
-			1,
+		value_multiplier = 2,
+		warcry_id = "ghost",
+		class_lock = {
+			SkillTreeTweakData.CLASS_INFILTRATOR,
 		},
 		upgrades = {
-			"player_can_use_scope",
-			"player_highlight_enemy",
+			{},
+			{},
+			{},
+			{},
 		},
+		upgrades_desc = {
+			"skill_warcry_ghost_stat_line_1",
+			"skill_warcry_ghost_stat_line_2",
+			"skill_warcry_ghost_stat_line_3",
+			"skill_warcry_ghost_stat_line_4",
+		},
+		upgrades_type = SkillTreeTweakData.TYPE_WARCRY,
 	}
-	self.skills.warcry_ghost_level_increase = {
-		desc_id = "skill_warcry_level_increase_desc",
-		icon = "skills_warcry_infilitrator_invisibility",
-		icon_large = "skills_warcry_infilitrator_invisibility_large",
-		name_id = "skill_warcry_ghost_level_increase_name",
-		acquires = {
+	self.skills.warcry_pain_train = {
+		desc_id = "skill_warcry_pain_train_desc",
+		icon = "skills_warcry_pain_train",
+		info_id = "skill_warcry_pain_train_info",
+		level_required = 10,
+		name_id = "skill_warcry_pain_train_name",
+		value_multiplier = 2.25,
+		warcry_id = "pain_train",
+		class_lock = {
+			SkillTreeTweakData.CLASS_INFILTRATOR,
+		},
+		upgrades = {
+			{},
+			{},
 			{
-				warcry_level = 1,
+				"warcry_player_charge_activation_threshold",
 			},
+			{},
 		},
-		icon_xy = {
-			1,
-			1,
+		upgrades_desc = {
+			"skill_warcry_pain_train_stat_line_1",
+			"skill_warcry_pain_train_stat_line_2",
+			"skill_warcry_pain_train_stat_line_3",
+			"skill_warcry_pain_train_stat_line_4",
 		},
-		upgrades = {},
+		upgrades_type = SkillTreeTweakData.TYPE_WARCRY,
 	}
 	self.skills.warcry_clustertruck = {
+		default_unlocked = true,
 		desc_id = "skill_warcry_clustertruck_desc",
-		icon = "skills_warcry_demolition_cluster_truck",
-		icon_large = "skills_warcry_demolition_cluster_truck_large",
+		icon = "skills_warcry_clustertruck",
 		name_id = "skill_warcry_clustertruck_name",
-		acquires = {
+		value_multiplier = 2,
+		warcry_id = "clustertruck",
+		class_lock = {
+			SkillTreeTweakData.CLASS_DEMOLITIONS,
+		},
+		upgrades = {
+			{},
+			{},
+			{},
+			{},
+		},
+		upgrades_desc = {
+			"skill_warcry_clustertruck_stat_line_1",
+			"skill_warcry_clustertruck_stat_line_2",
+			"skill_warcry_clustertruck_stat_line_3",
+			"skill_warcry_clustertruck_stat_line_4",
+		},
+		upgrades_type = SkillTreeTweakData.TYPE_WARCRY,
+	}
+end
+
+function SkillTreeTweakData:_init_skill_list_boosts()
+	self.skills.boost_nothing = {
+		desc_id = "skill_boost_nothing_desc",
+		icon = "skills_boost_nothing",
+		info_id = "status_effect_nothing_info",
+		level_required = 40,
+		name_id = "skill_boost_nothing_name",
+		value_multiplier = 2,
+		upgrades = {
 			{
-				warcry = "clustertruck",
+				"player_greed_loot_bonus_1",
+			},
+			{
+				"player_greed_loot_bonus_2",
+			},
+			{
+				"player_greed_loot_bonus_3",
+			},
+			{
+				"player_greed_loot_bonus_4",
 			},
 		},
-		icon_xy = {
-			1,
-			1,
+		upgrades_desc = {
+			"skill_boost_nothing_stat_line_1",
+			"skill_boost_nothing_stat_line_2",
+			"skill_boost_nothing_stat_line_3",
+			"skill_boost_nothing_stat_line_4",
 		},
-		upgrades = {
-			"player_can_use_scope",
-			"player_highlight_enemy",
-		},
+		upgrades_type = SkillTreeTweakData.TYPE_BOOSTS,
 	}
-	self.skills.warcry_clustertruck_level_increase = {
-		desc_id = "skill_warcry_level_increase_desc",
-		icon = "skills_warcry_demolition_cluster_truck",
-		icon_large = "skills_warcry_demolition_cluster_truck_large",
-		name_id = "skill_warcry_clustertruck_level_increase_name",
-		acquires = {
+	self.skills.box_o_choc = {
+		desc_id = "skill_box_o_choc_desc",
+		icon = "skills_box_o_choc",
+		level_required = 5,
+		name_id = "skill_box_o_choc_name",
+		upgrades_team_buff_icon = "status_effect_health_regen",
+		value_multiplier = 0.8,
+		upgrades = {
 			{
-				warcry_level = 1,
+				"player_box_o_choc_low_health_regen_multiplier",
+			},
+			{},
+			{},
+			{
+				"player_box_o_choc_health_regen_timer_multiplier",
 			},
 		},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {},
-	}
-	self.skills.warcry_duration_1 = {
-		desc_id = "skill_warcry_duration_increase_desc",
-		icon = "warcry_common_upgrade_duration_lvl1",
-		icon_large = "skills_warcry_common_upgrade_duration_lvl1_large",
-		name_id = "skill_warcry_duration_increase_name",
-		acquires = {
-			{},
-		},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"warcry_player_duration_1",
-		},
-	}
-	self.skills.warcry_duration_2 = {
-		desc_id = "skill_warcry_duration_increase_desc",
-		icon = "warcry_common_upgrade_duration_lvl2",
-		icon_large = "skills_warcry_common_upgrade_duration_lvl2_large",
-		name_id = "skill_warcry_duration_increase_name",
-		acquires = {
-			{},
-		},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"warcry_player_duration_2",
-		},
-	}
-	self.skills.warcry_duration_3 = {
-		desc_id = "skill_warcry_duration_increase_desc",
-		icon = "warcry_common_upgrade_duration_lvl3",
-		icon_large = "skills_warcry_common_upgrade_duration_lvl3_large",
-		name_id = "skill_warcry_duration_increase_name",
-		acquires = {
-			{},
-		},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"warcry_player_duration_3",
-		},
-	}
-	self.skills.warcry_duration_4 = {
-		desc_id = "skill_warcry_duration_increase_desc",
-		icon = "warcry_common_upgrade_duration_lvl4",
-		icon_large = "skills_warcry_common_upgrade_duration_lvl4_large",
-		name_id = "skill_warcry_duration_increase_name",
-		acquires = {
-			{},
-		},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"warcry_player_duration_4",
-		},
-	}
-	self.skills.warcry_team_damage_buff_1 = {
-		desc_id = "skill_warcry_team_damage_buff_desc",
-		icon = "warcry_recon_sharpshooter_upgrade_increased_damage",
-		icon_large = "skills_warcry_recon_sharpshooter_upgrade_increased_damage_large",
-		name_id = "skill_warcry_team_damage_buff_name",
-		acquires = {
-			{},
-		},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"warcry_team_damage_buff_bonus_1",
-		},
-	}
-	self.skills.warcry_team_damage_buff_2 = {
-		desc_id = "skill_warcry_team_damage_buff_desc",
-		icon = "warcry_recon_sharpshooter_upgrade_increased_damage",
-		icon_large = "skills_warcry_recon_sharpshooter_upgrade_increased_damage_large",
-		name_id = "skill_warcry_team_damage_buff_name",
-		acquires = {
-			{},
-		},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"warcry_team_damage_buff_bonus_2",
-		},
-	}
-	self.skills.warcry_team_damage_buff_3 = {
-		desc_id = "skill_warcry_team_damage_buff_desc",
-		icon = "warcry_recon_sharpshooter_upgrade_increased_damage",
-		icon_large = "skills_warcry_recon_sharpshooter_upgrade_increased_damage_large",
-		name_id = "skill_warcry_team_damage_buff_name",
-		acquires = {
-			{},
-		},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"warcry_team_damage_buff_bonus_3",
-		},
-	}
-	self.skills.warcry_team_damage_buff_4 = {
-		desc_id = "skill_warcry_team_damage_buff_desc",
-		icon = "warcry_recon_sharpshooter_upgrade_increased_damage",
-		icon_large = "skills_warcry_recon_sharpshooter_upgrade_increased_damage_large",
-		name_id = "skill_warcry_team_damage_buff_name",
-		acquires = {
-			{},
-		},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"warcry_team_damage_buff_bonus_4",
-		},
-	}
-	self.skills.warcry_headshot_multiplier_bonus_1 = {
-		desc_id = "skill_warcry_headshot_bonus_desc",
-		icon = "warcry_recon_sharpshooter_upgrade_headshot",
-		icon_large = "skills_warcry_recon_sharpshooter_upgrade_headshot_large",
-		name_id = "skill_warcry_headshot_bonus_name",
-		acquires = {
-			{},
-		},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"warcry_player_headshot_multiplier_bonus_1",
-		},
-	}
-	self.skills.warcry_headshot_multiplier_bonus_2 = {
-		desc_id = "skill_warcry_headshot_bonus_desc",
-		icon = "warcry_recon_sharpshooter_upgrade_headshot",
-		icon_large = "skills_warcry_recon_sharpshooter_upgrade_headshot_large",
-		name_id = "skill_warcry_headshot_bonus_name",
-		acquires = {
-			{},
-		},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"warcry_player_headshot_multiplier_bonus_2",
-		},
-	}
-	self.skills.warcry_long_range_multiplier_bonus_1 = {
-		desc_id = "skill_warcry_long_range_bonus_desc",
-		icon = "warcry_recon_sharpshooter_upgrade_long_range",
-		icon_large = "skills_warcry_recon_sharpshooter_upgrade_long_range_large",
-		name_id = "skill_warcry_long_range_bonus_name",
-		acquires = {
-			{},
-		},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"warcry_player_long_range_multiplier_bonus_1",
-		},
-	}
-	self.skills.warcry_long_range_multiplier_bonus_2 = {
-		desc_id = "skill_warcry_long_range_bonus_desc",
-		icon = "warcry_recon_sharpshooter_upgrade_long_range",
-		icon_large = "skills_warcry_recon_sharpshooter_upgrade_long_range_large",
-		name_id = "skill_warcry_long_range_bonus_name",
-		acquires = {
-			{},
-		},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"warcry_player_long_range_multiplier_bonus_2",
-		},
-	}
-	self.skills.warcry_team_heal_buff_1 = {
-		desc_id = "skill_warcry_team_heal_buff_desc",
-		icon = "warcry_assault_berserk_upgrade_increased_team_heal",
-		icon_large = "skills_warcry_assault_berserk_upgrade_increased_team_heal_large",
-		name_id = "skill_warcry_team_heal_buff_name",
-		acquires = {
-			{},
-		},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"warcry_player_team_heal_bonus_1",
-		},
-	}
-	self.skills.warcry_team_heal_buff_2 = {
-		desc_id = "skill_warcry_team_heal_buff_desc",
-		icon = "warcry_assault_berserk_upgrade_increased_team_heal",
-		icon_large = "skills_warcry_assault_berserk_upgrade_increased_team_heal_large",
-		name_id = "skill_warcry_team_heal_buff_name",
-		acquires = {
-			{},
-		},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"warcry_player_team_heal_bonus_2",
-		},
-	}
-	self.skills.warcry_team_heal_buff_3 = {
-		desc_id = "skill_warcry_team_heal_buff_desc",
-		icon = "warcry_assault_berserk_upgrade_increased_team_heal",
-		icon_large = "skills_warcry_assault_berserk_upgrade_increased_team_heal_large",
-		name_id = "skill_warcry_team_heal_buff_name",
-		acquires = {
-			{},
-		},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"warcry_player_team_heal_bonus_3",
-		},
-	}
-	self.skills.warcry_team_heal_buff_4 = {
-		desc_id = "skill_warcry_team_heal_buff_desc",
-		icon = "warcry_assault_berserk_upgrade_increased_team_heal",
-		icon_large = "skills_warcry_assault_berserk_upgrade_increased_team_heal_large",
-		name_id = "skill_warcry_team_heal_buff_name",
-		acquires = {
-			{},
-		},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"warcry_player_team_heal_bonus_4",
-		},
-	}
-	self.skills.warcry_dismemberment_multiplier_bonus_1 = {
-		desc_id = "skill_warcry_dismemberment_bonus_desc",
-		icon = "warcry_assault_berserk_upgrade_dismemberment",
-		icon_large = "skills_warcry_assault_berserk_upgrade_dismemberment_large",
-		name_id = "skill_warcry_dismemberment_bonus_name",
-		acquires = {
-			{},
-		},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"warcry_player_dismemberment_multiplier_bonus_1",
-		},
-	}
-	self.skills.warcry_dismemberment_multiplier_bonus_2 = {
-		desc_id = "skill_warcry_dismemberment_bonus_desc",
-		icon = "warcry_assault_berserk_upgrade_dismemberment",
-		icon_large = "skills_warcry_assault_berserk_upgrade_dismemberment_large",
-		name_id = "skill_warcry_dismemberment_bonus_name",
-		acquires = {
-			{},
-		},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"warcry_player_dismemberment_multiplier_bonus_2",
-		},
-	}
-	self.skills.warcry_low_health_multiplier_bonus_1 = {
-		desc_id = "skill_warcry_low_health_bonus_desc",
-		icon = "warcry_assault_berserk_upgrade_low_health",
-		icon_large = "skills_warcry_assault_berserk_upgrade_low_health_large",
-		name_id = "skill_warcry_low_health_bonus_name",
-		acquires = {
-			{},
-		},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"warcry_player_low_health_multiplier_bonus_1",
-		},
-	}
-	self.skills.warcry_low_health_multiplier_bonus_2 = {
-		desc_id = "skill_warcry_low_health_bonus_desc",
-		icon = "warcry_assault_berserk_upgrade_low_health",
-		icon_large = "skills_warcry_assault_berserk_upgrade_low_health_large",
-		name_id = "skill_warcry_low_health_bonus_name",
-		acquires = {
-			{},
-		},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"warcry_player_low_health_multiplier_bonus_2",
-		},
-	}
-	self.skills.warcry_team_movement_speed_buff_1 = {
-		desc_id = "skill_warcry_team_movement_speed_buff_desc",
-		icon = "warcry_insurgent_untouchable_upgrade_increased_move_speed",
-		icon_large = "skills_warcry_insurgent_untouchable_upgrade_increased_move_speed_large",
-		name_id = "skill_warcry_team_movement_speed_buff_name",
-		acquires = {
-			{},
-		},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"warcry_team_movement_speed_bonus_1",
-		},
-	}
-	self.skills.warcry_team_movement_speed_buff_2 = {
-		desc_id = "skill_warcry_team_movement_speed_buff_desc",
-		icon = "warcry_insurgent_untouchable_upgrade_increased_move_speed",
-		icon_large = "skills_warcry_insurgent_untouchable_upgrade_increased_move_speed_large",
-		name_id = "skill_warcry_team_movement_speed_buff_name",
-		acquires = {
-			{},
-		},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"warcry_team_movement_speed_bonus_2",
-		},
-	}
-	self.skills.warcry_team_movement_speed_buff_3 = {
-		desc_id = "skill_warcry_team_movement_speed_buff_desc",
-		icon = "warcry_insurgent_untouchable_upgrade_increased_move_speed",
-		icon_large = "skills_warcry_insurgent_untouchable_upgrade_increased_move_speed_large",
-		name_id = "skill_warcry_team_movement_speed_buff_name",
-		acquires = {
-			{},
-		},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"warcry_team_movement_speed_bonus_3",
-		},
-	}
-	self.skills.warcry_team_movement_speed_buff_4 = {
-		desc_id = "skill_warcry_team_movement_speed_buff_desc",
-		icon = "warcry_insurgent_untouchable_upgrade_increased_move_speed",
-		icon_large = "skills_warcry_insurgent_untouchable_upgrade_increased_move_speed_large",
-		name_id = "skill_warcry_team_movement_speed_buff_name",
-		acquires = {
-			{},
-		},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"warcry_team_movement_speed_bonus_4",
-		},
-	}
-	self.skills.warcry_melee_multiplier_bonus_1 = {
-		desc_id = "skill_warcry_melee_bonus_desc",
-		icon = "warcry_insurgent_untouchable_upgrade_melee",
-		icon_large = "skills_warcry_insurgent_untouchable_upgrade_melee_large",
-		name_id = "skill_warcry_melee_bonus_name",
-		acquires = {
-			{},
-		},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"warcry_player_melee_multiplier_bonus_1",
-		},
-	}
-	self.skills.warcry_melee_multiplier_bonus_2 = {
-		desc_id = "skill_warcry_melee_bonus_desc",
-		icon = "warcry_insurgent_untouchable_upgrade_melee",
-		icon_large = "skills_warcry_insurgent_untouchable_upgrade_melee_large",
-		name_id = "skill_warcry_melee_bonus_name",
-		acquires = {
-			{},
-		},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"warcry_player_melee_multiplier_bonus_2",
-		},
-	}
-	self.skills.warcry_short_range_multiplier_bonus_1 = {
-		desc_id = "skill_warcry_short_range_bonus_desc",
-		icon = "warcry_insurgent_untouchable_short_range_bonus",
-		icon_large = "skills_warcry_insurgent_untouchable_short_range_bonus_large",
-		name_id = "skill_warcry_short_range_bonus_name",
-		acquires = {
-			{},
-		},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"warcry_player_short_range_multiplier_bonus_1",
-		},
-	}
-	self.skills.warcry_short_range_multiplier_bonus_2 = {
-		desc_id = "skill_warcry_short_range_bonus_desc",
-		icon = "warcry_insurgent_untouchable_short_range_bonus",
-		icon_large = "skills_warcry_insurgent_untouchable_short_range_bonus_large",
-		name_id = "skill_warcry_short_range_bonus_name",
-		acquires = {
-			{},
-		},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"warcry_player_short_range_multiplier_bonus_2",
-		},
-	}
-	self.skills.warcry_team_damage_reduction_buff_1 = {
-		desc_id = "skill_warcry_team_damage_reduction_buff_desc",
-		icon = "warcry_demolition_cluster_truck_damage_resist",
-		icon_large = "skills_warcry_demolition_cluster_truck_damage_resist_large",
-		name_id = "skill_warcry_team_damage_reduction_buff_name",
-		acquires = {
-			{},
-		},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"warcry_team_damage_reduction_bonus_on_activate_1",
-		},
-	}
-	self.skills.warcry_team_damage_reduction_buff_2 = {
-		desc_id = "skill_warcry_team_damage_reduction_buff_desc",
-		icon = "warcry_demolition_cluster_truck_damage_resist",
-		icon_large = "skills_warcry_demolition_cluster_truck_damage_resist_large",
-		name_id = "skill_warcry_team_damage_reduction_buff_name",
-		acquires = {
-			{},
-		},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"warcry_team_damage_reduction_bonus_on_activate_2",
-		},
-	}
-	self.skills.warcry_team_damage_reduction_buff_3 = {
-		desc_id = "skill_warcry_team_damage_reduction_buff_desc",
-		icon = "warcry_demolition_cluster_truck_damage_resist",
-		icon_large = "skills_warcry_demolition_cluster_truck_damage_resist_large",
-		name_id = "skill_warcry_team_damage_reduction_buff_name",
-		acquires = {
-			{},
-		},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"warcry_team_damage_reduction_bonus_on_activate_3",
-		},
-	}
-	self.skills.warcry_team_damage_reduction_buff_4 = {
-		desc_id = "skill_warcry_team_damage_reduction_buff_desc",
-		icon = "warcry_demolition_cluster_truck_damage_resist",
-		icon_large = "skills_warcry_demolition_cluster_truck_damage_resist_large",
-		name_id = "skill_warcry_team_damage_reduction_buff_name",
-		acquires = {
-			{},
-		},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"warcry_team_damage_reduction_bonus_on_activate_4",
-		},
-	}
-	self.skills.warcry_explosion_multiplier_bonus_1 = {
-		desc_id = "skill_warcry_explosion_bonus_desc",
-		icon = "warcry_demolition_cluster_truck_granade",
-		icon_large = "skills_warcry_demolition_cluster_truck_granade_large",
-		name_id = "skill_warcry_explosion_bonus_name",
-		acquires = {
-			{},
-		},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"warcry_player_explosions_multiplier_bonus_1",
-		},
-	}
-	self.skills.warcry_explosion_multiplier_bonus_2 = {
-		desc_id = "skill_warcry_explosion_bonus_desc",
-		icon = "warcry_demolition_cluster_truck_granade",
-		icon_large = "skills_warcry_demolition_cluster_truck_granade_large",
-		name_id = "skill_warcry_explosion_bonus_name",
-		acquires = {
-			{},
-		},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"warcry_player_explosions_multiplier_bonus_2",
-		},
-	}
-	self.skills.warcry_killstreak_multiplier_bonus_1 = {
-		desc_id = "skill_warcry_killstreak_bonus_desc",
-		icon = "warcry_demolition_cluster_truck_kill_streak",
-		icon_large = "skills_warcry_demolition_cluster_truck_kill_streak_large",
-		name_id = "skill_warcry_killstreak_bonus_name",
-		acquires = {
-			{},
-		},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"warcry_player_killstreak_multiplier_bonus_1",
-		},
-	}
-	self.skills.warcry_killstreak_multiplier_bonus_2 = {
-		desc_id = "skill_warcry_killstreak_bonus_desc",
-		icon = "warcry_demolition_cluster_truck_kill_streak",
-		icon_large = "skills_warcry_demolition_cluster_truck_kill_streak_large",
-		name_id = "skill_warcry_killstreak_bonus_name",
-		acquires = {
-			{},
-		},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"warcry_player_killstreak_multiplier_bonus_2",
-		},
-	}
-	self.skills.subclass_to_scout = {
-		desc_id = "skill_subclass_to_scout_desc",
-		name_id = "skill_subclass_to_scout_name",
-		acquires = {
+		upgrades_desc = {
+			"skill_box_o_choc_stat_line_1",
+			"skill_box_o_choc_stat_line_2",
+			"skill_box_o_choc_stat_line_3",
+			"skill_box_o_choc_stat_line_4",
+		},
+		upgrades_team_buff = {
 			{
-				subclass = "scout",
+				"warcry_team_health_regeneration_1",
+			},
+			{
+				"warcry_team_health_regeneration_2",
+			},
+			{
+				"warcry_team_health_regeneration_3",
+			},
+			{
+				"warcry_team_health_regeneration_4",
 			},
 		},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_highlight_enemy",
-		},
+		upgrades_type = SkillTreeTweakData.TYPE_BOOSTS,
 	}
-	self.skills.subclass_to_rifleman = {
-		desc_id = "skill_subclass_to_rifleman_desc",
-		name_id = "skill_subclass_to_rifleman_name",
-		acquires = {
+	self.skills.sprinter = {
+		desc_id = "skill_sprinter_desc",
+		icon = "skills_sprinter",
+		level_required = 5,
+		name_id = "skill_sprinter_name",
+		upgrades_team_buff_icon = "status_effect_movement_speed",
+		value_multiplier = 0.8,
+		upgrades = {
 			{
-				subclass = "rifleman",
+				"player_sprinter_running_detection_multiplier",
+			},
+			{},
+			{},
+			{
+				"player_sprinter_run_speed_increase",
 			},
 		},
-		icon_xy = {
-			1,
-			1,
+		upgrades_desc = {
+			"skill_sprinter_stat_line_1",
+			"skill_sprinter_stat_line_2",
+			"skill_sprinter_stat_line_3",
+			"skill_sprinter_stat_line_4",
 		},
-		upgrades = {},
-	}
-	self.skills.subclass_to_sentry = {
-		desc_id = "skill_subclass_to_sentry_desc",
-		name_id = "skill_subclass_to_sentry_name",
-		acquires = {
+		upgrades_team_buff = {
 			{
-				subclass = "sentry",
+				"warcry_team_movement_speed_multiplier_1",
+			},
+			{
+				"warcry_team_movement_speed_multiplier_2",
+			},
+			{
+				"warcry_team_movement_speed_multiplier_3",
+			},
+			{
+				"warcry_team_movement_speed_multiplier_4",
 			},
 		},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {},
+		upgrades_type = SkillTreeTweakData.TYPE_BOOSTS,
 	}
-	self.skills.subclass_to_sapper = {
-		desc_id = "skill_subclass_to_sapper_desc",
-		name_id = "skill_subclass_to_sapper_name",
-		acquires = {
+	self.skills.painkiller = {
+		desc_id = "skill_painkiller_desc",
+		icon = "skills_painkiller",
+		level_required = 10,
+		name_id = "skill_painkiller_name",
+		upgrades_team_buff_icon = "status_effect_damage_resistance",
+		value_multiplier = 0.7,
+		upgrades = {
 			{
-				subclass = "sapper",
+				"player_painkiller_fire_damage_reduction",
+				"player_painkiller_explosive_damage_reduction",
+			},
+			{},
+			{},
+			{
+				"player_painkiller_damage_interval_multiplier",
 			},
 		},
-		icon_xy = {
-			1,
-			1,
+		upgrades_desc = {
+			"skill_painkiller_stat_line_1",
+			"skill_painkiller_stat_line_2",
+			"skill_painkiller_stat_line_3",
+			"skill_painkiller_stat_line_4",
 		},
-		upgrades = {},
-	}
-	self.skills.subclass_to_grenadier = {
-		desc_id = "skill_subclass_to_grenadier_desc",
-		name_id = "skill_subclass_to_grenadier_name",
-		acquires = {
+		upgrades_team_buff = {
 			{
-				subclass = "grenadier",
+				"warcry_team_damage_reduction_multiplier_1",
+			},
+			{
+				"warcry_team_damage_reduction_multiplier_2",
+			},
+			{
+				"warcry_team_damage_reduction_multiplier_3",
+			},
+			{
+				"warcry_team_damage_reduction_multiplier_4",
 			},
 		},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {},
-	}
-	self.skills.undetectable_by_spotters = {
-		desc_id = "skill_undetectable_by_spotters_desc",
-		name_id = "skill_undetectable_by_spotters_name",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_undetectable_by_spotters",
-		},
-	}
-	self.skills.player_critical_hit_chance_1 = {
-		desc_id = "skill_player_critical_hit_chance_desc",
-		icon = "skills_dealing_damage_critical_chance",
-		icon_large = "skills_dealing_damage_critical_chance_large",
-		name_id = "skill_player_critical_hit_chance_name",
-		stat_desc_id = "skill_player_critical_hit_chance_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_critical_hit_chance_1",
-		},
-	}
-	self.skills.player_critical_hit_chance_2 = {
-		desc_id = "skill_player_critical_hit_chance_desc",
-		icon = "skills_dealing_damage_critical_chance",
-		icon_large = "skills_dealing_damage_critical_chance_large",
-		name_id = "skill_player_critical_hit_chance_name",
-		stat_desc_id = "skill_player_critical_hit_chance_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_critical_hit_chance_2",
-		},
-	}
-	self.skills.player_critical_hit_chance_3 = {
-		desc_id = "skill_player_critical_hit_chance_desc",
-		icon = "skills_dealing_damage_critical_chance",
-		icon_large = "skills_dealing_damage_critical_chance_large",
-		name_id = "skill_player_critical_hit_chance_name",
-		stat_desc_id = "skill_player_critical_hit_chance_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_critical_hit_chance_3",
-		},
-	}
-	self.skills.player_critical_hit_chance_4 = {
-		desc_id = "skill_player_critical_hit_chance_desc",
-		icon = "skills_dealing_damage_critical_chance",
-		icon_large = "skills_dealing_damage_critical_chance_large",
-		name_id = "skill_player_critical_hit_chance_name",
-		stat_desc_id = "skill_player_critical_hit_chance_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_critical_hit_chance_4",
-		},
-	}
-	self.skills.stamina_multiplier_1 = {
-		desc_id = "skill_stamina_multiplier_desc",
-		icon = "skills_navigation_stamina_reserve",
-		icon_large = "skills_navigation_stamina_reserve_large",
-		name_id = "skill_stamina_multiplier_name",
-		stat_desc_id = "skill_stamina_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_stamina_multiplier_1",
-		},
-	}
-	self.skills.stamina_multiplier_2 = {
-		desc_id = "skill_stamina_multiplier_desc",
-		icon = "skills_navigation_stamina_reserve",
-		icon_large = "skills_navigation_stamina_reserve_large",
-		name_id = "skill_stamina_multiplier_name",
-		stat_desc_id = "skill_stamina_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_stamina_multiplier_2",
-		},
-	}
-	self.skills.stamina_multiplier_3 = {
-		desc_id = "skill_stamina_multiplier_desc",
-		icon = "skills_navigation_stamina_reserve",
-		icon_large = "skills_navigation_stamina_reserve_large",
-		name_id = "skill_stamina_multiplier_name",
-		stat_desc_id = "skill_stamina_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_stamina_multiplier_3",
-		},
-	}
-	self.skills.stamina_multiplier_4 = {
-		desc_id = "skill_stamina_multiplier_desc",
-		icon = "skills_navigation_stamina_reserve",
-		icon_large = "skills_navigation_stamina_reserve_large",
-		name_id = "skill_stamina_multiplier_name",
-		stat_desc_id = "skill_stamina_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_stamina_multiplier_4",
-		},
-	}
-	self.skills.stamina_regeneration_increase_1 = {
-		desc_id = "skill_stamina_regeneration_increase_desc",
-		icon = "skills_navigation_stamina_regeneration",
-		icon_large = "skills_navigation_stamina_regeneration_large",
-		name_id = "skill_stamina_regeneration_increase_name",
-		stat_desc_id = "skill_stamina_regeneration_increase_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_stamina_regeneration_increase_1",
-		},
-	}
-	self.skills.stamina_regeneration_increase_2 = {
-		desc_id = "skill_stamina_regeneration_increase_desc",
-		icon = "skills_navigation_stamina_regeneration",
-		icon_large = "skills_navigation_stamina_regeneration_large",
-		name_id = "skill_stamina_regeneration_increase_name",
-		stat_desc_id = "skill_stamina_regeneration_increase_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_stamina_regeneration_increase_2",
-		},
-	}
-	self.skills.stamina_regeneration_increase_3 = {
-		desc_id = "skill_stamina_regeneration_increase_desc",
-		icon = "skills_navigation_stamina_regeneration",
-		icon_large = "skills_navigation_stamina_regeneration_large",
-		name_id = "skill_stamina_regeneration_increase_name",
-		stat_desc_id = "skill_stamina_regeneration_increase_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_stamina_regeneration_increase_3",
-		},
-	}
-	self.skills.stamina_regeneration_increase_4 = {
-		desc_id = "skill_stamina_regeneration_increase_desc",
-		icon = "skills_navigation_stamina_regeneration",
-		icon_large = "skills_navigation_stamina_regeneration_large",
-		name_id = "skill_stamina_regeneration_increase_name",
-		stat_desc_id = "skill_stamina_regeneration_increase_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_stamina_regeneration_increase_4",
-		},
-	}
-	self.skills.max_health_multiplier_1 = {
-		desc_id = "skill_max_health_multiplier_desc",
-		icon = "skills_soaking_damage_increased_health",
-		icon_large = "skills_soaking_damage_increased_health_large",
-		name_id = "skill_max_health_multiplier_name",
-		stat_desc_id = "skill_max_health_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_max_health_multiplier_1",
-		},
-	}
-	self.skills.max_health_multiplier_2 = {
-		desc_id = "skill_max_health_multiplier_desc",
-		icon = "skills_soaking_damage_increased_health",
-		icon_large = "skills_soaking_damage_increased_health_large",
-		name_id = "skill_max_health_multiplier_name",
-		stat_desc_id = "skill_max_health_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_max_health_multiplier_2",
-		},
-	}
-	self.skills.max_health_multiplier_3 = {
-		desc_id = "skill_max_health_multiplier_desc",
-		icon = "skills_soaking_damage_increased_health",
-		icon_large = "skills_soaking_damage_increased_health_large",
-		name_id = "skill_max_health_multiplier_name",
-		stat_desc_id = "skill_max_health_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_max_health_multiplier_3",
-		},
-	}
-	self.skills.max_health_multiplier_4 = {
-		desc_id = "skill_max_health_multiplier_desc",
-		icon = "skills_soaking_damage_increased_health",
-		icon_large = "skills_soaking_damage_increased_health_large",
-		name_id = "skill_max_health_multiplier_name",
-		stat_desc_id = "skill_max_health_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_max_health_multiplier_4",
-		},
-	}
-	self.skills.pick_up_ammo_multiplier_1 = {
-		desc_id = "skill_pick_up_ammo_multiplier_desc",
-		icon = "skills_interaction_extra_ammo_pickups",
-		icon_large = "skills_interaction_extra_ammo_pickups_large",
-		name_id = "skill_pick_up_ammo_multiplier_name",
-		stat_desc_id = "skill_pick_up_ammo_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_pick_up_ammo_multiplier_1",
-		},
-	}
-	self.skills.pick_up_ammo_multiplier_2 = {
-		desc_id = "skill_pick_up_ammo_multiplier_desc",
-		icon = "skills_interaction_extra_ammo_pickups",
-		icon_large = "skills_interaction_extra_ammo_pickups_large",
-		name_id = "skill_pick_up_ammo_multiplier_name",
-		stat_desc_id = "skill_pick_up_ammo_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_pick_up_ammo_multiplier_2",
-		},
-	}
-	self.skills.pick_up_ammo_multiplier_3 = {
-		desc_id = "skill_pick_up_ammo_multiplier_desc",
-		icon = "skills_interaction_extra_ammo_pickups",
-		icon_large = "skills_interaction_extra_ammo_pickups_large",
-		name_id = "skill_pick_up_ammo_multiplier_name",
-		stat_desc_id = "skill_pick_up_ammo_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_pick_up_ammo_multiplier_3",
-		},
-	}
-	self.skills.pick_up_ammo_multiplier_4 = {
-		desc_id = "skill_pick_up_ammo_multiplier_desc",
-		icon = "skills_interaction_extra_ammo_pickups",
-		icon_large = "skills_interaction_extra_ammo_pickups_large",
-		name_id = "skill_pick_up_ammo_multiplier_name",
-		stat_desc_id = "skill_pick_up_ammo_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_pick_up_ammo_multiplier_4",
-		},
-	}
-	self.skills.pick_up_health_multiplier_mg42 = {
-		desc_id = "skill_pick_up_health_multiplier_1_desc",
-		name_id = "skill_pick_up_health_multiplier_1_name",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_pick_up_health_multiplier_1",
-			"mg42",
-		},
-	}
-	self.skills.pick_up_health_multiplier_1 = {
-		desc_id = "skill_pick_up_health_multiplier_desc",
-		icon = "skills_interaction_extra_health_pickups",
-		icon_large = "skills_interaction_extra_health_pickups_large",
-		name_id = "skill_pick_up_health_multiplier_name",
-		stat_desc_id = "skill_pick_up_health_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_pick_up_health_multiplier_1",
-		},
-	}
-	self.skills.pick_up_health_multiplier_2 = {
-		desc_id = "skill_pick_up_health_multiplier_desc",
-		icon = "skills_interaction_extra_health_pickups",
-		icon_large = "skills_interaction_extra_health_pickups_large",
-		name_id = "skill_pick_up_health_multiplier_name",
-		stat_desc_id = "skill_pick_up_health_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_pick_up_health_multiplier_2",
-		},
-	}
-	self.skills.pick_up_health_multiplier_3 = {
-		desc_id = "skill_pick_up_health_multiplier_desc",
-		icon = "skills_interaction_extra_health_pickups",
-		icon_large = "skills_interaction_extra_health_pickups_large",
-		name_id = "skill_pick_up_health_multiplier_name",
-		stat_desc_id = "skill_pick_up_health_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_pick_up_health_multiplier_3",
-		},
-	}
-	self.skills.pick_up_health_multiplier_4 = {
-		desc_id = "skill_pick_up_health_multiplier_desc",
-		icon = "skills_interaction_extra_health_pickups",
-		icon_large = "skills_interaction_extra_health_pickups_large",
-		name_id = "skill_pick_up_health_multiplier_name",
-		stat_desc_id = "skill_pick_up_health_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_pick_up_health_multiplier_4",
-		},
-	}
-	self.skills.primary_ammo_capacity_increase_1 = {
-		desc_id = "skill_ammo_capacity_increase_desc",
-		icon = "skills_special_skills_increase_prim_ammo_capacity",
-		icon_large = "skills_special_skills_increase_prim_ammo_capacity_large",
-		name_id = "skill_ammo_capacity_increase_name",
-		stat_desc_id = "skill_ammo_capacity_increase_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_primary_ammo_increase_1",
-		},
-	}
-	self.skills.primary_ammo_capacity_increase_2 = {
-		desc_id = "skill_ammo_capacity_increase_desc",
-		icon = "skills_special_skills_increase_prim_ammo_capacity",
-		icon_large = "skills_special_skills_increase_prim_ammo_capacity_large",
-		name_id = "skill_ammo_capacity_increase_name",
-		stat_desc_id = "skill_ammo_capacity_increase_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_primary_ammo_increase_2",
-		},
-	}
-	self.skills.primary_ammo_capacity_increase_3 = {
-		desc_id = "skill_ammo_capacity_increase_desc",
-		icon = "skills_special_skills_increase_prim_ammo_capacity",
-		icon_large = "skills_special_skills_increase_prim_ammo_capacity_large",
-		name_id = "skill_ammo_capacity_increase_name",
-		stat_desc_id = "skill_ammo_capacity_increase_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_primary_ammo_increase_3",
-		},
-	}
-	self.skills.primary_ammo_capacity_increase_4 = {
-		desc_id = "skill_ammo_capacity_increase_desc",
-		icon = "skills_special_skills_increase_prim_ammo_capacity",
-		icon_large = "skills_special_skills_increase_prim_ammo_capacity_large",
-		name_id = "skill_ammo_capacity_increase_name",
-		stat_desc_id = "skill_ammo_capacity_increase_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_primary_ammo_increase_4",
-		},
-	}
-	self.skills.secondary_ammo_capacity_increase_1 = {
-		desc_id = "skill_secondary_ammo_capacity_increase_desc",
-		icon = "skills_special_skills_increase_sec_ammo_capacity",
-		icon_large = "skills_special_skills_increase_sec_ammo_capacity_large",
-		name_id = "skill_secondary_ammo_capacity_increase_name",
-		stat_desc_id = "skill_secondary_ammo_capacity_increase_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_secondary_ammo_increase_1",
-		},
-	}
-	self.skills.secondary_ammo_capacity_increase_2 = {
-		desc_id = "skill_secondary_ammo_capacity_increase_desc",
-		icon = "skills_special_skills_increase_sec_ammo_capacity",
-		icon_large = "skills_special_skills_increase_sec_ammo_capacity_large",
-		name_id = "skill_secondary_ammo_capacity_increase_name",
-		stat_desc_id = "skill_secondary_ammo_capacity_increase_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_secondary_ammo_increase_2",
-		},
-	}
-	self.skills.secondary_ammo_capacity_increase_3 = {
-		desc_id = "skill_secondary_ammo_capacity_increase_desc",
-		icon = "skills_special_skills_increase_sec_ammo_capacity",
-		icon_large = "skills_special_skills_increase_sec_ammo_capacity_large",
-		name_id = "skill_secondary_ammo_capacity_increase_name",
-		stat_desc_id = "skill_secondary_ammo_capacity_increase_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_secondary_ammo_increase_3",
-		},
-	}
-	self.skills.secondary_ammo_capacity_increase_4 = {
-		desc_id = "skill_secondary_ammo_capacity_increase_desc",
-		icon = "skills_special_skills_increase_sec_ammo_capacity",
-		icon_large = "skills_special_skills_increase_sec_ammo_capacity_large",
-		name_id = "skill_secondary_ammo_capacity_increase_name",
-		stat_desc_id = "skill_secondary_ammo_capacity_increase_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_secondary_ammo_increase_4",
-		},
-	}
-	self.skills.reload_speed_multiplier_1 = {
-		desc_id = "skill_reload_speed_multiplier_desc",
-		icon = "skills_general_faster_reload",
-		icon_large = "skills_general_faster_reload_large",
-		name_id = "skill_reload_speed_multiplier_name",
-		stat_desc_id = "skill_reload_speed_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"primary_weapon_reload_speed_multiplier_1",
-			"secondary_weapon_reload_speed_multiplier_1",
-		},
-	}
-	self.skills.reload_speed_multiplier_2 = {
-		desc_id = "skill_reload_speed_multiplier_desc",
-		icon = "skills_general_faster_reload",
-		icon_large = "skills_general_faster_reload_large",
-		name_id = "skill_reload_speed_multiplier_name",
-		stat_desc_id = "skill_reload_speed_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"primary_weapon_reload_speed_multiplier_2",
-			"secondary_weapon_reload_speed_multiplier_2",
-		},
-	}
-	self.skills.reload_speed_multiplier_3 = {
-		desc_id = "skill_reload_speed_multiplier_desc",
-		icon = "skills_general_faster_reload",
-		icon_large = "skills_general_faster_reload_large",
-		name_id = "skill_reload_speed_multiplier_name",
-		stat_desc_id = "skill_reload_speed_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"primary_weapon_reload_speed_multiplier_3",
-			"secondary_weapon_reload_speed_multiplier_3",
-		},
-	}
-	self.skills.reload_speed_multiplier_4 = {
-		desc_id = "skill_reload_speed_multiplier_desc",
-		icon = "skills_general_faster_reload",
-		icon_large = "skills_general_faster_reload_large",
-		name_id = "skill_reload_speed_multiplier_name",
-		stat_desc_id = "skill_reload_speed_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"primary_weapon_reload_speed_multiplier_4",
-			"secondary_weapon_reload_speed_multiplier_4",
-		},
-	}
-	self.skills.increase_general_speed_1 = {
-		desc_id = "skill_increase_general_speed_desc",
-		icon = "skills_general_speed",
-		icon_large = "skills_general_speed_large",
-		name_id = "skill_increase_general_speed_name",
-		stat_desc_id = "skill_increase_general_speed_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_all_movement_speed_increase_1",
-		},
-	}
-	self.skills.increase_general_speed_2 = {
-		desc_id = "skill_increase_general_speed_desc",
-		icon = "skills_general_speed",
-		icon_large = "skills_general_speed_large",
-		name_id = "skill_increase_general_speed_name",
-		stat_desc_id = "skill_increase_general_speed_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_all_movement_speed_increase_2",
-		},
-	}
-	self.skills.increase_general_speed_3 = {
-		desc_id = "skill_increase_general_speed_desc",
-		icon = "skills_general_speed",
-		icon_large = "skills_general_speed_large",
-		name_id = "skill_increase_general_speed_name",
-		stat_desc_id = "skill_increase_general_speed_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_all_movement_speed_increase_3",
-		},
-	}
-	self.skills.increase_general_speed_4 = {
-		desc_id = "skill_increase_general_speed_desc",
-		icon = "skills_general_speed",
-		icon_large = "skills_general_speed_large",
-		name_id = "skill_increase_general_speed_name",
-		stat_desc_id = "skill_increase_general_speed_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_all_movement_speed_increase_4",
-		},
-	}
-	self.skills.increase_run_speed_1 = {
-		desc_id = "skill_increase_run_speed_desc",
-		icon = "skills_navigation_increase_run_speed",
-		icon_large = "skills_navigation_increase_run_speed_large",
-		name_id = "skill_increase_run_speed_name",
-		stat_desc_id = "skill_increase_run_speed_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_run_speed_increase_1",
-		},
-	}
-	self.skills.increase_run_speed_2 = {
-		desc_id = "skill_increase_run_speed_desc",
-		icon = "skills_navigation_increase_run_speed",
-		icon_large = "skills_navigation_increase_run_speed_large",
-		name_id = "skill_increase_run_speed_name",
-		stat_desc_id = "skill_increase_run_speed_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_run_speed_increase_2",
-		},
-	}
-	self.skills.increase_run_speed_3 = {
-		desc_id = "skill_increase_run_speed_desc",
-		icon = "skills_navigation_increase_run_speed",
-		icon_large = "skills_navigation_increase_run_speed_large",
-		name_id = "skill_increase_run_speed_name",
-		stat_desc_id = "skill_increase_run_speed_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
+		upgrades_type = SkillTreeTweakData.TYPE_BOOSTS,
+	}
+	self.skills.critbrain = {
+		desc_id = "skill_critbrain_desc",
+		icon = "skills_critbrain",
+		level_required = 10,
+		name_id = "skill_critbrain_name",
+		upgrades_team_buff_icon = "status_effect_crit_chances",
+		value_multiplier = 0.7,
 		upgrades = {
-			"player_run_speed_increase_3",
-		},
-	}
-	self.skills.increase_run_speed_4 = {
-		desc_id = "skill_increase_run_speed_desc",
-		icon = "skills_navigation_increase_run_speed",
-		icon_large = "skills_navigation_increase_run_speed_large",
-		name_id = "skill_increase_run_speed_name",
-		stat_desc_id = "skill_increase_run_speed_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_run_speed_increase_4",
-		},
-	}
-	self.skills.increase_crouch_speed_1 = {
-		desc_id = "skill_increase_crouch_speed_desc",
-		icon = "skills_navigation_increase_crouch_speed",
-		icon_large = "skills_navigation_increase_crouch_speed_large",
-		name_id = "skill_increase_crouch_speed_name",
-		stat_desc_id = "skill_increase_crouch_speed_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_crouch_speed_increase_1",
-		},
-	}
-	self.skills.increase_crouch_speed_2 = {
-		desc_id = "skill_increase_crouch_speed_desc",
-		icon = "skills_navigation_increase_crouch_speed",
-		icon_large = "skills_navigation_increase_crouch_speed_large",
-		name_id = "skill_increase_crouch_speed_name",
-		stat_desc_id = "skill_increase_crouch_speed_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_crouch_speed_increase_2",
-		},
-	}
-	self.skills.increase_crouch_speed_3 = {
-		desc_id = "skill_increase_crouch_speed_desc",
-		icon = "skills_navigation_increase_crouch_speed",
-		icon_large = "skills_navigation_increase_crouch_speed_large",
-		name_id = "skill_increase_crouch_speed_name",
-		stat_desc_id = "skill_increase_crouch_speed_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_crouch_speed_increase_3",
-		},
-	}
-	self.skills.increase_crouch_speed_4 = {
-		desc_id = "skill_increase_crouch_speed_desc",
-		icon = "skills_navigation_increase_crouch_speed",
-		icon_large = "skills_navigation_increase_crouch_speed_large",
-		name_id = "skill_increase_crouch_speed_name",
-		stat_desc_id = "skill_increase_crouch_speed_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_crouch_speed_increase_4",
-		},
-	}
-	self.skills.carry_penalty_decrease_1 = {
-		desc_id = "skill_carry_penalty_decrease_desc",
-		icon = "skills_navigation_move_faster_bags",
-		icon_large = "skills_navigation_move_faster_bags_large",
-		name_id = "skill_carry_penalty_decrease_name",
-		stat_desc_id = "skill_carry_penalty_decrease_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_carry_penalty_decrease_1",
-		},
-	}
-	self.skills.carry_penalty_decrease_2 = {
-		desc_id = "skill_carry_penalty_decrease_desc",
-		icon = "skills_navigation_move_faster_bags",
-		icon_large = "skills_navigation_move_faster_bags_large",
-		name_id = "skill_carry_penalty_decrease_name",
-		stat_desc_id = "skill_carry_penalty_decrease_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_carry_penalty_decrease_2",
-		},
-	}
-	self.skills.carry_penalty_decrease_3 = {
-		desc_id = "skill_carry_penalty_decrease_desc",
-		icon = "skills_navigation_move_faster_bags",
-		icon_large = "skills_navigation_move_faster_bags_large",
-		name_id = "skill_carry_penalty_decrease_name",
-		stat_desc_id = "skill_carry_penalty_decrease_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_carry_penalty_decrease_3",
-		},
-	}
-	self.skills.carry_penalty_decrease_4 = {
-		desc_id = "skill_carry_penalty_decrease_desc",
-		icon = "skills_navigation_move_faster_bags",
-		icon_large = "skills_navigation_move_faster_bags_large",
-		name_id = "skill_carry_penalty_decrease_name",
-		stat_desc_id = "skill_carry_penalty_decrease_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_carry_penalty_decrease_4",
-		},
-	}
-	self.skills.running_damage_reduction_1 = {
-		desc_id = "skill_running_damage_reduction_desc",
-		icon = "skills_soaking_damage_less_sprinting",
-		icon_large = "skills_soaking_damage_less_sprinting_large",
-		name_id = "skill_running_damage_reduction_name",
-		stat_desc_id = "skill_running_damage_reduction_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_running_damage_reduction_1",
-		},
-	}
-	self.skills.running_damage_reduction_2 = {
-		desc_id = "skill_running_damage_reduction_desc",
-		icon = "skills_soaking_damage_less_sprinting",
-		icon_large = "skills_soaking_damage_less_sprinting_large",
-		name_id = "skill_running_damage_reduction_name",
-		stat_desc_id = "skill_running_damage_reduction_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_running_damage_reduction_2",
-		},
-	}
-	self.skills.running_damage_reduction_3 = {
-		desc_id = "skill_running_damage_reduction_desc",
-		icon = "skills_soaking_damage_less_sprinting",
-		icon_large = "skills_soaking_damage_less_sprinting_large",
-		name_id = "skill_running_damage_reduction_name",
-		stat_desc_id = "skill_running_damage_reduction_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_running_damage_reduction_3",
-		},
-	}
-	self.skills.running_damage_reduction_4 = {
-		desc_id = "skill_running_damage_reduction_desc",
-		icon = "skills_soaking_damage_less_sprinting",
-		icon_large = "skills_soaking_damage_less_sprinting_large",
-		name_id = "skill_running_damage_reduction_name",
-		stat_desc_id = "skill_running_damage_reduction_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_running_damage_reduction_4",
-		},
-	}
-	self.skills.crouching_damage_reduction_1 = {
-		desc_id = "skill_crouching_damage_reduction_desc",
-		icon = "skills_soaking_damage_less_while_crouch",
-		icon_large = "skills_soaking_damage_less_while_crouch_large",
-		name_id = "skill_crouching_damage_reduction_name",
-		stat_desc_id = "skill_crouching_damage_reduction_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_crouching_damage_reduction_1",
-		},
-	}
-	self.skills.crouching_damage_reduction_2 = {
-		desc_id = "skill_crouching_damage_reduction_desc",
-		icon = "skills_soaking_damage_less_while_crouch",
-		icon_large = "skills_soaking_damage_less_while_crouch_large",
-		name_id = "skill_crouching_damage_reduction_name",
-		stat_desc_id = "skill_crouching_damage_reduction_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_crouching_damage_reduction_2",
-		},
-	}
-	self.skills.crouching_damage_reduction_3 = {
-		desc_id = "skill_crouching_damage_reduction_desc",
-		icon = "skills_soaking_damage_less_while_crouch",
-		icon_large = "skills_soaking_damage_less_while_crouch_large",
-		name_id = "skill_crouching_damage_reduction_name",
-		stat_desc_id = "skill_crouching_damage_reduction_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_crouching_damage_reduction_3",
-		},
-	}
-	self.skills.crouching_damage_reduction_4 = {
-		desc_id = "skill_crouching_damage_reduction_desc",
-		icon = "skills_soaking_damage_less_while_crouch",
-		icon_large = "skills_soaking_damage_less_while_crouch_large",
-		name_id = "skill_crouching_damage_reduction_name",
-		stat_desc_id = "skill_crouching_damage_reduction_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_crouching_damage_reduction_4",
-		},
-	}
-	self.skills.interacting_damage_reduction_1 = {
-		desc_id = "skill_interacting_damage_reduction_desc",
-		icon = "skills_interaction_less_damage_interact",
-		icon_large = "skills_interaction_less_damage_interact_large",
-		name_id = "skill_interacting_damage_reduction_name",
-		stat_desc_id = "skill_interacting_damage_reduction_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_interacting_damage_reduction_1",
-		},
-	}
-	self.skills.interacting_damage_reduction_2 = {
-		desc_id = "skill_interacting_damage_reduction_desc",
-		icon = "skills_interaction_less_damage_interact",
-		icon_large = "skills_interaction_less_damage_interact_large",
-		name_id = "skill_interacting_damage_reduction_name",
-		stat_desc_id = "skill_interacting_damage_reduction_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_interacting_damage_reduction_2",
-		},
-	}
-	self.skills.interacting_damage_reduction_3 = {
-		desc_id = "skill_interacting_damage_reduction_desc",
-		icon = "skills_interaction_less_damage_interact",
-		icon_large = "skills_interaction_less_damage_interact_large",
-		name_id = "skill_interacting_damage_reduction_name",
-		stat_desc_id = "skill_interacting_damage_reduction_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_interacting_damage_reduction_3",
-		},
-	}
-	self.skills.interacting_damage_reduction_4 = {
-		desc_id = "skill_interacting_damage_reduction_desc",
-		icon = "skills_interaction_less_damage_interact",
-		icon_large = "skills_interaction_less_damage_interact_large",
-		name_id = "skill_interacting_damage_reduction_name",
-		stat_desc_id = "skill_interacting_damage_reduction_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_interacting_damage_reduction_4",
-		},
-	}
-	self.skills.bullet_damage_reduction_1 = {
-		desc_id = "skill_bullet_damage_reduction_desc",
-		icon = "skills_general_resist",
-		icon_large = "skills_general_resist_large",
-		name_id = "skill_bullet_damage_reduction_name",
-		stat_desc_id = "skill_bullet_damage_reduction_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_bullet_damage_reduction_1",
-		},
-	}
-	self.skills.bullet_damage_reduction_2 = {
-		desc_id = "skill_bullet_damage_reduction_desc",
-		icon = "skills_general_resist",
-		icon_large = "skills_general_resist_large",
-		name_id = "skill_bullet_damage_reduction_name",
-		stat_desc_id = "skill_bullet_damage_reduction_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_bullet_damage_reduction_2",
-		},
-	}
-	self.skills.bullet_damage_reduction_3 = {
-		desc_id = "skill_bullet_damage_reduction_desc",
-		icon = "skills_general_resist",
-		icon_large = "skills_general_resist_large",
-		name_id = "skill_bullet_damage_reduction_name",
-		stat_desc_id = "skill_bullet_damage_reduction_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_bullet_damage_reduction_3",
-		},
-	}
-	self.skills.bullet_damage_reduction_4 = {
-		desc_id = "skill_bullet_damage_reduction_desc",
-		icon = "skills_general_resist",
-		icon_large = "skills_general_resist_large",
-		name_id = "skill_bullet_damage_reduction_name",
-		stat_desc_id = "skill_bullet_damage_reduction_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_bullet_damage_reduction_4",
-		},
-	}
-	self.skills.melee_damage_reduction_1 = {
-		desc_id = "skill_melee_damage_reduction_desc",
-		icon = "skills_soaking_damage_less_melee",
-		icon_large = "skills_soaking_damage_less_melee_large",
-		name_id = "skill_melee_damage_reduction_name",
-		stat_desc_id = "skill_melee_damage_reduction_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_melee_damage_reduction_1",
-		},
-	}
-	self.skills.melee_damage_reduction_2 = {
-		desc_id = "skill_melee_damage_reduction_desc",
-		icon = "skills_soaking_damage_less_melee",
-		icon_large = "skills_soaking_damage_less_melee_large",
-		name_id = "skill_melee_damage_reduction_name",
-		stat_desc_id = "skill_melee_damage_reduction_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_melee_damage_reduction_2",
-		},
-	}
-	self.skills.melee_damage_reduction_3 = {
-		desc_id = "skill_melee_damage_reduction_desc",
-		icon = "skills_soaking_damage_less_melee",
-		icon_large = "skills_soaking_damage_less_melee_large",
-		name_id = "skill_melee_damage_reduction_name",
-		stat_desc_id = "skill_melee_damage_reduction_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_melee_damage_reduction_3",
-		},
-	}
-	self.skills.melee_damage_reduction_4 = {
-		desc_id = "skill_melee_damage_reduction_desc",
-		icon = "skills_soaking_damage_less_melee",
-		icon_large = "skills_soaking_damage_less_melee_large",
-		name_id = "skill_melee_damage_reduction_name",
-		stat_desc_id = "skill_melee_damage_reduction_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_melee_damage_reduction_4",
-		},
-	}
-	self.skills.headshot_damage_multiplier_1 = {
-		desc_id = "skill_headshot_damage_multiplier_desc",
-		icon = "skills_dealing_damage_headshot_multiplier",
-		icon_large = "skills_dealing_damage_headshot_multiplier_large",
-		name_id = "skill_headshot_damage_multiplier_name",
-		stat_desc_id = "skill_headshot_damage_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_headshot_damage_multiplier_1",
-		},
-	}
-	self.skills.headshot_damage_multiplier_2 = {
-		desc_id = "skill_headshot_damage_multiplier_desc",
-		icon = "skills_dealing_damage_headshot_multiplier",
-		icon_large = "skills_dealing_damage_headshot_multiplier_large",
-		name_id = "skill_headshot_damage_multiplier_name",
-		stat_desc_id = "skill_headshot_damage_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_headshot_damage_multiplier_2",
-		},
-	}
-	self.skills.headshot_damage_multiplier_3 = {
-		desc_id = "skill_headshot_damage_multiplier_desc",
-		icon = "skills_dealing_damage_headshot_multiplier",
-		icon_large = "skills_dealing_damage_headshot_multiplier_large",
-		name_id = "skill_headshot_damage_multiplier_name",
-		stat_desc_id = "skill_headshot_damage_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_headshot_damage_multiplier_3",
-		},
-	}
-	self.skills.headshot_damage_multiplier_4 = {
-		desc_id = "skill_headshot_damage_multiplier_desc",
-		icon = "skills_dealing_damage_headshot_multiplier",
-		icon_large = "skills_dealing_damage_headshot_multiplier_large",
-		name_id = "skill_headshot_damage_multiplier_name",
-		stat_desc_id = "skill_headshot_damage_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_headshot_damage_multiplier_4",
-		},
-	}
-	self.skills.melee_damage_multiplier_1 = {
-		desc_id = "skill_melee_damage_multiplier_desc",
-		icon = "skills_dealing_damage_melee_multiplier",
-		icon_large = "skills_dealing_damage_melee_multiplier_large",
-		name_id = "skill_melee_damage_multiplier_name",
-		stat_desc_id = "skill_melee_damage_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_melee_damage_multiplier_1",
-		},
-	}
-	self.skills.melee_damage_multiplier_2 = {
-		desc_id = "skill_melee_damage_multiplier_desc",
-		icon = "skills_dealing_damage_melee_multiplier",
-		icon_large = "skills_dealing_damage_melee_multiplier_large",
-		name_id = "skill_melee_damage_multiplier_name",
-		stat_desc_id = "skill_melee_damage_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_melee_damage_multiplier_2",
-		},
-	}
-	self.skills.melee_damage_multiplier_3 = {
-		desc_id = "skill_melee_damage_multiplier_desc",
-		icon = "skills_dealing_damage_melee_multiplier",
-		icon_large = "skills_dealing_damage_melee_multiplier_large",
-		name_id = "skill_melee_damage_multiplier_name",
-		stat_desc_id = "skill_melee_damage_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_melee_damage_multiplier_3",
-		},
-	}
-	self.skills.highlight_enemy_damage_bonus_1 = {
-		desc_id = "skill_highlight_enemy_damage_bonus_desc",
-		icon = "skills_dealing_damage_tagged_enemies",
-		icon_large = "skills_dealing_damage_tagged_enemies_large",
-		name_id = "skill_highlight_enemy_damage_bonus_name",
-		stat_desc_id = "skill_highlight_enemy_damage_bonus_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_highlight_enemy_damage_bonus_1",
-		},
-	}
-	self.skills.highlight_enemy_damage_bonus_2 = {
-		desc_id = "skill_highlight_enemy_damage_bonus_desc",
-		icon = "skills_dealing_damage_tagged_enemies",
-		icon_large = "skills_dealing_damage_tagged_enemies_large",
-		name_id = "skill_highlight_enemy_damage_bonus_name",
-		stat_desc_id = "skill_highlight_enemy_damage_bonus_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_highlight_enemy_damage_bonus_2",
-		},
-	}
-	self.skills.highlight_enemy_damage_bonus_3 = {
-		desc_id = "skill_highlight_enemy_damage_bonus_desc",
-		icon = "skills_dealing_damage_tagged_enemies",
-		icon_large = "skills_dealing_damage_tagged_enemies_large",
-		name_id = "skill_highlight_enemy_damage_bonus_name",
-		stat_desc_id = "skill_highlight_enemy_damage_bonus_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_highlight_enemy_damage_bonus_3",
-		},
-	}
-	self.skills.highlight_enemy_damage_bonus_4 = {
-		desc_id = "skill_highlight_enemy_damage_bonus_desc",
-		icon = "skills_dealing_damage_tagged_enemies",
-		icon_large = "skills_dealing_damage_tagged_enemies_large",
-		name_id = "skill_highlight_enemy_damage_bonus_name",
-		stat_desc_id = "skill_highlight_enemy_damage_bonus_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_highlight_enemy_damage_bonus_4",
-		},
-	}
-	self.skills.on_hit_flinch_reduction_1 = {
-		desc_id = "skill_on_hit_flinch_reduction_desc",
-		icon = "skills_weapons_reduce_flinch_when_hit",
-		icon_large = "skills_weapons_reduce_flinch_when_hit_large",
-		name_id = "skill_on_hit_flinch_reduction_name",
-		stat_desc_id = "skill_on_hit_flinch_reduction_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_on_hit_flinch_reduction_1",
-		},
-	}
-	self.skills.on_hit_flinch_reduction_2 = {
-		desc_id = "skill_on_hit_flinch_reduction_desc",
-		icon = "skills_weapons_reduce_flinch_when_hit",
-		icon_large = "skills_weapons_reduce_flinch_when_hit_large",
-		name_id = "skill_on_hit_flinch_reduction_name",
-		stat_desc_id = "skill_on_hit_flinch_reduction_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_on_hit_flinch_reduction_2",
-		},
-	}
-	self.skills.on_hit_flinch_reduction_3 = {
-		desc_id = "skill_on_hit_flinch_reduction_desc",
-		icon = "skills_weapons_reduce_flinch_when_hit",
-		icon_large = "skills_weapons_reduce_flinch_when_hit_large",
-		name_id = "skill_on_hit_flinch_reduction_name",
-		stat_desc_id = "skill_on_hit_flinch_reduction_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_on_hit_flinch_reduction_3",
-		},
-	}
-	self.skills.on_hit_flinch_reduction_4 = {
-		desc_id = "skill_on_hit_flinch_reduction_desc",
-		icon = "skills_weapons_reduce_flinch_when_hit",
-		icon_large = "skills_weapons_reduce_flinch_when_hit_large",
-		name_id = "skill_on_hit_flinch_reduction_name",
-		stat_desc_id = "skill_on_hit_flinch_reduction_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_on_hit_flinch_reduction_4",
-		},
-	}
-	self.skills.swap_speed_multiplier_1 = {
-		desc_id = "skill_swap_speed_multiplier_desc",
-		icon = "skills_weapons_switch_faster",
-		icon_large = "skills_weapons_switch_faster_large",
-		name_id = "skill_swap_speed_multiplier_name",
-		stat_desc_id = "skill_swap_speed_multiplier_stat_line",
-		acquires = {
 			{
-				player_swap_speed_multiplier = 1,
+				"player_critbrain_critical_hit_chance",
+			},
+			{},
+			{},
+			{
+				"player_critbrain_critical_hit_damage",
 			},
 		},
-		icon_xy = {
-			1,
-			1,
+		upgrades_desc = {
+			"skill_critbrain_stat_line_1",
+			"skill_critbrain_stat_line_2",
+			"skill_critbrain_stat_line_3",
+			"skill_critbrain_stat_line_4",
+		},
+		upgrades_team_buff = {
+			{
+				"warcry_team_critical_hit_chance_1",
+			},
+			{
+				"warcry_team_critical_hit_chance_2",
+			},
+			{
+				"warcry_team_critical_hit_chance_3",
+			},
+			{
+				"warcry_team_critical_hit_chance_4",
+			},
+		},
+		upgrades_type = SkillTreeTweakData.TYPE_BOOSTS,
+	}
+end
+
+function SkillTreeTweakData:_init_skill_list_talents()
+	self.skills.gunner = {
+		desc_id = "skill_gunner_desc",
+		icon = "skills_gunner",
+		name_id = "skill_gunner_name",
+		class_lock = {
+			SkillTreeTweakData.CLASS_RECON,
+			SkillTreeTweakData.CLASS_INFILTRATOR,
+			SkillTreeTweakData.CLASS_DEMOLITIONS,
+		},
+		purchase_group = {
+			"gunner",
+			"gunner_pro",
 		},
 		upgrades = {
-			"player_swap_speed_multiplier_1",
+			{
+				"player_gunner_turret_m2_overheat_reduction_1",
+				"player_gunner_turret_flakvierling_overheat_reduction_1",
+			},
+			{
+				"player_gunner_turret_camera_speed_multiplier",
+			},
+			{
+				"player_gunner_damage_reduction_1",
+			},
+			{
+				"player_gunner_turret_damage_multiplier_1",
+			},
 		},
+		upgrades_desc = {
+			"skill_gunner_stat_line_1",
+			"skill_gunner_stat_line_2",
+			"skill_gunner_stat_line_3",
+			"skill_gunner_stat_line_4",
+		},
+		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
 	}
-	self.skills.swap_speed_multiplier_2 = {
-		desc_id = "skill_swap_speed_multiplier_desc",
-		icon = "skills_weapons_switch_faster",
-		icon_large = "skills_weapons_switch_faster_large",
-		name_id = "skill_swap_speed_multiplier_name",
-		stat_desc_id = "skill_swap_speed_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
+	self.skills.locksmith = {
+		desc_id = "skill_locksmith_desc",
+		icon = "skills_locksmith",
+		name_id = "skill_locksmith_name",
+		upgrades = {
+			{
+				"interaction_locksmith_wheel_hotspot_increase",
+				"interaction_locksmith_wheel_rotation_speed_increase",
+			},
+			{
+				"player_locksmith_lockpicking_damage_reduction",
+			},
+			{
+				"interaction_locksmith_wheel_amount_decrease",
+			},
+			{
+				"interaction_locksmith_failure_rotation_speed_decrease",
+			},
+		},
+		upgrades_desc = {
+			"skill_locksmith_stat_line_1",
+			"skill_locksmith_stat_line_2",
+			"skill_locksmith_stat_line_3",
+			"skill_locksmith_stat_line_4",
+		},
+		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
+	}
+	self.skills.strong_back = {
+		desc_id = "skill_strong_back_desc",
+		icon = "skills_strong_back",
+		name_id = "skill_strong_back_name",
+		class_lock = {
+			SkillTreeTweakData.CLASS_INFILTRATOR,
+			SkillTreeTweakData.CLASS_DEMOLITIONS,
+		},
+		purchase_group = {
+			"strong_back",
+			"strong_back_assault",
+			"strong_back_recon",
 		},
 		upgrades = {
-			"player_swap_speed_multiplier_2",
+			{
+				"interaction_strongback_carry_pickup_multiplier",
+			},
+			{
+				"carry_strongback_weight_increase_2",
+				"carry_strongback_weight_increase_1",
+			},
+			{
+				"carry_strongback_throw_distance_multiplier",
+			},
+			{
+				"carry_strongback_heavy_penalty_decrease",
+			},
 		},
+		upgrades_desc = {
+			"skill_strong_back_stat_line_1",
+			"skill_strong_back_stat_line_2",
+			"skill_strong_back_stat_line_3",
+			"skill_strong_back_stat_line_4",
+		},
+		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
 	}
-	self.skills.swap_speed_multiplier_3 = {
-		desc_id = "skill_swap_speed_multiplier_desc",
-		icon = "skills_weapons_switch_faster",
-		icon_large = "skills_weapons_switch_faster_large",
-		name_id = "skill_swap_speed_multiplier_name",
-		stat_desc_id = "skill_swap_speed_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
+	self.skills.strong_back_assault = deep_clone(self.skills.strong_back)
+	self.skills.strong_back_assault.class_lock = {
+		SkillTreeTweakData.CLASS_ASSAULT,
+	}
+	self.skills.strong_back_assault.upgrades[2] = {
+		"carry_strongback_weight_increase_1",
+	}
+	self.skills.strong_back_recon = deep_clone(self.skills.strong_back)
+	self.skills.strong_back_recon.class_lock = {
+		SkillTreeTweakData.CLASS_RECON,
+	}
+	self.skills.strong_back_recon.upgrades[2] = {
+		"carry_strongback_weight_increase_3",
+		"carry_strongback_weight_increase_2",
+		"carry_strongback_weight_increase_1",
+	}
+	self.skills.fleetfoot = {
+		desc_id = "skill_fleetfoot_desc",
+		icon = "skills_fleetfoot",
+		name_id = "skill_fleetfoot_name",
+		upgrades = {
+			{
+				"player_fleetfoot_movement_speed_multiplier",
+			},
+			{
+				"player_fleetfoot_silent_fall",
+			},
+			{
+				"player_fleetfoot_fall_damage_reduction",
+			},
+			{
+				"player_fleetfoot_critical_movement_speed_multiplier",
+			},
+		},
+		upgrades_desc = {
+			"skill_fleetfoot_stat_line_1",
+			"skill_fleetfoot_stat_line_2",
+			"skill_fleetfoot_stat_line_3",
+			"skill_fleetfoot_stat_line_4",
+		},
+		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
+	}
+	self.skills.focus = {
+		desc_id = "skill_focus_desc",
+		icon = "skills_focus",
+		level_required = 3,
+		name_id = "skill_focus_name",
+		class_lock = {
+			SkillTreeTweakData.CLASS_ASSAULT,
+			SkillTreeTweakData.CLASS_RECON,
 		},
 		upgrades = {
-			"player_swap_speed_multiplier_3",
+			{
+				"player_focus_interaction_damage_reduction",
+			},
+			{
+				"player_focus_vehicle_damage_reduction",
+			},
+			{
+				"player_focus_steelsight_damage_reduction",
+			},
+			{
+				"player_focus_steelsight_normal_movement_speed",
+			},
 		},
+		upgrades_desc = {
+			"skill_focus_stat_line_1",
+			"skill_focus_stat_line_2",
+			"skill_focus_stat_line_3",
+			"skill_focus_stat_line_4",
+		},
+		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
 	}
-	self.skills.swap_speed_multiplier_4 = {
-		desc_id = "skill_swap_speed_multiplier_desc",
-		icon = "skills_weapons_switch_faster",
-		icon_large = "skills_weapons_switch_faster_large",
-		name_id = "skill_swap_speed_multiplier_name",
-		stat_desc_id = "skill_swap_speed_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
+	self.skills.handyman = {
+		desc_id = "skill_handyman_desc",
+		icon = "skills_handyman",
+		level_required = 3,
+		name_id = "skill_handyman_name",
+		class_lock = {
+			SkillTreeTweakData.CLASS_INFILTRATOR,
 		},
 		upgrades = {
-			"player_swap_speed_multiplier_4",
+			{
+				"interaction_handyman_generic_speed_multiplier",
+			},
+			{
+				"interaction_handyman_rewire_speed_multipler",
+			},
+			{
+				"interaction_handyman_vehicle_speed_multipler",
+			},
+			{
+				"temporary_handyman_interaction_boost",
+			},
 		},
+		upgrades_desc = {
+			"skill_handyman_stat_line_1",
+			"skill_handyman_stat_line_2",
+			"skill_handyman_stat_line_3",
+			"skill_handyman_stat_line_4",
+		},
+		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
 	}
-	self.skills.ready_weapon_speed_multiplier_1 = {
-		desc_id = "skill_ready_weapon_speed_multiplier_desc",
-		icon = "skills_weapons_ready_faster_after_sprint",
-		icon_large = "skills_weapons_ready_faster_after_sprint_large",
-		name_id = "skill_ready_weapon_speed_multiplier_name",
-		stat_desc_id = "skill_ready_weapon_speed_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
+	self.skills.do_die = {
+		desc_id = "skill_do_die_desc",
+		icon = "skills_do_die",
+		level_required = 3,
+		name_id = "skill_do_die_name",
+		class_lock = {
+			SkillTreeTweakData.CLASS_DEMOLITIONS,
 		},
 		upgrades = {
-			"player_ready_weapon_speed_multiplier_1",
+			{
+				"player_do_die_melee_repeat_multiplier",
+			},
+			{
+				"player_do_die_melee_warcry_fill_multiplier",
+			},
+			{
+				"player_do_die_melee_running_charge",
+			},
+			{
+				"temporary_do_die_melee_speed_multiplier",
+			},
 		},
+		upgrades_desc = {
+			"skill_do_die_stat_line_1",
+			"skill_do_die_stat_line_2",
+			"skill_do_die_stat_line_3",
+			"skill_do_die_stat_line_4",
+		},
+		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
 	}
-	self.skills.ready_weapon_speed_multiplier_2 = {
-		desc_id = "skill_ready_weapon_speed_multiplier_desc",
-		icon = "skills_weapons_ready_faster_after_sprint",
-		icon_large = "skills_weapons_ready_faster_after_sprint_large",
-		name_id = "skill_ready_weapon_speed_multiplier_name",
-		stat_desc_id = "skill_ready_weapon_speed_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
+	self.skills.medic = {
+		desc_id = "skill_medic_desc",
+		icon = "skills_medic",
+		level_required = 3,
+		name_id = "skill_medic_name",
+		class_lock = {
+			SkillTreeTweakData.CLASS_RECON,
+			SkillTreeTweakData.CLASS_ASSAULT,
+			SkillTreeTweakData.CLASS_DEMOLITIONS,
+		},
+		purchase_group = {
+			"medic",
+			"medic_pro",
 		},
 		upgrades = {
-			"player_ready_weapon_speed_multiplier_2",
+			{
+				"player_medic_pick_up_health_multiplier_1",
+			},
+			{
+				"player_medic_attention_weight_reduction_1",
+			},
+			{
+				"interaction_medic_revive_speed_multiplier_1",
+			},
+			{
+				"player_medic_health_share_team_1",
+			},
+		},
+		upgrades_desc = {
+			"skill_medic_stat_line_1",
+			"skill_medic_stat_line_2",
+			"skill_medic_stat_line_3",
+			"skill_medic_stat_line_4",
+		},
+		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
+	}
+	self.skills.medic_pro = deep_clone(self.skills.medic)
+	self.skills.medic_pro.name_id = "skill_medic_pro_name"
+	self.skills.medic_pro.level_required = 8
+	self.skills.medic_pro.class_lock = {
+		SkillTreeTweakData.CLASS_INFILTRATOR,
+	}
+	self.skills.medic_pro.upgrades = {
+		{
+			"player_medic_pick_up_health_multiplier_2",
+		},
+		{
+			"player_medic_attention_weight_reduction_2",
+		},
+		{
+			"interaction_medic_revive_speed_multiplier_2",
+		},
+		{
+			"player_medic_health_share_team_2",
 		},
 	}
-	self.skills.ready_weapon_speed_multiplier_3 = {
-		desc_id = "skill_ready_weapon_speed_multiplier_desc",
-		icon = "skills_weapons_ready_faster_after_sprint",
-		icon_large = "skills_weapons_ready_faster_after_sprint_large",
-		name_id = "skill_ready_weapon_speed_multiplier_name",
-		stat_desc_id = "skill_ready_weapon_speed_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
+	self.skills.holdbarred = {
+		desc_id = "skill_holdbarred_desc",
+		icon = "skills_holdbarred",
+		level_required = 3,
+		name_id = "skill_holdbarred_name",
+		upgrades = {
+			{
+				"player_holdbarred_melee_speed_multiplier",
+			},
+			{
+				"player_holdbarred_melee_charge_multiplier",
+			},
+			{
+				"player_holdbarred_melee_knockdown_multiplier",
+			},
+			{
+				"player_holdbarred_melee_kill_panic_chance",
+			},
+		},
+		upgrades_desc = {
+			"skill_holdbarred_stat_line_1",
+			"skill_holdbarred_stat_line_2",
+			"skill_holdbarred_stat_line_3",
+			"skill_holdbarred_stat_line_4",
+		},
+		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
+	}
+	self.skills.steadiness = {
+		desc_id = "skill_steadiness_desc",
+		icon = "skills_steadiness",
+		level_required = 8,
+		name_id = "skill_steadiness_name",
+		class_lock = {
+			SkillTreeTweakData.CLASS_RECON,
 		},
 		upgrades = {
-			"player_ready_weapon_speed_multiplier_3",
+			{
+				"snp_steelsight_hit_flinch_reduction",
+				"snp_steelsight_movement_speed_multiplier",
+			},
+			{
+				"player_steadiness_headshot_warcry_fill_multiplier",
+			},
+			{
+				"player_steadiness_weapon_sway_decrease",
+			},
+			{
+				"snp_steelsight_fire_rate_multiplier",
+			},
 		},
+		upgrades_desc = {
+			"skill_steadiness_stat_line_1",
+			"skill_steadiness_stat_line_2",
+			"skill_steadiness_stat_line_3",
+			"skill_steadiness_stat_line_4",
+		},
+		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
 	}
-	self.skills.ready_weapon_speed_multiplier_4 = {
-		desc_id = "skill_ready_weapon_speed_multiplier_desc",
-		icon = "skills_weapons_ready_faster_after_sprint",
-		icon_large = "skills_weapons_ready_faster_after_sprint_large",
-		name_id = "skill_ready_weapon_speed_multiplier_name",
-		stat_desc_id = "skill_ready_weapon_speed_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
+	self.skills.high_dive = {
+		desc_id = "skill_high_dive_desc",
+		icon = "skills_high_dive",
+		info_id = "skill_high_dive_info",
+		level_required = 8,
+		name_id = "skill_high_dive_name",
+		class_lock = {
+			SkillTreeTweakData.CLASS_ASSAULT,
 		},
 		upgrades = {
-			"player_ready_weapon_speed_multiplier_4",
+			{
+				"player_high_dive_ground_slam_1",
+				"player_high_dive_gravity_multiplier_1",
+			},
+			{
+				"player_high_dive_gravity_multiplier_2",
+			},
+			{
+				"temporary_high_dive_enemy_knockdown",
+			},
+			{
+				"player_high_dive_ground_slam_2",
+			},
+		},
+		upgrades_desc = {
+			"skill_high_dive_stat_line_1",
+			"skill_high_dive_stat_line_2",
+			"skill_high_dive_stat_line_3",
+			"skill_high_dive_stat_line_4",
+		},
+		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
+	}
+	self.skills.gunner_pro = deep_clone(self.skills.gunner)
+	self.skills.gunner_pro.name_id = "skill_gunner_pro_name"
+	self.skills.gunner_pro.class_lock = {
+		SkillTreeTweakData.CLASS_ASSAULT,
+	}
+	self.skills.gunner_pro.upgrades = {
+		{
+			"player_gunner_turret_m2_overheat_reduction_2",
+			"player_gunner_turret_flakvierling_overheat_reduction_2",
+		},
+		{
+			"player_gunner_turret_camera_speed_multiplier",
+		},
+		{
+			"player_gunner_damage_reduction_2",
+		},
+		{
+			"player_gunner_turret_damage_multiplier_2",
 		},
 	}
-	self.skills.wheel_hotspot_increase_1 = {
-		desc_id = "skill_wheel_hotspot_increase_desc",
-		icon = "skills_interaction_wheel_hotspots_larger",
-		icon_large = "skills_interaction_wheel_hotspots_larger_large",
-		name_id = "skill_wheel_hotspot_increase_name",
-		stat_desc_id = "skill_wheel_hotspot_increase_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
+	self.skills.helpcry = {
+		desc_id = "skill_helpcry_desc",
+		icon = "skills_helpcry",
+		info_id = "skill_helpcry_info",
+		level_required = 8,
+		name_id = "skill_helpcry_name",
+		upgrades = {
+			{
+				"player_helpcry_warcry_auto_fill_1",
+				"player_helpcry_warcry_fill_multiplier",
+			},
+			{
+				"player_helpcry_warcry_duration_multiplier",
+			},
+			{
+				"player_helpcry_warcry_downed_reduction",
+			},
+			{
+				"player_helpcry_warcry_auto_fill_2",
+			},
+		},
+		upgrades_desc = {
+			"skill_helpcry_stat_line_1",
+			"skill_helpcry_stat_line_2",
+			"skill_helpcry_stat_line_3",
+			"skill_helpcry_stat_line_4",
+		},
+		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
+	}
+	self.skills.fitness_freak = {
+		desc_id = "skill_fitness_freak_desc",
+		icon = "skills_fitness_freak",
+		level_required = 8,
+		name_id = "skill_fitness_freak_name",
+		upgrades = {
+			{
+				"player_fitness_stamina_threshold_decrease",
+			},
+			{
+				"player_fitness_stamina_regeneration_increase",
+			},
+			{
+				"player_fitness_stamina_multiplier",
+			},
+			{
+				"player_fitness_can_free_run",
+			},
+		},
+		upgrades_desc = {
+			"skill_fitness_freak_stat_line_1",
+			"skill_fitness_freak_stat_line_2",
+			"skill_fitness_freak_stat_line_3",
+			"skill_fitness_freak_stat_line_4",
+		},
+		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
+	}
+	self.skills.clipazines_assault = {
+		desc_id = "skill_clipazines_desc",
+		icon = "skills_clipazines",
+		level_required = 16,
+		name_id = "skill_clipazines_name",
+		class_lock = {
+			SkillTreeTweakData.CLASS_ASSAULT,
+		},
+		purchase_group = {
+			"clipazines_assault",
+			"clipazines_recon",
+			"clipazines_insurgent",
+			"clipazines_demo",
 		},
 		upgrades = {
-			"interaction_wheel_hotspot_increase_1",
+			{
+				"weapon_clipazines_empty_reload_speed_multiplier",
+			},
+			{
+				"player_clipazines_pick_up_ammo_multiplier",
+			},
+			{
+				"assault_rifle_clipazines_magazine_upgrade",
+				"lmg_clipazines_magazine_upgrade",
+			},
+			{
+				"weapon_clipazines_reload_full_magazine",
+			},
 		},
+		upgrades_desc = {
+			"skill_clipazines_stat_line_1",
+			"skill_clipazines_stat_line_2",
+			"skill_clipazines_stat_line_3",
+			"skill_clipazines_stat_line_4",
+		},
+		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
 	}
-	self.skills.wheel_hotspot_increase_2 = {
-		desc_id = "skill_wheel_hotspot_increase_desc",
-		icon = "skills_interaction_wheel_hotspots_larger",
-		icon_large = "skills_interaction_wheel_hotspots_larger_large",
-		name_id = "skill_wheel_hotspot_increase_name",
-		stat_desc_id = "skill_wheel_hotspot_increase_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
+	self.skills.clipazines_recon = deep_clone(self.skills.clipazines_assault)
+	self.skills.clipazines_recon.name_id = "skill_clipazines_recon_name"
+	self.skills.clipazines_recon.level_required = 13
+	self.skills.clipazines_recon.class_lock = {
+		SkillTreeTweakData.CLASS_RECON,
+	}
+	self.skills.clipazines_recon.upgrades_desc[3] = "skill_clipazines_recon_stat_line_3"
+	self.skills.clipazines_recon.upgrades_desc[4] = "skill_clipazines_hybrid_stat_line_4"
+	self.skills.clipazines_recon.upgrades[3] = {
+		"snp_clipazines_magazine_upgrade",
+		"smg_clipazines_magazine_upgrade",
+	}
+	self.skills.clipazines_recon.upgrades[4] = {
+		"weapon_clipazines_reload_hybrid_rounds",
+	}
+	self.skills.clipazines_insurgent = deep_clone(self.skills.clipazines_assault)
+	self.skills.clipazines_insurgent.name_id = "skill_clipazines_insurgent_name"
+	self.skills.clipazines_insurgent.level_required = 3
+	self.skills.clipazines_insurgent.class_lock = {
+		SkillTreeTweakData.CLASS_INFILTRATOR,
+	}
+	self.skills.clipazines_insurgent.upgrades_desc[3] = "skill_clipazines_insurgent_stat_line_3"
+	self.skills.clipazines_insurgent.upgrades[3] = {
+		"smg_clipazines_magazine_upgrade",
+		"pistol_clipazines_magazine_upgrade",
+	}
+	self.skills.clipazines_demo = deep_clone(self.skills.clipazines_recon)
+	self.skills.clipazines_demo.name_id = "skill_clipazines_demo_name"
+	self.skills.clipazines_demo.level_required = 24
+	self.skills.clipazines_demo.class_lock = {
+		SkillTreeTweakData.CLASS_DEMOLITIONS,
+	}
+	self.skills.clipazines_demo.upgrades_desc[3] = "skill_clipazines_demo_stat_line_3"
+	self.skills.clipazines_demo.upgrades[3] = {
+		"shotgun_clipazines_magazine_upgrade",
+		"lmg_clipazines_magazine_upgrade",
+	}
+	self.skills.duck_and_cover = {
+		desc_id = "skill_duck_and_cover_desc",
+		icon = "skills_duck_and_cover",
+		level_required = 13,
+		name_id = "skill_duck_and_cover_name",
+		class_lock = {
+			SkillTreeTweakData.CLASS_INFILTRATOR,
 		},
 		upgrades = {
-			"interaction_wheel_hotspot_increase_2",
+			{
+				"player_dac_stamina_regen_delay_multiplier",
+			},
+			{
+				"player_dac_jump_stamina_drain_reduction",
+			},
+			{
+				"carry_dac_stamina_consumption_reduction",
+			},
+			{
+				"player_dac_stamina_regeneration_on_kill",
+			},
 		},
+		upgrades_desc = {
+			"skill_duck_and_cover_stat_line_1",
+			"skill_duck_and_cover_stat_line_2",
+			"skill_duck_and_cover_stat_line_3",
+			"skill_duck_and_cover_stat_line_4",
+		},
+		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
 	}
-	self.skills.wheel_hotspot_increase_3 = {
-		desc_id = "skill_wheel_hotspot_increase_desc",
-		icon = "skills_interaction_wheel_hotspots_larger",
-		icon_large = "skills_interaction_wheel_hotspots_larger_large",
-		name_id = "skill_wheel_hotspot_increase_name",
-		stat_desc_id = "skill_wheel_hotspot_increase_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
+	self.skills.saboteur = {
+		desc_id = "skill_saboteur_desc",
+		icon = "skills_saboteur",
+		level_required = 13,
+		name_id = "skill_saboteur_name",
+		class_lock = {
+			SkillTreeTweakData.CLASS_DEMOLITIONS,
 		},
 		upgrades = {
-			"interaction_wheel_hotspot_increase_3",
+			{
+				"interaction_saboteur_dynamite_speed_multiplier",
+			},
+			{
+				"interaction_saboteur_fuse_hotspot_increase",
+			},
+			{
+				"carry_saboteur_shell_weight_multiplier",
+			},
+			{
+				"interaction_saboteur_boobytrap_turret",
+			},
 		},
+		upgrades_desc = {
+			"skill_saboteur_stat_line_1",
+			"skill_saboteur_stat_line_2",
+			"skill_saboteur_stat_line_3",
+			"skill_saboteur_stat_line_4",
+		},
+		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
 	}
-	self.skills.wheel_hotspot_increase_4 = {
-		desc_id = "skill_wheel_hotspot_increase_desc",
-		icon = "skills_interaction_wheel_hotspots_larger",
-		icon_large = "skills_interaction_wheel_hotspots_larger_large",
-		name_id = "skill_wheel_hotspot_increase_name",
-		stat_desc_id = "skill_wheel_hotspot_increase_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
+	self.skills.predator = {
+		desc_id = "skill_predator_desc",
+		icon = "skills_predator",
+		level_required = 13,
+		name_id = "skill_predator_name",
+		upgrades = {
+			{
+				"carry_predator_corpse_weight_multiplier",
+			},
+			{
+				"interaction_predator_corpse_speed_multiplier",
+			},
+			{
+				"player_predator_surprise_kill_leeway_multiplier",
+			},
+			{
+				"player_predator_surprise_knockdown",
+			},
+		},
+		upgrades_desc = {
+			"skill_predator_stat_line_1",
+			"skill_predator_stat_line_2",
+			"skill_predator_stat_line_3",
+			"skill_predator_stat_line_4",
+		},
+		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
+	}
+	self.skills.perseverance = {
+		desc_id = "skill_perseverance_desc",
+		icon = "skills_perseverance",
+		info_id = "skill_perseverance_info",
+		level_required = 13,
+		name_id = "skill_perseverance_name",
+		upgrades = {
+			{
+				"player_perseverance_prolong_life_1",
+			},
+			{
+				"player_perseverance_killshot_timer_increase",
+			},
+			{
+				"player_perseverance_prolong_life_2",
+			},
+			{
+				"interaction_perseverance_allowed_interaction",
+			},
+		},
+		upgrades_desc = {
+			"skill_perseverance_stat_line_1",
+			"skill_perseverance_stat_line_2",
+			"skill_perseverance_stat_line_3",
+			"skill_perseverance_stat_line_4",
+		},
+		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
+	}
+	self.skills.opportunist = {
+		desc_id = "skill_opportunist_desc",
+		icon = "skills_opportunist",
+		level_required = 16,
+		name_id = "skill_opportunist_name",
+		class_lock = {
+			SkillTreeTweakData.CLASS_RECON,
+			SkillTreeTweakData.CLASS_DEMOLITIONS,
 		},
 		upgrades = {
-			"interaction_wheel_hotspot_increase_4",
+			{
+				"player_opportunist_pick_up_health_to_ammo",
+			},
+			{
+				"player_opportunist_pick_up_ammo_to_health",
+			},
+			{
+				"player_opportunist_pick_up_grenade_to_ammo",
+				"player_opportunist_pick_up_grenade_to_health",
+			},
+			{
+				"player_opportunist_pick_up_supplies_to_warcry",
+			},
 		},
+		upgrades_desc = {
+			"skill_opportunist_stat_line_1",
+			"skill_opportunist_stat_line_2",
+			"skill_opportunist_stat_line_3",
+			"skill_opportunist_stat_line_4",
+		},
+		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
 	}
-	self.skills.wheel_rotation_speed_increase_1 = {
-		desc_id = "skill_wheel_rotation_speed_increase_desc",
-		icon = "skills_interaction_wheels_turn_faster",
-		icon_large = "skills_interaction_wheels_turn_faster_large",
-		name_id = "skill_wheel_rotation_speed_increase_name",
-		stat_desc_id = "skill_wheel_rotation_speed_increase_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
+	self.skills.boxer = {
+		desc_id = "skill_boxer_desc",
+		icon = "skills_boxer",
+		level_required = 16,
+		name_id = "skill_boxer_name",
+		class_lock = {
+			SkillTreeTweakData.CLASS_INFILTRATOR,
 		},
 		upgrades = {
-			"interaction_wheel_rotation_speed_increase_1",
+			{
+				"player_boxer_melee_damage_reduction",
+			},
+			{
+				"player_boxer_melee_warcry_fill_multiplier",
+			},
+			{
+				"player_boxer_melee_damage_multiplier",
+			},
+			{
+				"player_boxer_melee_headshots",
+			},
 		},
+		upgrades_desc = {
+			"skill_boxer_stat_line_1",
+			"skill_boxer_stat_line_2",
+			"skill_boxer_stat_line_3",
+			"skill_boxer_stat_line_4",
+		},
+		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
 	}
-	self.skills.wheel_rotation_speed_increase_2 = {
-		desc_id = "skill_wheel_rotation_speed_increase_desc",
-		icon = "skills_interaction_wheels_turn_faster",
-		icon_large = "skills_interaction_wheels_turn_faster_large",
-		name_id = "skill_wheel_rotation_speed_increase_name",
-		stat_desc_id = "skill_wheel_rotation_speed_increase_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
+	self.skills.scuttler = {
+		desc_id = "skill_scuttler_desc",
+		icon = "skills_scuttler",
+		level_required = 16,
+		name_id = "skill_scuttler_name",
+		upgrades = {
+			{
+				"player_scuttler_crouch_speed_increase",
+			},
+			{
+				"player_scuttler_crouch_spread_multiplier",
+			},
+			{
+				"player_scuttler_stamina_regeneration_increase",
+			},
+			{
+				"carry_scuttler_crouch_penalty_decrease",
+			},
+		},
+		upgrades_desc = {
+			"skill_scuttler_stat_line_1",
+			"skill_scuttler_stat_line_2",
+			"skill_scuttler_stat_line_3",
+			"skill_scuttler_stat_line_4",
+		},
+		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
+	}
+	self.skills.grenadier = {
+		desc_id = "skill_grenadier_desc",
+		icon = "skills_grenadier",
+		info_id = "skill_grenadier_info",
+		level_required = 16,
+		name_id = "skill_grenadier_name",
+		class_lock = {
+			SkillTreeTweakData.CLASS_RECON,
+			SkillTreeTweakData.CLASS_ASSAULT,
+			SkillTreeTweakData.CLASS_INFILTRATOR,
+		},
+		purchase_group = {
+			"grenadier",
+			"grenadier_pro",
 		},
 		upgrades = {
-			"interaction_wheel_rotation_speed_increase_2",
+			{
+				"player_grenadier_grenade_quantity_1",
+			},
+			{
+				"player_grenadier_explosive_damage_reduction_1",
+			},
+			{
+				"player_grenadier_explosive_warcry_fill_multiplier_1",
+			},
+			{
+				"player_grenadier_grenade_radius_multiplier_1",
+			},
+		},
+		upgrades_desc = {
+			"skill_grenadier_stat_line_1",
+			"skill_grenadier_stat_line_2",
+			"skill_grenadier_stat_line_3",
+			"skill_grenadier_stat_line_4",
+		},
+		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
+	}
+	self.skills.grenadier_pro = deep_clone(self.skills.grenadier)
+	self.skills.grenadier_pro.name_id = "skill_grenadier_pro_name"
+	self.skills.grenadier_pro.class_lock = {
+		SkillTreeTweakData.CLASS_DEMOLITIONS,
+	}
+	self.skills.grenadier_pro.upgrades = {
+		{
+			"player_grenadier_grenade_quantity_2",
+		},
+		{
+			"player_grenadier_explosive_damage_reduction_2",
+		},
+		{
+			"player_grenadier_explosive_warcry_fill_multiplier_2",
+		},
+		{
+			"player_grenadier_grenade_radius_multiplier_2",
 		},
 	}
-	self.skills.wheel_rotation_speed_increase_3 = {
-		desc_id = "skill_wheel_rotation_speed_increase_desc",
-		icon = "skills_interaction_wheels_turn_faster",
-		icon_large = "skills_interaction_wheels_turn_faster_large",
-		name_id = "skill_wheel_rotation_speed_increase_name",
-		stat_desc_id = "skill_wheel_rotation_speed_increase_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
+	self.skills.pack_mule = {
+		desc_id = "skill_pack_mule_desc",
+		icon = "skills_pack_mule",
+		level_required = 20,
+		name_id = "skill_pack_mule_name",
+		class_lock = {
+			SkillTreeTweakData.CLASS_ASSAULT,
 		},
 		upgrades = {
-			"interaction_wheel_rotation_speed_increase_3",
+			{
+				"player_pack_mule_ammo_total_increase",
+			},
+			{
+				"player_pack_mule_pick_up_ammo_multiplier",
+			},
+			{
+				"carry_pack_mule_weight_increase",
+			},
+			{
+				"player_pack_mule_ammo_share_team",
+			},
 		},
+		upgrades_desc = {
+			"skill_pack_mule_stat_line_1",
+			"skill_pack_mule_stat_line_2",
+			"skill_pack_mule_stat_line_3",
+			"skill_pack_mule_stat_line_4",
+		},
+		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
 	}
-	self.skills.wheel_rotation_speed_increase_4 = {
-		desc_id = "skill_wheel_rotation_speed_increase_desc",
-		icon = "skills_interaction_wheels_turn_faster",
-		icon_large = "skills_interaction_wheels_turn_faster_large",
-		name_id = "skill_wheel_rotation_speed_increase_name",
-		stat_desc_id = "skill_wheel_rotation_speed_increase_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
+	self.skills.leaded = {
+		desc_id = "skill_leaded_desc",
+		icon = "skills_leaded",
+		level_required = 20,
+		name_id = "skill_leaded_name",
+		class_lock = {
+			SkillTreeTweakData.CLASS_INFILTRATOR,
 		},
 		upgrades = {
-			"interaction_wheel_rotation_speed_increase_4",
+			{
+				"player_leaded_ammo_sponge_1",
+				"player_leaded_damage_reduction_1",
+			},
+			{
+				"player_leaded_magazine_refill",
+			},
+			{
+				"player_leaded_ammo_sponge_2",
+			},
+			{
+				"player_leaded_damage_reduction_2",
+			},
 		},
+		upgrades_desc = {
+			"skill_leaded_stat_line_1",
+			"skill_leaded_stat_line_2",
+			"skill_leaded_stat_line_3",
+			"skill_leaded_stat_line_4",
+		},
+		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
 	}
-	self.skills.wheel_amount_decrease_1 = {
-		desc_id = "skill_wheel_amount_decrease_desc",
-		icon = "skills_interaction_one_fewer_wheel",
-		icon_large = "skills_interaction_one_fewer_wheel_large",
-		name_id = "skill_wheel_amount_decrease_name",
-		stat_desc_id = "skill_wheel_amount_decrease_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
+	self.skills.fragstone = {
+		desc_id = "skill_fragstone_desc",
+		icon = "skills_fragstone",
+		level_required = 20,
+		name_id = "skill_fragstone_name",
+		class_lock = {
+			SkillTreeTweakData.CLASS_DEMOLITIONS,
 		},
 		upgrades = {
-			"interaction_wheel_amount_decrease_1",
+			{
+				"player_fragstone_downed_martyrdom_1",
+			},
+			{
+				"player_fragstone_grenades_when_downed",
+			},
+			{
+				"player_fragstone_downed_martyrdom_2",
+			},
+			{
+				"player_fragstone_martyrdom_no_consumption",
+			},
 		},
+		upgrades_desc = {
+			"skill_fragstone_stat_line_1",
+			"skill_fragstone_stat_line_2",
+			"skill_fragstone_stat_line_3",
+			"skill_fragstone_stat_line_4",
+		},
+		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
 	}
-	self.skills.wheel_amount_decrease_2 = {
-		desc_id = "skill_wheel_amount_decrease_desc",
-		icon = "skills_interaction_one_fewer_wheel",
-		icon_large = "skills_interaction_one_fewer_wheel_large",
-		name_id = "skill_wheel_amount_decrease_name",
-		stat_desc_id = "skill_wheel_amount_decrease_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
+	self.skills.pickpocket = {
+		desc_id = "skill_pickpocket_desc",
+		icon = "skills_pickpocket",
+		info_id = "skill_pickpocket_info",
+		level_required = 20,
+		name_id = "skill_pickpocket_name",
+		upgrades = {
+			{
+				"temporary_pickpocket_melee_ammo_steal",
+			},
+			{
+				"player_pickpocket_melee_health_steal",
+			},
+			{
+				"player_pickpocket_uncover_detection",
+			},
+			{
+				"interaction_pickpocket_greed_steal",
+			},
+		},
+		upgrades_desc = {
+			"skill_pickpocket_stat_line_1",
+			"skill_pickpocket_stat_line_2",
+			"skill_pickpocket_stat_line_3",
+			"skill_pickpocket_stat_line_4",
+		},
+		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
+	}
+	self.skills.fast_hands = {
+		desc_id = "skill_fast_hands_desc",
+		icon = "skills_fast_hands",
+		level_required = 20,
+		name_id = "skill_fast_hands_name",
+		upgrades = {
+			{
+				"player_fasthand_enter_steelsight_speed_multiplier",
+			},
+			{
+				"player_fasthand_climb_speed_increase",
+				"player_fasthand_mantle_speed_increase",
+			},
+			{
+				"player_fasthand_swap_speed_multiplier",
+			},
+			{
+				"weapon_fasthand_reload_speed_multiplier",
+			},
+		},
+		upgrades_desc = {
+			"skill_fast_hands_stat_line_1",
+			"skill_fast_hands_stat_line_2",
+			"skill_fast_hands_stat_line_3",
+			"skill_fast_hands_stat_line_4",
+		},
+		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
+	}
+	self.skills.farsighted = {
+		desc_id = "skill_farsighted_desc",
+		icon = "skills_farsighted",
+		info_id = "skill_farsighted_info",
+		level_required = 24,
+		name_id = "skill_farsighted_name",
+		class_lock = {
+			SkillTreeTweakData.CLASS_RECON,
 		},
 		upgrades = {
-			"interaction_wheel_amount_decrease_2",
+			{
+				"primary_weapon_farsighted_long_range_damage_multiplier",
+			},
+			{
+				"player_farsighted_steelsight_fov_multiplier",
+			},
+			{
+				"player_farsighted_long_range_warcry_fill_multiplier",
+			},
+			{
+				"player_farsighted_long_range_critical_hit_chance",
+			},
 		},
+		upgrades_desc = {
+			"skill_farsighted_stat_line_1",
+			"skill_farsighted_stat_line_2",
+			"skill_farsighted_stat_line_3",
+			"skill_farsighted_stat_line_4",
+		},
+		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
 	}
+	self.skills.bellhop = {
+		desc_id = "skill_bellhop_desc",
+		icon = "skills_bellhop",
+		level_required = 24,
+		name_id = "skill_bellhop_name",
+		class_lock = {
+			SkillTreeTweakData.CLASS_ASSAULT,
+		},
+		upgrades = {
+			{
+				"player_bellhop_weight_increase_off_primary",
+			},
+			{
+				"player_bellhop_carry_stamina_consume_slower_1",
+			},
+			{
+				"player_bellhop_weight_penalty_removal_melees",
+				"player_bellhop_weight_penalty_removal_throwables",
+			},
+			{
+				"player_bellhop_carry_stamina_consume_slower_2",
+			},
+		},
+		upgrades_desc = {
+			"skill_bellhop_stat_line_1",
+			"skill_bellhop_stat_line_2",
+			"skill_bellhop_stat_line_3",
+			"skill_bellhop_stat_line_4",
+		},
+		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
+	}
+	self.skills.agile = {
+		desc_id = "skill_agile_desc",
+		icon = "skills_agile",
+		level_required = 24,
+		name_id = "skill_agile_name",
+		class_lock = {
+			SkillTreeTweakData.CLASS_INFILTRATOR,
+		},
+		upgrades = {
+			{
+				"player_agile_ready_weapon_speed_multiplier",
+			},
+			{
+				"player_agile_moving_spread_multiplier",
+			},
+			{
+				"player_agile_running_damage_reduction",
+			},
+			{
+				"player_agile_run_and_reload",
+			},
+		},
+		upgrades_desc = {
+			"skill_agile_stat_line_1",
+			"skill_agile_stat_line_2",
+			"skill_agile_stat_line_3",
+			"skill_agile_stat_line_4",
+		},
+		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
+	}
+	self.skills.marshal = {
+		desc_id = "skill_marshal_desc",
+		icon = "skills_marshal",
+		info_id = "skill_marshal_info",
+		level_required = 24,
+		name_id = "skill_marshal_name",
+		class_lock = {
+			SkillTreeTweakData.CLASS_INFILTRATOR,
+			SkillTreeTweakData.CLASS_ASSAULT,
+			SkillTreeTweakData.CLASS_DEMOLITIONS,
+		},
+		purchase_group = {
+			"marshal",
+			"marshal_pro",
+		},
+		upgrades = {
+			{
+				"player_marshal_max_multiplier_stacks",
+				"pistol_marshal_stacking_reload_speed_multiplier",
+				"player_marshal_stack_decay_timer_1",
+			},
+			{
+				"player_marshal_stacking_melee_damage_1",
+			},
+			{
+				"player_marshal_stack_decay_timer_2",
+			},
+			{
+				"pistol_marshal_stacking_damage_multiplier_1",
+			},
+		},
+		upgrades_desc = {
+			"skill_marshal_stat_line_1",
+			"skill_marshal_stat_line_2",
+			"skill_marshal_stat_line_3",
+			"skill_marshal_stat_line_4",
+		},
+		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
+	}
+	self.skills.marshal_pro = deep_clone(self.skills.marshal)
+	self.skills.marshal_pro.name_id = "skill_marshal_pro_name"
+	self.skills.marshal_pro.class_lock = {
+		SkillTreeTweakData.CLASS_RECON,
+	}
+	self.skills.marshal_pro.upgrades[2] = {
+		"player_marshal_stacking_melee_damage_2",
+		"player_marshal_stacking_melee_damage_1",
+	}
+	self.skills.marshal_pro.upgrades[4] = {
+		"pistol_marshal_stacking_damage_multiplier_2",
+		"pistol_marshal_stacking_damage_multiplier_1",
+	}
+	self.skills.anatomist = {
+		desc_id = "skill_anatomist_desc",
+		icon = "skills_anatomist",
+		level_required = 28,
+		name_id = "skill_anatomist_name",
+		class_lock = {
+			SkillTreeTweakData.CLASS_RECON,
+		},
+		upgrades = {
+			{
+				"primary_weapon_anatomist_bodyshot_damage_multiplier",
+			},
+			{
+				"secondary_weapon_anatomist_headshot_damage_multiplier",
+			},
+			{
+				"snp_anatomist_critical_hit_chance",
+				"smg_anatomist_critical_hit_chance",
+			},
+			{
+				"weapon_anatomist_legshot_knockdown",
+			},
+		},
+		upgrades_desc = {
+			"skill_anatomist_stat_line_1",
+			"skill_anatomist_stat_line_2",
+			"skill_anatomist_stat_line_3",
+			"skill_anatomist_stat_line_4",
+		},
+		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
+	}
+	self.skills.rally = {
+		desc_id = "skill_rally_desc",
+		icon = "skills_rally",
+		info_id = "skill_rally_info",
+		level_required = 28,
+		name_id = "skill_rally_name",
+		class_lock = {
+			SkillTreeTweakData.CLASS_ASSAULT,
+		},
+		upgrades = {
+			{
+				"player_rally_recoverable_damage_ratio_1",
+				"player_rally_recoverable_health_1",
+				"player_rally_low_health_regen_multiplier",
+			},
+			{
+				"player_rally_recovery_headshot_multiplier",
+			},
+			{
+				"player_rally_recoverable_health_2",
+			},
+			{
+				"player_rally_recoverable_damage_ratio_2",
+			},
+		},
+		upgrades_desc = {
+			"skill_rally_stat_line_1",
+			"skill_rally_stat_line_2",
+			"skill_rally_stat_line_3",
+			"skill_rally_stat_line_4",
+		},
+		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
+	}
+	self.skills.sapper = {
+		desc_id = "skill_sapper_desc",
+		icon = "skills_sapper",
+		level_required = 28,
+		name_id = "skill_sapper_name",
+		class_lock = {
+			SkillTreeTweakData.CLASS_DEMOLITIONS,
+		},
+		upgrades = {
+			{
+				"player_sapper_mine_quantity",
+			},
+			{
+				"interaction_sapper_crowbar_speed_multiplier",
+			},
+			{
+				"interaction_sapper_lockpick_crate_bypass",
+			},
+			{
+				"player_sapper_tank_disabler",
+				"player_sapper_tank_disabler_cooldown",
+			},
+		},
+		upgrades_desc = {
+			"skill_sapper_stat_line_1",
+			"skill_sapper_stat_line_2",
+			"skill_sapper_stat_line_3",
+			"skill_sapper_stat_line_4",
+		},
+		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
+	}
+	self.skills.revenant = {
+		desc_id = "skill_revenant_desc",
+		icon = "skills_revenant",
+		level_required = 28,
+		name_id = "skill_revenant_name",
+		upgrades = {
+			{
+				"player_revenant_additional_life",
+				"player_revenant_bleedout_timer_reduction",
+			},
+			{
+				"player_revenant_steelsight_when_downed",
+			},
+			{
+				"temporary_revenant_revived_damage_reduction",
+			},
+			{
+				"temporary_revenant_revived_critical_hit_chance",
+				"player_revenant_downed_critical_hit_chance",
+			},
+		},
+		upgrades_desc = {
+			"skill_revenant_stat_line_1",
+			"skill_revenant_stat_line_2",
+			"skill_revenant_stat_line_3",
+			"skill_revenant_stat_line_4",
+		},
+		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
+	}
+	self.skills.big_game = {
+		desc_id = "skill_big_game_desc",
+		icon = "skills_big_game",
+		level_required = 30,
+		name_id = "skill_big_game_name",
+		class_lock = {
+			SkillTreeTweakData.CLASS_RECON,
+		},
+		upgrades = {
+			{
+				"player_big_game_retrigger_time",
+				"player_big_game_special_sense_1",
+			},
+			{
+				"player_big_game_highlight_enemy_multiplier",
+			},
+			{
+				"player_big_game_special_sense_2",
+			},
+			{
+				"temporary_big_game_special_health_regen",
+			},
+		},
+		upgrades_desc = {
+			"skill_big_game_stat_line_1",
+			"skill_big_game_stat_line_2",
+			"skill_big_game_stat_line_3",
+			"skill_big_game_stat_line_4",
+		},
+		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
+	}
+	self.skills.brutality = {
+		desc_id = "skill_brutality_desc",
+		icon = "skills_brutality",
+		level_required = 30,
+		name_id = "skill_brutality_name",
+		class_lock = {
+			SkillTreeTweakData.CLASS_ASSAULT,
+		},
+		upgrades = {
+			{
+				"player_brutality_dismemberment_warcry_fill_multiplier",
+			},
+			{
+				"player_brutality_single_critical_hit_chance",
+			},
+			{
+				"player_brutality_single_dismember_chance",
+			},
+			{
+				"temporary_brutality_dismember_critical_hit_chance",
+			},
+		},
+		upgrades_desc = {
+			"skill_brutality_stat_line_1",
+			"skill_brutality_stat_line_2",
+			"skill_brutality_stat_line_3",
+			"skill_brutality_stat_line_4",
+		},
+		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
+	}
+	self.skills.toughness = {
+		desc_id = "skill_toughness_desc",
+		icon = "skills_toughness",
+		level_required = 30,
+		name_id = "skill_toughness_name",
+		class_lock = {
+			SkillTreeTweakData.CLASS_INFILTRATOR,
+		},
+		upgrades = {
+			{
+				"player_toughness_low_health_regen_limit_multiplier",
+			},
+			{
+				"player_toughness_low_health_warcry_fill_multiplier",
+			},
+			{
+				"player_toughness_critical_damage_reduction",
+			},
+			{
+				"player_toughness_death_defiant",
+			},
+		},
+		upgrades_desc = {
+			"skill_toughness_stat_line_1",
+			"skill_toughness_stat_line_2",
+			"skill_toughness_stat_line_3",
+			"skill_toughness_stat_line_4",
+		},
+		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
+	}
+	self.skills.blammfu = {
+		desc_id = "skill_blammfu_desc",
+		icon = "skills_blammfu",
+		level_required = 30,
+		name_id = "skill_blammfu_name",
+		class_lock = {
+			SkillTreeTweakData.CLASS_DEMOLITIONS,
+		},
+		upgrades = {
+			{
+				"player_blammfu_explosive_grenade_melee_1",
+			},
+			{
+				"grenade_swap_speed_multiplier",
+			},
+			{
+				"player_blammfu_grenade_player_damage_reduction",
+			},
+			{
+				"player_blammfu_explosive_grenade_melee_2",
+			},
+		},
+		upgrades_desc = {
+			"skill_blammfu_stat_line_1",
+			"skill_blammfu_stat_line_2",
+			"skill_blammfu_stat_line_3",
+			"skill_blammfu_stat_line_4",
+		},
+		upgrades_type = SkillTreeTweakData.TYPE_TALENT,
+	}
+end
+
+function SkillTreeTweakData:_init_skill_list_weapons()
 	self.skills.weapon_tier_unlocked_2 = {
 		desc_id = "skill_weapon_tier_unlocked_2_desc",
 		icon = "skills_weapon_tier_2",
-		icon_large = "skills_weapon_tier_2_large",
+		icon_large = "skills_weapon_tier_2",
 		name_id = "skill_weapon_tier_unlocked_2_name",
 		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
 		upgrades = {
 			"player_weapon_tier_unlocked_2",
 		},
+		upgrades_type = SkillTreeTweakData.TYPE_UNLOCKS,
 	}
 	self.skills.weapon_tier_unlocked_3 = {
 		desc_id = "skill_weapon_tier_unlocked_3_desc",
 		icon = "skills_weapon_tier_3",
-		icon_large = "skills_weapon_tier_3_large",
+		icon_large = "skills_weapon_tier_3",
 		name_id = "skill_weapon_tier_unlocked_3_name",
 		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
 		upgrades = {
 			"player_weapon_tier_unlocked_3",
 		},
+		upgrades_type = SkillTreeTweakData.TYPE_UNLOCKS,
 	}
 	self.skills.weapon_tier_unlocked_4 = {
 		desc_id = "skill_weapon_tier_unlocked_4_desc",
 		icon = "skills_weapon_tier_4",
-		icon_large = "skills_weapon_tier_4_large",
+		icon_large = "skills_weapon_tier_4",
 		name_id = "skill_weapon_tier_unlocked_4_name",
 		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
 		upgrades = {
 			"player_weapon_tier_unlocked_4",
 		},
+		upgrades_type = SkillTreeTweakData.TYPE_UNLOCKS,
 	}
 	self.skills.recon_tier_4_unlocked = {
 		desc_id = "skill_recon_tier_4_unlocked_desc",
 		icon = "skills_weapon_tier_4",
-		icon_large = "skills_weapon_tier_4_large",
+		icon_large = "skills_weapon_tier_4",
 		name_id = "skill_recon_tier_4_unlocked_name",
 		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
 		upgrades = {
 			"player_recon_tier_4_unlocked",
 		},
+		upgrades_type = SkillTreeTweakData.TYPE_UNLOCKS,
 	}
 	self.skills.assault_tier_4_unlocked = {
 		desc_id = "skill_assault_tier_4_unlocked_desc",
 		icon = "skills_weapon_tier_4",
-		icon_large = "skills_weapon_tier_4_large",
+		icon_large = "skills_weapon_tier_4",
 		name_id = "skill_assault_tier_4_unlocked_name",
 		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
 		upgrades = {
 			"player_assault_tier_4_unlocked",
 		},
+		upgrades_type = SkillTreeTweakData.TYPE_UNLOCKS,
 	}
 	self.skills.infiltrator_tier_4_unlocked = {
 		desc_id = "skill_infiltrator_tier_4_unlocked_desc",
 		icon = "skills_weapon_tier_4",
-		icon_large = "skills_weapon_tier_4_large",
+		icon_large = "skills_weapon_tier_4",
 		name_id = "skill_infiltrator_tier_4_unlocked_name",
 		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
 		upgrades = {
 			"player_infiltrator_tier_4_unlocked",
 		},
+		upgrades_type = SkillTreeTweakData.TYPE_UNLOCKS,
 	}
 	self.skills.demolitions_tier_4_unlocked = {
 		desc_id = "skill_demolitions_tier_4_unlocked_desc",
 		icon = "skills_weapon_tier_4",
-		icon_large = "skills_weapon_tier_4_large",
+		icon_large = "skills_weapon_tier_4",
 		name_id = "skill_demolitions_tier_4_unlocked_name",
 		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
 		upgrades = {
 			"player_demolitions_tier_4_unlocked",
 		},
+		upgrades_type = SkillTreeTweakData.TYPE_UNLOCKS,
 	}
 	self.skills.weapon_unlock_springfield = {
 		desc_id = "skill_weapon_unlock_springfield_desc",
 		name_id = "skill_weapon_unlock_springfield_name",
 		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
 		upgrades = {
 			"m1903",
 		},
+		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 	}
 	self.skills.weapon_unlock_m1911 = {
 		desc_id = "skill_weapon_unlock_m1911_desc",
 		name_id = "skill_weapon_unlock_m1911_name",
 		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
 		upgrades = {
 			"m1911",
 		},
+		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 	}
 	self.skills.weapon_unlock_c96 = {
 		desc_id = "skill_weapon_unlock_c96_desc",
 		name_id = "skill_weapon_unlock_c96_name",
 		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
 		upgrades = {
 			"c96",
 		},
+		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 	}
 	self.skills.weapon_unlock_webley = {
 		desc_id = "skill_weapon_unlock_webley_desc",
 		name_id = "skill_weapon_unlock_webley_name",
 		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
 		upgrades = {
 			"webley",
 		},
+		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 	}
 	self.skills.weapon_unlock_sten = {
 		desc_id = "skill_weapon_unlock_sten_desc",
 		name_id = "skill_weapon_unlock_sten_name",
 		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
 		upgrades = {
 			"sten",
 		},
+		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 	}
 	self.skills.weapon_unlock_mp38 = {
 		desc_id = "skill_weapon_unlock_mp38_desc",
 		name_id = "skill_weapon_unlock_mp38_name",
 		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
 		upgrades = {
 			"mp38",
 		},
+		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 	}
 	self.skills.weapon_unlock_thompson = {
 		desc_id = "skill_weapon_unlock_thompson_desc",
 		name_id = "skill_weapon_unlock_thompson_name",
 		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
 		upgrades = {
 			"thompson",
 		},
+		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 	}
 	self.skills.weapon_unlock_garand = {
 		desc_id = "skill_weapon_unlock_garand_desc",
 		name_id = "skill_weapon_unlock_garand_name",
 		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
 		upgrades = {
 			"garand",
 		},
+		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 	}
 	self.skills.weapon_unlock_winchester = {
 		desc_id = "skill_weapon_unlock_winchester_desc",
 		name_id = "skill_weapon_unlock_winchester_name",
 		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
 		upgrades = {
 			"m1912",
 		},
+		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 	}
 	self.skills.weapon_unlock_sterling = {
 		desc_id = "skill_weapon_unlock_sterling_desc",
 		name_id = "skill_weapon_unlock_sterling_name",
 		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
 		upgrades = {
 			"sterling",
 		},
+		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 	}
 	self.skills.weapon_unlock_bar = {
 		desc_id = "skill_weapon_unlock_bar_desc",
 		name_id = "skill_weapon_unlock_bar_name",
 		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
 		upgrades = {
 			"m1918",
 		},
+		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 	}
 	self.skills.weapon_unlock_mp44 = {
 		desc_id = "skill_weapon_unlock_mp44_desc",
 		name_id = "skill_weapon_unlock_mp44_name",
 		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
 		upgrades = {
 			"mp44",
 		},
+		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 	}
 	self.skills.weapon_unlock_mosin = {
 		desc_id = "skill_weapon_unlock_mosin_desc",
 		name_id = "skill_weapon_unlock_mosin_name",
 		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
 		upgrades = {
 			"mosin",
 		},
+		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 	}
 	self.skills.weapon_unlock_carbine = {
 		desc_id = "skill_weapon_unlock_carbine_desc",
 		name_id = "skill_weapon_unlock_carbine_name",
 		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
 		upgrades = {
 			"carbine",
 		},
+		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 	}
 	self.skills.weapon_unlock_mg42 = {
 		desc_id = "skill_weapon_unlock_mg42_desc",
 		name_id = "skill_weapon_unlock_mg42_name",
 		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
 		upgrades = {
 			"mg42",
 		},
+		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 	}
 	self.skills.weapon_unlock_geco = {
 		desc_id = "skill_weapon_unlock_geco_desc",
 		name_id = "skill_weapon_unlock_geco_name",
 		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
 		upgrades = {
 			"geco",
 		},
+		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 	}
 	self.skills.weapon_unlock_grenade_concrete = {
 		desc_id = "skill_weapon_unlock_grenade_concrete_desc",
 		name_id = "skill_weapon_unlock_grenade_concrete_name",
 		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
 		upgrades = {
 			"concrete",
 		},
+		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 	}
 	self.skills.weapon_unlock_grenade_d343 = {
 		desc_id = "skill_weapon_unlock_grenade_d343_desc",
 		name_id = "skill_weapon_unlock_grenade_d343_name",
 		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
 		upgrades = {
 			"d343",
 		},
+		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 	}
 	self.skills.weapon_unlock_grenade_mills = {
 		desc_id = "skill_weapon_unlock_grenade_mills_desc",
 		name_id = "skill_weapon_unlock_grenade_mills_name",
 		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
 		upgrades = {
 			"mills",
 		},
+		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 	}
 	self.skills.weapon_unlock_decoy_coin = {
 		desc_id = "skill_weapon_unlock_decoy_coin_desc",
 		name_id = "skill_weapon_unlock_decoy_coin_name",
 		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
 		upgrades = {
 			"decoy_coin",
 		},
+		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 	}
 	self.skills.weapon_unlock_grenade_betty = {
 		desc_id = "skill_weapon_unlock_grenade_betty_desc",
 		name_id = "skill_weapon_unlock_grenade_betty_name",
 		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
 		upgrades = {
 			"betty",
 		},
+		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 	}
 	self.skills.weapon_unlock_dp28 = {
 		desc_id = "skill_weapon_unlock_dp28_desc",
 		name_id = "skill_weapon_unlock_dp28_name",
 		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
 		upgrades = {
 			"dp28",
 		},
+		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 	}
 	self.skills.weapon_unlock_bren = {
 		desc_id = "skill_weapon_unlock_bren_desc",
 		name_id = "skill_weapon_unlock_bren_name",
 		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
 		upgrades = {
 			"bren",
 		},
+		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 	}
 	self.skills.weapon_unlock_tt33 = {
 		desc_id = "skill_weapon_unlock_tt33_desc",
 		name_id = "skill_weapon_unlock_tt33_name",
 		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
 		upgrades = {
 			"tt33",
 		},
+		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 	}
 	self.skills.weapon_unlock_kar_98k = {
 		desc_id = "skill_weapon_unlock_kar_98k_desc",
 		name_id = "skill_weapon_unlock_kar_98k_name",
 		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
 		upgrades = {
 			"kar_98k",
 		},
+		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 	}
 	self.skills.weapon_unlock_lee_enfield = {
 		desc_id = "skill_weapon_unlock_lee_enfield_desc",
 		name_id = "skill_weapon_unlock_lee_enfield_name",
 		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
 		upgrades = {
 			"lee_enfield",
 		},
+		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 	}
 	self.skills.weapon_unlock_ithaca = {
 		desc_id = "skill_weapon_unlock_ithaca_desc",
 		name_id = "skill_weapon_unlock_ithaca_name",
 		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
 		upgrades = {
 			"ithaca",
 		},
+		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 	}
 	self.skills.weapon_unlock_browning = {
 		desc_id = "skill_weapon_unlock_browning_desc",
 		name_id = "skill_weapon_unlock_browning_name",
 		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
 		upgrades = {
 			"browning",
 		},
+		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 	}
 	self.skills.weapon_unlock_welrod = {
 		desc_id = "skill_weapon_unlock_welrod_desc",
 		name_id = "skill_weapon_unlock_welrod_name",
 		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
 		upgrades = {
 			"welrod",
 		},
+		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 	}
 	self.skills.weapon_unlock_shotty = {
 		desc_id = "skill_weapon_unlock_shotty_desc",
 		name_id = "skill_weapon_unlock_shotty_name",
 		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
 		upgrades = {
 			"shotty",
 		},
-	}
-	self.skills.primary_group_damage_multiplier = {
-		desc_id = "skill_primary_group_damage_multiplier_desc",
-		icon = "skills_dealing_damage_assault_rifle_multiplier",
-		icon_large = "skills_dealing_damage_assault_rifle_multiplier_large",
-		name_id = "skill_primary_group_damage_multiplier_name",
-		stat_desc_id = "skill_primary_group_damage_multiplier_stat_line",
-		acquires = {
-			{
-				primary_weapon_damage_multiplier = 1,
-			},
-		},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {},
-	}
-	self.skills.secondary_group_damage_multiplier = {
-		desc_id = "skill_secondary_group_damage_multiplier_desc",
-		icon = "skills_dealing_damage_pistol_multiplier",
-		icon_large = "skills_dealing_damage_pistol_multiplier_large",
-		name_id = "skill_secondary_group_damage_multiplier_name",
-		stat_desc_id = "skill_secondary_group_damage_multiplier_stat_line",
-		acquires = {
-			{
-				secondary_weapon_damage_multiplier = 1,
-			},
-		},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {},
-	}
-	self.skills.pistol_damage_multiplier_1 = {
-		desc_id = "skill_pistol_damage_multiplier_desc",
-		icon = "skills_dealing_damage_pistol_multiplier",
-		icon_large = "skills_dealing_damage_pistol_multiplier_large",
-		name_id = "skill_pistol_damage_multiplier_name",
-		stat_desc_id = "skill_pistol_damage_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"pistol_damage_multiplier_1",
-		},
-	}
-	self.skills.pistol_damage_multiplier_2 = deep_clone(self.skills.pistol_damage_multiplier_1)
-	self.skills.pistol_damage_multiplier_2.upgrades = {
-		"pistol_damage_multiplier_2",
-	}
-	self.skills.pistol_damage_multiplier_3 = deep_clone(self.skills.pistol_damage_multiplier_1)
-	self.skills.pistol_damage_multiplier_3.upgrades = {
-		"pistol_damage_multiplier_3",
-	}
-	self.skills.pistol_damage_multiplier_4 = deep_clone(self.skills.pistol_damage_multiplier_1)
-	self.skills.pistol_damage_multiplier_4.upgrades = {
-		"pistol_damage_multiplier_4",
-	}
-	self.skills.shotgun_damage_multiplier_1 = {
-		desc_id = "skill_shotgun_damage_multiplier_desc",
-		icon = "skills_dealing_damage_shotgun_multiplier",
-		icon_large = "skills_dealing_damage_shotgun_multiplier_large",
-		name_id = "skill_shotgun_damage_multiplier_name",
-		stat_desc_id = "skill_shotgun_damage_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"shotgun_damage_multiplier_1",
-		},
-	}
-	self.skills.shotgun_damage_multiplier_2 = deep_clone(self.skills.shotgun_damage_multiplier_1)
-	self.skills.shotgun_damage_multiplier_2.upgrades = {
-		"shotgun_damage_multiplier_2",
-	}
-	self.skills.shotgun_damage_multiplier_3 = deep_clone(self.skills.shotgun_damage_multiplier_1)
-	self.skills.shotgun_damage_multiplier_3.upgrades = {
-		"shotgun_damage_multiplier_3",
-	}
-	self.skills.smg_damage_multiplier_1 = {
-		desc_id = "skill_smg_damage_multiplier_desc",
-		icon = "skills_dealing_damage_smg_multiplier",
-		icon_large = "skills_dealing_damage_smg_multiplier_large",
-		name_id = "skill_smg_damage_multiplier_name",
-		stat_desc_id = "skill_smg_damage_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"smg_damage_multiplier_1",
-		},
-	}
-	self.skills.smg_damage_multiplier_2 = deep_clone(self.skills.smg_damage_multiplier_1)
-	self.skills.smg_damage_multiplier_2.upgrades = {
-		"smg_damage_multiplier_2",
-	}
-	self.skills.smg_damage_multiplier_3 = deep_clone(self.skills.smg_damage_multiplier_1)
-	self.skills.smg_damage_multiplier_3.upgrades = {
-		"smg_damage_multiplier_3",
-	}
-	self.skills.assault_rifle_damage_multiplier_1 = {
-		desc_id = "skill_assault_rifle_damage_multiplier_desc",
-		icon = "skills_dealing_damage_assault_rifle_multiplier",
-		icon_large = "skills_dealing_damage_assault_rifle_multiplier_large",
-		name_id = "skill_assault_rifle_damage_multiplier_name",
-		stat_desc_id = "skill_assault_rifle_damage_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"assault_rifle_damage_multiplier_1",
-		},
-	}
-	self.skills.assault_rifle_damage_multiplier_2 = deep_clone(self.skills.assault_rifle_damage_multiplier_1)
-	self.skills.assault_rifle_damage_multiplier_2.upgrades = {
-		"assault_rifle_damage_multiplier_2",
-	}
-	self.skills.assault_rifle_damage_multiplier_3 = deep_clone(self.skills.assault_rifle_damage_multiplier_1)
-	self.skills.assault_rifle_damage_multiplier_3.upgrades = {
-		"assault_rifle_damage_multiplier_3",
-	}
-	self.skills.lmg_damage_multiplier_1 = {
-		desc_id = "skill_lmg_damage_multiplier_desc",
-		icon = "skills_dealing_damage_heavy_multiplier",
-		icon_large = "skills_dealing_damage_heavy_multiplier_large",
-		name_id = "skill_lmg_damage_multiplier_name",
-		stat_desc_id = "skill_lmg_damage_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"lmg_damage_multiplier_1",
-		},
-	}
-	self.skills.lmg_damage_multiplier_2 = deep_clone(self.skills.lmg_damage_multiplier_1)
-	self.skills.lmg_damage_multiplier_2.upgrades = {
-		"lmg_damage_multiplier_2",
-	}
-	self.skills.lmg_damage_multiplier_3 = deep_clone(self.skills.lmg_damage_multiplier_1)
-	self.skills.lmg_damage_multiplier_3.upgrades = {
-		"lmg_damage_multiplier_3",
-	}
-	self.skills.sniper_damage_multiplier_1 = {
-		desc_id = "skill_sniper_damage_multiplier_desc",
-		icon = "skills_dealing_damage_snp_multiplier",
-		icon_large = "skills_dealing_damage_snp_multiplier_large",
-		name_id = "skill_sniper_damage_multiplier_name",
-		stat_desc_id = "skill_sniper_damage_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"snp_damage_multiplier_1",
-		},
-	}
-	self.skills.sniper_damage_multiplier_2 = deep_clone(self.skills.sniper_damage_multiplier_1)
-	self.skills.sniper_damage_multiplier_2.upgrades = {
-		"snp_damage_multiplier_2",
-	}
-	self.skills.sniper_damage_multiplier_3 = deep_clone(self.skills.sniper_damage_multiplier_1)
-	self.skills.sniper_damage_multiplier_3.upgrades = {
-		"snp_damage_multiplier_3",
-	}
-	self.skills.grenade_quantity_1 = {
-		desc_id = "skill_grenade_quantity_desc",
-		icon = "skills_weapons_carry_extra_granade",
-		icon_large = "skills_weapons_carry_extra_granade_large",
-		name_id = "skill_grenade_quantity_name",
-		stat_desc_id = "skill_grenade_quantity_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_grenade_quantity_1",
-		},
-	}
-	self.skills.grenade_quantity_2 = {
-		desc_id = "skill_grenade_quantity_desc",
-		icon = "skills_weapons_carry_extra_granade",
-		icon_large = "skills_weapons_carry_extra_granade_large",
-		name_id = "skill_grenade_quantity_name",
-		stat_desc_id = "skill_grenade_quantity_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_grenade_quantity_2",
-		},
-	}
-	self.skills.turret_reduced_overheat_1 = {
-		desc_id = "skill_turret_reduced_overheat_desc",
-		icon = "skills_special_skills_mounted_guns_overheat",
-		icon_large = "skills_special_skills_mounted_guns_overheat_large",
-		name_id = "skill_turret_reduced_overheat_name",
-		stat_desc_id = "skill_turret_reduced_overheat_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_turret_m2_overheat_reduction_1",
-			"player_turret_flakvierling_overheat_reduction_1",
-		},
-	}
-	self.skills.turret_reduced_overheat_2 = {
-		desc_id = "skill_turret_reduced_overheat_desc",
-		icon = "skills_special_skills_mounted_guns_overheat",
-		icon_large = "skills_special_skills_mounted_guns_overheat_large",
-		name_id = "skill_turret_reduced_overheat_name",
-		stat_desc_id = "skill_turret_reduced_overheat_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_turret_m2_overheat_reduction_2",
-			"player_turret_flakvierling_overheat_reduction_2",
-		},
-	}
-	self.skills.turret_reduced_overheat_3 = {
-		desc_id = "skill_turret_reduced_overheat_desc",
-		icon = "skills_special_skills_mounted_guns_overheat",
-		icon_large = "skills_special_skills_mounted_guns_overheat_large",
-		name_id = "skill_turret_reduced_overheat_name",
-		stat_desc_id = "skill_turret_reduced_overheat_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_turret_m2_overheat_reduction_3",
-			"player_turret_flakvierling_overheat_reduction_3",
-		},
-	}
-	self.skills.turret_reduced_overheat_4 = {
-		desc_id = "skill_turret_reduced_overheat_desc",
-		icon = "skills_special_skills_mounted_guns_overheat",
-		icon_large = "skills_special_skills_mounted_guns_overheat_large",
-		name_id = "skill_turret_reduced_overheat_name",
-		stat_desc_id = "skill_turret_reduced_overheat_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_turret_m2_overheat_reduction_4",
-			"player_turret_flakvierling_overheat_reduction_4",
-		},
-	}
-	self.skills.revived_damage_reduction_1 = {
-		desc_id = "skill_revived_damage_reduction_desc",
-		icon = "skills_soaking_damage_less_after_revive",
-		icon_large = "skills_soaking_damage_less_after_revive_large",
-		name_id = "skill_revived_damage_reduction_name",
-		stat_desc_id = "skill_revived_damage_reduction_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"temporary_on_revived_damage_reduction_1",
-		},
-	}
-	self.skills.revived_damage_reduction_2 = {
-		desc_id = "skill_revived_damage_reduction_desc",
-		icon = "skills_soaking_damage_less_after_revive",
-		icon_large = "skills_soaking_damage_less_after_revive_large",
-		name_id = "skill_revived_damage_reduction_name",
-		stat_desc_id = "skill_revived_damage_reduction_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"temporary_on_revived_damage_reduction_2",
-		},
-	}
-	self.skills.revived_damage_reduction_3 = {
-		desc_id = "skill_revived_damage_reduction_desc",
-		icon = "skills_soaking_damage_less_after_revive",
-		icon_large = "skills_soaking_damage_less_after_revive_large",
-		name_id = "skill_revived_damage_reduction_name",
-		stat_desc_id = "skill_revived_damage_reduction_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"temporary_on_revived_damage_reduction_3",
-		},
-	}
-	self.skills.revived_damage_reduction_4 = {
-		desc_id = "skill_revived_damage_reduction_desc",
-		icon = "skills_soaking_damage_less_after_revive",
-		icon_large = "skills_soaking_damage_less_after_revive_large",
-		name_id = "skill_revived_damage_reduction_name",
-		stat_desc_id = "skill_revived_damage_reduction_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"temporary_on_revived_damage_reduction_4",
-		},
-	}
-	self.skills.bleedout_timer_increase_1 = {
-		desc_id = "skill_bleedout_timer_increase_desc",
-		icon = "skills_soaking_damage_increase_bleedout_time",
-		icon_large = "skills_soaking_damage_increase_bleedout_time_large",
-		name_id = "skill_bleedout_timer_increase_name",
-		stat_desc_id = "skill_bleedout_timer_increase_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_bleedout_timer_increase_1",
-		},
-	}
-	self.skills.bleedout_timer_increase_2 = {
-		desc_id = "skill_bleedout_timer_increase_desc",
-		icon = "skills_soaking_damage_increase_bleedout_time",
-		icon_large = "skills_soaking_damage_increase_bleedout_time_large",
-		name_id = "skill_bleedout_timer_increase_name",
-		stat_desc_id = "skill_bleedout_timer_increase_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_bleedout_timer_increase_2",
-		},
-	}
-	self.skills.bleedout_timer_increase_3 = {
-		desc_id = "skill_bleedout_timer_increase_desc",
-		icon = "skills_soaking_damage_increase_bleedout_time",
-		icon_large = "skills_soaking_damage_increase_bleedout_time_large",
-		name_id = "skill_bleedout_timer_increase_name",
-		stat_desc_id = "skill_bleedout_timer_increase_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_bleedout_timer_increase_3",
-		},
-	}
-	self.skills.bleedout_timer_increase_4 = {
-		desc_id = "skill_bleedout_timer_increase_desc",
-		icon = "skills_soaking_damage_increase_bleedout_time",
-		icon_large = "skills_soaking_damage_increase_bleedout_time_large",
-		name_id = "skill_bleedout_timer_increase_name",
-		stat_desc_id = "skill_bleedout_timer_increase_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_bleedout_timer_increase_4",
-		},
-	}
-	self.skills.revive_interaction_speed_multiplier_1 = {
-		desc_id = "skill_revive_interaction_speed_multiplier_desc",
-		icon = "skills_interaction_revive_teammates_faster",
-		icon_large = "skills_interaction_revive_teammates_faster_large",
-		name_id = "skill_revive_interaction_speed_multiplier_name",
-		stat_desc_id = "skill_revive_interaction_speed_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_revive_interaction_speed_multiplier_1",
-		},
-	}
-	self.skills.revive_interaction_speed_multiplier_2 = {
-		desc_id = "skill_revive_interaction_speed_multiplier_desc",
-		icon = "skills_interaction_revive_teammates_faster",
-		icon_large = "skills_interaction_revive_teammates_faster_large",
-		name_id = "skill_revive_interaction_speed_multiplier_name",
-		stat_desc_id = "skill_revive_interaction_speed_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_revive_interaction_speed_multiplier_2",
-		},
-	}
-	self.skills.revive_interaction_speed_multiplier_3 = {
-		desc_id = "skill_revive_interaction_speed_multiplier_desc",
-		icon = "skills_interaction_revive_teammates_faster",
-		icon_large = "skills_interaction_revive_teammates_faster_large",
-		name_id = "skill_revive_interaction_speed_multiplier_name",
-		stat_desc_id = "skill_revive_interaction_speed_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_revive_interaction_speed_multiplier_3",
-		},
-	}
-	self.skills.revive_interaction_speed_multiplier_4 = {
-		desc_id = "skill_revive_interaction_speed_multiplier_desc",
-		icon = "skills_interaction_revive_teammates_faster",
-		icon_large = "skills_interaction_revive_teammates_faster_large",
-		name_id = "skill_revive_interaction_speed_multiplier_name",
-		stat_desc_id = "skill_revive_interaction_speed_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_revive_interaction_speed_multiplier_4",
-		},
-	}
-	self.skills.general_interaction_speed_multiplier_1 = {
-		desc_id = "skill_general_interaction_speed_multiplier_desc",
-		icon = "skills_general_faster_interaction",
-		icon_large = "skills_general_faster_interaction_large",
-		name_id = "skill_general_interaction_speed_multiplier_name",
-		stat_desc_id = "skill_general_interaction_speed_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"interaction_general_interaction_timer_multiplier_1",
-		},
-	}
-	self.skills.general_interaction_speed_multiplier_2 = {
-		desc_id = "skill_general_interaction_speed_multiplier_desc",
-		icon = "skills_general_faster_interaction",
-		icon_large = "skills_general_faster_interaction_large",
-		name_id = "skill_general_interaction_speed_multiplier_name",
-		stat_desc_id = "skill_general_interaction_speed_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"interaction_general_interaction_timer_multiplier_2",
-		},
-	}
-	self.skills.general_interaction_speed_multiplier_3 = {
-		desc_id = "skill_general_interaction_speed_multiplier_desc",
-		icon = "skills_general_faster_interaction",
-		icon_large = "skills_general_faster_interaction_large",
-		name_id = "skill_general_interaction_speed_multiplier_name",
-		stat_desc_id = "skill_general_interaction_speed_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"interaction_general_interaction_timer_multiplier_3",
-		},
-	}
-	self.skills.general_interaction_speed_multiplier_4 = {
-		desc_id = "skill_general_interaction_speed_multiplier_desc",
-		icon = "skills_general_faster_interaction",
-		icon_large = "skills_general_faster_interaction_large",
-		name_id = "skill_general_interaction_speed_multiplier_name",
-		stat_desc_id = "skill_general_interaction_speed_multiplier_stat_line",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"interaction_general_interaction_timer_multiplier_4",
-		},
-	}
-	self.skills.long_dis_revive_1 = {
-		desc_id = "skill_long_dis_revive_1_desc",
-		icon = "skills_special_skills_revive_range_teammates",
-		icon_large = "skills_special_skills_revive_range_teammates_large",
-		name_id = "skill_long_dis_revive_1_name",
-		acquires = {},
-		icon_xy = {
-			1,
-			1,
-		},
-		upgrades = {
-			"player_long_dis_revive_1",
-		},
-	}
-end
-
-function SkillTreeTweakData:_init_recon_skill_tree()
-	self.skill_trees.recon = {}
-	self.skill_trees.recon[1] = {
-		{
-			skill_name = "warcry_sharpshooter",
-		},
-	}
-	self.skill_trees.recon[2] = {
-		{
-			skill_name = "swap_speed_multiplier_1",
-		},
-		{
-			skill_name = "turret_reduced_overheat_1",
-		},
-		{
-			skill_name = "ready_weapon_speed_multiplier_1",
-		},
-	}
-	self.skill_trees.recon[3] = {
-		{
-			skill_name = "stamina_multiplier_1",
-		},
-		{
-			skill_name = "stamina_regeneration_increase_1",
-		},
-		{
-			skill_name = "carry_penalty_decrease_1",
-		},
-	}
-	self.skill_trees.recon[4] = {
-		{
-			skill_name = "increase_general_speed_1",
-		},
-		{
-			skill_name = "increase_run_speed_1",
-		},
-		{
-			skill_name = "increase_crouch_speed_1",
-		},
-	}
-	self.skill_trees.recon[5] = {
-		{
-			skill_name = "warcry_team_damage_buff_1",
-		},
-		{
-			skill_name = "warcry_long_range_multiplier_bonus_1",
-		},
-		{
-			skill_name = "warcry_duration_1",
-		},
-	}
-	self.skill_trees.recon[6] = {
-		{
-			skill_name = "player_critical_hit_chance_1",
-		},
-		{
-			skill_name = "headshot_damage_multiplier_1",
-		},
-		{
-			skill_name = "highlight_enemy_damage_bonus_1",
-		},
-	}
-	self.skill_trees.recon[7] = {
-		{
-			skill_name = "running_damage_reduction_1",
-		},
-		{
-			skill_name = "crouching_damage_reduction_1",
-		},
-		{
-			skill_name = "revive_interaction_speed_multiplier_1",
-		},
-	}
-	self.skill_trees.recon[8] = {
-		{
-			skill_name = "primary_ammo_capacity_increase_1",
-		},
-		{
-			skill_name = "secondary_ammo_capacity_increase_1",
-		},
-		{
-			skill_name = "pick_up_ammo_multiplier_1",
-		},
-	}
-	self.skill_trees.recon[9] = {
-		{
-			skill_name = "wheel_hotspot_increase_1",
-		},
-		{
-			skill_name = "wheel_rotation_speed_increase_1",
-		},
-		{
-			skill_name = "general_interaction_speed_multiplier_1",
-		},
-	}
-	self.skill_trees.recon[10] = {
-		{
-			skill_name = "warcry_sharpshooter_level_increase",
-		},
-	}
-	self.skill_trees.recon[11] = {
-		{
-			skill_name = "max_health_multiplier_1",
-		},
-		{
-			skill_name = "pick_up_health_multiplier_1",
-		},
-		{
-			skill_name = "bleedout_timer_increase_1",
-		},
-	}
-	self.skill_trees.recon[12] = {
-		{
-			skill_name = "reload_speed_multiplier_1",
-		},
-		{
-			skill_name = "ready_weapon_speed_multiplier_2",
-		},
-		{
-			skill_name = "on_hit_flinch_reduction_1",
-		},
-	}
-	self.skill_trees.recon[13] = {
-		{
-			skill_name = "increase_general_speed_2",
-		},
-		{
-			skill_name = "increase_run_speed_2",
-		},
-		{
-			skill_name = "increase_crouch_speed_2",
-		},
-	}
-	self.skill_trees.recon[14] = {
-		{
-			skill_name = "player_critical_hit_chance_2",
-		},
-		{
-			skill_name = "headshot_damage_multiplier_2",
-		},
-		{
-			skill_name = "highlight_enemy_damage_bonus_2",
-		},
-	}
-	self.skill_trees.recon[15] = {
-		{
-			skill_name = "warcry_team_damage_buff_2",
-		},
-		{
-			skill_name = "warcry_headshot_multiplier_bonus_1",
-		},
-		{
-			skill_name = "warcry_duration_2",
-		},
-	}
-	self.skill_trees.recon[16] = {
-		{
-			skill_name = "stamina_multiplier_2",
-		},
-		{
-			skill_name = "crouching_damage_reduction_2",
-		},
-		{
-			skill_name = "revived_damage_reduction_1",
-		},
-	}
-	self.skill_trees.recon[17] = {
-		{
-			skill_name = "sniper_damage_multiplier_1",
-		},
-		{
-			skill_name = "assault_rifle_damage_multiplier_1",
-		},
-		{
-			skill_name = "pistol_damage_multiplier_1",
-		},
-	}
-	self.skill_trees.recon[18] = {
-		{
-			skill_name = "primary_ammo_capacity_increase_2",
-		},
-		{
-			skill_name = "secondary_ammo_capacity_increase_2",
-		},
-		{
-			skill_name = "revive_interaction_speed_multiplier_2",
-		},
-	}
-	self.skill_trees.recon[19] = {
-		{
-			skill_name = "interacting_damage_reduction_1",
-		},
-		{
-			skill_name = "bullet_damage_reduction_1",
-		},
-		{
-			skill_name = "melee_damage_reduction_1",
-		},
-	}
-	self.skill_trees.recon[20] = {
-		{
-			skill_name = "warcry_sharpshooter_level_increase",
-		},
-	}
-	self.skill_trees.recon[21] = {
-		{
-			skill_name = "reload_speed_multiplier_2",
-		},
-		{
-			skill_name = "pick_up_ammo_multiplier_2",
-		},
-		{
-			skill_name = "general_interaction_speed_multiplier_2",
-		},
-	}
-	self.skill_trees.recon[22] = {
-		{
-			skill_name = "stamina_regeneration_increase_2",
-		},
-		{
-			skill_name = "ready_weapon_speed_multiplier_3",
-		},
-		{
-			skill_name = "carry_penalty_decrease_2",
-		},
-	}
-	self.skill_trees.recon[23] = {
-		{
-			skill_name = "swap_speed_multiplier_2",
-		},
-		{
-			skill_name = "melee_damage_multiplier_1",
-		},
-		{
-			skill_name = "running_damage_reduction_2",
-		},
-	}
-	self.skill_trees.recon[24] = {
-		{
-			skill_name = "wheel_hotspot_increase_2",
-		},
-		{
-			skill_name = "crouching_damage_reduction_3",
-		},
-		{
-			skill_name = "increase_crouch_speed_3",
-		},
-	}
-	self.skill_trees.recon[25] = {
-		{
-			skill_name = "warcry_team_damage_buff_3",
-		},
-		{
-			skill_name = "warcry_long_range_multiplier_bonus_2",
-		},
-		{
-			skill_name = "warcry_duration_3",
-		},
-	}
-	self.skill_trees.recon[26] = {
-		{
-			skill_name = "stamina_multiplier_3",
-		},
-		{
-			skill_name = "headshot_damage_multiplier_3",
-		},
-		{
-			skill_name = "on_hit_flinch_reduction_2",
-		},
-	}
-	self.skill_trees.recon[27] = {
-		{
-			skill_name = "increase_general_speed_3",
-		},
-		{
-			skill_name = "highlight_enemy_damage_bonus_3",
-		},
-		{
-			skill_name = "revive_interaction_speed_multiplier_3",
-		},
-	}
-	self.skill_trees.recon[28] = {
-		{
-			skill_name = "primary_ammo_capacity_increase_3",
-		},
-		{
-			skill_name = "sniper_damage_multiplier_2",
-		},
-		{
-			skill_name = "increase_run_speed_3",
-		},
-	}
-	self.skill_trees.recon[29] = {
-		{
-			skill_name = "reload_speed_multiplier_3",
-		},
-		{
-			skill_name = "player_critical_hit_chance_3",
-		},
-		{
-			skill_name = "secondary_ammo_capacity_increase_3",
-		},
-	}
-	self.skill_trees.recon[30] = {
-		{
-			skill_name = "warcry_sharpshooter_level_increase",
-		},
-	}
-	self.skill_trees.recon[31] = {
-		{
-			skill_name = "max_health_multiplier_2",
-		},
-		{
-			skill_name = "smg_damage_multiplier_1",
-		},
-		{
-			skill_name = "pick_up_health_multiplier_2",
-		},
-	}
-	self.skill_trees.recon[32] = {
-		{
-			skill_name = "interacting_damage_reduction_2",
-		},
-		{
-			skill_name = "ready_weapon_speed_multiplier_4",
-		},
-		{
-			skill_name = "bleedout_timer_increase_2",
-		},
-	}
-	self.skill_trees.recon[33] = {
-		{
-			skill_name = "wheel_rotation_speed_increase_2",
-		},
-		{
-			skill_name = "revived_damage_reduction_2",
-		},
-		{
-			skill_name = "increase_crouch_speed_4",
-		},
-	}
-	self.skill_trees.recon[34] = {
-		{
-			skill_name = "headshot_damage_multiplier_4",
-		},
-		{
-			skill_name = "crouching_damage_reduction_4",
-		},
-		{
-			skill_name = "pick_up_ammo_multiplier_3",
-		},
-	}
-	self.skill_trees.recon[35] = {
-		{
-			skill_name = "warcry_team_damage_buff_4",
-		},
-		{
-			skill_name = "warcry_headshot_multiplier_bonus_2",
-		},
-		{
-			skill_name = "warcry_duration_4",
-		},
-	}
-	self.skill_trees.recon[36] = {
-		{
-			skill_name = "melee_damage_reduction_2",
-		},
-		{
-			skill_name = "on_hit_flinch_reduction_3",
-		},
-		{
-			skill_name = "highlight_enemy_damage_bonus_4",
-		},
-	}
-	self.skill_trees.recon[37] = {
-		{
-			skill_name = "reload_speed_multiplier_4",
-		},
-		{
-			skill_name = "assault_rifle_damage_multiplier_2",
-		},
-		{
-			skill_name = "running_damage_reduction_3",
-		},
-	}
-	self.skill_trees.recon[38] = {
-		{
-			skill_name = "stamina_multiplier_4",
-		},
-		{
-			skill_name = "primary_ammo_capacity_increase_4",
-		},
-		{
-			skill_name = "revive_interaction_speed_multiplier_4",
-		},
-	}
-	self.skill_trees.recon[39] = {
-		{
-			skill_name = "turret_reduced_overheat_2",
-		},
-		{
-			skill_name = "sniper_damage_multiplier_3",
-		},
-		{
-			skill_name = "bullet_damage_reduction_2",
-		},
-	}
-	self.skill_trees.recon[40] = {
-		{
-			skill_name = "warcry_sharpshooter_level_increase",
-		},
-	}
-end
-
-function SkillTreeTweakData:_init_assault_skill_tree()
-	self.skill_trees.assault = {}
-	self.skill_trees.assault[1] = {
-		{
-			skill_name = "warcry_berserk",
-		},
-	}
-	self.skill_trees.assault[2] = {
-		{
-			skill_name = "swap_speed_multiplier_1",
-		},
-		{
-			skill_name = "turret_reduced_overheat_1",
-		},
-		{
-			skill_name = "ready_weapon_speed_multiplier_1",
-		},
-	}
-	self.skill_trees.assault[3] = {
-		{
-			skill_name = "melee_damage_reduction_1",
-		},
-		{
-			skill_name = "interacting_damage_reduction_1",
-		},
-		{
-			skill_name = "revived_damage_reduction_1",
-		},
-	}
-	self.skill_trees.assault[4] = {
-		{
-			skill_name = "max_health_multiplier_1",
-		},
-		{
-			skill_name = "pick_up_health_multiplier_1",
-		},
-		{
-			skill_name = "bleedout_timer_increase_1",
-		},
-	}
-	self.skill_trees.assault[5] = {
-		{
-			skill_name = "warcry_team_heal_buff_1",
-		},
-		{
-			skill_name = "warcry_low_health_multiplier_bonus_1",
-		},
-		{
-			skill_name = "warcry_duration_1",
-		},
-	}
-	self.skill_trees.assault[6] = {
-		{
-			skill_name = "stamina_multiplier_1",
-		},
-		{
-			skill_name = "stamina_regeneration_increase_1",
-		},
-		{
-			skill_name = "carry_penalty_decrease_1",
-		},
-	}
-	self.skill_trees.assault[7] = {
-		{
-			skill_name = "bullet_damage_reduction_1",
-		},
-		{
-			skill_name = "crouching_damage_reduction_1",
-		},
-		{
-			skill_name = "running_damage_reduction_1",
-		},
-	}
-	self.skill_trees.assault[8] = {
-		{
-			skill_name = "player_critical_hit_chance_1",
-		},
-		{
-			skill_name = "headshot_damage_multiplier_1",
-		},
-		{
-			skill_name = "highlight_enemy_damage_bonus_1",
-		},
-	}
-	self.skill_trees.assault[9] = {
-		{
-			skill_name = "wheel_hotspot_increase_1",
-		},
-		{
-			skill_name = "wheel_rotation_speed_increase_1",
-		},
-		{
-			skill_name = "general_interaction_speed_multiplier_1",
-		},
-	}
-	self.skill_trees.assault[10] = {
-		{
-			skill_name = "warcry_berserk_level_increase",
-		},
-	}
-	self.skill_trees.assault[11] = {
-		{
-			skill_name = "primary_ammo_capacity_increase_1",
-		},
-		{
-			skill_name = "secondary_ammo_capacity_increase_1",
-		},
-		{
-			skill_name = "pick_up_ammo_multiplier_1",
-		},
-	}
-	self.skill_trees.assault[12] = {
-		{
-			skill_name = "max_health_multiplier_2",
-		},
-		{
-			skill_name = "pick_up_health_multiplier_2",
-		},
-		{
-			skill_name = "bleedout_timer_increase_2",
-		},
-	}
-	self.skill_trees.assault[13] = {
-		{
-			skill_name = "reload_speed_multiplier_1",
-		},
-		{
-			skill_name = "turret_reduced_overheat_2",
-		},
-		{
-			skill_name = "on_hit_flinch_reduction_1",
-		},
-	}
-	self.skill_trees.assault[14] = {
-		{
-			skill_name = "increase_general_speed_1",
-		},
-		{
-			skill_name = "increase_run_speed_1",
-		},
-		{
-			skill_name = "increase_crouch_speed_1",
-		},
-	}
-	self.skill_trees.assault[15] = {
-		{
-			skill_name = "warcry_team_heal_buff_2",
-		},
-		{
-			skill_name = "warcry_dismemberment_multiplier_bonus_1",
-		},
-		{
-			skill_name = "warcry_duration_2",
-		},
-	}
-	self.skill_trees.assault[16] = {
-		{
-			skill_name = "bullet_damage_reduction_2",
-		},
-		{
-			skill_name = "crouching_damage_reduction_2",
-		},
-		{
-			skill_name = "revived_damage_reduction_2",
-		},
-	}
-	self.skill_trees.assault[17] = {
-		{
-			skill_name = "assault_rifle_damage_multiplier_1",
-		},
-		{
-			skill_name = "smg_damage_multiplier_1",
-		},
-		{
-			skill_name = "lmg_damage_multiplier_1",
-		},
-	}
-	self.skill_trees.assault[18] = {
-		{
-			skill_name = "player_critical_hit_chance_2",
-		},
-		{
-			skill_name = "melee_damage_multiplier_1",
-		},
-		{
-			skill_name = "on_hit_flinch_reduction_2",
-		},
-	}
-	self.skill_trees.assault[19] = {
-		{
-			skill_name = "revive_interaction_speed_multiplier_1",
-		},
-		{
-			skill_name = "stamina_regeneration_increase_2",
-		},
-		{
-			skill_name = "carry_penalty_decrease_2",
-		},
-	}
-	self.skill_trees.assault[20] = {
-		{
-			skill_name = "warcry_berserk_level_increase",
-		},
-	}
-	self.skill_trees.assault[21] = {
-		{
-			skill_name = "melee_damage_reduction_2",
-		},
-		{
-			skill_name = "headshot_damage_multiplier_2",
-		},
-		{
-			skill_name = "secondary_ammo_capacity_increase_2",
-		},
-	}
-	self.skill_trees.assault[22] = {
-		{
-			skill_name = "turret_reduced_overheat_3",
-		},
-		{
-			skill_name = "pick_up_health_multiplier_3",
-		},
-		{
-			skill_name = "highlight_enemy_damage_bonus_2",
-		},
-	}
-	self.skill_trees.assault[23] = {
-		{
-			skill_name = "max_health_multiplier_3",
-		},
-		{
-			skill_name = "increase_crouch_speed_2",
-		},
-		{
-			skill_name = "crouching_damage_reduction_3",
-		},
-	}
-	self.skill_trees.assault[24] = {
-		{
-			skill_name = "swap_speed_multiplier_2",
-		},
-		{
-			skill_name = "revived_damage_reduction_3",
-		},
-		{
-			skill_name = "bleedout_timer_increase_3",
-		},
-	}
-	self.skill_trees.assault[25] = {
-		{
-			skill_name = "warcry_team_heal_buff_3",
-		},
-		{
-			skill_name = "warcry_low_health_multiplier_bonus_2",
-		},
-		{
-			skill_name = "warcry_duration_3",
-		},
-	}
-	self.skill_trees.assault[26] = {
-		{
-			skill_name = "stamina_multiplier_2",
-		},
-		{
-			skill_name = "increase_run_speed_2",
-		},
-		{
-			skill_name = "running_damage_reduction_2",
-		},
-	}
-	self.skill_trees.assault[27] = {
-		{
-			skill_name = "bullet_damage_reduction_3",
-		},
-		{
-			skill_name = "assault_rifle_damage_multiplier_2",
-		},
-		{
-			skill_name = "primary_ammo_capacity_increase_2",
-		},
-	}
-	self.skill_trees.assault[28] = {
-		{
-			skill_name = "player_critical_hit_chance_3",
-		},
-		{
-			skill_name = "reload_speed_multiplier_2",
-		},
-		{
-			skill_name = "turret_reduced_overheat_4",
-		},
-	}
-	self.skill_trees.assault[29] = {
-		{
-			skill_name = "wheel_hotspot_increase_2",
-		},
-		{
-			skill_name = "stamina_regeneration_increase_3",
-		},
-		{
-			skill_name = "on_hit_flinch_reduction_3",
-		},
-	}
-	self.skill_trees.assault[30] = {
-		{
-			skill_name = "warcry_berserk_level_increase",
-		},
-	}
-	self.skill_trees.assault[31] = {
-		{
-			skill_name = "pick_up_ammo_multiplier_2",
-		},
-		{
-			skill_name = "wheel_rotation_speed_increase_2",
-		},
-		{
-			skill_name = "melee_damage_multiplier_2",
-		},
-	}
-	self.skill_trees.assault[32] = {
-		{
-			skill_name = "max_health_multiplier_4",
-		},
-		{
-			skill_name = "smg_damage_multiplier_2",
-		},
-		{
-			skill_name = "grenade_quantity_1",
-		},
-	}
-	self.skill_trees.assault[33] = {
-		{
-			skill_name = "general_interaction_speed_multiplier_2",
-		},
-		{
-			skill_name = "pick_up_health_multiplier_4",
-		},
-		{
-			skill_name = "carry_penalty_decrease_3",
-		},
-	}
-	self.skill_trees.assault[34] = {
-		{
-			skill_name = "revive_interaction_speed_multiplier_2",
-		},
-		{
-			skill_name = "revived_damage_reduction_4",
-		},
-		{
-			skill_name = "bleedout_timer_increase_4",
-		},
-	}
-	self.skill_trees.assault[35] = {
-		{
-			skill_name = "warcry_team_heal_buff_4",
-		},
-		{
-			skill_name = "warcry_dismemberment_multiplier_bonus_2",
-		},
-		{
-			skill_name = "warcry_duration_4",
-		},
-	}
-	self.skill_trees.assault[36] = {
-		{
-			skill_name = "bullet_damage_reduction_4",
-		},
-		{
-			skill_name = "lmg_damage_multiplier_2",
-		},
-		{
-			skill_name = "ready_weapon_speed_multiplier_2",
-		},
-	}
-	self.skill_trees.assault[37] = {
-		{
-			skill_name = "melee_damage_reduction_3",
-		},
-		{
-			skill_name = "headshot_damage_multiplier_3",
-		},
-		{
-			skill_name = "on_hit_flinch_reduction_4",
-		},
-	}
-	self.skill_trees.assault[38] = {
-		{
-			skill_name = "player_critical_hit_chance_4",
-		},
-		{
-			skill_name = "assault_rifle_damage_multiplier_3",
-		},
-		{
-			skill_name = "interacting_damage_reduction_2",
-		},
-	}
-	self.skill_trees.assault[39] = {
-		{
-			skill_name = "highlight_enemy_damage_bonus_3",
-		},
-		{
-			skill_name = "increase_general_speed_2",
-		},
-		{
-			skill_name = "reload_speed_multiplier_3",
-		},
-	}
-	self.skill_trees.assault[40] = {
-		{
-			skill_name = "warcry_berserk_level_increase",
-		},
-	}
-end
-
-function SkillTreeTweakData:_init_infiltrator_skill_tree()
-	self.skill_trees.infiltrator = {}
-	self.skill_trees.infiltrator[1] = {
-		{
-			skill_name = "warcry_ghost",
-		},
-	}
-	self.skill_trees.infiltrator[2] = {
-		{
-			skill_name = "swap_speed_multiplier_1",
-		},
-		{
-			skill_name = "turret_reduced_overheat_1",
-		},
-		{
-			skill_name = "ready_weapon_speed_multiplier_1",
-		},
-	}
-	self.skill_trees.infiltrator[3] = {
-		{
-			skill_name = "melee_damage_reduction_1",
-		},
-		{
-			skill_name = "running_damage_reduction_1",
-		},
-		{
-			skill_name = "interacting_damage_reduction_1",
-		},
-	}
-	self.skill_trees.infiltrator[4] = {
-		{
-			skill_name = "increase_general_speed_1",
-		},
-		{
-			skill_name = "increase_run_speed_1",
-		},
-		{
-			skill_name = "increase_crouch_speed_1",
-		},
-	}
-	self.skill_trees.infiltrator[5] = {
-		{
-			skill_name = "warcry_team_movement_speed_buff_1",
-		},
-		{
-			skill_name = "warcry_short_range_multiplier_bonus_1",
-		},
-		{
-			skill_name = "warcry_duration_1",
-		},
-	}
-	self.skill_trees.infiltrator[6] = {
-		{
-			skill_name = "stamina_multiplier_1",
-		},
-		{
-			skill_name = "stamina_regeneration_increase_1",
-		},
-		{
-			skill_name = "carry_penalty_decrease_1",
-		},
-	}
-	self.skill_trees.infiltrator[7] = {
-		{
-			skill_name = "wheel_hotspot_increase_1",
-		},
-		{
-			skill_name = "wheel_rotation_speed_increase_1",
-		},
-		{
-			skill_name = "general_interaction_speed_multiplier_1",
-		},
-	}
-	self.skill_trees.infiltrator[8] = {
-		{
-			skill_name = "primary_ammo_capacity_increase_1",
-		},
-		{
-			skill_name = "secondary_ammo_capacity_increase_1",
-		},
-		{
-			skill_name = "pick_up_ammo_multiplier_1",
-		},
-	}
-	self.skill_trees.infiltrator[9] = {
-		{
-			skill_name = "max_health_multiplier_1",
-		},
-		{
-			skill_name = "pick_up_health_multiplier_1",
-		},
-		{
-			skill_name = "bleedout_timer_increase_1",
-		},
-	}
-	self.skill_trees.infiltrator[10] = {
-		{
-			skill_name = "warcry_ghost_level_increase",
-		},
-	}
-	self.skill_trees.infiltrator[11] = {
-		{
-			skill_name = "player_critical_hit_chance_1",
-		},
-		{
-			skill_name = "headshot_damage_multiplier_1",
-		},
-		{
-			skill_name = "highlight_enemy_damage_bonus_1",
-		},
-	}
-	self.skill_trees.infiltrator[12] = {
-		{
-			skill_name = "increase_general_speed_2",
-		},
-		{
-			skill_name = "increase_run_speed_2",
-		},
-		{
-			skill_name = "increase_crouch_speed_2",
-		},
-	}
-	self.skill_trees.infiltrator[13] = {
-		{
-			skill_name = "melee_damage_reduction_2",
-		},
-		{
-			skill_name = "running_damage_reduction_2",
-		},
-		{
-			skill_name = "revived_damage_reduction_1",
-		},
-	}
-	self.skill_trees.infiltrator[14] = {
-		{
-			skill_name = "reload_speed_multiplier_1",
-		},
-		{
-			skill_name = "swap_speed_multiplier_2",
-		},
-		{
-			skill_name = "ready_weapon_speed_multiplier_2",
-		},
-	}
-	self.skill_trees.infiltrator[15] = {
-		{
-			skill_name = "warcry_team_movement_speed_buff_2",
-		},
-		{
-			skill_name = "warcry_melee_multiplier_bonus_1",
-		},
-		{
-			skill_name = "warcry_duration_2",
-		},
-	}
-	self.skill_trees.infiltrator[16] = {
-		{
-			skill_name = "stamina_regeneration_increase_2",
-		},
-		{
-			skill_name = "on_hit_flinch_reduction_1",
-		},
-		{
-			skill_name = "revive_interaction_speed_multiplier_1",
-		},
-	}
-	self.skill_trees.infiltrator[17] = {
-		{
-			skill_name = "smg_damage_multiplier_1",
-		},
-		{
-			skill_name = "melee_damage_multiplier_1",
-		},
-		{
-			skill_name = "pistol_damage_multiplier_1",
-		},
-	}
-	self.skill_trees.infiltrator[18] = {
-		{
-			skill_name = "wheel_hotspot_increase_2",
-		},
-		{
-			skill_name = "wheel_rotation_speed_increase_2",
-		},
-		{
-			skill_name = "general_interaction_speed_multiplier_2",
-		},
-	}
-	self.skill_trees.infiltrator[19] = {
-		{
-			skill_name = "interacting_damage_reduction_2",
-		},
-		{
-			skill_name = "secondary_ammo_capacity_increase_2",
-		},
-		{
-			skill_name = "pick_up_health_multiplier_2",
-		},
-	}
-	self.skill_trees.infiltrator[20] = {
-		{
-			skill_name = "warcry_ghost_level_increase",
-		},
-	}
-	self.skill_trees.infiltrator[21] = {
-		{
-			skill_name = "bullet_damage_reduction_1",
-		},
-		{
-			skill_name = "shotgun_damage_multiplier_1",
-		},
-		{
-			skill_name = "carry_penalty_decrease_2",
-		},
-	}
-	self.skill_trees.infiltrator[22] = {
-		{
-			skill_name = "melee_damage_reduction_3",
-		},
-		{
-			skill_name = "turret_reduced_overheat_2",
-		},
-		{
-			skill_name = "highlight_enemy_damage_bonus_2",
-		},
-	}
-	self.skill_trees.infiltrator[23] = {
-		{
-			skill_name = "increase_general_speed_3",
-		},
-		{
-			skill_name = "pistol_damage_multiplier_2",
-		},
-		{
-			skill_name = "revived_damage_reduction_2",
-		},
-	}
-	self.skill_trees.infiltrator[24] = {
-		{
-			skill_name = "stamina_regeneration_increase_3",
-		},
-		{
-			skill_name = "increase_run_speed_3",
-		},
-		{
-			skill_name = "running_damage_reduction_3",
-		},
-	}
-	self.skill_trees.infiltrator[25] = {
-		{
-			skill_name = "warcry_team_movement_speed_buff_3",
-		},
-		{
-			skill_name = "warcry_short_range_multiplier_bonus_2",
-		},
-		{
-			skill_name = "warcry_duration_3",
-		},
-	}
-	self.skill_trees.infiltrator[26] = {
-		{
-			skill_name = "crouching_damage_reduction_1",
-		},
-		{
-			skill_name = "melee_damage_multiplier_2",
-		},
-		{
-			skill_name = "increase_crouch_speed_3",
-		},
-	}
-	self.skill_trees.infiltrator[27] = {
-		{
-			skill_name = "smg_damage_multiplier_2",
-		},
-		{
-			skill_name = "max_health_multiplier_2",
-		},
-		{
-			skill_name = "pick_up_ammo_multiplier_2",
-		},
-	}
-	self.skill_trees.infiltrator[28] = {
-		{
-			skill_name = "stamina_multiplier_2",
-		},
-		{
-			skill_name = "swap_speed_multiplier_3",
-		},
-		{
-			skill_name = "general_interaction_speed_multiplier_3",
-		},
-	}
-	self.skill_trees.infiltrator[29] = {
-		{
-			skill_name = "wheel_hotspot_increase_3",
-		},
-		{
-			skill_name = "secondary_ammo_capacity_increase_3",
-		},
-		{
-			skill_name = "ready_weapon_speed_multiplier_3",
-		},
-	}
-	self.skill_trees.infiltrator[30] = {
-		{
-			skill_name = "warcry_ghost_level_increase",
-		},
-	}
-	self.skill_trees.infiltrator[31] = {
-		{
-			skill_name = "reload_speed_multiplier_2",
-		},
-		{
-			skill_name = "wheel_rotation_speed_increase_3",
-		},
-		{
-			skill_name = "pick_up_health_multiplier_3",
-		},
-	}
-	self.skill_trees.infiltrator[32] = {
-		{
-			skill_name = "player_critical_hit_chance_2",
-		},
-		{
-			skill_name = "shotgun_damage_multiplier_2",
-		},
-		{
-			skill_name = "wheel_amount_decrease_1",
-		},
-	}
-	self.skill_trees.infiltrator[33] = {
-		{
-			skill_name = "stamina_regeneration_increase_4",
-		},
-		{
-			skill_name = "increase_run_speed_4",
-		},
-		{
-			skill_name = "running_damage_reduction_4",
-		},
-	}
-	self.skill_trees.infiltrator[34] = {
-		{
-			skill_name = "increase_general_speed_4",
-		},
-		{
-			skill_name = "headshot_damage_multiplier_2",
-		},
-		{
-			skill_name = "revived_damage_reduction_3",
-		},
-	}
-	self.skill_trees.infiltrator[35] = {
-		{
-			skill_name = "warcry_team_movement_speed_buff_4",
-		},
-		{
-			skill_name = "warcry_melee_multiplier_bonus_2",
-		},
-		{
-			skill_name = "warcry_duration_4",
-		},
-	}
-	self.skill_trees.infiltrator[36] = {
-		{
-			skill_name = "melee_damage_reduction_4",
-		},
-		{
-			skill_name = "melee_damage_multiplier_3",
-		},
-		{
-			skill_name = "revive_interaction_speed_multiplier_2",
-		},
-	}
-	self.skill_trees.infiltrator[37] = {
-		{
-			skill_name = "bleedout_timer_increase_2",
-		},
-		{
-			skill_name = "secondary_ammo_capacity_increase_4",
-		},
-		{
-			skill_name = "interacting_damage_reduction_3",
-		},
-	}
-	self.skill_trees.infiltrator[38] = {
-		{
-			skill_name = "crouching_damage_reduction_2",
-		},
-		{
-			skill_name = "on_hit_flinch_reduction_2",
-		},
-		{
-			skill_name = "assault_rifle_damage_multiplier_1",
-		},
-	}
-	self.skill_trees.infiltrator[39] = {
-		{
-			skill_name = "smg_damage_multiplier_3",
-		},
-		{
-			skill_name = "primary_ammo_capacity_increase_2",
-		},
-		{
-			skill_name = "bullet_damage_reduction_2",
-		},
-	}
-	self.skill_trees.infiltrator[40] = {
-		{
-			skill_name = "warcry_ghost_level_increase",
-		},
-	}
-end
-
-function SkillTreeTweakData:_init_demolitions_skill_tree()
-	self.skill_trees.demolitions = {}
-	self.skill_trees.demolitions[1] = {
-		{
-			skill_name = "warcry_clustertruck",
-		},
-	}
-	self.skill_trees.demolitions[2] = {
-		{
-			skill_name = "swap_speed_multiplier_1",
-		},
-		{
-			skill_name = "turret_reduced_overheat_1",
-		},
-		{
-			skill_name = "ready_weapon_speed_multiplier_1",
-		},
-	}
-	self.skill_trees.demolitions[3] = {
-		{
-			skill_name = "wheel_hotspot_increase_1",
-		},
-		{
-			skill_name = "wheel_rotation_speed_increase_1",
-		},
-		{
-			skill_name = "general_interaction_speed_multiplier_1",
-		},
-	}
-	self.skill_trees.demolitions[4] = {
-		{
-			skill_name = "stamina_multiplier_1",
-		},
-		{
-			skill_name = "stamina_regeneration_increase_1",
-		},
-		{
-			skill_name = "carry_penalty_decrease_1",
-		},
-	}
-	self.skill_trees.demolitions[5] = {
-		{
-			skill_name = "warcry_team_damage_reduction_buff_1",
-		},
-		{
-			skill_name = "warcry_explosion_multiplier_bonus_1",
-		},
-		{
-			skill_name = "warcry_duration_1",
-		},
-	}
-	self.skill_trees.demolitions[6] = {
-		{
-			skill_name = "max_health_multiplier_1",
-		},
-		{
-			skill_name = "pick_up_health_multiplier_1",
-		},
-		{
-			skill_name = "bleedout_timer_increase_1",
-		},
-	}
-	self.skill_trees.demolitions[7] = {
-		{
-			skill_name = "melee_damage_reduction_1",
-		},
-		{
-			skill_name = "interacting_damage_reduction_1",
-		},
-		{
-			skill_name = "revived_damage_reduction_1",
-		},
-	}
-	self.skill_trees.demolitions[8] = {
-		{
-			skill_name = "primary_ammo_capacity_increase_1",
-		},
-		{
-			skill_name = "secondary_ammo_capacity_increase_1",
-		},
-		{
-			skill_name = "pick_up_ammo_multiplier_1",
-		},
-	}
-	self.skill_trees.demolitions[9] = {
-		{
-			skill_name = "player_critical_hit_chance_1",
-		},
-		{
-			skill_name = "headshot_damage_multiplier_1",
-		},
-		{
-			skill_name = "highlight_enemy_damage_bonus_1",
-		},
-	}
-	self.skill_trees.demolitions[10] = {
-		{
-			skill_name = "warcry_clustertruck_level_increase",
-		},
-	}
-	self.skill_trees.demolitions[11] = {
-		{
-			skill_name = "bullet_damage_reduction_1",
-		},
-		{
-			skill_name = "crouching_damage_reduction_1",
-		},
-		{
-			skill_name = "running_damage_reduction_1",
-		},
-	}
-	self.skill_trees.demolitions[12] = {
-		{
-			skill_name = "wheel_hotspot_increase_2",
-		},
-		{
-			skill_name = "wheel_rotation_speed_increase_2",
-		},
-		{
-			skill_name = "general_interaction_speed_multiplier_2",
-		},
-	}
-	self.skill_trees.demolitions[13] = {
-		{
-			skill_name = "increase_general_speed_1",
-		},
-		{
-			skill_name = "increase_run_speed_1",
-		},
-		{
-			skill_name = "increase_crouch_speed_1",
-		},
-	}
-	self.skill_trees.demolitions[14] = {
-		{
-			skill_name = "reload_speed_multiplier_1",
-		},
-		{
-			skill_name = "swap_speed_multiplier_2",
-		},
-		{
-			skill_name = "revive_interaction_speed_multiplier_1",
-		},
-	}
-	self.skill_trees.demolitions[15] = {
-		{
-			skill_name = "warcry_team_damage_reduction_buff_2",
-		},
-		{
-			skill_name = "warcry_killstreak_multiplier_bonus_1",
-		},
-		{
-			skill_name = "warcry_duration_2",
-		},
-	}
-	self.skill_trees.demolitions[16] = {
-		{
-			skill_name = "wheel_amount_decrease_1",
-		},
-		{
-			skill_name = "on_hit_flinch_reduction_1",
-		},
-		{
-			skill_name = "turret_reduced_overheat_2",
-		},
-	}
-	self.skill_trees.demolitions[17] = {
-		{
-			skill_name = "shotgun_damage_multiplier_1",
-		},
-		{
-			skill_name = "lmg_damage_multiplier_1",
-		},
-		{
-			skill_name = "assault_rifle_damage_multiplier_1",
-		},
-	}
-	self.skill_trees.demolitions[18] = {
-		{
-			skill_name = "stamina_multiplier_2",
-		},
-		{
-			skill_name = "max_health_multiplier_2",
-		},
-		{
-			skill_name = "bleedout_timer_increase_2",
-		},
-	}
-	self.skill_trees.demolitions[19] = {
-		{
-			skill_name = "pick_up_ammo_multiplier_2",
-		},
-		{
-			skill_name = "interacting_damage_reduction_2",
-		},
-		{
-			skill_name = "carry_penalty_decrease_2",
-		},
-	}
-	self.skill_trees.demolitions[20] = {
-		{
-			skill_name = "warcry_clustertruck_level_increase",
-		},
-	}
-	self.skill_trees.demolitions[21] = {
-		{
-			skill_name = "grenade_quantity_1",
-		},
-		{
-			skill_name = "headshot_damage_multiplier_2",
-		},
-		{
-			skill_name = "secondary_ammo_capacity_increase_2",
-		},
-	}
-	self.skill_trees.demolitions[22] = {
-		{
-			skill_name = "ready_weapon_speed_multiplier_2",
-		},
-		{
-			skill_name = "wheel_rotation_speed_increase_3",
-		},
-		{
-			skill_name = "turret_reduced_overheat_3",
-		},
-	}
-	self.skill_trees.demolitions[23] = {
-		{
-			skill_name = "wheel_hotspot_increase_3",
-		},
-		{
-			skill_name = "bullet_damage_reduction_2",
-		},
-		{
-			skill_name = "highlight_enemy_damage_bonus_2",
-		},
-	}
-	self.skill_trees.demolitions[24] = {
-		{
-			skill_name = "primary_ammo_capacity_increase_2",
-		},
-		{
-			skill_name = "revive_interaction_speed_multiplier_2",
-		},
-		{
-			skill_name = "general_interaction_speed_multiplier_3",
-		},
-	}
-	self.skill_trees.demolitions[25] = {
-		{
-			skill_name = "warcry_team_damage_reduction_buff_3",
-		},
-		{
-			skill_name = "warcry_explosion_multiplier_bonus_2",
-		},
-		{
-			skill_name = "warcry_duration_3",
-		},
-	}
-	self.skill_trees.demolitions[26] = {
-		{
-			skill_name = "melee_damage_reduction_2",
-		},
-		{
-			skill_name = "swap_speed_multiplier_3",
-		},
-		{
-			skill_name = "carry_penalty_decrease_3",
-		},
-	}
-	self.skill_trees.demolitions[27] = {
-		{
-			skill_name = "shotgun_damage_multiplier_2",
-		},
-		{
-			skill_name = "pick_up_health_multiplier_2",
-		},
-		{
-			skill_name = "interacting_damage_reduction_3",
-		},
-	}
-	self.skill_trees.demolitions[28] = {
-		{
-			skill_name = "pick_up_ammo_multiplier_3",
-		},
-		{
-			skill_name = "lmg_damage_multiplier_2",
-		},
-		{
-			skill_name = "increase_general_speed_2",
-		},
-	}
-	self.skill_trees.demolitions[29] = {
-		{
-			skill_name = "stamina_regeneration_increase_2",
-		},
-		{
-			skill_name = "increase_run_speed_2",
-		},
-		{
-			skill_name = "running_damage_reduction_2",
-		},
-	}
-	self.skill_trees.demolitions[30] = {
-		{
-			skill_name = "warcry_clustertruck_level_increase",
-		},
-	}
-	self.skill_trees.demolitions[31] = {
-		{
-			skill_name = "stamina_multiplier_3",
-		},
-		{
-			skill_name = "increase_crouch_speed_2",
-		},
-		{
-			skill_name = "crouching_damage_reduction_2",
-		},
-	}
-	self.skill_trees.demolitions[32] = {
-		{
-			skill_name = "revived_damage_reduction_2",
-		},
-		{
-			skill_name = "wheel_rotation_speed_increase_4",
-		},
-		{
-			skill_name = "bleedout_timer_increase_3",
-		},
-	}
-	self.skill_trees.demolitions[33] = {
-		{
-			skill_name = "wheel_hotspot_increase_4",
-		},
-		{
-			skill_name = "max_health_multiplier_3",
-		},
-		{
-			skill_name = "assault_rifle_damage_multiplier_2",
-		},
-	}
-	self.skill_trees.demolitions[34] = {
-		{
-			skill_name = "revive_interaction_speed_multiplier_3",
-		},
-		{
-			skill_name = "swap_speed_multiplier_4",
-		},
-		{
-			skill_name = "general_interaction_speed_multiplier_4",
-		},
-	}
-	self.skill_trees.demolitions[35] = {
-		{
-			skill_name = "warcry_team_damage_reduction_buff_4",
-		},
-		{
-			skill_name = "warcry_killstreak_multiplier_bonus_2",
-		},
-		{
-			skill_name = "warcry_duration_4",
-		},
-	}
-	self.skill_trees.demolitions[36] = {
-		{
-			skill_name = "grenade_quantity_2",
-		},
-		{
-			skill_name = "bullet_damage_reduction_3",
-		},
-		{
-			skill_name = "reload_speed_multiplier_2",
-		},
-	}
-	self.skill_trees.demolitions[37] = {
-		{
-			skill_name = "on_hit_flinch_reduction_2",
-		},
-		{
-			skill_name = "interacting_damage_reduction_4",
-		},
-		{
-			skill_name = "carry_penalty_decrease_4",
-		},
-	}
-	self.skill_trees.demolitions[38] = {
-		{
-			skill_name = "shotgun_damage_multiplier_3",
-		},
-		{
-			skill_name = "pick_up_ammo_multiplier_4",
-		},
-		{
-			skill_name = "player_critical_hit_chance_2",
-		},
-	}
-	self.skill_trees.demolitions[39] = {
-		{
-			skill_name = "primary_ammo_capacity_increase_3",
-		},
-		{
-			skill_name = "lmg_damage_multiplier_3",
-		},
-		{
-			skill_name = "wheel_amount_decrease_2",
-		},
-	}
-	self.skill_trees.demolitions[40] = {
-		{
-			skill_name = "warcry_clustertruck_level_increase",
-		},
+		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 	}
 end
 
 function SkillTreeTweakData:get_weapon_unlock_levels()
-	local ret = {}
+	local t = {}
 
 	for class_name, class_unlock_data in pairs(self.automatic_unlock_progressions) do
 		for level, unlock_data in pairs(class_unlock_data) do
 			if unlock_data.weapons then
 				for _, weapon_unlock in pairs(unlock_data.weapons) do
 					for _, upgrade in ipairs(self.skills[weapon_unlock].upgrades) do
-						if not ret[upgrade] then
-							ret[upgrade] = {}
+						if not t[upgrade] then
+							t[upgrade] = {}
 						end
 
-						ret[upgrade][class_name] = level
+						t[upgrade][class_name] = level
 					end
 				end
 			end
 		end
 	end
 
-	return ret
+	return t
 end
 
 function SkillTreeTweakData:get_weapon_unlock_level(weapon_id, class_name)
@@ -5362,6 +2356,11 @@ function SkillTreeTweakData:_init_recon_unlock_progression()
 				"weapon_unlock_grenade_concrete",
 			},
 		},
+		[9] = {
+			weapons = {
+				"weapon_unlock_welrod",
+			},
+		},
 		[10] = {
 			weapons = {
 				"weapon_unlock_kar_98k",
@@ -5393,11 +2392,6 @@ function SkillTreeTweakData:_init_recon_unlock_progression()
 		[18] = {
 			weapons = {
 				"weapon_unlock_webley",
-			},
-		},
-		[19] = {
-			weapons = {
-				"weapon_unlock_welrod",
 			},
 		},
 		[21] = {
@@ -5625,6 +2619,11 @@ function SkillTreeTweakData:_init_infiltrator_unlock_progression()
 				"weapon_unlock_garand",
 			},
 		},
+		[16] = {
+			weapons = {
+				"weapon_unlock_welrod",
+			},
+		},
 		[18] = {
 			weapons = {
 				"weapon_unlock_webley",
@@ -5633,7 +2632,6 @@ function SkillTreeTweakData:_init_infiltrator_unlock_progression()
 		[20] = {
 			weapons = {
 				"weapon_unlock_grenade_d343",
-				"weapon_unlock_welrod",
 				"weapon_unlock_grenade_betty",
 			},
 		},
@@ -5803,4 +2801,58 @@ function SkillTreeTweakData:_init_demolitions_unlock_progression()
 	self.default_weapons.demolitions = {}
 	self.default_weapons.demolitions.primary = "m1912"
 	self.default_weapons.demolitions.secondary = "c96"
+end
+
+function SkillTreeTweakData.get_skill_exp_requirements(level, multi)
+	local reqs = {}
+
+	for i = 1, 4 do
+		local a = SkillTreeTweakData._EXP_REQS[1][i]
+
+		if level > 1 then
+			local b = SkillTreeTweakData._EXP_REQS[2][i]
+			local c = math.lerp(a, b, level / 40)
+
+			table.insert(reqs, math.round(c * multi, 100))
+		else
+			table.insert(reqs, math.round(a * multi, 100))
+		end
+	end
+
+	return reqs
+end
+
+function SkillTreeTweakData.get_skill_gold_requirements(level, multi)
+	local cost = 0
+	local a = SkillTreeTweakData._GOLD_REQS[1]
+
+	if level > 1 then
+		local b = SkillTreeTweakData._GOLD_REQS[2]
+		local rampup = math.bezier(SkillTreeTweakData._GOLD_REQ_RAMPUP, level / 40)
+		local c = math.lerp(a, b, rampup)
+
+		cost = c * multi
+	else
+		cost = a * multi
+	end
+
+	local lowest = 10
+
+	return math.max(lowest, math.round(cost, lowest))
+end
+
+function SkillTreeTweakData:get_skill_icon_tiered(id)
+	if not self.skills[id] then
+		return "skill_slot_unlocked"
+	end
+
+	local icons = self.skills[id].icon
+
+	if type(icons) == "table" then
+		local current_tier = managers.skilltree:get_skill_tier(id)
+
+		return icons[math.clamp(current_tier, 1, #icons)]
+	else
+		return icons
+	end
 end

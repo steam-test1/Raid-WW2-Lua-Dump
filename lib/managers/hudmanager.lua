@@ -24,6 +24,9 @@ HUDManager.WAYPOINT_MAX_FADE = 0.5
 HUDManager.NAME_LABEL_HEIGHT_FROM_HEAD = 50
 HUDManager.NAME_LABEL_Y_DIST_COEFF = 4
 HUDManager.NAME_LABEL_DIST_TO_ALPHA_COEFF = 0.004
+HUDManager.WP_STATE_PRESENT = "present"
+HUDManager.WP_STATE_SNEAK_PRESENT = "sneak_present"
+HUDManager.WP_STATE_PRESENT_ENDED = "present_ended"
 
 core:import("CoreEvent")
 
@@ -111,6 +114,18 @@ function HUDManager:saferect_h()
 	return self._saferect:height()
 end
 
+function HUDManager:fullscreen_workspace()
+	return self._fullscreen_workspace
+end
+
+function HUDManager:saferect_workspace()
+	return self._saferect
+end
+
+function HUDManager:workspace()
+	return self._workspace
+end
+
 function HUDManager:add_chatinput_changed_callback(callback_func)
 	self._chatinput_changed_callback_handler:add(callback_func)
 end
@@ -118,8 +133,6 @@ end
 function HUDManager:remove_chatinput_changed_callback(callback_func)
 	self._chatinput_changed_callback_handler:remove(callback_func)
 end
-
-local is_PS3 = SystemInfo:platform() == Idstring("PS3")
 
 function HUDManager:init_finalize()
 	if not self:exists(PlayerBase.PLAYER_CUSTODY_HUD) then
@@ -635,7 +648,7 @@ function HUDManager:update(t, dt)
 	if self._debug then
 		local cam_pos = managers.viewport:get_current_camera_position()
 
-		if cam_pos then
+		if cam_pos and self._debug and self._debug.coord then
 			self._debug.coord:set_text(string.format("Cam pos:   \"%.0f %.0f %.0f\" [cm]", cam_pos.x, cam_pos.y, cam_pos.z))
 		end
 
@@ -697,7 +710,9 @@ function HUDManager:update(t, dt)
 			end
 		end
 
-		self._debug.dogtagCoord:set_text(string.format("Dog Tags: %d left", #allDogTags))
+		if self._debug.dogtagCoord then
+			self._debug.dogtagCoord:set_text(string.format("Dog Tags: %d left", #allDogTags))
+		end
 	end
 end
 
@@ -906,6 +921,10 @@ function HUDManager:post_event(event)
 	self._sound_source:post_event(event)
 end
 
+function HUDManager:set_sound_switch(switch, value)
+	self._sound_source:set_switch(switch, value)
+end
+
 function HUDManager:_player_hud_layout()
 	self:_init_player_hud_values()
 
@@ -993,7 +1012,7 @@ function HUDManager:add_waypoint(id, data)
 		return
 	end
 
-	local icon = data.icon or "wp_standard"
+	local icon = data.icon or "map_waypoint_pov_in"
 	local icon, texture_rect, rect_over = self:_get_raid_icon(icon)
 
 	self._hud.waypoints[id] = {
@@ -1008,9 +1027,11 @@ function HUDManager:add_waypoint(id, data)
 		position_offset_z = data.position_offset_z or nil,
 		present_timer = data.present_timer or 2.5,
 		radius = data.radius or 160,
+		range_max = data.range_max,
+		range_min = data.range_min,
 		rotation = data.rotation,
 		show_on_screen = data.show_on_screen or data.show_on_screen == nil and true,
-		state = data.state or "present",
+		state = data.state or HUDManager.WP_STATE_PRESENT,
 		suspect = data.suspect,
 		texture_rect = texture_rect,
 		unit = data.unit,
@@ -1795,22 +1816,10 @@ function HUDManager:setup_anticipation(total_t)
 	end
 end
 
-function HUDManager:set_crosshair_offset(offset)
-	return
-end
-
-function HUDManager:set_crosshair_visible(visible)
-	return
-end
-
 function HUDManager:present_mid_text(params)
 	params.present_mid_text = true
 
 	self:present(params)
-end
-
-function HUDManager:_update_crosshair_offset(t, dt)
-	return
 end
 
 function HUDManager:_upd_suspition_waypoint_pos(data)
@@ -2036,12 +2045,22 @@ function HUDManager:_update_waypoints(t, dt)
 		if data.lifetime then
 			if data.lifetime <= 0 then
 				self:remove_waypoint(id)
-				Application:debug("[HUDManager:_update_waypoints] remove_waypoint with 0 lifetime")
+				Application:debug("[HUDManager:_update_waypoints] remove_waypoint with 0 lifetime", id)
 
 				return
 			else
 				data.lifetime = data.lifetime - dt
 			end
+		end
+
+		if data.range_max or data.range_min then
+			mvector3.set(wp_pos, self._saferect:world_to_screen(cam, data.position))
+			mvector3.set(wp_dir, data.position)
+			mvector3.subtract(wp_dir, cam_pos)
+
+			local length = wp_dir:length()
+
+			show_on_screen = (not data.range_min or not (length < data.range_min)) and (not data.range_max or not (length > data.range_max))
 		end
 
 		self:_upd_suspition_waypoint_state(data, show_on_screen)
@@ -2053,7 +2072,7 @@ function HUDManager:_update_waypoints(t, dt)
 				-- block empty
 			end
 
-			if data.state == "sneak_present" then
+			if data.state == HUDManager.WP_STATE_SNEAK_PRESENT then
 				if data.suspect == "teammate" then
 					data.bitmap:set_color(data.bitmap:color():with_alpha(0))
 					self:_upd_suspition_waypoint_alpha(data, 0)
@@ -2069,7 +2088,7 @@ function HUDManager:_update_waypoints(t, dt)
 
 				data.slot = nil
 				data.current_scale = 1
-				data.state = "present_ended"
+				data.state = HUDManager.WP_STATE_PRESENT_ENDED
 				data.text_alpha = 0.5
 				data.in_timer = 1
 				data.target_scale = 1
@@ -2077,8 +2096,8 @@ function HUDManager:_update_waypoints(t, dt)
 				if data.distance then
 					data.distance:set_visible(true)
 				end
-			elseif data.state == "present" then
-				data.current_position = Vector3(panel:center_x(), panel:center_y())
+			elseif data.state == HUDManager.WP_STATE_PRESENT then
+				data.current_position = Vector3(panel:center_x(), panel:center_y() + 200)
 
 				data.bitmap:set_center_x(data.current_position.x)
 				data.bitmap:set_center_y(data.current_position.y)
@@ -2089,7 +2108,7 @@ function HUDManager:_update_waypoints(t, dt)
 				if data.present_timer <= 0 then
 					data.slot = nil
 					data.current_scale = 1
-					data.state = "present_ended"
+					data.state = HUDManager.WP_STATE_PRESENT_ENDED
 					data.text_alpha = 0.5
 					data.in_timer = 1
 					data.target_scale = 1
@@ -2122,8 +2141,8 @@ function HUDManager:_update_waypoints(t, dt)
 
 					local alpha = HUDManager.DEFAULT_ALPHA
 
-					if dot > 0.99 then
-						alpha = math.clamp((1 - dot) / 0.01, 0.4, alpha)
+					if dot > 0.985 then
+						alpha = math.clamp((1 - dot) / 0.01, HUDManager.WAYPOINT_MAX_FADE, alpha)
 					elseif dot < 0 then
 						alpha = HUDManager.WAYPOINT_MAX_FADE
 					end
@@ -2397,7 +2416,7 @@ function HUDManager:set_aiming_icon(id, status)
 	local data = self._hud.waypoints[id]
 
 	if not data then
-		print("[HUDManager:set_aiming_icon] Attempt to change no existant waypoint:", id)
+		Application:error("[HUDManager:set_aiming_icon] Attempt to change no existant waypoint:", id)
 
 		return
 	end
@@ -2414,6 +2433,8 @@ function HUDManager:set_investigate_icon(id, status)
 
 	if not data then
 		Application:error("[HUDManager:set_investigate_icon] Attempt to change no existant waypoint:", id)
+
+		return
 	end
 
 	data.is_searching = status
@@ -2506,6 +2527,7 @@ function HUDManager:on_simulation_ended()
 	self:remove_updator("point_of_no_return")
 	self:end_assault()
 	self:_destroy_comm_wheel()
+	self:_destroy_carry_wheel()
 	self._hud_hit_direction:clean_up()
 	self._hud_suspicion_direction:clean_up()
 
@@ -2517,6 +2539,10 @@ function HUDManager:on_simulation_ended()
 		self._toast_notification:cleanup()
 
 		self._toast_notification = nil
+	end
+
+	if self._big_prompt then
+		self._big_prompt:cleanup()
 	end
 
 	if self._hud_objectives then

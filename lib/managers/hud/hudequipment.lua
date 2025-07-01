@@ -28,11 +28,13 @@ function HUDEquipment:_create_panel(equipment_panel, equipment_id)
 end
 
 function HUDEquipment:_create_icon(icon)
+	local full_gui = tweak_data.gui:get_full_gui_data(icon)
 	local icon_params = {
 		layer = 1,
 		name = "icon",
-		texture = tweak_data.gui.icons[icon].texture,
-		texture_rect = tweak_data.gui.icons[icon].texture_rect,
+		color = full_gui.color,
+		texture = full_gui.texture,
+		texture_rect = full_gui.texture_rect,
 	}
 
 	self._icon = self._object:bitmap(icon_params)

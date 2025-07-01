@@ -6,7 +6,6 @@ ElementPlayerSpawner.BASE_DELAY = 3.5
 
 function ElementPlayerSpawner:init(...)
 	ElementPlayerSpawner.super.init(self, ...)
-	Application:debug("[ElementPlayerSpawner:init]")
 	managers.player:preload()
 end
 
@@ -25,30 +24,15 @@ function ElementPlayerSpawner:value(name)
 end
 
 function ElementPlayerSpawner:client_on_executed(...)
-	Application:debug("[ElementPlayerSpawner:client_on_executed] enabled", self._values.enabled)
-
 	if not self._values.enabled then
 		return
 	end
 
 	managers.player:set_player_state(self._values.state or managers.player:default_player_state())
-
-	if false then
-		if false and managers.player:local_player() then
-			local position = self:get_spawn_position()
-
-			Application:debug("[ElementPlayerSpawner:client_on_executed()] Using spawner as teleporter!", position, self._values.rotation)
-			managers.player:warp_to(position, self._values.rotation)
-			managers.player:set_player_state(self._values.state or managers.player:current_state())
-		end
-	end
-
 	self:_end_transition(true)
 end
 
 function ElementPlayerSpawner:on_executed(instigator)
-	Application:debug("[ElementPlayerSpawner:on_executed] enabled, syncID", self._values.enabled, self._sync_id)
-
 	if not self._values.enabled then
 		return
 	end
@@ -60,19 +44,6 @@ function ElementPlayerSpawner:on_executed(instigator)
 		rotation = self._values.rotation,
 	})
 	ElementPlayerSpawner.super.on_executed(self, self._unit or instigator)
-
-	if false then
-		if false and managers.player:local_player() then
-			local position = self:get_spawn_position()
-
-			Application:debug("[ElementPlayerSpawner:on_executed()] Using spawner as teleporter!", instigator, position, self._values.rotation)
-			managers.player:warp_to(position, self._values.rotation)
-			managers.player:set_player_state(self._values.state or managers.player:current_state())
-			managers.groupai:state():on_player_spawn_state_set(self._values.state or managers.player:default_player_state())
-			ElementPlayerSpawner.super.on_executed(self, self._unit or instigator)
-		end
-	end
-
 	self:_end_transition()
 end
 
@@ -85,7 +56,6 @@ function ElementPlayerSpawner:_end_transition(client)
 	end
 
 	if not managers.worldcollection:check_all_peers_synced_last_world(CoreWorldCollection.STAGE_LOAD_FINISHED) or cnt > 0 or not player_spawned then
-		Application:debug("[ElementPlayerSpawner:_end_transition()] Waiting...", client, player_spawned)
 		managers.queued_tasks:queue(nil, self._end_transition, self, client, 0.5)
 
 		return
@@ -100,18 +70,19 @@ function ElementPlayerSpawner:_end_transition(client)
 end
 
 function ElementPlayerSpawner:_do_hide_loading_screen()
-	if not managers.raid_job:is_camp_loaded() and managers.player:local_player() and managers.raid_job:current_job() and (managers.raid_job:current_job().start_in_stealth or managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ONLY_MELEE_AVAILABLE)) then
-		managers.player:get_current_state():_start_action_unequip_weapon(managers.player:player_timer():time(), {
-			selection_wanted = PlayerInventory.SLOT_4,
-		})
+	if managers.raid_job:is_camp_loaded() or managers.raid_job:is_in_tutorial() then
+		managers.queued_tasks:queue(nil, self._first_login_check, self, nil, 0.5)
 	else
-		managers.player:get_current_state():_start_action_unequip_weapon(managers.player:player_timer():time(), {
-			selection_wanted = PlayerInventory.SLOT_2,
-		})
+		local spawned_weapon_slot = PlayerInventory.SLOT_2
+
+		if managers.player:local_player() and managers.raid_job:current_job() and (managers.raid_job:current_job().start_in_stealth or managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ONLY_MELEE_AVAILABLE)) then
+			spawned_weapon_slot = PlayerInventory.SLOT_4
+		end
+
+		managers.player:get_current_state():force_change_weapon_slot(spawned_weapon_slot)
 	end
 
 	managers.menu:hide_loading_screen()
-	managers.queued_tasks:queue(nil, self._first_login_check, self, nil, 1)
 end
 
 function ElementPlayerSpawner:_first_login_check()
@@ -120,7 +91,9 @@ function ElementPlayerSpawner:_first_login_check()
 
 		managers.raid_menu:first_login_check()
 
-		if not managers.raid_menu:is_offline_mode() then
+		if managers.raid_menu:is_offline_mode() or managers.raid_job:is_in_tutorial() then
+			-- block empty
+		else
 			managers.event_system:on_camp_entered()
 		end
 	end

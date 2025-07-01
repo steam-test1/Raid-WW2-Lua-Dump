@@ -1,550 +1,599 @@
-function BlackMarketTweakData:_init_melee_weapons()
-	local MELEE_SLOT = 4
+function BlackMarketTweakData:_init_melee_weapons(tweak_data)
+	self.melee_sounds = {}
+	self.melee_sounds.generic = {
+		hit_body = "melee_hit_body",
+		hit_gen = "melee_hit_gen",
+	}
+	self.melee_sounds.fist = {
+		equip = "fist_equip",
+		hit_air = "knife_hit_air",
+		hit_body = "punch_gunstock_1p",
+		hit_gen = "melee_hit_gen",
+	}
+	self.melee_sounds.knife = {
+		equip = "knife_equip",
+		hit_air = "knife_hit_air",
+		hit_body = "knife_hit_body",
+		hit_gen = "knife_hit_gen",
+		killing_blow = "knife_killing_blow",
+	}
+	self.melee_sounds.machete = {
+		equip = "knife_equip",
+		hit_air = "knife_hit_air",
+		hit_body = "machete_hit_body",
+		hit_gen = "knife_hit_gen",
+		killing_blow = "machete_killing_blow",
+	}
+
 	local MELEE_SPEED_INSTANT = 0
 	local MELEE_SPEED_NORMAL = 1
+	local MELEE_HEADSHOT_MULTIPLIER = 1.5
 
 	self.melee_weapons = {}
-	self.melee_weapons.weapon = {}
-	self.melee_weapons.weapon.name_id = "bm_melee_weapon"
-	self.melee_weapons.weapon.type = "weapon"
-	self.melee_weapons.weapon.unit = nil
-	self.melee_weapons.weapon.animation = nil
-	self.melee_weapons.weapon.instant = true
-	self.melee_weapons.weapon.free = true
-	self.melee_weapons.weapon.stats = {}
-	self.melee_weapons.weapon.stats.min_damage = 75
-	self.melee_weapons.weapon.stats.max_damage = 75
-	self.melee_weapons.weapon.stats.min_damage_effect = 1
-	self.melee_weapons.weapon.stats.max_damage_effect = 1
-	self.melee_weapons.weapon.stats.charge_time = MELEE_SPEED_INSTANT
-	self.melee_weapons.weapon.stats.range = 150
-	self.melee_weapons.weapon.stats.weapon_type = "blunt"
-	self.melee_weapons.weapon.expire_t = 0.6
-	self.melee_weapons.weapon.repeat_expire_t = 0.6
-	self.melee_weapons.weapon.sounds = {}
-	self.melee_weapons.weapon.sounds.hit_body = "melee_hit_body"
-	self.melee_weapons.weapon.sounds.hit_gen = "melee_hit_gen"
-	self.melee_weapons.fists = {}
-	self.melee_weapons.fists.name_id = "bm_melee_fists"
-	self.melee_weapons.fists.type = "fists"
-	self.melee_weapons.fists.unit = nil
-	self.melee_weapons.fists.animation = nil
-	self.melee_weapons.fists.free = true
-	self.melee_weapons.fists.stats = {}
-	self.melee_weapons.fists.stats.min_damage = 50
-	self.melee_weapons.fists.stats.max_damage = 92
-	self.melee_weapons.fists.stats.min_damage_effect = 3
-	self.melee_weapons.fists.stats.max_damage_effect = 2
-	self.melee_weapons.fists.stats.charge_time = MELEE_SPEED_NORMAL
-	self.melee_weapons.fists.stats.range = 150
-	self.melee_weapons.fists.stats.remove_weapon_movement_penalty = true
-	self.melee_weapons.fists.stats.weapon_type = "blunt"
-	self.melee_weapons.fists.anim_global_param = "melee_fist"
-	self.melee_weapons.fists.anim_attack_vars = {
-		"var1",
-		"var2",
-		"var3",
-		"var4",
+	self.melee_weapons.weapon = {
+		expire_t = 0.6,
+		free = true,
+		instant = true,
+		name_id = "bm_melee_weapon",
+		repeat_expire_t = 0.6,
+		type = "weapon",
+		sounds = self.melee_sounds.generic,
+		stats = {
+			max_damage = 75,
+			max_damage_effect = 1,
+			min_damage = 75,
+			min_damage_effect = 1,
+			range = 150,
+			weapon_type = "blunt",
+			charge_time = MELEE_SPEED_INSTANT,
+		},
 	}
-	self.melee_weapons.fists.expire_t = 1
-	self.melee_weapons.fists.repeat_expire_t = 0.55
-	self.melee_weapons.fists.melee_damage_delay = 0.2
-	self.melee_weapons.fists.melee_charge_shaker = "player_melee_charge_fist"
-	self.melee_weapons.fists.sounds = {}
-	self.melee_weapons.fists.sounds.equip = "fist_equip"
-	self.melee_weapons.fists.sounds.hit_air = "fist_hit_air"
-	self.melee_weapons.fists.sounds.hit_gen = "fist_hit_gen"
-	self.melee_weapons.fists.sounds.hit_body = "fist_hit_body"
-	self.melee_weapons.fists.sounds.charge = "fist_charge"
-	self.melee_weapons.fists.stats.concealment = 30
-	self.melee_weapons.m3_knife = {}
-	self.melee_weapons.m3_knife.type = "knife"
-	self.melee_weapons.m3_knife.name_id = "bm_melee_m3_knife"
-	self.melee_weapons.m3_knife.desc_id = "bm_melee_m3_knife_desc"
-	self.melee_weapons.m3_knife.weapon_movement_penalty = 1
-	self.melee_weapons.m3_knife.exit_run_speed_multiplier = 1
-	self.melee_weapons.m3_knife.transition_duration = 0
-	self.melee_weapons.m3_knife.stance = "m3"
-	self.melee_weapons.m3_knife.weapon_hold = "m3"
-	self.melee_weapons.m3_knife.align_objects = {
-		"a_weapon_right",
+	self.melee_weapons.fists = {
+		anim_global_param = "melee_fist",
+		expire_t = 1,
+		free = true,
+		melee_charge_shaker = "player_melee_charge_fist",
+		melee_damage_delay = 0.2,
+		name_id = "bm_melee_fists",
+		repeat_expire_t = 0.55,
+		type = "fists",
+		anim_attack_vars = {
+			"var1",
+			"var2",
+			"var3",
+			"var4",
+		},
+		sounds = self.melee_sounds.fist,
+		stats = {
+			concealment = 30,
+			max_damage = 92,
+			max_damage_effect = 2,
+			min_damage = 50,
+			min_damage_effect = 3,
+			range = 150,
+			remove_weapon_movement_penalty = true,
+			weapon_type = "blunt",
+			charge_time = MELEE_SPEED_NORMAL,
+		},
 	}
-	self.melee_weapons.m3_knife.unit = "units/vanilla/weapons/wpn_fps_mel_m3_knife/wpn_fps_mel_m3_knife"
-	self.melee_weapons.m3_knife.third_unit = "units/vanilla/weapons/wpn_third_mel_m3_knife/wpn_third_mel_m3_knife"
-	self.melee_weapons.m3_knife.repeat_expire_t = 0.6
-	self.melee_weapons.m3_knife.expire_t = 0.75
-	self.melee_weapons.m3_knife.melee_damage_delay = 0.1
-	self.melee_weapons.m3_knife.melee_charge_shaker = "player_melee_charge"
-	self.melee_weapons.m3_knife.stats = {}
-	self.melee_weapons.m3_knife.stats.min_damage = 133
-	self.melee_weapons.m3_knife.stats.max_damage = 250
-	self.melee_weapons.m3_knife.stats.min_damage_effect = 1
-	self.melee_weapons.m3_knife.stats.max_damage_effect = 1
-	self.melee_weapons.m3_knife.stats.charge_time = MELEE_SPEED_NORMAL
-	self.melee_weapons.m3_knife.stats.range = 185
-	self.melee_weapons.m3_knife.stats.remove_weapon_movement_penalty = true
-	self.melee_weapons.m3_knife.stats.weapon_type = "sharp"
-	self.melee_weapons.m3_knife.stats.concealment = 30
-	self.melee_weapons.m3_knife.animations = {}
-	self.melee_weapons.m3_knife.animations.equip_id = "equip_welrod"
-	self.melee_weapons.m3_knife.timers = {}
-	self.melee_weapons.m3_knife.timers.reload_not_empty = 1.25
-	self.melee_weapons.m3_knife.timers.reload_empty = 1.65
-	self.melee_weapons.m3_knife.timers.unequip = 0.5
-	self.melee_weapons.m3_knife.timers.equip = 0.25
-	self.melee_weapons.m3_knife.use_data = {}
-	self.melee_weapons.m3_knife.use_data.equip = {
-		align_place = "right_hand",
+	self.melee_weapons.m3_knife = {
+		decal_effect = "knife",
+		desc_id = "bm_melee_m3_knife_desc",
+		exit_run_speed_multiplier = 1,
+		expire_t = 0.75,
+		hold = "melee",
+		melee_charge_shaker = "player_melee_charge",
+		melee_damage_delay = 0.223,
+		name_id = "bm_melee_m3_knife",
+		repeat_expire_t = 0.6,
+		stance = "m3",
+		third_unit = "units/vanilla/weapons/wpn_third_mel_m3_knife/wpn_third_mel_m3_knife",
+		transition_duration = 0,
+		type = "knife",
+		unit = "units/vanilla/weapons/wpn_fps_mel_m3_knife/wpn_fps_mel_m3_knife",
+		usage_anim = "c45",
+		weapon_hold = "m3",
+		weapon_movement_penalty = 1,
+		align_objects = {
+			"a_weapon_right",
+		},
+		animations = {
+			equip_id = "equip_welrod",
+		},
+		gui = {
+			display_offset = 10,
+			distance_offset = -100,
+			height_offset = -8,
+			rotation_offset = -2,
+			initial_rotation = {
+				pitch = 20,
+				roll = 160,
+				yaw = 90,
+			},
+		},
+		headshot_multiplier = MELEE_HEADSHOT_MULTIPLIER,
+		sounds = self.melee_sounds.knife,
+		stats = {
+			concealment = 30,
+			max_damage = 150,
+			max_damage_effect = 1,
+			min_damage = 80,
+			min_damage_effect = 1,
+			range = 185,
+			remove_weapon_movement_penalty = true,
+			weapon_type = "sharp",
+			charge_time = MELEE_SPEED_NORMAL,
+		},
+		timers = {
+			equip = 0.25,
+			reload_empty = 1.65,
+			reload_not_empty = 1.25,
+			unequip = 0.5,
+		},
+		use_data = {
+			equip = {
+				align_place = "right_hand",
+			},
+			selection_index = tweak_data.weapon.WEAPON_SLOT_MELEE,
+			unequip = {
+				align_place = "back",
+			},
+		},
 	}
-	self.melee_weapons.m3_knife.use_data.selection_index = MELEE_SLOT
-	self.melee_weapons.m3_knife.use_data.unequip = {
-		align_place = "back",
+	self.melee_weapons.robbins_dudley_trench_push_dagger = {
+		decal_effect = "knife",
+		desc_id = "bm_melee_robbins_dudley_trench_push_dagger_desc",
+		exit_run_speed_multiplier = 1,
+		expire_t = 0.75,
+		hold = "melee",
+		melee_charge_shaker = "player_melee_charge",
+		melee_damage_delay = 0.1,
+		name_id = "bm_melee_robbins_dudley_trench_push_dagger",
+		repeat_expire_t = 0.6,
+		reward_image = "units/vanilla/weapons/wpn_fps_mel_robbins_dudley_trench_push_dagger/robbins_dudley_trench_push_dagger_hud",
+		stance = "robbins_dudley_trench_push_dagger",
+		third_unit = "units/vanilla/weapons/wpn_third_mel_robbins_dudley_trench_push_dagger/wpn_third_mel_robbins_dudley_trench_push_dagger",
+		transition_duration = 0,
+		type = "knife",
+		unit = "units/vanilla/weapons/wpn_fps_mel_robbins_dudley_trench_push_dagger/wpn_fps_mel_robbins_dudley_trench_push_dagger",
+		usage_anim = "c45",
+		weapon_hold = "robbins_dudley_trench_push_dagger",
+		weapon_movement_penalty = 1,
+		align_objects = {
+			"a_weapon_right",
+		},
+		animations = {
+			equip_id = "equip_welrod",
+		},
+		gui = {
+			display_offset = 12,
+			distance_offset = -100,
+			height_offset = -12,
+			rotation_offset = 4,
+			initial_rotation = {
+				pitch = 0,
+				roll = 0,
+				yaw = -90,
+			},
+		},
+		headshot_multiplier = MELEE_HEADSHOT_MULTIPLIER,
+		sounds = self.melee_sounds.knife,
+		stats = {
+			concealment = 30,
+			max_damage = 150,
+			max_damage_effect = 1,
+			min_damage = 80,
+			min_damage_effect = 1,
+			range = 185,
+			remove_weapon_movement_penalty = true,
+			weapon_type = "sharp",
+			charge_time = MELEE_SPEED_NORMAL,
+		},
+		timers = {
+			equip = 0.25,
+			reload_empty = 1.65,
+			reload_not_empty = 1.25,
+			unequip = 0.5,
+		},
+		use_data = {
+			equip = {
+				align_place = "right_hand",
+			},
+			selection_index = tweak_data.weapon.WEAPON_SLOT_MELEE,
+			unequip = {
+				align_place = "back",
+			},
+		},
 	}
-	self.melee_weapons.m3_knife.hold = "melee"
-	self.melee_weapons.m3_knife.usage_anim = "c45"
-	self.melee_weapons.m3_knife.sounds = {}
-	self.melee_weapons.m3_knife.sounds.equip = "knife_equip"
-	self.melee_weapons.m3_knife.sounds.hit_air = "knife_hit_air"
-	self.melee_weapons.m3_knife.sounds.hit_gen = "knife_hit_gen"
-	self.melee_weapons.m3_knife.sounds.hit_body = "knife_hit_body"
-	self.melee_weapons.m3_knife.sounds.killing_blow = "knife_killing_blow"
-	self.melee_weapons.m3_knife.gui = {}
-	self.melee_weapons.m3_knife.gui.rotation_offset = -2
-	self.melee_weapons.m3_knife.gui.distance_offset = -100
-	self.melee_weapons.m3_knife.gui.height_offset = -8
-	self.melee_weapons.m3_knife.gui.display_offset = 10
-	self.melee_weapons.m3_knife.gui.initial_rotation = {}
-	self.melee_weapons.m3_knife.gui.initial_rotation.yaw = 90
-	self.melee_weapons.m3_knife.gui.initial_rotation.pitch = 20
-	self.melee_weapons.m3_knife.gui.initial_rotation.roll = 160
-	self.melee_weapons.robbins_dudley_trench_push_dagger = {}
-	self.melee_weapons.robbins_dudley_trench_push_dagger.type = "knife"
-	self.melee_weapons.robbins_dudley_trench_push_dagger.name_id = "bm_melee_robbins_dudley_trench_push_dagger"
-	self.melee_weapons.robbins_dudley_trench_push_dagger.desc_id = "bm_melee_robbins_dudley_trench_push_dagger_desc"
-	self.melee_weapons.robbins_dudley_trench_push_dagger.reward_image = "units/vanilla/weapons/wpn_fps_mel_robbins_dudley_trench_push_dagger/robbins_dudley_trench_push_dagger_hud"
-	self.melee_weapons.robbins_dudley_trench_push_dagger.weapon_movement_penalty = 1
-	self.melee_weapons.robbins_dudley_trench_push_dagger.exit_run_speed_multiplier = 1
-	self.melee_weapons.robbins_dudley_trench_push_dagger.transition_duration = 0
-	self.melee_weapons.robbins_dudley_trench_push_dagger.stance = "robbins_dudley_trench_push_dagger"
-	self.melee_weapons.robbins_dudley_trench_push_dagger.weapon_hold = "robbins_dudley_trench_push_dagger"
-	self.melee_weapons.robbins_dudley_trench_push_dagger.align_objects = {
-		"a_weapon_right",
+	self.melee_weapons.german_brass_knuckles = {
+		desc_id = "bm_melee_german_brass_knuckles_desc",
+		exit_run_speed_multiplier = 1,
+		expire_t = 0.75,
+		hold = "melee",
+		melee_charge_shaker = "player_melee_charge",
+		melee_damage_delay = 0.1,
+		name_id = "bm_melee_german_brass_knuckles",
+		repeat_expire_t = 0.6,
+		reward_image = "units/vanilla/weapons/wpn_fps_mel_german_brass_knuckles/german_brass_knuckles_hud",
+		stance = "brass_knuckles",
+		third_unit = "units/vanilla/weapons/wpn_third_mel_german_brass_knuckles/wpn_third_mel_german_brass_knuckles",
+		transition_duration = 0,
+		type = "knife",
+		unit = "units/vanilla/weapons/wpn_fps_mel_german_brass_knuckles/wpn_fps_mel_german_brass_knuckles",
+		usage_anim = "c45",
+		weapon_hold = "brass_knuckles",
+		weapon_movement_penalty = 1,
+		align_objects = {
+			"a_weapon_right",
+		},
+		animations = {
+			equip_id = "equip_welrod",
+		},
+		gui = {
+			display_offset = 14,
+			distance_offset = -130,
+			height_offset = -9,
+			rotation_offset = 4,
+			initial_rotation = {
+				pitch = 0,
+				roll = 0,
+				yaw = -90,
+			},
+		},
+		headshot_multiplier = MELEE_HEADSHOT_MULTIPLIER,
+		sounds = self.melee_sounds.fist,
+		stats = {
+			concealment = 30,
+			max_damage = 150,
+			max_damage_effect = 1,
+			min_damage = 80,
+			min_damage_effect = 1,
+			range = 185,
+			remove_weapon_movement_penalty = true,
+			weapon_type = "sharp",
+			charge_time = MELEE_SPEED_NORMAL,
+		},
+		timers = {
+			equip = 0.25,
+			reload_empty = 1.65,
+			reload_not_empty = 1.25,
+			unequip = 0.5,
+		},
+		use_data = {
+			equip = {
+				align_place = "right_hand",
+			},
+			selection_index = tweak_data.weapon.WEAPON_SLOT_MELEE,
+			unequip = {
+				align_place = "back",
+			},
+		},
 	}
-	self.melee_weapons.robbins_dudley_trench_push_dagger.unit = "units/vanilla/weapons/wpn_fps_mel_robbins_dudley_trench_push_dagger/wpn_fps_mel_robbins_dudley_trench_push_dagger"
-	self.melee_weapons.robbins_dudley_trench_push_dagger.third_unit = "units/vanilla/weapons/wpn_third_mel_robbins_dudley_trench_push_dagger/wpn_third_mel_robbins_dudley_trench_push_dagger"
-	self.melee_weapons.robbins_dudley_trench_push_dagger.repeat_expire_t = 0.6
-	self.melee_weapons.robbins_dudley_trench_push_dagger.expire_t = 0.75
-	self.melee_weapons.robbins_dudley_trench_push_dagger.melee_damage_delay = 0.1
-	self.melee_weapons.robbins_dudley_trench_push_dagger.melee_charge_shaker = "player_melee_charge"
-	self.melee_weapons.robbins_dudley_trench_push_dagger.stats = {}
-	self.melee_weapons.robbins_dudley_trench_push_dagger.stats.min_damage = 133
-	self.melee_weapons.robbins_dudley_trench_push_dagger.stats.max_damage = 250
-	self.melee_weapons.robbins_dudley_trench_push_dagger.stats.min_damage_effect = 1
-	self.melee_weapons.robbins_dudley_trench_push_dagger.stats.max_damage_effect = 1
-	self.melee_weapons.robbins_dudley_trench_push_dagger.stats.charge_time = MELEE_SPEED_NORMAL
-	self.melee_weapons.robbins_dudley_trench_push_dagger.stats.range = 185
-	self.melee_weapons.robbins_dudley_trench_push_dagger.stats.remove_weapon_movement_penalty = true
-	self.melee_weapons.robbins_dudley_trench_push_dagger.stats.weapon_type = "sharp"
-	self.melee_weapons.robbins_dudley_trench_push_dagger.stats.concealment = 30
-	self.melee_weapons.robbins_dudley_trench_push_dagger.animations = {}
-	self.melee_weapons.robbins_dudley_trench_push_dagger.animations.equip_id = "equip_welrod"
-	self.melee_weapons.robbins_dudley_trench_push_dagger.timers = {}
-	self.melee_weapons.robbins_dudley_trench_push_dagger.timers.reload_not_empty = 1.25
-	self.melee_weapons.robbins_dudley_trench_push_dagger.timers.reload_empty = 1.65
-	self.melee_weapons.robbins_dudley_trench_push_dagger.timers.unequip = 0.5
-	self.melee_weapons.robbins_dudley_trench_push_dagger.timers.equip = 0.25
-	self.melee_weapons.robbins_dudley_trench_push_dagger.use_data = {}
-	self.melee_weapons.robbins_dudley_trench_push_dagger.use_data.equip = {
-		align_place = "right_hand",
+	self.melee_weapons.lockwood_brothers_push_dagger = {
+		desc_id = "bm_melee_lockwood_brothers_push_dagger_desc",
+		exit_run_speed_multiplier = 1,
+		expire_t = 0.75,
+		hold = "melee",
+		melee_charge_shaker = "player_melee_charge",
+		melee_damage_delay = 0.1,
+		name_id = "bm_melee_lockwood_brothers_push_dagger",
+		repeat_expire_t = 0.6,
+		reward_image = "units/vanilla/weapons/wpn_fps_mel_lockwood_brothers_push_dagger/lockwood_brothers_push_dagger_hud",
+		stance = "lockwood_brothers_push_dagger",
+		third_unit = "units/vanilla/weapons/wpn_third_mel_lockwood_brothers_push_dagger/wpn_third_mel_lockwood_brothers_push_dagger",
+		transition_duration = 0,
+		type = "knife",
+		unit = "units/vanilla/weapons/wpn_fps_mel_lockwood_brothers_push_dagger/wpn_fps_mel_lockwood_brothers_push_dagger",
+		usage_anim = "c45",
+		weapon_hold = "lockwood_brothers_push_dagger",
+		weapon_movement_penalty = 1,
+		align_objects = {
+			"a_weapon_right",
+		},
+		animations = {
+			equip_id = "equip_welrod",
+		},
+		gui = {
+			display_offset = 13,
+			distance_offset = -120,
+			height_offset = -11,
+			rotation_offset = 1,
+			initial_rotation = {
+				pitch = 0,
+				roll = 0,
+				yaw = -90,
+			},
+		},
+		headshot_multiplier = MELEE_HEADSHOT_MULTIPLIER,
+		sounds = self.melee_sounds.knife,
+		stats = {
+			concealment = 30,
+			effect = "knife",
+			max_damage = 150,
+			max_damage_effect = 1,
+			min_damage = 80,
+			min_damage_effect = 1,
+			range = 185,
+			remove_weapon_movement_penalty = true,
+			weapon_type = "sharp",
+			charge_time = MELEE_SPEED_NORMAL,
+		},
+		timers = {
+			equip = 0.25,
+			reload_empty = 1.65,
+			reload_not_empty = 1.25,
+			unequip = 0.5,
+		},
+		use_data = {
+			equip = {
+				align_place = "right_hand",
+			},
+			selection_index = tweak_data.weapon.WEAPON_SLOT_MELEE,
+			unequip = {
+				align_place = "back",
+			},
+		},
 	}
-	self.melee_weapons.robbins_dudley_trench_push_dagger.use_data.selection_index = MELEE_SLOT
-	self.melee_weapons.robbins_dudley_trench_push_dagger.use_data.unequip = {
-		align_place = "back",
+	self.melee_weapons.bc41_knuckle_knife = {
+		decal_effect = "knife",
+		desc_id = "bm_melee_bc41_knuckle_knife_desc",
+		exit_run_speed_multiplier = 1,
+		expire_t = 0.75,
+		hold = "melee",
+		melee_charge_shaker = "player_melee_charge",
+		melee_damage_delay = 0.1,
+		name_id = "bm_melee_bc41_knuckle_knife",
+		repeat_expire_t = 0.6,
+		reward_image = "units/vanilla/weapons/wpn_fps_mel_bc41_knuckle_knife/bc41_knuckle_knife_hud",
+		stance = "bc41_knuckle_knife",
+		third_unit = "units/vanilla/weapons/wpn_third_mel_bc41_knuckle_knife/wpn_third_mel_bc41_knuckle_knife",
+		transition_duration = 0,
+		type = "knife",
+		unit = "units/vanilla/weapons/wpn_fps_mel_bc41_knuckle_knife/wpn_fps_mel_bc41_knuckle_knife",
+		usage_anim = "c45",
+		weapon_hold = "bc41_knuckle_knife",
+		weapon_movement_penalty = 1,
+		align_objects = {
+			"a_weapon_right",
+		},
+		animations = {
+			equip_id = "equip_welrod",
+		},
+		gui = {
+			display_offset = 13,
+			distance_offset = -120,
+			height_offset = -9,
+			rotation_offset = 2,
+			initial_rotation = {
+				pitch = 0,
+				roll = 0,
+				yaw = -90,
+			},
+		},
+		headshot_multiplier = MELEE_HEADSHOT_MULTIPLIER,
+		sounds = self.melee_sounds.knife,
+		stats = {
+			concealment = 30,
+			max_damage = 150,
+			max_damage_effect = 1,
+			min_damage = 80,
+			min_damage_effect = 1,
+			range = 185,
+			remove_weapon_movement_penalty = true,
+			weapon_type = "sharp",
+			charge_time = MELEE_SPEED_NORMAL,
+		},
+		timers = {
+			equip = 0.25,
+			reload_empty = 1.65,
+			reload_not_empty = 1.25,
+			unequip = 0.5,
+		},
+		use_data = {
+			equip = {
+				align_place = "right_hand",
+			},
+			selection_index = tweak_data.weapon.WEAPON_SLOT_MELEE,
+			unequip = {
+				align_place = "back",
+			},
+		},
 	}
-	self.melee_weapons.robbins_dudley_trench_push_dagger.hold = "melee"
-	self.melee_weapons.robbins_dudley_trench_push_dagger.usage_anim = "c45"
-	self.melee_weapons.robbins_dudley_trench_push_dagger.sounds = {}
-	self.melee_weapons.robbins_dudley_trench_push_dagger.sounds.equip = "knife_equip"
-	self.melee_weapons.robbins_dudley_trench_push_dagger.sounds.hit_air = "knife_hit_air"
-	self.melee_weapons.robbins_dudley_trench_push_dagger.sounds.hit_gen = "knife_hit_gen"
-	self.melee_weapons.robbins_dudley_trench_push_dagger.sounds.hit_body = "knife_hit_body"
-	self.melee_weapons.robbins_dudley_trench_push_dagger.sounds.killing_blow = "knife_killing_blow"
-	self.melee_weapons.robbins_dudley_trench_push_dagger.gui = {}
-	self.melee_weapons.robbins_dudley_trench_push_dagger.gui.rotation_offset = 4
-	self.melee_weapons.robbins_dudley_trench_push_dagger.gui.distance_offset = -100
-	self.melee_weapons.robbins_dudley_trench_push_dagger.gui.height_offset = -12
-	self.melee_weapons.robbins_dudley_trench_push_dagger.gui.display_offset = 12
-	self.melee_weapons.robbins_dudley_trench_push_dagger.gui.initial_rotation = {}
-	self.melee_weapons.robbins_dudley_trench_push_dagger.gui.initial_rotation.yaw = -90
-	self.melee_weapons.robbins_dudley_trench_push_dagger.gui.initial_rotation.pitch = 0
-	self.melee_weapons.robbins_dudley_trench_push_dagger.gui.initial_rotation.roll = 0
-	self.melee_weapons.german_brass_knuckles = {}
-	self.melee_weapons.german_brass_knuckles.type = "knife"
-	self.melee_weapons.german_brass_knuckles.name_id = "bm_melee_german_brass_knuckles"
-	self.melee_weapons.german_brass_knuckles.desc_id = "bm_melee_german_brass_knuckles_desc"
-	self.melee_weapons.german_brass_knuckles.reward_image = "units/vanilla/weapons/wpn_fps_mel_german_brass_knuckles/german_brass_knuckles_hud"
-	self.melee_weapons.german_brass_knuckles.weapon_movement_penalty = 1
-	self.melee_weapons.german_brass_knuckles.exit_run_speed_multiplier = 1
-	self.melee_weapons.german_brass_knuckles.transition_duration = 0
-	self.melee_weapons.german_brass_knuckles.stance = "brass_knuckles"
-	self.melee_weapons.german_brass_knuckles.weapon_hold = "brass_knuckles"
-	self.melee_weapons.german_brass_knuckles.align_objects = {
-		"a_weapon_right",
+	self.melee_weapons.km_dagger = {
+		desc_id = "bm_melee_km_dagger_desc",
+		exit_run_speed_multiplier = 1,
+		expire_t = 0.75,
+		hold = "melee",
+		melee_charge_shaker = "player_melee_charge",
+		melee_damage_delay = 0.1,
+		name_id = "bm_melee_km_dagger",
+		repeat_expire_t = 0.6,
+		stance = "km_dagger",
+		third_unit = "units/vanilla/weapons/wpn_third_mel_km_dagger/wpn_third_mel_km_dagger",
+		transition_duration = 0,
+		type = "knife",
+		unit = "units/vanilla/weapons/wpn_fps_km_dagger/wpn_fps_km_dagger",
+		usage_anim = "c45",
+		weapon_hold = "km_dagger",
+		weapon_movement_penalty = 1,
+		align_objects = {
+			"a_weapon_right",
+		},
+		animations = {
+			equip_id = "equip_welrod",
+		},
+		dlc = DLCTweakData.DLC_NAME_SPECIAL_EDITION,
+		gui = {
+			display_offset = 9,
+			distance_offset = -75,
+			height_offset = -8,
+			rotation_offset = -12,
+			initial_rotation = {
+				pitch = -165,
+				roll = 15,
+				yaw = -90,
+			},
+		},
+		headshot_multiplier = MELEE_HEADSHOT_MULTIPLIER,
+		sounds = self.melee_sounds.knife,
+		stats = {
+			concealment = 30,
+			max_damage = 150,
+			max_damage_effect = 1,
+			min_damage = 80,
+			min_damage_effect = 1,
+			range = 185,
+			remove_weapon_movement_penalty = true,
+			weapon_type = "sharp",
+			charge_time = MELEE_SPEED_NORMAL,
+		},
+		timers = {
+			equip = 0.25,
+			reload_empty = 1.65,
+			reload_not_empty = 1.25,
+			unequip = 0.5,
+		},
+		use_data = {
+			equip = {
+				align_place = "right_hand",
+			},
+			selection_index = tweak_data.weapon.WEAPON_SLOT_MELEE,
+			unequip = {
+				align_place = "back",
+			},
+		},
 	}
-	self.melee_weapons.german_brass_knuckles.unit = "units/vanilla/weapons/wpn_fps_mel_german_brass_knuckles/wpn_fps_mel_german_brass_knuckles"
-	self.melee_weapons.german_brass_knuckles.third_unit = "units/vanilla/weapons/wpn_third_mel_german_brass_knuckles/wpn_third_mel_german_brass_knuckles"
-	self.melee_weapons.german_brass_knuckles.repeat_expire_t = 0.6
-	self.melee_weapons.german_brass_knuckles.expire_t = 0.75
-	self.melee_weapons.german_brass_knuckles.melee_damage_delay = 0.1
-	self.melee_weapons.german_brass_knuckles.melee_charge_shaker = "player_melee_charge"
-	self.melee_weapons.german_brass_knuckles.stats = {}
-	self.melee_weapons.german_brass_knuckles.stats.min_damage = 133
-	self.melee_weapons.german_brass_knuckles.stats.max_damage = 250
-	self.melee_weapons.german_brass_knuckles.stats.min_damage_effect = 1
-	self.melee_weapons.german_brass_knuckles.stats.max_damage_effect = 1
-	self.melee_weapons.german_brass_knuckles.stats.charge_time = MELEE_SPEED_NORMAL
-	self.melee_weapons.german_brass_knuckles.stats.range = 185
-	self.melee_weapons.german_brass_knuckles.stats.remove_weapon_movement_penalty = true
-	self.melee_weapons.german_brass_knuckles.stats.weapon_type = "sharp"
-	self.melee_weapons.german_brass_knuckles.stats.concealment = 30
-	self.melee_weapons.german_brass_knuckles.animations = {}
-	self.melee_weapons.german_brass_knuckles.animations.equip_id = "equip_welrod"
-	self.melee_weapons.german_brass_knuckles.timers = {}
-	self.melee_weapons.german_brass_knuckles.timers.reload_not_empty = 1.25
-	self.melee_weapons.german_brass_knuckles.timers.reload_empty = 1.65
-	self.melee_weapons.german_brass_knuckles.timers.unequip = 0.5
-	self.melee_weapons.german_brass_knuckles.timers.equip = 0.25
-	self.melee_weapons.german_brass_knuckles.use_data = {}
-	self.melee_weapons.german_brass_knuckles.use_data.equip = {
-		align_place = "right_hand",
+	self.melee_weapons.marching_mace = {
+		decal_effect = "knife",
+		desc_id = "bm_melee_marching_mace_desc",
+		exit_run_speed_multiplier = 1,
+		expire_t = 0.75,
+		hold = "marching_mace",
+		melee_charge_shaker = "player_melee_charge",
+		melee_damage_delay = 0.1,
+		name_id = "bm_melee_marching_mace",
+		repeat_expire_t = 0.6,
+		stance = "marching_mace",
+		third_unit = "units/vanilla/weapons/wpn_third_mel_marching_mace/wpn_third_mel_marching_mace",
+		transition_duration = 0,
+		type = "knife",
+		unit = "units/vanilla/weapons/wpn_fps_mel_marching_mace/wpn_fps_mel_marching_mace",
+		usage_anim = "c45",
+		weapon_hold = "marching_mace",
+		weapon_movement_penalty = 1,
+		align_objects = {
+			"a_weapon_right",
+		},
+		animations = {
+			equip_id = "equip_welrod",
+		},
+		dlc = DLCTweakData.DLC_NAME_SPECIAL_EDITION,
+		gui = {
+			display_offset = -6,
+			distance_offset = 60,
+			height_offset = -10,
+			rotation_offset = -30,
+			initial_rotation = {
+				pitch = 30,
+				roll = 0,
+				yaw = -90,
+			},
+		},
+		headshot_multiplier = MELEE_HEADSHOT_MULTIPLIER,
+		sounds = self.melee_sounds.knife,
+		stats = {
+			concealment = 30,
+			max_damage = 150,
+			max_damage_effect = 1,
+			min_damage = 80,
+			min_damage_effect = 1,
+			range = 185,
+			remove_weapon_movement_penalty = true,
+			weapon_type = "sharp",
+			charge_time = MELEE_SPEED_NORMAL,
+		},
+		timers = {
+			equip = 0.25,
+			reload_empty = 1.65,
+			reload_not_empty = 1.25,
+			unequip = 0.5,
+		},
+		use_data = {
+			equip = {
+				align_place = "right_hand",
+			},
+			selection_index = tweak_data.weapon.WEAPON_SLOT_MELEE,
+			unequip = {
+				align_place = "back",
+			},
+		},
 	}
-	self.melee_weapons.german_brass_knuckles.use_data.selection_index = MELEE_SLOT
-	self.melee_weapons.german_brass_knuckles.use_data.unequip = {
-		align_place = "back",
+	self.melee_weapons.lc14b = {
+		decal_effect = "knife",
+		desc_id = "bm_melee_lc14b_desc",
+		dismember_chance = 0.5,
+		exit_run_speed_multiplier = 1,
+		expire_t = 0.75,
+		hold = "machete",
+		melee_charge_shaker = "player_melee_charge",
+		melee_damage_delay = 0.1,
+		name_id = "bm_melee_lc14b",
+		repeat_expire_t = 0.6,
+		reward_image = "units/event_001_halloween/weapons/wpn_fps_mel_lc14b/wpn_fps_mel_lc14b_hud",
+		stance = "machete",
+		third_unit = "units/event_001_halloween/weapons/wpn_third_mel_lc14b/wpn_third_mel_lc14b",
+		transition_duration = 0,
+		type = "knife",
+		unit = "units/event_001_halloween/weapons/wpn_fps_mel_lc14b/wpn_fps_mel_lc14b",
+		usage_anim = "c45",
+		weapon_hold = "machete",
+		weapon_movement_penalty = 1,
+		align_objects = {
+			"a_weapon_right",
+		},
+		animations = {
+			equip_id = "equip_welrod",
+		},
+		gui = {
+			display_offset = 8,
+			distance_offset = -80,
+			height_offset = -4,
+			rotation_offset = -10,
+			initial_rotation = {
+				pitch = 10,
+				roll = 160,
+				yaw = 100,
+			},
+		},
+		headshot_multiplier = MELEE_HEADSHOT_MULTIPLIER,
+		sounds = self.melee_sounds.machete,
+		stats = {
+			concealment = 30,
+			max_damage = 150,
+			max_damage_effect = 1,
+			min_damage = 80,
+			min_damage_effect = 1,
+			range = 185,
+			remove_weapon_movement_penalty = true,
+			weapon_type = "sharp",
+			charge_time = MELEE_SPEED_NORMAL,
+		},
+		timers = {
+			equip = 0.25,
+			reload_empty = 1.65,
+			reload_not_empty = 1.25,
+			unequip = 0.5,
+		},
+		use_data = {
+			equip = {
+				align_place = "right_hand",
+			},
+			selection_index = tweak_data.weapon.WEAPON_SLOT_MELEE,
+			unequip = {
+				align_place = "back",
+			},
+		},
 	}
-	self.melee_weapons.german_brass_knuckles.hold = "melee"
-	self.melee_weapons.german_brass_knuckles.usage_anim = "c45"
-	self.melee_weapons.german_brass_knuckles.sounds = {}
-	self.melee_weapons.german_brass_knuckles.sounds.equip = "knife_equip"
-	self.melee_weapons.german_brass_knuckles.sounds.hit_air = "knife_hit_air"
-	self.melee_weapons.german_brass_knuckles.sounds.hit_gen = "knife_hit_gen"
-	self.melee_weapons.german_brass_knuckles.sounds.hit_body = "knife_hit_body"
-	self.melee_weapons.german_brass_knuckles.sounds.killing_blow = "knife_killing_blow"
-	self.melee_weapons.german_brass_knuckles.gui = {}
-	self.melee_weapons.german_brass_knuckles.gui.rotation_offset = 4
-	self.melee_weapons.german_brass_knuckles.gui.distance_offset = -130
-	self.melee_weapons.german_brass_knuckles.gui.height_offset = -9
-	self.melee_weapons.german_brass_knuckles.gui.display_offset = 14
-	self.melee_weapons.german_brass_knuckles.gui.initial_rotation = {}
-	self.melee_weapons.german_brass_knuckles.gui.initial_rotation.yaw = -90
-	self.melee_weapons.german_brass_knuckles.gui.initial_rotation.pitch = 0
-	self.melee_weapons.german_brass_knuckles.gui.initial_rotation.roll = 0
-	self.melee_weapons.lockwood_brothers_push_dagger = {}
-	self.melee_weapons.lockwood_brothers_push_dagger.type = "knife"
-	self.melee_weapons.lockwood_brothers_push_dagger.name_id = "bm_melee_lockwood_brothers_push_dagger"
-	self.melee_weapons.lockwood_brothers_push_dagger.desc_id = "bm_melee_lockwood_brothers_push_dagger_desc"
-	self.melee_weapons.lockwood_brothers_push_dagger.reward_image = "units/vanilla/weapons/wpn_fps_mel_lockwood_brothers_push_dagger/lockwood_brothers_push_dagger_hud"
-	self.melee_weapons.lockwood_brothers_push_dagger.weapon_movement_penalty = 1
-	self.melee_weapons.lockwood_brothers_push_dagger.exit_run_speed_multiplier = 1
-	self.melee_weapons.lockwood_brothers_push_dagger.transition_duration = 0
-	self.melee_weapons.lockwood_brothers_push_dagger.stance = "lockwood_brothers_push_dagger"
-	self.melee_weapons.lockwood_brothers_push_dagger.weapon_hold = "lockwood_brothers_push_dagger"
-	self.melee_weapons.lockwood_brothers_push_dagger.align_objects = {
-		"a_weapon_right",
-	}
-	self.melee_weapons.lockwood_brothers_push_dagger.unit = "units/vanilla/weapons/wpn_fps_mel_lockwood_brothers_push_dagger/wpn_fps_mel_lockwood_brothers_push_dagger"
-	self.melee_weapons.lockwood_brothers_push_dagger.third_unit = "units/vanilla/weapons/wpn_third_mel_lockwood_brothers_push_dagger/wpn_third_mel_lockwood_brothers_push_dagger"
-	self.melee_weapons.lockwood_brothers_push_dagger.repeat_expire_t = 0.6
-	self.melee_weapons.lockwood_brothers_push_dagger.expire_t = 0.75
-	self.melee_weapons.lockwood_brothers_push_dagger.melee_damage_delay = 0.1
-	self.melee_weapons.lockwood_brothers_push_dagger.melee_charge_shaker = "player_melee_charge"
-	self.melee_weapons.lockwood_brothers_push_dagger.stats = {}
-	self.melee_weapons.lockwood_brothers_push_dagger.stats.min_damage = 133
-	self.melee_weapons.lockwood_brothers_push_dagger.stats.max_damage = 250
-	self.melee_weapons.lockwood_brothers_push_dagger.stats.min_damage_effect = 1
-	self.melee_weapons.lockwood_brothers_push_dagger.stats.max_damage_effect = 1
-	self.melee_weapons.lockwood_brothers_push_dagger.stats.charge_time = MELEE_SPEED_NORMAL
-	self.melee_weapons.lockwood_brothers_push_dagger.stats.range = 185
-	self.melee_weapons.lockwood_brothers_push_dagger.stats.remove_weapon_movement_penalty = true
-	self.melee_weapons.lockwood_brothers_push_dagger.stats.weapon_type = "sharp"
-	self.melee_weapons.lockwood_brothers_push_dagger.stats.concealment = 30
-	self.melee_weapons.lockwood_brothers_push_dagger.animations = {}
-	self.melee_weapons.lockwood_brothers_push_dagger.animations.equip_id = "equip_welrod"
-	self.melee_weapons.lockwood_brothers_push_dagger.timers = {}
-	self.melee_weapons.lockwood_brothers_push_dagger.timers.reload_not_empty = 1.25
-	self.melee_weapons.lockwood_brothers_push_dagger.timers.reload_empty = 1.65
-	self.melee_weapons.lockwood_brothers_push_dagger.timers.unequip = 0.5
-	self.melee_weapons.lockwood_brothers_push_dagger.timers.equip = 0.25
-	self.melee_weapons.lockwood_brothers_push_dagger.use_data = {}
-	self.melee_weapons.lockwood_brothers_push_dagger.use_data.equip = {
-		align_place = "right_hand",
-	}
-	self.melee_weapons.lockwood_brothers_push_dagger.use_data.selection_index = MELEE_SLOT
-	self.melee_weapons.lockwood_brothers_push_dagger.use_data.unequip = {
-		align_place = "back",
-	}
-	self.melee_weapons.lockwood_brothers_push_dagger.hold = "melee"
-	self.melee_weapons.lockwood_brothers_push_dagger.usage_anim = "c45"
-	self.melee_weapons.lockwood_brothers_push_dagger.sounds = {}
-	self.melee_weapons.lockwood_brothers_push_dagger.sounds.equip = "knife_equip"
-	self.melee_weapons.lockwood_brothers_push_dagger.sounds.hit_air = "knife_hit_air"
-	self.melee_weapons.lockwood_brothers_push_dagger.sounds.hit_gen = "knife_hit_gen"
-	self.melee_weapons.lockwood_brothers_push_dagger.sounds.hit_body = "knife_hit_body"
-	self.melee_weapons.lockwood_brothers_push_dagger.sounds.killing_blow = "knife_killing_blow"
-	self.melee_weapons.lockwood_brothers_push_dagger.gui = {}
-	self.melee_weapons.lockwood_brothers_push_dagger.gui.rotation_offset = 1
-	self.melee_weapons.lockwood_brothers_push_dagger.gui.distance_offset = -120
-	self.melee_weapons.lockwood_brothers_push_dagger.gui.height_offset = -11
-	self.melee_weapons.lockwood_brothers_push_dagger.gui.display_offset = 13
-	self.melee_weapons.lockwood_brothers_push_dagger.gui.initial_rotation = {}
-	self.melee_weapons.lockwood_brothers_push_dagger.gui.initial_rotation.yaw = -90
-	self.melee_weapons.lockwood_brothers_push_dagger.gui.initial_rotation.pitch = 0
-	self.melee_weapons.lockwood_brothers_push_dagger.gui.initial_rotation.roll = 0
-	self.melee_weapons.bc41_knuckle_knife = {}
-	self.melee_weapons.bc41_knuckle_knife.type = "knife"
-	self.melee_weapons.bc41_knuckle_knife.name_id = "bm_melee_bc41_knuckle_knife"
-	self.melee_weapons.bc41_knuckle_knife.desc_id = "bm_melee_bc41_knuckle_knife_desc"
-	self.melee_weapons.bc41_knuckle_knife.reward_image = "units/vanilla/weapons/wpn_fps_mel_bc41_knuckle_knife/bc41_knuckle_knife_hud"
-	self.melee_weapons.bc41_knuckle_knife.weapon_movement_penalty = 1
-	self.melee_weapons.bc41_knuckle_knife.exit_run_speed_multiplier = 1
-	self.melee_weapons.bc41_knuckle_knife.transition_duration = 0
-	self.melee_weapons.bc41_knuckle_knife.stance = "bc41_knuckle_knife"
-	self.melee_weapons.bc41_knuckle_knife.weapon_hold = "bc41_knuckle_knife"
-	self.melee_weapons.bc41_knuckle_knife.align_objects = {
-		"a_weapon_right",
-	}
-	self.melee_weapons.bc41_knuckle_knife.unit = "units/vanilla/weapons/wpn_fps_mel_bc41_knuckle_knife/wpn_fps_mel_bc41_knuckle_knife"
-	self.melee_weapons.bc41_knuckle_knife.third_unit = "units/vanilla/weapons/wpn_third_mel_bc41_knuckle_knife/wpn_third_mel_bc41_knuckle_knife"
-	self.melee_weapons.bc41_knuckle_knife.repeat_expire_t = 0.6
-	self.melee_weapons.bc41_knuckle_knife.expire_t = 0.75
-	self.melee_weapons.bc41_knuckle_knife.melee_damage_delay = 0.1
-	self.melee_weapons.bc41_knuckle_knife.melee_charge_shaker = "player_melee_charge"
-	self.melee_weapons.bc41_knuckle_knife.stats = {}
-	self.melee_weapons.bc41_knuckle_knife.stats.min_damage = 133
-	self.melee_weapons.bc41_knuckle_knife.stats.max_damage = 250
-	self.melee_weapons.bc41_knuckle_knife.stats.min_damage_effect = 1
-	self.melee_weapons.bc41_knuckle_knife.stats.max_damage_effect = 1
-	self.melee_weapons.bc41_knuckle_knife.stats.charge_time = MELEE_SPEED_NORMAL
-	self.melee_weapons.bc41_knuckle_knife.stats.range = 185
-	self.melee_weapons.bc41_knuckle_knife.stats.remove_weapon_movement_penalty = true
-	self.melee_weapons.bc41_knuckle_knife.stats.weapon_type = "sharp"
-	self.melee_weapons.bc41_knuckle_knife.stats.concealment = 30
-	self.melee_weapons.bc41_knuckle_knife.animations = {}
-	self.melee_weapons.bc41_knuckle_knife.animations.equip_id = "equip_welrod"
-	self.melee_weapons.bc41_knuckle_knife.timers = {}
-	self.melee_weapons.bc41_knuckle_knife.timers.reload_not_empty = 1.25
-	self.melee_weapons.bc41_knuckle_knife.timers.reload_empty = 1.65
-	self.melee_weapons.bc41_knuckle_knife.timers.unequip = 0.5
-	self.melee_weapons.bc41_knuckle_knife.timers.equip = 0.25
-	self.melee_weapons.bc41_knuckle_knife.use_data = {}
-	self.melee_weapons.bc41_knuckle_knife.use_data.equip = {
-		align_place = "right_hand",
-	}
-	self.melee_weapons.bc41_knuckle_knife.use_data.selection_index = MELEE_SLOT
-	self.melee_weapons.bc41_knuckle_knife.use_data.unequip = {
-		align_place = "back",
-	}
-	self.melee_weapons.bc41_knuckle_knife.hold = "melee"
-	self.melee_weapons.bc41_knuckle_knife.usage_anim = "c45"
-	self.melee_weapons.bc41_knuckle_knife.sounds = {}
-	self.melee_weapons.bc41_knuckle_knife.sounds.equip = "knife_equip"
-	self.melee_weapons.bc41_knuckle_knife.sounds.hit_air = "knife_hit_air"
-	self.melee_weapons.bc41_knuckle_knife.sounds.hit_gen = "knife_hit_gen"
-	self.melee_weapons.bc41_knuckle_knife.sounds.hit_body = "knife_hit_body"
-	self.melee_weapons.bc41_knuckle_knife.sounds.killing_blow = "knife_killing_blow"
-	self.melee_weapons.bc41_knuckle_knife.gui = {}
-	self.melee_weapons.bc41_knuckle_knife.gui.rotation_offset = 2
-	self.melee_weapons.bc41_knuckle_knife.gui.distance_offset = -120
-	self.melee_weapons.bc41_knuckle_knife.gui.height_offset = -9
-	self.melee_weapons.bc41_knuckle_knife.gui.display_offset = 13
-	self.melee_weapons.bc41_knuckle_knife.gui.initial_rotation = {}
-	self.melee_weapons.bc41_knuckle_knife.gui.initial_rotation.yaw = -90
-	self.melee_weapons.bc41_knuckle_knife.gui.initial_rotation.pitch = 0
-	self.melee_weapons.bc41_knuckle_knife.gui.initial_rotation.roll = 0
-	self.melee_weapons.km_dagger = {}
-	self.melee_weapons.km_dagger.type = "knife"
-	self.melee_weapons.km_dagger.name_id = "bm_melee_km_dagger"
-	self.melee_weapons.km_dagger.desc_id = "bm_melee_km_dagger_desc"
-	self.melee_weapons.km_dagger.weapon_movement_penalty = 1
-	self.melee_weapons.km_dagger.exit_run_speed_multiplier = 1
-	self.melee_weapons.km_dagger.transition_duration = 0
-	self.melee_weapons.km_dagger.stance = "km_dagger"
-	self.melee_weapons.km_dagger.weapon_hold = "km_dagger"
-	self.melee_weapons.km_dagger.align_objects = {
-		"a_weapon_right",
-	}
-	self.melee_weapons.km_dagger.unit = "units/vanilla/weapons/wpn_fps_km_dagger/wpn_fps_km_dagger"
-	self.melee_weapons.km_dagger.third_unit = "units/vanilla/weapons/wpn_third_mel_km_dagger/wpn_third_mel_km_dagger"
-	self.melee_weapons.km_dagger.repeat_expire_t = 0.6
-	self.melee_weapons.km_dagger.expire_t = 0.75
-	self.melee_weapons.km_dagger.melee_damage_delay = 0.1
-	self.melee_weapons.km_dagger.melee_charge_shaker = "player_melee_charge"
-	self.melee_weapons.km_dagger.stats = {}
-	self.melee_weapons.km_dagger.stats.min_damage = 133
-	self.melee_weapons.km_dagger.stats.max_damage = 250
-	self.melee_weapons.km_dagger.stats.min_damage_effect = 1
-	self.melee_weapons.km_dagger.stats.max_damage_effect = 1
-	self.melee_weapons.km_dagger.stats.charge_time = MELEE_SPEED_NORMAL
-	self.melee_weapons.km_dagger.stats.range = 185
-	self.melee_weapons.km_dagger.stats.remove_weapon_movement_penalty = true
-	self.melee_weapons.km_dagger.stats.weapon_type = "sharp"
-	self.melee_weapons.km_dagger.stats.concealment = 30
-	self.melee_weapons.km_dagger.animations = {}
-	self.melee_weapons.km_dagger.animations.equip_id = "equip_welrod"
-	self.melee_weapons.km_dagger.timers = {}
-	self.melee_weapons.km_dagger.timers.reload_not_empty = 1.25
-	self.melee_weapons.km_dagger.timers.reload_empty = 1.65
-	self.melee_weapons.km_dagger.timers.unequip = 0.5
-	self.melee_weapons.km_dagger.timers.equip = 0.25
-	self.melee_weapons.km_dagger.use_data = {}
-	self.melee_weapons.km_dagger.use_data.equip = {
-		align_place = "right_hand",
-	}
-	self.melee_weapons.km_dagger.use_data.selection_index = MELEE_SLOT
-	self.melee_weapons.km_dagger.use_data.unequip = {
-		align_place = "back",
-	}
-	self.melee_weapons.km_dagger.hold = "melee"
-	self.melee_weapons.km_dagger.usage_anim = "c45"
-	self.melee_weapons.km_dagger.sounds = {}
-	self.melee_weapons.km_dagger.sounds.equip = "knife_equip"
-	self.melee_weapons.km_dagger.sounds.hit_air = "knife_hit_air"
-	self.melee_weapons.km_dagger.sounds.hit_gen = "knife_hit_gen"
-	self.melee_weapons.km_dagger.sounds.hit_body = "knife_hit_body"
-	self.melee_weapons.km_dagger.sounds.killing_blow = "knife_killing_blow"
-	self.melee_weapons.km_dagger.gui = {}
-	self.melee_weapons.km_dagger.gui.rotation_offset = -12
-	self.melee_weapons.km_dagger.gui.distance_offset = -75
-	self.melee_weapons.km_dagger.gui.height_offset = -8
-	self.melee_weapons.km_dagger.gui.display_offset = 9
-	self.melee_weapons.km_dagger.gui.initial_rotation = {}
-	self.melee_weapons.km_dagger.gui.initial_rotation.yaw = -90
-	self.melee_weapons.km_dagger.gui.initial_rotation.pitch = -165
-	self.melee_weapons.km_dagger.gui.initial_rotation.roll = 15
-	self.melee_weapons.km_dagger.dlc = DLCTweakData.DLC_NAME_SPECIAL_EDITION
-	self.melee_weapons.marching_mace = {}
-	self.melee_weapons.marching_mace.type = "knife"
-	self.melee_weapons.marching_mace.name_id = "bm_melee_marching_mace"
-	self.melee_weapons.marching_mace.desc_id = "bm_melee_marching_mace_desc"
-	self.melee_weapons.marching_mace.weapon_movement_penalty = 1
-	self.melee_weapons.marching_mace.exit_run_speed_multiplier = 1
-	self.melee_weapons.marching_mace.transition_duration = 0
-	self.melee_weapons.marching_mace.stance = "marching_mace"
-	self.melee_weapons.marching_mace.weapon_hold = "marching_mace"
-	self.melee_weapons.marching_mace.align_objects = {
-		"a_weapon_right",
-	}
-	self.melee_weapons.marching_mace.unit = "units/vanilla/weapons/wpn_fps_mel_marching_mace/wpn_fps_mel_marching_mace"
-	self.melee_weapons.marching_mace.third_unit = "units/vanilla/weapons/wpn_third_mel_marching_mace/wpn_third_mel_marching_mace"
-	self.melee_weapons.marching_mace.repeat_expire_t = 0.6
-	self.melee_weapons.marching_mace.expire_t = 0.75
-	self.melee_weapons.marching_mace.melee_damage_delay = 0.1
-	self.melee_weapons.marching_mace.melee_charge_shaker = "player_melee_charge"
-	self.melee_weapons.marching_mace.stats = {}
-	self.melee_weapons.marching_mace.stats.min_damage = 133
-	self.melee_weapons.marching_mace.stats.max_damage = 250
-	self.melee_weapons.marching_mace.stats.min_damage_effect = 1
-	self.melee_weapons.marching_mace.stats.max_damage_effect = 1
-	self.melee_weapons.marching_mace.stats.charge_time = MELEE_SPEED_NORMAL
-	self.melee_weapons.marching_mace.stats.range = 185
-	self.melee_weapons.marching_mace.stats.remove_weapon_movement_penalty = true
-	self.melee_weapons.marching_mace.stats.weapon_type = "sharp"
-	self.melee_weapons.marching_mace.stats.concealment = 30
-	self.melee_weapons.marching_mace.animations = {}
-	self.melee_weapons.marching_mace.animations.equip_id = "equip_welrod"
-	self.melee_weapons.marching_mace.timers = {}
-	self.melee_weapons.marching_mace.timers.reload_not_empty = 1.25
-	self.melee_weapons.marching_mace.timers.reload_empty = 1.65
-	self.melee_weapons.marching_mace.timers.unequip = 0.5
-	self.melee_weapons.marching_mace.timers.equip = 0.25
-	self.melee_weapons.marching_mace.use_data = {}
-	self.melee_weapons.marching_mace.use_data.equip = {
-		align_place = "right_hand",
-	}
-	self.melee_weapons.marching_mace.use_data.selection_index = MELEE_SLOT
-	self.melee_weapons.marching_mace.use_data.unequip = {
-		align_place = "back",
-	}
-	self.melee_weapons.marching_mace.hold = "marching_mace"
-	self.melee_weapons.marching_mace.usage_anim = "c45"
-	self.melee_weapons.marching_mace.sounds = {}
-	self.melee_weapons.marching_mace.sounds.equip = "knife_equip"
-	self.melee_weapons.marching_mace.sounds.hit_air = "knife_hit_air"
-	self.melee_weapons.marching_mace.sounds.hit_gen = "knife_hit_gen"
-	self.melee_weapons.marching_mace.sounds.hit_body = "knife_hit_body"
-	self.melee_weapons.marching_mace.sounds.killing_blow = "knife_killing_blow"
-	self.melee_weapons.marching_mace.dlc = DLCTweakData.DLC_NAME_SPECIAL_EDITION
-	self.melee_weapons.marching_mace.gui = {}
-	self.melee_weapons.marching_mace.gui.rotation_offset = -30
-	self.melee_weapons.marching_mace.gui.distance_offset = 60
-	self.melee_weapons.marching_mace.gui.height_offset = -10
-	self.melee_weapons.marching_mace.gui.display_offset = -6
-	self.melee_weapons.marching_mace.gui.initial_rotation = {}
-	self.melee_weapons.marching_mace.gui.initial_rotation.yaw = -90
-	self.melee_weapons.marching_mace.gui.initial_rotation.pitch = 30
-	self.melee_weapons.marching_mace.gui.initial_rotation.roll = 0
-	self.melee_weapons.lc14b = {}
-	self.melee_weapons.lc14b.type = "knife"
-	self.melee_weapons.lc14b.name_id = "bm_melee_lc14b"
-	self.melee_weapons.lc14b.desc_id = "bm_melee_lc14b_desc"
-	self.melee_weapons.lc14b.reward_image = "units/event_001_halloween/weapons/wpn_fps_mel_lc14b/wpn_fps_mel_lc14b_hud"
-	self.melee_weapons.lc14b.weapon_movement_penalty = 1
-	self.melee_weapons.lc14b.exit_run_speed_multiplier = 1
-	self.melee_weapons.lc14b.transition_duration = 0
-	self.melee_weapons.lc14b.stance = "machete"
-	self.melee_weapons.lc14b.weapon_hold = "machete"
-	self.melee_weapons.lc14b.align_objects = {
-		"a_weapon_right",
-	}
-	self.melee_weapons.lc14b.unit = "units/event_001_halloween/weapons/wpn_fps_mel_lc14b/wpn_fps_mel_lc14b"
-	self.melee_weapons.lc14b.third_unit = "units/event_001_halloween/weapons/wpn_third_mel_lc14b/wpn_third_mel_lc14b"
-	self.melee_weapons.lc14b.repeat_expire_t = 0.6
-	self.melee_weapons.lc14b.expire_t = 0.75
-	self.melee_weapons.lc14b.melee_damage_delay = 0.1
-	self.melee_weapons.lc14b.melee_charge_shaker = "player_melee_charge"
-	self.melee_weapons.lc14b.stats = {}
-	self.melee_weapons.lc14b.stats.min_damage = 133
-	self.melee_weapons.lc14b.stats.max_damage = 250
-	self.melee_weapons.lc14b.stats.min_damage_effect = 1
-	self.melee_weapons.lc14b.stats.max_damage_effect = 1
-	self.melee_weapons.lc14b.stats.charge_time = MELEE_SPEED_NORMAL
-	self.melee_weapons.lc14b.stats.range = 185
-	self.melee_weapons.lc14b.stats.remove_weapon_movement_penalty = true
-	self.melee_weapons.lc14b.stats.weapon_type = "sharp"
-	self.melee_weapons.lc14b.stats.concealment = 30
-	self.melee_weapons.lc14b.animations = {}
-	self.melee_weapons.lc14b.animations.equip_id = "equip_welrod"
-	self.melee_weapons.lc14b.timers = {}
-	self.melee_weapons.lc14b.timers.reload_not_empty = 1.25
-	self.melee_weapons.lc14b.timers.reload_empty = 1.65
-	self.melee_weapons.lc14b.timers.unequip = 0.5
-	self.melee_weapons.lc14b.timers.equip = 0.25
-	self.melee_weapons.lc14b.use_data = {}
-	self.melee_weapons.lc14b.use_data.equip = {
-		align_place = "right_hand",
-	}
-	self.melee_weapons.lc14b.use_data.selection_index = MELEE_SLOT
-	self.melee_weapons.lc14b.use_data.unequip = {
-		align_place = "back",
-	}
-	self.melee_weapons.lc14b.hold = "machete"
-	self.melee_weapons.lc14b.usage_anim = "c45"
-	self.melee_weapons.lc14b.sounds = {}
-	self.melee_weapons.lc14b.sounds.equip = "knife_equip"
-	self.melee_weapons.lc14b.sounds.hit_air = "knife_hit_air"
-	self.melee_weapons.lc14b.sounds.hit_gen = "knife_hit_gen"
-	self.melee_weapons.lc14b.sounds.hit_body = "machete_hit_body"
-	self.melee_weapons.lc14b.sounds.killing_blow = "machete_killing_blow"
-	self.melee_weapons.lc14b.dismember_chance = 0.5
-	self.melee_weapons.lc14b.gui = {}
-	self.melee_weapons.lc14b.gui.rotation_offset = -10
-	self.melee_weapons.lc14b.gui.distance_offset = -80
-	self.melee_weapons.lc14b.gui.height_offset = -4
-	self.melee_weapons.lc14b.gui.display_offset = 8
-	self.melee_weapons.lc14b.gui.initial_rotation = {}
-	self.melee_weapons.lc14b.gui.initial_rotation.yaw = 100
-	self.melee_weapons.lc14b.gui.initial_rotation.pitch = 10
-	self.melee_weapons.lc14b.gui.initial_rotation.roll = 160
 
 	self:_add_desc_from_name_macro(self.melee_weapons)
 end

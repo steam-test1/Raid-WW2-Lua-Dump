@@ -117,8 +117,6 @@ function CopLogicTravel.enter(data, new_logic_name, enter_params)
 			local i = CopLogicTravel.complete_coarse_path(data, my_data, path)
 
 			if not i then
-				Application:debug("[CopLogicTravel.enter1] coarse_path_index is nill?", inspect(my_data.coarse_path))
-
 				my_data.coarse_path_index = 1
 			else
 				my_data.coarse_path_index = i
@@ -129,8 +127,6 @@ function CopLogicTravel.enter(data, new_logic_name, enter_params)
 			local i = CopLogicTravel.complete_coarse_path(data, my_data, my_data.coarse_path)
 
 			if not i then
-				Application:debug("[CopLogicTravel.enter2] coarse_path_index is nill?", inspect(my_data.coarse_path))
-
 				my_data.coarse_path_index = 1
 			else
 				my_data.coarse_path_index = i
@@ -165,7 +161,7 @@ function CopLogicTravel.enter(data, new_logic_name, enter_params)
 	my_data.weapon_range_max = data.char_tweak.weapon[data.unit:inventory():equipped_unit():base():weapon_tweak_data().usage].max_range
 	my_data.additional_weapon_stats = data.char_tweak.weapon[data.unit:inventory():equipped_unit():base():weapon_tweak_data().usage].additional_weapon_stats
 	my_data.path_safely = data.team.foes[tweak_data.levels:get_default_team_ID("player")]
-	my_data.path_ahead = true
+	my_data.path_ahead = data.objective.path_ahead or false
 
 	data.unit:brain():set_update_enabled_state(false)
 
@@ -249,7 +245,7 @@ function CopLogicTravel.upd_advance(data)
 	elseif my_data.advance_path then
 		CopLogicTravel._chk_begin_advance(data, my_data)
 
-		if my_data.advancing then
+		if my_data.advancing and my_data.path_ahead then
 			CopLogicTravel._check_start_path_ahead(data)
 		end
 	elseif my_data.processing_advance_path or my_data.processing_coarse_path then
@@ -281,7 +277,7 @@ function CopLogicTravel.upd_advance(data)
 			CopLogicTravel._begin_coarse_pathing(data, my_data)
 		end
 	else
-		CopLogicBase._exit(data.unit, "idle")
+		CopLogicBase._exit_to_state(data.unit, "idle")
 
 		return
 	end
@@ -322,7 +318,7 @@ function CopLogicTravel._upd_enemy_detection(data)
 
 			if my_data == data.internal_data and objective and not objective.is_default then
 				debug_pause_unit(data.unit, "[CopLogicTravel._upd_enemy_detection] exiting without discarding objective", data.unit, inspect(objective))
-				CopLogicBase._exit(data.unit, wanted_state)
+				CopLogicBase._exit_to_state(data.unit, wanted_state)
 			end
 
 			CopLogicBase._report_detections(data.detected_attention_objects)
@@ -593,7 +589,7 @@ function CopLogicTravel.on_action_completed(data, action)
 				end
 
 				if my_data == data.internal_data then
-					CopLogicBase._exit(data.unit, wanted_state)
+					CopLogicBase._exit_to_state(data.unit, wanted_state)
 				end
 			end
 		end
@@ -1148,8 +1144,6 @@ function CopLogicTravel.complete_coarse_path(data, my_data, coarse_path)
 			local ins_coarse_path = managers.navigation:search_coarse(search_params)
 
 			if not ins_coarse_path then
-				Application:debug("[CopLogicTravel.complete_coarse_path] Coarse path failed, can't path from one nav_seg to other.")
-
 				return
 			end
 
@@ -1248,6 +1242,9 @@ function CopLogicTravel._chk_close_to_criminal(data, my_data)
 	return my_data.close_to_criminal
 end
 
+CopLogicTravel._TRAVEL_GROUP_WAIT_DISTANCE = 4000000
+CopLogicTravel._TRAVEL_GROUP_WAIT_TOLERANCE = 1.3224999999999998
+
 function CopLogicTravel.chk_group_ready_to_move(data, my_data)
 	local my_objective = data.objective
 
@@ -1261,11 +1258,11 @@ function CopLogicTravel.chk_group_ready_to_move(data, my_data)
 
 	local my_dis = mvector3.distance_sq(my_objective.area.pos, data.m_pos)
 
-	if my_dis > 4000000 then
+	if my_dis > CopLogicTravel._TRAVEL_GROUP_WAIT_DISTANCE then
 		return true
 	end
 
-	my_dis = my_dis * 1.15 * 1.15
+	my_dis = my_dis * CopLogicTravel._TRAVEL_GROUP_WAIT_TOLERANCE
 
 	for u_key, u_data in pairs(data.group.units) do
 		if u_key ~= data.key then
@@ -1567,15 +1564,21 @@ function CopLogicTravel._get_exact_move_pos(data, nav_index)
 			return nil
 		end
 
-		local cover = managers.navigation:find_cover_in_nav_seg_1(area.nav_segs)
+		local want_cover = true
 
-		if cover then
-			managers.navigation:reserve_cover(cover, data.pos_rsrv_id)
+		if want_cover then
+			local cover = want_cover and managers.navigation:find_cover_in_nav_seg_1(area.nav_segs)
 
-			my_data.moving_to_cover = {
-				cover,
-			}
-			to_pos = cover[1]
+			if cover then
+				managers.navigation:reserve_cover(cover, data.pos_rsrv_id)
+
+				my_data.moving_to_cover = {
+					cover,
+				}
+				to_pos = cover[1]
+			else
+				to_pos = coarse_path[nav_index][2]
+			end
 		else
 			to_pos = coarse_path[nav_index][2]
 		end

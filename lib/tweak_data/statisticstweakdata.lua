@@ -173,6 +173,9 @@ function StatisticsTweakData:statistics_table()
 		"settlement",
 		"tutorial",
 		"ger_bridge_operation",
+		"fury_railway",
+		"silo",
+		"kelly",
 	}
 	local job_list = {
 		"clear_skies",
@@ -225,6 +228,7 @@ function StatisticsTweakData:statistics_table()
 		"concrete",
 		"d343",
 		"mills",
+		"decoy_coin",
 		"betty",
 	}
 	local enemy_list = {

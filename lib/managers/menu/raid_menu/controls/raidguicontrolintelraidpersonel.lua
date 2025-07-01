@@ -76,7 +76,7 @@ function RaidGUIControlIntelRaidPersonel:_layout()
 		h = 384,
 		name = "scrollable_area_notes",
 		scroll_step = 19,
-		scrollbar_width = 3,
+		scrollbar_width = 10,
 		w = 384,
 		x = 608,
 		y = 288,

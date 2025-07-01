@@ -1,296 +1,310 @@
 ComicBookGui = ComicBookGui or class(RaidGuiBase)
-ComicBookGui.PAGE_WIDTH = 992
-ComicBookGui.PAGE_HEIGHT = 768
+ComicBookGui.PAGE_WIDTH = 593
+ComicBookGui.PAGE_HEIGHT = 912
+ComicBookGui.PAGE_COORD_WIDTH = 1024
+ComicBookGui.PAGE_COORD_HEIGHT = 2048
+ComicBookGui.PAGE_ANIMATION_DURATION = 0.11
+ComicBookGui.PAGE_TEXTURE_PREFIX = "ui/comic_book/raid_comic_"
 ComicBookGui.TOTAL_PAGE_COUNT = 14
-ComicBookGui.PAGING_NO_PAGE_COLOR_CIRCLE = tweak_data.gui.colors.raid_dark_grey
-ComicBookGui.PAGING_NO_PAGE_COLOR_ARROW = tweak_data.gui.colors.raid_dark_grey
-ComicBookGui.PAGING_NORMAL_PAGE_COLOR_CIRCLE = tweak_data.gui.colors.raid_grey_effects
-ComicBookGui.PAGING_NORMAL_PAGE_COLOR_ARROW = tweak_data.gui.colors.raid_dirty_white
-ComicBookGui.NORMAL_PAGE_HOVER_COLOR_CIRCLE = tweak_data.gui.colors.raid_red
-ComicBookGui.NORMAL_PAGE_HOVER_COLOR_ARROW = tweak_data.gui.colors.raid_dirty_white
-ComicBookGui.BULLET_PANEL_HEIGHT = 32
-ComicBookGui.BULLET_WIDTH = 16
-ComicBookGui.BULLET_HEIGHT = 16
-ComicBookGui.BULLET_PADDING = 2
-ComicBookGui.ANIMATION_DURATION = 1
-ComicBookGui.PAGE_NAME = "ui/comic_book/raid_comic_"
+ComicBookGui.CIRCLE_NORMAL_COLOR = tweak_data.gui.colors.raid_grey_effects
+ComicBookGui.CIRCLE_HIGHLIGHT_COLOR = tweak_data.gui.colors.raid_red
+ComicBookGui.CIRCLE_DISABLED_COLOR = tweak_data.gui.colors.raid_dark_grey
+ComicBookGui.ARROW_X_OFFSET = ComicBookGui.PAGE_WIDTH + 95
+ComicBookGui.ARROW_NORMAL_COLOR = tweak_data.gui.colors.raid_dirty_white
+ComicBookGui.ARROW_DISABLED_COLOR = tweak_data.gui.colors.raid_dark_grey
+ComicBookGui.BULLET_PANEL_HEIGHT = 36
+ComicBookGui.BULLET_WIDTH = 22
+ComicBookGui.BULLET_HEIGHT = 22
+ComicBookGui.BULLET_PADDING = 1
+ComicBookGui.BULLET_ANIMATION_DURATION = 0.33
+ComicBookGui.BULLET_NORMAL_COLOR = tweak_data.gui.colors.raid_dirty_white
+ComicBookGui.BULLET_HIGHLIGHT_COLOR = tweak_data.gui.colors.progress_orange
+ComicBookGui.SHUFFLE_EVENT_COOLDOWN = 0.065
 
 function ComicBookGui:init(ws, fullscreen_ws, node, component_name)
 	ComicBookGui.super.init(self, ws, fullscreen_ws, node, component_name)
-	self._node.components.raid_menu_header:set_screen_name("menu_comic_book_screen_name")
-	self:_process_comic_book()
+	self._node.components.raid_menu_footer:hide_name_and_gold_panel()
+	self:_preload_pages()
+	self:bind_controller_inputs()
 end
 
 function ComicBookGui:_set_initial_data()
 	self._current_page = 1
+	self._paper_event_expire_t = 0
 	self._bullets_normal = {}
 	self._bullets_active = {}
+	self._zoom_position = Vector3()
+	self._texture_rect = {
+		left = {
+			0,
+			0,
+			self.PAGE_COORD_WIDTH,
+			self.PAGE_COORD_HEIGHT,
+		},
+		right = {
+			self.PAGE_COORD_WIDTH,
+			0,
+			self.PAGE_COORD_WIDTH,
+			self.PAGE_COORD_HEIGHT,
+		},
+	}
 end
 
 function ComicBookGui:close()
 	ComicBookGui.super.close(self)
+	self:_unload_pages()
 end
 
 function ComicBookGui:_layout()
 	self:_disable_dof()
+	self:_layout_comic_pages()
+	self:_layout_nav_arrows()
+	self:_layout_page_bullets()
+end
 
-	self._left_arrow = self._root_panel:panel({
-		visible = true,
-		x = 0,
-		y = 0,
-		h = tweak_data.gui.icons.players_icon_outline.texture_rect[4],
-		w = tweak_data.gui.icons.players_icon_outline.texture_rect[3],
+function ComicBookGui:_layout_comic_pages()
+	self._pages_panel = self._root_panel:panel({
+		h = self.PAGE_HEIGHT,
 	})
-	self._left_arrow_circle = self._left_arrow:image_button({
-		visible = true,
-		x = 0,
-		y = 0,
-		color = ComicBookGui.PAGING_NO_PAGE_COLOR_CIRCLE,
-		highlight_color = ComicBookGui.NORMAL_PAGE_HOVER_COLOR_CIRCLE,
+	self._page_left = self._pages_panel:bitmap({
+		rotation = 0,
+		texture = "ui/comic_book/raid_comic_01",
+		h = self.PAGE_HEIGHT,
+		texture_rect = self._texture_rect.left,
+		w = self.PAGE_WIDTH,
+	})
+
+	self._page_left:set_right(self._pages_panel:w() / 2)
+
+	self._page_right = self._pages_panel:bitmap({
+		rotation = 0,
+		texture = "ui/comic_book/raid_comic_01",
+		h = self.PAGE_HEIGHT,
+		texture_rect = self._texture_rect.right,
+		w = self.PAGE_WIDTH,
+	})
+
+	self._page_right:set_center_x(self._pages_panel:w() / 2)
+
+	self._fake_page = self._pages_panel:bitmap({
+		visible = false,
+		h = self.PAGE_HEIGHT,
+		layer = self._page_left:layer() + 1,
+		w = self.PAGE_WIDTH,
+	})
+end
+
+function ComicBookGui:_layout_nav_arrows()
+	local circle_icon = tweak_data.gui:get_full_gui_data("players_icon_outline")
+	local left_arrow_panel = self._root_panel:panel({
+		h = circle_icon.texture_rect[4],
+		w = circle_icon.texture_rect[3],
+	})
+
+	left_arrow_panel:set_center_x(self._root_panel:w() / 2 - ComicBookGui.ARROW_X_OFFSET)
+	left_arrow_panel:set_center_y(self._root_panel:h() / 2)
+
+	self._left_arrow_circle = left_arrow_panel:image_button({
+		color = ComicBookGui.CIRCLE_NORMAL_COLOR,
+		disabled_color = ComicBookGui.CIRCLE_DISABLED_COLOR,
+		highlight_color = ComicBookGui.CIRCLE_HIGHLIGHT_COLOR,
 		on_click_callback = callback(self, self, "_on_left_arrow_clicked"),
-		texture = tweak_data.gui.icons.players_icon_outline.texture,
-		texture_rect = tweak_data.gui.icons.players_icon_outline.texture_rect,
+		texture = circle_icon.texture,
+		texture_rect = circle_icon.texture_rect,
 	})
-	self._left_arrow_arrow = self._left_arrow:bitmap({
-		visible = true,
-		x = 7,
-		y = 7,
-		color = ComicBookGui.PAGING_NO_PAGE_COLOR_ARROW,
+
+	self._left_arrow_circle:set_enabled(false)
+
+	self._left_arrow_arrow = left_arrow_panel:bitmap({
+		color = ComicBookGui.ARROW_DISABLED_COLOR,
 		texture = tweak_data.gui.icons.ico_page_turn_left.texture,
 		texture_rect = tweak_data.gui.icons.ico_page_turn_left.texture_rect,
 	})
 
-	self._left_arrow:set_center_x(176)
-	self._left_arrow:set_center_y(464)
+	self._left_arrow_arrow:set_center(self._left_arrow_circle:center())
 
-	self._right_arrow = self._root_panel:panel({
-		visible = true,
-		x = 0,
-		y = 0,
-		h = tweak_data.gui.icons.players_icon_outline.texture_rect[4],
-		w = tweak_data.gui.icons.players_icon_outline.texture_rect[3],
+	local right_arrow_panel = self._root_panel:panel({
+		h = circle_icon.texture_rect[4],
+		w = circle_icon.texture_rect[3],
 	})
-	self._right_arrow_circle = self._right_arrow:image_button({
-		visible = true,
-		x = 0,
-		y = 0,
-		color = ComicBookGui.PAGING_NO_PAGE_COLOR_CIRCLE,
-		highlight_color = ComicBookGui.NORMAL_PAGE_HOVER_COLOR_CIRCLE,
+
+	right_arrow_panel:set_center_x(self._root_panel:w() / 2 + ComicBookGui.ARROW_X_OFFSET)
+	right_arrow_panel:set_center_y(self._root_panel:h() / 2)
+
+	self._right_arrow_circle = right_arrow_panel:image_button({
+		color = ComicBookGui.CIRCLE_NORMAL_COLOR,
+		disabled_color = ComicBookGui.CIRCLE_DISABLED_COLOR,
+		highlight_color = ComicBookGui.CIRCLE_HIGHLIGHT_COLOR,
 		on_click_callback = callback(self, self, "_on_right_arrow_clicked"),
-		texture = tweak_data.gui.icons.players_icon_outline.texture,
-		texture_rect = tweak_data.gui.icons.players_icon_outline.texture_rect,
+		texture = circle_icon.texture,
+		texture_rect = circle_icon.texture_rect,
 	})
-	self._right_arrow_arrow = self._right_arrow:bitmap({
-		visible = true,
-		x = 7,
-		y = 7,
-		color = ComicBookGui.PAGING_NO_PAGE_COLOR_ARROW,
+	self._right_arrow_arrow = right_arrow_panel:bitmap({
+		color = ComicBookGui.ARROW_NORMAL_COLOR,
 		texture = tweak_data.gui.icons.ico_page_turn_right.texture,
 		texture_rect = tweak_data.gui.icons.ico_page_turn_right.texture_rect,
 	})
 
-	self._right_arrow:set_center_x(1552)
-	self._right_arrow:set_center_y(464)
+	self._right_arrow_arrow:set_center(self._right_arrow_circle:center())
+end
 
-	self._comic_book_image = self._root_panel:bitmap({
-		texture = "ui/comic_book/raid_comic_001",
-		visible = true,
-		x = 0,
-		y = 96,
-		h = ComicBookGui.PAGE_HEIGHT,
-		w = ComicBookGui.PAGE_WIDTH,
-	})
-
-	self._comic_book_image:set_center_x(self._root_panel:center_x())
-
+function ComicBookGui:_layout_page_bullets()
 	self._bullet_panel = self._root_panel:panel({
-		h = 32,
-		x = 0,
-		w = self._root_panel:w(),
-		y = self._root_panel:h() - ComicBookGui.BULLET_PANEL_HEIGHT * 2,
+		h = ComicBookGui.BULLET_PANEL_HEIGHT,
 	})
-
-	for i = 1, ComicBookGui.TOTAL_PAGE_COUNT do
-		table.insert(self._bullets_normal, self._bullet_panel:bitmap({
-			h = ComicBookGui.BULLET_HEIGHT,
-			texture = tweak_data.gui.icons.bullet_empty.texture,
-			texture_rect = tweak_data.gui.icons.bullet_empty.texture_rect,
-			w = ComicBookGui.BULLET_WIDTH,
-			x = (i - 1) * (ComicBookGui.BULLET_WIDTH + ComicBookGui.BULLET_PADDING),
-			y = ComicBookGui.BULLET_HEIGHT / 2,
-		}))
-		table.insert(self._bullets_active, self._bullet_panel:bitmap({
-			h = 0,
-			w = 0,
-			texture = tweak_data.gui.icons.bullet_active.texture,
-			texture_rect = tweak_data.gui.icons.bullet_active.texture_rect,
-			x = (i - 1) * (ComicBookGui.BULLET_WIDTH + ComicBookGui.BULLET_PADDING),
-			y = ComicBookGui.BULLET_HEIGHT / 2,
-		}))
-	end
 
 	self._bullet_panel:set_w(ComicBookGui.TOTAL_PAGE_COUNT * (ComicBookGui.BULLET_WIDTH + ComicBookGui.BULLET_PADDING))
 	self._bullet_panel:set_center_x(self._root_panel:w() / 2)
-	self._bullets_active[1]:set_w(ComicBookGui.BULLET_WIDTH)
-	self._bullets_active[1]:set_h(ComicBookGui.BULLET_HEIGHT)
-	self:bind_controller_inputs()
+	self._bullet_panel:set_bottom(self._root_panel:h())
+
+	local bullet_empty_icon = tweak_data.gui:get_full_gui_data("bullet_empty")
+	local bullet_active_icon = tweak_data.gui:get_full_gui_data("bullet_active")
+
+	for i = 0, ComicBookGui.TOTAL_PAGE_COUNT - 1 do
+		local bullet_x = i * (ComicBookGui.BULLET_WIDTH + ComicBookGui.BULLET_PADDING)
+		local normal_bullet = self._bullet_panel:image_button({
+			color = ComicBookGui.BULLET_NORMAL_COLOR,
+			h = ComicBookGui.BULLET_HEIGHT,
+			highlight_color = ComicBookGui.BULLET_HIGHLIGHT_COLOR,
+			on_click_callback = callback(self, self, "_on_bullet_clicked", i + 1),
+			texture = bullet_empty_icon.texture,
+			texture_rect = bullet_empty_icon.texture_rect,
+			w = ComicBookGui.BULLET_WIDTH,
+			x = bullet_x,
+		})
+
+		table.insert(self._bullets_normal, normal_bullet)
+
+		local active_bullet = self._bullet_panel:bitmap({
+			h = 0,
+			w = 0,
+			layer = normal_bullet:layer() + 1,
+			texture = bullet_active_icon.texture,
+			texture_rect = bullet_active_icon.texture_rect,
+			x = bullet_x,
+		})
+
+		table.insert(self._bullets_active, active_bullet)
+	end
+
+	self._bullets_active[1]:set_size(ComicBookGui.BULLET_WIDTH, ComicBookGui.BULLET_HEIGHT)
 end
 
-function ComicBookGui:_process_comic_book()
-	managers.menu_component:post_event("paper_shuffle_menu")
+function ComicBookGui:_preload_pages()
+	self._page_textures = {}
 
-	if self._current_page == 1 then
-		self._left_arrow_circle:set_color(ComicBookGui.PAGING_NO_PAGE_COLOR_CIRCLE)
-		self._left_arrow_arrow:set_color(ComicBookGui.PAGING_NO_PAGE_COLOR_ARROW)
-		self._right_arrow_circle:set_color(ComicBookGui.PAGING_NORMAL_PAGE_COLOR_CIRCLE)
-		self._right_arrow_arrow:set_color(ComicBookGui.PAGING_NORMAL_PAGE_COLOR_ARROW)
-		self._comic_book_image:set_w(ComicBookGui.PAGE_WIDTH / 2)
-		self._left_arrow_circle:set_param_value("no_highlight", true)
-		self._right_arrow_circle:set_param_value("no_highlight", false)
-		self:bind_controller_inputs_right_only()
-	elseif self._current_page == ComicBookGui.TOTAL_PAGE_COUNT then
-		self._left_arrow_circle:set_color(ComicBookGui.PAGING_NORMAL_PAGE_COLOR_CIRCLE)
-		self._left_arrow_arrow:set_color(ComicBookGui.PAGING_NORMAL_PAGE_COLOR_ARROW)
-		self._right_arrow_circle:set_color(ComicBookGui.PAGING_NO_PAGE_COLOR_CIRCLE)
-		self._right_arrow_arrow:set_color(ComicBookGui.PAGING_NO_PAGE_COLOR_ARROW)
-		self._comic_book_image:set_w(ComicBookGui.PAGE_WIDTH / 2)
-		self._left_arrow_circle:set_param_value("no_highlight", false)
-		self._right_arrow_circle:set_param_value("no_highlight", true)
-		self:bind_controller_inputs_left_only()
+	for i = 1, ComicBookGui.TOTAL_PAGE_COUNT do
+		local texture = string.format("%s%02d", ComicBookGui.PAGE_TEXTURE_PREFIX, i)
+
+		managers.menu_component:retrieve_texture(texture)
+		table.insert(self._page_textures, texture)
+	end
+end
+
+function ComicBookGui:_unload_pages()
+	for _, texture in ipairs(self._page_textures) do
+		TextureCache:unretrieve(Idstring(texture))
+	end
+end
+
+function ComicBookGui:_process_comic_book(previous_page, current_page)
+	local t = TimerManager:game():time()
+
+	if t >= self._paper_event_expire_t then
+		managers.menu_component:post_event("paper_shuffle_menu")
+
+		self._paper_event_expire_t = t + self.SHUFFLE_EVENT_COOLDOWN
+	end
+
+	local on_first_page = current_page == 1
+	local on_last_page = current_page == self.TOTAL_PAGE_COUNT
+
+	self._left_arrow_circle:set_enabled(not on_first_page)
+	self._right_arrow_circle:set_enabled(not on_last_page)
+	self._left_arrow_arrow:set_color(on_first_page and self.ARROW_DISABLED_COLOR or self.ARROW_NORMAL_COLOR)
+	self._right_arrow_arrow:set_color(on_last_page and self.ARROW_DISABLED_COLOR or self.ARROW_NORMAL_COLOR)
+
+	local previous_texture = self._page_textures[previous_page]
+	local next_texture = self._page_textures[current_page]
+	local next_page = current_page - previous_page > 0
+
+	if next_page then
+		self._page_right:set_image(next_texture, unpack(self._texture_rect.right))
+		self._fake_page:set_image(previous_texture, unpack(self._texture_rect.right))
+		self._fake_page:set_x(self._page_right:x())
 	else
-		self._left_arrow_circle:set_color(ComicBookGui.PAGING_NORMAL_PAGE_COLOR_CIRCLE)
-		self._left_arrow_arrow:set_color(ComicBookGui.PAGING_NORMAL_PAGE_COLOR_ARROW)
-		self._right_arrow_circle:set_color(ComicBookGui.PAGING_NORMAL_PAGE_COLOR_CIRCLE)
-		self._right_arrow_arrow:set_color(ComicBookGui.PAGING_NORMAL_PAGE_COLOR_ARROW)
-		self._comic_book_image:set_w(ComicBookGui.PAGE_WIDTH)
-		self._left_arrow_circle:set_param_value("no_highlight", false)
-		self._right_arrow_circle:set_param_value("no_highlight", false)
-		self:bind_controller_inputs()
+		self._page_left:set_image(next_texture, unpack(self._texture_rect.left))
+		self._fake_page:set_image(previous_texture, unpack(self._texture_rect.left))
+		self._fake_page:set_x(self._page_left:x())
 	end
 
-	self._comic_book_image:set_center_x(self._root_panel:center_x())
-	self._comic_book_image:set_image(ComicBookGui.PAGE_NAME .. string.format("%03d", self._current_page))
+	self._fake_page:set_w(ComicBookGui.PAGE_WIDTH)
+	self:bind_controller_inputs()
+
+	return next_texture
 end
 
-function ComicBookGui:_animate_bullets(params)
-	local current_page = params.current_page
-	local previous_page = params.previous_page
-
-	self._bullets_active[previous_page]:set_w(0)
-	self._bullets_active[previous_page]:set_h(0)
-	self._bullets_active[current_page]:set_w(0)
-	self._bullets_active[current_page]:set_h(0)
-
-	local t = 0
-	local animation_duration = ComicBookGui.ANIMATION_DURATION
-
-	while t < animation_duration do
-		local dt = coroutine.yield()
-
-		t = t + dt
-
-		if t < animation_duration / 2 then
-			local current_active_width = (animation_duration / 2 - t) / (animation_duration / 2) * ComicBookGui.BULLET_WIDTH
-			local current_active_height = (animation_duration / 2 - t) / (animation_duration / 2) * ComicBookGui.BULLET_HEIGHT
-
-			self._bullets_active[previous_page]:set_w(current_active_width)
-			self._bullets_active[previous_page]:set_h(current_active_height)
-			self._bullets_active[previous_page]:set_center_x(self._bullets_normal[previous_page]:center_x())
-			self._bullets_active[previous_page]:set_center_y(self._bullets_normal[previous_page]:center_y())
-		elseif t > animation_duration / 2 then
-			local current_next_width = (t - animation_duration / 2) / (animation_duration / 2) * ComicBookGui.BULLET_WIDTH
-			local current_next_height = (t - animation_duration / 2) / (animation_duration / 2) * ComicBookGui.BULLET_HEIGHT
-
-			self._bullets_active[current_page]:set_w(current_next_width)
-			self._bullets_active[current_page]:set_h(current_next_height)
-			self._bullets_active[current_page]:set_center_x(self._bullets_normal[current_page]:center_x())
-			self._bullets_active[current_page]:set_center_y(self._bullets_normal[current_page]:center_y())
-		end
-	end
-end
-
-function ComicBookGui:_stop_animation(current_page, previous_page)
-	if previous_page then
-		self._bullets_active[previous_page]:set_w(0)
-		self._bullets_active[previous_page]:set_h(0)
-	end
-
-	if current_page then
-		self._bullets_active[current_page]:set_w(0)
-		self._bullets_active[current_page]:set_h(0)
-	end
-
-	self._bullet_panel:stop()
-end
-
-function ComicBookGui:_page_left()
-	if self._current_page == 1 then
+function ComicBookGui:_set_page(page)
+	if self._zoomed then
 		return
 	end
 
-	self:_stop_animation(self._current_page, self._previous_page)
+	page = math.clamp(page, 1, ComicBookGui.TOTAL_PAGE_COUNT)
 
-	self._previous_page = self._current_page
-	self._current_page = self._current_page - 1
-
-	if self._current_page < 1 then
-		self._current_page = 1
-	end
-
-	self:_process_comic_book()
-	self._bullet_panel:animate(callback(self, self, "_animate_bullets", {
-		current_page = self._current_page,
-		previous_page = self._previous_page,
-	}))
-	Application:trace("[ComicBookGui:_page_left] self._current_page ", self._current_page)
-end
-
-function ComicBookGui:_page_right()
-	if self._current_page == ComicBookGui.TOTAL_PAGE_COUNT then
+	if self._current_page == page then
 		return
 	end
 
-	self:_stop_animation(self._current_page, self._previous_page)
-
 	self._previous_page = self._current_page
-	self._current_page = self._current_page + 1
+	self._current_page = page
 
-	if self._current_page > ComicBookGui.TOTAL_PAGE_COUNT then
-		self._current_page = ComicBookGui.TOTAL_PAGE_COUNT
+	if not self._animating_pages then
+		self._pages_panel:stop()
+		self._pages_panel:animate(callback(self, self, "_animate_pages", self._previous_page))
 	end
-
-	self:_process_comic_book()
-	self._bullet_panel:animate(callback(self, self, "_animate_bullets", {
-		current_page = self._current_page,
-		previous_page = self._previous_page,
-	}))
-	Application:trace("[ComicBookGui:_page_right] self._current_page ", self._current_page)
 end
 
 function ComicBookGui:_on_left_arrow_clicked()
-	self:_page_left()
+	self:_set_page(self._current_page - 1)
 end
 
 function ComicBookGui:_on_right_arrow_clicked()
-	self:_page_right()
+	self:_set_page(self._current_page + 1)
+end
+
+function ComicBookGui:_on_bullet_clicked(page)
+	self:_set_page(page)
+end
+
+function ComicBookGui:_on_zoom_in()
+	return
+end
+
+function ComicBookGui:_on_zoom_out()
+	return
+end
+
+function ComicBookGui:move_left()
+	self:_on_left_arrow_clicked()
+
+	return ComicBookGui.super.move_left(self)
+end
+
+function ComicBookGui:move_right()
+	self:_on_right_arrow_clicked()
+
+	return ComicBookGui.super.move_right(self)
+end
+
+function ComicBookGui:update(t, dt)
+	return
 end
 
 function ComicBookGui:bind_controller_inputs()
-	local bindings = {
-		{
-			callback = callback(self, self, "_on_left_arrow_clicked"),
-			key = Idstring("menu_controller_shoulder_left"),
-		},
-		{
-			callback = callback(self, self, "_on_right_arrow_clicked"),
-			key = Idstring("menu_controller_shoulder_right"),
-		},
-	}
+	local bindings = {}
 	local legend = {
 		controller = {
 			"menu_legend_back",
-			"menu_legend_comic_book_left",
-			"menu_legend_comic_book_right",
 		},
 		keyboard = {
 			{
@@ -300,53 +314,13 @@ function ComicBookGui:bind_controller_inputs()
 		},
 	}
 
-	self:set_controller_bindings(bindings, true)
-	self:set_legend(legend)
-end
+	if self._current_page > 1 then
+		table.insert(legend.controller, "menu_legend_comic_book_left")
+	end
 
-function ComicBookGui:bind_controller_inputs_left_only()
-	local bindings = {
-		{
-			callback = callback(self, self, "_on_left_arrow_clicked"),
-			key = Idstring("menu_controller_shoulder_left"),
-		},
-	}
-	local legend = {
-		controller = {
-			"menu_legend_back",
-			"menu_legend_comic_book_left",
-		},
-		keyboard = {
-			{
-				key = "footer_back",
-				callback = callback(self, self, "_on_legend_pc_back", nil),
-			},
-		},
-	}
-
-	self:set_controller_bindings(bindings, true)
-	self:set_legend(legend)
-end
-
-function ComicBookGui:bind_controller_inputs_right_only()
-	local bindings = {
-		{
-			callback = callback(self, self, "_on_right_arrow_clicked"),
-			key = Idstring("menu_controller_shoulder_right"),
-		},
-	}
-	local legend = {
-		controller = {
-			"menu_legend_back",
-			"menu_legend_comic_book_right",
-		},
-		keyboard = {
-			{
-				key = "footer_back",
-				callback = callback(self, self, "_on_legend_pc_back", nil),
-			},
-		},
-	}
+	if self._current_page < ComicBookGui.TOTAL_PAGE_COUNT then
+		table.insert(legend.controller, "menu_legend_comic_book_right")
+	end
 
 	self:set_controller_bindings(bindings, true)
 	self:set_legend(legend)
@@ -354,4 +328,140 @@ end
 
 function ComicBookGui:confirm_pressed()
 	return false
+end
+
+function ComicBookGui:_animate_bullets(params)
+	local previous_page = params.previous_page
+	local current_page = params.current_page
+	local previous_bullet = self._bullets_active[previous_page]
+	local current_bullet = self._bullets_active[current_page]
+	local previous_center_x, previous_center_y = self._bullets_normal[previous_page]:center()
+	local current_center_x, current_center_y = self._bullets_normal[current_page]:center()
+
+	previous_bullet:set_size(ComicBookGui.BULLET_WIDTH, ComicBookGui.BULLET_HEIGHT)
+	previous_bullet:set_center(previous_center_x, previous_center_y)
+	current_bullet:set_size(0, 0)
+	current_bullet:set_center(current_center_x, current_center_y)
+
+	local duration = ComicBookGui.BULLET_ANIMATION_DURATION
+	local t = 0
+
+	while t < duration do
+		local dt = coroutine.yield()
+
+		t = t + dt
+
+		local current_lerp = Easing.quadratic_in_out(t, 0, 1, duration)
+		local current_active_width = ComicBookGui.BULLET_WIDTH * (1 - current_lerp)
+		local current_active_height = ComicBookGui.BULLET_HEIGHT * (1 - current_lerp)
+
+		previous_bullet:set_size(current_active_width, current_active_height)
+		previous_bullet:set_center(previous_center_x, previous_center_y)
+
+		local current_next_width = ComicBookGui.BULLET_WIDTH * current_lerp
+		local current_next_height = ComicBookGui.BULLET_HEIGHT * current_lerp
+
+		current_bullet:set_size(current_next_width, current_next_height)
+		current_bullet:set_center(current_center_x, current_center_y)
+	end
+
+	previous_bullet:set_size(0, 0)
+	previous_bullet:set_center(previous_center_x, previous_center_y)
+	current_bullet:set_size(ComicBookGui.BULLET_WIDTH, ComicBookGui.BULLET_HEIGHT)
+	current_bullet:set_center(current_center_x, current_center_y)
+end
+
+function ComicBookGui:_animate_pages(current_page)
+	self._animating_pages = true
+
+	local center_x = self._pages_panel:w() / 2
+	local closed_offset = ComicBookGui.PAGE_WIDTH / 2
+
+	repeat
+		local previous_page = current_page
+		local wanted_page = self._current_page
+		local difference = math.abs(wanted_page - previous_page)
+		local step = difference > 3 and 2 or 1
+
+		current_page = math.step(current_page, wanted_page, step)
+
+		self._bullet_panel:animate(callback(self, self, "_animate_bullets", {
+			current_page = current_page,
+			previous_page = previous_page,
+		}))
+
+		local next_texture = self:_process_comic_book(previous_page, current_page)
+
+		self._fake_page:show()
+
+		local next_page = previous_page < wanted_page
+		local previous_center = self._page_right:x()
+		local target_center = center_x
+
+		if current_page == 1 then
+			target_center = center_x - closed_offset
+		elseif current_page == ComicBookGui.TOTAL_PAGE_COUNT then
+			target_center = center_x + closed_offset
+		end
+
+		local duration = ComicBookGui.PAGE_ANIMATION_DURATION / difference
+		local t = 0
+
+		while t < duration do
+			local dt = coroutine.yield()
+
+			t = t + dt
+
+			local current_lerp = Easing.quadratic_in(t, 0, 1, duration)
+			local current_w = math.lerp(ComicBookGui.PAGE_WIDTH, 0, current_lerp)
+
+			self._fake_page:set_w(current_w)
+
+			local current_center = math.lerp(previous_center, target_center, current_lerp / 2)
+
+			self._page_left:set_right(current_center)
+			self._page_right:set_left(current_center)
+
+			local current_x = next_page and 0 or current_w
+
+			self._fake_page:set_left(current_center - current_x)
+		end
+
+		local texture_rect = next_page and self._texture_rect.left or self._texture_rect.right
+
+		self._fake_page:set_image(next_texture, unpack(texture_rect))
+		self._fake_page:set_w(0)
+
+		t = 0
+
+		while t < duration do
+			local dt = coroutine.yield()
+
+			t = t + dt
+
+			local current_lerp = Easing.quadratic_out(t, 0, 1, duration)
+			local current_w = math.lerp(0, ComicBookGui.PAGE_WIDTH, current_lerp)
+
+			self._fake_page:set_w(current_w)
+
+			local center_lerp = 0.5 + current_lerp / 2
+			local current_center = math.lerp(previous_center, target_center, center_lerp)
+
+			self._page_left:set_right(current_center)
+			self._page_right:set_left(current_center)
+
+			local current_x = next_page and current_w or 0
+
+			self._fake_page:set_left(current_center - current_x)
+		end
+
+		self._page_left:set_right(target_center)
+		self._page_left:set_image(next_texture, unpack(self._texture_rect.left))
+		self._page_right:set_left(target_center)
+		self._page_right:set_image(next_texture, unpack(self._texture_rect.right))
+	until current_page == self._current_page
+
+	self._fake_page:hide()
+
+	self._animating_pages = false
 end

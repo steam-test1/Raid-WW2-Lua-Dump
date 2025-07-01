@@ -140,28 +140,9 @@ function TankTurretWeapon:update(unit, t, dt)
 		VehicleDrivingExt.cumulative_gravity = 0
 
 		self:_hit_explosion(raycast, raycast.hit_position + Vector3(0, 0, 2))
-
-		if TankTurretWeapon.show_trajectory then
-			local sphere_id = DebugDraw:sphere(Color.green, raycast.hit_position + Vector3(0, 0, 2), 30, 2)
-
-			table.insert(self._test_delete_after, {
-				id = sphere_id,
-				time = t,
-			})
-		end
-
 		self._unit:set_extension_update_enabled(Idstring("weapon"), false)
 	else
 		self._tank_shell.position = new_position
-
-		if TankTurretWeapon.show_trajectory then
-			local sphere_id = DebugDraw:sphere(Color.red, new_position, 10, 2)
-
-			table.insert(self._test_delete_after, {
-				id = sphere_id,
-				time = t,
-			})
-		end
 	end
 end
 
@@ -200,14 +181,13 @@ function TankTurretWeapon:_hit_explosion(raycast, hit_position)
 end
 
 function TankTurretWeapon:_hit_explosion_on_client(position, radius, damage, player_damage, curve_pow)
-	local sound_event = "grenade_explode"
 	local damage_radius = radius or self._tweak_data.turret.damage_radius or 1000
 	local custom_params = {
 		camera_shake_max_mul = 4,
+		sound_event = "grenade_explode",
 		sound_muffle_effect = true,
 		effect = self._effect_name,
 		feedback_range = damage_radius * 2,
-		sound_event = sound_event,
 	}
 
 	managers.explosion:give_local_player_dmg(position, damage_radius, player_damage)

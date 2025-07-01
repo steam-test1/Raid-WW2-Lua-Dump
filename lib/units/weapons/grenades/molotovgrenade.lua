@@ -168,6 +168,7 @@ function MolotovGrenade:detonate(normal)
 	managers.explosion:detect_and_give_dmg({
 		curve_pow = 0.1,
 		damage = 3,
+		ignite_character = true,
 		player_damage = 0,
 		push_units = false,
 		range = 250,

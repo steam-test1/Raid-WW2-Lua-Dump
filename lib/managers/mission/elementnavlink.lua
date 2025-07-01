@@ -131,7 +131,6 @@ function ElementNavLink:_finalize_values(values)
 	_index_or_nil(ElementNavLink._INTERACTION_VOICES, "interaction_voice")
 	_save_boolean("repeatable")
 	_save_boolean("forced")
-	_save_boolean("no_arrest")
 	_save_boolean("scan")
 	_save_boolean("allow_followup_self")
 	_index_or_nil(ElementNavLink._STANCES, "path_stance")
@@ -322,8 +321,6 @@ function ElementNavLink:get_objective(instigator)
 		interaction_voice = interaction_voice,
 		interrupt_dis = interrupt_dis,
 		interrupt_health = interrupt_health,
-		no_arrest = self._values.no_arrest,
-		no_retreat = not interrupt_dis and not interrupt_health,
 		path_style = path_style,
 		pos = pos,
 		pose = pose,

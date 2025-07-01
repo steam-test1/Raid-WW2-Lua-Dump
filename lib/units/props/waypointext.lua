@@ -7,15 +7,27 @@ function WaypointExt:init(unit)
 end
 
 function WaypointExt:add_waypoint(icon_name, pos_z_offset, pos_locator, map_icon, show_on_hud)
-	if self._is_active then
+	self:add_waypoint_external({
+		icon_name = icon_name,
+		map_icon = map_icon,
+		pos_locator = pos_locator,
+		pos_z_offset = pos_z_offset,
+		show_on_hud = show_on_hud,
+	})
+end
+
+function WaypointExt:add_waypoint_external(data)
+	if self:active() then
 		self:remove_waypoint()
 	end
 
-	self._icon_name = icon_name or "pd2_goto"
-	self._pos_z_offset = pos_z_offset and Vector3(0, 0, pos_z_offset) or Vector3(0, 0, 0)
-	self._pos_locator = pos_locator
-	self._map_icon = map_icon
-	self._show_on_hud = show_on_hud
+	Application:debug("[WaypointExt:add_waypoint_external] data", inspect(data))
+
+	self._icon_name = data.icon_name or "map_waypoint_pov_in"
+	self._map_icon = data.map_icon
+	self._pos_z_offset = Vector3(0, 0, data.pos_z_offset or 0)
+	self._pos_locator = data.pos_locator
+	self._show_on_hud = data.show_on_hud
 
 	local rotation = self._pos_locator and self._unit:get_object(Idstring(self._pos_locator)):rotation() or self._unit:rotation()
 	local position = self._pos_locator and self._unit:get_object(Idstring(self._pos_locator)):position() or self._unit:position()
@@ -24,19 +36,23 @@ function WaypointExt:add_waypoint(icon_name, pos_z_offset, pos_locator, map_icon
 	self._icon_pos = position
 	self._icon_rot = rotation
 	self._waypoint_data = {
-		blend_mode = "add",
 		no_sync = false,
-		present_timer = 0,
 		radius = 200,
 		waypoint_origin = "waypoint_extension",
 		waypoint_type = "unit_waypoint",
-		color = Color(1, 1, 1),
+		color = data.color or Color(1, 1, 1),
+		distance = data.distance,
 		icon = self._icon_name,
-		map_icon = map_icon,
+		lifetime = data.lifetime,
+		map_icon = self._map_icon,
 		position = position,
+		present_timer = data.present_timer,
+		range_max = data.range_max,
+		range_min = data.range_min,
 		rotation = rotation,
-		show_on_screen = show_on_hud or show_on_hud == nil and true,
+		show_on_screen = self._show_on_hud or self._show_on_hud == nil and true,
 		unit = self._unit,
+		waypoint_color = data.waypoint_color or Color(1, 1, 1),
 	}
 	self._icon_id = tostring(self._unit:key())
 
@@ -76,7 +92,7 @@ end
 
 function WaypointExt:save(save_data)
 	save_data.Waypoint = {
-		active = self._is_active,
+		active = self:active(),
 		icon_name = self._icon_name,
 		map_icon = self._map_icon,
 		pos_locator = self._pos_locator,
@@ -95,8 +111,18 @@ function WaypointExt:load(save_data)
 			local show_on_hud = save_data.Waypoint.show_on_hud
 
 			self:add_waypoint(icon_name, pos_z_offset, pos_locator, map_icon, show_on_hud)
-		elseif not save_data.Waypoint.active and self._is_active then
+		elseif not save_data.Waypoint.active and self:active() then
 			self:remove_waypoint()
 		end
+	end
+end
+
+function WaypointExt:active()
+	return self._is_active
+end
+
+function WaypointExt:destroy()
+	if self:active() then
+		self:remove_waypoint()
 	end
 end

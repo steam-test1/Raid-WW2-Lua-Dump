@@ -9,7 +9,7 @@ ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD = "card_category_challenge_
 ChallengeCardsTweakData.CARD_CATEGORY_BOOSTER = "card_category_booster"
 ChallengeCardsTweakData.KEY_NAME_FIELD = "key_name"
 ChallengeCardsTweakData.FILTER_ALL_ITEMS = "filter_all_items"
-ChallengeCardsTweakData.CARDS_TEXTURE_PATH = "ui/atlas/raid_atlas_cards"
+ChallengeCardsTweakData.CARDS_TEXTURE_PATH = "ui/challenge_cards"
 ChallengeCardsTweakData.TEXTURE_RECT_PATH_COMMON_THUMB = ""
 ChallengeCardsTweakData.TEXTURE_RECT_PATH_UNCOMMON_THUMB = ""
 ChallengeCardsTweakData.TEXTURE_RECT_PATH_RARE_THUMB = ""
@@ -23,6 +23,14 @@ ChallengeCardsTweakData.STACKABLE_AREA = {
 }
 
 function ChallengeCardsTweakData:init(tweak_data)
+	self.challenge_card_texture_path = "ui/challenge_cards/"
+	self.challenge_card_texture_rect = {
+		0,
+		0,
+		512,
+		512,
+	}
+
 	local function setup_card(id)
 		local card = {}
 
@@ -31,7 +39,7 @@ function ChallengeCardsTweakData:init(tweak_data)
 
 		local gui_id = "cc_" .. id .. "_hud"
 
-		if tweak_data.gui[gui_id] then
+		if DB:has("texture", self.challenge_card_texture_path .. gui_id) then
 			card.texture = gui_id
 		else
 			Application:error("[ChallengeCardsTweakData] card " .. id .. " was generated without a valid texture, using temporary texture.")
@@ -42,13 +50,6 @@ function ChallengeCardsTweakData:init(tweak_data)
 		return card
 	end
 
-	self.challenge_card_texture_path = "ui/challenge_cards/"
-	self.challenge_card_texture_rect = {
-		0,
-		0,
-		512,
-		512,
-	}
 	self.card_back_challenge_cards = {}
 	self.card_back_challenge_cards.texture = self.challenge_card_texture_path .. "cc_back_hud"
 	self.card_back_challenge_cards.texture_rect = self.challenge_card_texture_rect
@@ -95,75 +96,84 @@ function ChallengeCardsTweakData:init(tweak_data)
 		670,
 	}
 	self.rarity_definition = {}
-	self.rarity_definition.loot_rarity_common = {}
-	self.rarity_definition.loot_rarity_common.texture_path = ChallengeCardsTweakData.CARDS_TEXTURE_PATH
-	self.rarity_definition.loot_rarity_common.texture_rect = {
-		2,
-		2,
-		497,
-		670,
+	self.rarity_definition.loot_rarity_common = {
+		color = Color("ececec"),
+		texture = ChallengeCardsTweakData.CARDS_TEXTURE_PATH,
+		texture_gui = tweak_data.gui.icons.loot_rarity_common,
+		texture_gui_dirty = tweak_data.gui.icons.loot_rarity_common_dirty,
+		texture_path_id = LootDropTweakData.RARITY_COMMON,
+		texture_rect = {
+			0,
+			0,
+			512,
+			512,
+		},
 	}
-	self.rarity_definition.loot_rarity_common.texture_path_icon = tweak_data.gui.icons.loot_rarity_common.texture
-	self.rarity_definition.loot_rarity_common.texture_rect_icon = tweak_data.gui.icons.loot_rarity_common.texture_rect
-	self.rarity_definition.loot_rarity_common.color = Color("ececec")
-	self.rarity_definition.loot_rarity_uncommon = {}
-	self.rarity_definition.loot_rarity_uncommon.texture_path = ChallengeCardsTweakData.CARDS_TEXTURE_PATH
-	self.rarity_definition.loot_rarity_uncommon.texture_rect = {
-		2,
-		1346,
-		497,
-		670,
+	self.rarity_definition.loot_rarity_uncommon = {
+		color = Color("71b35b"),
+		texture = ChallengeCardsTweakData.CARDS_TEXTURE_PATH,
+		texture_gui = tweak_data.gui.icons.loot_rarity_uncommon,
+		texture_gui_dirty = tweak_data.gui.icons.loot_rarity_uncommon_dirty,
+		texture_path_id = LootDropTweakData.RARITY_UNCOMMON,
+		texture_rect = {
+			0,
+			0,
+			512,
+			512,
+		},
 	}
-	self.rarity_definition.loot_rarity_uncommon.texture_path_icon = tweak_data.gui.icons.loot_rarity_uncommon.texture
-	self.rarity_definition.loot_rarity_uncommon.texture_rect_icon = tweak_data.gui.icons.loot_rarity_uncommon.texture_rect
-	self.rarity_definition.loot_rarity_uncommon.color = Color("71b35b")
-	self.rarity_definition.loot_rarity_rare = {}
-	self.rarity_definition.loot_rarity_rare.texture_path = ChallengeCardsTweakData.CARDS_TEXTURE_PATH
-	self.rarity_definition.loot_rarity_rare.texture_rect = {
-		501,
-		674,
-		497,
-		670,
+	self.rarity_definition.loot_rarity_rare = {
+		color = Color("718c9e"),
+		texture = ChallengeCardsTweakData.CARDS_TEXTURE_PATH,
+		texture_gui = tweak_data.gui.icons.loot_rarity_rare,
+		texture_gui_dirty = tweak_data.gui.icons.loot_rarity_rare_dirty,
+		texture_path_id = LootDropTweakData.RARITY_RARE,
+		texture_rect = {
+			0,
+			0,
+			512,
+			512,
+		},
 	}
-	self.rarity_definition.loot_rarity_rare.texture_path_icon = tweak_data.gui.icons.loot_rarity_rare.texture
-	self.rarity_definition.loot_rarity_rare.texture_rect_icon = tweak_data.gui.icons.loot_rarity_rare.texture_rect
-	self.rarity_definition.loot_rarity_rare.color = Color("718c9e")
-	self.rarity_definition.loot_rarity_halloween = {}
-	self.rarity_definition.loot_rarity_halloween.texture_path = ChallengeCardsTweakData.CARDS_TEXTURE_PATH
-	self.rarity_definition.loot_rarity_halloween.texture_rect = {
-		501,
-		674,
-		497,
-		670,
+	self.rarity_definition.loot_rarity_halloween = {
+		color = Color("d88023"),
+		texture = ChallengeCardsTweakData.CARDS_TEXTURE_PATH,
+		texture_gui = tweak_data.gui.icons.loot_rarity_halloween,
+		texture_gui_dirty = tweak_data.gui.icons.loot_rarity_halloween_dirty,
+		texture_path_id = LootDropTweakData.RARITY_HALLOWEEN_2017,
+		texture_rect = {
+			0,
+			0,
+			512,
+			512,
+		},
 	}
-	self.rarity_definition.loot_rarity_halloween.texture_path_icon = tweak_data.gui.icons.loot_rarity_halloween.texture
-	self.rarity_definition.loot_rarity_halloween.texture_rect_icon = tweak_data.gui.icons.loot_rarity_halloween.texture_rect
-	self.rarity_definition.loot_rarity_halloween.color = Color("d88023")
-	self.rarity_definition.loot_rarity_none = {}
-	self.rarity_definition.loot_rarity_none.texture_path = ChallengeCardsTweakData.CARDS_TEXTURE_PATH
-	self.rarity_definition.loot_rarity_none.texture_rect = {
-		2,
-		674,
-		497,
-		670,
+	self.rarity_definition.loot_rarity_none = {
+		texture = ChallengeCardsTweakData.CARDS_TEXTURE_PATH,
+		texture_gui = tweak_data.gui.icons.loot_rarity_common,
+		texture_gui_dirty = tweak_data.gui.icons.loot_rarity_common_dirty,
+		texture_rect = {
+			0,
+			0,
+			512,
+			512,
+		},
 	}
-	self.rarity_definition.loot_rarity_none.texture_path_icon = nil
-	self.rarity_definition.loot_rarity_none.texture_rect_icon = nil
-	self.rarity_definition.loot_rarity_none.color = nil
 	self.type_definition = {}
-	self.type_definition.card_type_raid = {}
-	self.type_definition.card_type_raid.texture_path = tweak_data.gui.icons.ico_raid.texture
-	self.type_definition.card_type_raid.texture_rect = tweak_data.gui.icons.ico_raid.texture_rect
-	self.type_definition.card_type_operation = {}
-	self.type_definition.card_type_operation.texture_path = tweak_data.gui.icons.ico_operation.texture
-	self.type_definition.card_type_operation.texture_rect = tweak_data.gui.icons.ico_operation.texture_rect
-	self.type_definition.card_type_none = {}
-	self.type_definition.card_type_none.texture_path = "ui/main_menu/textures/cards_atlas"
-	self.type_definition.card_type_none.texture_rect = {
-		310,
-		664,
-		144,
-		209,
+	self.type_definition.card_type_raid = {
+		texture_gui = tweak_data.gui.icons.card_type_raid,
+		texture_gui_dirty = tweak_data.gui.icons.card_type_raid_dirty,
+		texture_path_id = LootDropTweakData.CARD_TYPE_RAID,
+	}
+	self.type_definition.card_type_operation = {
+		texture_gui = tweak_data.gui.icons.card_type_operation,
+		texture_gui_dirty = tweak_data.gui.icons.card_type_operation_dirty,
+		texture_path_id = LootDropTweakData.CARD_TYPE_OPERATION,
+	}
+	self.type_definition.card_type_none = {
+		texture_gui = tweak_data.gui.icons.card_type_none,
+		texture_gui_dirty = tweak_data.gui.icons.card_type_none_dirty,
+		texture_path_id = LootDropTweakData.CARD_TYPE_NONE,
 	}
 	self.card_glow = {}
 	self.card_glow.texture = "ui/main_menu/textures/cards_atlas"
@@ -188,7 +198,6 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.empty.card_type = ChallengeCardsTweakData.CARD_TYPE_NONE
 	self.cards.empty.texture = ""
 	self.cards.empty.achievement_id = ""
-	self.cards.empty.bonus_xp = nil
 	self.cards.empty.steam_skip = true
 	self.cards.ra_on_the_scrounge = {}
 	self.cards.ra_on_the_scrounge.name = "card_ra_on_the_scrounge_name_id"
@@ -221,7 +230,7 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.ra_on_the_scrounge.card_type = ChallengeCardsTweakData.CARD_TYPE_RAID
 	self.cards.ra_on_the_scrounge.texture = "cc_raid_common_on_the_scrounge_hud"
 	self.cards.ra_on_the_scrounge.achievement_id = ""
-	self.cards.ra_on_the_scrounge.bonus_xp = 300
+	self.cards.ra_on_the_scrounge.bonus_xp = 400
 	self.cards.ra_on_the_scrounge.def_id = 20001
 	self.cards.ra_on_the_scrounge.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
 	self.cards.ra_no_backups = {}
@@ -252,7 +261,7 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.ra_no_backups.card_type = ChallengeCardsTweakData.CARD_TYPE_RAID
 	self.cards.ra_no_backups.texture = "cc_raid_common_no_backups_hud"
 	self.cards.ra_no_backups.achievement_id = ""
-	self.cards.ra_no_backups.bonus_xp = 250
+	self.cards.ra_no_backups.bonus_xp = 350
 	self.cards.ra_no_backups.def_id = 20002
 	self.cards.ra_no_backups.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
 	self.cards.ra_this_is_gonna_hurt = {}
@@ -286,7 +295,7 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.ra_this_is_gonna_hurt.card_type = ChallengeCardsTweakData.CARD_TYPE_RAID
 	self.cards.ra_this_is_gonna_hurt.texture = "cc_raid_common_this_is_gonna_hurt_hud"
 	self.cards.ra_this_is_gonna_hurt.achievement_id = ""
-	self.cards.ra_this_is_gonna_hurt.bonus_xp = 230
+	self.cards.ra_this_is_gonna_hurt.bonus_xp = 300
 	self.cards.ra_this_is_gonna_hurt.def_id = 20003
 	self.cards.ra_this_is_gonna_hurt.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
 	self.cards.ra_not_in_the_face = {}
@@ -317,7 +326,7 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.ra_not_in_the_face.card_type = ChallengeCardsTweakData.CARD_TYPE_RAID
 	self.cards.ra_not_in_the_face.texture = "cc_raid_common_not_in_the_face_hud"
 	self.cards.ra_not_in_the_face.achievement_id = ""
-	self.cards.ra_not_in_the_face.bonus_xp = 250
+	self.cards.ra_not_in_the_face.bonus_xp = 450
 	self.cards.ra_not_in_the_face.def_id = 20004
 	self.cards.ra_not_in_the_face.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
 	self.cards.ra_loaded_for_bear = {}
@@ -351,7 +360,7 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.ra_loaded_for_bear.card_type = ChallengeCardsTweakData.CARD_TYPE_RAID
 	self.cards.ra_loaded_for_bear.texture = "cc_raid_common_loaded_for_bear_hud"
 	self.cards.ra_loaded_for_bear.achievement_id = ""
-	self.cards.ra_loaded_for_bear.bonus_xp = 250
+	self.cards.ra_loaded_for_bear.bonus_xp = 350
 	self.cards.ra_loaded_for_bear.def_id = 20005
 	self.cards.ra_loaded_for_bear.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
 	self.cards.ra_total_carnage = {}
@@ -384,7 +393,7 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.ra_total_carnage.card_type = ChallengeCardsTweakData.CARD_TYPE_RAID
 	self.cards.ra_total_carnage.texture = "cc_raid_uncommon_total_carnage_hud"
 	self.cards.ra_total_carnage.achievement_id = ""
-	self.cards.ra_total_carnage.bonus_xp_multiplier = 1.4
+	self.cards.ra_total_carnage.bonus_xp_multiplier = 1.75
 	self.cards.ra_total_carnage.def_id = 20006
 	self.cards.ra_total_carnage.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
 	self.cards.ra_switch_hitter = {}
@@ -412,7 +421,7 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.ra_switch_hitter.card_type = ChallengeCardsTweakData.CARD_TYPE_RAID
 	self.cards.ra_switch_hitter.texture = "cc_raid_uncommon_switch_hitter_hud"
 	self.cards.ra_switch_hitter.achievement_id = ""
-	self.cards.ra_switch_hitter.bonus_xp_multiplier = 1.45
+	self.cards.ra_switch_hitter.bonus_xp_multiplier = 1.65
 	self.cards.ra_switch_hitter.def_id = 20007
 	self.cards.ra_switch_hitter.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
 	self.cards.ra_gunslingers = {}
@@ -443,7 +452,7 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.ra_gunslingers.card_type = ChallengeCardsTweakData.CARD_TYPE_RAID
 	self.cards.ra_gunslingers.texture = "cc_raid_uncommon_gunslingers_hud"
 	self.cards.ra_gunslingers.achievement_id = ""
-	self.cards.ra_gunslingers.bonus_xp_multiplier = 1.45
+	self.cards.ra_gunslingers.bonus_xp_multiplier = 1.65
 	self.cards.ra_gunslingers.def_id = 20008
 	self.cards.ra_gunslingers.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
 	self.cards.ra_fresh_troops = {}
@@ -477,7 +486,7 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.ra_fresh_troops.card_type = ChallengeCardsTweakData.CARD_TYPE_RAID
 	self.cards.ra_fresh_troops.texture = "cc_raid_uncommon_fresh_troops_hud"
 	self.cards.ra_fresh_troops.achievement_id = ""
-	self.cards.ra_fresh_troops.bonus_xp_multiplier = 1.45
+	self.cards.ra_fresh_troops.bonus_xp_multiplier = 2.25
 	self.cards.ra_fresh_troops.def_id = 20009
 	self.cards.ra_fresh_troops.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
 	self.cards.ra_dont_you_die_on_me = {}
@@ -509,7 +518,7 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.ra_dont_you_die_on_me.card_type = ChallengeCardsTweakData.CARD_TYPE_RAID
 	self.cards.ra_dont_you_die_on_me.texture = "cc_raid_uncommon_dont_you_die_on_me_hud"
 	self.cards.ra_dont_you_die_on_me.achievement_id = ""
-	self.cards.ra_dont_you_die_on_me.bonus_xp_multiplier = 1.5
+	self.cards.ra_dont_you_die_on_me.bonus_xp_multiplier = 1.8
 	self.cards.ra_dont_you_die_on_me.def_id = 20010
 	self.cards.ra_dont_you_die_on_me.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
 	self.cards.ra_no_second_chances = {}
@@ -541,7 +550,7 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.ra_no_second_chances.card_type = ChallengeCardsTweakData.CARD_TYPE_RAID
 	self.cards.ra_no_second_chances.texture = "cc_raid_rare_no_second_chances_hud"
 	self.cards.ra_no_second_chances.achievement_id = ""
-	self.cards.ra_no_second_chances.bonus_xp_multiplier = 1.75
+	self.cards.ra_no_second_chances.bonus_xp_multiplier = 2.2
 	self.cards.ra_no_second_chances.def_id = 20011
 	self.cards.ra_no_second_chances.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
 	self.cards.ra_a_perfect_score = {}
@@ -570,7 +579,7 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.ra_a_perfect_score.card_type = ChallengeCardsTweakData.CARD_TYPE_RAID
 	self.cards.ra_a_perfect_score.texture = "cc_raid_rare_a_perfect_score_hud"
 	self.cards.ra_a_perfect_score.achievement_id = ""
-	self.cards.ra_a_perfect_score.bonus_xp_multiplier = 2
+	self.cards.ra_a_perfect_score.bonus_xp_multiplier = 2.2
 	self.cards.ra_a_perfect_score.def_id = 20012
 	self.cards.ra_a_perfect_score.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
 	self.cards.ra_helmet_shortage = {}
@@ -601,7 +610,7 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.ra_helmet_shortage.card_type = ChallengeCardsTweakData.CARD_TYPE_RAID
 	self.cards.ra_helmet_shortage.texture = "cc_raid_rare_helmet_shortage_hud"
 	self.cards.ra_helmet_shortage.achievement_id = ""
-	self.cards.ra_helmet_shortage.bonus_xp_multiplier = 2
+	self.cards.ra_helmet_shortage.bonus_xp_multiplier = 2.5
 	self.cards.ra_helmet_shortage.def_id = 20013
 	self.cards.ra_helmet_shortage.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
 	self.cards.ra_hemorrhaging = {}
@@ -635,7 +644,7 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.ra_hemorrhaging.card_type = ChallengeCardsTweakData.CARD_TYPE_RAID
 	self.cards.ra_hemorrhaging.texture = "cc_raid_rare_hemorrhaging_hud"
 	self.cards.ra_hemorrhaging.achievement_id = ""
-	self.cards.ra_hemorrhaging.bonus_xp_multiplier = 2.15
+	self.cards.ra_hemorrhaging.bonus_xp_multiplier = 2.5
 	self.cards.ra_hemorrhaging.def_id = 20014
 	self.cards.ra_hemorrhaging.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
 	self.cards.ra_crab_people = {}
@@ -663,7 +672,7 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.ra_crab_people.card_type = ChallengeCardsTweakData.CARD_TYPE_RAID
 	self.cards.ra_crab_people.texture = "cc_raid_rare_crab_people_hud"
 	self.cards.ra_crab_people.achievement_id = ""
-	self.cards.ra_crab_people.bonus_xp_multiplier = 2.3
+	self.cards.ra_crab_people.bonus_xp_multiplier = 3
 	self.cards.ra_crab_people.def_id = 20015
 	self.cards.ra_crab_people.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
 	self.cards.ra_slasher_movie = {}
@@ -704,7 +713,7 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.ra_slasher_movie.card_type = ChallengeCardsTweakData.CARD_TYPE_RAID
 	self.cards.ra_slasher_movie.texture = "cc_special_raid_slasher_movie_hud"
 	self.cards.ra_slasher_movie.achievement_id = ""
-	self.cards.ra_slasher_movie.bonus_xp_multiplier = 2.5
+	self.cards.ra_slasher_movie.bonus_xp_multiplier = 2.75
 	self.cards.ra_slasher_movie.def_id = 20016
 	self.cards.ra_slasher_movie.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
 	self.cards.ra_slasher_movie.card_back = "card_back_halloween_2017"
@@ -739,7 +748,7 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.ra_pumpkin_pie.card_type = ChallengeCardsTweakData.CARD_TYPE_RAID
 	self.cards.ra_pumpkin_pie.texture = "cc_special_raid_pumpkin_pie_hud"
 	self.cards.ra_pumpkin_pie.achievement_id = ""
-	self.cards.ra_pumpkin_pie.bonus_xp_multiplier = 2.3
+	self.cards.ra_pumpkin_pie.bonus_xp_multiplier = 2.5
 	self.cards.ra_pumpkin_pie.def_id = 20017
 	self.cards.ra_pumpkin_pie.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
 	self.cards.ra_pumpkin_pie.card_back = "card_back_halloween_2017"
@@ -809,7 +818,7 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.op_limited_supplies.card_type = ChallengeCardsTweakData.CARD_TYPE_OPERATION
 	self.cards.op_limited_supplies.texture = "cc_operation_common_limited_supplies_hud"
 	self.cards.op_limited_supplies.achievement_id = ""
-	self.cards.op_limited_supplies.bonus_xp = 300
+	self.cards.op_limited_supplies.bonus_xp = 1000
 	self.cards.op_limited_supplies.def_id = 30001
 	self.cards.op_limited_supplies.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
 	self.cards.op_take_the_cannoli = {}
@@ -840,7 +849,7 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.op_take_the_cannoli.card_type = ChallengeCardsTweakData.CARD_TYPE_OPERATION
 	self.cards.op_take_the_cannoli.texture = "cc_operation_common_take_the_canonoli_hud"
 	self.cards.op_take_the_cannoli.achievement_id = ""
-	self.cards.op_take_the_cannoli.bonus_xp = 350
+	self.cards.op_take_the_cannoli.bonus_xp = 1500
 	self.cards.op_take_the_cannoli.def_id = 30002
 	self.cards.op_take_the_cannoli.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
 	self.cards.op_everyones_a_tough_guy = {}
@@ -874,7 +883,7 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.op_everyones_a_tough_guy.card_type = ChallengeCardsTweakData.CARD_TYPE_OPERATION
 	self.cards.op_everyones_a_tough_guy.texture = "cc_operation_common_everyones_a_tough_guy_hud"
 	self.cards.op_everyones_a_tough_guy.achievement_id = ""
-	self.cards.op_everyones_a_tough_guy.bonus_xp = 500
+	self.cards.op_everyones_a_tough_guy.bonus_xp = 1400
 	self.cards.op_everyones_a_tough_guy.def_id = 30003
 	self.cards.op_everyones_a_tough_guy.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
 	self.cards.op_nichtsplosions = {}
@@ -905,7 +914,7 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.op_nichtsplosions.card_type = ChallengeCardsTweakData.CARD_TYPE_OPERATION
 	self.cards.op_nichtsplosions.texture = "cc_operation_common_nichtsplosions_hud"
 	self.cards.op_nichtsplosions.achievement_id = ""
-	self.cards.op_nichtsplosions.bonus_xp = 400
+	self.cards.op_nichtsplosions.bonus_xp = 1200
 	self.cards.op_nichtsplosions.def_id = 30004
 	self.cards.op_nichtsplosions.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
 	self.cards.op_war_weary = {}
@@ -939,7 +948,7 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.op_war_weary.card_type = ChallengeCardsTweakData.CARD_TYPE_OPERATION
 	self.cards.op_war_weary.texture = "cc_operation_common_war_weary_hud"
 	self.cards.op_war_weary.achievement_id = ""
-	self.cards.op_war_weary.bonus_xp = 400
+	self.cards.op_war_weary.bonus_xp = 800
 	self.cards.op_war_weary.def_id = 30005
 	self.cards.op_war_weary.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
 	self.cards.op_special_for_a_reason = {}
@@ -973,7 +982,7 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.op_special_for_a_reason.card_type = ChallengeCardsTweakData.CARD_TYPE_OPERATION
 	self.cards.op_special_for_a_reason.texture = "cc_operation_uncommon_special_for_a_reason_hud"
 	self.cards.op_special_for_a_reason.achievement_id = ""
-	self.cards.op_special_for_a_reason.bonus_xp_multiplier = 1.25
+	self.cards.op_special_for_a_reason.bonus_xp_multiplier = 1.3
 	self.cards.op_special_for_a_reason.def_id = 30006
 	self.cards.op_special_for_a_reason.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
 	self.cards.op_dont_blink = {}
@@ -1012,7 +1021,7 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.op_dont_blink.card_type = ChallengeCardsTweakData.CARD_TYPE_OPERATION
 	self.cards.op_dont_blink.texture = "cc_operation_uncommon_dont_blink_hud"
 	self.cards.op_dont_blink.achievement_id = ""
-	self.cards.op_dont_blink.bonus_xp_multiplier = 1.35
+	self.cards.op_dont_blink.bonus_xp_multiplier = 1.4
 	self.cards.op_dont_blink.def_id = 30007
 	self.cards.op_dont_blink.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
 	self.cards.op_bad_coffee = {}
@@ -1046,7 +1055,7 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.op_bad_coffee.card_type = ChallengeCardsTweakData.CARD_TYPE_OPERATION
 	self.cards.op_bad_coffee.texture = "cc_operation_uncommon_bad_coffee_hud"
 	self.cards.op_bad_coffee.achievement_id = ""
-	self.cards.op_bad_coffee.bonus_xp_multiplier = 1.4
+	self.cards.op_bad_coffee.bonus_xp_multiplier = 1.6
 	self.cards.op_bad_coffee.def_id = 30008
 	self.cards.op_bad_coffee.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
 	self.cards.op_playing_for_keeps = {}
@@ -1080,7 +1089,7 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.op_playing_for_keeps.card_type = ChallengeCardsTweakData.CARD_TYPE_OPERATION
 	self.cards.op_playing_for_keeps.texture = "cc_operation_uncommon_playing_for_keeps_hud"
 	self.cards.op_playing_for_keeps.achievement_id = ""
-	self.cards.op_playing_for_keeps.bonus_xp_multiplier = 1.4
+	self.cards.op_playing_for_keeps.bonus_xp_multiplier = 1.5
 	self.cards.op_playing_for_keeps.def_id = 30009
 	self.cards.op_playing_for_keeps.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
 	self.cards.op_silent_shout = {}
@@ -1298,7 +1307,6 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.ra_b_walk_it_off.card_type = ChallengeCardsTweakData.CARD_TYPE_RAID
 	self.cards.ra_b_walk_it_off.texture = "cc_booster_raid_common_walk_it_of_hud"
 	self.cards.ra_b_walk_it_off.achievement_id = ""
-	self.cards.ra_b_walk_it_off.bonus_xp = 0
 	self.cards.ra_b_walk_it_off.def_id = 40002
 	self.cards.ra_b_walk_it_off.card_category = ChallengeCardsTweakData.CARD_CATEGORY_BOOSTER
 	self.cards.ra_b_in_fine_feather = {}
@@ -1321,7 +1329,6 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.ra_b_in_fine_feather.card_type = ChallengeCardsTweakData.CARD_TYPE_RAID
 	self.cards.ra_b_in_fine_feather.texture = "cc_booster_raid_uncommon_in_fine_feather_hud"
 	self.cards.ra_b_in_fine_feather.achievement_id = ""
-	self.cards.ra_b_in_fine_feather.bonus_xp = 0
 	self.cards.ra_b_in_fine_feather.def_id = 40004
 	self.cards.ra_b_in_fine_feather.card_category = ChallengeCardsTweakData.CARD_CATEGORY_BOOSTER
 	self.cards.ra_b_precision_fire = {}
@@ -1344,7 +1351,6 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.ra_b_precision_fire.card_type = ChallengeCardsTweakData.CARD_TYPE_RAID
 	self.cards.ra_b_precision_fire.texture = "cc_booster_raid_rare_precision_shooting_hud"
 	self.cards.ra_b_precision_fire.achievement_id = ""
-	self.cards.ra_b_precision_fire.bonus_xp = 0
 	self.cards.ra_b_precision_fire.def_id = 40005
 	self.cards.ra_b_precision_fire.card_category = ChallengeCardsTweakData.CARD_CATEGORY_BOOSTER
 	self.cards.op_b_recycle_for_victory = {}
@@ -1367,7 +1373,6 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.op_b_recycle_for_victory.card_type = ChallengeCardsTweakData.CARD_TYPE_OPERATION
 	self.cards.op_b_recycle_for_victory.texture = "cc_booster_operation_common_recycle_for_victory_hud"
 	self.cards.op_b_recycle_for_victory.achievement_id = ""
-	self.cards.op_b_recycle_for_victory.bonus_xp = 0
 	self.cards.op_b_recycle_for_victory.def_id = 50001
 	self.cards.op_b_recycle_for_victory.card_category = ChallengeCardsTweakData.CARD_CATEGORY_BOOSTER
 	self.cards.op_b_will_not_go_quietly = {}
@@ -1390,7 +1395,6 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.op_b_will_not_go_quietly.card_type = ChallengeCardsTweakData.CARD_TYPE_OPERATION
 	self.cards.op_b_will_not_go_quietly.texture = "cc_booster_operation_uncommon_will_not_go_quietly_hud"
 	self.cards.op_b_will_not_go_quietly.achievement_id = ""
-	self.cards.op_b_will_not_go_quietly.bonus_xp = 0
 	self.cards.op_b_will_not_go_quietly.def_id = 50003
 	self.cards.op_b_will_not_go_quietly.card_category = ChallengeCardsTweakData.CARD_CATEGORY_BOOSTER
 	self.cards.op_b_on_top_form = {}
@@ -1413,21 +1417,134 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.op_b_on_top_form.card_type = ChallengeCardsTweakData.CARD_TYPE_OPERATION
 	self.cards.op_b_on_top_form.texture = "cc_booster_operation_rare_on_top_form_hud"
 	self.cards.op_b_on_top_form.achievement_id = ""
-	self.cards.op_b_on_top_form.bonus_xp = 0
 	self.cards.op_b_on_top_form.def_id = 50006
 	self.cards.op_b_on_top_form.card_category = ChallengeCardsTweakData.CARD_CATEGORY_BOOSTER
-
-	local card_bonus_xp_multi = 1.5
-	local card_bonus_xp_multiplier_multi = 1.2
-
-	for _, card_data in pairs(self.cards) do
-		if card_data.bonus_xp then
-			card_data.bonus_xp = math.round(card_data.bonus_xp * card_bonus_xp_multi)
-		elseif card_data.bonus_xp_multiplier then
-			card_data.bonus_xp_multiplier = math.round(card_data.bonus_xp_multiplier * card_bonus_xp_multiplier_multi)
-		end
-	end
-
+	self.cards.ra_dooms_day = setup_card("ra_dooms_day")
+	self.cards.ra_dooms_day.effects = {
+		{
+			value = 1.5,
+			name = BuffEffectManager.EFFECT_PLAYER_MOVEMENT_SPEED,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+		},
+		{
+			value = true,
+			name = BuffEffectManager.EFFECT_PLAYER_DOOMS_DAY,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+		},
+		{
+			value = true,
+			name = BuffEffectManager.EFFECT_PLAYER_CANNOT_ADS,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+		},
+		{
+			value = true,
+			name = BuffEffectManager.EFFECT_PLAYER_CANNOT_SPRINT,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+		},
+	}
+	self.cards.ra_dooms_day.positive_description = {
+		desc_id = BuffEffectManager.EFFECT_PLAYER_MOVEMENT_SPEED,
+		desc_params = {
+			EFFECT_VALUE_1 = "50%",
+		},
+	}
+	self.cards.ra_dooms_day.negative_description = {
+		desc_id = BuffEffectManager.EFFECT_PLAYER_DOOMS_DAY,
+	}
+	self.cards.ra_dooms_day.rarity = LootDropTweakData.RARITY_RARE
+	self.cards.ra_dooms_day.card_type = ChallengeCardsTweakData.CARD_TYPE_RAID
+	self.cards.ra_dooms_day.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
+	self.cards.ra_dooms_day.bonus_xp = 400
+	self.cards.ra_dooms_day.def_id = 400
+	self.cards.ra_roulette = setup_card("ra_roulette")
+	self.cards.ra_roulette.effects = {
+		{
+			value = true,
+			name = BuffEffectManager.EFFECT_PLAYER_ROULETTE,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+		},
+	}
+	self.cards.ra_roulette.negative_description = {
+		desc_id = BuffEffectManager.EFFECT_PLAYER_ROULETTE,
+	}
+	self.cards.ra_roulette.rarity = LootDropTweakData.RARITY_RARE
+	self.cards.ra_roulette.card_type = ChallengeCardsTweakData.CARD_TYPE_RAID
+	self.cards.ra_roulette.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
+	self.cards.ra_roulette.achievement_id = ""
+	self.cards.ra_roulette.bonus_xp_multiplier = 1.5
+	self.cards.ra_roulette.def_id = 401
+	self.cards.ra_holiday_rush = setup_card("ra_holiday_rush")
+	self.cards.ra_holiday_rush.effects = {
+		{
+			value = true,
+			name = BuffEffectManager.EFFECT_PLAYER_CARRY_INVERT_SPEED,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+		},
+		{
+			value = 4,
+			name = BuffEffectManager.EFFECT_ENEMIES_MELEE_DAMAGE_INCREASE,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+		},
+	}
+	self.cards.ra_holiday_rush.positive_description = {
+		desc_id = BuffEffectManager.EFFECT_PLAYER_CARRY_INVERT_SPEED,
+	}
+	self.cards.ra_holiday_rush.negative_description = {
+		desc_id = BuffEffectManager.EFFECT_ENEMIES_MELEE_DAMAGE_INCREASE,
+		desc_params = {
+			EFFECT_VALUE_1 = "400%",
+		},
+	}
+	self.cards.ra_holiday_rush.rarity = LootDropTweakData.RARITY_UNCOMMON
+	self.cards.ra_holiday_rush.card_type = ChallengeCardsTweakData.CARD_TYPE_RAID
+	self.cards.ra_holiday_rush.achievement_id = ""
+	self.cards.ra_holiday_rush.def_id = 402
+	self.cards.ra_holiday_rush.card_category = ChallengeCardsTweakData.CARD_CATEGORY_BOOSTER
+	self.cards.free_crowbar = setup_card("free_crowbar")
+	self.cards.free_crowbar.effects = {
+		{
+			value = true,
+			name = BuffEffectManager.EFFECT_ALL_CHESTS_ARE_TIER3,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+		},
+		{
+			value = true,
+			name = BuffEffectManager.EFFECT_PLAYER_EQUIP_CROWBAR,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+		},
+	}
+	self.cards.free_crowbar.positive_description = {
+		desc_id = BuffEffectManager.EFFECT_ALL_CHESTS_ARE_TIER3,
+	}
+	self.cards.free_crowbar.rarity = LootDropTweakData.RARITY_COMMON
+	self.cards.free_crowbar.card_type = ChallengeCardsTweakData.CARD_TYPE_RAID
+	self.cards.free_crowbar.achievement_id = ""
+	self.cards.free_crowbar.def_id = 403
+	self.cards.free_crowbar.card_category = ChallengeCardsTweakData.CARD_CATEGORY_BOOSTER
+	self.cards.lucky_day = setup_card("lucky_day")
+	self.cards.lucky_day.effects = {
+		{
+			value = 1.1,
+			name = BuffEffectManager.EFFECT_PLAYER_CRITICAL_HIT_CHANCE,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+		},
+		{
+			value = 1.1,
+			name = BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_REWARD_INCREASE,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+		},
+	}
+	self.cards.lucky_day.positive_description = {
+		desc_id = BuffEffectManager.EFFECT_LUCKY_DAY,
+		desc_params = {
+			EFFECT_VALUE_1 = "10%",
+		},
+	}
+	self.cards.lucky_day.rarity = LootDropTweakData.RARITY_RARE
+	self.cards.lucky_day.card_type = ChallengeCardsTweakData.CARD_TYPE_RAID
+	self.cards.lucky_day.achievement_id = ""
+	self.cards.lucky_day.def_id = 404
+	self.cards.lucky_day.card_category = ChallengeCardsTweakData.CARD_CATEGORY_BOOSTER
 	self.cards_index = {
 		"ra_on_the_scrounge",
 		"ra_no_backups",
@@ -1468,6 +1585,11 @@ function ChallengeCardsTweakData:init(tweak_data)
 		"ra_slasher_movie",
 		"ra_pumpkin_pie",
 		"ra_season_of_resurrection",
+		"ra_holiday_rush",
+		"ra_dooms_day",
+		"ra_roulette",
+		"free_crowbar",
+		"lucky_day",
 	}
 	self.playtimegenerator = {}
 	self.bundledefinitions = {}
@@ -1499,116 +1621,4 @@ function ChallengeCardsTweakData:get_card_by_key_name(card_key_name)
 	end
 
 	return result
-end
-
-function ChallengeCardsTweakData:get_card_by_def_id(def_id)
-	def_id = tonumber(def_id)
-
-	for k, v in pairs(self.cards) do
-		if v ~= nil and tonumber(v.def_id) == def_id then
-			return v
-		end
-	end
-end
-
-function ChallengeCardsTweakData:get_cards_by_rarity(rarity)
-	local cards = {}
-
-	for key, card in pairs(self.cards) do
-		if card.rarity == rarity then
-			table.insert(cards, key)
-		end
-	end
-
-	return cards
-end
-
-function ChallengeCardsTweakData:update_card_data_from_json(jsonData)
-	Application:trace("[ChallengeCardsTweakData.update_card_data_from_json]")
-
-	local jsonDataItems = jsonData
-
-	if jsonData.items ~= nil then
-		jsonDataItems = jsonData.items
-	end
-
-	Application:trace(inspect(jsonDataItems))
-
-	if jsonDataItems ~= nil then
-		for i, val in pairs(jsonDataItems) do
-			if val.type ~= nil and val.item_name ~= nil then
-				if val.type == "item" then
-					local key = val.item_name
-
-					if self.cards[key] == nil then
-						self.cards[key] = {}
-
-						table.insert(self.cards_index, key)
-					end
-
-					for k, v in pairs(val) do
-						if self.cards[key][k] ~= v then
-							Application:trace(tostring(key) .. "." .. tostring(k) .. " is now >> " .. tostring(v))
-
-							self.cards[key][k] = v
-						end
-					end
-
-					self.cards[key][ChallengeCardsTweakData.KEY_NAME_FIELD] = key
-
-					if self.cards[key].card_type == nil then
-						self.cards[key].card_type = ChallengeCardsTweakData.CARD_TYPE_RAID
-					end
-
-					if self.cards[key].rarity == nil then
-						self.cards[key].rarity = LootDropTweakData.RARITY_COMMON
-					end
-
-					if self.cards[key].bonus_xp == nil then
-						self.cards[key].bonus_xp = 0
-					end
-
-					if self.cards[key].entry == nil then
-						self.cards[key].entry = key
-					end
-				elseif val.type == "playtimegenerator" then
-					for k, v in pairs(val) do
-						if self.playtimegenerator[k] ~= v then
-							Application:trace("playtimegenerator, " .. tostring(val.item_name) .. "." .. tostring(k) .. " is now >> " .. tostring(v))
-
-							self.playtimegenerator[k] = v
-						end
-					end
-				elseif val.type == "bundle" then
-					local key = val.itemdefid
-
-					if self.bundledefinitions[key] == nil then
-						self.bundledefinitions[key] = {}
-					end
-
-					for k, v in pairs(val) do
-						if self.bundledefinitions[key][k] ~= v then
-							Application:trace("bundledefinitions, " .. tostring(key) .. "." .. tostring(k) .. " is now >> " .. tostring(v))
-
-							self.bundledefinitions[key][k] = v
-						end
-					end
-				elseif val.type == "generator" then
-					local key = val.itemdefid
-
-					if self.generators[key] == nil then
-						self.generators[key] = {}
-					end
-
-					for k, v in pairs(val) do
-						if self.generators[key][k] ~= v then
-							Application:trace("generators, " .. tostring(key) .. "." .. tostring(k) .. " is now >> " .. tostring(v))
-
-							self.generators[key][k] = v
-						end
-					end
-				end
-			end
-		end
-	end
 end

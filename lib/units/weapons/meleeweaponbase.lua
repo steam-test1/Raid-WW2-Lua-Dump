@@ -80,7 +80,7 @@ function MeleeWeaponBase:ammo_info()
 end
 
 function MeleeWeaponBase:add_ammo(ratio, add_amount_override, add_amount_multiplier)
-	return false, 0
+	return false, 0, 0
 end
 
 function MeleeWeaponBase:add_ammo_from_bag(available)
@@ -125,6 +125,14 @@ end
 
 function MeleeWeaponBase:weapon_tweak_data()
 	return tweak_data.blackmarket.melee_weapons[self.name_id]
+end
+
+function MeleeWeaponBase:category()
+	return WeaponTweakData.WEAPON_CATEGORY_MELEE
+end
+
+function MeleeWeaponBase:is_category(category)
+	return self:category() == category
 end
 
 function MeleeWeaponBase:weapon_hold()

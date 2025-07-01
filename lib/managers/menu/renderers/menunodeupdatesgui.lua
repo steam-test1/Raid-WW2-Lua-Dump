@@ -226,7 +226,7 @@ function MenuNodeUpdatesGui:setup()
 		w = panel:w() / 2,
 	})
 
-	if not _G.IS_PC then
+	if not IS_PC then
 		latest_update_panel:set_w(latest_update_panel:w() * 0.8)
 		latest_update_panel:set_h(latest_update_panel:w() * 0.5)
 	end
@@ -254,8 +254,8 @@ function MenuNodeUpdatesGui:setup()
 	self._select_x = 1
 
 	local w = panel:w()
-	local padding = _G.IS_PC and 30 or 5
-	local dech_panel_h = _G.IS_PC and latest_update_panel:h() or panel:h() / 2
+	local padding = IS_PC and 30 or 5
+	local dech_panel_h = IS_PC and latest_update_panel:h() or panel:h() / 2
 	local latest_desc_panel = panel:panel({
 		name = "latest_description",
 		h = dech_panel_h,
@@ -722,7 +722,7 @@ function MenuNodeUpdatesGui:open(content_update)
 
 	local play_sound = true
 
-	if _G.IS_PC then
+	if IS_PC then
 		if not MenuCallbackHandler:is_overlay_enabled() then
 			managers.menu:show_enable_steam_overlay()
 
@@ -742,12 +742,6 @@ function MenuNodeUpdatesGui:open(content_update)
 		else
 			play_sound = false
 		end
-	elseif _G.IS_PS3 then
-		if true or not managers.dlc:is_dlc_unlocked(content_update.id) then
-			managers.dlc:buy_product(content_update.id)
-		else
-			play_sound = false
-		end
 	else
 		play_sound = false
 	end
@@ -758,7 +752,7 @@ function MenuNodeUpdatesGui:open(content_update)
 end
 
 function MenuNodeUpdatesGui:open_url(url)
-	if _G.IS_PC then
+	if IS_PC then
 		Steam:overlay_activate("url", url)
 		managers.menu_component:post_event("menu_enter")
 	end

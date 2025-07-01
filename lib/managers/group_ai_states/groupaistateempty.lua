@@ -88,10 +88,6 @@ function GroupAIStateEmpty:set_mission_fwd_vector(direction)
 	return
 end
 
-function GroupAIStateEmpty:set_drama_build_period(period)
-	return
-end
-
 function GroupAIStateEmpty:add_special_objective(id, objective_data)
 	return
 end

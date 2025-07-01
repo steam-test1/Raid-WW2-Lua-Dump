@@ -54,7 +54,7 @@ function IntelGui:_layout_list()
 		h = 752,
 		name = "category_items_list_scrollable_area",
 		scroll_step = 19,
-		scrollbar_width = 3,
+		scrollbar_width = 10,
 		w = 384,
 		x = 0,
 		y = 192,

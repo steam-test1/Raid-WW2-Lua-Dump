@@ -166,7 +166,7 @@ function HUDTabScreen:_create_card_info()
 	local empty_card_image_params = {
 		name = "empty_card_image",
 		x = 0,
-		h = tweak_data.gui:icon_h(HUDTabScreen.NO_CARD_ICON) / tweak_data.gui:icon_w(HUDTabScreen.NO_CARD_ICON) * HUDTabScreen.CARD_W,
+		h = HUDTabScreen.CARD_H,
 		texture = empty_slot_texture.texture,
 		texture_rect = empty_slot_texture.texture_rect,
 		w = HUDTabScreen.CARD_W,
@@ -220,7 +220,7 @@ function HUDTabScreen:_create_card_info()
 		name = "active_card_details",
 		x = 0,
 		card_image_params = {
-			h = tweak_data.gui:icon_h(HUDTabScreen.NO_CARD_ICON) / tweak_data.gui:icon_w(HUDTabScreen.NO_CARD_ICON) * HUDTabScreen.CARD_W,
+			h = HUDTabScreen.CARD_H,
 			w = HUDTabScreen.CARD_W,
 		},
 		h = self._active_card_panel:h() - HUDTabScreen.CARD_Y,

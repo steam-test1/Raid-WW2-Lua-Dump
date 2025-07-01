@@ -158,7 +158,6 @@ function ElementSpecialObjective:_finalize_values(values)
 	_index_or_nil(ElementSpecialObjective._INTERACTION_VOICES, "interaction_voice")
 	_save_boolean("repeatable")
 	_save_boolean("forced")
-	_save_boolean("no_arrest")
 	_save_boolean("scan")
 	_save_boolean("allow_followup_self")
 	_save_boolean("is_navigation_link")
@@ -427,8 +426,6 @@ function ElementSpecialObjective:get_objective(instigator)
 		interaction_voice = interaction_voice,
 		interrupt_dis = interrupt_dis,
 		interrupt_health = interrupt_health,
-		no_arrest = self._values.no_arrest,
-		no_retreat = not interrupt_dis and not interrupt_health,
 		path_style = path_style,
 		pos = pos,
 		pose = pose,
@@ -496,14 +493,6 @@ function ElementSpecialObjective:get_objective(instigator)
 		elseif objective_type ~= "phalanx" then
 			objective.type = objective_type
 			objective.nav_seg = nav_seg or pos and last_pos and managers.navigation:get_nav_seg_from_pos(last_pos)
-
-			if objective_type == "sniper" then
-				objective.no_retreat = true
-			end
-
-			if objective_type == "spotter" then
-				objective.no_retreat = true
-			end
 
 			if objective_type == "security" then
 				objective.rubberband_rotation = true

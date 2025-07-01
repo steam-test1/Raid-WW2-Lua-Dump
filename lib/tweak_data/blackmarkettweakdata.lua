@@ -7,8 +7,6 @@ require("lib/tweak_data/blackmarket/MasksTweakData")
 require("lib/tweak_data/blackmarket/MeleeWeaponsTweakData")
 require("lib/tweak_data/blackmarket/WeaponSkinsTweakData")
 
-local is_nextgen_console = _G.IS_PS4 or _G.IS_XB1
-
 function BlackMarketTweakData:init(tweak_data)
 	self:_init_colors()
 	self:_init_materials()
@@ -19,7 +17,7 @@ function BlackMarketTweakData:init(tweak_data)
 	self:_init_xp()
 	self:_init_armors()
 	self:_init_deployables(tweak_data)
-	self:_init_melee_weapons()
+	self:_init_melee_weapons(tweak_data)
 	self:_init_weapon_skins()
 	self:_init_weapon_mods(tweak_data)
 end
@@ -44,10 +42,6 @@ function BlackMarketTweakData:_init_weapon_mods(tweak_data)
 	self.weapon_mods = {}
 
 	for id, data in pairs(tweak_data.weapon.factory.parts) do
-		if is_nextgen_console then
-			data.is_a_unlockable = nil
-		end
-
 		self.weapon_mods[id] = {
 			desc_id = data.desc_id,
 			dlc = data.dlc,
@@ -91,12 +85,10 @@ function BlackMarketTweakData:_init_characters()
 	self.characters.russian.sequence = "russian"
 	self.characters.russian.name_id = "bm_character_russian"
 	self.characters.ai_german = {}
-	self.characters.ai_german.fps_unit = "units/temp/characters/fps_mover_ger/fps_mover"
 	self.characters.ai_german.npc_unit = "units/vanilla/characters/players/german/npc_criminal_ger"
 	self.characters.ai_german.sequence = "var_mtr_german"
 	self.characters.ai_german.name_id = "bm_character_ai_german"
 	self.characters.ai_british = {}
-	self.characters.ai_british.fps_unit = "units/temp/characters/fps_mover_uk/fps_mover"
 	self.characters.ai_british.npc_unit = "units/vanilla/characters/players/british/npc_criminal_uk"
 	self.characters.ai_british.sequence = "var_mtr_brit"
 	self.characters.ai_british.name_id = "bm_character_ai_brit"
@@ -105,7 +97,6 @@ function BlackMarketTweakData:_init_characters()
 	self.characters.ai_american.sequence = "var_mtr_amer"
 	self.characters.ai_american.name_id = "bm_character_ai_amer"
 	self.characters.ai_russian = {}
-	self.characters.ai_russian.fps_unit = "units/temp/characters/fps_mover_ru/fps_mover"
 	self.characters.ai_russian.npc_unit = "units/vanilla/characters/players/soviet/npc_criminal_ru"
 	self.characters.ai_russian.sequence = "var_mtr_rus"
 	self.characters.ai_russian.name_id = "bm_character_ai_rus"
@@ -205,7 +196,7 @@ function BlackMarketTweakData:_init_cash()
 	self.cash.cash_preorder.value_id = "cash_preorder"
 	self.cash.cash_preorder.multiplier = 1.2
 
-	if _G.IS_XB1 then
+	if IS_XB1 then
 		self.cash.xone_bonus = {}
 		self.cash.xone_bonus.name_id = "bm_csh_cash_xone"
 		self.cash.xone_bonus.value_id = "xone_bonus"
@@ -346,12 +337,8 @@ function BlackMarketTweakData:_init_deployables(tweak_data)
 	self.deployables.ammo_bag.name_id = "bm_equipment_ammo_bag"
 	self.deployables.trip_mine = {}
 	self.deployables.trip_mine.name_id = "bm_equipment_trip_mine"
-	self.deployables.armor_kit = {}
-	self.deployables.armor_kit.name_id = "bm_equipment_armor_kit"
 	self.deployables.first_aid_kit = {}
 	self.deployables.first_aid_kit.name_id = "bm_equipment_first_aid_kit"
-	self.deployables.bodybags_bag = {}
-	self.deployables.bodybags_bag.name_id = "bm_equipment_bodybags_bag"
 
 	self:_add_desc_from_name_macro(self.deployables)
 end

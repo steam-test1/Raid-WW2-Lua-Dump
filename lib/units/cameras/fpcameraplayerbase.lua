@@ -83,9 +83,6 @@ function FPCameraPlayerBase:init(unit)
 	}
 
 	self:check_flashlight_enabled()
-	self:load_fps_mask_units()
-
-	self._use_anim_allowed = true
 end
 
 function FPCameraPlayerBase:set_parent_unit(parent_unit)
@@ -156,7 +153,7 @@ function FPCameraPlayerBase:check_flashlight_enabled()
 
 		if not self._light_effect then
 			self._light_effect = World:effect_manager():spawn({
-				effect = Idstring("effects/vanilla/weapons/flashlight/fp_flashlight"),
+				effect = tweak_data.common_effects.fps_flashlight,
 				position = self._unit:position(),
 				rotation = Rotation(),
 			})
@@ -206,10 +203,11 @@ function FPCameraPlayerBase:_update_stance(t, dt)
 			self._shoulder_stance.transition = nil
 		else
 			local progress = elapsed_t / trans_data.duration
-			local progress_smooth = math.bezier(bezier_values, progress)
+			local progress_smooth = Easing.quadratic_out(elapsed_t, 0, 1, trans_data.duration)
 
 			mvector3.lerp(self._shoulder_stance.translation, trans_data.start_translation, trans_data.end_translation, progress_smooth)
 
+			progress_smooth = Easing.cubic_in_out(elapsed_t, 0, 1, trans_data.duration)
 			self._shoulder_stance.rotation = trans_data.start_rotation:slerp(trans_data.end_rotation, progress_smooth)
 		end
 	end
@@ -224,7 +222,7 @@ function FPCameraPlayerBase:_update_stance(t, dt)
 			self._head_stance.transition = nil
 		else
 			local progress = elapsed_t / trans_data.duration
-			local progress_smooth = math.bezier(bezier_values, progress)
+			local progress_smooth = Easing.quadratic_in_out(elapsed_t, 0, 1, trans_data.duration)
 
 			mvector3.lerp(self._head_stance.translation, trans_data.start_translation, trans_data.end_translation, progress_smooth)
 		end
@@ -421,6 +419,7 @@ function FPCameraPlayerBase:_update_rot(axis, unscaled_axis)
 		end
 	end
 
+	multiplier = multiplier * self:_get_sensitivity_multiplier()
 	stick_input_x = stick_input_x * self:_get_aim_assist_look_multiplier() * multiplier
 	stick_input_y = stick_input_y * self:_get_aim_assist_look_multiplier() * multiplier
 	self._stick_input_length = mvector3.length(Vector3(stick_input_x, stick_input_y, 0))
@@ -430,6 +429,9 @@ function FPCameraPlayerBase:_update_rot(axis, unscaled_axis)
 		local camera_speed_limit = current_State.get_camera_speed_limit and current_State:get_camera_speed_limit()
 
 		if camera_speed_limit then
+			local speed_multiplier = managers.player:upgrade_value("player", "gunner_turret_camera_speed_multiplier", 1)
+
+			camera_speed_limit = camera_speed_limit * speed_multiplier
 			stick_input_x = math.clamp(stick_input_x, -camera_speed_limit, camera_speed_limit)
 			stick_input_y = math.clamp(stick_input_y, -camera_speed_limit, camera_speed_limit)
 		end
@@ -594,6 +596,12 @@ function FPCameraPlayerBase:_update_rot(axis, unscaled_axis)
 
 	if player_state == "driving" then
 		self:_set_camera_position_in_vehicle()
+	elseif player_state == "ladder" then
+		local shoulder_rot = mrot4
+
+		mrotation.set_zero(shoulder_rot)
+		mrotation.multiply(shoulder_rot, self._shoulder_stance.rotation)
+		self:set_rotation(shoulder_rot)
 	elseif player_state == "freefall" or player_state == "parachuting" then
 		mrotation.set_zero(cam_offset_rot)
 		mrotation.multiply(cam_offset_rot, self._parent_unit:movement().fall_rotation)
@@ -1082,6 +1090,14 @@ function FPCameraPlayerBase:_get_look_speed(stick_input, stick_input_multiplier,
 	}, self._camera_properties.look_speed_transition_timer)
 end
 
+function FPCameraPlayerBase:set_sensitivity_multiplier(value)
+	self._camera_sensitivity_multiplier = value
+end
+
+function FPCameraPlayerBase:_get_sensitivity_multiplier()
+	return self._camera_sensitivity_multiplier or 1
+end
+
 function FPCameraPlayerBase:_calculate_soft_velocity_overshot(dt)
 	local stick_input = self._input.look
 	local vel_overshot = self._vel_overshot
@@ -1129,14 +1145,18 @@ function FPCameraPlayerBase:_calculate_soft_velocity_overshot(dt)
 	local mul = self._tweak_data.uses_keyboard and 0.002 / dt or 0.4
 
 	if not managers.player:is_view_disabled() then
+		local camera_pitch = self._camera_properties and self._camera_properties.pitch or 0.5
+
 		if stick_input.y >= 0 then
 			local stick_input_y = math.pow(math.abs(math.clamp(mul * stick_input.y, 0, 1)), 1.5) * math.sign(stick_input.y)
+			local inside_bounds = camera_pitch + stick_input_y < FPCameraPlayerBase.MAX_PITCH
 
-			input_pitch = stick_input_y * vel_overshot.pitch_pos
+			input_pitch = inside_bounds and stick_input_y * vel_overshot.pitch_pos or 0
 		else
 			local stick_input_y = math.pow(math.abs(math.clamp(mul * stick_input.y, -1, 0)), 1.5)
+			local inside_bounds = camera_pitch - stick_input_y > -FPCameraPlayerBase.MAX_PITCH
 
-			input_pitch = stick_input_y * vel_overshot.pitch_neg
+			input_pitch = inside_bounds and stick_input_y * vel_overshot.pitch_neg or 0
 		end
 	else
 		input_pitch = 0
@@ -1194,18 +1214,10 @@ function FPCameraPlayerBase:play_redirect(redirect_name, speed, offset_time)
 
 	self._anim_empty_state_wanted = false
 
-	if not self._use_anim_allowed and redirect_name == Idstring("use") then
-		return
-	end
-
 	local result = self._unit:play_redirect(redirect_name, offset_time)
 
 	if result == self.IDS_NOSTRING then
 		return false
-	end
-
-	if redirect_name == Idstring("use") then
-		self._use_anim_allowed = false
 	end
 
 	if speed then
@@ -1550,18 +1562,6 @@ function FPCameraPlayerBase:anim_clbk_empty_full_blend()
 	self:set_anims_enabled(false)
 end
 
-function FPCameraPlayerBase:anim_clbk_spawn_handcuffs()
-	return
-end
-
-function FPCameraPlayerBase:anim_clbk_unspawn_handcuffs()
-	return
-end
-
-function FPCameraPlayerBase:anim_clbk_use_exit()
-	self._use_anim_allowed = true
-end
-
 function FPCameraPlayerBase:get_weapon_offsets()
 	local weapon = self._parent_unit:inventory():equipped_unit()
 	local object = weapon:get_object(Idstring("a_sight"))
@@ -1621,14 +1621,22 @@ function FPCameraPlayerBase:anims_enabled()
 end
 
 function FPCameraPlayerBase:anim_clbk_hide_pin(unit)
-	if alive(self._parent_unit) and alive(self._parent_unit:inventory():equipped_unit()) and self._parent_unit:inventory():equipped_unit():damage() and self._parent_unit:inventory():equipped_unit():damage():has_sequence("hide_pin") then
-		self._parent_unit:inventory():equipped_unit():damage():run_sequence_simple("hide_pin")
+	if alive(self._parent_unit) then
+		local weapon = self._parent_unit:inventory():equipped_unit()
+
+		if alive(weapon) and weapon:damage() and weapon:damage():has_sequence("hide_pin") then
+			weapon:damage():run_sequence_simple("hide_pin")
+		end
 	end
 end
 
 function FPCameraPlayerBase:anim_clbk_show_pin(unit)
-	if alive(self._parent_unit) and alive(self._parent_unit:inventory():equipped_unit()) and self._parent_unit:inventory():equipped_unit():damage() and self._parent_unit:inventory():equipped_unit():damage():has_sequence("show_pin") then
-		self._parent_unit:inventory():equipped_unit():damage():run_sequence_simple("show_pin")
+	if alive(self._parent_unit) then
+		local weapon = self._parent_unit:inventory():equipped_unit()
+
+		if alive(weapon) and weapon:damage() and weapon:damage():has_sequence("show_pin") then
+			weapon:damage():run_sequence_simple("show_pin")
+		end
 	end
 end
 
@@ -1808,28 +1816,11 @@ function FPCameraPlayerBase:counter_taser()
 			local align_obj = self._unit:get_object(Idstring("a_weapon_right"))
 
 			World:effect_manager():spawn({
-				effect = Idstring("effects/vanilla/character/taser_stop"),
+				effect = tweak_data.common_effects.taser_stop,
 				normal = align_obj:rotation():y(),
 				position = align_obj:position(),
 			})
 		end
-	end
-end
-
-function FPCameraPlayerBase:spawn_taser_hooks()
-	return
-end
-
-function FPCameraPlayerBase:unspawn_taser_hooks()
-	if alive(self._taser_hooks_unit) then
-		self._taser_hooks_unit:unlink()
-
-		local name = self._taser_hooks_unit:name()
-
-		World:delete_unit(self._taser_hooks_unit)
-		managers.dyn_resource:unload(Idstring("unit"), name, DynamicResourceManager.DYN_RESOURCES_PACKAGE, false)
-
-		self._taser_hooks_unit = nil
 	end
 end
 
@@ -1905,9 +1896,11 @@ function FPCameraPlayerBase:anim_clbk_stop_weapon_magazine_empty()
 end
 
 function FPCameraPlayerBase:anim_clbk_reset_dp28_mag_pos()
-	local weapon = self._parent_unit:inventory():equipped_unit()
+	if self._parent_unit and self._parent_unit:inventory() and self._parent_unit:inventory():equipped_unit() then
+		local weapon = self._parent_unit:inventory():equipped_unit()
 
-	weapon:base():reset_magazine_anim_pos()
+		weapon:base():reset_magazine_anim_pos()
+	end
 end
 
 function FPCameraPlayerBase:anim_clbk_punch_bren_mag()
@@ -1986,12 +1979,6 @@ function FPCameraPlayerBase:_unspawn_shotgun_shell()
 	self._shell = nil
 end
 
-function FPCameraPlayerBase:load_fps_mask_units()
-	if not self._mask_backface_loaded then
-		self._mask_backface_loaded = true
-	end
-end
-
 function FPCameraPlayerBase:destroy()
 	if self._parent_unit then
 		self._parent_unit:base():remove_destroy_listener("FPCameraPlayerBase")
@@ -2007,14 +1994,10 @@ function FPCameraPlayerBase:destroy()
 		self._light_effect = nil
 	end
 
-	self:anim_clbk_unspawn_handcuffs()
 	self:unspawn_grenade()
 	self:unspawn_melee_item()
 	self:_unspawn_shotgun_shell()
-
-	if self._mask_backface_loaded then
-		self._mask_backface_loaded = nil
-	end
+	self:_unspawn_bren_mag_shell()
 end
 
 function FPCameraPlayerBase:set_spin(_spin)
@@ -2075,6 +2058,12 @@ function FPCameraPlayerBase:update_tilt_smooth(direction, max_tilt, tilt_speed, 
 				self._tilt_dt = 0
 			end
 		end
+	end
+end
+
+function FPCameraPlayerBase:anim_clbk_play_shaker(unit, effect, amplitude, frequency, offset)
+	if self._parent_unit and managers.user:get_setting("use_camera_accel") then
+		self._parent_unit:camera():play_shaker(effect, amplitude, frequency, offset)
 	end
 end
 

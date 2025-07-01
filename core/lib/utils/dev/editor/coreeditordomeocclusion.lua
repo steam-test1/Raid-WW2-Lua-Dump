@@ -41,6 +41,7 @@ function CoreEditor:_create_dome_occlusion(params)
 	self._show_center = false
 
 	self:on_hide_helper_units({
+		ignore_max_per_frame = true,
 		vis = false,
 	})
 
@@ -187,6 +188,7 @@ function CoreEditor:dome_occlusion_done()
 	self._show_center = self._saved_show_center
 
 	self:on_hide_helper_units({
+		ignore_max_per_frame = false,
 		vis = true,
 	})
 

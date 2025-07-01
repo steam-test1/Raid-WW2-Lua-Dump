@@ -1,7 +1,9 @@
 GoldEconomyManager = GoldEconomyManager or class()
-GoldEconomyManager.THOUSAND_SEPARATOR = "."
+GoldEconomyManager.THOUSAND_SEPARATOR = ","
 GoldEconomyManager.VERSION = 8
 GoldEconomyManager.ACHIEVEMENT_CAMP_ROYALTY = 1000
+GoldEconomyManager.LOYALTY_SKILL_REWORK = "SkillRework"
+GoldEconomyManager.LOYALTY_REMOVED_SKILL = "RemovedSkill"
 
 function GoldEconomyManager:init()
 	self:_setup()
@@ -12,8 +14,6 @@ function GoldEconomyManager:_setup()
 		Global.gold_economy_manager = {}
 		Global.gold_economy_manager.total = Application:digest_value(0, true)
 		Global.gold_economy_manager.current = Application:digest_value(0, true)
-		Global.gold_economy_manager.respec_cost_multiplier = Application:digest_value(0, true)
-		Global.gold_economy_manager.respec_reset = Application:digest_value(10, true)
 		Global.gold_economy_manager.applied_upgrades = deep_clone(tweak_data.camp_customization.default_camp)
 		Global.gold_economy_manager.owned_upgrades = tweak_data.camp_customization:get_applyable_upgrades()
 		Global.gold_economy_manager.gold_awards = {}
@@ -24,11 +24,7 @@ function GoldEconomyManager:_setup()
 	self._automatic_camp_units = {}
 end
 
-function GoldEconomyManager:debug_add_gold(amount)
-	self:add_gold(amount, true)
-end
-
-function GoldEconomyManager:spend_gold(amount, is_debug)
+function GoldEconomyManager:spend_gold(amount)
 	if amount <= 0 then
 		return
 	end
@@ -37,7 +33,7 @@ function GoldEconomyManager:spend_gold(amount, is_debug)
 	managers.raid_menu:refresh_footer_gold_amount()
 end
 
-function GoldEconomyManager:add_gold(amount, is_debug)
+function GoldEconomyManager:add_gold(amount)
 	if amount <= 0 then
 		return
 	end
@@ -65,49 +61,10 @@ function GoldEconomyManager:_set_current(value)
 	end
 
 	self._global.current = Application:digest_value(value, true)
-end
 
-function GoldEconomyManager:respec()
-	self:spend_gold(self:respec_cost())
-
-	local old = Application:digest_value(self._global.respec_cost_multiplier, false)
-
-	self._global.respec_cost_multiplier = Application:digest_value(old + 1, true)
-end
-
-function GoldEconomyManager:decrease_respec_reset()
-	local old = Application:digest_value(self._global.respec_reset, false)
-	local new = old - 1
-
-	if new == 1 then
-		local old_multiplier = Application:digest_value(self._global.respec_cost_multiplier, false)
-		local new_multiplier = old_multiplier - 1
-
-		if new_multiplier < 0 then
-			new_multiplier = 0
-		end
-
-		self._global.respec_cost_multiplier = Application:digest_value(new_multiplier, true)
-		new = 10
+	if IS_PC then
+		managers.statistics:publish_gold_to_steam()
 	end
-
-	self._global.respec_reset = Application:digest_value(new, true)
-end
-
-function GoldEconomyManager:respec_reset_value()
-	return Application:digest_value(self._global.respec_reset, false)
-end
-
-function GoldEconomyManager:respec_cost()
-	local multiplier = 1
-	local char_level = managers.experience:current_level()
-	local cost = math.ceil(char_level * (1 + multiplier) * TweakData.RESPEC_COST_CONSTANT)
-
-	return cost
-end
-
-function GoldEconomyManager:respec_cost_string()
-	return self:gold_string(self:respec_cost())
 end
 
 function GoldEconomyManager:gold_string(amount)
@@ -133,9 +90,8 @@ function GoldEconomyManager:save(data)
 		applied_upgrades = self._global.applied_upgrades,
 		current = self._global.current,
 		gold_awards = self._global.gold_awards,
+		loyalty_rewards = self._global.pending_loyalty_rewards,
 		owned_upgrades = self._global.owned_upgrades,
-		respec_cost_multiplier = self._global.respec_cost_multiplier,
-		respec_reset = self._global.respec_reset,
 		total = self._global.total,
 		version = GoldEconomyManager.VERSION,
 	}
@@ -144,6 +100,7 @@ function GoldEconomyManager:save(data)
 end
 
 function GoldEconomyManager:load(data)
+	Application:trace("[GoldEconomyManager:load] data ", inspect(data))
 	self:reset()
 
 	local state = data.GoldEconomyManager
@@ -151,14 +108,7 @@ function GoldEconomyManager:load(data)
 	if state then
 		self._global.total = state.total or 0
 		self._global.current = state.current or 0
-
-		if state.respec_cost_multiplier then
-			self._global.respec_cost_multiplier = state.respec_cost_multiplier
-		end
-
-		if state.respec_reset then
-			self._global.respec_reset = state.respec_reset
-		end
+		self._global.pending_loyalty_rewards = state.loyalty_rewards
 	end
 
 	local needs_upgrade = false
@@ -186,8 +136,6 @@ function GoldEconomyManager:load(data)
 	end
 
 	self._global.gold_awards = state and state.gold_awards or {}
-
-	self:get_gold_awards()
 end
 
 function GoldEconomyManager:_refund_upgrades(upgrades)
@@ -212,6 +160,7 @@ function GoldEconomyManager:get_gold_awards()
 
 			self:add_gold(award.amount)
 			managers.savefile:set_resave_required()
+			Application:debug("[GoldEconomyManager:get_gold_awards] - Awarded gold", award.amount)
 		end
 	end
 end
@@ -284,6 +233,8 @@ function GoldEconomyManager:layout_camp()
 		return
 	end
 
+	self:get_gold_awards()
+
 	for upgrade_name, unit in pairs(self._automatic_camp_units) do
 		local gold_spread = tweak_data.camp_customization.camp_upgrades_automatic[upgrade_name].gold
 		local gold_level = self:_calculate_gold_pile_level(gold_spread)
@@ -312,11 +263,11 @@ function GoldEconomyManager:layout_camp()
 end
 
 function GoldEconomyManager:_calculate_gold_pile_level(gold_spread)
-	local index = #gold_spread + 1
-
 	if self:current() == 0 then
 		return 0
 	end
+
+	local index = #gold_spread + 1
 
 	for i, value in ipairs(gold_spread) do
 		if value > self:current() then
@@ -333,7 +284,6 @@ function GoldEconomyManager:reset()
 	Global.gold_economy_manager = nil
 
 	self:_setup()
-	self:get_gold_awards()
 end
 
 function GoldEconomyManager:get_difficulty_multiplier(difficulty)
@@ -449,4 +399,33 @@ function GoldEconomyManager:update_camp_upgrade(upgrade_slot_name, upgrade_level
 			upgrade = upgrade_slot_name,
 		})
 	end
+end
+
+function GoldEconomyManager:add_loyalty_reward(category, amount)
+	self._global.pending_loyalty_rewards = self._global.pending_loyalty_rewards or {}
+	self._global.pending_loyalty_rewards[category] = self._global.pending_loyalty_rewards[category] or 0
+	self._global.pending_loyalty_rewards[category] = self._global.pending_loyalty_rewards[category] + amount
+end
+
+function GoldEconomyManager:loyalty_reward_pending(category)
+	return self._global.pending_loyalty_rewards and self._global.pending_loyalty_rewards[category]
+end
+
+function GoldEconomyManager:grant_loyalty_reward(category)
+	if not self:loyalty_reward_pending(category) then
+		Application:trace("[GoldEconomyManager:grant_loyalty_reward] no pending reward for category:", category)
+
+		return
+	end
+
+	local amount = self._global.pending_loyalty_rewards[category]
+
+	self._global.pending_loyalty_rewards[category] = nil
+
+	if table.size(self._global.pending_loyalty_rewards) == 0 then
+		self._global.pending_loyalty_rewards = nil
+	end
+
+	self:add_gold(amount)
+	managers.savefile:set_resave_required()
 end

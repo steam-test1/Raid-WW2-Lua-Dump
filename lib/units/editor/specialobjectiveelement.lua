@@ -15,6 +15,39 @@ SpecialObjectiveUnitElement._AI_SO_types = {
 	"AI_sniper",
 	"AI_spotter",
 	"AI_turret",
+	"AI_phalanx",
+}
+SpecialObjectiveUnitElement.PRESETS = {
+	acrobats = {
+		"cop",
+		"fbi",
+		"swat",
+		"sniper",
+		"gangster",
+		"murky",
+		"teamAI1",
+		"teamAI2",
+		"teamAI3",
+		"teamAI4",
+	},
+	civilians = {
+		"civ_male",
+		"civ_female",
+	},
+	heavies = {
+		"shield",
+		"tank",
+	},
+	security = {
+		"security",
+		"security_patrol",
+	},
+	team_ai = {
+		"teamAI1",
+		"teamAI2",
+		"teamAI3",
+		"teamAI4",
+	},
 }
 
 function SpecialObjectiveUnitElement:init(unit)
@@ -119,6 +152,7 @@ function SpecialObjectiveUnitElement:test_element()
 	}
 
 	t.values = self:new_save_values()
+	t.values.enabled = true
 	t.values.use_instigator = true
 	t.values.is_navigation_link = false
 	t.values.is_alert_point = false
@@ -451,6 +485,8 @@ function SpecialObjectiveUnitElement:_apply_preset(params)
 		self:_clear_all_nav_link_filters()
 	elseif value == "all" then
 		self:_enable_all_nav_link_filters()
+	elseif SpecialObjectiveUnitElement.PRESETS[value] then
+		self:_set_preset_nav_link_filters(value)
 	else
 		print("Didn't have preset", value, "yet.")
 	end
@@ -469,6 +505,20 @@ end
 function SpecialObjectiveUnitElement:_clear_all_nav_link_filters()
 	for name, ctrlr in pairs(self._nav_link_filter_check_boxes) do
 		ctrlr:set_value(false)
+		self:_toggle_nav_link_filter_value({
+			ctrlr = ctrlr,
+			name = name,
+		})
+	end
+end
+
+function SpecialObjectiveUnitElement:_set_preset_nav_link_filters(value)
+	local list = SpecialObjectiveUnitElement.PRESETS[value]
+
+	for name, ctrlr in pairs(self._nav_link_filter_check_boxes) do
+		local state = table.contains(list, name)
+
+		ctrlr:set_value(state)
 		self:_toggle_nav_link_filter_value({
 			ctrlr = ctrlr,
 			name = name,

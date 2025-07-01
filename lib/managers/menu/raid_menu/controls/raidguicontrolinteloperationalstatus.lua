@@ -52,7 +52,7 @@ function RaidGUIControlIntelOperationalStatus:_layout()
 		h = 512,
 		name = "content_panel_scrollable_area",
 		scroll_step = 19,
-		scrollbar_width = 3,
+		scrollbar_width = 10,
 		w = 576,
 		x = 256,
 		y = 208,

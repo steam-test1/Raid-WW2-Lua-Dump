@@ -1,3 +1,10 @@
+TweakData = TweakData or class()
+TweakData.RELOAD = true
+TweakData.DIFFICULTY_1 = 1
+TweakData.DIFFICULTY_2 = 2
+TweakData.DIFFICULTY_3 = 3
+TweakData.DIFFICULTY_4 = 4
+
 require("lib/tweak_data/WeaponTweakData")
 require("lib/tweak_data/EquipmentsTweakData")
 require("lib/tweak_data/CharacterTweakData")
@@ -41,15 +48,6 @@ require("lib/tweak_data/InputTweakData")
 require("lib/tweak_data/IntelTweakData")
 require("lib/tweak_data/NetworkTweakData")
 require("lib/tweak_data/LinkPrefabsTweakData")
-
-TweakData = TweakData or class()
-TweakData.RELOAD = true
-TweakData.RESPEC_COST_CONSTANT = 1
-TweakData.RESPEC_RESET = 10
-TweakData.DIFFICULTY_1 = 1
-TweakData.DIFFICULTY_2 = 2
-TweakData.DIFFICULTY_3 = 3
-TweakData.DIFFICULTY_4 = 4
 
 function TweakData:digest_tweak_data()
 	self.digested_tables = {
@@ -162,42 +160,46 @@ end
 
 function TweakData:_set_difficulty_1()
 	self.player:_set_difficulty_1()
-	self.character:_set_difficulty_1()
+	self.character:set_difficulty(1)
 	self.weapon:_set_difficulty_1()
 	self.group_ai:init(self)
 	self.barrage:init(self)
 
 	self.difficulty_name_id = self.difficulty_name_ids.difficulty_1
+	self.lootcrate_pattern_total = 24
 end
 
 function TweakData:_set_difficulty_2()
 	self.player:_set_difficulty_2()
-	self.character:_set_difficulty_2()
+	self.character:set_difficulty(2)
 	self.weapon:_set_difficulty_2()
 	self.group_ai:init(self)
 	self.barrage:init(self)
 
 	self.difficulty_name_id = self.difficulty_name_ids.difficulty_2
+	self.lootcrate_pattern_total = 24
 end
 
 function TweakData:_set_difficulty_3()
 	self.player:_set_difficulty_3()
-	self.character:_set_difficulty_3()
+	self.character:set_difficulty(3)
 	self.weapon:_set_difficulty_3()
 	self.group_ai:init(self)
 	self.barrage:init(self)
 
 	self.difficulty_name_id = self.difficulty_name_ids.difficulty_3
+	self.lootcrate_pattern_total = 26
 end
 
 function TweakData:_set_difficulty_4()
 	self.player:_set_difficulty_4()
-	self.character:_set_difficulty_4()
+	self.character:set_difficulty(4)
 	self.weapon:_set_difficulty_4()
 	self.group_ai:init(self)
 	self.barrage:init(self)
 
 	self.difficulty_name_id = self.difficulty_name_ids.difficulty_4
+	self.lootcrate_pattern_total = 28
 end
 
 function TweakData:number_of_difficulties()
@@ -250,6 +252,32 @@ function TweakData:index_to_menu_sync_state(index)
 	return self.menu_sync_states[index]
 end
 
+function TweakData:init_common_effects_physics()
+	self.physics_effects = {}
+	self.physics_effects.body_explosion = Idstring("physic_effects/body_explosion")
+	self.physics_effects.shotgun_push = Idstring("physic_effects/shotgun_hit")
+	self.physics_effects.molotov_throw = Idstring("physic_effects/molotov_throw")
+	self.physics_effects.no_gravity = Idstring("physic_effects/anti_gravitate")
+	self.common_effects = {}
+	self.common_effects.impact = Idstring("effects/vanilla/impacts/imp_fallback_001")
+	self.common_effects.blood_impact_1 = Idstring("effects/vanilla/impacts/imp_blood_hit_001")
+	self.common_effects.blood_impact_2 = Idstring("effects/vanilla/impacts/imp_blood_hit_002")
+	self.common_effects.blood_impact_3 = Idstring("effects/vanilla/impacts/imp_blood_hit_003")
+	self.common_effects.blood_screen = Idstring("effects/vanilla/dismemberment/dis_blood_screen_001")
+	self.common_effects.taser_hit = Idstring("effects/vanilla/character/taser_hittarget_001")
+	self.common_effects.taser_thread = Idstring("effects/vanilla/character/taser_thread")
+	self.common_effects.taser_stop = Idstring("effects/vanilla/character/taser_stop")
+	self.common_effects.fps_flashlight = Idstring("effects/vanilla/weapons/flashlight/fp_flashlight")
+	self.common_effects.flamer_burst = Idstring("effects/vanilla/fire/fire_flame_burst_001")
+	self.common_effects.flamer_nosel = Idstring("effects/vanilla/explosions/exp_flamer_nosel_001")
+	self.common_effects.flamer_pilot = Idstring("effects/vanilla/fire/fire_flame_burst_pilot_001")
+	self.common_effects.fire_gen_medium = Idstring("effects/vanilla/fire/fire_medium_001")
+	self.common_effects.fire_molotov_grenade = Idstring("effects/vanilla/fire/fire_molotov_grenade_001")
+	self.common_effects.flash_grenade_bang = Idstring("effects/particles/explosions/explosion_flash_grenade")
+	self.common_effects.smoke_grenade_bang = Idstring("effects/vanilla/explosions/exp_smoke_grenade_001")
+	self.common_effects.smoke_grenade = Idstring("effects/vanilla/weapons/smoke_grenade_smoke")
+end
+
 function TweakData:init()
 	self.difficulties = {
 		"difficulty_1",
@@ -260,13 +288,17 @@ function TweakData:init()
 	self.hardest_difficulty = {
 		id = 4,
 	}
-	self.difficulty_level_locks = {
-		0,
-		0,
-		0,
-		0,
-		0,
-		80,
+	self.difficulty_name_ids = {}
+
+	for i, v in ipairs(self.difficulties) do
+		self.difficulty_name_ids[v] = "menu_" .. v
+	end
+
+	self.lootcrate_pattern_total = 999
+	self.lootcrate_tiers = {
+		4,
+		6,
+		3,
 	}
 	self.permissions = {
 		"public",
@@ -288,16 +320,20 @@ function TweakData:init()
 		"blackmarket_mask",
 		"payday",
 	}
-	self.difficulty_name_ids = {}
-	self.difficulty_name_ids.difficulty_1 = "menu_difficulty_1"
-	self.difficulty_name_ids.difficulty_2 = "menu_difficulty_2"
-	self.difficulty_name_ids.difficulty_3 = "menu_difficulty_3"
-	self.difficulty_name_ids.difficulty_4 = "menu_difficulty_4"
-	self.hud_icons = HudIconsTweakData:new()
+
+	self:init_common_effects_physics()
+
+	self.WEAPON_SLOT_SECONDARY = 1
+	self.WEAPON_SLOT_PRIMARY = 2
+	self.WEAPON_SLOT_GRENADE = 3
+	self.WEAPON_SLOT_MELEE = 4
 	self.weapon = WeaponTweakData:new(self)
+	self.hud_icons = HudIconsTweakData:new()
 	self.equipments = EquipmentsTweakData:new()
 	self.player = PlayerTweakData:new()
 	self.character = CharacterTweakData:new(self)
+	self.greed = GreedTweakData:new()
+	self.carry = CarryTweakData:new(self)
 	self.character_customization = CharacterCustomizationTweakData:new()
 	self.camp_customization = CampCustomizationTweakData:new()
 	self.statistics = StatisticsTweakData:new()
@@ -310,7 +346,6 @@ function TweakData:init()
 	self.skilltree = SkillTreeTweakData:new(self)
 	self.tips = TipsTweakData:new()
 	self.blackmarket = BlackMarketTweakData:new(self)
-	self.carry = CarryTweakData:new(self)
 	self.attention = AttentionTweakData:new()
 	self.timespeed = TimeSpeedEffectTweakData:new()
 	self.sound = SoundTweakData:new()
@@ -333,7 +368,6 @@ function TweakData:init()
 	self.subtitles = SubtitlesTweakData:new(self)
 	self.input = InputTweakData:new(self)
 	self.intel = IntelTweakData:new(self)
-	self.greed = GreedTweakData:new()
 	self.network = NetworkTweakData:new(self)
 	self.link_prefabs = LinkPrefabsTweakData:new()
 	self.criminals = {}
@@ -370,7 +404,7 @@ function TweakData:init()
 				color_id = 1,
 				mask_id = 1,
 				ssuffix = "l",
-				voice = "ger",
+				voice = "germ",
 			},
 		},
 		{
@@ -380,7 +414,7 @@ function TweakData:init()
 				color_id = 2,
 				mask_id = 2,
 				ssuffix = "c",
-				voice = "rus",
+				voice = "russ",
 			},
 		},
 		{
@@ -404,20 +438,12 @@ function TweakData:init()
 			},
 		},
 	}
-	self.criminals.loud_teleport_distance_treshold = 3000
+	self.criminals.loud_teleport_distance_treshold = 9000000
 	self.EFFECT_QUALITY = 0.5
-
-	if SystemInfo:platform() == Idstring("X360") then
-		self.EFFECT_QUALITY = 0.5
-	elseif SystemInfo:platform() == Idstring("PS3") then
-		self.EFFECT_QUALITY = 0.5
-	end
 
 	self:set_scale()
 
 	self.states = {}
-	self.states.title = {}
-	self.states.title.ATTRACT_VIDEO_DELAY = 60
 	self.menu = {}
 	self.menu.BRIGHTNESS_CHANGE = 0.05
 	self.menu.MIN_BRIGHTNESS = 0.5
@@ -475,7 +501,6 @@ function TweakData:init()
 	self.screen_colors.button_stage_1 = Color(255, 0, 0, 0) / 255
 	self.screen_colors.button_stage_2 = Color(255, 255, 50, 50) / 255
 	self.screen_colors.button_stage_3 = Color(240, 240, 240, 240) / 255
-	self.screen_colors.crimenet_lines = Color(255, 127, 157, 182) / 255
 	self.screen_colors.risk = Color(255, 255, 204, 0) / 255
 	self.screen_colors.friend_color = Color(255, 41, 204, 122) / 255
 	self.screen_colors.regular_color = Color(255, 41, 150, 240) / 255
@@ -486,10 +511,6 @@ function TweakData:init()
 	self.screen_colors.extra_bonus_color = Color(255, 255, 255, 255) / 255
 	self.screen_colors.community_color = Color(255, 59, 174, 254) / 255
 	self.screen_colors.challenge_completed_color = Color(255, 255, 168, 0) / 255
-	self.screen_colors.heat_cold_color = Color(255, 255, 51, 51) / 255
-	self.screen_colors.heat_warm_color = Color("ff7f00")
-	self.screen_colors.heat_standard_color = Color(255, 255, 255, 255) / 255
-	self.screen_colors.heat_color = self.screen_colors.heat_standard_color
 	self.screen_colors.stats_positive = Color(255, 191, 221, 125) / 255
 	self.screen_colors.stats_negative = Color(255, 254, 93, 99) / 255
 	self.screen_colors.stats_mods = Color(255, 229, 229, 76) / 255
@@ -558,6 +579,14 @@ function TweakData:init()
 		"quad_diag",
 		"quad_plus",
 	}
+	self.motion_dot_modes_ads_hides = {
+		false,
+		true,
+		false,
+		false,
+		false,
+		false,
+	}
 	self.motion_dot_sizes = {
 		"tiny",
 		"small",
@@ -567,6 +596,7 @@ function TweakData:init()
 	}
 	self.hit_indicator_modes = {
 		"off",
+		"min",
 		"on",
 		"track",
 	}
@@ -816,10 +846,25 @@ function TweakData:init()
 	self.materials[Idstring("snow"):key()] = "snow"
 	self.materials[Idstring("ice"):key()] = "ice_thick"
 	self.materials[Idstring("flamer_metal"):key()] = "flamer_metal"
+	self.materials_effects = {}
+	self.materials_effects[Idstring(""):key()] = {}
+	self.materials_effects[Idstring("water_deep"):key()] = {
+		land = Idstring("effects/vanilla/character/step_water_shallow"),
+	}
+	self.materials_effects[Idstring("water_puddle"):key()] = {
+		land = Idstring("effects/vanilla/character/sprint_water_shallow"),
+		sprint = Idstring("effects/vanilla/character/sprint_water_shallow"),
+		step = Idstring("effects/vanilla/character/step_water_shallow"),
+	}
+	self.materials_effects[Idstring("water_shallow"):key()] = {
+		land = Idstring("effects/vanilla/character/sprint_water_shallow"),
+		sprint = Idstring("effects/vanilla/character/sprint_water_shallow"),
+		step = Idstring("effects/vanilla/character/step_water_shallow"),
+	}
 	self.screen = {}
 	self.screen.fadein_delay = 1
 	self.experience_manager = {}
-	self.experience_manager.level_failed_multiplier = 0.075
+	self.experience_manager.level_failed_multiplier = 0.01
 	self.experience_manager.human_player_multiplier = {
 		1,
 		1.25,
@@ -830,12 +875,14 @@ function TweakData:init()
 	self.experience_manager.difficulty_multiplier = {}
 	self.experience_manager.difficulty_multiplier[TweakData.DIFFICULTY_1] = 1
 	self.experience_manager.difficulty_multiplier[TweakData.DIFFICULTY_2] = 1.5
-	self.experience_manager.difficulty_multiplier[TweakData.DIFFICULTY_3] = 3
-	self.experience_manager.difficulty_multiplier[TweakData.DIFFICULTY_4] = 4.5
-	self.experience_manager.escort_survived_bonus = 1.25
+	self.experience_manager.difficulty_multiplier[TweakData.DIFFICULTY_3] = 2.5
+	self.experience_manager.difficulty_multiplier[TweakData.DIFFICULTY_4] = 4
+	self.experience_manager.stealth_bonus = 1.5
+	self.experience_manager.escort_survived_bonus = 1.3
 	self.experience_manager.side_quest_bonus = 1.5
-	self.experience_manager.extra_objectives_bonus = 1.2
+	self.experience_manager.extra_objectives_bonus = 1.25
 	self.experience_manager.tiny_objectives_bonus = 1.01
+	self.experience_manager.tiny_loot_bonus = 1.01
 
 	local level_xp_requirements = {}
 
@@ -901,62 +948,44 @@ function TweakData:init()
 	end
 
 	self.pickups = {}
-	self.pickups.bank_manager_key = {
-		unit = Idstring("units/pickups/pickup_bank_manager_key/pickup_bank_manager_key"),
-	}
-	self.pickups.chavez_key = {
-		unit = Idstring("units/pickups/pickup_chavez_key/pickup_chavez_key"),
-	}
-	self.pickups.drill = {
-		unit = Idstring("units/pickups/pickup_drill/pickup_drill"),
-	}
-	self.pickups.keycard_outlined = {
-		unit = Idstring("units/pd2_dlc_red/pickups/gen_pku_keycard_outlined/gen_pku_keycard_outlined"),
-	}
-	self.pickups.hotel_room_key = {
-		unit = Idstring("units/pd2_dlc_casino/props/cas_prop_keycard/cas_prop_keycard"),
-	}
-	self.pickups.pku_rambo = {
-		unit = Idstring("units/pd2_dlc_jolly/pickups/gen_pku_rambo/gen_pku_rambo"),
-	}
 	self.pickups.equip_safe_key_chain = {
 		unit = Idstring("units/vanilla/equipment/equip_safe_key_chain/equip_safe_key_chain"),
 	}
-	self.pickups.health_big_beam = {
-		unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_health_big_beam"),
-	}
-	self.pickups.health_medium_beam = {
-		unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_health_medium_beam"),
-	}
-	self.pickups.health_small_beam = {
-		unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_health_small_beam"),
-	}
-	self.pickups.ammo_big_beam = {
-		unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_ammo_big_beam"),
-	}
-	self.pickups.ammo_medium_beam = {
-		unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_ammo_medium_beam"),
-	}
-	self.pickups.ammo_small_beam = {
-		unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_ammo_small_beam"),
-	}
 	self.pickups.health_big = {
-		unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_health_big"),
+		unit = Idstring("units/vanilla/pickups/pku_new_munitions/health/pku_health_big"),
 	}
 	self.pickups.health_medium = {
-		unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_health_medium"),
+		unit = Idstring("units/vanilla/pickups/pku_new_munitions/health/pku_health_medium"),
 	}
 	self.pickups.health_small = {
-		unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_health_small"),
+		unit = Idstring("units/vanilla/pickups/pku_new_munitions/health/pku_health_small"),
 	}
-	self.pickups.ammo_big = {
-		unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_ammo_big"),
+	self.pickups.health_small_beam = {
+		unit = Idstring("units/vanilla/pickups/pku_new_munitions/health/pku_health_small_drop"),
 	}
-	self.pickups.ammo_medium = {
-		unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_ammo_medium"),
+	self.pickups.health_medium_beam = {
+		unit = Idstring("units/vanilla/pickups/pku_new_munitions/health/pku_health_medium_drop"),
+	}
+	self.pickups.health_big_beam = {
+		unit = Idstring("units/vanilla/pickups/pku_new_munitions/health/pku_health_big_drop"),
 	}
 	self.pickups.ammo_small = {
-		unit = Idstring("units/vanilla/pickups/pku_health_ammo_granade/pku_ammo_small"),
+		unit = Idstring("units/vanilla/pickups/pku_new_munitions/ammo/pku_ammo_small"),
+	}
+	self.pickups.ammo_medium = {
+		unit = Idstring("units/vanilla/pickups/pku_new_munitions/ammo/pku_ammo_medium"),
+	}
+	self.pickups.ammo_big = {
+		unit = Idstring("units/vanilla/pickups/pku_new_munitions/ammo/pku_ammo_big"),
+	}
+	self.pickups.ammo_small_beam = {
+		unit = Idstring("units/vanilla/pickups/pku_new_munitions/ammo/pku_ammo_small_drop"),
+	}
+	self.pickups.ammo_medium_beam = {
+		unit = Idstring("units/vanilla/pickups/pku_new_munitions/ammo/pku_ammo_medium_drop"),
+	}
+	self.pickups.ammo_big_beam = {
+		unit = Idstring("units/vanilla/pickups/pku_new_munitions/ammo/pku_ammo_big_drop"),
 	}
 	self.pickups.grenade_big = {
 		unit = Idstring("units/vanilla/pickups/pku_new_munitions/grenades/pku_grenade_stack_max5"),
@@ -967,7 +996,6 @@ function TweakData:init()
 	}
 	self.pickups.grenade_medium_beam = deep_clone(self.pickups.grenade_medium)
 	self.pickups.grenade_small = {
-		position_offset = Vector3(0, 2.5, 0),
 		unit = Idstring("units/vanilla/pickups/pku_new_munitions/grenades/pku_grenade_stack_max3"),
 	}
 	self.pickups.grenade_small_beam = deep_clone(self.pickups.grenade_small)
@@ -1025,6 +1053,17 @@ function TweakData:init()
 	self.pickups.code_book = {
 		unit = Idstring("units/vanilla/equipment/equip_code_book/equip_code_book_active"),
 	}
+	self.warcry_units = {}
+	self.warcry_units.hold_the_line_flag = {
+		drop_to_ground = true,
+		level_seq = {
+			"level_1",
+			"level_2",
+			"level_3",
+			"level_4",
+		},
+		unit = Idstring("units/upd_022/warcry/wc_flagpole/wc_flagpole"),
+	}
 	self.danger_zones = {
 		0.6,
 		0.5,
@@ -1039,9 +1078,9 @@ function TweakData:init()
 	self.contour.character.dead_color = Vector3(1, 0.1, 0.1)
 	self.contour.character.dangerous_color = Vector3(0.6, 0.2, 0.2)
 	self.contour.character.more_dangerous_color = Vector3(1, 0.1, 0.1)
-	self.contour.character.standard_opacity = 0
-	self.contour.character.ghost_warcry = Vector3(0.6, 0.2, 0.2)
-	self.contour.character.sharpshooter_warcry = Vector3(1, 0, 0)
+	self.contour.character.ghost_warcry = Vector3(0.3, 0.1, 0.1)
+	self.contour.character.sharpshooter_warcry = Vector3(0.15, 0.45, 0.7)
+	self.contour.character.silver_bullet_warcry = Vector3(0.592156862745098, 0.8392156862745098, 0.7529411764705882)
 	self.contour.character_interactable = {}
 	self.contour.character_interactable.standard_color = Vector3(1, 0.5, 0)
 	self.contour.character_interactable.selected_color = Vector3(1, 1, 1)
@@ -1051,7 +1090,6 @@ function TweakData:init()
 	self.contour.contour_off = {}
 	self.contour.contour_off.standard_color = Vector3(0, 0, 0)
 	self.contour.contour_off.selected_color = Vector3(0, 0, 0)
-	self.contour.contour_off.standard_opacity = 0
 	self.contour.deployable = {}
 	self.contour.deployable.standard_color = Vector3(0.1, 1, 0.5)
 	self.contour.deployable.selected_color = Vector3(1, 1, 1)
@@ -1064,11 +1102,12 @@ function TweakData:init()
 	self.contour.pickup = {}
 	self.contour.pickup.standard_color = Vector3(0.1, 1, 0.5)
 	self.contour.pickup.selected_color = Vector3(1, 1, 1)
-	self.contour.pickup.standard_opacity = 1
 	self.contour.interactable_icon = {}
 	self.contour.interactable_icon.standard_color = Vector3(0, 0, 0)
 	self.contour.interactable_icon.selected_color = Vector3(0, 1, 0)
-	self.contour.interactable_icon.standard_opacity = 0
+	self.contour.interactable_danger = {}
+	self.contour.interactable_danger.standard_color = Vector3(1, 0.33, 0.04)
+	self.contour.interactable_danger.selected_color = Vector3(1, 1, 1)
 	self.contour.interactable_look_at = {}
 	self.contour.interactable_look_at.standard_color = Vector3(0, 0, 0)
 	self.contour.interactable_look_at.selected_color = Vector3(1, 1, 1)
@@ -1097,11 +1136,10 @@ function TweakData:init()
 	self.music.forest_gumpy.start = "consumable_level_music_one"
 	self.music.forest_gumpy.include_in_shuffle = true
 	self.music.default = deep_clone(self.music.flakturm)
-	self.music.soundbank_list = {}
 	self.voiceover = {}
 	self.voiceover.idle_delay = 10
-	self.voiceover.idle_rnd_delay = 50
-	self.voiceover.idle_cooldown = 30
+	self.voiceover.idle_rnd_delay = 15
+	self.voiceover.idle_cooldown = 15
 	self.voting = {}
 	self.voting.timeout = 30
 	self.voting.cooldown = 50
@@ -1562,230 +1600,7 @@ function TweakData:get_controller_help_coords()
 		vehicle = {},
 	}
 
-	if _G.IS_PS3 then
-		coords.normal.left_thumb = {
-			align = "right",
-			id = "menu_button_sprint",
-			vertical = "top",
-			x = 195,
-			y = 255,
-		}
-		coords.normal.left = {
-			align = "right",
-			id = "menu_button_move",
-			vertical = "top",
-			x = 195,
-			y = 280,
-		}
-		coords.normal.right_thumb = {
-			align = "left",
-			id = "menu_button_melee",
-			vertical = "top",
-			x = 319,
-			y = 255,
-		}
-		coords.normal.right = {
-			align = "left",
-			id = "menu_button_look",
-			vertical = "top",
-			x = 319,
-			y = 280,
-		}
-		coords.normal.triangle = {
-			align = "left",
-			id = "menu_button_switch_weapon",
-			x = 511,
-			y = 112,
-		}
-		coords.normal.square = {
-			align = "left",
-			id = "menu_button_reload",
-			x = 511,
-			y = 214,
-		}
-		coords.normal.circle = {
-			align = "left",
-			id = "menu_button_crouch",
-			x = 511,
-			y = 146,
-		}
-		coords.normal.cross = {
-			align = "left",
-			id = "menu_button_jump",
-			x = 511,
-			y = 178,
-		}
-		coords.normal.r2_trigger = {
-			align = "left",
-			id = "menu_button_shout",
-			x = 511,
-			y = 8,
-		}
-		coords.normal.r1_trigger = {
-			align = "left",
-			id = "menu_button_fire_weapon",
-			x = 511,
-			y = 36,
-		}
-		coords.normal.l2_trigger = {
-			align = "right",
-			id = "menu_button_deploy",
-			x = 0,
-			y = 8,
-		}
-		coords.normal.l1_trigger = {
-			align = "right",
-			id = "menu_button_aim_down_sight",
-			x = 0,
-			y = 36,
-		}
-		coords.normal.start = {
-			align = "left",
-			id = "menu_button_ingame_menu",
-			vertical = "bottom",
-			x = 280,
-			y = 0,
-		}
-		coords.normal.back = {
-			align = "right",
-			id = "menu_button_stats_screen",
-			vertical = "bottom",
-			x = 230,
-			y = 0,
-		}
-		coords.normal.d_down = {
-			align = "right",
-			id = "menu_button_weapon_gadget_bipod",
-			vertical = "center",
-			x = 0,
-			y = 171,
-		}
-		coords.normal.d_left = {
-			align = "right",
-			id = "menu_button_throw_grenade",
-			vertical = "center",
-			x = 0,
-			y = 145,
-		}
-		coords.normal.d_right = {
-			align = "right",
-			id = "menu_button_weapon_firemode",
-			vertical = "center",
-			x = 0,
-			y = 87,
-		}
-		coords.vehicle.left_thumb = {
-			align = "right",
-			id = "menu_button_unassigned",
-			vertical = "top",
-			x = 195,
-			y = 255,
-		}
-		coords.vehicle.left = {
-			align = "right",
-			id = "menu_button_steering",
-			vertical = "top",
-			x = 195,
-			y = 280,
-		}
-		coords.vehicle.right_thumb = {
-			align = "left",
-			id = "menu_button_vehicle_rear_camera",
-			vertical = "top",
-			x = 319,
-			y = 255,
-		}
-		coords.vehicle.right = {
-			align = "left",
-			id = "menu_button_unassigned",
-			vertical = "top",
-			x = 319,
-			y = 280,
-		}
-		coords.vehicle.triangle = {
-			align = "left",
-			id = "menu_button_unassigned",
-			x = 511,
-			y = 112,
-		}
-		coords.vehicle.square = {
-			align = "left",
-			id = "menu_button_vehicle_change_camera",
-			x = 511,
-			y = 214,
-		}
-		coords.vehicle.circle = {
-			align = "left",
-			id = "menu_button_vehicle_shooting_stance",
-			x = 511,
-			y = 146,
-		}
-		coords.vehicle.cross = {
-			align = "left",
-			id = "menu_button_handbrake",
-			x = 511,
-			y = 178,
-		}
-		coords.vehicle.r2_trigger = {
-			align = "left",
-			id = "menu_button_unassigned",
-			x = 511,
-			y = 8,
-		}
-		coords.vehicle.r1_trigger = {
-			align = "left",
-			id = "menu_button_accelerate",
-			x = 511,
-			y = 36,
-		}
-		coords.vehicle.l2_trigger = {
-			align = "right",
-			id = "menu_button_unassigned",
-			x = 0,
-			y = 8,
-		}
-		coords.vehicle.l1_trigger = {
-			align = "right",
-			id = "menu_button_brake",
-			x = 0,
-			y = 36,
-		}
-		coords.vehicle.start = {
-			align = "left",
-			id = "menu_button_ingame_menu",
-			vertical = "bottom",
-			x = 280,
-			y = 0,
-		}
-		coords.vehicle.back = {
-			align = "right",
-			id = "menu_button_stats_screen",
-			vertical = "bottom",
-			x = 230,
-			y = 0,
-		}
-		coords.vehicle.d_down = {
-			align = "right",
-			id = "menu_button_unassigned",
-			vertical = "center",
-			x = 0,
-			y = 171,
-		}
-		coords.vehicle.d_left = {
-			align = "right",
-			id = "menu_button_unassigned",
-			vertical = "center",
-			x = 0,
-			y = 145,
-		}
-		coords.vehicle.d_right = {
-			align = "right",
-			id = "menu_button_unassigned",
-			vertical = "center",
-			x = 0,
-			y = 87,
-		}
-	elseif _G.IS_PS4 then
+	if IS_PS4 then
 		coords.normal.left_thumb = {
 			align = "right",
 			id = "menu_button_sprint",
@@ -2008,7 +1823,7 @@ function TweakData:get_controller_help_coords()
 			x = 0,
 			y = 181,
 		}
-	elseif _G.IS_XB1 then
+	elseif IS_XB1 then
 		coords.normal.left_thumb = {
 			align = "right",
 			id = "menu_button_sprint",
@@ -2344,7 +2159,7 @@ function TweakData:get_controller_help_coords()
 			y = 256,
 		}
 
-		if _G.IS_PC then
+		if IS_PC then
 			coords.normal.d_up = {
 				align = "right",
 				id = "menu_button_push_to_talk",
@@ -2466,7 +2281,7 @@ function TweakData:get_controller_help_coords()
 			y = 256,
 		}
 
-		if _G.IS_PC then
+		if IS_PC then
 			coords.vehicle.d_up = {
 				align = "right",
 				id = "menu_button_unassigned",

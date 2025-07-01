@@ -35,7 +35,7 @@ function RaidGUIControlIntelOppositeForces:_layout()
 		h = 448,
 		name = "scrollable_area_description",
 		scroll_step = 19,
-		scrollbar_width = 3,
+		scrollbar_width = 10,
 		w = 416,
 		x = 96,
 		y = 160,

@@ -171,8 +171,8 @@ action_variants.german = action_variants.team_ai
 action_variants.british = action_variants.team_ai
 action_variants.american = action_variants.team_ai
 action_variants.russian = action_variants.team_ai
-security_variant = nil
 CopMovement._action_variants = action_variants
+security_variant = nil
 action_variants = nil
 CopMovement._stance = {}
 CopMovement._stance.names = {
@@ -190,6 +190,7 @@ CopMovement._stance.blend = {
 
 function CopMovement:init(unit)
 	self._unit = unit
+	self._mover_blocker = self.mover_blocker
 	self._machine = self._unit:anim_state_machine()
 	self._nav_tracker_id = self._unit:key()
 	self._nav_tracker = nil
@@ -222,6 +223,10 @@ function CopMovement:init(unit)
 	self._suppression = {
 		value = 0,
 	}
+end
+
+function CopMovement:get_mover_blocker()
+	return self._mover_blocker and self._unit:body(self._mover_blocker) or false
 end
 
 function CopMovement:post_init()
@@ -262,9 +267,6 @@ function CopMovement:post_init()
 
 	self._unit:kill_mover()
 	self._unit:set_driving("script")
-
-	self._unit:unit_data().has_alarm_pager = self._tweak_data.has_alarm_pager
-
 	self._unit:character_damage():add_listener("movement", {
 		"bleedout",
 		"light_hurt",
@@ -852,11 +854,7 @@ function CopMovement:set_stance(new_stance_name, instant, execute_queued)
 end
 
 function CopMovement:set_stance_by_code(new_stance_code, instant, execute_queued)
-	if self._stance.code ~= new_stance_code then
-		if new_stance_code == 1 then
-			Application:debug("CopMovement:set_stance_by_code", self._unit, new_stance_code)
-		end
-
+	if self._stance.code ~= new_stance_code and (new_stance_code ~= 1 or true) then
 		self._ext_network:send("set_stance", new_stance_code, instant or false, execute_queued or false)
 		self:_change_stance(new_stance_code, instant)
 	end
@@ -1721,7 +1719,12 @@ function CopMovement:drop_held_items()
 			end
 
 			drop_item_unit:unlink()
-			drop_item_unit:set_slot(0)
+
+			if drop_item_unit:damage() and drop_item_unit:damage():has_sequence("drop_held_item") then
+				drop_item_unit:damage():run_sequence_simple("drop_held_item")
+			else
+				drop_item_unit:set_slot(0)
+			end
 		else
 			for align_place, item_list in pairs(self._equipped_gadgets) do
 				if wanted_item_key then
