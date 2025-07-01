@@ -35,7 +35,7 @@ end
 function CoreEffectPropertyContainer:validate_properties()
 	local ret = {
 		message = "",
-		sizer = nil,
+		parent = nil,
 		valid = true,
 	}
 
@@ -218,7 +218,7 @@ end
 function CoreEffectProperty:validate()
 	local ret = {
 		message = "",
-		sizer = nil,
+		parent = nil,
 		valid = true,
 	}
 

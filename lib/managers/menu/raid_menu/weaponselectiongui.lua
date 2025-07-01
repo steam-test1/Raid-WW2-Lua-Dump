@@ -278,7 +278,6 @@ end
 
 function WeaponSelectionGui:_layout_weapon_stats()
 	local weapon_stats_params = {
-		data_source_callback = nil,
 		label_class = RaidGUIControlLabelNamedValueWithDelta,
 		name = "weapon_stats",
 		selection_enabled = false,
@@ -291,7 +290,6 @@ function WeaponSelectionGui:_layout_weapon_stats()
 	self._weapon_stats = self._root_panel:create_custom_control(RaidGUIControlWeaponStats, weapon_stats_params)
 
 	local melee_weapon_stats_params = {
-		data_source_callback = nil,
 		label_class = RaidGUIControlLabelNamedValue,
 		name = "melee_weapon_stats",
 		selection_enabled = false,
@@ -304,7 +302,6 @@ function WeaponSelectionGui:_layout_weapon_stats()
 	self._melee_weapon_stats = self._root_panel:create_custom_control(RaidGUIControlMeleeWeaponStats, melee_weapon_stats_params)
 
 	local grenade_weapon_stats_params = {
-		data_source_callback = nil,
 		label_class = RaidGUIControlLabelNamedValue,
 		name = "grenade_weapon_stats",
 		selection_enabled = false,

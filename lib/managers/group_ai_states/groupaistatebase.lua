@@ -3644,7 +3644,7 @@ function GroupAIStateBase:chk_say_teamAI_combat_chatter(unit)
 	end
 
 	managers.dialog:queue_dialog("player_gen_battle_celebration", {
-		done_cbk = nil,
+		[""] = nil,
 		skip_idle_check = true,
 	})
 end

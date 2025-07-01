@@ -191,6 +191,7 @@ function CoreEnvironmentControllerManager:set_blurzone(id, mode, pos, radius, he
 		Application:info("[CoreEnvironmentControllerManager:set_blurzone] Blurzone Check exists:", id, not not blurzone)
 
 		blurzone = blurzone or {
+			check = nil,
 			delete_after_fadeout = false,
 			height = 0,
 			mode = -1,

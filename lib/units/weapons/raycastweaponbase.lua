@@ -44,7 +44,7 @@ function RaycastWeaponBase:init(unit)
 	self._shoot_through_data = {
 		from = Vector3(),
 		kills = 0,
-		pitch = nil,
+		sync_explosion_results = nil,
 	}
 	self._can_shoot_through_shield = tweak_data.weapon[self._name_id].can_shoot_through_shield
 	self._can_shoot_through_enemy = tweak_data.weapon[self._name_id].can_shoot_through_enemy

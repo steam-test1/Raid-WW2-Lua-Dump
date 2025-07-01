@@ -188,7 +188,7 @@ end
 function PlayerManager:soft_reset()
 	self._listener_holder = EventListenerHolder:new()
 	self._equipment = {
-		add_coroutine = nil,
+		distance_sq = nil,
 		selections = {},
 		specials = {},
 	}
@@ -204,7 +204,7 @@ end
 
 function PlayerManager:_setup()
 	self._equipment = {
-		add_coroutine = nil,
+		distance_sq = nil,
 		selections = {},
 		specials = {},
 	}
