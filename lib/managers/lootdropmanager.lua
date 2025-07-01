@@ -59,21 +59,23 @@ end
 function LootDropManager:produce_consumable_mission_drop()
 	local gold_bars_earned = 0
 	local loot_secured = managers.loot:get_secured()
+	local difficulty = Global.game_settings and Global.game_settings.difficulty or Global.DEFAULT_DIFFICULTY
+	local difficulty_index = tweak_data:difficulty_to_index(difficulty)
+	local difficulty_multi = tweak_data.lootdrop.difficulty_reward_multiplier[difficulty_index]
 
 	while loot_secured do
 		local loot_tweak_data = tweak_data.carry[loot_secured.carry_id]
 
-		if loot_tweak_data and loot_tweak_data.value_in_gold then
-			gold_bars_earned = gold_bars_earned + loot_tweak_data.value_in_gold
+		if loot_tweak_data and loot_tweak_data.loot_outlaw_value then
+			local value_by_diff = math.round(loot_tweak_data.loot_outlaw_value * difficulty_multi)
+
+			Application:debug("[LootDropManager:produce_consumable_mission_drop()] Loot '" .. loot_secured.carry_id .. "' value by diff: " .. tostring(loot_tweak_data.loot_outlaw_value) .. " -> " .. tostring(value_by_diff))
+
+			gold_bars_earned = gold_bars_earned + value_by_diff
 		end
 
 		loot_secured = managers.loot:get_secured()
 	end
-
-	local difficulty = Global.game_settings and Global.game_settings.difficulty or Global.DEFAULT_DIFFICULTY
-	local difficulty_index = tweak_data:difficulty_to_index(difficulty)
-
-	gold_bars_earned = math.ceil(gold_bars_earned * tweak_data.operations.consumable_missions.difficulty_reward_multiplier[difficulty_index])
 
 	local drop = {
 		gold_bars_max = gold_bars_earned,
@@ -111,31 +113,6 @@ function LootDropManager:_get_loot_group(loot_value, use_reroll_drop_tables, for
 
 		if group.min_loot_value or loot_value > 0 and loot_value <= (group.max_loot_value or 0) then
 			loot_group = deep_clone(group)
-
-			for k, v in pairs(loot_group) do
-				Application:debug("[LootDropManager:_get_loot_group] loot group parts:", k)
-
-				if type(v) == "table" and v.conditions then
-					Application:debug("[LootDropManager:_get_loot_group] has conditions", k, v.conditions)
-
-					local conditions_met = true
-
-					for _, condition in ipairs(v.conditions) do
-						if condition == LootDropTweakData.DROP_CONDITION_BELOW_MAX_LEVEL and managers.experience:reached_level_cap() then
-							conditions_met = false
-
-							Application:debug("[LootDropManager:_get_loot_group] DROP_CONDITION_BELOW_MAX_LEVEL failed")
-						end
-					end
-
-					if not conditions_met then
-						Application:debug("[LootDropManager:_get_loot_group] conditions failed removing", k)
-						table.remove(loot_group, k)
-					end
-				end
-			end
-
-			break
 		end
 	end
 
@@ -210,18 +187,18 @@ function LootDropManager:give_loot_to_player(loot_value, use_reroll_drop_tables,
 		return
 	elseif drop.reward_type == LootDropTweakData.REWARD_XP then
 		self:_give_xp_to_player(drop)
+	elseif drop.reward_type == LootDropTweakData.REWARD_GOLD_BARS then
+		self:_give_gold_bars_to_player(drop)
+	elseif drop.reward_type == LootDropTweakData.REWARD_WEAPON_POINT then
+		self:_give_weapon_point_to_player(drop)
 	elseif drop.reward_type == LootDropTweakData.REWARD_CUSTOMIZATION then
 		local result = self:_give_character_customization_to_player(drop)
 
 		need_reroll = not result
-	elseif drop.reward_type == LootDropTweakData.REWARD_WEAPON_POINT then
-		self:_give_weapon_point_to_player(drop)
 	elseif drop.reward_type == LootDropTweakData.REWARD_MELEE_WEAPON then
 		local result = self:_give_melee_weapon_to_player(drop)
 
 		need_reroll = not result
-	elseif drop.reward_type == LootDropTweakData.REWARD_GOLD_BARS then
-		self:_give_gold_bars_to_player(drop)
 	elseif drop.reward_type == LootDropTweakData.REWARD_HALLOWEEN_2017 then
 		local result = self:_give_halloween_2017_weapon_to_player(drop)
 
@@ -301,7 +278,7 @@ function LootDropManager:redeem_dropped_loot_for_goldbars()
 end
 
 function LootDropManager:_give_xp_to_player(drop)
-	drop.awarded_xp = math.round(math.rand(drop.xp_min, drop.xp_max))
+	drop.awarded_xp = math.round(math.rand(drop.xp_min, drop.xp_max) / 100) * 100
 
 	managers.experience:set_loot_bonus_xp(drop.awarded_xp)
 	managers.network:session():send_to_peers_synched("sync_loot_to_peers", drop.reward_type, "", drop.awarded_xp, managers.network:session():local_peer():id())
@@ -380,6 +357,8 @@ function LootDropManager:_give_gold_bars_to_player(drop)
 end
 
 function LootDropManager:on_loot_dropped_for_peer(loot_type, name, value, peer_id)
+	Application:trace("[LootDropManager:on_loot_dropped_for_peer]   Loot dropped for peer:  ", loot_type, name, value, peer_id)
+
 	local drop = {
 		peer_id = peer_id,
 		peer_name = managers.network:session():peer(peer_id) and managers.network:session():peer(peer_id):name() or "",

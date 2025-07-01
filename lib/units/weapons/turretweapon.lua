@@ -14,6 +14,7 @@ function TurretWeapon:init(unit)
 	self._overheating_smoke_locator = unit:get_object(Idstring("es_smoke")) or unit:get_object(Idstring("es_smoke_1"))
 	self._number_of_barrels = tweak_data.weapon[self.name_id].number_of_barrels or 1
 	self._current_barrel = 1
+	self._turret_marked = false
 
 	self:_setup_fire_effects()
 	self:_setup_smoke_effects()
@@ -113,6 +114,10 @@ end
 
 function TurretWeapon:pre_destroy()
 	return
+end
+
+function TurretWeapon:zoom()
+	return tweak_data.weapon[self.name_id].aim_fov or 55
 end
 
 function TurretWeapon:set_visibility_state(visible)
@@ -321,6 +326,8 @@ function TurretWeapon:deactivate()
 	self:stop_autofire()
 
 	self._mode = nil
+
+	self:unmark_turret()
 
 	if alive(self._puppet_unit) then
 		self._puppet_unit:inventory():show_equipped_unit()
@@ -766,7 +773,8 @@ function TurretWeapon:_update_shell_movement(dt)
 	self._shell_cumulative_gravity = self._shell_cumulative_gravity + 9.81 * dt
 
 	local shell_velocity = 60000
-	local fire_position = self._locator_fire:position()
+	local fire_locator = self:_get_fire_locator()
+	local fire_position = fire_locator:position()
 	local old_shell_position = Vector3(self._turret_shell.position.x, self._turret_shell.position.y, self._turret_shell.position.z)
 
 	self._turret_shell.position = self._turret_shell.position + self._turret_shell.direction * shell_velocity * dt + Vector3(0, 0, -self._shell_cumulative_gravity)
@@ -794,6 +802,7 @@ end
 
 function TurretWeapon:_turret_shell_explode(from_pos, to_pos, detonate_now)
 	local shell_position = from_pos
+	local shell_dir
 
 	if not detonate_now then
 		local col_ray = World:raycast("ray", from_pos, to_pos, "ignore_unit", self._setup.ignore_units)
@@ -802,6 +811,7 @@ function TurretWeapon:_turret_shell_explode(from_pos, to_pos, detonate_now)
 			return
 		end
 
+		shell_dir = col_ray.normal
 		shell_position = col_ray.hit_position
 		self._turret_shell = nil
 		self._shell_cumulative_gravity = 0
@@ -809,7 +819,7 @@ function TurretWeapon:_turret_shell_explode(from_pos, to_pos, detonate_now)
 
 	World:effect_manager():spawn({
 		effect = Idstring("effects/vanilla/explosions/vehicle_explosion"),
-		normal = math.UP,
+		normal = shell_dir or math.UP,
 		position = shell_position,
 	})
 
@@ -1636,6 +1646,44 @@ function TurretWeapon:_shell_explosion_on_client(position, radius, damage, playe
 
 	managers.explosion:give_local_player_dmg(position, damage_radius, player_damage)
 	managers.explosion:explode_on_client(position, math.UP, nil, damage, damage_radius, curve_pow, custom_params)
+end
+
+function TurretWeapon:mark_turret(data)
+	Application:debug("[TurretWeapon:mark_turret] data", inspect(data))
+
+	self._contour_data = data
+
+	if self._puppet_unit:contour() then
+		self._puppet_unit:contour():add(data[1], data[2], data[3], data[4])
+	else
+		Application:debug("[TurretWeapon:mark_turret] No puppet contour.")
+	end
+
+	if self._unit:contour() then
+		self._unit:contour():add("mark_enemy_turret", data[2], data[3], nil)
+	else
+		Application:debug("[TurretWeapon:mark_turret] No turret contour.")
+	end
+
+	self._turret_marked = true
+end
+
+function TurretWeapon:unmark_turret()
+	if self._turret_marked and self._contour_data then
+		if self._puppet_unit:contour() then
+			self._puppet_unit:contour():remove(self._contour_data[1], self._contour_data[2])
+		else
+			Application:debug("[TurretWeapon:mark_turret] No puppet contour to remove.")
+		end
+
+		if self._unit:contour() then
+			self._unit:contour():remove("mark_enemy_turret", self._contour_data[2])
+		else
+			Application:debug("[TurretWeapon:mark_turret] No turret contour to remove.")
+		end
+
+		self._contour_data = nil
+	end
 end
 
 function TurretWeapon:adjust_target_pos(target_pos)
