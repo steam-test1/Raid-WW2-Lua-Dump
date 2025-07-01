@@ -1028,7 +1028,7 @@ function RaidJobManager:save_game(data)
 	end
 
 	if managers.global_state then
-		if self._current_save_slot and self._current_job and Network:is_server() then
+		if Network:is_server() and self._current_save_slot and self._current_job then
 			local save_data = {}
 
 			save_data.global_states = self._initial_global_states or managers.global_state:get_all_global_states()
@@ -1105,18 +1105,16 @@ function RaidJobManager:_prepare_peer_save_data()
 	table.insert(peer_save_data, local_player_data)
 
 	for index, peer in pairs(managers.network:session():all_peers()) do
-		if peer ~= managers.network:session():local_peer() then
-			local peer_data = {}
+		local peer_data = {}
 
-			peer_data.name = peer:name()
-			peer_data.class = peer:class()
-			peer_data.nationality = peer:character()
-			peer_data.level = peer:level()
-			peer_data.player_id = peer:user_id()
-			peer_data.statistics = peer:statistics()
+		peer_data.name = peer:name()
+		peer_data.class = peer:class()
+		peer_data.nationality = peer:character()
+		peer_data.level = peer:level()
+		peer_data.player_id = peer:user_id()
+		peer_data.statistics = peer:statistics()
 
-			table.insert(peer_save_data, peer_data)
-		end
+		table.insert(peer_save_data, peer_data)
 	end
 
 	return peer_save_data

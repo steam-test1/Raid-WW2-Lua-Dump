@@ -22,7 +22,7 @@ function BarrageTweakData:init(tweak_data)
 	self.default.cooldown = {
 		140,
 		130,
-		100,
+		120,
 	}
 	self.default.initial_delay = 3.5
 	self.default.barrage_launch_sound_delay = 3.5

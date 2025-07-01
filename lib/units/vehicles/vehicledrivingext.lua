@@ -1130,7 +1130,6 @@ function VehicleDrivingExt:exit_vehicle(player)
 	local count = self:_number_in_the_vehicle()
 
 	if count == 0 then
-		self:_unregister_drive_SO()
 		self:_evacuate_vehicle()
 	end
 end
@@ -2158,6 +2157,7 @@ function VehicleDrivingExt:_create_seat_SO(seat)
 		admin_clbk = callback(self, self, "on_drive_SO_administered", seat),
 		objective = ride_objective,
 		search_pos = ride_objective.pos,
+		verification_clbk = callback(self, self, "clbk_drive_SO_verification"),
 	}
 	local SO_id = "ride_" .. tostring(self._unit:key()) .. seat.name
 
@@ -2172,6 +2172,10 @@ function VehicleDrivingExt:_create_seat_SO(seat)
 end
 
 function VehicleDrivingExt:clbk_drive_SO_verification(candidate_unit)
+	if candidate_unit:movement():cool() then
+		return false
+	end
+
 	return true
 end
 

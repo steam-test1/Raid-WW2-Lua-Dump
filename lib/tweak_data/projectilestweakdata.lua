@@ -296,8 +296,8 @@ function ProjectilesTweakData:init(tweak_data)
 	self.mortar_shell.adjust_z = 0
 	self.mortar_shell.push_at_body_index = 0
 	self.mortar_shell.init_timer = 5
-	self.mortar_shell.damage = 80
-	self.mortar_shell.player_damage = 20
+	self.mortar_shell.damage = 75
+	self.mortar_shell.player_damage = 35
 	self.mortar_shell.range = 1500
 	self.mortar_shell.killzone_range = 0
 	self.mortar_shell.init_timer = 15

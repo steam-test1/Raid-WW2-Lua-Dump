@@ -49,6 +49,14 @@ function UpgradeLeaded:_on_damage_taken(attack_data)
 			end
 
 			managers.hud:set_ammo_amount(weapon_base:selection_index(), weapon_base:ammo_info())
+
+			if weapon_base:can_reload() then
+				managers.hud:hide_prompt("hud_reload_prompt")
+			end
+
+			if not weapon_base:out_of_ammo() then
+				managers.hud:hide_prompt("hud_no_ammo_prompt")
+			end
 		end
 	end
 

@@ -230,7 +230,7 @@ function RaidMainMenuGui:_layout_version_id()
 		alpha = 0.33,
 		h = 100,
 		name = "version_id",
-		w = 400,
+		w = 600,
 		x = 0,
 		text = text,
 		y = self._root_panel:h() - 50,

@@ -22,7 +22,7 @@ function UpgradeAnatomist:_on_knockdown(params)
 	local enemy_unit = params.unit
 	local character_damage = enemy_unit:character_damage()
 
-	if not character_damage or character_damage.ignore_knockdown and character_damage:ignore_knockdown() then
+	if not character_damage or character_damage:dead() or character_damage.ignore_knockdown and character_damage:ignore_knockdown() then
 		return
 	end
 

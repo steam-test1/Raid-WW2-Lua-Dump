@@ -104,7 +104,7 @@ function VehicleTweakData:_init_data_kubelwagen()
 		vehicle_id = "kubelwagen",
 	}
 	self.kubelwagen.sound = {
-		broken_engine = "falcogini_engine_broken_loop",
+		broken_engine = "kubel_engine_break",
 		bump = "car_bumper_01",
 		bump_locator = "anim_tire_front_left",
 		bump_rtpc = "TRD_bump",

@@ -14,6 +14,8 @@ WorldDefinition.VEHICLES_CONTINENT_NAME = "NOT_USED_vehicles"
 WorldDefinition.MAX_WORLD_UNIT_ID = 15
 WorldDefinition.UNIT_ID_BASE = 1000000
 
+local is_editor = Application:editor()
+
 function WorldDefinition:init(params)
 	WorldDefinition.ASYNC_CALLBACKS = Global.STREAM_ALL_PACKAGES
 	self._no_loading_packages = {}
@@ -224,8 +226,6 @@ function WorldDefinition:get_max_id()
 end
 
 function WorldDefinition:_parse_replace_unit()
-	local is_editor = Application:editor()
-
 	if DB:has("xml", self._replace_units_path) then
 		local node = DB:load_node("xml", self._replace_units_path)
 
@@ -756,18 +756,6 @@ function WorldDefinition:init_done()
 	self._continent_definitions = nil
 	self._definition = nil
 	self.is_created = true
-end
-
-function WorldDefinition:_measure_lap_time(name)
-	do return end
-
-	self._start_lap = self._start_lap or TimerManager:now()
-
-	local now = TimerManager:now()
-
-	Application:debug("Lap ", name, now - self._start_lap)
-
-	self._start_lap = now
 end
 
 function WorldDefinition:create(layer, offset, world_in_world, nav_graph_loaded)
@@ -1412,8 +1400,6 @@ function WorldDefinition:_create_ai_editor_unit(data, offset)
 end
 
 function WorldDefinition:preload_unit(name)
-	local is_editor = Application:editor()
-
 	if table.has(self._replace_names, name) then
 		name = self._replace_names[name]
 	elseif is_editor and (not DB:has(IDS_UNIT, name:id()) or CoreEngineAccess._editor_unit_data(name:id()):type():id() == Idstring("deleteme")) then
@@ -1436,8 +1422,6 @@ function WorldDefinition:preload_unit(name)
 	end
 end
 
-local is_editor = Application:editor()
-
 function WorldDefinition:make_unit(data, offset, world_in_world, continent_name)
 	local name = data.name
 
@@ -1456,14 +1440,14 @@ function WorldDefinition:make_unit(data, offset, world_in_world, continent_name)
 	data.continent_name = continent_name
 
 	local pkg = data.package or ""
-	local network_sync = PackageManager:unit_data(name:id(), pkg):network_sync()
-	local need_sync = false
 	local unit
+	local need_sync = false
+	local network_sync = PackageManager:unit_data(name:id(), pkg):network_sync()
 
 	if network_sync ~= "none" and network_sync ~= "client" then
 		need_sync = true
 
-		if not is_editor and not Network:is_server() then
+		if not is_editor and Network:is_client() then
 			local found = false
 
 			for _, u in ipairs(self._temp_units_synced) do
@@ -1471,6 +1455,8 @@ function WorldDefinition:make_unit(data, offset, world_in_world, continent_name)
 					unit = managers.worldcollection:get_unit_with_real_id(u.unit_id)
 
 					if unit then
+						data.need_sync = true
+
 						self:assign_unit_data(unit, data, world_in_world)
 
 						found = true
@@ -1483,7 +1469,7 @@ function WorldDefinition:make_unit(data, offset, world_in_world, continent_name)
 				table.insert(self._temp_units, data)
 			end
 
-			return
+			return nil
 		end
 	end
 
@@ -1520,7 +1506,26 @@ function WorldDefinition:make_unit(data, offset, world_in_world, continent_name)
 	return unit
 end
 
-local is_editor = Application:editor()
+function WorldDefinition:sync_unit_data(unit, editor_id)
+	local found = false
+
+	for _, data in ipairs(self._temp_units) do
+		if data.unit_id == editor_id then
+			found = true
+			data.found_unit = unit
+
+			self:assign_unit_data(unit, data)
+			self:use_me(unit, Application:editor())
+		end
+	end
+
+	if not found then
+		table.insert(self._temp_units_synced, {
+			synced_editor_id = editor_id,
+			unit_id = unit:id(),
+		})
+	end
+end
 
 function WorldDefinition:assign_unit_data(unit, data, world_in_world)
 	if not unit:unit_data() then
@@ -1541,10 +1546,6 @@ function WorldDefinition:assign_unit_data(unit, data, world_in_world)
 
 	self:_setup_unit_id(unit, data)
 	self:_setup_editor_unit_data(unit, data)
-
-	if unit:unit_data().helper_type and unit:unit_data().helper_type ~= "none" then
-		managers.helper_unit:add_unit(unit, unit:unit_data().helper_type)
-	end
 
 	if data.continent and self._created_by_editor then
 		managers.editor:add_unit_to_continent(data.continent, unit)
@@ -1570,6 +1571,10 @@ function WorldDefinition:assign_unit_data(unit, data, world_in_world)
 			ext:on_load_complete()
 		end
 	end
+end
+
+function WorldDefinition:_project_assign_unit_data(...)
+	return
 end
 
 function WorldDefinition:_setup_unit_id(unit, data)
@@ -1646,6 +1651,10 @@ function WorldDefinition:setup_lights(...)
 end
 
 function WorldDefinition:_setup_variations(unit, data)
+	if not data.found_unit and data.need_sync then
+		return
+	end
+
 	if data.mesh_variation and data.mesh_variation ~= "default" then
 		if not Application:editor() or unit:damage() and unit:damage():has_sequence(data.mesh_variation) then
 			unit:unit_data().mesh_variation = data.mesh_variation
@@ -1793,6 +1802,10 @@ function WorldDefinition:_add_to_portal(unit, data)
 	end
 end
 
+function WorldDefinition:setup_projection_light(...)
+	self:_setup_projection_light(...)
+end
+
 function WorldDefinition:_setup_projection_light(unit, data)
 	if not data.projection_light then
 		return
@@ -1827,14 +1840,6 @@ function WorldDefinition:_setup_projection_light(unit, data)
 	local omni = string.find(light:properties(), "omni") and true or false
 
 	light:set_projection_texture(Idstring(texture_name), omni, true)
-end
-
-function WorldDefinition:setup_projection_light(...)
-	self:_setup_projection_light(...)
-end
-
-function WorldDefinition:_project_assign_unit_data(...)
-	return
 end
 
 function WorldDefinition:add_trigger_sequence(unit, triggers)
@@ -2176,27 +2181,6 @@ function WorldDefinition:_load_package(package)
 	PackageManager:load(package)
 end
 
-function WorldDefinition:sync_unit_data(unit, editor_id)
-	local found = false
-
-	for _, data in ipairs(self._temp_units) do
-		if data.unit_id == editor_id then
-			self:assign_unit_data(unit, data)
-			self:use_me(unit, Application:editor())
-
-			found = true
-			data.found_unit = unit
-		end
-	end
-
-	if not found then
-		table.insert(self._temp_units_synced, {
-			synced_editor_id = editor_id,
-			unit_id = unit:id(),
-		})
-	end
-end
-
 function WorldDefinition:sync_unit_reference_data(unit_id, editor_id)
 	table.insert(self._temp_units_synced, {
 		dropin = true,
@@ -2247,4 +2231,8 @@ function WorldDefinition:keep_alive(t)
 
 		managers.network:session():send_to_peers_ip_verified("connection_keep_alive")
 	end
+end
+
+function WorldDefinition:_measure_lap_time(name)
+	return
 end

@@ -83,13 +83,12 @@ function CharacterTweakData:_init_russian(presets)
 	self.russian.flammable = false
 	self.russian.speech_prefix = "russ"
 	self.russian.weapon_voice = "1"
-	self.russian.access = "teamAI1"
+	self.russian.access = "teamAI2"
 	self.russian.arrest = {
 		aggression_timeout = 6,
 		arrest_timeout = 2400,
 		timeout = 2400,
 	}
-	self.russian.access = "teamAI1"
 	self.russian.vision = presets.vision.easy
 end
 
@@ -110,7 +109,7 @@ function CharacterTweakData:_init_german(presets)
 	self.german.flammable = false
 	self.german.speech_prefix = "germ"
 	self.german.weapon_voice = "2"
-	self.german.access = "teamAI1"
+	self.german.access = "teamAI3"
 	self.german.arrest = {
 		aggression_timeout = 6,
 		arrest_timeout = 2400,
@@ -162,7 +161,7 @@ function CharacterTweakData:_init_american(presets)
 	self.american.flammable = false
 	self.american.speech_prefix = "amer"
 	self.american.weapon_voice = "3"
-	self.american.access = "teamAI1"
+	self.american.access = "teamAI4"
 	self.american.arrest = {
 		aggression_timeout = 6,
 		arrest_timeout = 2400,

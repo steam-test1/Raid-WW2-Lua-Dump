@@ -2107,8 +2107,6 @@ function InstantExplosiveBulletBase:on_collision_server(position, normal, damage
 				weapon_unit = weapon_unit,
 			})
 		end
-
-		local weapon_pass, weapon_type_pass, count_pass, all_pass
 	else
 		local peer = managers.network:session():peer(owner_peer_id)
 		local SYNCH_MIN = 0

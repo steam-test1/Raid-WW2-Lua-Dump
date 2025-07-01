@@ -3392,11 +3392,11 @@ function WeaponTweakData:_init_m1911(weapon_data, tweak_data)
 	self.m1911.use_data.selection_index = tweak_data.WEAPON_SLOT_SECONDARY
 	self.m1911.damage_profile = {
 		{
-			damage = 38,
+			damage = 40,
 			range = 1000,
 		},
 		{
-			damage = 30,
+			damage = 35,
 			range = 2400,
 		},
 	}
@@ -5080,8 +5080,8 @@ function WeaponTweakData:_init_m1_garand(weapon_data, tweak_data)
 	self.garand.use_data.selection_index = tweak_data.WEAPON_SLOT_PRIMARY
 	self.garand.damage_profile = {
 		{
-			damage = 58,
-			range = 2400,
+			damage = 75,
+			range = 800,
 		},
 		{
 			damage = 44,
