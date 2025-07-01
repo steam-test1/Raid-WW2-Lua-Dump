@@ -281,8 +281,8 @@ function GroupAIRaidTweakData:init(difficulty_index)
 			},
 			commanders = {
 				0,
-				1,
 				2,
+				3,
 			},
 			fallschirm_charge = {
 				0,
@@ -301,8 +301,8 @@ function GroupAIRaidTweakData:init(difficulty_index)
 			},
 			flamethrower = {
 				1,
-				1,
 				2,
+				3,
 			},
 			gerbish_chargers = {
 				40,
@@ -359,8 +359,8 @@ function GroupAIRaidTweakData:init(difficulty_index)
 			},
 			commanders = {
 				0,
-				2,
 				4,
+				8,
 			},
 			fallschirm_charge = {
 				30,
@@ -378,7 +378,7 @@ function GroupAIRaidTweakData:init(difficulty_index)
 				40,
 			},
 			flamethrower = {
-				9,
+				5,
 				12,
 				15,
 			},
@@ -436,9 +436,9 @@ function GroupAIRaidTweakData:init(difficulty_index)
 				80,
 			},
 			commanders = {
-				1,
-				4,
-				8,
+				2,
+				7,
+				12,
 			},
 			fallschirm_charge = {
 				75,
@@ -456,7 +456,7 @@ function GroupAIRaidTweakData:init(difficulty_index)
 				30,
 			},
 			flamethrower = {
-				15,
+				10,
 				18,
 				20,
 			},

@@ -5030,7 +5030,7 @@ function WeaponSkillsTweakData:_init_browning_skill_tree(tweak_data)
 			challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
 			challenge_done_text_id = "weapon_skill_collect_ammo_completed",
 			cost = 4,
-			value = 3,
+			value = 2,
 			challenge_tasks = {
 				{
 					target = 590,
