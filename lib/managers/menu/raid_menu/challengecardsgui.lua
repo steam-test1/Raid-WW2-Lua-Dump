@@ -258,15 +258,11 @@ function ChallengeCardsGui:_layout()
 	self._filter_type = managers.raid_job:current_job_type()
 
 	local rm_head = self._node.components.raid_menu_header
+	local rm_head_text
 
-	if self._filter_type == OperationsTweakData.JOB_TYPE_OPERATION then
-		rm_head:set_screen_name("menu_challenge_cards_suggest_operation_title")
-	elseif self._filter_type == OperationsTweakData.JOB_TYPE_OPERATION then
-		rm_head:set_screen_name("menu_challenge_cards_suggest_operation_title")
-	else
-		rm_head:set_screen_name("menu_challenge_cards_view_title")
-	end
+	rm_head_text = self._filter_type == OperationsTweakData.JOB_TYPE_RAID and "menu_challenge_cards_suggest_raid_title" or self._filter_type == OperationsTweakData.JOB_TYPE_OPERATION and "menu_challenge_cards_suggest_operation_title" or "menu_challenge_cards_view_title"
 
+	rm_head:set_screen_name(rm_head_text)
 	self:suggestions_changed()
 	self._phase_one_panel:show()
 	self._phase_two_panel:hide()
@@ -384,8 +380,6 @@ end
 
 function ChallengeCardsGui:reload_filtered_data()
 	if self._challenge_cards_steam_data_source then
-		self._challenge_cards_data_source = clone(self._challenge_cards_steam_data_source)
-
 		local owned_cards = {}
 
 		for _, card_data in ipairs(self._challenge_cards_steam_data_source) do
@@ -406,19 +400,49 @@ function ChallengeCardsGui:reload_filtered_data()
 				table.insert(self._challenge_cards_data_source, card)
 			end
 		end
+
+		local function sort_owned(a, b)
+			if not a.steam_instances and not b.steam_instances then
+				return false
+			end
+
+			if a.steam_instances and not b.steam_instances then
+				return true
+			end
+
+			if a.steam_instances and b.steam_instances and #a.steam_instances > #b.steam_instances then
+				return true
+			end
+
+			return false
+		end
+
+		table.sort(self._challenge_cards_data_source, sort_owned)
 	end
 
 	local result = {}
 
-	if self._filter_type then
-		for _, card_data in ipairs(self._challenge_cards_data_source) do
-			if self._filter_type == OperationsTweakData.JOB_TYPE_RAID and card_data.card_type == ChallengeCardsTweakData.CARD_TYPE_RAID or self._filter_type == OperationsTweakData.JOB_TYPE_OPERATION and card_data.card_type == ChallengeCardsTweakData.CARD_TYPE_OPERATION then
-				table.insert(result, card_data)
-			end
+	for _, card_data in ipairs(self._challenge_cards_data_source) do
+		local add_card = true
+
+		if add_card and card_data.menu_skip then
+			add_card = false
 		end
 
-		self._challenge_cards_data_source = clone(result)
+		if not add_card or not self._filter_type or self._filter_type == OperationsTweakData.JOB_TYPE_RAID and card_data.card_type == ChallengeCardsTweakData.CARD_TYPE_RAID or self._filter_type == OperationsTweakData.JOB_TYPE_OPERATION and card_data.card_type == ChallengeCardsTweakData.CARD_TYPE_OPERATION then
+			-- block empty
+		else
+			add_card = false
+		end
+
+		if add_card then
+			table.insert(result, card_data)
+		else
+			Application:info("[ChallengeCardsGui:reload_filtered_data] Card '" .. card_data.key_name .. "' did not make visible filters", inspect(card_data))
+		end
 	end
+
+	self._challenge_cards_data_source = clone(result)
 
 	self._card_grid:refresh_data()
 	self._challenge_cards_grid_scrollable_area:setup_scroll_area()
@@ -488,7 +512,7 @@ function ChallengeCardsGui:suggest_card()
 	local card_data = self._selected_card_data
 
 	if card_data and card_data.steam_instances then
-		managers.menu_component:post_event("gold_spending_apply")
+		managers.menu_component:post_event("sugg_card_lock")
 
 		local steam_instance_id = card_data.steam_instances[1].instance_id
 
@@ -612,6 +636,7 @@ end
 function ChallengeCardsGui:cancel_card()
 	managers.challenge_cards:remove_suggested_challenge_card()
 	self:_update_suggest_card_button()
+	managers.menu_component:post_event("sugg_card_remove")
 end
 
 function ChallengeCardsGui:phase_two_activate()
@@ -782,7 +807,7 @@ function ChallengeCardsGui:redirect_to_phase_two_screen()
 		local all_players_passed = true
 
 		for _, suggested_card_data in pairs(managers.challenge_cards:get_suggested_cards()) do
-			if suggested_card_data.key_name ~= ChallengeCardsManager.CARD_PASS_KEY_NAME then
+			if not suggested_card_data.menu_skip then
 				all_players_passed = false
 
 				break

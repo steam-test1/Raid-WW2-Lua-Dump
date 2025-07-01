@@ -853,7 +853,7 @@ function MenuManager:toggle_menu_state()
 			if (not self:active_menu() or #self:active_menu().logic._node_stack == 1 or not managers.menu:active_menu().logic:selected_node() or managers.menu:active_menu().logic:selected_node():parameters().allow_pause_menu) and managers.menu_component:input_focus() ~= 1 then
 				local success = managers.raid_menu:open_menu("raid_main_menu")
 
-				if Global.game_settings.single_player or managers.network:session():count_all_peers() == 1 then
+				if Global.game_settings.single_player or (managers.network:session() and managers.network:session():count_all_peers() or 1) == 1 then
 					if not managers.raid_job:is_camp_loaded() then
 						Application:debug("[MenuManager:toggle_menu_state()] PAUSING")
 						Application:set_pause(true)

@@ -23,8 +23,8 @@ function ExplosionTweakData:init(tweak_data)
 		effect_params = {
 			sound_event = "explosive_barrel_destruction",
 		},
-		player_damage = 75,
-		range = 450,
+		player_damage = 100,
+		range = 500,
 	}
 	self.thermite_detonate = {
 		curve_pow = 0.1,

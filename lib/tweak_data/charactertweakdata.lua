@@ -1258,14 +1258,14 @@ function CharacterTweakData:_init_german_flamer(presets)
 				1,
 				1,
 			},
-			dmg_mul = 1,
+			dmg_mul = 2,
 			mode = {
 				0,
 				2,
 				4,
 				10,
 			},
-			r = 200,
+			r = 400,
 			recoil = {
 				0,
 				0,
@@ -1312,8 +1312,9 @@ function CharacterTweakData:_init_german_flamer(presets)
 	self:_process_weapon_usage_table(self.german_flamer.weapon)
 
 	self.german_flamer.throwable = {
+		cooldown = 30,
 		projectile_id = "flamer_incendiary",
-		throw_chance = 0.18,
+		throw_chance = 0.15,
 	}
 	self.german_flamer.weapon_voice = "3"
 	self.german_flamer.speech_prefix_p1 = "ger"
@@ -6711,14 +6712,14 @@ function CharacterTweakData:_presets(tweak_data)
 			crouch = {
 				run = {
 					cbt = {
-						bwd = 125,
-						fwd = 144,
-						strafe = 100,
+						bwd = 170,
+						fwd = 216,
+						strafe = 180,
 					},
 					hos = {
-						bwd = 113,
-						fwd = 144,
-						strafe = 130,
+						bwd = 170,
+						fwd = 216,
+						strafe = 180,
 					},
 				},
 				walk = {
@@ -6737,14 +6738,14 @@ function CharacterTweakData:_presets(tweak_data)
 			stand = {
 				run = {
 					cbt = {
-						bwd = 125,
-						fwd = 144,
-						strafe = 100,
+						bwd = 170,
+						fwd = 216,
+						strafe = 180,
 					},
 					hos = {
-						bwd = 113,
-						fwd = 144,
-						strafe = 140,
+						bwd = 170,
+						fwd = 216,
+						strafe = 180,
 					},
 				},
 				walk = {
@@ -7145,6 +7146,8 @@ function CharacterTweakData:_set_difficulty_1()
 		},
 	}
 	self.german_flamer.HEALTH_INIT = 1600
+	self.german_flamer.throwable.throw_chance = 0
+	self.german_flamer.throwable.cooldown = 40
 end
 
 function CharacterTweakData:_set_difficulty_2()
@@ -7238,6 +7241,8 @@ function CharacterTweakData:_set_difficulty_2()
 		},
 	}
 	self.german_flamer.HEALTH_INIT = 2000
+	self.german_flamer.throwable.throw_chance = 0.15
+	self.german_flamer.throwable.cooldown = 30
 end
 
 function CharacterTweakData:_set_difficulty_3()
@@ -7331,6 +7336,8 @@ function CharacterTweakData:_set_difficulty_3()
 		},
 	}
 	self.german_flamer.HEALTH_INIT = 2200
+	self.german_flamer.throwable.throw_chance = 0.2
+	self.german_flamer.throwable.cooldown = 22
 end
 
 function CharacterTweakData:_set_difficulty_4()
@@ -7425,6 +7432,8 @@ function CharacterTweakData:_set_difficulty_4()
 		},
 	}
 	self.german_flamer.HEALTH_INIT = 2600
+	self.german_flamer.throwable.throw_chance = 0.28
+	self.german_flamer.throwable.cooldown = 15
 end
 
 function CharacterTweakData:_multiply_weapon_delay(weap_usage_table, mul)

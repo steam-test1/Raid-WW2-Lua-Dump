@@ -619,6 +619,7 @@ function SkillTreeManager:calculate_stats(character_class)
 	local class_tweak_data = tweak_data.player:get_tweak_data_for_class(character_class)
 	local stats = {
 		carry_limit = self:_calculate_carry_limit_stat(character_class),
+		crit_chance = self:_calculate_crit_chance_stat(character_class),
 		health = self:_calculate_health_stat(class_tweak_data),
 		speed_run = class_tweak_data.movement.speed.RUNNING_SPEED * managers.player:movement_speed_multiplier(true),
 		speed_walk = class_tweak_data.movement.speed.WALKING_SPEED * managers.player:movement_speed_multiplier(),
@@ -663,6 +664,12 @@ function SkillTreeManager:_calculate_stamina_regen_stat(class_tweak_data)
 	local regen_multiplier = managers.player:stamina_regen_multiplier()
 
 	return base_stamina_regen * regen_multiplier, base_stamina_regen
+end
+
+function SkillTreeManager:_calculate_crit_chance_stat(character_class)
+	local base_crit_chance = managers.player:critical_hit_chance() * 100
+
+	return base_crit_chance, base_crit_chance
 end
 
 function SkillTreeManager:_calculate_carry_limit_stat(character_class)

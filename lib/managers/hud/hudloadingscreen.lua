@@ -427,9 +427,9 @@ function HUDLoadingScreen:_layout_operation_finished(current_job, success)
 
 	self._info_panel = self._panel:panel(info_panel_params)
 
-	local current_event = managers.raid_job:current_job().current_event
-	local operation_tweak_data = tweak_data.operations.missions[managers.raid_job:current_job().job_id]
-	local current_event_tweak_data = operation_tweak_data.events[managers.raid_job:current_job().events_index[current_event]]
+	local current_job = managers.raid_job:current_job()
+	local current_event = current_job.current_event
+	local current_event_tweak_data = current_job.events[managers.raid_job:current_job().events_index[current_event]]
 	local operation_title_panel_params = {
 		h = HUDLoadingScreen.INFO_TITLE_H,
 		layer = self._info_panel:layer() + 1,
@@ -455,7 +455,7 @@ function HUDLoadingScreen:_layout_operation_finished(current_job, success)
 		font_size = HUDLoadingScreen.INFO_TITLE_FONT_SIZE,
 		h = operation_title_panel:h(),
 		name = "operation_title",
-		text = utf8.to_upper(managers.localization:text(operation_tweak_data.name_id) .. " " .. tostring(current_event) .. "/" .. tostring(#operation_tweak_data.events_index_template)),
+		text = utf8.to_upper(managers.localization:text(current_job.name_id) .. " " .. tostring(current_event) .. "/" .. tostring(#current_job.events_index_template)),
 		vertical = "center",
 		x = operation_icon:w() + HUDLoadingScreen.MISSION_ICON_PADDING_RIGHT,
 	}

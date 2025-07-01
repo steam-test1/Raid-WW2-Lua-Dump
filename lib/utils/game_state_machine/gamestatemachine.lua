@@ -268,7 +268,7 @@ function GameStateMachine:init()
 	managers.system_menu:add_active_changed_callback(callback(self, self, "dialog_active_changed_callback"))
 end
 
-function GameStateMachine:init_finilize()
+function GameStateMachine:init_finalize()
 	if managers.hud then
 		managers.hud:add_chatinput_changed_callback(callback(self, self, "chatinput_changed_callback"))
 	end

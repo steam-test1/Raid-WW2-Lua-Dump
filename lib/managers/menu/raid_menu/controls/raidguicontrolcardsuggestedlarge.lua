@@ -184,7 +184,7 @@ function RaidGUIControlCardSuggestedLarge:set_card(card_data)
 	self._xp_bonus:set_h(h1)
 	self._xp_bonus:set_center_x(self._card_image:w() / 2)
 
-	local bonus_description, malus_description = managers.challenge_cards:get_card_description(self._item_data.key_name)
+	local bonus_description, malus_description = managers.challenge_cards:get_card_description(self._item_data)
 
 	if bonus_description and bonus_description ~= "" then
 		self._bonus_image = self._object:image({

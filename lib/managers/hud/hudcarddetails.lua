@@ -137,7 +137,7 @@ function HUDCardDetails:set_card_details(card)
 	self._preview_card:set_card(card)
 
 	if card and card.effects then
-		local bonus_description, malus_description = managers.challenge_cards:get_card_description(card.key_name)
+		local bonus_description, malus_description = managers.challenge_cards:get_card_description(card)
 
 		self._bonus_text:set_text(bonus_description)
 		self._malus_text:set_text(malus_description)
@@ -169,5 +169,7 @@ function HUDCardDetails:set_card_details(card)
 			self._malus_panel:set_y(effect_y)
 			self._malus_panel:set_h(math.max(self._malus_text:h(), self._malus_icon:h()))
 		end
+	else
+		Application:warn("[HUDCardDetails:set_card_details] Missing effects to get details!", card and card.effects)
 	end
 end

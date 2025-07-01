@@ -719,6 +719,16 @@ function AttentionTweakData:_init_custom()
 		verification_interval = 1.5,
 		weight_mul = 100,
 	}
+	self.settings.custom_enemy_shoot_at_delayed = {
+		filter = "law_enforcer",
+		max_range = 1000,
+		notice_requires_FOV = true,
+		pause = 4,
+		reaction = "REACT_COMBAT",
+		release_delay = 2,
+		turn_around_range = 250,
+		verification_interval = 1.5,
+	}
 end
 
 function AttentionTweakData:_init_drill()

@@ -112,3 +112,14 @@ end
 function HuskPlayerBase:chk_freeze_anims()
 	return
 end
+
+function HuskPlayerBase:set_visible(visible)
+	self._unit:set_visible(visible)
+	self._unit:customization():set_visible(visible)
+
+	if visible then
+		self._unit:inventory():show_equipped_unit()
+	else
+		self._unit:inventory():hide_equipped_unit()
+	end
+end

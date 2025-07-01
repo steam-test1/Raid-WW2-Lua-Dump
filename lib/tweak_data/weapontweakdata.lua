@@ -1567,10 +1567,10 @@ function WeaponTweakData:_init_data_tiger_main_gun_module_npc(difficulty_index)
 		main_cannon_lock_on = "tiger_npc_canon_reload",
 	}
 	self.tiger_main_gun_module.effect = {
-		DEFAULT_KICK_OFFSET = nil,
+		_init_new_weapons = nil,
 		main_cannon_fire = "effects/vanilla/explosions/tank_turret_fire",
 		main_cannon_fire_hit = "effects/vanilla/explosions/exp_airbomb_explosion_002",
-		standing = nil,
+		style = nil,
 	}
 	self.tiger_main_gun_module.turret = {
 		armor_piercing = true,
@@ -2156,124 +2156,63 @@ function WeaponTweakData:_init_data_player_weapons(tweak_data)
 	}
 
 	local autohit_rifle_default, autohit_pistol_default, autohit_shotgun_default, autohit_lmg_default, autohit_snp_default, autohit_smg_default, autohit_minigun_default, aim_assist_rifle_default, aim_assist_pistol_default, aim_assist_shotgun_default, aim_assist_lmg_default, aim_assist_snp_default, aim_assist_smg_default, aim_assist_minigun_default
-	local is_controller_present = managers.controller and managers.controller:is_controller_present()
 
-	if is_controller_present then
-		autohit_rifle_default = {
-			INIT_RATIO = 0.6,
-			MAX_RATIO = 0.6,
-			MIN_RATIO = 0.25,
-			far_angle = 3,
-			far_dis = 5000,
-			near_angle = 3,
-		}
-		autohit_pistol_default = {
-			INIT_RATIO = 0.6,
-			MAX_RATIO = 0.6,
-			MIN_RATIO = 0.25,
-			far_angle = 3,
-			far_dis = 2500,
-			near_angle = 3,
-		}
-		autohit_shotgun_default = {
-			INIT_RATIO = 0.3,
-			MAX_RATIO = 0.3,
-			MIN_RATIO = 0.15,
-			far_angle = 5,
-			far_dis = 5000,
-			near_angle = 3,
-		}
-		autohit_lmg_default = {
-			INIT_RATIO = 0.6,
-			MAX_RATIO = 0.6,
-			MIN_RATIO = 0.25,
-			far_angle = 3,
-			far_dis = 5000,
-			near_angle = 3,
-		}
-		autohit_snp_default = {
-			INIT_RATIO = 0.6,
-			MAX_RATIO = 0.6,
-			MIN_RATIO = 0.25,
-			far_angle = 3,
-			far_dis = 5000,
-			near_angle = 3,
-		}
-		autohit_smg_default = {
-			INIT_RATIO = 0.6,
-			MAX_RATIO = 0.6,
-			MIN_RATIO = 0.25,
-			far_angle = 3,
-			far_dis = 5000,
-			near_angle = 3,
-		}
-		autohit_minigun_default = {
-			INIT_RATIO = 1,
-			MAX_RATIO = 1,
-			MIN_RATIO = 0,
-			far_angle = 0.0005,
-			far_dis = 10000,
-			near_angle = 0.0005,
-		}
-	else
-		autohit_rifle_default = {
-			INIT_RATIO = 0.15,
-			MAX_RATIO = 0.85,
-			MIN_RATIO = 0.75,
-			far_angle = 1,
-			far_dis = 4000,
-			near_angle = 3,
-		}
-		autohit_pistol_default = {
-			INIT_RATIO = 0.15,
-			MAX_RATIO = 0.95,
-			MIN_RATIO = 0.82,
-			far_angle = 0.5,
-			far_dis = 4000,
-			near_angle = 3,
-		}
-		autohit_shotgun_default = {
-			INIT_RATIO = 0.15,
-			MAX_RATIO = 0.7,
-			MIN_RATIO = 0.6,
-			far_angle = 1.5,
-			far_dis = 5000,
-			near_angle = 3,
-		}
-		autohit_lmg_default = {
-			INIT_RATIO = 0.05,
-			MAX_RATIO = 0.4,
-			MIN_RATIO = 0.2,
-			far_angle = 0.2,
-			far_dis = 2000,
-			near_angle = 2,
-		}
-		autohit_snp_default = {
-			INIT_RATIO = 0.05,
-			MAX_RATIO = 0.4,
-			MIN_RATIO = 0.2,
-			far_angle = 0.2,
-			far_dis = 5000,
-			near_angle = 2,
-		}
-		autohit_smg_default = {
-			INIT_RATIO = 0.05,
-			MAX_RATIO = 0.4,
-			MIN_RATIO = 0.2,
-			far_angle = 0.5,
-			far_dis = 2500,
-			near_angle = 4,
-		}
-		autohit_minigun_default = {
-			INIT_RATIO = 1,
-			MAX_RATIO = 1,
-			MIN_RATIO = 0,
-			far_angle = 0.0005,
-			far_dis = 10000,
-			near_angle = 0.0005,
-		}
-	end
-
+	autohit_rifle_default = {
+		INIT_RATIO = 0.15,
+		MAX_RATIO = 0.85,
+		MIN_RATIO = 0.75,
+		far_angle = 1.5,
+		far_dis = 4000,
+		near_angle = 4,
+	}
+	autohit_pistol_default = {
+		INIT_RATIO = 0.15,
+		MAX_RATIO = 0.95,
+		MIN_RATIO = 0.82,
+		far_angle = 1.5,
+		far_dis = 4000,
+		near_angle = 4,
+	}
+	autohit_shotgun_default = {
+		INIT_RATIO = 0.15,
+		MAX_RATIO = 0.7,
+		MIN_RATIO = 0.6,
+		far_angle = 1.5,
+		far_dis = 5000,
+		near_angle = 3,
+	}
+	autohit_lmg_default = {
+		INIT_RATIO = 0.05,
+		MAX_RATIO = 0.4,
+		MIN_RATIO = 0.2,
+		far_angle = 0.25,
+		far_dis = 2000,
+		near_angle = 2,
+	}
+	autohit_snp_default = {
+		INIT_RATIO = 0.05,
+		MAX_RATIO = 0.4,
+		MIN_RATIO = 0.2,
+		far_angle = 1,
+		far_dis = 5000,
+		near_angle = 3,
+	}
+	autohit_smg_default = {
+		INIT_RATIO = 0.05,
+		MAX_RATIO = 0.4,
+		MIN_RATIO = 0.2,
+		far_angle = 0.5,
+		far_dis = 2500,
+		near_angle = 4,
+	}
+	autohit_minigun_default = {
+		INIT_RATIO = 1,
+		MAX_RATIO = 1,
+		MIN_RATIO = 0,
+		far_angle = 0.0005,
+		far_dis = 10000,
+		near_angle = 0.0005,
+	}
 	aim_assist_rifle_default = deep_clone(autohit_rifle_default)
 	aim_assist_pistol_default = deep_clone(autohit_pistol_default)
 	aim_assist_shotgun_default = deep_clone(autohit_shotgun_default)
@@ -3050,7 +2989,7 @@ function WeaponTweakData:_init_flamethrower_mk2(weapon_data, tweak_data)
 	self.flamethrower_mk2.animations.equip_id = "equip_flamethrower"
 	self.flamethrower_mk2.animations.recoil_steelsight = false
 	self.flamethrower_mk2.no_whizby = true
-	self.flamethrower_mk2.flame_max_range = 1400
+	self.flamethrower_mk2.flame_max_range = 1900
 	self.flamethrower_mk2.single_flame_effect_duration = 1
 	self.flamethrower_mk2.global_value = "normal"
 	self.flamethrower_mk2.texture_bundle_folder = "bbq"
@@ -5204,9 +5143,9 @@ function WeaponTweakData:_init_m1_garand(weapon_data, tweak_data)
 	}
 	self.garand.headshot_multiplier = 3
 	self.garand.CLIP_AMMO_MAX = 8
-	self.garand.NR_CLIPS_MAX = 7
+	self.garand.NR_CLIPS_MAX = 6
 	self.garand.AMMO_MAX = self.garand.CLIP_AMMO_MAX * self.garand.NR_CLIPS_MAX
-	self.garand.ammo_pickup_base = 8
+	self.garand.ammo_pickup_base = 7
 	self.garand.FIRE_MODE = "single"
 	self.garand.fire_mode_data = {}
 	self.garand.fire_mode_data.fire_rate = self:convert_rpm(520)
@@ -5220,11 +5159,11 @@ function WeaponTweakData:_init_m1_garand(weapon_data, tweak_data)
 	self.garand.spread.moving_standing = self.garand.spread.standing * 1.25
 	self.garand.spread.moving_crouching = self.garand.spread.crouching * 1.1
 	self.garand.spread.moving_steelsight = self.garand.spread.steelsight * 1.1
-	self.garand.spread.per_shot = 1
-	self.garand.spread.per_shot_steelsight = 0.25
+	self.garand.spread.per_shot = 1.2
+	self.garand.spread.per_shot_steelsight = 0.35
 	self.garand.spread.recovery = 1.25
 	self.garand.spread.recovery_wait_multiplier = 2
-	self.garand.spread.max = 2.2
+	self.garand.spread.max = 2.4
 	self.garand.kick = {}
 	self.garand.kick.standing = {
 		2.9,
@@ -5253,19 +5192,19 @@ function WeaponTweakData:_init_m1_garand(weapon_data, tweak_data)
 	self.garand.minimum_view_kick = {}
 	self.garand.minimum_view_kick.standing = {
 		0,
-		1.6,
+		1.65,
 	}
 	self.garand.minimum_view_kick.crouching = {
 		0,
-		1.45,
+		1.5,
 	}
 	self.garand.minimum_view_kick.steelsight = {
 		0,
-		1.35,
+		1.4,
 	}
 	self.garand.minimum_view_kick.crouching_steelsight = {
 		0,
-		1,
+		1.1,
 	}
 	self.garand.gun_kick = {}
 	self.garand.gun_kick.hip_fire = {
@@ -5601,8 +5540,8 @@ function WeaponTweakData:_init_m1918_bar(weapon_data, tweak_data)
 	self.m1918.shake = {}
 	self.m1918.shake.fire_multiplier = 1
 	self.m1918.shake.fire_steelsight_multiplier = -1
-	self.m1918.autohit = weapon_data.autohit_lmg_default
-	self.m1918.aim_assist = weapon_data.aim_assist_lmg_default
+	self.m1918.autohit = weapon_data.autohit_rifle_default
+	self.m1918.aim_assist = weapon_data.aim_assist_rifle_default
 	self.m1918.weapon_hold = "m1918"
 	self.m1918.animations = {}
 	self.m1918.animations.equip_id = "equip_m1918"
@@ -5895,8 +5834,8 @@ function WeaponTweakData:_init_bren(weapon_data, tweak_data)
 	self.bren.shake = {}
 	self.bren.shake.fire_multiplier = 1
 	self.bren.shake.fire_steelsight_multiplier = -1
-	self.bren.autohit = weapon_data.autohit_lmg_default
-	self.bren.aim_assist = weapon_data.aim_assist_lmg_default
+	self.bren.autohit = weapon_data.autohit_rifle_default
+	self.bren.aim_assist = weapon_data.aim_assist_rifle_default
 	self.bren.weapon_hold = "bren"
 	self.bren.animations = {}
 	self.bren.animations.equip_id = "equip_bren"
@@ -6113,7 +6052,7 @@ function WeaponTweakData:_init_m1903_springfield(weapon_data, tweak_data)
 	self.m1903.auto = {}
 	self.m1903.auto.fire_rate = 0.75
 	self.m1903.spread = {}
-	self.m1903.spread.standing = 4
+	self.m1903.spread.standing = 3.5
 	self.m1903.spread.crouching = 3.2
 	self.m1903.spread.steelsight = 0.08
 	self.m1903.spread.moving_standing = 4.5
@@ -6271,8 +6210,8 @@ function WeaponTweakData:_init_kar_98k(weapon_data, tweak_data)
 	self.kar_98k.auto = {}
 	self.kar_98k.auto.fire_rate = 0.8
 	self.kar_98k.spread = {}
-	self.kar_98k.spread.standing = 3.5
-	self.kar_98k.spread.crouching = 3
+	self.kar_98k.spread.standing = 3.1
+	self.kar_98k.spread.crouching = 2.9
 	self.kar_98k.spread.steelsight = 0.1
 	self.kar_98k.spread.moving_standing = 4
 	self.kar_98k.spread.moving_crouching = 3.5
@@ -6430,8 +6369,8 @@ function WeaponTweakData:_init_lee_enfield(weapon_data, tweak_data)
 	self.lee_enfield.auto = {}
 	self.lee_enfield.auto.fire_rate = 0.8
 	self.lee_enfield.spread = {}
-	self.lee_enfield.spread.standing = 3.5
-	self.lee_enfield.spread.crouching = 3
+	self.lee_enfield.spread.standing = 3.1
+	self.lee_enfield.spread.crouching = 2.9
 	self.lee_enfield.spread.steelsight = 0.1
 	self.lee_enfield.spread.moving_standing = 4
 	self.lee_enfield.spread.moving_crouching = 3.5
@@ -6585,8 +6524,8 @@ function WeaponTweakData:_init_mosin(weapon_data, tweak_data)
 	self.mosin.single = {}
 	self.mosin.single.fire_rate = 0.78
 	self.mosin.spread = {}
-	self.mosin.spread.standing = 4.2
-	self.mosin.spread.crouching = 3.1
+	self.mosin.spread.standing = 3.9
+	self.mosin.spread.crouching = 2.5
 	self.mosin.spread.steelsight = 0.07
 	self.mosin.spread.moving_standing = 4.3
 	self.mosin.spread.moving_crouching = 3.2

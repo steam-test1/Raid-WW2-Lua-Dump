@@ -94,10 +94,17 @@ function GuiTweakData:_setup_colors()
 	self.colors.progress_bar_dot = Color("797f88")
 	self.colors.raid_grey_effects = Color("787878")
 	self.colors.raid_grey_skills = Color("a9a9ae")
+	self.colors.hitmarker_weak = Color("9e9e9e")
+	self.colors.hitmarker_hurt = Color("d7d7d7")
+	self.colors.hitmarker_kill = Color("de4a3e")
+	self.colors.hitmarker_crit_kill = Color("db8f68")
+	self.colors.hitmarker_crit = Color("d8b883")
 	self.colors.loot_rarity_common = Color("9e9e9e")
 	self.colors.loot_rarity_uncommon = Color("64bc4c")
 	self.colors.loot_rarity_rare = Color("b8392e")
 	self.colors.loot_rarity_halloween = Color("c78e38")
+	self.colors.card_booster = Color("70b35b")
+	self.colors.card_challenge = Color("de4a3e")
 end
 
 function GuiTweakData:_setup_hud_colors()
@@ -1621,6 +1628,14 @@ function GuiTweakData:_setup_icons()
 	self.icons.card_type_raid_dirty = {}
 	self.icons.card_type_raid_dirty.texture = "ui/atlas/menu/cc_menu_tags_dirty"
 	self.icons.card_type_raid_dirty.texture_rect = {
+		64,
+		64,
+		64,
+		64,
+	}
+	self.icons.card_type_none_dirty = {}
+	self.icons.card_type_none_dirty.texture = "ui/atlas/menu/cc_menu_tags_dirty"
+	self.icons.card_type_none_dirty.texture_rect = {
 		64,
 		64,
 		64,

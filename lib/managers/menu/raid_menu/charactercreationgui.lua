@@ -230,7 +230,6 @@ function CharacterCreationGui:_layout()
 		y = 0,
 	}, {
 		class = nil,
-		level = nil,
 	})
 
 	self._right_side_info_class:set_right(self._root_panel:right())
@@ -246,7 +245,6 @@ function CharacterCreationGui:_layout()
 		y = 0,
 	}, {
 		class = nil,
-		level = nil,
 	})
 
 	self._right_side_info_nationality:set_right(self._root_panel:right())

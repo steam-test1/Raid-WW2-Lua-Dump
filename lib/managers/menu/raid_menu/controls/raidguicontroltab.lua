@@ -34,7 +34,6 @@ function RaidGUIControlTab:init(parent, params)
 			vertical = "center",
 			w = params.icon.texture_rect[3],
 			x = RaidGUIControlTab.PADDING,
-			y = 0,
 		})
 		label_coord_x = self._tab_icon:x() + self._tab_icon:w() + RaidGUIControlTab.PADDING
 		label_width = label_width - self._tab_icon:w() - 2 * RaidGUIControlTab.PADDING

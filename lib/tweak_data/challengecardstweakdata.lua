@@ -42,11 +42,6 @@ function ChallengeCardsTweakData:_init_cards_newtype(tweak_data)
 	RARITY_SWAP[LootDropTweakData.RARITY_RARE] = "rare"
 	RARITY_SWAP[LootDropTweakData.RARITY_HALLOWEEN] = "halloween"
 
-	local tag_card_scrap_booster = "card_scrap:card_scrap_booster"
-	local tag_card_scrap_challenge = "card_scrap:card_scrap_challenge"
-	local cost_craft_common = 2
-	local cost_craft_uncommon = 3
-	local cost_craft_rare = 4
 	local bonus_xp_tiers = {
 		300,
 		500,
@@ -118,28 +113,41 @@ function ChallengeCardsTweakData:_init_cards_generator(tweak_data)
 
 	if make_new_generators then
 		self.bundles.loot_drop_pack = {
-			def_id = 1,
+			def_id = ChallengeCardsTweakData.PACK_TYPE_REGULAR,
 		}
 		self.bundles.drop_single_card_halloween = {
-			def_id = 2,
+			def_id = ChallengeCardsTweakData.PACK_TYPE_HALLOWEEN,
 		}
 		self.bundles.loot_drop_pack_of_3 = {
 			def_id = 10001,
 		}
-		self.bundles.loot_drop_pack_of_1 = {
+		self.bundles.loot_drop_pack_of_1_halloween = {
 			def_id = 10004,
 		}
 		self.bundles.raid_cards = {
 			def_id = 10010,
 		}
+		self.bundles.raid_cards_halloween = {
+			def_id = 10011,
+		}
 	end
 end
 
-function ChallengeCardsTweakData:get_card_defs_of_type(card_category)
+function ChallengeCardsTweakData:get_card_defs_of_type(card_category, card_rarity)
 	local cards = {}
 
 	for id, card in pairs(self.cards) do
-		if card.card_category == card_category then
+		local valid = true
+
+		if valid and card_category and card.card_category ~= card_category then
+			valid = false
+		end
+
+		if valid and card_rarity and card.rarity ~= card_rarity then
+			valid = false
+		end
+
+		if valid then
 			table.insert(cards, card.def_id)
 		end
 	end
@@ -227,7 +235,6 @@ function ChallengeCardsTweakData:_init_cards(tweak_data)
 		texture = ChallengeCardsTweakData.CARDS_TEXTURE_PATH,
 		texture_gui = tweak_data.gui.icons.loot_rarity_common,
 		texture_gui_dirty = tweak_data.gui.icons.loot_rarity_common_dirty,
-		texture_path_id = LootDropTweakData.RARITY_COMMON,
 		texture_rect = {
 			0,
 			0,
@@ -240,7 +247,6 @@ function ChallengeCardsTweakData:_init_cards(tweak_data)
 		texture = ChallengeCardsTweakData.CARDS_TEXTURE_PATH,
 		texture_gui = tweak_data.gui.icons.loot_rarity_uncommon,
 		texture_gui_dirty = tweak_data.gui.icons.loot_rarity_uncommon_dirty,
-		texture_path_id = LootDropTweakData.RARITY_UNCOMMON,
 		texture_rect = {
 			0,
 			0,
@@ -253,7 +259,6 @@ function ChallengeCardsTweakData:_init_cards(tweak_data)
 		texture = ChallengeCardsTweakData.CARDS_TEXTURE_PATH,
 		texture_gui = tweak_data.gui.icons.loot_rarity_rare,
 		texture_gui_dirty = tweak_data.gui.icons.loot_rarity_rare_dirty,
-		texture_path_id = LootDropTweakData.RARITY_RARE,
 		texture_rect = {
 			0,
 			0,
@@ -266,7 +271,6 @@ function ChallengeCardsTweakData:_init_cards(tweak_data)
 		texture = ChallengeCardsTweakData.CARDS_TEXTURE_PATH,
 		texture_gui = tweak_data.gui.icons.loot_rarity_halloween,
 		texture_gui_dirty = tweak_data.gui.icons.loot_rarity_halloween_dirty,
-		texture_path_id = LootDropTweakData.RARITY_HALLOWEEN,
 		texture_rect = {
 			0,
 			0,
@@ -290,17 +294,14 @@ function ChallengeCardsTweakData:_init_cards(tweak_data)
 	self.type_definition.card_type_raid = {
 		texture_gui = tweak_data.gui.icons.card_type_raid,
 		texture_gui_dirty = tweak_data.gui.icons.card_type_raid_dirty,
-		texture_path_id = LootDropTweakData.CARD_TYPE_RAID,
 	}
 	self.type_definition.card_type_operation = {
 		texture_gui = tweak_data.gui.icons.card_type_operation,
 		texture_gui_dirty = tweak_data.gui.icons.card_type_operation_dirty,
-		texture_path_id = LootDropTweakData.CARD_TYPE_OPERATION,
 	}
 	self.type_definition.card_type_none = {
 		texture_gui = tweak_data.gui.icons.card_type_none,
 		texture_gui_dirty = tweak_data.gui.icons.card_type_none_dirty,
-		texture_path_id = LootDropTweakData.CARD_TYPE_NONE,
 	}
 	self.card_glow = {}
 	self.card_glow.texture = "ui/main_menu/textures/cards_atlas"
@@ -317,15 +318,17 @@ function ChallengeCardsTweakData:_init_cards(tweak_data)
 	self.steam_inventory.gameplay = {}
 	self.steam_inventory.gameplay.def_id = 1
 	self.cards = {}
-	self.cards.empty = {}
-	self.cards.empty.name = "NAME"
-	self.cards.empty.description = "DESC"
-	self.cards.empty.effects = {}
-	self.cards.empty.rarity = LootDropTweakData.RARITY_NONE
-	self.cards.empty.card_type = ChallengeCardsTweakData.CARD_TYPE_NONE
-	self.cards.empty.texture = ""
-	self.cards.empty.achievement_id = nil
-	self.cards.empty.steam_skip = true
+	self.card_templates = {}
+	self.cards.empty = {
+		card_type = ChallengeCardsTweakData.CARD_TYPE_NONE,
+		description = "DESC",
+		effects = {},
+		menu_skip = true,
+		name = "NAME",
+		rarity = LootDropTweakData.RARITY_NONE,
+		steam_skip = true,
+		texture = "",
+	}
 	self.cards.ra_on_the_scrounge = {}
 	self.cards.ra_on_the_scrounge.name = "card_ra_on_the_scrounge_name_id"
 	self.cards.ra_on_the_scrounge.description = "card_ra_on_the_scrounge_desc_id"
@@ -557,7 +560,7 @@ function ChallengeCardsTweakData:_init_cards(tweak_data)
 	self.cards.ra_gunslingers.tradable = true
 	self.cards.ra_gunslingers.effects = {
 		{
-			name = BuffEffectManager.EFFECT_PLAYER_PISTOL_DAMAGE,
+			name = BuffEffectManager.EFFECT_PLAYER_SECONDARY_DAMAGE,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
 			value = 1.15,
 		},

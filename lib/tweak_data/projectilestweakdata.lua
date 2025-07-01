@@ -469,14 +469,14 @@ function ProjectilesTweakData:_init_flamer_incendiary(tweak_data)
 	self.flamer_incendiary = {
 		alert_radius = 1500,
 		damage = 10,
-		fire_tweak_id = "explosive_barrel",
+		fire_tweak_id = "flamer_incendiary",
 		impact_detonation = true,
 		killzone_range = 0,
 		launch_speed = 350,
 		name_id = "bm_grenade_molotov",
 		no_cheat_count = false,
 		player_damage = 25,
-		range = 250,
+		range = 300,
 		unit = "units/upd_blaze/weapons/npc_gre_incendiary/npc_gre_incendiary",
 		unit_dummy = "units/upd_blaze/weapons/npc_gre_incendiary/npc_gre_incendiary_husk",
 	}

@@ -142,13 +142,25 @@ function WeaponInventoryManager:get_melee_weapon_loot_drop_candidates()
 	local all_melee_weapons = self:get_all_weapons_from_category(WeaponInventoryManager.CATEGORY_NAME_MELEE)
 	local result = {}
 
-	for weapon_index, weapon_data in pairs(all_melee_weapons) do
-		if weapon_data.droppable then
+	for _, weapon_data in pairs(all_melee_weapons) do
+		if weapon_data.droppable and not weapon_data.is_challenge_reward then
 			table.insert(result, clone(weapon_data))
 		end
 	end
 
 	return result
+end
+
+function WeaponInventoryManager:is_drop_inventory_complete_melee()
+	local all_melee_weapons = self:get_all_weapons_from_category(WeaponInventoryManager.CATEGORY_NAME_MELEE)
+
+	for _, weapon_data in pairs(all_melee_weapons) do
+		if weapon_data.droppable and not weapon_data.is_challenge_reward and not self:is_melee_weapon_owned(weapon_data.weapon_id) then
+			return false
+		end
+	end
+
+	return true
 end
 
 function WeaponInventoryManager:add_melee_weapon_as_drop(drop)

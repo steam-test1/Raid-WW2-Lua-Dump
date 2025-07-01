@@ -255,7 +255,6 @@ require("lib/managers/hud/HUDSaveIcon")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlDialogTest")
 require("lib/utils/StatisticsGenerator")
 
-script_data = script_data or {}
 game_state_machine = game_state_machine or nil
 Setup = Setup or class(CoreSetup.CoreSetup)
 
@@ -589,7 +588,7 @@ end
 
 function Setup:init_finalize()
 	Setup.super.init_finalize(self)
-	game_state_machine:init_finilize()
+	game_state_machine:init_finalize()
 	managers.dlc:init_finalize()
 	managers.achievment:init_finalize()
 	managers.system_menu:init_finalize()
@@ -705,7 +704,6 @@ function Setup:load_level(level, mission, world_setting, level_class_name, level
 	Global.level_data.level = level
 	Global.level_data.mission = mission
 	Global.level_data.world_setting = world_setting
-	Global.level_data.level_class_name = level_class_name
 	Global.level_data.level_id = level_id
 
 	self:exec(level)
@@ -731,7 +729,6 @@ function Setup:load_start_menu(save_progress)
 	Global.level_data.level = nil
 	Global.level_data.mission = nil
 	Global.level_data.world_setting = nil
-	Global.level_data.level_class_name = nil
 	Global.level_data.level_id = nil
 
 	if save_progress then

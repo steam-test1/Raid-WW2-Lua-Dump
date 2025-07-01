@@ -457,7 +457,7 @@ function AchievmentManager:check_achievement_mission_award()
 	end
 end
 
-function AchievmentManager:check_mission_achievements(job_id, current_job_data)
+function AchievmentManager:check_mission_achievements(job_id, mission_data)
 	if not tweak_data.operations.missions[job_id] then
 		return
 	end
@@ -466,20 +466,23 @@ function AchievmentManager:check_mission_achievements(job_id, current_job_data)
 		return
 	end
 
+	Application:info("[AchievmentManager:check_mission_achievements]", job_id, mission_data and inspect(mission_data))
+
+	local job_data = managers.raid_job:current_job() or tweak_data.operations.missions[job_id]
 	local job_achievements = tweak_data.achievement.missions[job_id]
-	local job_type = tweak_data.operations.missions[job_id].job_type
+	local job_type = job_data.job_type
 	local _, difficulty_completed = managers.progression:get_mission_progression(job_type, job_id)
 
-	difficulty_completed = current_job_data and current_job_data.difficulty or difficulty_completed
+	difficulty_completed = mission_data and mission_data.difficulty or difficulty_completed
 
 	if not difficulty_completed then
 		return
 	end
 
-	local stealthed = current_job_data and current_job_data.stealthed
-	local dogtags_collected = current_job_data and current_job_data.dogtags_collected
-	local peers_connected = current_job_data and current_job_data.peers_connected or 1
-	local no_bleedout = current_job_data and current_job_data.no_bleedout or false
+	local stealthed = mission_data and mission_data.stealthed
+	local dogtags_collected = mission_data and mission_data.dogtags_collected
+	local peers_connected = mission_data and mission_data.peers_connected or 1
+	local no_bleedout = mission_data and mission_data.no_bleedout or false
 
 	for _, data in ipairs(job_achievements) do
 		local achieved = difficulty_completed >= (data.difficulty or 1)

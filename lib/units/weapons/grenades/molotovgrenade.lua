@@ -31,6 +31,8 @@ function MolotovGrenade:detonate(normal)
 		damage = self._damage,
 		hit_pos = position,
 		ignite_character = true,
+		ignore_unit = self._unit,
+		no_raycast_check_characters = true,
 		player_damage = self._player_damage,
 		push_units = false,
 		range = self._range,

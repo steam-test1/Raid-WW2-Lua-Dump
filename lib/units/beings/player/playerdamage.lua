@@ -990,13 +990,9 @@ function PlayerDamage:damage_fire(attack_data)
 		self:_call_listeners(damage_info)
 
 		return
-	elseif self:incapacitated() then
-		return
 	end
 
-	local damage = attack_data.damage or 1
-
-	if self._bleed_out then
+	if self:incapacitated() or self._bleed_out then
 		return
 	end
 
@@ -1004,11 +1000,11 @@ function PlayerDamage:damage_fire(attack_data)
 
 	local dmg_mul = managers.player:damage_reduction_skill_multiplier("fire", self._unit:movement():current_state(), self:health_ratio())
 
-	attack_data.damage = damage * dmg_mul
+	attack_data.damage = (attack_data.damage or 1) * dmg_mul
 
-	local armor_subtracted = self:_calc_armor_damage(attack_data)
+	local armor_subtracted = self:_calc_armor_damage(attack_data) or 0
 
-	attack_data.damage = attack_data.damage - (armor_subtracted or 0)
+	attack_data.damage = attack_data.damage - armor_subtracted
 
 	managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.PLAYER_DAMAGE_TAKEN, attack_data)
 

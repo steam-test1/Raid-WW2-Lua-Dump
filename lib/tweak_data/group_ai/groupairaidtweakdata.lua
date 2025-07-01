@@ -108,6 +108,12 @@ function GroupAIRaidTweakData:init(difficulty_index)
 		68,
 		74,
 	}
+	self.assault.push_delay = {
+		4,
+		4,
+		3.5,
+		3,
+	}
 
 	if difficulty_index <= TweakData.DIFFICULTY_1 then
 		self.assault.force_balance_mul = {
@@ -122,12 +128,6 @@ function GroupAIRaidTweakData:init(difficulty_index)
 			1.17,
 			1.32,
 		}
-		self.assault.push_delay = {
-			6.5,
-			4.5,
-			3.5,
-			3,
-		}
 	elseif difficulty_index == TweakData.DIFFICULTY_2 then
 		self.assault.force_balance_mul = {
 			1,
@@ -140,12 +140,6 @@ function GroupAIRaidTweakData:init(difficulty_index)
 			1.13,
 			1.28,
 			1.4,
-		}
-		self.assault.push_delay = {
-			6.5,
-			4.5,
-			3.5,
-			3,
 		}
 	elseif difficulty_index == TweakData.DIFFICULTY_3 then
 		self.assault.force_balance_mul = {
@@ -160,12 +154,6 @@ function GroupAIRaidTweakData:init(difficulty_index)
 			1.33,
 			1.55,
 		}
-		self.assault.push_delay = {
-			6.25,
-			4.25,
-			3.25,
-			2.75,
-		}
 	elseif difficulty_index == TweakData.DIFFICULTY_4 then
 		self.assault.force_balance_mul = {
 			1.07,
@@ -178,12 +166,6 @@ function GroupAIRaidTweakData:init(difficulty_index)
 			1.16,
 			1.4,
 			1.7,
-		}
-		self.assault.push_delay = {
-			6,
-			4,
-			3,
-			2.5,
 		}
 	end
 

@@ -1269,7 +1269,7 @@ function UpgradesTweakData:_create_talent_definitions()
 	self:_create_definition("player_brutality_dismemberment_warcry_fill_multiplier", UpgradesTweakData.DEF_CAT_FEATURE, "brutality_dismemberment_warcry_fill_multiplier", UpgradesTweakData.UPG_CAT_PLAYER, false, 1, false, self.description_data_types.generic_multiplier)
 
 	self.values.player.brutality_single_critical_hit_chance = {
-		1.19,
+		1.2,
 	}
 
 	self:_create_definition("player_brutality_single_critical_hit_chance", UpgradesTweakData.DEF_CAT_FEATURE, "brutality_single_critical_hit_chance", UpgradesTweakData.UPG_CAT_PLAYER, false, 1, false, self.description_data_types.generic_multiplier)
@@ -2146,10 +2146,10 @@ function UpgradesTweakData:_primary_weapon_definitions()
 		0.65,
 		0.55,
 		0.45,
-		0.95,
 		0.9,
 		0.85,
 		0.8,
+		0.75,
 	}
 
 	self:_create_definition_levels("primary_weapon_spread_multiplier", UpgradesTweakData.DEF_CAT_FEATURE, "spread_multiplier", "primary_weapon", false, self.values.primary_weapon.spread_multiplier)
@@ -2213,10 +2213,10 @@ function UpgradesTweakData:_secondary_weapon_definitions()
 		0.65,
 		0.55,
 		0.45,
-		1.15,
-		1.3,
-		1.4,
-		1.5,
+		0.9,
+		0.85,
+		0.8,
+		0.75,
 	}
 
 	self:_create_definition_levels("secondary_weapon_spread_multiplier", UpgradesTweakData.DEF_CAT_FEATURE, "spread_multiplier", "secondary_weapon", false, self.values.secondary_weapon.spread_multiplier)

@@ -338,12 +338,12 @@ function CoreWorldCameraManager:world_camera(world_camera)
 	return self._world_cameras[world_camera]
 end
 
-function CoreWorldCameraManager:play_world_camera(world_camera_name)
+function CoreWorldCameraManager:play_world_camera(world_camera_name, stay_active)
 	local s = {
 		self:_camera_sequence_table(world_camera_name),
 	}
 
-	self:play_world_camera_sequence(nil, s)
+	self:play_world_camera_sequence(nil, s, stay_active)
 end
 
 function CoreWorldCameraManager:new_play_world_camera(world_camera_sequence)

@@ -118,7 +118,6 @@ function MissionSelectionGui:_layout_lists()
 		layer = 1,
 		name = "list_panel",
 		w = 448,
-		x = 0,
 		y = 78,
 	}
 
@@ -153,7 +152,6 @@ function MissionSelectionGui:_layout_lists()
 			},
 		},
 		x = 3,
-		y = 0,
 	}
 
 	list_tabs_params.tab_width = (self._primary_lists_panel:w() - 2 * list_tabs_params.x) / #list_tabs_params.tabs_params
@@ -165,7 +163,6 @@ function MissionSelectionGui:_layout_lists()
 		name = "raid_list_scrollable_area",
 		scroll_step = 35,
 		w = self._primary_lists_panel:w(),
-		x = 0,
 		y = self._list_tabs:h(),
 	}
 
@@ -279,7 +276,7 @@ end
 
 function MissionSelectionGui:_layout_right_panel()
 	self._right_panel = self._root_panel:panel({
-		h = 680,
+		h = 600,
 		layer = 1,
 		name = "right_panel",
 		w = 480,
@@ -422,8 +419,6 @@ function MissionSelectionGui:_layout_settings_offline()
 		on_menu_move = {
 			down = "team_ai_checkbox",
 		},
-		x = 0,
-		y = 0,
 	}
 
 	self._difficulty_stepper = self._right_panel:stepper(difficulty_stepper_params)
@@ -439,7 +434,6 @@ function MissionSelectionGui:_layout_settings_offline()
 			up = "difficulty",
 		},
 		value = true,
-		x = 0,
 		y = self._difficulty_stepper:y() + self._difficulty_stepper:h() + MissionSelectionGui.SETTINGS_PADDING,
 	}
 
@@ -729,8 +723,6 @@ function MissionSelectionGui:_layout_operation_list()
 		selection_enabled = true,
 		unselected_callback = callback(self, self, "_on_operation_list_unselected"),
 		w = self._operation_list_panel:w(),
-		x = 0,
-		y = 0,
 	}
 
 	self._operation_list = self._operation_list_panel:list_active(operation_list_params)
@@ -1318,7 +1310,7 @@ function MissionSelectionGui:_on_start_button_click()
 	managers.challenge_cards:remove_active_challenge_card()
 
 	if self._selected_job_id then
-		self:_start_job(self._selected_job_id)
+		self:_start_job(self._selected_job_id, self._selected_job_data)
 	elseif self._continue_slot_selected then
 		self:_continue_operation()
 	else
@@ -1366,15 +1358,15 @@ function MissionSelectionGui:_set_settings_enabled(enabled)
 end
 
 function MissionSelectionGui:_on_raid_clicked(raid_data)
-	if self._selected_job_id and self._selected_job_id == raid_data.value then
+	local mission_data = raid_data.mission_data or tweak_data.operations:mission_data(raid_data.value)
+
+	if self._selected_job_data and self._selected_job_data == mission_data then
 		return
 	end
 
-	if not self._selected_job_id or self._selected_job_id ~= raid_data.value then
-		self:_stop_mission_briefing_audio()
-	end
+	self:_stop_mission_briefing_audio()
 
-	local difficulty_available = managers.progression:get_mission_progression(tweak_data.operations.missions[raid_data.value].job_type, raid_data.value)
+	local difficulty_available = managers.progression:get_mission_progression(mission_data.job_type, raid_data.value)
 
 	if difficulty_available and difficulty_available < tweak_data:difficulty_to_index(self._difficulty_stepper:get_value()) then
 		self._difficulty_stepper:set_value_and_render(tweak_data:index_to_difficulty(difficulty_available), true)
@@ -1385,14 +1377,13 @@ function MissionSelectionGui:_on_raid_clicked(raid_data)
 	self._operation_tutorialization_panel:get_engine_panel():animate(callback(self, self, "_animate_hide_operation_tutorialization"))
 
 	self._selected_job_id = raid_data.value
+	self._selected_job_data = mission_data
 
 	self:_update_soe_stamp(self._selected_job_id)
 
 	self._selected_new_operation_index = nil
 
-	local job_tweak_data = tweak_data.operations.missions[self._selected_job_id]
-
-	if not managers.progression:mission_unlocked(job_tweak_data.job_type, self._selected_job_id) and not job_tweak_data.consumable and not job_tweak_data.debug then
+	if not managers.progression:mission_unlocked(mission_data.job_type, self._selected_job_id) and not mission_data.consumable and not mission_data.debug then
 		if Network:is_server() then
 			self._start_disabled_message:set_text(self:translate("raid_locked_progression", true))
 			self._start_disabled_message:set_visible(true)
@@ -1409,16 +1400,13 @@ function MissionSelectionGui:_on_raid_clicked(raid_data)
 		local difficulty_available, difficulty_completed = managers.progression:get_mission_progression(OperationsTweakData.JOB_TYPE_RAID, self._selected_job_id)
 
 		self:set_difficulty_stepper_data(difficulty_available, difficulty_completed)
+		self._primary_paper_mission_icon:set_image(tweak_data.gui.icons[mission_data.icon_menu].texture)
+		self._primary_paper_mission_icon:set_texture_rect(unpack(tweak_data.gui.icons[mission_data.icon_menu].texture_rect))
+		self._primary_paper_mission_icon:set_w(tweak_data.gui:icon_w(mission_data.icon_menu))
+		self._primary_paper_mission_icon:set_h(tweak_data.gui:icon_h(mission_data.icon_menu))
+		self._primary_paper_title:set_text(self:translate(mission_data.name_id, true))
 
-		local raid_tweak_data = tweak_data.operations.missions[raid_data.value]
-
-		self._primary_paper_mission_icon:set_image(tweak_data.gui.icons[raid_tweak_data.icon_menu].texture)
-		self._primary_paper_mission_icon:set_texture_rect(unpack(tweak_data.gui.icons[raid_tweak_data.icon_menu].texture_rect))
-		self._primary_paper_mission_icon:set_w(tweak_data.gui:icon_w(raid_tweak_data.icon_menu))
-		self._primary_paper_mission_icon:set_h(tweak_data.gui:icon_h(raid_tweak_data.icon_menu))
-		self._primary_paper_title:set_text(self:translate(raid_tweak_data.name_id, true))
-
-		if job_tweak_data.consumable then
+		if mission_data.consumable then
 			self._primary_paper_subtitle:set_visible(true)
 			self._primary_paper_subtitle:set_text(self:translate("menu_mission_selected_mission_type_consumable", true))
 			self._primary_paper_difficulty_indicator:set_visible(false)
@@ -1428,12 +1416,12 @@ function MissionSelectionGui:_on_raid_clicked(raid_data)
 			self._primary_paper_difficulty_indicator:set_progress(difficulty_available, difficulty_completed)
 		end
 
-		self:_update_information_buttons(true, true, not raid_tweak_data.consumable)
+		self:_update_information_buttons(true, true, not mission_data.consumable)
 		self:_on_info_clicked(nil, true)
 		self._intel_image_grid:clear_selection()
 		self:_stop_mission_briefing_audio()
 
-		local short_audio_briefing_id = raid_tweak_data.short_audio_briefing_id
+		local short_audio_briefing_id = mission_data.short_audio_briefing_id
 
 		if short_audio_briefing_id then
 			managers.queued_tasks:queue("play_short_audio_briefing", self.play_short_audio_briefing, self, short_audio_briefing_id, 1, nil)
@@ -1461,7 +1449,7 @@ function MissionSelectionGui:_on_mission_list_double_clicked(raid_data)
 	if raid_data.consumable then
 		mission_availble = managers.consumable_missions:is_mission_unlocked(raid_data.value)
 	else
-		local mission_tweak = tweak_data.operations.missions[raid_data.value]
+		local mission_tweak = tweak_data.operations:mission_data(raid_data.value)
 		local job_type = mission_tweak.job_type
 		local difficulty_available = managers.progression:get_mission_progression(job_type, raid_data.value)
 		local current_difficulty = tweak_data:difficulty_to_index(self._difficulty_stepper:get_value())
@@ -1582,7 +1570,10 @@ function MissionSelectionGui:_on_operation_selected(operation_data)
 		end
 	end
 
+	local mission_data = operation_data.mission_data or tweak_data.operations:mission_data(operation_data.value)
+
 	self._selected_job_id = operation_data.value
+	self._selected_job_data = mission_data
 
 	self:_update_soe_stamp(self._selected_job_id)
 
@@ -1840,10 +1831,11 @@ function MissionSelectionGui:_on_info_clicked(secondary_paper_callback, force)
 			self._primary_paper:stop()
 			self._primary_paper:animate(callback(self, self, "_animate_change_primary_paper_control"), clbk, self._mission_description)
 		else
-			local paragraph_text = self:translate(tweak_data.operations.missions[self._selected_job_id].briefing_id)
+			local mission_data = tweak_data.operations.missions[self._selected_job_id]
+			local paragraph_text = self:translate(mission_data.briefing_id)
 
 			if tweak_data.operations.missions[self._selected_job_id].stealth_description then
-				paragraph_text = paragraph_text .. "\n\n" .. self:translate(tweak_data.operations.missions[self._selected_job_id].stealth_description)
+				paragraph_text = paragraph_text .. "\n\n" .. self:translate(mission_data.stealth_description)
 			end
 
 			local clbk = callback(self._mission_description, self._mission_description, "set_text", paragraph_text)
@@ -2063,16 +2055,22 @@ function MissionSelectionGui:_check_difficulty_warning()
 		self._raid_start_button:enable()
 		self._difficulty_warning:stop()
 		self._difficulty_warning:animate(callback(self, self, "_animate_hide_difficulty_warning_message"))
+		Application:info("[MissionSelectionGui:_check_difficulty_warning] consumable mission, dont care, hiding")
 
 		return
-	elseif not self._selected_job_id or not managers.progression:mission_unlocked(tweak_data.operations.missions[self._selected_job_id].job_type, self._selected_job_id) then
+	end
+
+	if not self._selected_job_id or not managers.progression:mission_unlocked(tweak_data.operations.missions[self._selected_job_id].job_type, self._selected_job_id) then
+		Application:info("[MissionSelectionGui:_check_difficulty_warning] not unlocked, do nothing")
+
 		return
 	end
 
 	local difficulty_available, difficulty_completed = managers.progression:get_mission_progression(tweak_data.operations.missions[self._selected_job_id].job_type, self._selected_job_id)
 	local difficulty = tweak_data:difficulty_to_index(self._difficulty_stepper:get_value())
+	local req_progress = difficulty_available < difficulty
 
-	if difficulty_available < difficulty then
+	if req_progress then
 		local message = managers.localization:text("raid_difficulty_warning", {
 			NEEDED_DIFFICULTY = managers.localization:text("menu_difficulty_" .. tostring(difficulty - 1)),
 			TARGET_DIFFICULTY = managers.localization:text("menu_difficulty_" .. tostring(difficulty)),
@@ -2285,53 +2283,59 @@ function MissionSelectionGui:_on_toggle_vote_kick(button, control, value)
 end
 
 function MissionSelectionGui:_raid_list_data_source()
-	local non_consumable_list = {}
+	local raid_list = {}
 	local consumable_list = {}
+	local non_consumable_list = {}
 	local debug_list = {}
 
 	for raid_index, mission_name in pairs(tweak_data.operations:get_raids_index()) do
 		local mission_data = tweak_data.operations:mission_data(mission_name)
-		local item_text = self:translate(mission_data.name_id)
-		local item_icon_name = mission_data.icon_menu
-		local item_icon = {
-			texture = tweak_data.gui.icons[item_icon_name].texture,
-			texture_rect = tweak_data.gui.icons[item_icon_name].texture_rect,
-		}
 
-		if mission_data.consumable then
-			if managers.consumable_missions:is_mission_unlocked(mission_name) then
-				table.insert(consumable_list, {
+		if mission_data then
+			local item_text = self:translate(mission_data.name_id)
+			local item_icon_name = mission_data.icon_menu
+			local item_icon = {
+				texture = tweak_data.gui.icons[item_icon_name].texture,
+				texture_rect = tweak_data.gui.icons[item_icon_name].texture_rect,
+			}
+
+			if mission_data.consumable then
+				if managers.consumable_missions:is_mission_unlocked(mission_name) then
+					table.insert(consumable_list, {
+						breadcrumb = {
+							category = BreadcrumbManager.CATEGORY_CONSUMABLE_MISSION,
+							identifiers = {
+								mission_name,
+							},
+						},
+						consumable = true,
+						icon = item_icon,
+						selected_color = tweak_data.gui.colors.raid_gold,
+						text = item_text,
+						unlocked = true,
+						value = mission_name,
+					})
+				end
+			else
+				table.insert(mission_data.debug and debug_list or non_consumable_list, {
 					breadcrumb = {
-						category = BreadcrumbManager.CATEGORY_CONSUMABLE_MISSION,
+						category = BreadcrumbManager.CATEGORY_NEW_RAID,
 						identifiers = {
 							mission_name,
 						},
 					},
-					consumable = true,
+					color = tweak_data.gui.colors.raid_white,
+					debug = mission_data.debug,
 					icon = item_icon,
-					selected_color = tweak_data.gui.colors.raid_gold,
+					index = raid_index,
+					selected_color = tweak_data.gui.colors.raid_red,
 					text = item_text,
-					unlocked = true,
+					unlocked = mission_data.debug or managers.progression:mission_unlocked(mission_data.job_type, mission_name),
 					value = mission_name,
 				})
 			end
 		else
-			table.insert(mission_data.debug and debug_list or non_consumable_list, {
-				breadcrumb = {
-					category = BreadcrumbManager.CATEGORY_NEW_RAID,
-					identifiers = {
-						mission_name,
-					},
-				},
-				color = tweak_data.gui.colors.raid_white,
-				debug = mission_data.debug,
-				icon = item_icon,
-				index = raid_index,
-				selected_color = tweak_data.gui.colors.raid_red,
-				text = item_text,
-				unlocked = mission_data.debug or managers.progression:mission_unlocked(mission_data.job_type, mission_name),
-				value = mission_name,
-			})
+			Application:error("[MissionSelectionGui:_raid_list_data_source] mission_name", mission_name, "does not exist as a mission data!")
 		end
 	end
 
@@ -2345,7 +2349,9 @@ function MissionSelectionGui:_raid_list_data_source()
 		return l.index < r.index and not l.debug
 	end)
 
-	local raid_list = consumable_list
+	for _, mission in pairs(consumable_list) do
+		table.insert(raid_list, mission)
+	end
 
 	for _, mission in pairs(non_consumable_list) do
 		table.insert(raid_list, mission)
@@ -2362,10 +2368,10 @@ function MissionSelectionGui:_operation_list_data_source()
 	local operation_list = {}
 
 	for index, mission_name in pairs(tweak_data.operations:get_operations_index()) do
-		local operation_tweak_data = tweak_data.operations:mission_data(mission_name)
-		local item_title = self:translate(operation_tweak_data.name_id)
-		local item_description = self:translate(operation_tweak_data.briefing_id)
-		local item_icon_name = operation_tweak_data.icon_menu
+		local mission_data = tweak_data.operations:mission_data(mission_name)
+		local item_title = self:translate(mission_data.name_id)
+		local item_description = self:translate(mission_data.briefing_id)
+		local item_icon_name = mission_data.icon_menu
 		local item_icon = {
 			texture = tweak_data.gui.icons[item_icon_name].texture,
 			texture_rect = tweak_data.gui.icons[item_icon_name].texture_rect,
@@ -2375,6 +2381,7 @@ function MissionSelectionGui:_operation_list_data_source()
 			description = item_description,
 			icon = item_icon,
 			index = index,
+			mission_data = mission_data,
 			title = item_title,
 			value = mission_name,
 		})
@@ -2399,7 +2406,11 @@ function MissionSelectionGui:_slot_list_data_source()
 		if current_save_slots[i] then
 			current_slot.text = self:translate(current_save_slots[i].current_job.name_id)
 
-			local icon_name = tweak_data.operations:mission_data(current_save_slots[i].current_job.job_id).icon_menu
+			local mission_data = tweak_data.operations:mission_data(current_save_slots[i].current_job.job_id)
+
+			current_slot.mission_data = mission_data
+
+			local icon_name = mission_data.icon_menu
 
 			current_slot.icon = {
 				texture = tweak_data.gui.icons[icon_name].texture,
@@ -2433,13 +2444,16 @@ function MissionSelectionGui:_continue_operation()
 	managers.menu:input_enabled(false)
 end
 
-function MissionSelectionGui:_start_job(job_id)
-	local job = tweak_data.operations.missions[job_id]
+function MissionSelectionGui:_start_job(job_id, job_data)
+	Application:info("[MissionSelectionGui] _start_job", job_id)
+
+	job_data = job_data or tweak_data.operations.missions[job_id]
+
 	local difficulty = self._difficulty_stepper:get_value()
 	local team_ai = self._team_ai_checkbox:get_value()
 	local event_enabled = self._event_display and self._event_display:get_value()
 
-	if job.job_type == OperationsTweakData.JOB_TYPE_OPERATION then
+	if job_data.job_type == OperationsTweakData.JOB_TYPE_OPERATION then
 		event_enabled = false
 	end
 
@@ -2478,18 +2492,18 @@ function MissionSelectionGui:_start_job(job_id)
 
 	managers.raid_job._next_event_index = nil
 
-	managers.raid_job:set_selected_job(job_id)
+	managers.raid_job:set_selected_job(job_id, job_data)
 	managers.raid_menu:close_all_menus()
 end
 
 function MissionSelectionGui:_select_mission(job_id)
+	Application:info("[MissionSelectionGui] _select_mission", job_id, "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
+
 	self._selected_job_id = job_id
 
 	local job_data = tweak_data.operations:mission_data(job_id)
 	local description = managers.localization:text(job_data.briefing_id)
 	local mission_title = managers.localization:text("menu_mission_selected_title")
-
-	self._selected_job_id = job_id
 end
 
 function MissionSelectionGui:_select_slot(slot)

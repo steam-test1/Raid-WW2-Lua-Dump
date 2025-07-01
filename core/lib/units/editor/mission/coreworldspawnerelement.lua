@@ -325,12 +325,26 @@ function CoreWorldSpawnerElement:_build_panel(panel, panel_sizer)
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
 
-	local worlds = managers.worldcollection:get_all_worlds()
+	local worlds = self:_get_worlds()
 
-	table.insert(worlds, "")
-	table.sort(worlds)
 	self:_build_value_combobox(panel, panel_sizer, "world", worlds, "Select a world from the combobox")
 	self:_add_help_text("The world that will be loaded")
+end
+
+function CoreWorldSpawnerElement:_get_worlds()
+	local t = {
+		"",
+	}
+
+	for level_id, data in pairs(_G.tweak_data.levels) do
+		if type(data) == "table" and data.world_name then
+			table.insert(t, level_id)
+		end
+	end
+
+	table.sort(t)
+
+	return t
 end
 
 function CoreWorldSpawnerElement:set_element_data(...)
@@ -347,7 +361,7 @@ end
 function CoreWorldSpawnerElement:_change_world()
 	self:_delete_low_poly_unit()
 
-	local world_meta_data = managers.worldcollection:get_world_meta_data(self._hed.world)
+	local world_meta_data = _G.tweak_data.levels[self._hed.world]
 
 	if world_meta_data then
 		if world_meta_data.low_poly and world_meta_data.low_poly ~= "" then

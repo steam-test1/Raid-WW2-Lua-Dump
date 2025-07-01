@@ -188,7 +188,7 @@ function WeaponInventoryTweakData:init()
 			weapon_id = "marching_mace",
 		},
 		{
-			droppable = true,
+			droppable = false,
 			is_challenge_reward = true,
 			redeemed_gold = 5,
 			redeemed_xp = 80,

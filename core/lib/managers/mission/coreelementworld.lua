@@ -248,9 +248,10 @@ function ElementWorldPoint:_create_world(data)
 	self._has_created = true
 	self._counted_continents = self._counted_continents + 1
 
-	local world_meta_data = managers.worldcollection:get_world_meta_data(self._values.world)
+	local level_data = _G.tweak_data.levels[self._values.world]
 
-	Application:debug("[ElementWorldPoint:_create_world()]  Creating world:", world_meta_data.file, self._values.position, self._values.rotation)
+	assert(level_data, "Supplied world id " .. self._values.world .. " is missing tweak data entry")
+	Application:debug("[ElementWorldPoint:_create_world()]  Creating world:", level_data.file, self._values.position, self._values.rotation)
 
 	local world_def = managers.worldcollection:get_worlddefinition_by_unit_id(self._id)
 	local pos = Vector3()
@@ -267,12 +268,13 @@ function ElementWorldPoint:_create_world(data)
 		mrotation.multiply(rot, self._values.rotation)
 	end
 
-	local world = {}
-
-	world.meta_data = world_meta_data
-	world.translation = {}
-	world.translation.position = pos
-	world.translation.rotation = rot
+	local world = {
+		level_data = level_data,
+		translation = {
+			position = pos,
+			rotation = rot,
+		},
+	}
 
 	if not world_id then
 		self._world_id = managers.worldcollection:get_next_world_id()

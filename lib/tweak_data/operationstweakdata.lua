@@ -1854,14 +1854,16 @@ end
 
 function OperationsTweakData:mission_data(mission_id)
 	if not mission_id or not self.missions[mission_id] then
+		Application:error("[OperationsTweakData:mission_data] There was no mission id or no missions for the id:", mission_id)
+
 		return
 	end
 
-	local res = deep_clone(self.missions[mission_id])
+	local mission_data = deep_clone(self.missions[mission_id])
 
-	res.job_id = mission_id
+	mission_data.job_id = mission_id
 
-	return res
+	return mission_data
 end
 
 function OperationsTweakData:get_raids_index()
@@ -1910,9 +1912,10 @@ function OperationsTweakData:get_operation_name_from_index(index)
 	return self._operations_index[index]
 end
 
-function OperationsTweakData:randomize_operation(operation_id)
-	local operation = self.missions[operation_id]
-	local template = operation.events_index_template
+function OperationsTweakData:randomize_operation(operation_id, operation_data)
+	operation_data = operation_data or self.missions[operation_id]
+
+	local template = operation_data.events_index_template
 	local calculated_index = {}
 
 	for _, value in ipairs(template) do
@@ -1921,7 +1924,7 @@ function OperationsTweakData:randomize_operation(operation_id)
 		table.insert(calculated_index, value[index])
 	end
 
-	operation.events_index = calculated_index
+	operation_data.events_index = calculated_index
 
 	Application:debug("[OperationsTweakData:randomize_operation]", operation_id, inspect(calculated_index))
 end
@@ -1962,12 +1965,14 @@ function OperationsTweakData:get_raid_index_from_raid_id(operation_id, raid_id)
 	return 0
 end
 
-function OperationsTweakData:get_operation_indexes_delimited(operation_id)
-	return table.concat(self.missions[operation_id].events_index, "|")
+function OperationsTweakData:get_operation_indexes_delimited(mission_id, mission_data)
+	local events_index = (mission_data or self.missions[mission_id]).events_index
+
+	return table.concat(events_index, "|")
 end
 
-function OperationsTweakData:set_operation_indexes_delimited(operation_id, delimited_string)
-	self.missions[operation_id].events_index = string.split(delimited_string, "|")
+function OperationsTweakData:set_operation_indexes_delimited(mission_id, delimited_string)
+	self.missions[mission_id].events_index = string.split(delimited_string, "|")
 end
 
 function OperationsTweakData:get_all_consumable_raids()

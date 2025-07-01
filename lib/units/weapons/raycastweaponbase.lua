@@ -44,7 +44,7 @@ function RaycastWeaponBase:init(unit)
 	self._shoot_through_data = {
 		from = Vector3(),
 		kills = 0,
-		sync_explosion_results = nil,
+		push_units = nil,
 	}
 	self._can_shoot_through_shield = tweak_data.weapon[self._name_id].can_shoot_through_shield
 	self._can_shoot_through_enemy = tweak_data.weapon[self._name_id].can_shoot_through_enemy
@@ -668,28 +668,26 @@ function RaycastWeaponBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul
 	local autoaim, suppression_enemies = self:check_autoaim(from_pos, direction)
 
 	if self._autoaim then
-		local weight = 0.1
+		local weight = self._autohit_data.WEIGHT or 0.25
 
 		if col_ray and col_ray.unit:in_slot(managers.slot:get_mask("enemies")) then
 			self._autohit_current = (self._autohit_current + weight) / (1 + weight)
 			damage = self:get_damage_falloff(col_ray, user_unit) * dmg_mul
 			hit_unit = self._bullet_class:on_collision(col_ray, self._unit, user_unit, damage)
 		elseif autoaim then
-			local autohit_chance = 1
-
-			autohit_chance = tweak_data.weapon[self._name_id].category == WeaponTweakData.WEAPON_CATEGORY_SNP and 1 or 1 - math.clamp((self._autohit_current - self._autohit_data.MIN_RATIO) / (self._autohit_data.MAX_RATIO - self._autohit_data.MIN_RATIO), 0, 1)
+			local autohit_chance = math.clamp((self._autohit_current - self._autohit_data.MIN_RATIO) / (self._autohit_data.MAX_RATIO - self._autohit_data.MIN_RATIO), 0, 1)
 
 			if autohit_mul then
 				autohit_chance = autohit_chance * autohit_mul
 			end
 
 			if autohit_chance > math.random() then
-				self._autohit_current = (self._autohit_current + weight) / (1 + weight)
+				self._autohit_current = self._autohit_current / (1 + weight)
 				damage = self:get_damage_falloff(autoaim, user_unit) * dmg_mul
 				hit_unit = self._bullet_class:on_collision(autoaim, self._unit, user_unit, damage)
 				col_ray = autoaim
 			else
-				self._autohit_current = self._autohit_current / (1 + weight)
+				self._autohit_current = (self._autohit_current + weight) / (1 + weight)
 			end
 		elseif col_ray then
 			damage = self:get_damage_falloff(col_ray, user_unit) * dmg_mul
@@ -2199,16 +2197,15 @@ function FlameBulletBase:give_fire_damage(col_ray, weapon_unit, user_unit, damag
 		end
 	end
 
-	local action_data = {}
-
-	action_data.variant = "fire"
-	action_data.damage = damage
-	action_data.weapon_unit = weapon_unit
-	action_data.attacker_unit = user_unit
-	action_data.col_ray = col_ray
-	action_data.armor_piercing = armor_piercing
-	action_data.fire_dot_data = fire_dot_data
-
+	local action_data = {
+		armor_piercing = armor_piercing,
+		attacker_unit = user_unit,
+		col_ray = col_ray,
+		damage = damage,
+		fire_dot_data = fire_dot_data,
+		variant = "fire",
+		weapon_unit = weapon_unit,
+	}
 	local defense_data = col_ray.unit:character_damage():damage_fire(action_data)
 
 	return defense_data

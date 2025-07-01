@@ -15,7 +15,7 @@ function RaidGUIControlGridItem:init(parent, params, item_data, grid_params)
 
 	self._item_data = item_data
 	self._object = self._panel:panel({
-		h = params.selected_marker_w,
+		h = params.selected_marker_h,
 		layer = 0,
 		name = "panel_grid_item",
 		w = params.selected_marker_w,

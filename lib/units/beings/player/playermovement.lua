@@ -61,7 +61,7 @@ function PlayerMovement:init(unit)
 	self._state_data = {
 		ducking = false,
 		in_air = false,
-		m_stand_pos = nil,
+		m_newest_pos = nil,
 	}
 	self._synced_suspicion = false
 	self._suspicion_ratio = false

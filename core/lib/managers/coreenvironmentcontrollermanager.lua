@@ -197,7 +197,6 @@ function CoreEnvironmentControllerManager:set_blurzone(id, mode, pos, radius, he
 			mode = -1,
 			opacity = 0,
 			radius = 0,
-			update = nil,
 		}
 
 		if mode > 0 then

@@ -1151,6 +1151,7 @@ end
 function HUDManager:remove_waypoint(id)
 	if not self._hud.waypoints[id] then
 		Application:error("[HUDManager][remove_waypoint] Trying to remove waypoint that hasn't been added! Id: " .. (id or "NULL") .. ".")
+		Application:stack_dump()
 
 		return
 	end
@@ -2621,15 +2622,15 @@ function HUDManager:save(d)
 
 	for id, data in pairs(self._hud.waypoints) do
 		if not data.no_sync then
-			state.waypoints[id] = {}
-			state.waypoints[id] = data.init_data
+			state.waypoints[id] = data.init_data or {}
 			state.waypoints[id].timer = data.timer
 			state.waypoints[id].pause_timer = data.pause_timer
-			state.waypoints[id].unit = data.unit
+			state.waypoints[id].position = data.position
+			state.waypoints[id].unit_id = alive(data.unit) and data.unit:id()
 		end
 	end
 
-	for id, data in pairs(self._teammate_panels) do
+	for _, data in pairs(self._teammate_panels) do
 		if data._timer_current and data._timer_current > 0 then
 			local name
 
@@ -2640,9 +2641,10 @@ function HUDManager:save(d)
 			end
 
 			if name then
-				state.teammate_timers[name] = {}
-				state.teammate_timers[name].timer_current = data._timer_current
-				state.teammate_timers[name].timer_total = data._timer_total
+				state.teammate_timers[name] = {
+					timer_current = data._timer_current,
+					timer_total = data._timer_total,
+				}
 			end
 		end
 	end
@@ -2655,6 +2657,11 @@ function HUDManager:load(data)
 
 	for id, init_data in pairs(state.waypoints) do
 		if init_data.waypoint_origin ~= "waypoint_extension" then
+			if init_data.unit_id then
+				init_data.unit = World:unit_manager():get_unit_by_id(init_data.unit_id)
+				init_data.unit_id = nil
+			end
+
 			self:add_waypoint(id, init_data)
 		end
 	end

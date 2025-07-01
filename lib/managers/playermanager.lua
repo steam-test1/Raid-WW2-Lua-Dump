@@ -188,7 +188,7 @@ end
 function PlayerManager:soft_reset()
 	self._listener_holder = EventListenerHolder:new()
 	self._equipment = {
-		distance_sq = nil,
+		PART_TYPE_HEAD = nil,
 		selections = {},
 		specials = {},
 	}
@@ -204,7 +204,7 @@ end
 
 function PlayerManager:_setup()
 	self._equipment = {
-		distance_sq = nil,
+		PART_TYPE_HEAD = nil,
 		selections = {},
 		specials = {},
 	}
@@ -598,14 +598,14 @@ function PlayerManager:_add_level_equipment(player)
 
 	local id = Global.running_simulation and managers.editor:layer("Level Settings"):get_setting("simulation_level_id")
 
-	id = id ~= "none" and id or nil
+	id = id ~= "none" and id
 	id = id or Global.level_data.level_id
 
 	if not id then
 		return
 	end
 
-	local equipment = tweak_data.levels[id] and tweak_data.levels[id].equipment or {}
+	local equipment = tweak_data.operations[id] and tweak_data.operations[id].equipment or {}
 
 	if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_PLAYER_EQUIP_CROWBAR) and managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_PLAYER_EQUIP_CROWBAR) == true then
 		table.insert(equipment, "crowbar")
@@ -1462,8 +1462,34 @@ function PlayerManager:stamina_regen_delay_multiplier()
 	return multiplier
 end
 
-function PlayerManager:critical_hit_chance(distance)
+function PlayerManager:roll_crits(distance)
 	local equipped_weapon = self:equipped_weapon_unit()
+
+	if not equipped_weapon or not equipped_weapon.base then
+		return false
+	end
+
+	equipped_weapon = equipped_weapon:base()
+
+	local cchance = self:critical_hit_chance(distance)
+	local reserve = equipped_weapon.crit_reserve and math.max(cchance, equipped_weapon:crit_reserve()) or cchance
+
+	if reserve > 1 or reserve > math.random() then
+		if equipped_weapon.modify_crit_reserve then
+			equipped_weapon:modify_crit_reserve(-1)
+		end
+
+		return true
+	else
+		if equipped_weapon.modify_crit_reserve then
+			equipped_weapon:modify_crit_reserve(cchance)
+		end
+
+		return false
+	end
+end
+
+function PlayerManager:critical_hit_chance(distance)
 	local multiplier = 0
 
 	multiplier = multiplier + (self:team_upgrade_value("player", "warcry_critical_hit_chance", 1) - 1)
@@ -1483,6 +1509,8 @@ function PlayerManager:critical_hit_chance(distance)
 		multiplier = multiplier + (self:upgrade_value("player", "revenant_downed_critical_hit_chance", 1) - 1)
 	end
 
+	local equipped_weapon = self:equipped_weapon_unit()
+
 	if alive(equipped_weapon) and equipped_weapon:base().critical_hit_chance then
 		multiplier = multiplier + equipped_weapon:base():critical_hit_chance()
 	end
@@ -1492,7 +1520,7 @@ function PlayerManager:critical_hit_chance(distance)
 	end
 
 	if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_PLAYER_CRITICAL_HIT_CHANCE) then
-		multiplier = multiplier * (managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_PLAYER_CRITICAL_HIT_CHANCE) or 1)
+		multiplier = multiplier + managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_PLAYER_CRITICAL_HIT_CHANCE)
 	end
 
 	return multiplier
@@ -4157,6 +4185,12 @@ function PlayerManager:sync_enter_vehicle(vehicle, peer_id, player, seat_name)
 end
 
 function PlayerManager:_enter_vehicle(vehicle, peer_id, player, seat_name)
+	if not alive(player) or player:movement():downed() then
+		Application:warn("[PlayerManager:_enter_vehicle] invalid player attempted to enter a vehicle", peer_id)
+
+		return
+	end
+
 	self._global.synced_vehicle_data[peer_id] = {
 		seat = seat_name,
 		vehicle_unit = vehicle,

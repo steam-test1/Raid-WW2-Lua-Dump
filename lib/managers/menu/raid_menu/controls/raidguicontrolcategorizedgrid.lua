@@ -23,7 +23,7 @@ function RaidGUIControlCategorizedGrid:_get_data()
 	self._total_items = 0
 
 	local row_count = 0
-	local labels_h = #self._grid_data * RaidGUIControlCategorizedGrid.LABEL_H
+	local labels_h = #self._grid_data * self.LABEL_H
 
 	for i = 1, #self._grid_data do
 		if grid_data[i].items then

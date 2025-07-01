@@ -325,26 +325,39 @@ function IngameWaitingForRespawnState:_upd_watch(t, dt)
 			end
 		end
 
+		local distance = 150
+
 		if vehicle_unit and vehicle_seat then
-			local target_pos = vehicle_unit:vehicle():object_position(vehicle_seat.object)
+			local target_pos = vehicle_unit:position()
 
 			mvec3_set(self._vec_target, target_pos)
 
 			local oobb = vehicle_unit:oobb()
-			local up = oobb:z() * 2.5
+			local up = oobb:z() * 2
 
 			mvec3_add(self._vec_target, up)
+
+			local back = oobb:y():length() * 1.5
+
+			distance = distance + back
 		else
 			watch_u_head:m_position(self._vec_target)
 		end
 
 		mvec3_set(self._vec_eye, self._fwd)
-		mvec3_multiply(self._vec_eye, 150)
+		mvec3_multiply(self._vec_eye, distance)
 		mvec3_negate(self._vec_eye)
 		mvec3_add(self._vec_eye, self._vec_target)
 		mrot_set_look_at(self._rot, self._fwd, math_up)
 
-		local col_ray = World:raycast("ray", self._vec_target, self._vec_eye, "slot_mask", self._slotmask)
+		local col_ray
+
+		if vehicle_unit then
+			col_ray = World:raycast("ray", self._vec_target, self._vec_eye, "slot_mask", self._slotmask, "ignore_unit", vehicle_unit)
+		else
+			col_ray = World:raycast("ray", self._vec_target, self._vec_eye, "slot_mask", self._slotmask)
+		end
+
 		local dis_new
 
 		if col_ray then

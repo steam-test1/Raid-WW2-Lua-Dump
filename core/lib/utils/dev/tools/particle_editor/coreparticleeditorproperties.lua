@@ -35,7 +35,7 @@ end
 function CoreEffectPropertyContainer:validate_properties()
 	local ret = {
 		message = "",
-		parent = nil,
+		node = nil,
 		valid = true,
 	}
 
@@ -218,7 +218,7 @@ end
 function CoreEffectProperty:validate()
 	local ret = {
 		message = "",
-		parent = nil,
+		node = nil,
 		valid = true,
 	}
 

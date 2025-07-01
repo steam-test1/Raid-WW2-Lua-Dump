@@ -46,7 +46,7 @@ function RaidGUIControlListItemSkillProfile:_layout(params, item_data)
 		color = self.BACKGROUND_COLOR,
 		h = self._object:h(),
 		left = self.BACKGROUND_LEFT,
-		name = "candy_progress_bar_background",
+		name = "background",
 		right = self.BACKGROUND_RIGHT,
 		visible = false,
 		w = self._object:w(),
@@ -282,7 +282,7 @@ function RaidGUIControlListItemSkillProfile:_animate_unselect()
 end
 
 function RaidGUIControlListItemSkillProfile:on_mouse_released(button)
-	self:activate()
+	return self:activate()
 end
 
 function RaidGUIControlListItemSkillProfile:confirm_pressed()
@@ -290,7 +290,7 @@ function RaidGUIControlListItemSkillProfile:confirm_pressed()
 		return false
 	end
 
-	self:activate()
+	return self:activate()
 end
 
 function RaidGUIControlListItemSkillProfile:activate()

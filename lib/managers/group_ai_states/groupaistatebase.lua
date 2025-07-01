@@ -244,7 +244,7 @@ function GroupAIStateBase:_init_misc_data(clean_up)
 
 	self._phalanx_data = {
 		minions = {},
-		stand = nil,
+		sync = nil,
 	}
 end
 
@@ -3644,7 +3644,7 @@ function GroupAIStateBase:chk_say_teamAI_combat_chatter(unit)
 	end
 
 	managers.dialog:queue_dialog("player_gen_battle_celebration", {
-		[""] = nil,
+		position = nil,
 		skip_idle_check = true,
 	})
 end

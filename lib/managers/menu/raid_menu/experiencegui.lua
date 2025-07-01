@@ -419,9 +419,9 @@ function ExperienceGui:on_item_clicked_upgrade(data)
 		self:_on_upgrade_purchased(data)
 	else
 		local selected_item = self._equippable_upgrades:selected_grid_item()
-		local data = selected_item:get_data()
+		local item_data = selected_item:get_data()
 
-		self:_set_skill_equipped(data.upgrades_type, data.key_name, data.active)
+		self:_set_skill_equipped(item_data.upgrades_type, item_data.key_name, item_data.active)
 	end
 end
 
@@ -574,6 +574,7 @@ function ExperienceGui:_layout_player_stats()
 			font_size = tweak_data.gui.font_sizes.size_24,
 			value_font_size = tweak_data.gui.font_sizes.menu_list,
 		},
+		items_padding = 10,
 		name = "player_stats",
 		w = self._player_stats_panel:w(),
 	})
@@ -609,6 +610,11 @@ function ExperienceGui:data_source_stats()
 	table.insert(t, {
 		name = "speed_run",
 		text_id = "character_stats_speed_run_label",
+	})
+	table.insert(t, {
+		format_value = "%s%%",
+		name = "crit_chance",
+		text_id = "character_stats_crit_chance_label",
 	})
 	table.insert(t, {
 		name = "carry_limit",

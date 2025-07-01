@@ -25,6 +25,11 @@ function RaidGUIControlCardDetails:init(parent, params)
 		return
 	end
 
+	self._show_type = params.show_type == nil and true or params.show_type
+	self._show_rarity = params.show_rarity == nil and true or params.show_rarity
+	self._show_xp = params.show_xp == nil and true or params.show_xp
+	self._crush_top_row = not self._show_type and not self._show_rarity and not self._show_xp
+	self._info_padding = params.info_padding or 32
 	self._pointer_type = "arrow"
 	self._effects_list = {}
 
@@ -151,51 +156,66 @@ function RaidGUIControlCardDetails:_create_card_details()
 	})
 end
 
-function RaidGUIControlCardDetails:set_card_details(card_key_name)
-	self._card = tweak_data.challenge_cards:get_card_by_key_name(card_key_name)
+function RaidGUIControlCardDetails:set_card_details(card)
+	self._card = type(card) == "string" and tweak_data.challenge_cards:get_card_by_key_name(card) or card
 
 	if self._card then
-		local card_rarity = self._card.rarity
-		local rarity_definitions_icon = tweak_data.challenge_cards.rarity_definition[card_rarity].texture_gui
+		if self._show_rarity then
+			local card_rarity = self._card.rarity
+			local rarity_definitions_icon = tweak_data.challenge_cards.rarity_definition[card_rarity].texture_gui
 
-		if rarity_definitions_icon then
-			self._rarity_icon:set_image(rarity_definitions_icon.texture)
-			self._rarity_icon:set_texture_rect(rarity_definitions_icon.texture_rect)
-			self._rarity_icon:show()
+			if rarity_definitions_icon then
+				self._rarity_icon:set_image(rarity_definitions_icon.texture)
+				self._rarity_icon:set_texture_rect(rarity_definitions_icon.texture_rect)
+				self._rarity_icon:show()
+			else
+				self._rarity_icon:hide()
+				Application:error("[RaidGUIControlCardDetails:set_card]", card, "is missing rarity icons!")
+			end
+
+			self._rarity_label:set_text(self:translate(card_rarity, true))
 		else
 			self._rarity_icon:hide()
-			Application:error("[RaidGUIControlCardDetails:set_card]", card_key_name, "is missing rarity icons!")
 		end
 
-		local card_type = self._card.card_type
-		local type_definitions_icon = tweak_data.challenge_cards.type_definition[card_type].texture_gui
+		if self._show_type then
+			local card_type = self._card.card_type
+			local type_definitions_icon = tweak_data.challenge_cards.type_definition[card_type].texture_gui
 
-		if type_definitions_icon then
-			self._type_icon:set_image(type_definitions_icon.texture)
-			self._type_icon:set_texture_rect(type_definitions_icon.texture_rect)
-			self._type_icon:show()
+			if type_definitions_icon then
+				self._type_icon:set_image(type_definitions_icon.texture)
+				self._type_icon:set_texture_rect(type_definitions_icon.texture_rect)
+				self._type_icon:show()
+			else
+				self._type_icon:hide()
+				Application:error("[RaidGUIControlCardDetails:set_card]", card, "is missing type icons!")
+			end
+
+			self._type_label:set_text(self:translate(self._card.card_type, true))
 		else
 			self._type_icon:hide()
-			Application:error("[RaidGUIControlCardDetails:set_card]", card_key_name, "is missing type icons!")
 		end
 
 		self._card_control:set_card(self._card, false)
 		self._card_control:set_visible(true)
 
-		local xp_label_value = managers.challenge_cards:get_card_xp_label(card_key_name, true)
+		if self._show_xp then
+			local xp_label_value = managers.challenge_cards:get_card_xp_label(card, true)
 
-		if xp_label_value and xp_label_value ~= "" then
-			self._experience_bonus_count:set_text(xp_label_value)
-			self._experience_bonus_count:set_visible(true)
-			self._experience_bonus_label:set_visible(true)
+			if xp_label_value and xp_label_value ~= "" then
+				self._experience_bonus_count:set_text(xp_label_value)
+				self._experience_bonus_count:set_visible(true)
+				self._experience_bonus_label:set_visible(true)
+			else
+				self._experience_bonus_count:set_text("")
+				self._experience_bonus_count:set_visible(false)
+				self._experience_bonus_label:set_visible(false)
+			end
 		else
 			self._experience_bonus_count:set_text("")
 			self._experience_bonus_count:set_visible(false)
 			self._experience_bonus_label:set_visible(false)
 		end
-
-		self._type_label:set_text(self:translate(self._card.card_type, true))
-		self._rarity_label:set_text(self:translate(self._card.rarity, true))
 	else
 		self._card_control:set_visible(false)
 		self._card_description_label_right:set_text("")
@@ -203,10 +223,10 @@ function RaidGUIControlCardDetails:set_card_details(card_key_name)
 		self._experience_bonus_label:set_visible(false)
 	end
 
-	self:_recreate_card_effects()
+	self:_recreate_card_effects(self._object)
 end
 
-function RaidGUIControlCardDetails:_recreate_card_effects()
+function RaidGUIControlCardDetails:_recreate_card_effects(parent)
 	for _, data in ipairs(self._effects_list) do
 		for _, obj in pairs(data) do
 			obj:hide()
@@ -219,8 +239,8 @@ function RaidGUIControlCardDetails:_recreate_card_effects()
 		return
 	end
 
-	local list_start_y = 128
-	local x_spacing = self._card_control:w() + 32
+	local list_start_y = self._crush_top_row and 0 or 128
+	local x_spacing = self._card_control:w() + self._info_padding
 	local TEMP_DATA = {}
 
 	if self._card.positive_description then
@@ -244,7 +264,7 @@ function RaidGUIControlCardDetails:_recreate_card_effects()
 
 		if not line_data then
 			local gui = tweak_data.gui:get_full_gui_data("ico_condition")
-			local effect_icon = self._object:image({
+			local effect_icon = parent:image({
 				h = 64,
 				name = "effect_icon_" .. tostring(i),
 				texture = gui.texture,
@@ -253,7 +273,7 @@ function RaidGUIControlCardDetails:_recreate_card_effects()
 				x = x_spacing,
 				y = list_start_y,
 			})
-			local effect_label = self._object:label({
+			local effect_label = parent:label({
 				align = "left",
 				color = tweak_data.gui.colors.raid_grey,
 				font = tweak_data.gui.fonts.lato,
@@ -262,9 +282,9 @@ function RaidGUIControlCardDetails:_recreate_card_effects()
 				name = "effect_label_" .. tostring(i),
 				text = "ABC",
 				vertical = "center",
-				w = 340,
+				w = parent:w() - (effect_icon:right() + 8),
 				wrap = true,
-				x = x_spacing + effect_icon:w() + 8,
+				x = effect_icon:right() + 8,
 				y = list_start_y,
 			})
 
@@ -285,13 +305,7 @@ function RaidGUIControlCardDetails:_recreate_card_effects()
 		line_data.effect_icon:set_image(gui.texture, unpack(gui.texture_rect))
 		line_data.effect_icon:set_texture_rect(gui.texture_rect)
 
-		local loc_text = "ERROR"
-
-		if data.value then
-			loc_text = managers.localization:text(data.name, data.value)
-		else
-			loc_text = managers.localization:text(data.name)
-		end
+		local loc_text = managers.localization:text(data.name, data.value or nil)
 
 		line_data.effect_label:set_text(loc_text)
 

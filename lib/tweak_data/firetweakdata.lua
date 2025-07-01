@@ -109,8 +109,8 @@ function FireTweakData:_init_fires()
 		effect_name = self.effects.thermite,
 		player_damage = 3,
 		range = 380,
-		sound_burning = "cvy_thermite_glow",
-		sound_burning_stop = "cvy_thermite_finish",
+		sound_burning = "thermite_grenade",
+		sound_burning_stop = "thermite_grenade_stop",
 		tick_interval = 0.875,
 		type = self.FIRE_TYPE_PARENTED,
 	}
@@ -124,5 +124,21 @@ function FireTweakData:_init_fires()
 		range = 500,
 		tick_interval = 0.3333,
 		type = self.FIRE_TYPE_SINGLE,
+	}
+	self.flamer_incendiary = {
+		alert_radius = 1500,
+		damage = 5,
+		dot_type = "default",
+		duration = 8,
+		effect_name = self.effects.molotov,
+		iterations = 6,
+		player_damage = 4,
+		range = 100,
+		sound_burning = "burn_loop_body",
+		sound_burning_stop = "burn_loop_body_stop",
+		sound_impact = "flamer_grenade_explode",
+		sound_impact_duration = 0.6,
+		tick_interval = 0.25,
+		type = self.FIRE_TYPE_HEX,
 	}
 end

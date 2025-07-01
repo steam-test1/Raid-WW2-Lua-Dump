@@ -201,9 +201,12 @@ function TeamAIMovement:current_state_name()
 end
 
 function TeamAIMovement:save(data)
-	data.movement = {
-		customization = self._customization,
-	}
+	TeamAIMovement.super.save(self, data)
+
+	if self._customization then
+		data.movement = data.movement or {}
+		data.movement.customization = self._customization
+	end
 end
 
 function TeamAIMovement:pre_destroy()

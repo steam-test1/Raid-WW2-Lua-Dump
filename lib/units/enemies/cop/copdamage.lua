@@ -1202,26 +1202,18 @@ function CopDamage:damage_explosion(attack_data)
 end
 
 function CopDamage:roll_critical_hit(damage, ray)
-	local critical_hits = self._char_tweak.critical_hits or {}
-	local critical_hit = false
-	local critical_value = (critical_hits.base_chance or 0) + managers.player:critical_hit_chance(ray and ray.distance) * (critical_hits.player_chance_multiplier or 1)
-
-	if critical_value > 0 then
-		local critical_roll = math.rand(1)
-
-		critical_hit = critical_roll < critical_value
-	end
+	local critical_hit = managers.player:roll_crits(ray and ray.distance)
 
 	if critical_hit then
-		local critical_damage_mul = critical_hits.damage_mul or self._char_tweak.headshot_dmg_mul
+		local critical_damage_mul = self._char_tweak.headshot_dmg_mul
+		local critical_hits = self._char_tweak.critical_hits
+
+		if critical_hits and critical_hits.damage_mul then
+			critical_damage_mul = critical_hits.damage_mul
+		end
 
 		critical_damage_mul = critical_damage_mul + (managers.player:upgrade_value("player", "critbrain_critical_hit_damage", 1) - 1)
-
-		if critical_damage_mul then
-			damage = damage * critical_damage_mul
-		else
-			damage = self._health * 10
-		end
+		damage = damage * critical_damage_mul
 	end
 
 	return critical_hit, damage
@@ -3163,8 +3155,17 @@ function CopDamage:_apply_damage_modifier(damage, attack_data)
 		damage_modifier = multiplier * damage_modifier
 	end
 
-	if attack_data and attack_data.attacker_unit == managers.player:local_player() and managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_PLAYER_PISTOL_DAMAGE) and attack_data.weapon_unit and attack_data.weapon_unit:base()._use_data and attack_data.weapon_unit:base()._use_data.player.selection_index == 1 then
-		damage_modifier = damage_modifier + (managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_PLAYER_PISTOL_DAMAGE) or 1) - 1
+	local primary_damage_buff = managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_PLAYER_PRIMARY_DAMAGE)
+	local secondary_damage_buff = managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_PLAYER_SECONDARY_DAMAGE)
+
+	if attack_data and attack_data.attacker_unit == managers.player:local_player() and attack_data.weapon_unit and attack_data.weapon_unit:base()._use_data and attack_data.weapon_unit:base()._use_data.player and (primary_damage_buff or secondary_damage_buff) then
+		if primary_damage_buff and attack_data.weapon_unit:base()._use_data.player.selection_index == tweak_data.WEAPON_SLOT_PRIMARY then
+			damage_modifier = damage_modifier + (managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_PLAYER_PRIMARY_DAMAGE) or 1) - 1
+		end
+
+		if secondary_damage_buff and attack_data.weapon_unit:base()._use_data.player.selection_index == tweak_data.WEAPON_SLOT_SECONDARY then
+			damage_modifier = damage_modifier + (managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_PLAYER_SECONDARY_DAMAGE) or 1) - 1
+		end
 	end
 
 	damage_modifier = damage_modifier - damage_reduction

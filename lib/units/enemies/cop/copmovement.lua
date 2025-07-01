@@ -1874,6 +1874,8 @@ function CopMovement:save(save_data)
 		my_save_data.stance_wnd = true
 	end
 
+	my_save_data.cool_state = self._cool and true or false
+
 	for _, action in ipairs(self._active_actions) do
 		if action and action.save then
 			local action_save_data = {}
@@ -2002,12 +2004,10 @@ function CopMovement:_do_load()
 
 	if my_load_data.stance_code then
 		self:_change_stance(my_load_data.stance_code)
+	end
 
-		if my_load_data.stance_code == 1 then
-			self:set_cool(true)
-		else
-			self:set_cool(false)
-		end
+	if my_load_data.cool_state ~= self._cool then
+		self:set_cool(my_load_data.cool_state)
 	end
 
 	if my_load_data.stance_wnd then

@@ -138,6 +138,8 @@ function CarryTweakData:init(tweak_data)
 	self.flak_shell.throw_sound = "flakshell_throw"
 	self.flak_shell.upgrade_weight_multiplier = self.WEIGHT_MULTIPLIERS_SHELL
 	self.flak_shell.weight = 4
+	self.flak_shell.throw_rotations = Rotation(0, 0, 66)
+	self.flak_shell.throw_positions = Vector3(0, 0, 18)
 	self.flak_shell_explosive = deep_clone(self.flak_shell)
 	self.flak_shell_explosive.type = "normal"
 	self.flak_shell_explosive.unit = "units/vanilla/pickups/pku_88_flak_shell_bag/pku_88_flak_shell_bag"

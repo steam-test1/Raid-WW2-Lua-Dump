@@ -980,6 +980,8 @@ function MissionJoinGui:_set_game_description_data(data)
 		card_data = tweak_data.challenge_cards.cards[card_key_name]
 	end
 
+	Application:info("[MissionJoinGui] PLAYER CARD KEY NAME '" .. tostring(card_key_name) .. "'")
+
 	if card_data then
 		self._desc_challenge_card_panel:show()
 		self.desc_challenge_card_icon:set_image(tweak_data.challenge_cards.challenge_card_texture_path .. card_data.texture, unpack(tweak_data.challenge_cards.challenge_card_texture_rect))
@@ -997,9 +999,12 @@ function MissionJoinGui:_set_game_description_data(data)
 
 		local desc_challenge_card_rarity_icon = tweak_data.gui.icons[card_data.rarity]
 
-		self._desc_challenge_card_rarity_icon:set_image(desc_challenge_card_rarity_icon.texture, unpack(desc_challenge_card_rarity_icon.texture_rect))
-		self._desc_challenge_card_rarity_icon:set_right(self._desc_challenge_card_xp:x() - 12)
-		self._desc_challenge_card_rarity_icon:show()
+		if desc_challenge_card_rarity_icon then
+			self._desc_challenge_card_rarity_icon:set_image(desc_challenge_card_rarity_icon.texture, unpack(desc_challenge_card_rarity_icon.texture_rect))
+			self._desc_challenge_card_rarity_icon:set_right(self._desc_challenge_card_xp:x() - 12)
+			self._desc_challenge_card_rarity_icon:show()
+			self._desc_challenge_card_rarity_icon_on_card:set_image(desc_challenge_card_rarity_icon.texture, unpack(desc_challenge_card_rarity_icon.texture_rect))
+		end
 
 		if not card_data.title_in_texture then
 			self._desc_challenge_card_name_on_card:set_text(self:translate(card_data.name, true))
@@ -1016,7 +1021,6 @@ function MissionJoinGui:_set_game_description_data(data)
 		self._desc_challenge_card_xp_on_card:set_w(w1)
 		self._desc_challenge_card_xp_on_card:set_h(h1)
 		self._desc_challenge_card_xp_on_card:set_center_x(self.desc_challenge_card_icon:w() / 2)
-		self._desc_challenge_card_rarity_icon_on_card:set_image(desc_challenge_card_rarity_icon.texture, unpack(desc_challenge_card_rarity_icon.texture_rect))
 
 		local type_definition = tweak_data.challenge_cards.type_definition[card_data.card_type]
 

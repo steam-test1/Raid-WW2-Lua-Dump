@@ -159,8 +159,14 @@ end
 function ReadyUpGui:_layout_header()
 	local selected_job = managers.raid_job:selected_job()
 	local current_job = managers.raid_job:current_job()
-	local selected_level_data = selected_job or current_job
-	local mission_data = tweak_data.operations:mission_data(selected_level_data.job_id)
+	local mission_data = selected_job or current_job
+
+	if not mission_data then
+		Application:warn("[ReadyUpGui:_layout_header] selected_job, current_job", selected_job, current_job)
+
+		return
+	end
+
 	local item_icon_name = mission_data.icon_menu
 	local item_icon = {
 		color = tweak_data.gui.colors.dirty_white,
@@ -182,7 +188,7 @@ function ReadyUpGui:_layout_header()
 
 		mission_name = title_text
 	else
-		mission_name = utf8.to_upper(managers.localization:text(tweak_data.operations.missions[selected_job.job_id].name_id))
+		mission_name = utf8.to_upper(managers.localization:text(selected_job.name_id))
 	end
 
 	local mission_info_x = tweak_data.gui:icon_w(item_icon_name) + 16
@@ -321,7 +327,6 @@ function ReadyUpGui:_layout_card_info()
 		text = self:translate("hud_no_challenge_card_text", false),
 		w = 352,
 		wrap = true,
-		x = 0,
 		y = self._card_control:bottom() + 32,
 	})
 
@@ -337,7 +342,6 @@ function ReadyUpGui:_layout_card_info()
 		text = "",
 		w = 352,
 		wrap = true,
-		x = 0,
 		y = self._card_control:bottom() + 96,
 	})
 
@@ -919,9 +923,12 @@ function ReadyUpGui:_update_controls_contining_mission()
 
 			self._forced_card = active_card.locked_suggestion
 
-			local bonus_description, malus_description = managers.challenge_cards:get_card_description(active_card.key_name)
+			local bonus_description, malus_description = managers.challenge_cards:get_card_description(active_card)
 
-			self._positive_card_effect_label:set_text("+ " .. bonus_description)
+			if bonus_description ~= "" then
+				self._positive_card_effect_label:show()
+				self._positive_card_effect_label:set_text("+ " .. bonus_description)
+			end
 
 			if malus_description ~= "" then
 				self._negative_card_effect_label:show()

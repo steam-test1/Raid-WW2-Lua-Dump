@@ -2323,7 +2323,7 @@ function StatisticsManager:favourite_level()
 		started = started < data.started and data.started or started
 	end
 
-	return c_name and tweak_data.levels:get_localized_level_name_from_level_id(c_name) or managers.localization:text("debug_undecided")
+	return c_name and tweak_data.levels:get_level_name_from_level_id(c_name) or managers.localization:text("debug_undecided")
 end
 
 function StatisticsManager:total_completed_campaigns()

@@ -148,16 +148,16 @@ function RaidMainMenuGui:_layout_title_logo()
 			self._title_icon:set_texture_rect(unpack(tweak_data.gui.icons[current_job.icon_menu].texture_rect))
 			self._title_icon:show()
 			self._title_label:set_x(90)
-			self._title_label:set_text(self:translate(tweak_data.operations.missions[current_job.job_id].name_id, true))
+			self._title_label:set_text(self:translate(current_job.name_id, true))
 			self._title_label:set_color(tweak_data.gui.colors.raid_red)
 		elseif current_job and current_job.job_type == OperationsTweakData.JOB_TYPE_OPERATION then
 			self._title_icon:set_image(tweak_data.gui.icons[current_job.icon_menu].texture)
 			self._title_icon:set_texture_rect(unpack(tweak_data.gui.icons[current_job.icon_menu].texture_rect))
 			self._title_icon:show()
 
-			local operation_name = self:translate(tweak_data.operations.missions[current_job.job_id].name_id, true)
+			local operation_name = self:translate(current_job.name_id, true)
 			local operation_progress = current_job.current_event .. "/" .. #current_job.events_index
-			local level_name = self:translate(tweak_data.operations.missions[current_job.job_id].events[current_job.events_index[current_job.current_event]].name_id, true)
+			local level_name = self:translate(current_job.events[current_job.events_index[current_job.current_event]].name_id, true)
 
 			self._title_label:set_x(90)
 			self._title_label:set_text(operation_name .. " " .. operation_progress .. ": " .. level_name, true)

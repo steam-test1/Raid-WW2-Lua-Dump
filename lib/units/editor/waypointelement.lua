@@ -1,5 +1,6 @@
 WaypointUnitElement = WaypointUnitElement or class(MissionElement)
 WaypointUnitElement.HED_COLOR = Color.white
+WaypointUnitElement.USES_POINT_ORIENTATION = true
 
 function WaypointUnitElement:init(unit)
 	WaypointUnitElement.super.init(self, unit)

@@ -147,10 +147,6 @@ end
 function MissionScriptElement:_print_debug_on_executed(instigator)
 	if self:is_debug() then
 		self:_print_debug("Element '" .. self._editor_name .. "' executed.", instigator)
-
-		if instigator then
-			-- block empty
-		end
 	end
 end
 

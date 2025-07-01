@@ -28,27 +28,34 @@ function RaidJobManager:_setup()
 	self._play_tutorial = true
 end
 
-function RaidJobManager:set_selected_job(job_id)
+function RaidJobManager:set_selected_job(job_id, job_data)
 	if not Network:is_server() then
 		return
 	end
 
-	local selected_job = tweak_data.operations:mission_data(job_id)
+	Application:debug("[RaidJobManager:set_selected_job]", job_id, job_data, job_data and inspect(job_data))
 
-	if selected_job.job_type == OperationsTweakData.JOB_TYPE_OPERATION then
-		tweak_data.operations:randomize_operation(job_id)
+	job_id = job_id or job_data.job_id
+	job_data = job_data or tweak_data.operations:mission_data(job_id)
 
-		local list_delimited = tweak_data.operations:get_operation_indexes_delimited(job_id)
+	if job_data.job_type == OperationsTweakData.JOB_TYPE_OPERATION then
+		tweak_data.operations:randomize_operation(job_id, job_data)
+
+		local list_delimited = tweak_data.operations:get_operation_indexes_delimited(job_id, job_data)
 
 		managers.network:session():send_to_peers_synched("sync_randomize_operation", job_id, list_delimited)
 	end
 
-	self:_set_selected_job(job_id)
+	self:local_set_selected_job(job_id, job_data)
 	managers.network:session():send_to_peers_synched("sync_set_selected_job", job_id, Global.game_settings.difficulty)
 end
 
-function RaidJobManager:_set_selected_job(job_id)
-	local selected_job = tweak_data.operations:mission_data(job_id)
+function RaidJobManager:local_set_selected_job(job_id, job_data)
+	Application:trace("[RaidJobManager:local_set_selected_job]", job_id, inspect(job_data))
+
+	job_id = job_id or job_data.job_id
+
+	local mission_data = job_data or tweak_data.operations:mission_data(job_id)
 
 	self._current_job = nil
 
@@ -58,17 +65,21 @@ function RaidJobManager:_set_selected_job(job_id)
 	})
 	managers.network:session():send_to_peers_synched("stop_statistics_session", false, true, "")
 
-	self._selected_job = selected_job
+	self._selected_job = mission_data
 	self._loot_data = {}
+
+	if mission_data.active_card then
+		managers.challenge_cards:set_active_card(mission_data.active_card)
+	end
 
 	managers.global_state:reset_all_flags()
 
 	if self._selected_job.job_type == OperationsTweakData.JOB_TYPE_RAID then
 		self:_select_raid()
-		managers.global_state:set_flag(selected_job.mission_flag)
+		managers.global_state:set_flag(mission_data.mission_flag)
 	elseif self._selected_job.job_type == OperationsTweakData.JOB_TYPE_OPERATION then
 		self:_select_operation()
-		managers.global_state:set_flag(selected_job.current_event_data.mission_flag)
+		managers.global_state:set_flag(mission_data.current_event_data.mission_flag)
 	end
 end
 
@@ -79,7 +90,7 @@ function RaidJobManager:_select_raid()
 			"obj_camp_goto",
 		}
 
-		if not Global.game_settings.single_player then
+		if not Global.game_settings.single_player and self._selected_job and not self._selected_job.active_card then
 			table.insert(sub_objs, "obj_pick_a_card")
 		end
 
@@ -92,6 +103,8 @@ function RaidJobManager:_select_raid()
 end
 
 function RaidJobManager:_select_operation()
+	Application:debug("[RaidJobManager:_select_operation]", inspect(self._selected_job))
+
 	if Network:is_server() then
 		self:_goto_operation_objective()
 	end
@@ -105,14 +118,15 @@ function RaidJobManager:_select_operation()
 end
 
 function RaidJobManager:_goto_operation_objective()
-	Application:debug("[RaidJobManager:_goto_operation_objective]")
+	Application:debug("[RaidJobManager:_goto_operation_objective] selected job", (self._selected_job or self._current_job).job_id)
+	Application:stack_dump()
 
 	local id
 
-	if self._selected_job then
+	if self._selected_job and self._selected_job.job_id then
 		id = tweak_data.operations:get_camp_goto_objective_id(self._selected_job.job_id)
 
-		Application:debug("[RaidJobManager:_goto_operation_objective] using selected_job job_id")
+		Application:debug("[RaidJobManager:_goto_operation_objective] using selected_job job_id", self._selected_job.job_id)
 	elseif self._current_job then
 		if self._current_job.current_event_data and self._current_job.current_event_data.camp_objective_id then
 			id = self._current_job.current_event_data.camp_objective_id
@@ -135,7 +149,7 @@ function RaidJobManager:_goto_operation_objective()
 		"obj_camp_goto",
 	}
 
-	if not Global.game_settings.single_player then
+	if not Global.game_settings.single_player and self._selected_job and not self._selected_job.active_card then
 		table.insert(sub_objs, "obj_pick_a_card")
 	end
 
@@ -153,7 +167,7 @@ function RaidJobManager:sync_goto_job_objective(obj_id)
 		"obj_camp_goto",
 	}
 
-	if not Global.game_settings.single_player then
+	if not Global.game_settings.single_player and self._selected_job and not self._selected_job.active_card then
 		table.insert(sub_objs, "obj_pick_a_card")
 	end
 
@@ -188,6 +202,8 @@ function RaidJobManager:_select_job_dynamic_objectives(obj_id, sub_id_list, sub_
 end
 
 function RaidJobManager:set_current_event(operation, index)
+	Application:info("[RaidJobManager:set_current_event]", index, operation and operation.events_index and inspect(operation.events_index))
+
 	operation.current_event = index
 
 	local event_id = operation.events_index[index]
@@ -338,6 +354,10 @@ function RaidJobManager:on_mission_restart()
 	if managers.event_system:is_event_active() and Global.game_settings.event_enabled then
 		managers.queued_tasks:queue("special_event_reenable", managers.event_system.activate_current_event, managers.event_system, true, 0.5)
 	end
+
+	if self._current_job.active_card then
+		managers.queued_tasks:queue("job_active_card_reenable", managers.challenge_cards.set_active_card, managers.challenge_cards, self._current_job.active_card, 0.5)
+	end
 end
 
 function RaidJobManager:external_start_mission()
@@ -349,13 +369,20 @@ function RaidJobManager:external_start_mission()
 
 	Application:debug("[RaidJobManager:external_start_mission()]")
 
-	if not self._current_job and not self._selected_job then
-		Application:debug("[RaidJobManager:external_start_mission()] no job selected")
+	local mission = self._current_job or self._selected_job
+
+	if not mission then
+		Application:debug("[RaidJobManager:external_start_mission()] no current or selected job", mission)
 
 		return
 	end
 
-	local mission = self._current_job or self._selected_job
+	if not mission.job_id then
+		Application:error("[RaidJobManager:external_start_mission] Lacking job_id, this will crash peers!", inspect(mission))
+
+		return
+	end
+
 	local event_index = self._current_job and self._current_job.current_event or 1
 
 	managers.network:session():send_to_peers_synched("sync_external_start_mission", mission.job_id, event_index, self.reload_mission_flag)
@@ -434,18 +461,14 @@ function RaidJobManager:external_start_mission_clbk()
 		Application:debug("[RaidJobManager:external_start_mission_clbk()] No camp world point in the script! ", RaidJobManager.WORLD_POINT_CAMP, " Skipping despown step...")
 	end
 
-	local world, excluded_conts
+	local level_id, excluded_conts
 
 	if self._current_job then
-		local level_id
-
 		if self._current_job.job_type == OperationsTweakData.JOB_TYPE_RAID then
 			level_id = self._current_job.level_id
-			world = tweak_data.levels[level_id].predefined_world
 			excluded_conts = self._current_job.excluded_continents
 		elseif self._current_job.job_type == OperationsTweakData.JOB_TYPE_OPERATION then
 			level_id = self._current_job.current_event_data.level_id
-			world = tweak_data.levels[level_id].predefined_world
 			excluded_conts = self._current_job.current_event_data.excluded_continents
 		else
 			Application:error("[RaidJobManager:external_start_mission_clbk()] Missing job_type in tweak data for", self._current_job.job_id)
@@ -461,7 +484,7 @@ function RaidJobManager:external_start_mission_clbk()
 	if mission_wp then
 		mission_wp._action = "spawn"
 		mission_wp._spawn_loot = true
-		mission_wp._values.world = world
+		mission_wp._values.world = level_id
 		mission_wp._excluded_continents = excluded_conts
 
 		mission_wp:on_executed()
@@ -555,14 +578,16 @@ function RaidJobManager:do_external_end_mission(restart_camp)
 	local current_job_success = self._current_job and self:stage_success()
 
 	if current_job_success then
-		for peer_id, peer_data in pairs(managers.player:get_all_synced_carry()) do
-			for carry_idx, data in pairs(peer_data) do
-				if not tweak_data.carry[data.carry_id].skip_exit_secure then
+		for _, peer_data in pairs(managers.player:get_all_synced_carry()) do
+			for _, data in pairs(peer_data) do
+				local carry_data = tweak_data.carry[data.carry_id]
+
+				if carry_data and not carry_data.skip_exit_secure then
 					Application:debug("[RaidJobManager:job_completion_trail] Securing carry out bags!", data.carry_id)
 
-					local silent = true
 					local carry_id = data.carry_id
-					local multiplier = 1
+					local multiplier = data.multiplier or 1
+					local silent = true
 
 					managers.loot:secure(carry_id, multiplier, silent)
 				end
@@ -588,7 +613,7 @@ function RaidJobManager:do_external_end_mission(restart_camp)
 		local mission = self._camp
 
 		if self._play_tutorial then
-			self:set_selected_job("tutorial")
+			self:set_selected_job("tutorial", nil)
 
 			if game_state_machine:current_state().show_intro_video and not game_state_machine:current_state().intro_video_shown then
 				game_state_machine:current_state():show_intro_video()
@@ -615,7 +640,7 @@ function RaidJobManager:do_external_end_mission(restart_camp)
 			elseif self._current_job.job_type == OperationsTweakData.JOB_TYPE_RAID then
 				Application:debug("[RaidJobManager:job_completion_trail] Load success as single stage raid job...")
 
-				data.mission = tweak_data.operations.missions[self._current_job.job_id]
+				data.mission = self._current_job
 				at_last_stage = true
 			else
 				Application:debug("[RaidJobManager:job_completion_trail] Load success as operation stage...")
@@ -953,6 +978,8 @@ function RaidJobManager:continue_operation(slot)
 	local save_slot = self._save_slots[slot]
 
 	if not save_slot then
+		Application:error("[RaidJobManager:continue_operation] Cannot continue nil slot! Slot", slot, save_slot)
+
 		return
 	end
 
@@ -1057,18 +1084,28 @@ function RaidJobManager:get_save_slot_downs(save_slot)
 end
 
 function RaidJobManager:save_progress()
-	if self._current_job and self._current_job.job_type == OperationsTweakData.JOB_TYPE_OPERATION then
-		self._need_to_save = true
+	if self._current_job then
+		if self._current_job.job_type == OperationsTweakData.JOB_TYPE_OPERATION or self._current_job.bounty then
+			Application:info("[RaidJobManager:save_progress] Needs to save!")
 
-		managers.savefile:save_game(SavefileManager.SETTING_SLOT)
+			self._need_to_save = true
+
+			managers.savefile:save_game(SavefileManager.SETTING_SLOT)
+		end
+	else
+		Application:warn("[RaidJobManager:save_progress] Cant save, no current job")
 	end
 end
 
 function RaidJobManager:on_challenge_card_failed()
-	if self._current_job and self._current_job.job_type == OperationsTweakData.JOB_TYPE_OPERATION then
-		self._save_slots[self._current_save_slot].active_card.status = ChallengeCardsManager.CARD_STATUS_FAILED
+	if self._current_job then
+		if self._current_job.job_type == OperationsTweakData.JOB_TYPE_OPERATION then
+			self._save_slots[self._current_save_slot].active_card.status = ChallengeCardsManager.CARD_STATUS_FAILED
 
-		managers.savefile:save_game(SavefileManager.SETTING_SLOT)
+			managers.savefile:save_game(SavefileManager.SETTING_SLOT)
+		end
+	else
+		Application:warn("[RaidJobManager:on_challenge_card_failed] Cant save, no current job")
 	end
 end
 
@@ -1077,7 +1114,7 @@ function RaidJobManager:get_current_save_slot()
 end
 
 function RaidJobManager:load_game(data)
-	Application:trace("[RaidJobManager:load_game] ")
+	Application:trace("[RaidJobManager:load_game]", inspect(data.job_manager))
 
 	local state = data.job_manager
 
@@ -1134,6 +1171,7 @@ function RaidJobManager:save_game(data)
 
 			if active_card then
 				save_data.active_card = deep_clone(active_card)
+				save_data.active_card.status = ChallengeCardsManager.CARD_STATUS_NORMAL
 			end
 
 			save_data.current_job = current_job
@@ -1200,9 +1238,9 @@ function RaidJobManager:_prepare_peer_save_data()
 end
 
 function RaidJobManager:sync_current_job(job_id)
+	self._loot_data = {}
 	self._selected_job = nil
 	self._current_job = nil
-	self._loot_data = {}
 	self._current_job = tweak_data.operations:mission_data(job_id)
 
 	if self._current_job.job_type == OperationsTweakData.JOB_TYPE_OPERATION then
@@ -1314,7 +1352,7 @@ function RaidJobManager:stop_sounds()
 end
 
 function RaidJobManager:set_stage_success(success)
-	print("[RaidJobManager:set_stage_success]", success)
+	Application:info("[RaidJobManager:set_stage_success]", success)
 
 	self._stage_success = success
 end

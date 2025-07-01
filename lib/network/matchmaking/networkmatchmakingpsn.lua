@@ -2143,7 +2143,7 @@ function NetworkMatchMakingPSN:_joined_game(res, level_index, difficulty_index, 
 			room_id = managers.network.matchmake:room_id(),
 		})
 
-		local level_id = tweak_data.levels:get_level_name_from_index(level_index)
+		local level_id = tweak_data.levels:get_level_id_from_index(level_index)
 
 		Global.game_settings.level_id = level_id
 

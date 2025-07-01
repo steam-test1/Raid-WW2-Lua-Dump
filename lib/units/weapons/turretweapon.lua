@@ -308,13 +308,13 @@ function TurretWeapon:set_turret_rot(dt)
 
 	local player_unit = managers.player:player_unit()
 
-	if not player_unit then
+	if not alive(player_unit) then
 		Application:trace("TurretWeapon:_set_turret_rot - missing player unit ")
 
 		return
 	end
 
-	local player_rotation = managers.player:player_unit():movement():m_head_rot()
+	local player_rotation = player_unit:movement():m_head_rot()
 
 	self._player_rotation = player_rotation
 end

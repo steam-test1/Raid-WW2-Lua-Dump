@@ -42,9 +42,10 @@ function EditUnitLight:init(editor)
 	self._color_ctrlr:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "show_color_dialog"), "")
 	lights_sizer:add(self._color_ctrlr, 0, 5, "EXPAND,LEFT")
 
-	self._color_hex_ctrl = EWS:TextCtrl(panel, "000000", "", "TE_LEFT")
+	self._color_hex_ctrl = EWS:TextCtrl(panel, "000000", "", "TE_LEFT,TE_PROCESS_ENTER")
 
-	self._color_hex_ctrl:connect("EVT_COMMAND_TEXT_UPDATED", callback(self, self, "update_color"), "")
+	self._color_hex_ctrl:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "update_color"), "")
+	self._color_hex_ctrl:connect("EVT_KILL_FOCUS", callback(self, self, "update_color"), "")
 	lights_sizer:add(self._color_hex_ctrl, 0, 5, "EXPAND,LEFT")
 
 	self._enabled_ctrlr = EWS:CheckBox(panel, "Enabled", "")
@@ -390,7 +391,10 @@ function EditUnitLight:show_color_dialog()
 	local colordlg = EWS:ColourDialog(self._panel, true, self._color_ctrlr:background_colour() / 255)
 
 	if colordlg:show_modal() then
-		self._color_ctrlr:set_background_colour(colordlg:get_colour().x * 255, colordlg:get_colour().y * 255, colordlg:get_colour().z * 255)
+		local r, g, b = (colordlg:get_colour() * 255):unpack()
+
+		self._color_ctrlr:set_background_colour(r, g, b)
+		self._color_hex_ctrl:set_value(string.format("%X%X%X", r, g, b))
 
 		for _, light in ipairs(self:_selected_lights()) do
 			light:set_color(self._color_ctrlr:background_colour() / 255)
