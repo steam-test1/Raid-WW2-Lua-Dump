@@ -2684,26 +2684,49 @@ function CoreEditor:update_ruler(t, dt)
 		return
 	end
 
-	local pos = self._ruler_points[1]
-
-	Application:draw_sphere(pos, 10, 1, 1, 1)
-
+	local len = 0
+	local pos_s, pos_e
 	local ray = self:unit_by_raycast({
 		mask = managers.slot:get_mask("all"),
 		ray_type = "body editor",
 		sample = true,
 	})
 
-	if not ray or not ray.position then
-		return
+	if #self._ruler_points == 1 then
+		if not ray or not ray.position then
+			return
+		end
+
+		pos_s = self._ruler_points[1]
+		pos_e = ray.position
+		len = len + (pos_s - pos_e):length()
+
+		Application:draw_sphere(pos_s, 10, 1, 1, 1)
+		Application:draw_line(pos_s, pos_e, 1, 1, 1)
+	else
+		for i = 1, #self._ruler_points - 1 do
+			pos_s = self._ruler_points[i]
+			pos_e = self._ruler_points[i + 1]
+			len = len + (pos_s - pos_e):length()
+
+			Application:draw_sphere(pos_s, 10, 1, 1, 1)
+			Application:draw_line(pos_s, pos_e, 1, 1, 1)
+		end
+
+		if ctrl() and ray and ray.position then
+			pos_s = pos_e
+			pos_e = ray.position
+
+			Application:draw_sphere(pos_s, 10, 1, 1, 1)
+			Application:draw_line(pos_s, pos_e, 1, 1, 1)
+
+			len = len + (pos_s - pos_e):length()
+		end
 	end
 
-	local len = (pos - ray.position):length()
-
-	Application:draw_sphere(ray.position, 10, 1, 1, 1)
-	Application:draw_line(pos, ray.position, 1, 1, 1)
-	self:set_value_info(string.format("Length: %.2fm", len / 100))
-	self:set_value_info_pos(self:world_to_screen(ray.position))
+	Application:draw_sphere(pos_e, 10, 1, 1, 1)
+	self:set_value_info(string.format("Length: %.2fm / Lines: %s", len / 100, #self._ruler_points - 1))
+	self:set_value_info_pos(self:world_to_screen(pos_e))
 end
 
 function CoreEditor:current_orientation(offset_move_vec, unit)
@@ -4434,31 +4457,33 @@ function CoreEditor:delete_workview(continent, view_name)
 end
 
 function CoreEditor:set_ruler_points()
-	if not shift() then
-		return
-	end
-
-	if not self._ruler_points then
-		self._ruler_points = {}
-	end
-
 	local ray = self:unit_by_raycast({
 		mask = managers.slot:get_mask("all"),
 		ray_type = "body editor",
 		sample = true,
 	})
 
-	if not ray or not ray.position then
-		return
-	end
+	if shift() then
+		if not self._ruler_points then
+			self._ruler_points = {}
+		end
 
-	if #self._ruler_points == 0 then
+		if #self._ruler_points == 0 then
+			if not ray or not ray.position then
+				managers.editor:output("Cannot activate ruler, raycast didnt hit any bodies.")
+
+				return
+			end
+
+			table.insert(self._ruler_points, ray.position)
+			self:set_value_info_visibility(true)
+		else
+			self:set_value_info_visibility(false)
+
+			self._ruler_points = {}
+		end
+	elseif ctrl() and self._ruler_points and #self._ruler_points > 0 then
 		table.insert(self._ruler_points, ray.position)
-		self:set_value_info_visibility(true)
-	else
-		self:set_value_info_visibility(false)
-
-		self._ruler_points = {}
 	end
 end
 

@@ -321,6 +321,7 @@ function VehicleTweakData:_init_data_truck()
 	self.truck.interact_distance = 475
 	self.truck.driver_camera_offset = Vector3(0, 2, 20)
 	self.truck_ss = deep_clone(self.truck)
+	self.truck_ss.unit = "units/vanilla/vehicles/fps_vehicle_truck_ss/fps_vehicle_truck_ss"
 	self.truck_ss.seats.passenger_back_right.has_shooting_mode = false
 	self.truck_ss.seats.passenger_back_left.has_shooting_mode = false
 end

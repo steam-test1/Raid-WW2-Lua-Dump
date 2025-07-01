@@ -1389,10 +1389,6 @@ function ReviveInteractionExt:_at_interact_start_revive(player, timer)
 	else
 		self._unit:character_damage():pause_bleed_out()
 	end
-
-	if player:base().is_local_player then
-		managers.achievment:set_script_data("player_reviving", true)
-	end
 end
 
 function ReviveInteractionExt:_at_interact_interupt(player, complete)
@@ -1414,10 +1410,6 @@ function ReviveInteractionExt:_at_interact_interupt_revive(player)
 		self._unit:network():send_to_unit(revive_rpc_params)
 	else
 		self._unit:character_damage():unpause_bleed_out()
-	end
-
-	if player:base().is_local_player then
-		managers.achievment:set_script_data("player_reviving", false)
 	end
 end
 
@@ -1537,7 +1529,6 @@ function ReviveInteractionExt:interact(reviving_unit)
 		end
 
 		ReviveInteractionExt.super.interact(self, reviving_unit)
-		managers.achievment:set_script_data("player_reviving", false)
 	end
 
 	self:remove_interact()

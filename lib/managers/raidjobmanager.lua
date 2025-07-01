@@ -118,8 +118,9 @@ function RaidJobManager:_select_operation()
 end
 
 function RaidJobManager:_goto_operation_objective()
-	Application:debug("[RaidJobManager:_goto_operation_objective] selected job", (self._selected_job or self._current_job).job_id)
-	Application:stack_dump()
+	if not self:is_camp_loaded() then
+		return
+	end
 
 	local id
 
@@ -1301,6 +1302,7 @@ function RaidJobManager:sync_load(data)
 			tweak_data.operations.missions[state.current_job_id].events_index = state.events_index
 
 			self:set_current_event(self._current_job, state.current_job_event)
+			self:_goto_operation_objective()
 		end
 
 		self._loot_data = state.loot_data

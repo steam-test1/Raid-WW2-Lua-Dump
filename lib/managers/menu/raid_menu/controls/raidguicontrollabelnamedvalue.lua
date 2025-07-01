@@ -35,6 +35,16 @@ function RaidGUIControlLabelNamedValue:set_text(text)
 	self._text = text
 
 	self._label_text:set_text(text)
+
+	local _, _, w, _ = self._label_text:text_rect()
+
+	if w > self._object:w() then
+		local font_size = self._params.font_size or tweak_data.gui.font_sizes.medium
+
+		font_size = font_size * (self._object:w() / w)
+
+		self._label_text:set_font_size(font_size)
+	end
 end
 
 function RaidGUIControlLabelNamedValue:text()

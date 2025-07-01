@@ -1222,56 +1222,57 @@ function OperationsTweakData:_init_raids()
 			title_id = "fury_railway_mission_photo_4_title",
 		},
 	}
-	self.missions.forest_bunker = {}
-	self.missions.forest_bunker.level_id = "forest_bunker"
-	self.missions.forest_bunker.name_id = "forest_bunker"
-	self.missions.forest_bunker.briefing_id = "forest_bunker_briefing"
-	self.missions.forest_bunker.audio_briefing_id = "mrs_white_fb_briefing_long"
-	self.missions.forest_bunker.short_audio_briefing_id = "mrs_white_fb_briefing_short"
-	self.missions.forest_bunker.music_id = "random"
-	self.missions.forest_bunker.region = "germany"
-	self.missions.forest_bunker.xp = 4400
-	self.missions.forest_bunker.dogtags = self.dogtag_types.medium
-	self.missions.forest_bunker.greed_items = {
-		max = 1500,
-		min = 1200,
-	}
-	self.missions.forest_bunker.progression_groups = {
-		self.PROGRESSION_GROUP_STANDARD,
-	}
-	self.missions.forest_bunker.mission_state = self.STATE_LOCATION_MISSION_SELECTED
-	self.missions.forest_bunker.mission_flag = "level_raid_forest_bunker"
-	self.missions.forest_bunker.job_type = self.JOB_TYPE_RAID
-	self.missions.forest_bunker.icon_menu = "missions_forest_bunker"
-	self.missions.forest_bunker.icon_menu_big = "xp_events_missions_forest_bunker"
-	self.missions.forest_bunker.icon_hud = "missions_forest_bunker"
-	self.missions.forest_bunker.loading = {
-		image = "forest_bunker_loading_screen",
-		text = "forest_bunker_loading",
-	}
-	self.missions.forest_bunker.start_in_stealth = true
-	self.missions.forest_bunker.stealth_description = self.RAID_STARTS_STEALTHABLE
-	self.missions.forest_bunker.photos = {
-		{
-			description_id = "forest_bunker_mission_photo_1_description",
-			photo = "intel_forest_bunker_01",
-			title_id = "forest_bunker_mission_photo_1_title",
+	self.missions.forest_bunker = {
+		audio_briefing_id = "mrs_white_fb_briefing_long",
+		briefing_id = "forest_bunker_briefing",
+		dogtags = self.dogtag_types.medium,
+		greed_items = {
+			max = 1500,
+			min = 1200,
 		},
-		{
-			description_id = "forest_bunker_mission_photo_2_description",
-			photo = "intel_forest_bunker_02",
-			title_id = "forest_bunker_mission_photo_2_title",
+		icon_hud = "missions_forest_bunker",
+		icon_menu = "missions_forest_bunker",
+		icon_menu_big = "xp_events_missions_forest_bunker",
+		job_type = self.JOB_TYPE_RAID,
+		level_id = "forest_bunker",
+		loading = {
+			image = "forest_bunker_loading_screen",
+			text = "forest_bunker_loading",
 		},
-		{
-			description_id = "forest_bunker_mission_photo_3_description",
-			photo = "intel_forest_bunker_03",
-			title_id = "forest_bunker_mission_photo_3_title",
+		mission_flag = "level_raid_forest_bunker",
+		mission_state = self.STATE_LOCATION_MISSION_SELECTED,
+		music_id = "random",
+		name_id = "forest_bunker",
+		photos = {
+			{
+				description_id = "forest_bunker_mission_photo_1_description",
+				photo = "intel_forest_bunker_01",
+				title_id = "forest_bunker_mission_photo_1_title",
+			},
+			{
+				description_id = "forest_bunker_mission_photo_2_description",
+				photo = "intel_forest_bunker_02",
+				title_id = "forest_bunker_mission_photo_2_title",
+			},
+			{
+				description_id = "forest_bunker_mission_photo_3_description",
+				photo = "intel_forest_bunker_03",
+				title_id = "forest_bunker_mission_photo_3_title",
+			},
+			{
+				description_id = "forest_bunker_mission_photo_4_description",
+				photo = "intel_forest_bunker_04",
+				title_id = "forest_bunker_mission_photo_4_title",
+			},
 		},
-		{
-			description_id = "forest_bunker_mission_photo_4_description",
-			photo = "intel_forest_bunker_04",
-			title_id = "forest_bunker_mission_photo_4_title",
+		progression_groups = {
+			self.PROGRESSION_GROUP_STANDARD,
 		},
+		region = "germany",
+		short_audio_briefing_id = "mrs_white_fb_briefing_short",
+		start_in_stealth = true,
+		stealth_description = self.RAID_STARTS_STEALTHABLE,
+		xp = 4400,
 	}
 end
 
@@ -1429,6 +1430,7 @@ function OperationsTweakData:_init_operations()
 	self.missions.clear_skies.events.gold_rush.camp_objective_id = "obj_camp_goto_oper_clear_sky_02"
 	self.missions.clear_skies.events.gold_rush.music_id = "reichsbank"
 	self.missions.clear_skies.events.gold_rush.xp = 3200
+	self.missions.clear_skies.events.gold_rush.dogtags = self.dogtag_types.medium
 	self.missions.clear_skies.events.gold_rush.start_in_stealth = true
 	self.missions.clear_skies.events.gold_rush.mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED
 	self.missions.clear_skies.events.gold_rush.mission_flag = "level_operation_01_mission_02"
@@ -1516,6 +1518,7 @@ function OperationsTweakData:_init_operations()
 	self.missions.clear_skies.events.radio_defense.camp_objective_id = "obj_camp_goto_oper_clear_sky_04"
 	self.missions.clear_skies.events.radio_defense.music_id = "radio_defense"
 	self.missions.clear_skies.events.radio_defense.xp = 3200
+	self.missions.clear_skies.events.radio_defense.dogtags = self.dogtag_types.medium
 	self.missions.clear_skies.events.radio_defense.start_in_stealth = true
 	self.missions.clear_skies.events.radio_defense.mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED
 	self.missions.clear_skies.events.radio_defense.mission_flag = "level_operation_01_mission_04"
@@ -1557,6 +1560,11 @@ function OperationsTweakData:_init_operations()
 	self.missions.clear_skies.events.railyard.camp_objective_id = "obj_camp_goto_oper_clear_sky_05"
 	self.missions.clear_skies.events.railyard.music_id = "train_yard"
 	self.missions.clear_skies.events.railyard.xp = 1500
+	self.missions.clear_skies.events.railyard.dogtags = {
+		diff_bonus = 1,
+		max = 10,
+		min = 6,
+	}
 	self.missions.clear_skies.events.railyard.mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED
 	self.missions.clear_skies.events.railyard.mission_flag = "level_operation_01_mission_06"
 	self.missions.clear_skies.events.railyard.checkpoint = true
@@ -1576,6 +1584,7 @@ function OperationsTweakData:_init_operations()
 	self.missions.clear_skies.events.flakturm.music_id = "flakturm"
 	self.missions.clear_skies.events.flakturm.start_in_stealth = true
 	self.missions.clear_skies.events.flakturm.xp = 3600
+	self.missions.clear_skies.events.flakturm.dogtags = self.dogtag_types.large
 	self.missions.clear_skies.events.flakturm.icon_menu = "missions_raid_flaktower_menu"
 	self.missions.clear_skies.events.flakturm.icon_hud = "miissions_raid_flaktower"
 	self.missions.clear_skies.events.flakturm.mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED
@@ -1780,11 +1789,7 @@ function OperationsTweakData:_init_operations()
 	self.missions.oper_flamable.events.bridge.camp_objective_id = "obj_camp_goto_oper_rhinegold_03"
 	self.missions.oper_flamable.events.bridge.music_id = "ger_bridge"
 	self.missions.oper_flamable.events.bridge.xp = 2400
-	self.missions.oper_flamable.events.dogtags = {
-		diff_bonus = 3,
-		max = 8,
-		min = 5,
-	}
+	self.missions.oper_flamable.events.bridge.dogtags = self.dogtag_types.medium
 	self.missions.oper_flamable.events.bridge.mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED
 	self.missions.oper_flamable.events.bridge.checkpoint = true
 	self.missions.oper_flamable.events.bridge.icon_menu = "missions_raid_bridge_menu"
@@ -1802,6 +1807,7 @@ function OperationsTweakData:_init_operations()
 	self.missions.oper_flamable.events.castle.camp_objective_id = "obj_camp_goto_oper_rhinegold_04"
 	self.missions.oper_flamable.events.castle.music_id = "castle"
 	self.missions.oper_flamable.events.castle.xp = 4000
+	self.missions.oper_flamable.events.castle.dogtags = self.dogtag_types.large
 	self.missions.oper_flamable.events.castle.icon_menu = "missions_raid_castle_menu"
 	self.missions.oper_flamable.events.castle.icon_hud = "missions_raid_castle"
 	self.missions.oper_flamable.events.castle.mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED

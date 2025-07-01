@@ -188,7 +188,7 @@ end
 function PlayerManager:soft_reset()
 	self._listener_holder = EventListenerHolder:new()
 	self._equipment = {
-		PART_TYPE_HEAD = nil,
+		mvector3 = nil,
 		selections = {},
 		specials = {},
 	}
@@ -204,7 +204,7 @@ end
 
 function PlayerManager:_setup()
 	self._equipment = {
-		PART_TYPE_HEAD = nil,
+		mvector3 = nil,
 		selections = {},
 		specials = {},
 	}
@@ -332,29 +332,29 @@ function PlayerManager:set_customization_equiped_lower_name(lower_name)
 end
 
 function PlayerManager:get_customization_for_nationality(nationality)
+	local customization = {
+		nationality = nationality,
+	}
+
 	for i = SavefileManager.CHARACTER_PROFILE_STARTING_SLOT, SavefileManager.CHARACTER_PROFILE_STARTING_SLOT + SavefileManager.CHARACTER_PROFILE_SLOTS_COUNT - 1 do
 		local save_data = Global.savefile_manager.meta_data_list[i]
 
 		if save_data and save_data.is_cached_slot and save_data.cache and save_data.cache.PlayerManager and nationality == save_data.cache.PlayerManager.character_profile_nation then
 			local player_man = save_data.cache.PlayerManager
-			local customization = {
-				equiped_head_name = player_man.customization_equiped_head_name,
-				equiped_lower_name = player_man.customization_equiped_lower_name,
-				equiped_upper_name = player_man.customization_equiped_upper_name,
-				nationality = nationality,
-			}
 
-			return customization
+			customization.equiped_head_name = player_man.customization_equiped_head_name
+			customization.equiped_upper_name = player_man.customization_equiped_upper_name
+			customization.equiped_lower_name = player_man.customization_equiped_lower_name
+
+			break
 		end
 	end
 
 	local cc = managers.character_customization
-	local customization = {
-		equiped_head_name = cc:get_default_part_key_name(nationality, CharacterCustomizationTweakData.PART_TYPE_HEAD),
-		equiped_lower_name = cc:get_default_part_key_name(nationality, CharacterCustomizationTweakData.PART_TYPE_LOWER),
-		equiped_upper_name = cc:get_default_part_key_name(nationality, CharacterCustomizationTweakData.PART_TYPE_UPPER),
-		nationality = nationality,
-	}
+
+	customization.equiped_head_name = customization.equiped_head_name or cc:get_default_part_key_name(nationality, CharacterCustomizationTweakData.PART_TYPE_HEAD)
+	customization.equiped_upper_name = customization.equiped_upper_name or cc:get_default_part_key_name(nationality, CharacterCustomizationTweakData.PART_TYPE_UPPER)
+	customization.equiped_lower_name = customization.equiped_lower_name or cc:get_default_part_key_name(nationality, CharacterCustomizationTweakData.PART_TYPE_LOWER)
 
 	return customization
 end

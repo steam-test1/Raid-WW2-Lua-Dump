@@ -1176,7 +1176,7 @@ function CharacterTweakData:_init_german_flamer(presets)
 		stand = true,
 	}
 	self.german_flamer.always_face_enemy = true
-	self.german_flamer.move_speed = presets.move_speed.very_slow
+	self.german_flamer.move_speed = presets.move_speed.super_slow
 	self.german_flamer.crouch_move = false
 	self.german_flamer.no_run_start = true
 	self.german_flamer.no_run_stop = true
@@ -6590,6 +6590,65 @@ function CharacterTweakData:_presets(tweak_data)
 				},
 			},
 		},
+		super_slow = {
+			crouch = {
+				run = {
+					cbt = {
+						bwd = 125,
+						fwd = 144,
+						strafe = 100,
+					},
+					hos = {
+						bwd = 113,
+						fwd = 144,
+						strafe = 130,
+					},
+				},
+				walk = {
+					cbt = {
+						bwd = 113,
+						fwd = 144,
+						strafe = 120,
+					},
+					hos = {
+						bwd = 113,
+						fwd = 144,
+						strafe = 120,
+					},
+				},
+			},
+			stand = {
+				run = {
+					cbt = {
+						bwd = 125,
+						fwd = 144,
+						strafe = 100,
+					},
+					hos = {
+						bwd = 113,
+						fwd = 144,
+						strafe = 140,
+					},
+				},
+				walk = {
+					cbt = {
+						bwd = 113,
+						fwd = 144,
+						strafe = 120,
+					},
+					hos = {
+						bwd = 113,
+						fwd = 144,
+						strafe = 120,
+					},
+					ntl = {
+						bwd = 113,
+						fwd = 144,
+						strafe = 120,
+					},
+				},
+			},
+		},
 		teamai = {
 			crouch = {
 				run = {
@@ -7148,6 +7207,7 @@ function CharacterTweakData:_set_difficulty_1()
 	self.german_flamer.HEALTH_INIT = 1600
 	self.german_flamer.throwable.throw_chance = 0
 	self.german_flamer.throwable.cooldown = 40
+	self.german_flamer.move_speed = self.presets.move_speed.super_slow
 end
 
 function CharacterTweakData:_set_difficulty_2()
@@ -7243,6 +7303,7 @@ function CharacterTweakData:_set_difficulty_2()
 	self.german_flamer.HEALTH_INIT = 2000
 	self.german_flamer.throwable.throw_chance = 0.15
 	self.german_flamer.throwable.cooldown = 30
+	self.german_flamer.move_speed = self.presets.move_speed.super_slow
 end
 
 function CharacterTweakData:_set_difficulty_3()
@@ -7338,6 +7399,7 @@ function CharacterTweakData:_set_difficulty_3()
 	self.german_flamer.HEALTH_INIT = 2200
 	self.german_flamer.throwable.throw_chance = 0.2
 	self.german_flamer.throwable.cooldown = 22
+	self.german_flamer.move_speed = self.presets.move_speed.very_slow
 end
 
 function CharacterTweakData:_set_difficulty_4()
@@ -7434,6 +7496,7 @@ function CharacterTweakData:_set_difficulty_4()
 	self.german_flamer.HEALTH_INIT = 2600
 	self.german_flamer.throwable.throw_chance = 0.28
 	self.german_flamer.throwable.cooldown = 15
+	self.german_flamer.move_speed = self.presets.move_speed.very_slow
 end
 
 function CharacterTweakData:_multiply_weapon_delay(weap_usage_table, mul)

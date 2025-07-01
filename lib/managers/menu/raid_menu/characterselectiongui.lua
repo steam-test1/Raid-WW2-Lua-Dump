@@ -110,7 +110,7 @@ function CharacterSelectionGui:_layout()
 		y = 0,
 	}, {
 		class = nil,
-		slot = nil,
+		level = nil,
 	})
 
 	self._right_side_info:set_right(self._root_panel:right())

@@ -337,6 +337,7 @@ end
 
 CoreInstancePointUnitElement = CoreInstancePointUnitElement or class(MissionElement)
 InstancePointUnitElement = InstancePointUnitElement or class(CoreInstancePointUnitElement)
+InstancePointUnitElement.USES_POINT_ORIENTATION = true
 
 function InstancePointUnitElement:init(...)
 	InstancePointUnitElement.super.init(self, ...)

@@ -243,8 +243,8 @@ function GroupAIStateBase:_init_misc_data(clean_up)
 	self:_init_team_tables()
 
 	self._phalanx_data = {
+		idle = nil,
 		minions = {},
-		sync = nil,
 	}
 end
 

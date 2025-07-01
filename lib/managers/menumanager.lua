@@ -560,15 +560,11 @@ function MenuManager:init(is_start_menu)
 
 	managers.controller:add_hotswap_callback("menu_manager", callback(self, self, "controller_hotswap_triggered"), 1)
 
-	self._loading_screen = self:_init_loading_screen()
+	self._loading_screen = HUDLoadingScreen:new()
 
 	if Global.dropin_loading_screen then
 		managers.menu:show_loading_screen(Global.dropin_loading_screen)
 	end
-end
-
-function MenuManager:_init_loading_screen()
-	return HUDLoadingScreen:new()
 end
 
 function MenuManager:show_loading_screen(data, clbk, instant)

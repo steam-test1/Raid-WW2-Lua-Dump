@@ -9,7 +9,6 @@ function AchievmentManager:init()
 		c = 5000,
 		none = 0,
 	}
-	self.script_data = {}
 
 	if IS_PC then
 		if IS_STEAM then
@@ -179,14 +178,6 @@ function AchievmentManager:_parse_achievments(platform)
 			end
 		end
 	end
-end
-
-function AchievmentManager:get_script_data(id)
-	return self.script_data[id]
-end
-
-function AchievmentManager:set_script_data(id, data)
-	self.script_data[id] = data
 end
 
 function AchievmentManager:exists(id)

@@ -780,11 +780,23 @@ function PlayerInventory:add_ammo(ratio, ammo)
 	end
 end
 
+function PlayerInventory:add_ammo_to_selection(id, ratio, ammo)
+	local weapon = self._available_selections[id]
+
+	if weapon and alive(weapon.unit) and weapon.unit:base():uses_ammo() then
+		local _, add_amount, ammo_actually_picked_up = weapon.unit:base():add_ammo(ratio, ammo)
+
+		managers.hud:set_ammo_amount(id, weapon.unit:base():ammo_info())
+
+		return add_amount, ammo_actually_picked_up
+	end
+end
+
 function PlayerInventory:add_ammo_to_equipped(ratio, ammo)
 	local equipped_unit = self:equipped_unit()
 
 	if alive(equipped_unit) and equipped_unit:base():uses_ammo() then
-		local picked_up, add_amount, ammo_actually_picked_up = equipped_unit:base():add_ammo(ratio, ammo)
+		local _, add_amount, ammo_actually_picked_up = equipped_unit:base():add_ammo(ratio, ammo)
 
 		managers.hud:set_ammo_amount(self._equipped_selection, equipped_unit:base():ammo_info())
 

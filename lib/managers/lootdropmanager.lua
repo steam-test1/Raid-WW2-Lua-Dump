@@ -552,7 +552,7 @@ function LootDropManager:remove_loot_from_level(world_id)
 	self._registered_loot_units[world_id] = {}
 end
 
-function LootDropManager:plant_loot_on_level(world_id, total_value, job_id)
+function LootDropManager:plant_loot_on_level(world_id, total_value, min_distance, job_id)
 	if not Network:is_server() or Application:editor() then
 		return
 	end
@@ -582,9 +582,6 @@ function LootDropManager:plant_loot_on_level(world_id, total_value, job_id)
 			end
 
 			if not should_remove_loot_unit then
-				local dogtags_data = managers.raid_job:current_job().dogtags
-				local min_distance = dogtags_data and dogtags_data.min_dist or 200
-
 				for _, existing_loot_unit in ipairs(self._active_loot_units) do
 					if min_distance > mvector3.distance(loot_data.unit:position(), existing_loot_unit:position()) then
 						should_remove_loot_unit = true

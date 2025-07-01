@@ -436,7 +436,7 @@ function ChallengeCardsTweakData:_init_cards(tweak_data)
 		{
 			name = BuffEffectManager.EFFECT_PLAYER_CRITICAL_HIT_CHANCE,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
-			value = 1.1,
+			value = 0.1,
 		},
 		{
 			name = BuffEffectManager.EFFECT_PLAYER_HEADSHOT_DOESNT_DO_DAMAGE,
@@ -1336,7 +1336,7 @@ function ChallengeCardsTweakData:_init_cards(tweak_data)
 		{
 			name = BuffEffectManager.EFFECT_PLAYER_CRITICAL_HIT_CHANCE,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
-			value = 1.07,
+			value = 0.07,
 		},
 		{
 			fail_message = BuffEffectManager.FAIL_EFFECT_MESSAGE_PLAYER_EMPTIED_A_CLIP,
@@ -1619,7 +1619,7 @@ function ChallengeCardsTweakData:_init_cards(tweak_data)
 		{
 			name = BuffEffectManager.EFFECT_PLAYER_CRITICAL_HIT_CHANCE,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
-			value = 1.1,
+			value = 0.1,
 		},
 		{
 			name = BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_REWARD_INCREASE,

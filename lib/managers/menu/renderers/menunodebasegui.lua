@@ -123,7 +123,6 @@ function MenuNodeBaseGui:create_text_button(params)
 		blur = gui_blur,
 		clbk = clbk,
 		highlighted = false,
-		image = nil,
 		legend_text = nil,
 		panel = button_panel,
 		params = params.params,
