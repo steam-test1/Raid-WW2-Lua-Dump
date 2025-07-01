@@ -1062,8 +1062,8 @@ function OperationsTweakData:_init_raids()
 	self.missions.silo.level_id = "silo"
 	self.missions.silo.briefing_id = "menu_silo_desc"
 	self.missions.silo.sub_worlds_spawned = 2
-	self.missions.silo.audio_briefing_id = ""
-	self.missions.silo.short_audio_briefing_id = ""
+	self.missions.silo.audio_briefing_id = "mrs_white_silo_brief"
+	self.missions.silo.short_audio_briefing_id = "mrs_white_silo_brief"
 	self.missions.silo.music_id = "random"
 	self.missions.silo.region = "germany"
 	self.missions.silo.dogtags_min = 30
