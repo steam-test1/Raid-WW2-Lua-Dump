@@ -127,22 +127,22 @@ end
 
 function LootDropTweakData:_init_gold_bar_rewards()
 	self.gold_bar_rewards = {}
-	self.gold_bar_rewards.tiny = {
+	self.gold_bar_rewards.tiny_raid = {
 		gold_bars_max = 1,
 		gold_bars_min = 1,
 		reward_type = LootDropTweakData.REWARD_GOLD_BARS,
 	}
-	self.gold_bar_rewards.small = {
+	self.gold_bar_rewards.small_raid = {
 		gold_bars_max = 4,
 		gold_bars_min = 2,
 		reward_type = LootDropTweakData.REWARD_GOLD_BARS,
 	}
-	self.gold_bar_rewards.medium = {
+	self.gold_bar_rewards.medium_raid = {
 		gold_bars_max = 10,
 		gold_bars_min = 5,
 		reward_type = LootDropTweakData.REWARD_GOLD_BARS,
 	}
-	self.gold_bar_rewards.large = {
+	self.gold_bar_rewards.large_raid = {
 		gold_bars_max = 15,
 		gold_bars_min = 11,
 		reward_type = LootDropTweakData.REWARD_GOLD_BARS,
@@ -194,22 +194,22 @@ function LootDropTweakData:_init_categories()
 	self.loot_categories.category_gold_tiny = {}
 	self.loot_categories.category_gold_tiny[1] = {
 		chance = 100,
-		value = self.gold_bar_rewards.tiny,
+		value = self.gold_bar_rewards.tiny_raid,
 	}
 	self.loot_categories.category_gold_low = {}
 	self.loot_categories.category_gold_low[1] = {
 		chance = 100,
-		value = self.gold_bar_rewards.small,
+		value = self.gold_bar_rewards.small_raid,
 	}
 	self.loot_categories.category_gold_mid = {}
 	self.loot_categories.category_gold_mid[1] = {
 		chance = 100,
-		value = self.gold_bar_rewards.medium,
+		value = self.gold_bar_rewards.medium_raid,
 	}
 	self.loot_categories.category_gold_high = {}
 	self.loot_categories.category_gold_high[1] = {
 		chance = 100,
-		value = self.gold_bar_rewards.large,
+		value = self.gold_bar_rewards.large_raid,
 	}
 	self.loot_categories.category_gold_tiny_operation = {}
 	self.loot_categories.category_gold_tiny_operation[1] = {
@@ -306,7 +306,7 @@ function LootDropTweakData:_init_groups_basic()
 		value = self.loot_categories.category_gold_tiny_operation,
 	})
 
-	self.loot_groups.loot_group_basic = deep_clone(self.loot_groups_doubles_fallback.loot_group_basic)
+	self.loot_groups.loot_group_basic = clone(self.loot_groups_doubles_fallback.loot_group_basic)
 end
 
 function LootDropTweakData:_init_groups_bronze()
@@ -355,11 +355,11 @@ function LootDropTweakData:_init_groups_bronze()
 		value = self.loot_categories.category_gold_mid_operation,
 	})
 	table.insert(self.loot_groups_doubles_fallback.loot_group_bronze, {
-		chance = 20,
+		chance = 5,
 		value = self.loot_categories.category_cards_pack,
 	})
 
-	self.loot_groups.loot_group_bronze = deep_clone(self.loot_groups_doubles_fallback.loot_group_bronze)
+	self.loot_groups.loot_group_bronze = clone(self.loot_groups_doubles_fallback.loot_group_bronze)
 end
 
 function LootDropTweakData:_init_groups_silver()
@@ -387,11 +387,11 @@ function LootDropTweakData:_init_groups_silver()
 		value = self.loot_categories.category_gold_mid_operation,
 	})
 	table.insert(self.loot_groups_doubles_fallback.loot_group_silver, {
-		chance = 20,
+		chance = 15,
 		value = self.loot_categories.category_cards_pack,
 	})
 
-	self.loot_groups.loot_group_silver = deep_clone(self.loot_groups_doubles_fallback.loot_group_silver)
+	self.loot_groups.loot_group_silver = clone(self.loot_groups_doubles_fallback.loot_group_silver)
 
 	table.insert(self.loot_groups.loot_group_silver, {
 		chance = 20,
@@ -432,7 +432,7 @@ function LootDropTweakData:_init_groups_gold()
 		value = self.loot_categories.category_cards_pack,
 	})
 
-	self.loot_groups.loot_group_gold = deep_clone(self.loot_groups_doubles_fallback.loot_group_gold)
+	self.loot_groups.loot_group_gold = clone(self.loot_groups_doubles_fallback.loot_group_gold)
 
 	table.insert(self.loot_groups.loot_group_gold, {
 		chance = 30,

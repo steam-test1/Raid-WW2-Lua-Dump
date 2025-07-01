@@ -4,6 +4,7 @@ RaidGUIControlListItemCharacterSelectButton.BUTTON_TYPE_DELETE = "button_delete"
 RaidGUIControlListItemCharacterSelectButton.BUTTON_TYPE_CREATE = "button_create"
 RaidGUIControlListItemCharacterSelectButton.BUTTON_TYPE_RENAME = "button_rename"
 RaidGUIControlListItemCharacterSelectButton.BUTTON_TYPE_NATION = "button_nation"
+RaidGUIControlListItemCharacterSelectButton.BUTTON_COLOR = Color("313131")
 
 function RaidGUIControlListItemCharacterSelectButton:init(parent, params)
 	RaidGUIControlListItemCharacterSelectButton.super.init(self, parent, params)
@@ -30,6 +31,7 @@ function RaidGUIControlListItemCharacterSelectButton:init(parent, params)
 		w = 32,
 		x = 0,
 		y = 0,
+		color = RaidGUIControlListItemCharacterSelectButton.BUTTON_COLOR,
 		layer = self._background:layer() + 1,
 		texture = tweak_data.gui.icons.list_btn_ico_plus.texture,
 		texture_rect = tweak_data.gui.icons.list_btn_ico_plus.texture_rect,

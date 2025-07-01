@@ -37,8 +37,11 @@ function EquipmentsTweakData:init()
 	self.specials.crowbar_stack.transfer_quantity = 4
 	self.specials.dynamite = {
 		icon = "equipment_panel_dynamite_stick",
+		max_quantity = 99,
+		quantity = 1,
 		sync_possession = true,
 		text_id = "hud_equipment_dynamite",
+		transfer_quantity = 99,
 	}
 	self.specials.dynamite_x5 = {
 		icon = "equipment_panel_dynamite_stick",

@@ -236,7 +236,7 @@ function RaidGUIControlCardSuggestedLarge:set_card(card_data)
 			layer = self._challenge_card_panel:layer() + 1,
 			name = "suggested_card_malus_label_" .. self._name,
 			text = malus_description,
-			w = self._challenge_card_panel:w() - self._bonus_image:w() - 10,
+			w = self._challenge_card_panel:w() - self._malus_image:w() - 10,
 			x = self._malus_image:x() + self._malus_image:w() + 10,
 			y = self._malus_image:y(),
 		})

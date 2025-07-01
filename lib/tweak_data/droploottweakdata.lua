@@ -233,7 +233,7 @@ function DropLootTweakData:_init_basic_crate_tier()
 		unit = "health_small",
 	}
 	self.basic_crate_tier.units.grenade = {}
-	self.basic_crate_tier.units.grenade.drop_rate = 20
+	self.basic_crate_tier.units.grenade.drop_rate = 15
 	self.basic_crate_tier.units.grenade.subtypes = {}
 	self.basic_crate_tier.units.grenade.subtypes.medium = {
 		drop_rate = 50,
@@ -275,7 +275,7 @@ function DropLootTweakData:_init_lockpick_crate_tier()
 		unit = "health_small",
 	}
 	self.lockpick_crate_tier.units.grenade = {}
-	self.lockpick_crate_tier.units.grenade.drop_rate = 20
+	self.lockpick_crate_tier.units.grenade.drop_rate = 15
 	self.lockpick_crate_tier.units.grenade.subtypes = {}
 	self.lockpick_crate_tier.units.grenade.subtypes.large = {
 		drop_rate = 50,
@@ -306,7 +306,7 @@ function DropLootTweakData:_init_crowbar_crate_tier()
 		unit = "health_big",
 	}
 	self.crowbar_crate_tier.units.grenade = {
-		drop_rate = 15,
+		drop_rate = 10,
 		unit = "grenade_big",
 	}
 	self.crowbar_crate_tier.units.ammo = {
@@ -431,7 +431,7 @@ function DropLootTweakData:_init_drop_rate_multipliers()
 		grenade = {
 			max_multiplier = 1.5,
 			max_ratio = 0.5,
-			min_multiplier = 5,
+			min_multiplier = 3,
 			min_ratio = 0.01,
 		},
 		health = {

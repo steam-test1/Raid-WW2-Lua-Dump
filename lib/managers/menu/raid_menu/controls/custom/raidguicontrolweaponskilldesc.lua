@@ -36,7 +36,7 @@ function RaidGUIControlWeaponSkillDesc:set_weapon_skill(skill_data)
 
 	self._desc_label:set_text(self:translate(desc_id, false))
 
-	local challenge, count, target, min_range
+	local challenge, count, target, min_range, max_range
 
 	if skill.challenge_id then
 		challenge = managers.challenge:get_challenge(ChallengeManager.CATEGORY_WEAPON_UPGRADE, skill.challenge_id)
@@ -48,6 +48,7 @@ function RaidGUIControlWeaponSkillDesc:set_weapon_skill(skill_data)
 		count = tasks[1]:current_count()
 		target = tasks[1]:target()
 		min_range = math.round(tasks[1]:min_range() / 100)
+		max_range = math.round(tasks[1]:max_range() / 100)
 	end
 
 	self._challenge_locked_label:set_visible(false)
@@ -88,18 +89,23 @@ function RaidGUIControlWeaponSkillDesc:set_weapon_skill(skill_data)
 		self._progress_bar_panel:set_visible(false)
 	elseif skill.challenge_unlocked and not managers.challenge:get_challenge(ChallengeManager.CATEGORY_WEAPON_UPGRADE, skill.challenge_id):completed() then
 		self._status_label:set_text(self:translate(RaidGUIControlWeaponSkillDesc.CHALLENGE_IN_PROGRESS_TEXT, true))
+
+		local range = max_range > 0 and max_range or min_range
+
 		self._desc_label:set_text(managers.localization:text(desc_id, {
 			AMOUNT = target,
-			RANGE = min_range,
+			RANGE = range,
 			WEAPON = self:translate(tweak_data.weapon[skill.weapon_id].name_id),
 		}))
 		self._progress_bar_panel:set_visible(true)
 		self:set_progress(count, target)
 	elseif managers.challenge:get_challenge(ChallengeManager.CATEGORY_WEAPON_UPGRADE, skill.challenge_id):completed() then
+		local range = max_range > 0 and max_range or min_range
+
 		self._status_label:set_text(self:translate(RaidGUIControlWeaponSkillDesc.CHALLENGE_COMPLETED_TEXT, true))
 		self._desc_label:set_text(managers.localization:text(done_id, {
 			AMOUNT = target,
-			RANGE = min_range,
+			RANGE = range,
 			WEAPON = self:translate(tweak_data.weapon[skill.weapon_id].name_id),
 		}))
 		self._progress_bar_panel:set_visible(true)

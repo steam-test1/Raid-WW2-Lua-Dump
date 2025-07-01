@@ -139,7 +139,9 @@ end
 
 function ElementInstancePoint:_create()
 	if self._has_created then
-		managers.editor:output_error("[ElementInstancePoint:_create()] Attempted to double-spawn a spawned instance [" .. self._editor_name .. "]")
+		if Application:editor() then
+			managers.editor:output_error("[ElementInstancePoint:_create()] Attempted to double-spawn a spawned instance [" .. self._editor_name .. "]")
+		end
 
 		return
 	end

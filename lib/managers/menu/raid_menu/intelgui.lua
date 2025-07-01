@@ -30,7 +30,6 @@ function IntelGui:_layout_tab_categories()
 		tab_align = "center",
 		tab_height = 64,
 		tab_width = 220,
-		x = 0,
 		y = 80,
 		on_click_callback = callback(self, self, "on_intel_category_selected"),
 		parent_control_ref = self,
@@ -51,12 +50,11 @@ end
 
 function IntelGui:_layout_list()
 	local category_items_list_scrollable_area_params = {
-		h = 752,
+		h = 700,
 		name = "category_items_list_scrollable_area",
 		scroll_step = 19,
 		scrollbar_width = 10,
-		w = 384,
-		x = 0,
+		w = 460,
 		y = 192,
 	}
 
@@ -68,9 +66,6 @@ function IntelGui:_layout_list()
 		on_mouse_over_sound_event = "highlight",
 		selection_enabled = true,
 		use_unlocked = false,
-		w = 384,
-		x = 0,
-		y = 0,
 		data_source_callback = callback(self, self, "data_source_category_items_list"),
 		item_class = RaidGUIControlListItem,
 		item_font = tweak_data.gui.fonts.lato,
@@ -78,6 +73,7 @@ function IntelGui:_layout_list()
 		on_item_clicked_callback = callback(self, self, "on_item_clicked_category_items_list"),
 		on_item_selected_callback = callback(self, self, "on_item_selected_category_items_list"),
 		scrollable_area_ref = self._category_items_list_scrollable_area,
+		w = category_items_list_scrollable_area_params.w,
 	}
 
 	self._category_items_list = self._category_items_list_scrollable_area:get_panel():list(category_items_list_params)
@@ -140,19 +136,11 @@ function IntelGui:data_source_category_items_list()
 			end
 
 			if is_unlocked then
-				if #result == 0 then
-					table.insert(result, {
-						selected = true,
-						text = self:translate(list_item_data.list_item_name_id, false),
-						value = list_item_data.id,
-					})
-				else
-					table.insert(result, {
-						selected = false,
-						text = self:translate(list_item_data.list_item_name_id, false),
-						value = list_item_data.id,
-					})
-				end
+				table.insert(result, {
+					selected = #result == 0,
+					text = self:translate(list_item_data.list_item_name_id, false),
+					value = list_item_data.id,
+				})
 			end
 		end
 	end
@@ -161,6 +149,7 @@ function IntelGui:data_source_category_items_list()
 end
 
 function IntelGui:_list_item_selected(list_item_value)
+	Application:trace("[IntelGui:_list_item_selected] list_item_value ", list_item_value)
 	self:_show_selected_list_item_data(list_item_value)
 end
 
@@ -203,6 +192,8 @@ function IntelGui:_create_category_controls(selected_category)
 end
 
 function IntelGui:_setup_category_controls(selected_category)
+	Application:info("[IntelGui:_setup_category_controls] selected_category ", selected_category)
+
 	if selected_category == IntelGui.CATEGORY_BULLETINS then
 		self._active_category_control = self._bulletins_control
 
@@ -243,6 +234,7 @@ function IntelGui:_setup_category_controls(selected_category)
 		self._raid_personel_control:set_visible(false)
 		self._opposite_forces_control:set_visible(false)
 		self._control_archive_control:set_visible(true)
+		self._secret_files_control:set_visible(false)
 	end
 end
 

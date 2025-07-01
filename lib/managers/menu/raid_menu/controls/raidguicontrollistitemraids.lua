@@ -1,9 +1,9 @@
 RaidGUIControlListItemRaids = RaidGUIControlListItemRaids or class(RaidGUIControl)
-RaidGUIControlListItemRaids.HEIGHT = 94
-RaidGUIControlListItemRaids.ICON_PADDING = 28
-RaidGUIControlListItemRaids.ICON_CENTER_X = 48
-RaidGUIControlListItemRaids.NAME_CENTER_Y = 34
-RaidGUIControlListItemRaids.DIFFICULTY_CENTER_Y = 63
+RaidGUIControlListItemRaids.HEIGHT = 86
+RaidGUIControlListItemRaids.NAME_CENTER_Y = RaidGUIControlListItemRaids.HEIGHT * 0.33
+RaidGUIControlListItemRaids.DIFFICULTY_CENTER_Y = RaidGUIControlListItemRaids.HEIGHT * 0.66
+RaidGUIControlListItemRaids.ICON_CENTER_X = 40
+RaidGUIControlListItemRaids.ICON_PADDING = 20
 RaidGUIControlListItemRaids.LOCK_ICON = "ico_locker"
 RaidGUIControlListItemRaids.LOCK_ICON_CENTER_DISTANCE_FROM_RIGHT = 43
 RaidGUIControlListItemRaids.LOCKED_COLOR = tweak_data.gui.colors.raid_dark_grey
@@ -115,7 +115,7 @@ end
 
 function RaidGUIControlListItemRaids:_layout_icon(params, data)
 	local icon_params = {
-		color = self._is_consumable and tweak_data.gui.colors.raid_gold or tweak_data.gui.colors.raid_dirty_white,
+		color = self:_get_mission_color(),
 		name = "list_item_icon_" .. self._name,
 		texture = data.icon.texture,
 		texture_rect = data.icon.texture_rect,
@@ -132,7 +132,6 @@ end
 function RaidGUIControlListItemRaids:_layout_raid_name(params, data)
 	local raid_name_params = {
 		vertical = "center",
-		y = 0,
 		color = tweak_data.gui.colors.raid_dirty_white,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.small,
@@ -235,6 +234,10 @@ function RaidGUIControlListItemRaids:_layout_lock_icon()
 	self._lock_icon:set_center_y(self._object:h() / 2)
 end
 
+function RaidGUIControlListItemRaids:_get_mission_color()
+	return self._is_consumable and tweak_data.gui.colors.raid_gold or tweak_data.gui.colors.raid_dirty_white
+end
+
 function RaidGUIControlListItemRaids:_layout_breadcrumb()
 	local breadcrumb_params = {
 		category = self._data.breadcrumb.category,
@@ -243,8 +246,8 @@ function RaidGUIControlListItemRaids:_layout_breadcrumb()
 
 	self._breadcrumb = self._object:breadcrumb(breadcrumb_params)
 
-	self._breadcrumb:set_right(self._object:w())
-	self._breadcrumb:set_center_y(self._object:h() / 2)
+	self._breadcrumb:set_left(4)
+	self._breadcrumb:set_center_y(16)
 end
 
 function RaidGUIControlListItemRaids:_apply_progression_layout()

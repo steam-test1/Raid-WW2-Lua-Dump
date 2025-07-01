@@ -293,7 +293,7 @@ function OperationsTweakData:_init_raids()
 	self.missions.flakturm.short_audio_briefing_id = "flakturm_brief_short"
 	self.missions.flakturm.music_id = "flakturm"
 	self.missions.flakturm.region = "germany"
-	self.missions.flakturm.xp = 6000
+	self.missions.flakturm.xp = 5800
 	self.missions.flakturm.start_in_stealth = true
 	self.missions.flakturm.stealth_description = OperationsTweakData.RAID_MOSTLY_STEALTHABLE
 	self.missions.flakturm.dogtags_min = 23

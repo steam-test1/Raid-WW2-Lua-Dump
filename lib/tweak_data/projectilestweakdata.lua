@@ -260,7 +260,7 @@ function ProjectilesTweakData:init(tweak_data)
 	self.decoy_coin = {}
 	self.decoy_coin.name_id = "bm_coin"
 	self.decoy_coin.unit = "units/vanilla/weapons/wpn_fps_decoy_coin_peace/wpn_decoy_coin_peace"
-	self.decoy_coin.unit_hand = "units/vanilla/weapons/wpn_fps_decoy_coin_peace/wpn_decoy_coin_peace_husk"
+	self.decoy_coin.unit_hand = "units/vanilla/weapons/wpn_fps_decoy_coin_peace/wpn_decoy_coin_peace_hand"
 	self.decoy_coin.unit_dummy = "units/vanilla/weapons/wpn_fps_decoy_coin_peace/wpn_decoy_coin_peace_husk"
 	self.decoy_coin.icon = "frag_grenade"
 	self.decoy_coin.max_amount = 9
@@ -297,9 +297,9 @@ function ProjectilesTweakData:init(tweak_data)
 	self.mortar_shell.push_at_body_index = 0
 	self.mortar_shell.init_timer = 5
 	self.mortar_shell.damage = 75
-	self.mortar_shell.player_damage = 35
-	self.mortar_shell.range = 1500
-	self.mortar_shell.killzone_range = 0
+	self.mortar_shell.player_damage = 25
+	self.mortar_shell.range = 2400
+	self.mortar_shell.killzone_range = 0.33
 	self.mortar_shell.init_timer = 15
 	self.mortar_shell.effect_name = "effects/vanilla/explosions/exp_artillery_explosion_001"
 	self.mortar_shell.sound_event = "grenade_launcher_explosion"

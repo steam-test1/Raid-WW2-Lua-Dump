@@ -1394,9 +1394,6 @@ function RaycastWeaponBase:replenish()
 	self:set_ammo_max(ammo_max)
 	self:set_ammo_total(ammo_max)
 	self:set_ammo_remaining_in_clip(ammo_max_per_clip)
-
-	self._ammo_pickup = tweak_data.weapon[self._name_id].AMMO_PICKUP
-
 	self:tweak_data_anim_stop("magazine_empty")
 	self:update_damage()
 end
@@ -1721,6 +1718,10 @@ function RaycastWeaponBase:add_ammo(ratio, add_amount_override)
 		managers.player:add_weapon_ammo_gain(self._name_id, add_amount)
 	end
 
+	if not self:out_of_ammo() then
+		managers.hud:hide_prompt("hud_no_ammo_prompt")
+	end
+
 	return picked_up, add_amount, ammo_actually_picked_up
 end
 
@@ -1906,6 +1907,17 @@ function InstantBulletBase:on_collision(col_ray, weapon_unit, user_unit, damage,
 		end
 	else
 		managers.game_play_central:physics_push(col_ray)
+	end
+
+	if hit_unit:damage() and user_unit == managers.player:player_unit() then
+		local hitmarker_type = hit_unit:damage().hitmarker_type
+
+		if hitmarker_type and hitmarker_type ~= "" then
+			managers.hud:on_hit_confirmed({
+				hit_type = hitmarker_type == "armor" and HUDHitConfirm.HIT_ARMOR or hitmarker_type == "weakness" and HUDHitConfirm.HIT_WEAKPOINT or hitmarker_type == "headshot" and HUDHitConfirm.HIT_HEADSHOT or hitmarker_type == "killshot" and HUDHitConfirm.HIT_KILLSHOT or hitmarker_type == "normal" and HUDHitConfirm.HIT_NORMAL,
+				pos = col_ray.position,
+			})
+		end
 	end
 
 	if play_impact then
