@@ -32,12 +32,11 @@ end
 
 function RaidMenuOptionsVideoAdvanced:_load_advanced_video_values()
 	local dof_setting = managers.user:get_setting("dof_setting") == "standard" and true or false
-	local ssao_setting = false
+	local ssao_setting = managers.user:get_setting("ssao_setting") == "standard" and true or false
 	local use_parallax = managers.user:get_setting("use_parallax")
 	local motion_blur_setting = managers.user:get_setting("motion_blur_setting") == "standard" and true or false
 	local vls_setting = managers.user:get_setting("vls_setting") == "standard" and true or false
 	local flush_gpu_command_queue = managers.user:get_setting("flush_gpu_command_queue")
-	local use_lightfx = managers.user:get_setting("use_lightfx")
 	local vsync = RenderSettings.v_sync
 	local buffer_count = RenderSettings.buffer_count
 	local vsync_value
@@ -57,12 +56,10 @@ function RaidMenuOptionsVideoAdvanced:_load_advanced_video_values()
 
 	self._toggle_menu_toggle_dof:set_value_and_render(dof_setting, true)
 	self._toggle_menu_toggle_ssao:set_value_and_render(ssao_setting, true)
-	self._toggle_menu_toggle_ssao:set_enabled(false)
 	self._toggle_menu_toggle_parallax:set_value_and_render(use_parallax, true)
 	self._toggle_menu_toggle_motion_blur:set_value_and_render(motion_blur_setting, true)
 	self._toggle_menu_toggle_volumetric_light_scattering:set_value_and_render(vls_setting, true)
 	self._toggle_menu_toggle_gpu_flush:set_value_and_render(flush_gpu_command_queue, true)
-	self._toggle_menu_toggle_lightfx:set_value_and_render(use_lightfx)
 
 	local fov_multiplier_value = (1 - fov_multiplier) / (1 - tweak_data.player.fov_multiplier.MAX)
 
@@ -83,7 +80,6 @@ function RaidMenuOptionsVideoAdvanced:_save_advanced_video_values()
 	self:on_click_toggle_motion_blur()
 	self:on_click_toggle_volumetric_light_scattering()
 	self:on_click_toggle_gpu_flush()
-	self:on_click_toggle_lightfx()
 	self:on_item_selected_anim_lod()
 	self:on_item_selected_max_streaming_chunk()
 end
@@ -171,7 +167,7 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 		description = utf8.to_upper(managers.localization:text("menu_toggle_gpu_flush")),
 		on_click_callback = callback(self, self, "on_click_toggle_gpu_flush"),
 		on_menu_move = {
-			down = "toggle_menu_toggle_lightfx_params",
+			down = "progress_bar_menu_fov_adjustment",
 			up = "toggle_menu_toggle_volumetric_light_scattering",
 		},
 		w = default_width,
@@ -181,21 +177,6 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 
 	self._toggle_menu_toggle_gpu_flush = self._root_panel:toggle_button(toggle_menu_toggle_gpu_flush_params)
 
-	local toggle_menu_toggle_lightfx_params = {
-		name = "toggle_menu_toggle_lightfx_params",
-		description = utf8.to_upper(managers.localization:text("menu_lightfx")),
-		on_click_callback = callback(self, self, "on_click_toggle_lightfx"),
-		on_menu_move = {
-			down = "progress_bar_menu_fov_adjustment",
-			up = "toggle_menu_toggle_gpu_flush",
-		},
-		w = default_width,
-		x = start_x,
-		y = toggle_menu_toggle_gpu_flush_params.y + RaidGuiBase.PADDING,
-	}
-
-	self._toggle_menu_toggle_lightfx = self._root_panel:toggle_button(toggle_menu_toggle_lightfx_params)
-
 	local progress_bar_menu_fov_adjustment_params = {
 		name = "progress_bar_menu_fov_adjustment",
 		description = utf8.to_upper(managers.localization:text("menu_fov_adjustment")),
@@ -203,11 +184,11 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 		min_display_value = tweak_data.player.stances.default.standard.FOV,
 		on_menu_move = {
 			down = "progress_bar_menu_detail_distance",
-			up = "toggle_menu_toggle_lightfx_params",
+			up = "toggle_menu_toggle_gpu_flush",
 		},
 		on_value_change_callback = callback(self, self, "on_value_change_fov_adjustment"),
 		x = start_x,
-		y = toggle_menu_toggle_lightfx_params.y + RaidGuiBase.PADDING,
+		y = toggle_menu_toggle_gpu_flush_params.y + RaidGuiBase.PADDING,
 	}
 
 	self._progress_bar_menu_fov_adjustment = self._root_panel:slider(progress_bar_menu_fov_adjustment_params)
@@ -407,12 +388,6 @@ function RaidMenuOptionsVideoAdvanced:on_click_toggle_gpu_flush()
 	local flush_gpu_command_queue = self._toggle_menu_toggle_gpu_flush:get_value()
 
 	managers.menu:active_menu().callback_handler:toggle_gpu_flush_setting_raid(flush_gpu_command_queue)
-end
-
-function RaidMenuOptionsVideoAdvanced:on_click_toggle_lightfx()
-	local use_lightfx = self._toggle_menu_toggle_lightfx:get_value()
-
-	managers.menu:active_menu().callback_handler:toggle_lightfx_raid(use_lightfx)
 end
 
 function RaidMenuOptionsVideoAdvanced:on_value_change_fov_adjustment()
