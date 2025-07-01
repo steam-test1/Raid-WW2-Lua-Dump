@@ -41,23 +41,23 @@ end
 function LootDropTweakData:_init_xp_packs()
 	self.xp_packs = {}
 	self.xp_packs.tiny = {
-		xp_max = 400,
-		xp_min = 100,
+		xp_max = 100,
+		xp_min = 50,
 		reward_type = LootDropTweakData.REWARD_XP,
 	}
 	self.xp_packs.small = {
-		xp_max = 700,
-		xp_min = 400,
+		xp_max = 300,
+		xp_min = 120,
 		reward_type = LootDropTweakData.REWARD_XP,
 	}
 	self.xp_packs.medium = {
-		xp_max = 1000,
-		xp_min = 700,
+		xp_max = 600,
+		xp_min = 350,
 		reward_type = LootDropTweakData.REWARD_XP,
 	}
 	self.xp_packs.large = {
-		xp_max = 1500,
-		xp_min = 1000,
+		xp_max = 900,
+		xp_min = 700,
 		reward_type = LootDropTweakData.REWARD_XP,
 	}
 end
@@ -225,7 +225,7 @@ function LootDropTweakData:_init_groups()
 	self.loot_groups = {}
 	self.loot_groups.loot_group_basic = {}
 	self.loot_groups.loot_group_basic[1] = {
-		chance = 0,
+		chance = 20,
 		value = self.loot_categories.category_xp_min,
 	}
 	self.loot_groups.loot_group_basic[2] = {
@@ -237,16 +237,16 @@ function LootDropTweakData:_init_groups()
 		value = self.loot_categories.category_custom_low,
 	}
 	self.loot_groups.loot_group_basic[4] = {
-		chance = 55,
+		chance = 35,
 		value = self.loot_categories.category_gold_low,
 	}
 	self.loot_groups.loot_group_bronze = {}
 	self.loot_groups.loot_group_bronze[1] = {
-		chance = 0,
+		chance = 20,
 		value = self.loot_categories.category_xp_low,
 	}
 	self.loot_groups.loot_group_bronze[2] = {
-		chance = 50,
+		chance = 30,
 		value = self.loot_categories.category_gold_low,
 	}
 	self.loot_groups.loot_group_bronze[3] = {
@@ -271,11 +271,11 @@ function LootDropTweakData:_init_groups()
 	}
 	self.loot_groups.loot_group_silver = {}
 	self.loot_groups.loot_group_silver[1] = {
-		chance = 0,
+		chance = 20,
 		value = self.loot_categories.category_xp_mid,
 	}
 	self.loot_groups.loot_group_silver[2] = {
-		chance = 47,
+		chance = 27,
 		value = self.loot_categories.category_gold_mid,
 	}
 	self.loot_groups.loot_group_silver[3] = {
@@ -292,11 +292,11 @@ function LootDropTweakData:_init_groups()
 	}
 	self.loot_groups.loot_group_gold = {}
 	self.loot_groups.loot_group_gold[1] = {
-		chance = 0,
+		chance = 10,
 		value = self.loot_categories.category_xp_high,
 	}
 	self.loot_groups.loot_group_gold[2] = {
-		chance = 25,
+		chance = 15,
 		value = self.loot_categories.category_gold_high,
 	}
 	self.loot_groups.loot_group_gold[3] = {
@@ -327,16 +327,20 @@ function LootDropTweakData:_init_groups()
 	self.loot_groups_doubles_fallback = {}
 	self.loot_groups_doubles_fallback.loot_group_basic = {}
 	self.loot_groups_doubles_fallback.loot_group_basic[1] = {
-		chance = 85,
+		chance = 45,
 		value = self.loot_categories.category_gold_low,
 	}
 	self.loot_groups_doubles_fallback.loot_group_basic[2] = {
+		chance = 45,
+		value = self.loot_categories.category_xp_min,
+	}
+	self.loot_groups_doubles_fallback.loot_group_basic[3] = {
 		chance = 10,
 		value = self.loot_categories.category_cards_low,
 	}
 	self.loot_groups_doubles_fallback.loot_group_bronze = {}
 	self.loot_groups_doubles_fallback.loot_group_bronze[1] = {
-		chance = 70,
+		chance = 40,
 		value = self.loot_categories.category_gold_low,
 	}
 	self.loot_groups_doubles_fallback.loot_group_bronze[2] = {
@@ -344,16 +348,20 @@ function LootDropTweakData:_init_groups()
 		value = self.loot_categories.category_gold_mid,
 	}
 	self.loot_groups_doubles_fallback.loot_group_bronze[3] = {
-		chance = 10,
+		chance = 15,
 		value = self.loot_categories.category_cards_low,
 	}
 	self.loot_groups_doubles_fallback.loot_group_bronze[4] = {
 		chance = 5,
 		value = self.loot_categories.category_cards_mid,
 	}
+	self.loot_groups_doubles_fallback.loot_group_bronze[5] = {
+		chance = 30,
+		value = self.loot_categories.category_xp_low,
+	}
 	self.loot_groups_doubles_fallback.loot_group_silver = {}
 	self.loot_groups_doubles_fallback.loot_group_silver[1] = {
-		chance = 60,
+		chance = 38,
 		value = self.loot_categories.category_gold_mid,
 	}
 	self.loot_groups_doubles_fallback.loot_group_silver[2] = {
@@ -364,9 +372,13 @@ function LootDropTweakData:_init_groups()
 		chance = 20,
 		value = self.loot_categories.category_cards_mid,
 	}
+	self.loot_groups_doubles_fallback.loot_group_silver[4] = {
+		chance = 35,
+		value = self.loot_categories.category_xp_mid,
+	}
 	self.loot_groups_doubles_fallback.loot_group_gold = {}
 	self.loot_groups_doubles_fallback.loot_group_gold[1] = {
-		chance = 45,
+		chance = 35,
 		value = self.loot_categories.category_gold_high,
 	}
 	self.loot_groups_doubles_fallback.loot_group_gold[2] = {
@@ -376,6 +388,10 @@ function LootDropTweakData:_init_groups()
 	self.loot_groups_doubles_fallback.loot_group_gold[3] = {
 		chance = 20,
 		value = self.loot_categories.category_cards_high,
+	}
+	self.loot_groups_doubles_fallback.loot_group_gold[4] = {
+		chance = 35,
+		value = self.loot_categories.category_xp_high,
 	}
 end
 

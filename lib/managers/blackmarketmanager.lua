@@ -3440,6 +3440,18 @@ function BlackMarketManager:load(data)
 	if not self._global.unlocked_weapon_slots then
 		self:_setup_unlocked_weapon_slots()
 	end
+
+	local list_of_weapons_factory_ids = {}
+
+	for bm_weapon_index, bm_weapon_data in ipairs(self._global.crafted_items.primaries) do
+		if not list_of_weapons_factory_ids[bm_weapon_data.factory_id] then
+			list_of_weapons_factory_ids[bm_weapon_data.factory_id] = true
+		else
+			table.remove(self._global.crafted_items.primaries, bm_weapon_index)
+			table.remove(Global.blackmarket_manager.crafted_items.primaries, bm_weapon_index)
+			managers.savefile:set_resave_required()
+		end
+	end
 end
 
 function BlackMarketManager:_load_done()

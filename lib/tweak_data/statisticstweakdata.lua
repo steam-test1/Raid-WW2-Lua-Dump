@@ -201,6 +201,7 @@ function StatisticsTweakData:statistics_table()
 		"geco",
 		"dp28",
 		"tt33",
+		"ithaca",
 		"kar_98k",
 		"bren",
 		"lee_enfield",

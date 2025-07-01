@@ -1026,7 +1026,7 @@ function WeaponSelectionGui:_update_weapon_stats(reset_applied_stats)
 		weapon_name = tweak_data.blackmarket.melee_weapons[selected_weapon_data.weapon_id].name_id
 	elseif weapon_category == WeaponInventoryManager.BM_CATEGORY_GRENADES_NAME then
 		local proj_tweak_data = tweak_data.projectiles[selected_weapon_data.weapon_id]
-		local damage = f2s(proj_tweak_data.damage)
+		local damage = f2s(proj_tweak_data.damage or 0)
 		local range = f2s(proj_tweak_data.range)
 		local distance = f2s(proj_tweak_data.launch_speed or 250)
 

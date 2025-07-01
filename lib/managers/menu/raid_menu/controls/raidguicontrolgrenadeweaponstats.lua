@@ -12,11 +12,11 @@ function RaidGUIControlGrenadeWeaponStats:_set_default_values()
 		},
 		distance = {
 			value = "000",
-			text = self:translate("menu_weapons_stats_throw_distance", true),
+			text = self:translate("menu_weapons_stats_grenade_throw", true),
 		},
 		range = {
 			value = "000",
-			text = self:translate("menu_weapons_stats_range", true),
+			text = self:translate("menu_weapons_stats_grenade_diameter", true),
 		},
 	}
 end

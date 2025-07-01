@@ -757,6 +757,38 @@ function PlayerTweakData:_init_shotgun_stances()
 	self.stances.m1912.crouched.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
 	self.stances.m1912.crouched.shoulders.rotation = pivot_head_rotation * pivot_shoulder_rotation:inverse()
 	self.stances.m1912.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -25, 0)
+	self.stances.ithaca = deep_clone(self.stances.default)
+
+	local pivot_shoulder_translation = Vector3(11.2001, 10.9188, 2.99868)
+	local pivot_shoulder_rotation = Rotation(0.000153332, 0.000313466, -0.00140905)
+	local pivot_head_translation = Vector3(7, 18, -4)
+	local pivot_head_rotation = Rotation(0, 0, -1)
+
+	self.stances.ithaca.standard.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
+	self.stances.ithaca.standard.shoulders.rotation = pivot_head_rotation * pivot_shoulder_rotation:inverse()
+	self.stances.ithaca.standard.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -30, 0)
+	self.stances.ithaca.standard.vel_overshot.yaw_neg = 10
+	self.stances.ithaca.standard.vel_overshot.yaw_pos = -10
+	self.stances.ithaca.standard.vel_overshot.pitch_neg = -10
+	self.stances.ithaca.standard.vel_overshot.pitch_pos = 10
+
+	local pivot_head_translation = Vector3(0, 15, -1)
+	local pivot_head_rotation = Rotation(0, 0, 0)
+
+	self.stances.ithaca.steelsight.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
+	self.stances.ithaca.steelsight.shoulders.rotation = pivot_head_rotation * pivot_shoulder_rotation:inverse()
+	self.stances.ithaca.steelsight.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -18, 0)
+	self.stances.ithaca.steelsight.vel_overshot.yaw_neg = 10
+	self.stances.ithaca.steelsight.vel_overshot.yaw_pos = -10
+	self.stances.ithaca.steelsight.vel_overshot.pitch_neg = -10
+	self.stances.ithaca.steelsight.vel_overshot.pitch_pos = 10
+
+	local pivot_head_translation = Vector3(6, 17, -6)
+	local pivot_head_rotation = Rotation(0, 0, -6)
+
+	self.stances.ithaca.crouched.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
+	self.stances.ithaca.crouched.shoulders.rotation = pivot_head_rotation * pivot_shoulder_rotation:inverse()
+	self.stances.ithaca.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -25, 0)
 end
 
 function PlayerTweakData:_init_new_stances()
