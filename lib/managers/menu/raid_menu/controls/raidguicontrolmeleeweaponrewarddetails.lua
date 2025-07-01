@@ -64,8 +64,8 @@ end
 
 function RaidGUIControlMeleeWeaponRewardDetails:_create_left_panel()
 	local left_panel_params = {
-		name = "left_panel",
 		h = self._object:h(),
+		name = "left_panel",
 		w = RaidGUIControlMeleeWeaponRewardDetails.LEFT_PANEL_W,
 	}
 
@@ -76,14 +76,14 @@ function RaidGUIControlMeleeWeaponRewardDetails:_create_title()
 	local title_description_params = {
 		align = "left",
 		alpha = 0,
-		layer = 10,
-		name = "title_description",
-		vertical = "center",
 		color = RaidGUIControlMeleeWeaponRewardDetails.TITLE_DESCRIPTION_COLOR,
 		font = RaidGUIControlMeleeWeaponRewardDetails.FONT,
 		font_size = RaidGUIControlMeleeWeaponRewardDetails.TITLE_DESCRIPTION_FONT_SIZE,
 		h = RaidGUIControlMeleeWeaponRewardDetails.TITLE_DESCRIPTION_H,
+		layer = 10,
+		name = "title_description",
 		text = self:translate("menu_loot_screen_bracket_unlocked_title", true),
+		vertical = "center",
 		y = RaidGUIControlMeleeWeaponRewardDetails.TITLE_DESCRIPTION_Y,
 	}
 
@@ -96,15 +96,15 @@ function RaidGUIControlMeleeWeaponRewardDetails:_create_title()
 	local title_params = {
 		align = "left",
 		alpha = 0,
-		layer = 10,
-		name = "customization_name",
-		vertical = "top",
-		wrap = true,
 		color = RaidGUIControlMeleeWeaponRewardDetails.TITLE_COLOR,
 		font = RaidGUIControlMeleeWeaponRewardDetails.FONT,
 		font_size = RaidGUIControlMeleeWeaponRewardDetails.TITLE_FONT_SIZE,
+		layer = 10,
+		name = "customization_name",
 		text = self:translate("menu_loot_screen_melee_weapon", true),
+		vertical = "top",
 		w = self._left_panel:w() * 0.8,
+		wrap = true,
 		y = self._title_description:y() + self._title_description:h() + RaidGUIControlMeleeWeaponRewardDetails.TITLE_PADDING_TOP,
 	}
 
@@ -145,20 +145,20 @@ end
 
 function RaidGUIControlMeleeWeaponRewardDetails:_create_redeem_info()
 	local redeem_description_params = {
-		layer = 10,
-		name = "redeem_description",
 		color = RaidGUIControlMeleeWeaponRewardDetails.REDEEM_DESCRIPTION_COLOR,
 		font = RaidGUIControlMeleeWeaponRewardDetails.FONT,
 		font_size = RaidGUIControlMeleeWeaponRewardDetails.REDEEM_DESCRIPTION_FONT_SIZE,
+		layer = 10,
+		name = "redeem_description",
 		text = self:translate("menu_loot_screen_redeem_worth_title", true),
 	}
 	local redeem_description = self._left_panel:text(redeem_description_params)
 	local redeem_value_params = {
-		layer = 10,
-		name = "redeem_value",
 		color = RaidGUIControlMeleeWeaponRewardDetails.REDEEM_VALUE_COLOR,
 		font = RaidGUIControlMeleeWeaponRewardDetails.FONT,
 		font_size = RaidGUIControlMeleeWeaponRewardDetails.REDEEM_VALUE_FONT_SIZE,
+		layer = 10,
+		name = "redeem_value",
 		text = self._xp_redeem_value .. " " .. self:translate("menu_label_xp", true),
 	}
 
@@ -167,11 +167,11 @@ function RaidGUIControlMeleeWeaponRewardDetails:_create_redeem_info()
 	self:_layout_redeem_info()
 
 	local redeem_xp_button_params = {
-		name = "redeem_xp_button",
-		x = 0,
 		layer = RaidGuiBase.FOREGROUND_LAYER,
+		name = "redeem_xp_button",
 		on_click_callback = callback(self, self, "_on_click_redeem"),
 		text = self:translate("menu_loot_screen_redeem_xp", true),
+		x = 0,
 		y = self._left_panel:h() - RaidGUIControlMeleeWeaponRewardDetails.REDEEM_BUTTON_CENTER_Y_FROM_BOTTOM,
 	}
 
@@ -199,8 +199,8 @@ end
 
 function RaidGUIControlMeleeWeaponRewardDetails:_create_right_panel()
 	local right_panel_params = {
-		name = "right_panel",
 		h = self._object:h(),
+		name = "right_panel",
 		w = self._object:w() - self._left_panel:w(),
 	}
 
@@ -213,15 +213,15 @@ function RaidGUIControlMeleeWeaponRewardDetails:_create_description()
 	local description_params = {
 		align = "left",
 		alpha = 0,
+		color = RaidGUIControlMeleeWeaponRewardDetails.DESCRIPTION_COLOR,
+		font = RaidGUIControlMeleeWeaponRewardDetails.DESCRIPTION_FONT,
+		font_size = RaidGUIControlMeleeWeaponRewardDetails.DESCRIPTION_FONT_SIZE,
 		layer = 10,
 		name = "description",
 		text = "",
 		vertical = "top",
-		wrap = true,
-		color = RaidGUIControlMeleeWeaponRewardDetails.DESCRIPTION_COLOR,
-		font = RaidGUIControlMeleeWeaponRewardDetails.DESCRIPTION_FONT,
-		font_size = RaidGUIControlMeleeWeaponRewardDetails.DESCRIPTION_FONT_SIZE,
 		w = RaidGUIControlMeleeWeaponRewardDetails.DESCRIPTION_W,
+		wrap = true,
 		y = RaidGUIControlMeleeWeaponRewardDetails.DESCRIPTION_Y,
 	}
 
@@ -234,16 +234,16 @@ function RaidGUIControlMeleeWeaponRewardDetails:_create_item_title()
 	local item_type_params = {
 		align = "left",
 		alpha = 0,
-		layer = 10,
-		name = "item_type",
-		text = "",
-		vertical = "center",
-		wrap = true,
 		color = RaidGUIControlMeleeWeaponRewardDetails.ITEM_TYPE_COLOR,
 		font = RaidGUIControlMeleeWeaponRewardDetails.FONT,
 		font_size = RaidGUIControlMeleeWeaponRewardDetails.ITEM_TYPE_FONT_SIZE,
 		h = RaidGUIControlMeleeWeaponRewardDetails.ITEM_TYPE_H,
+		layer = 10,
+		name = "item_type",
+		text = "",
+		vertical = "center",
 		w = RaidGUIControlMeleeWeaponRewardDetails.DESCRIPTION_W,
+		wrap = true,
 		x = self._description:x(),
 		y = RaidGUIControlMeleeWeaponRewardDetails.ITEM_TYPE_Y,
 	}

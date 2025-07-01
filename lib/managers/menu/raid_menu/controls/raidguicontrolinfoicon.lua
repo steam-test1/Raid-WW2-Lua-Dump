@@ -28,13 +28,13 @@ function RaidGUIControlInfoIcon:init(parent, params)
 
 	if params.icon then
 		local icon_params = {
-			x = 0,
-			y = 0,
 			color = params.icon_color or RaidGUIControlInfoIcon.COLOR,
 			h = params.icon_h or RaidGUIControlInfoIcon.TOP_H,
 			layer = self._object:layer() + 1,
 			texture = tweak_data.gui.icons[self._params.icon].texture,
 			texture_rect = tweak_data.gui.icons[self._params.icon].texture_rect,
+			x = 0,
+			y = 0,
 		}
 
 		self._top = self._object:bitmap(icon_params)
@@ -46,16 +46,16 @@ function RaidGUIControlInfoIcon:init(parent, params)
 	else
 		local title_params = {
 			align = "center",
-			vertical = "center",
-			wrap = false,
-			x = 0,
-			y = 0,
 			color = params.title_color or RaidGUIControlInfoIcon.COLOR,
 			font = RaidGUIControlInfoIcon.TEXT_FONT,
 			font_size = params.title_size or RaidGUIControlInfoIcon.TITLE_TEXT_SIZE,
 			h = params.title_h or RaidGUIControlInfoIcon.TOP_H,
 			layer = self._object:layer() + 1,
 			text = params.title,
+			vertical = "center",
+			wrap = false,
+			x = 0,
+			y = 0,
 		}
 
 		self._top = self._object:text(title_params)
@@ -71,16 +71,16 @@ function RaidGUIControlInfoIcon:init(parent, params)
 
 	local text_params = {
 		align = "center",
-		vertical = "center",
-		wrap = false,
-		x = 0,
-		y = 0,
 		color = params.text_color or RaidGUIControlInfoIcon.COLOR,
 		font = RaidGUIControlInfoIcon.TEXT_FONT,
 		font_size = params.text_size or RaidGUIControlInfoIcon.TEXT_SIZE,
 		h = params.text_h or 0,
 		layer = self._object:layer() + 1,
 		text = params.text,
+		vertical = "center",
+		wrap = false,
+		x = 0,
+		y = 0,
 	}
 
 	self._text = self._object:text(text_params)
@@ -144,13 +144,13 @@ function RaidGUIControlInfoIcon:set_icon(icon, params)
 	end
 
 	local icon_params = {
-		x = 0,
-		y = 0,
 		color = params and params.color or Color.white,
 		h = params and params.icon_h or RaidGUIControlInfoIcon.TOP_H,
 		layer = self._object:layer() + 1,
 		texture = tweak_data.gui.icons[icon].texture,
 		texture_rect = tweak_data.gui.icons[icon].texture_rect,
+		x = 0,
+		y = 0,
 	}
 
 	self._top = self._object:bitmap(icon_params)
@@ -184,16 +184,16 @@ function RaidGUIControlInfoIcon:set_title(title, params)
 
 	local title_params = {
 		align = "center",
-		vertical = "center",
-		wrap = false,
-		x = 0,
-		y = 0,
 		color = params and params.color or RaidGUIControlInfoIcon.COLOR,
 		font = params and params.font or RaidGUIControlInfoIcon.TEXT_FONT,
 		font_size = params and params.font_size or RaidGUIControlInfoIcon.TITLE_TEXT_SIZE,
 		h = h or RaidGUIControlInfoIcon.TOP_H,
 		layer = self._object:layer() + 1,
 		text = title,
+		vertical = "center",
+		wrap = false,
+		x = 0,
+		y = 0,
 	}
 
 	self._top = self._object:text(title_params)
@@ -234,15 +234,15 @@ function RaidGUIControlInfoIcon:set_text(text, params)
 
 	local text_params = {
 		align = "center",
-		vertical = "center",
-		wrap = false,
-		x = 0,
-		y = 0,
 		color = params and params.color or RaidGUIControlInfoIcon.COLOR,
 		font = RaidGUIControlInfoIcon.TEXT_FONT,
 		font_size = params and params.text_size or RaidGUIControlInfoIcon.TEXT_SIZE,
 		layer = self._object:layer() + 1,
 		text = params and params.no_translate and text or self:translate(text, true),
+		vertical = "center",
+		wrap = false,
+		x = 0,
+		y = 0,
 	}
 
 	self._text = self._object:text(text_params)

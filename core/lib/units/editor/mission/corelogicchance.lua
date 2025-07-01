@@ -65,9 +65,9 @@ function CoreLogicChanceOperatorUnitElement:draw_links(t, dt, selected_unit, all
 		if draw then
 			self:_draw_link({
 				b = 0.25,
+				from_unit = self._unit,
 				g = 0.75,
 				r = 0.75,
-				from_unit = self._unit,
 				to_unit = unit,
 			})
 		end
@@ -165,9 +165,9 @@ function CoreLogicChanceTriggerUnitElement:draw_links(t, dt, selected_unit, all_
 		if draw then
 			self:_draw_link({
 				b = 0.25,
+				from_unit = unit,
 				g = 0.85,
 				r = 0.85,
-				from_unit = unit,
 				to_unit = self._unit,
 			})
 		end

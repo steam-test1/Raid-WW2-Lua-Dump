@@ -5,8 +5,8 @@ EditUnitEditableGui = EditUnitEditableGui or class(EditUnitBase)
 
 function EditUnitEditableGui:init(editor)
 	local panel, sizer = (editor or managers.editor):add_unit_edit_page({
-		name = "Gui Text",
 		class = self,
+		name = "Gui Text",
 	})
 
 	self._panel = panel
@@ -97,10 +97,10 @@ function EditUnitEditableGui:_create_font_size_slider(panel, sizer)
 		min = 0.1,
 		name = "Font size:",
 		name_proportions = 1,
-		tooltip = "Set the font size using the slider",
-		value = 1,
 		panel = panel,
 		sizer = horizontal_sizer,
+		tooltip = "Set the font size using the slider",
+		value = 1,
 	}
 
 	CoreEws.slider_and_number_controller(self._font_size_params)
@@ -119,12 +119,12 @@ function EditUnitEditableGui:_create_font_combobox(panel, sizer)
 		ctrlr_proportions = 1,
 		name = "Font:",
 		name_proportions = 1,
-		sizer_proportions = 1,
-		sorted = false,
-		tooltip = "Select a font from the combobox",
 		options = self._fonts,
 		panel = panel,
 		sizer = horizontal_sizer,
+		sizer_proportions = 1,
+		sorted = false,
+		tooltip = "Select a font from the combobox",
 		value = self._fonts[1],
 	}
 
@@ -151,12 +151,12 @@ function EditUnitEditableGui:_create_text_aligns_combobox(panel, sizer)
 		ctrlr_proportions = 2,
 		name = "Horizontal:",
 		name_proportions = 1,
-		sizer_proportions = 1,
-		sorted = false,
-		tooltip = "Select an align from the combobox",
 		options = self._aligns.horizontal,
 		panel = panel,
 		sizer = horizontal_sizer,
+		sizer_proportions = 1,
+		sorted = false,
+		tooltip = "Select an align from the combobox",
 		value = self._aligns.horizontal[1],
 	}
 
@@ -169,12 +169,12 @@ function EditUnitEditableGui:_create_text_aligns_combobox(panel, sizer)
 		ctrlr_proportions = 2,
 		name = " Vertical:",
 		name_proportions = 1,
-		sizer_proportions = 1,
-		sorted = false,
-		tooltip = "Select an align from the combobox",
 		options = self._aligns.vertical,
 		panel = panel,
 		sizer = horizontal_sizer,
+		sizer_proportions = 1,
+		sorted = false,
+		tooltip = "Select an align from the combobox",
 		value = self._aligns.vertical[1],
 	}
 
@@ -230,12 +230,12 @@ function EditUnitEditableGui:_create_render_template_blend_mode_combobox(panel, 
 		ctrlr_proportions = 2,
 		name = "Render Template:",
 		name_proportions = 1,
-		sizer_proportions = 1,
-		sorted = false,
-		tooltip = "Select a Render Template from the combobox",
 		options = self._render_templates,
 		panel = panel,
 		sizer = horizontal_sizer,
+		sizer_proportions = 1,
+		sorted = false,
+		tooltip = "Select a Render Template from the combobox",
 		value = self._render_templates[1],
 	}
 
@@ -249,12 +249,12 @@ function EditUnitEditableGui:_create_render_template_blend_mode_combobox(panel, 
 		enabled = false,
 		name = " Blend Mode:",
 		name_proportions = 1,
-		sizer_proportions = 1,
-		sorted = false,
-		tooltip = "Select a Blend Mode from the combobox",
 		options = self._blend_modes,
 		panel = panel,
 		sizer = horizontal_sizer,
+		sizer_proportions = 1,
+		sorted = false,
+		tooltip = "Select a Blend Mode from the combobox",
 		value = self._blend_modes[1],
 	}
 
@@ -275,10 +275,10 @@ function EditUnitEditableGui:_create_alpha_slider(panel, sizer)
 		min = 0,
 		name = "Alpha:",
 		name_proportions = 1,
-		tooltip = "Set the alpha using the slider",
-		value = 1,
 		panel = panel,
 		sizer = horizontal_sizer,
+		tooltip = "Set the alpha using the slider",
+		value = 1,
 	}
 
 	CoreEws.slider_and_number_controller(self._alpha_params)
@@ -306,12 +306,12 @@ function EditUnitEditableGui:_create_shape_sliders(panel, sizer)
 			floats = 2,
 			max = 1,
 			min = 0,
-			name_proportions = 1,
-			tooltip = "Set shape using the slider",
-			value = 1,
 			name = "Shape " .. shape .. ":",
+			name_proportions = 1,
 			panel = panel,
 			sizer = horizontal_sizer,
+			tooltip = "Set shape using the slider",
+			value = 1,
 		}
 
 		CoreEws.slider_and_number_controller(self._shape_params[i])

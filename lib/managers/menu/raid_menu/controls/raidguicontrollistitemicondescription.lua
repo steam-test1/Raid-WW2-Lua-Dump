@@ -52,10 +52,10 @@ end
 function RaidGUIControlListItemIconDescription:_create_sideline()
 	local sideline_params = {
 		alpha = 0,
-		x = 0,
 		color = RaidGUIControlListItemIconDescription.ACTIVE_COLOR,
 		h = RaidGUIControlListItemIconDescription.ICON_HEIGHT,
 		w = RaidGUIControlListItemIconDescription.SIDELINE_W,
+		x = 0,
 		y = (self._params.h - RaidGUIControlListItemIconDescription.ICON_HEIGHT) / 2,
 	}
 
@@ -82,16 +82,16 @@ end
 
 function RaidGUIControlListItemIconDescription:_create_title()
 	local title_params = {
-		vertical = "center",
-		y = 0,
 		color = RaidGUIControlListItemIconDescription.COLOR,
 		font = RaidGUIControlListItemIconDescription.FONT,
 		font_size = RaidGUIControlListItemIconDescription.TITLE_FONT_SIZE,
 		h = self._params.h,
 		name = "list_item_title_" .. tostring(self._name),
 		text = self._data.title,
+		vertical = "center",
 		w = self._params.w,
 		x = self._icon:x() + self._icon:w() + RaidGUIControlListItemIconDescription.ICON_PADDING_RIGHT,
+		y = 0,
 	}
 
 	self._title = self._object:text(title_params)
@@ -106,15 +106,15 @@ end
 
 function RaidGUIControlListItemIconDescription:_create_description()
 	local description_params = {
-		vertical = "center",
-		wrap = true,
 		color = RaidGUIControlListItemIconDescription.COLOR,
 		font = RaidGUIControlListItemIconDescription.FONT,
 		font_size = RaidGUIControlListItemIconDescription.DESCRIPTION_FONT_SIZE,
 		h = self._params.h,
 		name = "list_item_description_" .. tostring(self._name),
 		text = self._data.description,
+		vertical = "center",
 		w = self._params.w,
+		wrap = true,
 		x = self._title:x(),
 		y = self._title:y() + self._title:h() + RaidGUIControlListItemIconDescription.TITLE_PADDING_DOWN,
 	}

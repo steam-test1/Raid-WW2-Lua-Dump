@@ -73,10 +73,10 @@ function ReadyUpGui:_layout_buttons()
 
 	self._ready_up_button = self._root_panel:short_primary_button({
 		name = "ready_up_button",
-		visible = false,
-		x = 0,
 		on_click_callback = callback(self, self, "_on_ready_up_button"),
 		text = self:translate("menu_ready_button", true),
+		visible = false,
+		x = 0,
 		y = button_y,
 	})
 
@@ -84,10 +84,10 @@ function ReadyUpGui:_layout_buttons()
 
 	self._suggest_card_button = self._root_panel:short_secondary_button({
 		name = "suggest_card_button",
-		visible = false,
-		x = 1000,
 		on_click_callback = callback(self, self, "_on_select_card_button"),
 		text = self:translate("menu_suggest_card_button", true),
+		visible = false,
+		x = 1000,
 		y = button_y,
 	})
 
@@ -97,13 +97,13 @@ function ReadyUpGui:_layout_buttons()
 
 	self._no_cards_warning_label = self._root_panel:label({
 		align = "right",
-		name = "no_cards_warning_label",
-		visible = false,
-		x = 1000,
 		color = tweak_data.gui.colors.raid_red,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.extra_small,
+		name = "no_cards_warning_label",
 		text = self:translate("menu_card_dont_own", true),
+		visible = false,
+		x = 1000,
 		y = button_y,
 	})
 
@@ -117,9 +117,9 @@ function ReadyUpGui:_layout_buttons()
 	if self._is_host then
 		self._kick_button = self._root_panel:short_secondary_button({
 			name = "kick_button",
-			x = 1000,
 			on_click_callback = callback(self, self, "_on_kick_button"),
 			text = self:translate("menu_kick_button", true),
+			x = 1000,
 			y = button_y,
 		})
 
@@ -188,20 +188,20 @@ function ReadyUpGui:_layout_header()
 	local mission_info_x = tweak_data.gui:icon_w(item_icon_name) + 16
 	local mission_name_params = {
 		align = "left",
-		h = 32,
-		name = "mission_name",
-		vertical = "center",
-		y = 0,
 		color = tweak_data.gui.colors.raid_red,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.small,
+		h = 32,
+		name = "mission_name",
 		text = mission_name,
+		vertical = "center",
 		x = mission_info_x,
+		y = 0,
 	}
 	local mission_name = self._root_panel:label(mission_name_params)
 	local difficulty_params = {
-		name = "mission_difficulty",
 		amount = tweak_data:number_of_difficulties(),
+		name = "mission_difficulty",
 	}
 
 	self._difficulty_indicator = RaidGuiControlDifficultyStars:new(self._root_panel, difficulty_params)
@@ -243,7 +243,6 @@ function ReadyUpGui:_layout_player_list()
 		local current_player = peer == managers.network:session():local_peer()
 		local player_control = self._root_panel:create_custom_control(RaidGUIControlReadyUpPlayerDescription, {
 			h = 112,
-			y = 96,
 			is_current_player = current_player,
 			list_index = list_index,
 			on_click_callback = callback(self, self, "_on_player_click_callback"),
@@ -251,6 +250,7 @@ function ReadyUpGui:_layout_player_list()
 			peer_index = peer_index,
 			w = width,
 			x = (list_index - 1) * width,
+			y = 96,
 		})
 		local outfit = peer:blackmarket_outfit()
 		local player_data = {
@@ -274,10 +274,10 @@ function ReadyUpGui:_layout_card_info()
 	local card_w = 160
 	local card_params = {
 		item_h = 224,
-		name = "player_loot_card",
-		y = 384,
 		item_w = card_w,
+		name = "player_loot_card",
 		x = self._root_panel:w() - 160,
+		y = 384,
 	}
 
 	self._card_control = self._root_panel:create_custom_control(RaidGUIControlCardBase, card_params)
@@ -287,24 +287,24 @@ function ReadyUpGui:_layout_card_info()
 	local empty_slot_texture = tweak_data.gui.icons.cc_empty_slot_small
 
 	self._empty_card_slot = self._root_panel:bitmap({
-		name = "cc_empty_slot",
-		y = 384,
 		h = empty_slot_texture.texture_rect[4],
+		name = "cc_empty_slot",
 		texture = empty_slot_texture.texture,
 		texture_rect = empty_slot_texture.texture_rect,
 		w = empty_slot_texture.texture_rect[3],
 		x = self._root_panel:w() - 160,
+		y = 384,
 	})
 	self._card_not_selected_label = self._root_panel:label({
 		align = "center",
-		h = 128,
-		name = "card_not_selected_label",
-		wrap = true,
 		color = tweak_data.gui.colors.dirty_white,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.extra_small,
+		h = 128,
+		name = "card_not_selected_label",
 		text = self:translate("menu_card_not_selected", true),
 		w = self._empty_card_slot:w() - 10,
+		wrap = true,
 		x = self._root_panel:w() - 160,
 		y = self._card_control:top() + 90,
 	})
@@ -314,15 +314,15 @@ function ReadyUpGui:_layout_card_info()
 
 	self._positive_card_effect_label = self._root_panel:label({
 		align = "left",
-		h = 128,
-		name = "positive_card_effect",
-		w = 352,
-		wrap = true,
-		x = 0,
 		color = tweak_data.gui.colors.raid_grey,
 		font = tweak_data.gui.fonts.lato,
 		font_size = tweak_data.gui.font_sizes.size_18,
+		h = 128,
+		name = "positive_card_effect",
 		text = self:translate("hud_no_challenge_card_text", false),
+		w = 352,
+		wrap = true,
+		x = 0,
 		y = self._card_control:bottom() + 32,
 	})
 
@@ -330,15 +330,15 @@ function ReadyUpGui:_layout_card_info()
 
 	self._negative_card_effect_label = self._root_panel:label({
 		align = "left",
+		color = tweak_data.gui.colors.raid_grey,
+		font = tweak_data.gui.fonts.lato,
+		font_size = tweak_data.gui.font_sizes.size_18,
 		h = 64,
 		name = "negative_card_effect",
 		text = "",
 		w = 352,
 		wrap = true,
 		x = 0,
-		color = tweak_data.gui.colors.raid_grey,
-		font = tweak_data.gui.fonts.lato,
-		font_size = tweak_data.gui.font_sizes.size_18,
 		y = self._card_control:bottom() + 96,
 	})
 
@@ -900,13 +900,13 @@ function ReadyUpGui:close()
 end
 
 function ReadyUpGui:_update_controls_contining_mission()
-	if self._continuing_mission then
+	local active_card = managers.challenge_cards:get_active_card()
+	local is_card_active = active_card and active_card.description ~= "PASS"
+
+	if self._continuing_mission or is_card_active then
 		self._suggest_card_button:hide()
 		self._suggest_card_button:disable()
 		self._no_cards_warning_label:hide()
-
-		local active_card = managers.challenge_cards:get_active_card()
-		local is_card_active = active_card and active_card.description ~= "PASS"
 
 		if is_card_active then
 			self._card_not_selected_label:hide()

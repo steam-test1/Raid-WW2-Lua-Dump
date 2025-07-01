@@ -37,9 +37,9 @@ function MenuNodeCreditsGui:_build_credits_panel(file)
 	})
 
 	local bg = self._clipping_panel:rect({
-		visible = true,
 		color = Color.black / 2,
 		layer = self.layers.background,
+		visible = true,
 	})
 
 	bg:set_top(0)
@@ -63,24 +63,21 @@ function MenuNodeCreditsGui:_build_credits_panel(file)
 	bg:set_width(text_width)
 	bg:set_size(self._clipping_panel:size())
 	self._clipping_panel:gradient({
+		gradient_points = {
+			0,
+			Color(1, 0, 0, 0),
+			1,
+			Color(0, 0, 0, 0),
+		},
+		h = 75 * global_scale,
+		layer = self.layers.items + 1,
 		orientation = "vertical",
 		visible = false,
+		w = self._clipping_panel:width(),
 		x = 0,
 		y = 0,
-		gradient_points = {
-			0,
-			Color(1, 0, 0, 0),
-			1,
-			Color(0, 0, 0, 0),
-		},
-		h = 75 * global_scale,
-		layer = self.layers.items + 1,
-		w = self._clipping_panel:width(),
 	})
 	self._clipping_panel:gradient({
-		orientation = "vertical",
-		visible = false,
-		x = 0,
 		gradient_points = {
 			0,
 			Color(0, 0, 0, 0),
@@ -89,7 +86,10 @@ function MenuNodeCreditsGui:_build_credits_panel(file)
 		},
 		h = 75 * global_scale,
 		layer = self.layers.items + 1,
+		orientation = "vertical",
+		visible = false,
 		w = self._clipping_panel:width(),
+		x = 0,
 		y = self._clipping_panel:height() - 75 * global_scale,
 	})
 
@@ -102,10 +102,10 @@ function MenuNodeCreditsGui:_build_credits_panel(file)
 	bg:animate(animate_fade_in)
 
 	local blur = self._fullscreen_ws:panel():bitmap({
-		render_template = "VertexColorTexturedBlur3D",
-		texture = "guis/textures/test_blur_df",
 		h = self._fullscreen_ws:panel():h(),
 		layer = self.layers.background - 1,
+		render_template = "VertexColorTexturedBlur3D",
+		texture = "guis/textures/test_blur_df",
 		w = self._fullscreen_ws:panel():w(),
 	})
 
@@ -153,18 +153,18 @@ function MenuNodeCreditsGui:_build_credits_panel(file)
 
 			local text_field = self._credits_panel:text({
 				align = "center",
-				h = 0,
-				halign = "left",
-				vertical = "bottom",
-				word_wrap = true,
-				wrap = true,
-				x = 0,
 				color = color,
 				font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, 24),
 				font_size = height,
+				h = 0,
+				halign = "left",
 				layer = self.layers.items,
 				text = data.text,
+				vertical = "bottom",
 				w = text_width,
+				word_wrap = true,
+				wrap = true,
+				x = 0,
 				y = ypos,
 			})
 			local _, _, _, h = text_field:text_rect()
@@ -175,9 +175,9 @@ function MenuNodeCreditsGui:_build_credits_panel(file)
 		elseif data._meta == "image" then
 			local scale = (data.scale or 1) * global_scale
 			local bitmap = self._credits_panel:bitmap({
-				x = 0,
 				layer = self.layers.items,
 				texture = data.src,
+				x = 0,
 				y = ypos,
 			})
 

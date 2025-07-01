@@ -254,10 +254,6 @@ CopActionWalk._walk_side_rot = {
 }
 CopActionWalk._anim_movement = {
 	crouch = {
-		run_stop_bwd = 62,
-		run_stop_fwd = 83,
-		run_stop_l = 75,
-		run_stop_r = 65,
 		run_start_turn_bwd = {
 			ds = Vector3(0, -123, 0),
 		},
@@ -267,12 +263,12 @@ CopActionWalk._anim_movement = {
 		run_start_turn_r = {
 			ds = Vector3(103, 0, 0),
 		},
+		run_stop_bwd = 62,
+		run_stop_fwd = 83,
+		run_stop_l = 75,
+		run_stop_r = 65,
 	},
 	stand = {
-		run_stop_bwd = 91,
-		run_stop_fwd = 154,
-		run_stop_l = 87,
-		run_stop_r = 106,
 		run_start_turn_bwd = {
 			ds = Vector3(19, -173, 0),
 		},
@@ -282,6 +278,10 @@ CopActionWalk._anim_movement = {
 		run_start_turn_r = {
 			ds = Vector3(133, 16, 0),
 		},
+		run_stop_bwd = 91,
+		run_stop_fwd = 154,
+		run_stop_l = 87,
+		run_stop_r = 106,
 	},
 }
 CopActionWalk._anim_block_presets = {
@@ -361,8 +361,8 @@ function CopActionWalk:init(action_desc, common_data)
 
 		if Network:is_server() then
 			self._unit:brain():add_pos_rsrv("move_dest", {
-				radius = 30,
 				position = mvector3.copy(self._nav_point_pos(self._nav_path[#self._nav_path])),
+				radius = 30,
 			})
 		end
 	elseif not self:_init() then
@@ -546,8 +546,8 @@ function CopActionWalk:_init()
 	if Network:is_server() then
 		self._unit:brain():rem_pos_rsrv("stand")
 		self._unit:brain():add_pos_rsrv("move_dest", {
-			radius = 30,
 			position = mvector3.copy(self._simplified_path[#self._simplified_path]),
+			radius = 30,
 		})
 	end
 
@@ -1231,8 +1231,8 @@ function CopActionWalk:_upd_start_anim(t)
 			local new_pos = self._common_data.pos + delta_pos
 			local ray_params = {
 				allow_entry = true,
-				trace = true,
 				pos_to = new_pos,
+				trace = true,
 				tracker_from = self._common_data.nav_tracker,
 			}
 			local collision = managers.navigation:raycast(ray_params)
@@ -1337,16 +1337,16 @@ end
 function CopActionWalk:get_husk_interrupt_desc()
 	local old_action_desc = {
 		body_part = 2,
-		interrupted = true,
-		path_simplified = true,
-		type = "walk",
 		end_rot = self._end_rot,
 		host_stop_pos_ahead = self._host_stop_pos_ahead,
 		host_stop_pos_inserted = self._host_stop_pos_inserted,
+		interrupted = true,
 		nav_path = self._simplified_path,
 		no_strafe = self._no_strafe,
 		no_walk = self._no_walk,
+		path_simplified = true,
 		persistent = self._persistent,
+		type = "walk",
 		variant = self._haste,
 	}
 
@@ -1765,11 +1765,11 @@ function CopActionWalk:_reserve_nav_pos(nav_pos, next_pos, from_pos, vel)
 	mvec3_set_l(step_vec, 65)
 
 	local data = {
-		nr_attempts = 0,
-		step_mul = 1,
 		bwd_pos = from_pos,
 		fwd_pos = next_pos,
+		nr_attempts = 0,
 		start_pos = nav_pos,
+		step_mul = 1,
 		step_vec = step_vec,
 	}
 	local step_clbk = callback(self, CopActionWalk, "_reserve_pos_step_clbk", data)

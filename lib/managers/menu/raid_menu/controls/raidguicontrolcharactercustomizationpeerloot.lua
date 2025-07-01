@@ -48,22 +48,22 @@ function RaidGUIControlCharacterCustomizationPeerLoot:_create_customization_deta
 
 	local params_customization_image = {
 		name = "card_image",
-		x = 0,
-		y = 0,
 		texture = tweak_data.gui.icons[icon].texture,
 		texture_rect = tweak_data.gui.icons[icon].texture_rect,
+		x = 0,
+		y = 0,
 	}
 
 	self._customization_image = self._control_panel:bitmap(params_customization_image)
 
 	local params_player_name = {
 		align = "left",
-		layer = 1,
-		name = "peer_customization_name_label",
-		text = "",
 		color = RaidGUIControlCharacterCustomizationPeerLoot.NAME_COLOR,
 		font = RaidGUIControlCharacterCustomizationPeerLoot.FONT,
 		font_size = RaidGUIControlCharacterCustomizationPeerLoot.NAME_FONT_SIZE,
+		layer = 1,
+		name = "peer_customization_name_label",
+		text = "",
 		w = self._object:w() - RaidGUIControlCharacterCustomizationPeerLoot.TEXT_X,
 		x = RaidGUIControlCharacterCustomizationPeerLoot.TEXT_X,
 		y = RaidGUIControlCharacterCustomizationPeerLoot.NAME_Y,
@@ -77,14 +77,14 @@ function RaidGUIControlCharacterCustomizationPeerLoot:_create_customization_deta
 
 	local params_customization_description = {
 		align = "left",
-		layer = 1,
-		name = "customization_description_label",
-		text = "",
-		wrap = true,
 		color = RaidGUIControlCharacterCustomizationPeerLoot.DESCRIPTION_COLOR,
 		font = RaidGUIControlCharacterCustomizationPeerLoot.FONT,
 		font_size = RaidGUIControlCharacterCustomizationPeerLoot.DESCRIPTION_FONT_SIZE,
+		layer = 1,
+		name = "customization_description_label",
+		text = "",
 		w = self._name_label:w(),
+		wrap = true,
 		x = self._name_label:x(),
 		y = self._name_label:y() + self._name_label:h() + RaidGUIControlCharacterCustomizationPeerLoot.NAME_PADDING_DOWN,
 	}

@@ -20,36 +20,36 @@ function RaidGUIControlImageViewer:_layout()
 	self._bullets_active = {}
 	self._image_frame_1 = self._object:bitmap({
 		alpha = 1,
-		name = "_image_frame_1",
-		x = 0,
-		y = 0,
 		h = self._params.h - RaidGUIControlImageViewer.BULLET_PANEL_HEIGHT,
 		layer = self._object:layer() + 1,
+		name = "_image_frame_1",
 		texture = tweak_data.gui.icons.intel_table_opp_img_herr_a.texture,
 		texture_rect = tweak_data.gui.icons.intel_table_opp_img_herr_a.texture_rect,
 		w = self._params.w,
+		x = 0,
+		y = 0,
 	})
 
 	table.insert(self._image_frames, self._image_frame_1)
 
 	self._image_frame_2 = self._object:bitmap({
 		alpha = 1,
-		name = "_image_frame_2",
-		y = 0,
 		h = self._params.h - RaidGUIControlImageViewer.BULLET_PANEL_HEIGHT,
 		layer = self._object:layer() + 1,
+		name = "_image_frame_2",
 		texture = tweak_data.gui.icons.intel_table_opp_img_herr_a.texture,
 		texture_rect = tweak_data.gui.icons.intel_table_opp_img_herr_a.texture_rect,
 		w = self._params.w,
 		x = self._params.w,
+		y = 0,
 	})
 
 	table.insert(self._image_frames, self._image_frame_2)
 
 	self._bullet_panel = self._object:panel({
-		x = 0,
 		h = RaidGUIControlImageViewer.BULLET_PANEL_HEIGHT,
 		w = self._params.w,
+		x = 0,
 		y = self._image_frame_1:h(),
 	})
 end
@@ -107,10 +107,10 @@ function RaidGUIControlImageViewer:start()
 			}))
 			table.insert(self._bullets_active, self._bullet_panel:bitmap({
 				h = 0,
-				w = 0,
 				layer = self._object:layer() + 2,
 				texture = tweak_data.gui.icons.bullet_active.texture,
 				texture_rect = tweak_data.gui.icons.bullet_active.texture_rect,
+				w = 0,
 				x = (i - 1) * (RaidGUIControlImageViewer.BULLET_WIDTH + RaidGUIControlImageViewer.BULLET_PADDING),
 				y = RaidGUIControlImageViewer.BULLET_HEIGHT / 2,
 			}))

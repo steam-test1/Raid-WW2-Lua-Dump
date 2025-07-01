@@ -45,15 +45,12 @@ function CharacterCustomizationGui:_layout()
 	self._filter_body_part = self._root_panel:tabs({
 		initial_tab_idx = 1,
 		name = "filter_body_part",
+		on_click_callback = callback(self, self, "_on_click_filter_body_part"),
 		tab_align = "center",
 		tab_height = 64,
 		tab_width = 240,
-		x = 0,
-		y = 96,
-		on_click_callback = callback(self, self, "_on_click_filter_body_part"),
 		tabs_params = {
 			{
-				name = "tab_upper",
 				breadcrumb = {
 					category = BreadcrumbManager.CATEGORY_CHARACTER_CUSTOMIZATION_UPPER,
 					identifiers = {
@@ -61,10 +58,10 @@ function CharacterCustomizationGui:_layout()
 					},
 				},
 				callback_param = CharacterCustomizationTweakData.PART_TYPE_UPPER,
+				name = "tab_upper",
 				text = self:translate("character_customization_filter_body_part_upper", true),
 			},
 			{
-				name = "tab_lower",
 				breadcrumb = {
 					category = BreadcrumbManager.CATEGORY_CHARACTER_CUSTOMIZATION_LOWER,
 					identifiers = {
@@ -72,9 +69,12 @@ function CharacterCustomizationGui:_layout()
 					},
 				},
 				callback_param = CharacterCustomizationTweakData.PART_TYPE_LOWER,
+				name = "tab_lower",
 				text = self:translate("character_customization_filter_body_part_lower", true),
 			},
 		},
+		x = 0,
+		y = 96,
 	})
 	self._selected_filter_body_part = CharacterCustomizationTweakData.PART_TYPE_UPPER
 
@@ -90,28 +90,28 @@ function CharacterCustomizationGui:_layout()
 	self._customization_grid_scrollable_area = self._root_panel:scrollable_area(customization_grid_scrollable_area_params)
 
 	local customization_grid_params = {
-		name = "customization_grid",
-		w = 480,
-		x = 0,
-		y = 0,
 		grid_params = {
-			scroll_marker_w = 32,
-			vertical_spacing = 5,
 			data_source_callback = callback(self, self, "_data_source_character_customizations"),
 			on_click_callback = callback(self, self, "_on_click_character_customizations"),
 			on_double_click_callback = callback(self, self, "_on_double_click_character_customizations"),
 			on_select_callback = callback(self, self, "_on_selected_character_customizations"),
+			scroll_marker_w = 32,
+			vertical_spacing = 5,
 		},
 		item_params = {
 			grid_item_icon = "path_icon",
 			item_h = 134,
 			item_w = 134,
 			key_value_field = "key_name",
+			row_class = RaidGUIControlGridItemActive,
 			selected_marker_h = 148,
 			selected_marker_w = 148,
-			row_class = RaidGUIControlGridItemActive,
 		},
+		name = "customization_grid",
 		scrollable_area_ref = self._customization_grid_scrollable_area,
+		w = 480,
+		x = 0,
+		y = 0,
 	}
 
 	self._character_customizations_grid = self._customization_grid_scrollable_area:get_panel():grid_active(customization_grid_params)
@@ -119,35 +119,35 @@ function CharacterCustomizationGui:_layout()
 	local icon_data = self:get_icon_data_for_body_part(self._selected_filter_body_part)
 
 	self._body_part_icon = self._root_panel:image({
-		y = 300,
 		h = icon_data.texture_rect[4],
 		texture = icon_data.texture,
 		texture_rect = icon_data.texture_rect,
 		w = icon_data.texture_rect[3],
 		x = self._root_panel:right() - 520,
+		y = 300,
 	})
 
 	local body_part_data = self._all_customizations[self._selected_upper_name]
 
 	self._body_part_title = self._root_panel:label({
-		w = 288,
-		wor_wrap = true,
-		wrap = true,
 		color = tweak_data.gui.colors.raid_white,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.large,
 		text = self:translate(body_part_data.name, true),
+		w = 288,
+		wor_wrap = true,
+		wrap = true,
 		x = self._body_part_icon:x() + 48,
 		y = self._body_part_icon:y(),
 	})
 	self._body_part_description = self._root_panel:label({
-		h = 448,
-		w = 352,
-		wrap = true,
 		color = tweak_data.gui.colors.raid_grey,
 		font = tweak_data.gui.fonts.lato,
 		font_size = tweak_data.gui.font_sizes.size_20,
+		h = 448,
 		text = self:translate(body_part_data.description, false),
+		w = 352,
+		wrap = true,
 		x = self._body_part_icon:x(),
 	})
 
@@ -155,63 +155,63 @@ function CharacterCustomizationGui:_layout()
 
 	self._coord_center_y = 864
 	self._equip_button = self._root_panel:short_primary_button({
-		name = "equip_button",
-		visible = false,
-		x = 0,
 		layer = RaidGuiBase.FOREGROUND_LAYER,
+		name = "equip_button",
 		on_click_callback = callback(self, self, "_on_click_button_equip"),
 		text = self:translate("character_customization_equip_button", true),
+		visible = false,
+		x = 0,
 	})
 
 	self._equip_button:set_center_y(self._coord_center_y)
 
 	self._equip_gold_button = self._root_panel:short_primary_gold_button({
-		name = "equip_gold_button",
-		visible = false,
-		x = 0,
 		layer = RaidGuiBase.FOREGROUND_LAYER,
+		name = "equip_gold_button",
 		on_click_callback = callback(self, self, "_on_click_button_equip"),
 		text = self:translate("character_customization_equip_button", true),
+		visible = false,
+		x = 0,
 	})
 
 	self._equip_gold_button:set_center_y(self._coord_center_y)
 
 	self._buy_button = self._root_panel:short_primary_gold_button({
-		name = "buy_button",
-		visible = false,
-		x = 0,
 		layer = RaidGuiBase.FOREGROUND_LAYER,
+		name = "buy_button",
 		on_click_callback = callback(self, self, "_on_click_button_buy"),
 		text = self:translate("character_customization_buy_button", true),
+		visible = false,
+		x = 0,
 	})
 
 	self._buy_button:set_center_y(self._coord_center_y)
 
 	self._info_label = self._root_panel:label({
+		font = tweak_data.gui.fonts.din_compressed,
+		font_size = tweak_data.gui.font_sizes.small,
 		h = 60,
+		layer = RaidGuiBase.FOREGROUND_LAYER,
 		name = "info_label",
+		text = self:translate("character_customization_insuficient_gold_label", true),
 		visible = false,
 		w = 520,
 		word_wrap = true,
 		wrap = true,
 		x = 0,
-		font = tweak_data.gui.fonts.din_compressed,
-		font_size = tweak_data.gui.font_sizes.small,
-		layer = RaidGuiBase.FOREGROUND_LAYER,
-		text = self:translate("character_customization_insuficient_gold_label", true),
 	})
 
 	self._info_label:set_center_y(self._coord_center_y)
 
 	self._gold_currency_label = self._root_panel:label({
-		name = "gold_currency_label",
-		text = "",
-		visible = false,
-		x = 250,
 		color = tweak_data.gui.colors.gold_orange,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_38,
 		layer = RaidGuiBase.FOREGROUND_LAYER,
+		name = "gold_currency_label",
+		text = "",
+		visible = false,
+		x = 250,
 	})
 
 	local x2, y2, w2, h2 = self._gold_currency_label:text_rect()
@@ -222,25 +222,25 @@ function CharacterCustomizationGui:_layout()
 	self._gold_currency_label:set_right(512)
 
 	self._gold_currency_icon = self._root_panel:bitmap({
-		name = "gold_currency_icon",
-		visible = false,
-		x = 200,
 		color = tweak_data.gui.colors.gold_orange,
 		layer = RaidGuiBase.FOREGROUND_LAYER,
+		name = "gold_currency_icon",
 		texture = tweak_data.gui.icons.gold_amount_purchase.texture,
 		texture_rect = tweak_data.gui.icons.gold_amount_purchase.texture_rect,
+		visible = false,
+		x = 200,
 	})
 
 	self._gold_currency_icon:set_center_y(self._coord_center_y)
 	self._gold_currency_icon:set_right(self._gold_currency_label:x() - 14)
 
 	self._gold_item_bought_icon = self._root_panel:bitmap({
-		name = "gold_item_bought_icon",
-		visible = false,
-		x = 200,
 		layer = RaidGuiBase.FOREGROUND_LAYER,
+		name = "gold_item_bought_icon",
 		texture = tweak_data.gui.icons.consumable_purchased_confirmed.texture,
 		texture_rect = tweak_data.gui.icons.consumable_purchased_confirmed.texture_rect,
+		visible = false,
+		x = 200,
 	})
 
 	self._gold_item_bought_icon:set_center_y(self._coord_center_y)
@@ -552,8 +552,8 @@ function CharacterCustomizationGui:_select_grid_item(item_data)
 
 	self:_process_controls_states()
 	managers.dialog:queue_dialog("player_gen_custom_right_clothes", {
-		skip_idle_check = true,
 		instigator = managers.player:local_player(),
+		skip_idle_check = true,
 	})
 
 	local machine = self._spawned_character_unit:anim_state_machine()
@@ -700,8 +700,8 @@ function CharacterCustomizationGui:bind_controller_inputs()
 		},
 		keyboard = {
 			{
-				key = "footer_back",
 				callback = callback(self, self, "_on_legend_pc_back", nil),
+				key = "footer_back",
 			},
 		},
 	}
@@ -740,8 +740,8 @@ function CharacterCustomizationGui:bind_controller_inputs_equip()
 		controller = controller_legend,
 		keyboard = {
 			{
-				key = "footer_back",
 				callback = callback(self, self, "_on_legend_pc_back", nil),
+				key = "footer_back",
 			},
 		},
 	}
@@ -773,8 +773,8 @@ function CharacterCustomizationGui:bind_controller_inputs_buy()
 		},
 		keyboard = {
 			{
-				key = "footer_back",
 				callback = callback(self, self, "_on_legend_pc_back", nil),
+				key = "footer_back",
 			},
 		},
 	}

@@ -19,8 +19,8 @@ function SawWeaponBase:init(unit)
 
 	self._active_effect_name = Idstring("effects/vanilla/weapons/saw/sawing")
 	self._active_effect_table = {
-		force_synch = true,
 		effect = self._active_effect_name,
+		force_synch = true,
 		parent = self._obj_fire,
 	}
 end
@@ -199,8 +199,8 @@ end
 
 function SawHit:play_impact_sound_and_effects(col_ray)
 	managers.game_play_central:play_impact_sound_and_effects({
+		col_ray = col_ray,
 		decal = "saw",
 		no_sound = true,
-		col_ray = col_ray,
 	})
 end

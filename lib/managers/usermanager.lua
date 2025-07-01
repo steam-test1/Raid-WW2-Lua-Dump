@@ -26,7 +26,10 @@ function GenericUserManager:init()
 
 	if not self:is_global_initialized() then
 		Global.user_manager = {
+			[""] = nil,
+			add_setting_changed_callback = nil,
 			initializing = true,
+			reset_network_setting_map = nil,
 			setting_data_id_to_name_map = {},
 			setting_data_map = {},
 			setting_map = {},
@@ -152,6 +155,7 @@ function GenericUserManager:setup_setting_map()
 	self:setup_setting(73, "camera_shake", 1)
 	self:setup_setting(74, "hud_crosshairs", true)
 	self:setup_setting(75, "skip_cinematics", false)
+	self:setup_setting(76, "warcry_ready_indicator", true)
 end
 
 function GenericUserManager:setup_setting(id, name, default_value)
@@ -269,6 +273,7 @@ function GenericUserManager:reset_interface_setting_map()
 		"motion_dot_toggle_aim",
 		"objective_reminder",
 		"skip_cinematics",
+		"warcry_ready_indicator",
 	}
 
 	for _, name in pairs(settings) do
@@ -722,8 +727,8 @@ function GenericUserManager:confirm_select_user_callback(callback_func, success)
 
 	if success then
 		managers.system_menu:show_select_user({
-			count = 1,
 			callback_func = callback(self, self, "select_user_callback", callback_func),
+			count = 1,
 		})
 	elseif callback_func then
 		callback_func(false)
@@ -767,9 +772,9 @@ function GenericUserManager:check_storage(callback_func, auto_select)
 		end
 
 		managers.system_menu:show_select_storage({
-			count = 1,
 			auto_select = auto_select,
 			callback_func = wrapped_callback_func,
+			count = 1,
 			min_bytes = managers.savefile.RESERVED_BYTES,
 		})
 	end

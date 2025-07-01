@@ -34,8 +34,8 @@ function NewNPCRaycastWeaponBase:init(unit)
 
 	self._muzzle_effect = Idstring(self:weapon_tweak_data().muzzleflash or "effects/vanilla/weapons/muzzleflash_maingun")
 	self._muzzle_effect_table = {
-		force_synch = false,
 		effect = self._muzzle_effect,
+		force_synch = false,
 		parent = self._obj_fire,
 	}
 	self._use_shell_ejection_effect = IS_PC
@@ -124,8 +124,8 @@ function NewNPCRaycastWeaponBase:assemble(factory_id)
 	if ammo_muzzle_effect then
 		self._muzzle_effect = ammo_muzzle_effect
 		self._muzzle_effect_table = {
-			force_synch = false,
 			effect = self._muzzle_effect,
+			force_synch = false,
 			parent = self._obj_fire,
 		}
 	end

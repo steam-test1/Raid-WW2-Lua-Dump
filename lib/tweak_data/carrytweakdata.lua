@@ -183,15 +183,6 @@ function CarryTweakData:init(tweak_data)
 	self.turret_m2_gun.hud_icon = "carry_planks"
 	self.turret_m2_gun.cannot_stack = true
 	self.turret_m2_gun.skip_exit_secure = true
-	self.crate_explosives = {
-		cannot_stack = true,
-		hud_icon = "carry_planks",
-		name_id = "hud_carry_plank",
-		skip_exit_secure = true,
-		type = "normal",
-		unit = "units/upd_fb/pickups/pku_crate_explosives/pku_crate_explosives_bag",
-		unit_static = "units/upd_fb/pickups/pku_crate_explosives/pku_crate_explosives_static",
-	}
 	self.parachute = {}
 	self.parachute.type = "normal"
 	self.parachute.name_id = "hud_carry_parachute"

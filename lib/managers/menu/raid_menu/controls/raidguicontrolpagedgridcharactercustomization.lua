@@ -165,18 +165,15 @@ function RaidGUIControlPagedGridCharacterCustomization:_create_paging_controls()
 
 	if self._grid_params.use_paging then
 		self._paging_controls_panel_params = {
-			visible = true,
 			h = RaidGUIControlPagedGridCharacterCustomization.PAGING_PANEL_HEIGHT,
 			name = self._params.name .. "_paging_controls_panel",
+			visible = true,
 			w = self._params.w / 2 - 25,
 			x = self._params.w / 2 + 25,
 			y = self._grid_panel:h(),
 		}
 		self._paging_controls_panel = self._paged_grid_panel:panel(self._paging_controls_panel_params)
 		self._page_stepper_params = {
-			h = 25,
-			x = 0,
-			y = 0,
 			arrow_color = tweak_data.menu.raid_red,
 			arrow_highlight_color = Color.white,
 			background_color = RaidOptions.BACKGROUND_COLOR_UNSELECTED,
@@ -184,6 +181,7 @@ function RaidGUIControlPagedGridCharacterCustomization:_create_paging_controls()
 			button_w = MissionJoinGui.FILTER_BUTTON_W,
 			color = tweak_data.menu.raid_red,
 			data_source_callback = callback(self, self, "data_source_grid_page_stepper"),
+			h = 25,
 			highlight_color = Color.white,
 			name = self._params.name .. "_page_stepper_stepper",
 			on_item_selected_callback = callback(self, self, "on_item_selected_grid_page"),
@@ -194,6 +192,8 @@ function RaidGUIControlPagedGridCharacterCustomization:_create_paging_controls()
 			},
 			stepper_w = self._paging_controls_panel:w(),
 			w = self._paging_controls_panel:w(),
+			x = 0,
+			y = 0,
 		}
 		self._page_stepper = self._paging_controls_panel:stepper(self._page_stepper_params)
 	end
@@ -245,18 +245,15 @@ function RaidGUIControlPagedGridCharacterCustomization:_create_filtering_control
 	end
 
 	self._filtering_controls_panel_params = {
-		visible = true,
-		x = 0,
 		h = RaidGUIControlPagedGridCharacterCustomization.PAGING_PANEL_HEIGHT,
 		name = self._params.name .. "_filtering_controls_panel",
+		visible = true,
 		w = self._params.w / 2 - 25,
+		x = 0,
 		y = self._grid_panel:h(),
 	}
 	self._filtering_controls_panel = self._paged_grid_panel:panel(self._filtering_controls_panel_params)
 	self._filter_stepper_params = {
-		h = 25,
-		x = 0,
-		y = 0,
 		arrow_color = tweak_data.menu.raid_red,
 		arrow_highlight_color = Color.white,
 		background_color = RaidOptions.BACKGROUND_COLOR_UNSELECTED,
@@ -264,6 +261,7 @@ function RaidGUIControlPagedGridCharacterCustomization:_create_filtering_control
 		button_w = MissionJoinGui.FILTER_BUTTON_W,
 		color = tweak_data.menu.raid_red,
 		data_source_callback = callback(self, self, "data_source_grid_filter_stepper"),
+		h = 25,
 		highlight_color = Color.white,
 		name = self._params.name .. "_filter_stepper_stepper",
 		on_item_selected_callback = callback(self, self, "on_item_selected_grid_filter"),
@@ -274,6 +272,8 @@ function RaidGUIControlPagedGridCharacterCustomization:_create_filtering_control
 		},
 		stepper_w = self._filtering_controls_panel:w(),
 		w = self._filtering_controls_panel:w(),
+		x = 0,
+		y = 0,
 	}
 	self._filter_stepper = self._filtering_controls_panel:stepper(self._filter_stepper_params)
 
@@ -286,16 +286,16 @@ function RaidGUIControlPagedGridCharacterCustomization:data_source_grid_filter_s
 	local filters = {}
 
 	table.insert(filters, {
-		value = 1,
 		text = self:translate("character_customization_filter_equipable", true),
+		value = 1,
 	})
 	table.insert(filters, {
-		value = 2,
 		text = self:translate("character_customization_filter_character", true),
+		value = 2,
 	})
 	table.insert(filters, {
-		value = 3,
 		text = self:translate("character_customization_filter_all", true),
+		value = 3,
 	})
 
 	return filters

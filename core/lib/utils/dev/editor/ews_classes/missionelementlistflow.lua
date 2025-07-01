@@ -22,8 +22,8 @@ function MissionElementListFlow:init(...)
 	toolbar:add_check_tool("LOOK_AT", "Look at selected", CoreEws.image_path("toolbar\\find_16x16.png"), "Look at selected")
 	toolbar:set_tool_state("LOOK_AT", self._use_look_at)
 	toolbar:connect("LOOK_AT", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "_toolbar_toggle"), {
-		value = "_use_look_at",
 		toolbar = toolbar,
+		value = "_use_look_at",
 	})
 	toolbar:add_tool("HELP", "Help", CoreEws.image_path("help_16x16.png"), nil)
 	toolbar:connect("HELP", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "_on_gui_help"), nil)

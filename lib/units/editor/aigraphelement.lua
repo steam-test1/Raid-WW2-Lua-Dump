@@ -34,9 +34,9 @@ function AIGraphUnitElement:update_selected(t, dt)
 			if unit:unit_data().unit_id == id then
 				self:_draw_link({
 					b = 0,
+					from_unit = self._unit,
 					g = 0.75,
 					r = 0,
-					from_unit = self._unit,
 					to_unit = unit,
 				})
 			end
@@ -113,18 +113,18 @@ function AIGraphUnitElement:_build_panel(panel, panel_sizer)
 		ctrlr_proportions = 2,
 		name = "Operation:",
 		name_proportions = 1,
-		sorted = true,
-		tooltip = "Select an operation to perform on the selected graphs",
 		options = NavigationManager.nav_states,
 		panel = panel,
 		sizer = panel_sizer,
+		sorted = true,
+		tooltip = "Select an operation to perform on the selected graphs",
 		value = self._hed.operation,
 	}
 	local operations = CoreEWS.combobox(operations_params)
 
 	operations:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "set_element_data"), {
-		value = "operation",
 		ctrlr = operations,
+		value = "operation",
 	})
 
 	local help = {}

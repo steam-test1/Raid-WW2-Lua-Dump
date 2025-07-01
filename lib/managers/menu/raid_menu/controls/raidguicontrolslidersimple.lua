@@ -51,37 +51,37 @@ function RaidGUIControlSliderSimple:_create_slider_controls()
 	})
 	self._slider_line = self._slider_line_panel:three_cut_bitmap({
 		center = "slider_line_center_base",
-		left = "slider_line_left_base",
-		right = "slider_line_right_base",
-		x = 0,
-		y = 0,
 		color = RaidGUIControlSliderSimple.SLIDER_BACKGROUND_COLOR,
 		layer = self._slider_line_panel:layer(),
+		left = "slider_line_left_base",
 		name = self._name .. "_slider_line",
+		right = "slider_line_right_base",
 		w = self._slider_line_panel:w(),
+		x = 0,
+		y = 0,
 	})
 	self._slider_line_active = self._slider_line_panel:three_cut_bitmap({
 		center = "slider_line_center_base",
-		left = "slider_line_left_base",
-		right = "slider_line_right_base",
-		x = 0,
-		y = 0,
 		color = RaidGUIControlSliderSimple.SLIDER_COLOR,
 		layer = self._slider_line_panel:layer() + 1,
+		left = "slider_line_left_base",
 		name = self._name .. "_slider_line_active",
+		right = "slider_line_right_base",
 		w = self._slider_line_panel:w(),
+		x = 0,
+		y = 0,
 	})
 
 	self._slider_line_panel:set_h(self._slider_line:h())
 
 	self._slider_thumb = self._object:bitmap({
-		x = 0,
-		y = 0,
 		h = tweak_data.gui.icons[RaidGUIControlSliderSimple.SLIDER_ICON].texture_rect[4],
 		layer = self._slider_line_panel:layer() + 200,
 		texture = tweak_data.gui.icons[RaidGUIControlSliderSimple.SLIDER_ICON].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlSliderSimple.SLIDER_ICON].texture_rect,
 		w = tweak_data.gui.icons[RaidGUIControlSliderSimple.SLIDER_ICON].texture_rect[3],
+		x = 0,
+		y = 0,
 	})
 end
 

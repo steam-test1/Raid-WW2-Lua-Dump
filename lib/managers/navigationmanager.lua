@@ -366,7 +366,6 @@ function NavigationManager:_convert_nav_data_v5_to_v6(data_v5)
 	local segments = {}
 	local visibility_groups = {}
 	local data_v6 = {
-		version = 6,
 		door_high_pos = data_v5.door_high_pos,
 		door_high_quads = data_v5.door_high_rooms,
 		door_low_pos = data_v5.door_low_pos,
@@ -381,6 +380,7 @@ function NavigationManager:_convert_nav_data_v5_to_v6(data_v5)
 		quad_heights_xp_yn = data_v5.room_heights_xp_yn,
 		quad_heights_xp_yp = data_v5.room_heights_xp_yp,
 		segments = segments,
+		version = 6,
 		visibility_groups = visibility_groups,
 	}
 
@@ -1154,9 +1154,9 @@ function NavigationManager:reserve_cover(cover, filter)
 		cover[self.COVER_RESERVED] = 1
 
 		local reservation = {
-			radius = 60,
 			filter = filter,
 			position = cover[NavigationManager.COVER_POSITION],
+			radius = 60,
 		}
 
 		cover[self.COVER_RESERVATION] = reservation
@@ -1184,9 +1184,9 @@ end
 
 function NavigationManager:find_cover_nearest_pos(near_pos, max_near_dis)
 	local search_params = {
-		variation_z = 250,
 		max_distance = max_near_dis,
 		near_pos = near_pos,
+		variation_z = 250,
 	}
 
 	return self._quad_field:find_cover(search_params)
@@ -1194,12 +1194,12 @@ end
 
 function NavigationManager:find_cover_near_pos_1(near_pos, threat_pos, max_near_dis, min_threat_dis, allow_fwd)
 	local search_params = {
-		variation_z = 250,
 		forbid_fwd = not allow_fwd,
 		max_distance = max_near_dis,
 		min_threat_distance = min_threat_dis,
 		near_pos = near_pos,
 		threat_pos = threat_pos,
+		variation_z = 250,
 	}
 
 	return self._quad_field:find_cover(search_params)
@@ -1305,13 +1305,13 @@ end
 
 function NavigationManager:find_cover_in_cone_from_threat_pos(threat_pos, cone_base, near_pos, cone_angle, nav_seg, rsrv_filter)
 	local search_params = {
-		variation_z = 250,
 		cone_angle = cone_angle,
 		cone_base = cone_base,
 		in_nav_seg = nav_seg,
 		near_pos = near_pos,
 		rsrv_filter = rsrv_filter,
 		threat_pos = threat_pos,
+		variation_z = 250,
 	}
 	local t = TimerManager:now()
 	local ret
@@ -1360,9 +1360,9 @@ function NavigationManager:find_walls_accross_tracker(from_tracker, accross_vec,
 	end
 
 	local ray_params = {
-		trace = true,
 		pos_from = pos_from,
 		pos_to = pos_to,
+		trace = true,
 		tracker_from = tracker_from,
 	}
 	local ray_results = {}

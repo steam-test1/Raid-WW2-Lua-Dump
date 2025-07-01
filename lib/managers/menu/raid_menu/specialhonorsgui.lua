@@ -69,13 +69,13 @@ function SpecialHonorsGui:_layout_first_screen()
 	local top_stats_title_params = {
 		align = "center",
 		alpha = 0,
-		name = "top_stats_title",
-		vertical = "center",
 		color = SpecialHonorsGui.TOP_STATS_TITLE_COLOR,
 		font = SpecialHonorsGui.FONT,
 		font_size = SpecialHonorsGui.TOP_STATS_TITLE_FONT_SIZE,
 		h = SpecialHonorsGui.TOP_STATS_TITLE_H,
+		name = "top_stats_title",
 		text = self:translate(title_text, true),
+		vertical = "center",
 	}
 	local top_stats_title = self._top_stats_big_panel:text(top_stats_title_params)
 
@@ -213,8 +213,8 @@ function SpecialHonorsGui:bind_controller_inputs()
 		},
 		keyboard = {
 			{
-				key = "footer_continue",
 				callback = callback(self, self, "_continue_button_on_click", nil),
+				key = "footer_continue",
 			},
 		},
 	}

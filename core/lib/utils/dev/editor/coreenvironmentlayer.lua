@@ -308,9 +308,9 @@ function EnvironmentLayer:save()
 	self:_add_project_save_data(data)
 
 	local t = {
-		single_data_block = true,
 		data = data,
 		entry = self._save_name,
+		single_data_block = true,
 	}
 
 	managers.editor:add_save_data(t)
@@ -420,8 +420,8 @@ end
 
 function EnvironmentLayer:build_panel(notebook)
 	EnvironmentLayer.super.build_panel(self, notebook, {
-		units_noteboook_proportion = 0,
 		units_notebook_min_size = Vector3(1, 165, 0),
+		units_noteboook_proportion = 0,
 	})
 	cat_print("editor", "EnvironmentLayer:build_panel")
 
@@ -505,8 +505,8 @@ function EnvironmentLayer:build_panel(notebook)
 	draw_occ_cb:set_value(self._draw_occ_shape)
 	self._dome_occ_sizer:add(draw_occ_cb, 0, 0, "EXPAND")
 	draw_occ_cb:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "cb_toogle"), {
-		value = "_draw_occ_shape",
 		cb = draw_occ_cb,
+		value = "_draw_occ_shape",
 	})
 
 	local generate_dome_occ = EWS:Button(self._env_panel, "Generate", "", "BU_EXACTFIT,NO_BORDER")
@@ -545,8 +545,8 @@ function EnvironmentLayer:build_panel(notebook)
 	show_wind_cb:set_value(self._draw_wind)
 	wind_sizer:add(show_wind_cb, 0, 0, "EXPAND")
 	show_wind_cb:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "cb_toogle"), {
-		value = "_draw_wind",
 		cb = show_wind_cb,
+		value = "_draw_wind",
 	})
 
 	local direction_sizer = EWS:StaticBoxSizer(self._env_panel, "HORIZONTAL", "Direction / Variation")

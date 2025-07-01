@@ -121,14 +121,14 @@ function PlayerStandard:enter(state_data, enter_data)
 
 	if self._ext_movement:nav_tracker() then
 		self._pos_reservation = {
-			radius = 100,
 			filter = self._ext_movement:pos_rsrv_id(),
 			position = self._ext_movement:m_pos(),
+			radius = 100,
 		}
 		self._pos_reservation_slow = {
-			radius = 100,
 			filter = self._ext_movement:pos_rsrv_id(),
 			position = mvector3.copy(self._ext_movement:m_pos()),
+			radius = 100,
 		}
 
 		managers.navigation:add_pos_reservation(self._pos_reservation)
@@ -269,12 +269,12 @@ function PlayerStandard:exit(state_data, new_state_name)
 	self._ext_camera:set_shaker_parameter("headbob", "amplitude", 0)
 
 	local exit_data = {
-		skip_equip = true,
 		change_weapon_data = self._change_weapon_data,
 		ducking = self._state_data.ducking,
 		equip_weapon_expire_t = self._equip_weapon_expire_t,
 		last_sent_pos = self._last_sent_pos,
 		last_sent_pos_t = self._last_sent_pos_t,
+		skip_equip = true,
 		unequip_weapon_expire_t = self._unequip_weapon_expire_t,
 	}
 
@@ -506,11 +506,11 @@ end
 function PlayerStandard:_create_on_controller_disabled_input()
 	local release_interact = Global.game_settings.single_player or not managers.menu:get_controller():get_input_bool("interact")
 	local input = {
+		btn_interact_release = release_interact,
 		btn_melee_release = true,
 		btn_steelsight_release = true,
 		btn_use_item_release = true,
 		is_customized = true,
-		btn_interact_release = release_interact,
 	}
 
 	return input
@@ -531,8 +531,8 @@ function PlayerStandard:_get_input(t, dt)
 		end
 	elseif not self._state_data.controller_enabled then
 		local input = {
-			is_customized = true,
 			btn_interact_release = managers.menu:get_controller():get_input_released("interact"),
+			is_customized = true,
 		}
 
 		return input
@@ -549,11 +549,11 @@ function PlayerStandard:_get_input(t, dt)
 	end
 
 	local input = {
-		btn_deploy_bipod = false,
 		any_input_held = held,
 		any_input_pressed = pressed,
 		any_input_released = released,
 		btn_activate_warcry_press = pressed and self._controller:get_input_pressed("activate_warcry"),
+		btn_deploy_bipod = false,
 		btn_duck_press = pressed and self._controller:get_input_pressed("duck"),
 		btn_duck_release = released and self._controller:get_input_released("duck"),
 		btn_duck_state = held and self._controller:get_input_bool("duck"),
@@ -992,6 +992,7 @@ function PlayerStandard:_update_foley(t, input)
 		local fall_data = self._state_data.dive_data or {}
 
 		fall_data.height = self._state_data.enter_air_pos_z - self._pos.z
+		fall_data.onto_ladder = self:on_ladder()
 
 		local damage_taken = self._unit:character_damage():damage_fall(fall_data)
 
@@ -1208,7 +1209,7 @@ function PlayerStandard:_stance_entered(unequipped)
 	self._camera_unit:base():clbk_stance_entered(misc_attribs.shoulders, head_stance, misc_attribs.vel_overshot, new_fov, misc_attribs.shakers, stance_mod, duration_multiplier, duration)
 	managers.menu:set_mouse_sensitivity(self:in_steelsight())
 
-	local sensitivity_multiplier = self:get_sensitivity_multiplier()
+	local sensitivity_multiplier = self:get_sensitivity_multiplier(new_fov)
 
 	self._camera_unit:base():set_sensitivity_multiplier(sensitivity_multiplier)
 end
@@ -2572,9 +2573,9 @@ function PlayerStandard:_do_melee_damage(t, bayonet_melee, col_ray)
 					col_ray = col_ray,
 				})
 				managers.game_play_central:play_impact_sound_and_effects({
+					col_ray = col_ray,
 					no_decal = true,
 					no_sound = true,
-					col_ray = col_ray,
 				})
 			end
 		else
@@ -2587,11 +2588,11 @@ function PlayerStandard:_do_melee_damage(t, bayonet_melee, col_ray)
 			local decal_effect = melee_tweak.decal_effect
 
 			managers.game_play_central:play_impact_sound_and_effects({
-				weapon_type = "knife",
 				col_ray = col_ray,
 				decal = decal_effect,
 				effect = tweak_data.common_effects.impact,
 				no_decal = not decal_effect,
+				weapon_type = "knife",
 			})
 		end
 
@@ -2946,6 +2947,7 @@ function PlayerStandard:_start_action_use_item(t)
 	})
 
 	managers.hud:show_progress_timer({
+		ratio = nil,
 		text = text,
 	})
 
@@ -3521,8 +3523,8 @@ function PlayerStandard:_do_action_intimidate(t, interact_type, sound_name, queu
 		self._intimidate_t = t
 
 		managers.dialog:queue_dialog(sound_name, {
-			skip_idle_check = true,
 			instigator = self._unit,
+			skip_idle_check = true,
 		})
 	end
 
@@ -3738,8 +3740,8 @@ function PlayerStandard:_check_action_equip(t, input)
 			elseif fail_reason then
 				managers.notification:add_notification({
 					duration = 3,
-					shelf_life = 5,
 					id = fail_reason,
+					shelf_life = 5,
 					text = managers.localization:text(fail_reason),
 				})
 			end
@@ -4634,7 +4636,7 @@ function PlayerStandard:get_zoom_fov(stance_data)
 	return fov * fov_multiplier
 end
 
-function PlayerStandard:get_sensitivity_multiplier()
+function PlayerStandard:get_sensitivity_multiplier(current_fov)
 	local multiplier = 1
 
 	if self._state_data.in_steelsight and managers.player:has_category_upgrade("player", "farsighted_steelsight_fov_multiplier") then
@@ -4692,8 +4694,8 @@ function PlayerStandard:_check_action_primary_attack(t, input)
 				if weap_base.out_of_ammo and weap_base:out_of_ammo() then
 					if input.btn_primary_attack_press then
 						managers.dialog:queue_dialog("player_gen_no_ammo", {
-							skip_idle_check = true,
 							instigator = self._unit,
+							skip_idle_check = true,
 						})
 						managers.hud:set_prompt("hud_no_ammo_prompt", utf8.to_upper(managers.localization:text("hint_no_ammo")))
 						weap_base:dryfire()
@@ -4974,8 +4976,8 @@ function PlayerStandard:_start_action_reload(t)
 	if self._equipped_unit:base():can_reload() then
 		managers.hud:hide_prompt("hud_reload_prompt")
 		managers.dialog:queue_dialog("player_reloading", {
-			skip_idle_check = true,
 			instigator = self._unit,
+			skip_idle_check = true,
 		})
 
 		local weap_base = self._equipped_unit:base()
@@ -5307,9 +5309,9 @@ function PlayerStandard:setup_upgrades()
 
 	if managers.player:has_category_upgrade("player", "marshal_max_multiplier_stacks") then
 		self._state_data.marshal_data = self._state_data.marshal_data or {
-			stacks = 0,
 			decay_time = managers.player:upgrade_value("player", "marshal_stack_decay_timer", 1),
 			max_stacks = managers.player:upgrade_value("player", "marshal_max_multiplier_stacks", 1),
+			stacks = 0,
 		}
 	else
 		managers.queued_tasks:unqueue("upgrade_marshal_stack_decay")

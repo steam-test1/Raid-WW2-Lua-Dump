@@ -15,10 +15,10 @@ end
 
 function RaidGUIControlServerPlayerDescription:_create_selector()
 	local selector_params = {
+		color = tweak_data.gui.colors.raid_list_background,
 		layer = 1,
 		name = "selector",
 		visible = false,
-		color = tweak_data.gui.colors.raid_list_background,
 	}
 
 	self._selector = self._object:rect(selector_params)
@@ -28,74 +28,74 @@ function RaidGUIControlServerPlayerDescription:_layout()
 	local class_icon = tweak_data.gui.icons.ico_class_assault
 
 	self._class_icon = self._object:bitmap({
-		name = "class_icon",
-		x = 0,
-		y = 0,
 		layer = self._selector:layer() + 1,
+		name = "class_icon",
 		texture = class_icon.texture,
 		texture_rect = class_icon.texture_rect,
+		x = 0,
+		y = 0,
 	})
 
 	self._class_icon:hide()
 
 	self._player_name = self._object:label({
 		align = "left",
+		color = tweak_data.gui.colors.raid_dirty_white,
+		font = tweak_data.gui.fonts.din_compressed,
+		font_size = tweak_data.gui.font_sizes.small,
 		h = 64,
+		layer = self._selector:layer() + 1,
 		name = "player_name",
 		text = "PLAYER NAME 1",
 		vertical = "center",
 		w = 336,
 		x = 80,
 		y = 0,
-		color = tweak_data.gui.colors.raid_dirty_white,
-		font = tweak_data.gui.fonts.din_compressed,
-		font_size = tweak_data.gui.font_sizes.small,
-		layer = self._selector:layer() + 1,
 	})
 
 	self._player_name:hide()
 
 	self._player_class_nation = self._object:label({
 		align = "left",
+		color = tweak_data.gui.colors.raid_grey_effects,
+		font = tweak_data.gui.fonts.din_compressed,
+		font_size = tweak_data.gui.font_sizes.extra_small,
 		h = 64,
+		layer = self._selector:layer() + 1,
 		name = "player_class_nation",
 		text = "INFILTRATOR  |  GERMAN",
 		vertical = "center",
 		w = 336,
 		x = 80,
 		y = 32,
-		color = tweak_data.gui.colors.raid_grey_effects,
-		font = tweak_data.gui.fonts.din_compressed,
-		font_size = tweak_data.gui.font_sizes.extra_small,
-		layer = self._selector:layer() + 1,
 	})
 
 	self._player_class_nation:hide()
 
 	self._host_icon = self._object:bitmap({
-		name = "host_icon",
-		x = 416,
-		y = 16,
 		layer = self._selector:layer() + 1,
+		name = "host_icon",
 		texture = tweak_data.gui.icons.player_panel_host_indicator.texture,
 		texture_rect = tweak_data.gui.icons.player_panel_host_indicator.texture_rect,
+		x = 416,
+		y = 16,
 	})
 
 	self._host_icon:hide()
 
 	self._player_level = self._object:label({
 		align = "right",
+		color = tweak_data.gui.colors.raid_dirty_white,
+		font = tweak_data.gui.fonts.din_compressed,
+		font_size = tweak_data.gui.font_sizes.small,
 		h = 64,
+		layer = self._selector:layer() + 1,
 		name = "player_level",
 		text = "17",
 		vertical = "center",
 		w = 64,
 		x = 450,
 		y = 0,
-		color = tweak_data.gui.colors.raid_dirty_white,
-		font = tweak_data.gui.fonts.din_compressed,
-		font_size = tweak_data.gui.font_sizes.small,
-		layer = self._selector:layer() + 1,
 	})
 
 	self._player_level:hide()

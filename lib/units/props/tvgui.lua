@@ -23,8 +23,8 @@ function TvGui:setup()
 	self._video_panel = self._ws:panel():video({
 		layer = 10,
 		loop = true,
-		visible = true,
 		video = self._video,
+		visible = true,
 	})
 
 	self._video_panel:set_render_template(Idstring("gui:DIFFUSE_TEXTURE:FULLBRIGHT"))

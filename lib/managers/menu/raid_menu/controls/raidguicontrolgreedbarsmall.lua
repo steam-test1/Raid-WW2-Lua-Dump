@@ -29,8 +29,8 @@ end
 
 function RaidGUIControlGreedBarSmall:_create_panel()
 	local panel_params = {
-		name = "greed_bar_small",
 		h = RaidGUIControlGreedBarSmall.HEIGHT,
+		name = "greed_bar_small",
 		w = RaidGUIControlGreedBarSmall.WIDTH,
 		x = self._params.x or 0,
 		y = self._params.y or 0,
@@ -43,9 +43,9 @@ function RaidGUIControlGreedBarSmall:_create_loot_icon()
 	local loot_icon_params = {
 		halign = "left",
 		name = "loot_icon",
-		valign = "center",
 		texture = tweak_data.gui.icons[RaidGUIControlGreedBarSmall.LOOT_ICON].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlGreedBarSmall.LOOT_ICON].texture_rect,
+		valign = "center",
 	}
 
 	self._loot_icon = self._object:bitmap(loot_icon_params)
@@ -57,15 +57,15 @@ end
 function RaidGUIControlGreedBarSmall:_create_loot_title()
 	local loot_title_params = {
 		align = "center",
-		halign = "left",
-		name = "loot_title",
-		valign = "center",
-		vertical = "center",
 		color = RaidGUIControlGreedBarSmall.LOOT_TITLE_COLOR,
 		font = RaidGUIControlGreedBarSmall.LOOT_TITLE_FONT,
 		font_size = RaidGUIControlGreedBarSmall.LOOT_TITLE_FONT_SIZE,
 		h = RaidGUIControlGreedBarSmall.LOOT_TITLE_H,
+		halign = "left",
+		name = "loot_title",
 		text = self:translate(RaidGUIControlGreedBarSmall.LOOT_TITLE_STRING, true),
+		valign = "center",
+		vertical = "center",
 	}
 
 	self._title = self._object:text(loot_title_params)
@@ -77,10 +77,10 @@ end
 
 function RaidGUIControlGreedBarSmall:_create_loot_bar()
 	local loot_bar_panel_params = {
+		h = RaidGUIControlGreedBarSmall.LOOT_BAR_PANEL_H,
 		halign = "left",
 		name = "loot_bar_panel",
 		valign = "center",
-		h = RaidGUIControlGreedBarSmall.LOOT_BAR_PANEL_H,
 		w = RaidGUIControlGreedBarSmall.LOOT_BAR_PANEL_W,
 	}
 
@@ -89,11 +89,11 @@ function RaidGUIControlGreedBarSmall:_create_loot_bar()
 	self._loot_bar_panel:set_center_y(RaidGUIControlGreedBarSmall.LOOT_BAR_PANEL_CENTER_Y)
 
 	local loot_bar_background_params = {
-		layer = 1,
-		name = "loot_bar_background",
 		center = RaidGUIControlGreedBarSmall.LOOT_BAR_ICON_M,
 		color = RaidGUIControlGreedBarSmall.LOOT_BAR_COLOR,
+		layer = 1,
 		left = RaidGUIControlGreedBarSmall.LOOT_BAR_ICON_L,
+		name = "loot_bar_background",
 		right = RaidGUIControlGreedBarSmall.LOOT_BAR_ICON_R,
 		w = RaidGUIControlGreedBarSmall.LOOT_BAR_W,
 	}
@@ -104,9 +104,9 @@ function RaidGUIControlGreedBarSmall:_create_loot_bar()
 	self._loot_bar_background:set_center_y(self._loot_bar_panel:h() / 2)
 
 	local loot_bar_progress_panel_params = {
-		name = "loot_bar_progress_panel",
 		h = self._loot_bar_background:h(),
 		layer = self._loot_bar_background:layer() + 1,
+		name = "loot_bar_progress_panel",
 		w = RaidGUIControlGreedBarSmall.LOOT_BAR_W,
 	}
 
@@ -116,10 +116,10 @@ function RaidGUIControlGreedBarSmall:_create_loot_bar()
 	self._loot_bar_progress_panel:set_center_y(self._loot_bar_background:center_y())
 
 	local loot_bar_foreground_params = {
-		name = "loot_bar_foreground",
 		center = RaidGUIControlGreedBarSmall.LOOT_BAR_ICON_M,
 		color = RaidGUIControlGreedBarSmall.LOOT_BAR_FOREGROUND_COLOR,
 		left = RaidGUIControlGreedBarSmall.LOOT_BAR_ICON_L,
+		name = "loot_bar_foreground",
 		right = RaidGUIControlGreedBarSmall.LOOT_BAR_ICON_R,
 		w = RaidGUIControlGreedBarSmall.LOOT_BAR_W,
 	}

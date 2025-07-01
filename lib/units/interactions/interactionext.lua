@@ -373,8 +373,8 @@ function BaseInteractionExt:interact_start(player, locator)
 	local function show_hint(hint_id)
 		managers.notification:add_notification({
 			duration = 2,
-			shelf_life = 5,
 			id = hint_id,
+			shelf_life = 5,
 			text = managers.localization:text(hint_id),
 		})
 	end
@@ -388,8 +388,8 @@ function BaseInteractionExt:interact_start(player, locator)
 			if self._tweak_data.blocked_hint_sound then
 				self:_post_event(player, "blocked_hint_sound")
 				managers.dialog:queue_dialog("player_gen_full_reserve", {
-					skip_idle_check = true,
 					instigator = managers.player:local_player(),
+					skip_idle_check = true,
 				})
 			end
 
@@ -1041,17 +1041,6 @@ function PickupInteractionExt:interact(player)
 	return true
 end
 
-function PickupInteractionExt:interact(player)
-	if not self:can_interact(player) then
-		return
-	end
-
-	PickupInteractionExt.super.interact(self, player)
-	self._unit:pickup():pickup(player)
-
-	return true
-end
-
 function PickupInteractionExt:selected(player)
 	local return_val = PickupInteractionExt.super.selected(self, player)
 
@@ -1159,7 +1148,9 @@ function GrenadePickupInteractionExt:selected(player)
 		return
 	end
 
-	if managers.player:got_max_grenades() then
+	local blocked, _, _ = self:_interact_blocked(player)
+
+	if blocked then
 		self._hide_interaction_prompt = true
 	end
 
@@ -1176,7 +1167,25 @@ function GrenadePickupInteractionExt:unselect()
 end
 
 function GrenadePickupInteractionExt:_interact_blocked(player)
-	return managers.player:got_max_grenades()
+	if self._unit:base() and self._unit:base().get_thrower_peer_id and self._unit:base():get_thrower_peer_id() and self._unit:base():get_thrower_peer_id() ~= managers.network:session():local_peer():id() then
+		Application:info("[GrenadePickupInteractionExt:_interact_blocked] Not thrower", self._unit:base():get_thrower_peer_id(), managers.network:session():local_peer():id())
+
+		return true, nil, nil
+	end
+
+	if self._pickup_filter and self._pickup_filter ~= tweak_data.projectiles[managers.blackmarket:equipped_projectile()].pickup_filter then
+		Application:info("[GrenadePickupInteractionExt:_interact_blocked] Wrong pickup")
+
+		return true, nil, "hint_wrong_grenades"
+	end
+
+	if managers.player:got_max_grenades() then
+		Application:info("[GrenadePickupInteractionExt:_interact_blocked] Full grenades")
+
+		return true, nil, "hint_full_grenades"
+	end
+
+	return false, nil, nil
 end
 
 function GrenadePickupInteractionExt:interact(player)
@@ -1448,8 +1457,8 @@ function ReviveInteractionExt:set_active(active, sync, down_time)
 
 		managers.notification:add_notification({
 			duration = 3,
-			shelf_life = 5,
 			id = hint,
+			shelf_life = 5,
 			text = managers.localization:text(hint, {
 				LOCATION = location,
 				TEAMMATE = self._unit:base():nick_name(),
@@ -1464,11 +1473,11 @@ function ReviveInteractionExt:set_active(active, sync, down_time)
 			local timer = self.tweak_data == "revive" and (self._unit:base().is_husk_player and down_time or tweak_data.character[self._unit:base()._tweak_table].damage.DOWNED_TIME)
 
 			managers.hud:add_waypoint(self._wp_id, {
-				waypoint_type = "revive",
 				distance = is_win32,
 				icon = icon,
 				text = text,
 				unit = self._unit,
+				waypoint_type = "revive",
 			})
 
 			self._active_wp = true
@@ -2900,8 +2909,8 @@ function SecretDocumentInteractionExt:_interact_reward_outlaw(player)
 		doc_text = "hud_hint_consumable_mission_secured",
 		duration = 4,
 		id = "hud_hint_consumable_mission",
-		priority = 3,
 		notification_type = HUDNotification.CONSUMABLE_MISSION_PICKED_UP,
+		priority = 3,
 	}
 
 	return notification_data

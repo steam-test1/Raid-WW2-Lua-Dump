@@ -81,9 +81,9 @@ commands:add({
 	label = "&Batch Export to Game...",
 })
 commands:add({
+	help = "Closes the " .. CoreCutsceneEditor.EDITOR_TITLE .. " window",
 	id = "EXIT",
 	label = "E&xit",
-	help = "Closes the " .. CoreCutsceneEditor.EDITOR_TITLE .. " window",
 })
 commands:add({
 	help = "Place selected clips on the clipboard. When pasted, the clips will be moved",

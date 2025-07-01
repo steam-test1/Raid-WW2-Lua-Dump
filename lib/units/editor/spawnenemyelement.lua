@@ -135,8 +135,8 @@ function SpawnEnemyUnitElement:_build_panel(panel, panel_sizer)
 
 	participate_to_group_ai:set_value(self._hed.participate_to_group_ai)
 	participate_to_group_ai:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		value = "participate_to_group_ai",
 		ctrlr = participate_to_group_ai,
+		value = "participate_to_group_ai",
 	})
 	panel_sizer:add(participate_to_group_ai, 0, 0, "EXPAND")
 
@@ -189,8 +189,8 @@ function SpawnEnemyUnitElement:add_to_mission_package()
 		for _, file in ipairs(sequence_files) do
 			managers.editor:add_to_world_package({
 				category = "script_data",
-				init = true,
 				continent = self._unit:unit_data().continent,
+				init = true,
 				name = file:s() .. ".sequence_manager",
 			})
 		end

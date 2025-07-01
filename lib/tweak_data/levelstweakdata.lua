@@ -113,7 +113,6 @@ function LevelsTweakData:init()
 	}
 	self.zone_germany_park.map = {
 		base_icon = "map_camp",
-		texture = "map",
 		base_location = {
 			x = -200,
 			y = -2850,
@@ -124,6 +123,7 @@ function LevelsTweakData:init()
 			x = 105,
 			y = 220,
 		},
+		texture = "map",
 		world_borders = {
 			down = -28846,
 			left = -29736,
@@ -145,7 +145,6 @@ function LevelsTweakData:init()
 	}
 	self.zone_germany_destroyed.map = {
 		base_icon = "map_camp",
-		texture = "map",
 		base_location = {
 			x = -200,
 			y = -2850,
@@ -156,6 +155,7 @@ function LevelsTweakData:init()
 			x = 105,
 			y = 220,
 		},
+		texture = "map",
 		world_borders = {
 			down = -28846,
 			left = -29736,
@@ -177,7 +177,6 @@ function LevelsTweakData:init()
 	}
 	self.zone_germany_destroyed_fuel.map = {
 		base_icon = "map_camp",
-		texture = "map",
 		base_location = {
 			x = -200,
 			y = -2850,
@@ -188,6 +187,7 @@ function LevelsTweakData:init()
 			x = 105,
 			y = 220,
 		},
+		texture = "map",
 		world_borders = {
 			down = -28846,
 			left = -29736,
@@ -209,7 +209,6 @@ function LevelsTweakData:init()
 	}
 	self.zone_germany_roundabout.map = {
 		base_icon = "map_camp",
-		texture = "map",
 		base_location = {
 			x = -200,
 			y = -2850,
@@ -220,6 +219,7 @@ function LevelsTweakData:init()
 			x = 105,
 			y = 220,
 		},
+		texture = "map",
 		world_borders = {
 			down = -28846,
 			left = -29736,
@@ -241,7 +241,6 @@ function LevelsTweakData:init()
 	}
 	self.zone_germany_roundabout_fuel.map = {
 		base_icon = "map_camp",
-		texture = "map",
 		base_location = {
 			x = -200,
 			y = -2850,
@@ -252,6 +251,7 @@ function LevelsTweakData:init()
 			x = 105,
 			y = 220,
 		},
+		texture = "map",
 		world_borders = {
 			down = -28846,
 			left = -29736,
@@ -363,7 +363,6 @@ function LevelsTweakData:init()
 		"kelly",
 		"fury_railway",
 	}
-	self.escape_levels = {}
 end
 
 function LevelsTweakData:get_level_index()

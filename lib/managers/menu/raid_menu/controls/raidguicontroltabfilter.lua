@@ -18,9 +18,6 @@ function RaidGUIControlTabFilter:init(parent, params)
 	})
 	self._tab_label = self._object:label({
 		align = "center",
-		vertical = "center",
-		x = 0,
-		y = 0,
 		color = tweak_data.gui.colors.raid_grey,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.extra_small,
@@ -28,7 +25,10 @@ function RaidGUIControlTabFilter:init(parent, params)
 		layer = self._object:layer() + 1,
 		name = "tab_control_label_" .. self._name,
 		text = params.text,
+		vertical = "center",
 		w = params.w,
+		x = 0,
+		y = 0,
 	})
 	self._callback_param = params.callback_param
 	self._tab_select_callback = params.tab_select_callback

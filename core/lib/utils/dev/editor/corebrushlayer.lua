@@ -52,11 +52,11 @@ end
 function BrushLayer:save(save_params)
 	local file_name = "massunit"
 	local t = {
-		single_data_block = true,
 		data = {
 			file = file_name,
 		},
 		entry = self._save_name,
+		single_data_block = true,
 	}
 
 	self:_add_project_save_data(t.data)
@@ -484,7 +484,7 @@ function BrushLayer:build_panel(notebook)
 
 	sizer_pb:add(self:create_slider("Density [/m2]", "_brush_density", 0, 30), 0, 0, "EXPAND")
 	sizer_pb:add(self:create_slider("Pressure", "_brush_pressure", 1, 20), 0, 0, "EXPAND")
-	sizer_pb:add(self:create_slider("Radius [cm]", "_brush_size", 1, 1000), 0, 0, "EXPAND")
+	sizer_pb:add(self:create_slider("Radius [cm]", "_brush_size", 1, 400), 0, 0, "EXPAND")
 	sizer_pb:add(self:create_slider("Smoothness", "_brush_smoothness", 1, 16), 0, 0, "EXPAND")
 	h_sizer:add(sizer_pb, 1, 2, "EXPAND")
 
@@ -509,8 +509,8 @@ function BrushLayer:build_panel(notebook)
 	pressure_cb:set_value(self._erase_with_pressure)
 	brush_toggles_sizer:add(pressure_cb, 0, 0, "EXPAND")
 	pressure_cb:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "cb_toogle"), {
-		value = "_erase_with_pressure",
 		cb = pressure_cb,
+		value = "_erase_with_pressure",
 	})
 
 	local erase_cb = EWS:CheckBox(self._ews_panel, "Filter Erase", "")
@@ -518,8 +518,8 @@ function BrushLayer:build_panel(notebook)
 	erase_cb:set_value(self._erase_with_units)
 	brush_toggles_sizer:add(erase_cb, 0, 0, "EXPAND")
 	erase_cb:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "cb_toogle"), {
-		value = "_erase_with_units",
 		cb = erase_cb,
+		value = "_erase_with_units",
 	})
 
 	local force_up_cb = EWS:CheckBox(self._ews_panel, "Override Surface", "")
@@ -527,8 +527,8 @@ function BrushLayer:build_panel(notebook)
 	force_up_cb:set_value(self._overide_surface_normal)
 	brush_toggles_sizer:add(force_up_cb, 0, 0, "EXPAND")
 	force_up_cb:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "cb_toogle"), {
-		value = "_overide_surface_normal",
 		cb = force_up_cb,
+		value = "_overide_surface_normal",
 	})
 
 	local brush_on_editor_bodies_cb = EWS:CheckBox(self._ews_panel, "Brush On Editor Units", "")
@@ -536,8 +536,8 @@ function BrushLayer:build_panel(notebook)
 	brush_on_editor_bodies_cb:set_value(self._brush_on_editor_bodies)
 	brush_toggles_sizer:add(brush_on_editor_bodies_cb, 0, 0, "EXPAND")
 	brush_on_editor_bodies_cb:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "cb_toogle"), {
-		value = "_brush_on_editor_bodies",
 		cb = brush_on_editor_bodies_cb,
+		value = "_brush_on_editor_bodies",
 	})
 	ctrl_sizer:add(brush_toggles_sizer, 0, 0, "EXPAND")
 	self._sizer:add(ctrl_sizer, 0, 0, "EXPAND")
@@ -586,9 +586,9 @@ function BrushLayer:build_panel(notebook)
 	toolbar:add_check_tool("DEBUG_DRAW", "Draw unit orientations", CoreEws.image_path("image_16x16.png"), "Draw unit orientations")
 	toolbar:set_tool_state("DEBUG_DRAW", self._debug_draw_unit_orientation)
 	toolbar:connect("DEBUG_DRAW", "EVT_COMMAND_MENU_SELECTED", callback(nil, CoreEditorUtils, "toolbar_toggle"), {
-		value = "_debug_draw_unit_orientation",
 		class = self,
 		toolbar = toolbar,
+		value = "_debug_draw_unit_orientation",
 	})
 	toolbar:add_tool("DEBUG_LIST", "Open debug list", CoreEws.image_path("magnifying_glass_16x16.png"), "Open debug list")
 	toolbar:connect("DEBUG_LIST", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "_on_gui_open_debug_list"), nil)
@@ -735,12 +735,12 @@ function BrushLayer:create_slider(name, value, s_value, e_value, default_value)
 
 	local slider_params = {
 		floats = 0,
-		number_ctrlr_proportions = 0.1,
-		slider_ctrlr_proportions = 0.2,
 		max = e_value,
 		min = s_value,
+		number_ctrlr_proportions = 0.1,
 		panel = self._ews_panel,
 		sizer = slider_sizer,
+		slider_ctrlr_proportions = 0.2,
 		value = default_value or s_value,
 	}
 

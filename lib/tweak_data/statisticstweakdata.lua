@@ -4,20 +4,6 @@ function StatisticsTweakData:init()
 	self.session = {}
 	self.killed = {
 		civilian = {
-			head_shots = {
-				count = 0,
-				type = "normal",
-			},
-			session = {
-				count = 0,
-				type = "session",
-			},
-			total = {
-				count = 0,
-				type = "normal",
-			},
-		},
-		civilian = {
 			count = 0,
 			head_shots = 0,
 		},

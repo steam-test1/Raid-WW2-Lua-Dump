@@ -22,35 +22,35 @@ function RaidGUIControlListItemMenu:init(parent, params, data)
 		y = params.y,
 	})
 	self._item_label = self._object:label({
-		vertical = "center",
-		x = 32,
-		y = 0,
 		color = self._data.value.unlocked and tweak_data.gui.colors.raid_white or tweak_data.gui.colors.raid_dark_grey,
 		font = font,
 		font_size = font_size,
 		h = params.h,
 		name = "list_item_label_" .. self._name,
 		text = data.text,
+		vertical = "center",
 		w = params.w,
+		x = 32,
+		y = 0,
 	})
 	self._item_background = self._object:rect({
-		visible = false,
-		x = 0,
-		y = 1,
 		color = tweak_data.gui.colors.raid_list_background,
 		h = params.h - 2,
 		layer = self._item_label:layer() - 1,
 		name = "list_item_back_" .. self._name,
+		visible = false,
 		w = params.w,
+		x = 0,
+		y = 1,
 	})
 	self._item_highlight_marker = self._object:rect({
+		color = tweak_data.gui.colors.raid_red,
+		h = params.h - 2,
+		name = "list_item_highlight_" .. self._name,
 		visible = false,
 		w = 3,
 		x = 0,
 		y = 1,
-		color = tweak_data.gui.colors.raid_red,
-		h = params.h - 2,
-		name = "list_item_highlight_" .. self._name,
 	})
 
 	if self._data and self._data.value and not self._data.value.unlocked then
@@ -58,8 +58,8 @@ function RaidGUIControlListItemMenu:init(parent, params, data)
 		local text_rect = ico_locker.texture_rect
 
 		self._object:image({
-			name = "locker_icon",
 			h = text_rect[4],
+			name = "locker_icon",
 			texture = ico_locker.texture,
 			texture_rect = text_rect,
 			w = text_rect[3],

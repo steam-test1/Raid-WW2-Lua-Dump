@@ -23,7 +23,6 @@ end
 function ChallengeCardsLootRewardGui:_show_loot_list(loot_list)
 	local coord_y = 200
 	local loot_reward_card_params = {
-		x = 0,
 		h = self._root_panel:h() - coord_y,
 		item_params = {
 			item_h = 352,
@@ -32,6 +31,7 @@ function ChallengeCardsLootRewardGui:_show_loot_list(loot_list)
 		},
 		loot_list = loot_list,
 		w = self._root_panel:w(),
+		x = 0,
 		y = coord_y,
 	}
 
@@ -82,8 +82,8 @@ function ChallengeCardsLootRewardGui:bind_controller_inputs()
 		},
 		keyboard = {
 			{
-				key = "footer_continue",
 				callback = callback(self, self, "_continue_button_on_click", nil),
+				key = "footer_continue",
 			},
 		},
 	}

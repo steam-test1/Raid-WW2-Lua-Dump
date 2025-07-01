@@ -21,12 +21,12 @@ function InstanceInputUnitElement:_build_panel(panel, panel_sizer)
 
 	panel_sizer:add(event, 0, 0, "EXPAND")
 	event:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
-		value = "event",
 		ctrlr = event,
+		value = "event",
 	})
 	event:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
-		value = "event",
 		ctrlr = event,
+		value = "event",
 	})
 end
 
@@ -53,12 +53,12 @@ function InstanceOutputUnitElement:_build_panel(panel, panel_sizer)
 
 	panel_sizer:add(event, 0, 0, "EXPAND")
 	event:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
-		value = "event",
 		ctrlr = event,
+		value = "event",
 	})
 	event:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
-		value = "event",
 		ctrlr = event,
+		value = "event",
 	})
 end
 
@@ -203,12 +203,12 @@ function InstanceEventUnitElement:_add_instance_gui(instance_name, events, event
 	local events_params = {
 		ctrlr_proportions = 2,
 		name_proportions = 0,
-		sizer_proportions = 2,
-		sorted = true,
-		tooltip = "Select an event from the combobox",
 		options = events,
 		panel = panel,
 		sizer = h_sizer,
+		sizer_proportions = 2,
+		sorted = true,
+		tooltip = "Select an event from the combobox",
 		value = event_list_data.event,
 	}
 	local event = CoreEws.combobox(events_params)
@@ -621,12 +621,12 @@ function InstanceParamsUnitElement:_build_number(data, panel, sizer)
 	local number_params = {
 		ctrlr_proportions = 2,
 		floats = 0,
-		name_proportions = 1,
-		sizer_proportions = 1,
-		tooltip = "Set a default number variable.",
 		name = data.var_name,
+		name_proportions = 1,
 		panel = panel,
 		sizer = sizer,
+		sizer_proportions = 1,
+		tooltip = "Set a default number variable.",
 		value = data.default_value,
 	}
 	local number = CoreEws.number_controller(number_params)
@@ -648,14 +648,14 @@ function InstanceParamsUnitElement:_build_combobox(data, panel, sizer, options)
 
 	local params = {
 		ctrlr_proportions = 2,
-		name_proportions = 1,
-		sizer_proportions = 1,
-		sorted = true,
-		tooltip = "Select an option from the combobox",
 		name = data.var_name,
+		name_proportions = 1,
 		options = options,
 		panel = panel,
 		sizer = horizontal_sizer,
+		sizer_proportions = 1,
+		sorted = true,
+		tooltip = "Select an option from the combobox",
 		value = data.default_value,
 	}
 	local combobox = CoreEws.combobox(params)
@@ -965,12 +965,12 @@ function InstanceSetParamsUnitElement:_build_number(data, panel, sizer)
 	local number_params = {
 		ctrlr_proportions = 2,
 		floats = 0,
-		name_proportions = 1,
-		sizer_proportions = 1,
-		tooltip = "Set a number variable.",
 		name = data.var_name,
+		name_proportions = 1,
 		panel = panel,
 		sizer = sizer,
+		sizer_proportions = 1,
+		tooltip = "Set a number variable.",
 		value = self._hed.params[data.var_name] or data.default_value,
 	}
 	local number = CoreEws.number_controller(number_params)
@@ -994,14 +994,14 @@ function InstanceSetParamsUnitElement:_build_combobox(data, panel, sizer, option
 
 	local combobox_params = {
 		ctrlr_proportions = 2,
-		name_proportions = 1,
-		sizer_proportions = 1,
-		sorted = true,
-		tooltip = "Select an option from the combobox",
 		name = data.var_name,
+		name_proportions = 1,
 		options = options,
 		panel = panel,
 		sizer = horizontal_sizer,
+		sizer_proportions = 1,
+		sorted = true,
+		tooltip = "Select an option from the combobox",
 		value = self._hed.params[data.var_name] or data.default_value,
 	}
 	local combobox = CoreEws.combobox(combobox_params)

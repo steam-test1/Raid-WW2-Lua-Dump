@@ -43,9 +43,9 @@ function AIAreaElement:draw_links(t, dt, selected_unit, all_units)
 	for u_id, unit in pairs(self._nav_seg_units) do
 		self:_draw_link({
 			b = 0,
+			from_unit = self._unit,
 			g = 0.75,
 			r = 0,
-			from_unit = self._unit,
 			to_unit = unit,
 		})
 	end

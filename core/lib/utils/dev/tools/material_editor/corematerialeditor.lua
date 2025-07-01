@@ -411,17 +411,17 @@ function CoreMaterialEditor:_save_to_disk(path)
 	local global_file = self:_save_global_to_disk(false)
 
 	Application:data_compile({
+		platform = string.lower(SystemInfo:platform():s()),
 		preprocessor_definitions = "preprocessor_definitions",
 		send_idstrings = false,
-		target_db_name = "all",
-		verbose = false,
-		platform = string.lower(SystemInfo:platform():s()),
 		source_files = {
 			managers.database:entry_relative_path(path),
 			managers.database:entry_relative_path(global_file),
 		},
 		source_root = managers.database:base_path(),
+		target_db_name = "all",
 		target_db_root = Application:base_path() .. "assets",
+		verbose = false,
 	})
 	DB:reload()
 	managers.database:clear_all_cached_indices()
@@ -442,16 +442,16 @@ function CoreMaterialEditor:_save_global_to_disk(recompile)
 
 	if recompile then
 		Application:data_compile({
+			platform = string.lower(SystemInfo:platform():s()),
 			preprocessor_definitions = "preprocessor_definitions",
 			send_idstrings = false,
-			target_db_name = "all",
-			verbose = false,
-			platform = string.lower(SystemInfo:platform():s()),
 			source_files = {
 				managers.database:entry_relative_path(global_file),
 			},
 			source_root = managers.database:base_path(),
+			target_db_name = "all",
 			target_db_root = Application:base_path() .. "assets",
+			verbose = false,
 		})
 		DB:reload()
 		managers.database:clear_all_cached_indices()

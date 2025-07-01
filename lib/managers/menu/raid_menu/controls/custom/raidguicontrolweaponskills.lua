@@ -29,7 +29,6 @@ function RaidGUIControlWeaponSkills:_create_items()
 	self._rows = {}
 
 	local row_params = {
-		x = 0,
 		get_available_points_callback = callback(self, self, "get_available_points"),
 		h = RaidGUIControlWeaponSkills.ROW_HEIGHT,
 		layer = self._object:layer() + 1,
@@ -39,6 +38,7 @@ function RaidGUIControlWeaponSkills:_create_items()
 		on_selected_weapon_skill_callback = callback(self, self, "on_selected_weapon_skill_callback"),
 		on_unselected_weapon_skill_callback = callback(self, self, "on_unselected_weapon_skill_callback"),
 		toggle_select_item_callback = callback(self, self, "toggle_select_item_callback"),
+		x = 0,
 		y = RaidGUIControlWeaponSkills.FIRST_ROW_Y,
 	}
 
@@ -64,13 +64,13 @@ function RaidGUIControlWeaponSkills:_create_tier_labels()
 		local text = self:translate("menu_weapons_stats_tier_abbreviation", true) .. RaidGUIControlWeaponSkills.ROMAN_NUMERALS[i]
 		local tier_label_params = {
 			align = "center",
-			vertical = "bottom",
 			alpha = RaidGUIControlWeaponSkills.TIER_LABEL_ACTIVE_ALPHA,
 			color = tweak_data.gui.colors.raid_white,
 			font = tweak_data.gui.fonts.din_compressed,
 			font_size = tweak_data.gui.font_sizes.size_24,
 			name = "tier_" .. tostring(i) .. "_label",
 			text = text,
+			vertical = "bottom",
 		}
 		local tier_label = self._tier_panel:text(tier_label_params)
 		local _, _, w, h = tier_label:text_rect()

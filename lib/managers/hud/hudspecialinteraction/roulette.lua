@@ -27,12 +27,12 @@ function HUDSpecialInteractionRoulette:_create_bg_plate()
 	local gui_data = tweak_data.gui:get_full_gui_data(HUDSpecialInteractionRoulette.BACKGROUND_PLATE_IMAGE)
 
 	self._bg_plate = self._object:bitmap({
+		color = gui_data.color,
 		halign = "center",
 		name = "special_interaction_bg_plate",
-		valign = "center",
-		color = gui_data.color,
 		texture = gui_data.texture,
 		texture_rect = gui_data.texture_rect,
+		valign = "center",
 	})
 
 	self._bg_plate:set_center(self._object:center())
@@ -42,13 +42,13 @@ function HUDSpecialInteractionRoulette:_create_pointer()
 	local gui_data = tweak_data.gui:get_full_gui_data(HUDSpecialInteractionRoulette.POINTER_GUI_ID)
 
 	self._pointer_texture = self._object:bitmap({
-		halign = "center",
-		name = "special_interaction_pointer_texture",
-		valign = "center",
 		color = gui_data.color,
+		halign = "center",
 		layer = self._bg_plate:layer() + 1,
+		name = "special_interaction_pointer_texture",
 		texture = gui_data.texture,
 		texture_rect = gui_data.texture_rect,
+		valign = "center",
 	})
 
 	self._pointer_texture:set_center_x(self._object:center_x())
@@ -59,13 +59,13 @@ function HUDSpecialInteractionRoulette:_create_timer()
 	local gui_data = tweak_data.gui:get_full_gui_data(HUDSpecialInteractionRoulette.TIMER_GUI_ID)
 
 	self._timer = CircleBitmapGuiObject:new(self._object, {
-		radius = 128,
-		use_bg = false,
 		color = gui_data.color,
 		image = gui_data.texture,
 		layer = self._bg_plate:layer() + 1,
+		radius = 128,
 		sides = self._sides,
 		total = self._sides,
+		use_bg = false,
 	})
 
 	self._timer:set_center(self._object:center())
@@ -74,22 +74,22 @@ end
 function HUDSpecialInteractionRoulette:_create_wheel()
 	local gui_data = tweak_data.gui:get_full_gui_data(HUDSpecialInteractionRoulette.WHEEL_GUI_ID)
 	local circle = self._object:bitmap({
-		halign = "center",
-		name = "special_interaction_circle_texture",
-		valign = "center",
 		color = gui_data.color,
+		halign = "center",
 		layer = self._bg_plate:layer() + 2,
+		name = "special_interaction_circle_texture",
 		rotation = math.random(360),
 		texture = gui_data.texture,
 		texture_rect = gui_data.texture_rect,
+		valign = "center",
 	})
 
 	circle:set_center(self._object:center())
 
 	self._circle = {
+		circle = circle,
 		completed = false,
 		valid = true,
-		circle = circle,
 	}
 end
 

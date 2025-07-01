@@ -11,99 +11,99 @@ end
 
 function RaidGUIControlIntelBulletin:_layout()
 	self._bg_image = self._object:bitmap({
-		x = 0,
-		y = 0,
 		h = tweak_data.gui.icons.intel_table_newspapers.texture_rect[4],
 		layer = self._object:layer() + 1,
 		texture = tweak_data.gui.icons.intel_table_newspapers.texture,
 		texture_rect = tweak_data.gui.icons.intel_table_newspapers.texture_rect,
 		w = tweak_data.gui.icons.intel_table_newspapers.texture_rect[3],
+		x = 0,
+		y = 0,
 	})
 	self._update_date = self._object:text({
 		align = "left",
+		color = tweak_data.gui.colors.intel_newspapers_text,
+		font = tweak_data.gui.fonts.din_compressed,
+		font_size = tweak_data.gui.font_sizes.size_20,
 		h = 32,
+		layer = self._object:layer() + 2,
 		text = "",
 		vertical = "center",
 		w = 192,
 		x = 96,
 		y = 112,
-		color = tweak_data.gui.colors.intel_newspapers_text,
-		font = tweak_data.gui.fonts.din_compressed,
-		font_size = tweak_data.gui.font_sizes.size_20,
-		layer = self._object:layer() + 2,
 	})
 	self._update_person = self._object:text({
 		align = "right",
+		color = tweak_data.gui.colors.intel_newspapers_text,
+		font = tweak_data.gui.fonts.din_compressed,
+		font_size = tweak_data.gui.font_sizes.size_20,
 		h = 32,
+		layer = self._object:layer() + 2,
 		text = "",
 		vertical = "center",
 		w = 192,
 		x = 96,
 		y = 112,
-		color = tweak_data.gui.colors.intel_newspapers_text,
-		font = tweak_data.gui.fonts.din_compressed,
-		font_size = tweak_data.gui.font_sizes.size_20,
-		layer = self._object:layer() + 2,
 	})
 
 	self._update_person:set_right(self._object:w() - 128)
 
 	local content_panel_scrollable_area_params = {
 		h = 512,
+		layer = self._object:layer() + 2,
 		name = "content_panel_scrollable_area",
 		scroll_step = 19,
 		scrollbar_width = 10,
 		w = 576,
 		x = 256,
 		y = 208,
-		layer = self._object:layer() + 2,
 	}
 
 	self.content_panel_scrollable_area = self._object:scrollable_area(content_panel_scrollable_area_params)
 
 	local content_panel_params = {
 		h = 512,
+		layer = self._object:layer() + 2,
 		w = 572,
 		x = 0,
 		y = 0,
-		layer = self._object:layer() + 2,
 	}
 
 	self._content_panel = self.content_panel_scrollable_area:get_panel():panel(content_panel_params)
 	self._title = self._content_panel:text({
 		align = "center",
-		text = "",
-		vertical = "center",
-		wrap = true,
-		x = 0,
-		y = 0,
 		color = tweak_data.gui.colors.chat_border,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_56,
 		layer = self._object:layer() + 2,
-		w = self._content_panel:w(),
-	})
-	self._text = self._content_panel:text({
-		align = "left",
 		text = "",
-		vertical = "top",
+		vertical = "center",
+		w = self._content_panel:w(),
 		wrap = true,
 		x = 0,
 		y = 0,
+	})
+	self._text = self._content_panel:text({
+		align = "left",
 		color = tweak_data.gui.colors.chat_border,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_20,
 		layer = self._object:layer() + 2,
+		text = "",
+		vertical = "top",
 		w = self._content_panel:w(),
+		wrap = true,
+		x = 0,
+		y = 0,
 	})
 	self._title_image = self._content_panel:bitmap({
 		h = 288,
-		w = 512,
-		x = 32,
-		y = 0,
 		layer = self._object:layer() + 2,
 		texture = tweak_data.gui.icons.intel_table_newspapers.texture,
 		texture_rect = tweak_data.gui.icons.intel_table_newspapers.texture_rect,
+		w = 512,
+		x = 32,
+		y = 0,
 	})
 end
 

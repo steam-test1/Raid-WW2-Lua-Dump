@@ -48,17 +48,17 @@ function RaidGUIControlTopStat:_create_stat_info()
 	local params_player_name = {
 		align = "center",
 		alpha = 0,
-		layer = 1,
-		name = "player_name_label",
-		text = "PLAYER NAME",
-		vertical = "center",
-		x = 0,
-		y = 0,
 		color = RaidGUIControlTopStat.PLAYER_NAME_COLOR,
 		font = RaidGUIControlTopStat.FONT,
 		font_size = RaidGUIControlTopStat.FONT_SIZE,
 		h = RaidGUIControlTopStat.PLAYER_NAME_H,
+		layer = 1,
+		name = "player_name_label",
+		text = "PLAYER NAME",
+		vertical = "center",
 		w = self._object:w(),
+		x = 0,
+		y = 0,
 	}
 
 	self._player_name_label = self._control_panel:label(params_player_name)
@@ -66,18 +66,18 @@ function RaidGUIControlTopStat:_create_stat_info()
 	local params_stat_name = {
 		align = "center",
 		alpha = 0,
-		layer = 3,
-		name = "stat_name_label",
-		text = "Most things done well",
-		vertical = "top",
-		word_wrap = true,
-		wrap = true,
-		x = 0,
 		color = RaidGUIControlTopStat.STAT_NAME_COLOR,
 		font = RaidGUIControlTopStat.FONT,
 		font_size = RaidGUIControlTopStat.FONT_SIZE,
 		h = RaidGUIControlTopStat.STAT_NAME_H,
+		layer = 3,
+		name = "stat_name_label",
+		text = "Most things done well",
+		vertical = "top",
 		w = RaidGUIControlTopStat.WIDTH,
+		word_wrap = true,
+		wrap = true,
+		x = 0,
 		y = self._object:h() - RaidGUIControlTopStat.STAT_NAME_H,
 	}
 
@@ -86,11 +86,11 @@ end
 
 function RaidGUIControlTopStat:_create_icon_panel()
 	local icon_panel_params = {
-		name = "icon_panel",
-		x = 0,
 		h = RaidGUIControlTopStat.STAT_ICON_SIZE,
 		layer = self._object:layer() + 1,
+		name = "icon_panel",
 		w = RaidGUIControlTopStat.STAT_ICON_SIZE,
+		x = 0,
 		y = self._player_name_label:y() + self._player_name_label:h(),
 	}
 
@@ -103,13 +103,13 @@ function RaidGUIControlTopStat:set_data(data)
 
 	local params_stat_icon = {
 		alpha = 0,
-		name = "stat_icon",
-		x = 0,
-		y = 0,
 		h = data.icon_texture_rect[4],
+		name = "stat_icon",
 		texture = data.icon_texture,
 		texture_rect = data.icon_texture_rect,
 		w = data.icon_texture_rect[3],
+		x = 0,
+		y = 0,
 	}
 
 	self._stat_icon = self._icon_panel:bitmap(params_stat_icon)

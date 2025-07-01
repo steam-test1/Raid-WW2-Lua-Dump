@@ -122,84 +122,84 @@ function GuiTweakData:_setup_hud_colors()
 	self.colors.intel_newspapers_text = Color("d6c8b2")
 	self.colors.player_health_colors = {
 		{
-			start_percentage = 0,
 			color = self.colors.progress_red,
+			start_percentage = 0,
 		},
 		{
-			start_percentage = 0.5,
 			color = self.colors.light_grey,
+			start_percentage = 0.25,
 		},
 	}
 	self.colors.player_warcry_colors = {
 		{
-			start_percentage = 0,
 			color = self.colors.light_grey,
+			start_percentage = 0,
 		},
 	}
 	self.colors.player_stamina_colors = {
 		{
-			start_percentage = 0,
 			color = self.colors.progress_red,
+			start_percentage = 0,
 		},
 		{
-			start_percentage = 0.25,
 			color = self.colors.light_grey,
+			start_percentage = 0.25,
 		},
 	}
 	self.colors.ammo_clip_colors = {
 		{
-			start_percentage = 0,
 			color = self.colors.progress_red,
+			start_percentage = 0,
 		},
 		{
-			start_percentage = 0.25,
 			color = self.colors.light_grey,
+			start_percentage = 0.25,
 		},
 	}
 	self.colors.ammo_clip_spent_colors = {
 		{
-			start_percentage = 0,
 			color = self.colors.progress_dark_red,
+			start_percentage = 0,
 		},
 		{
-			start_percentage = 0.25,
 			color = self.colors.dark_grey,
+			start_percentage = 0.25,
 		},
 	}
 	self.colors.turret_heat_colors = {
 		{
-			start_percentage = 0,
 			color = self.colors.progress_yellow,
+			start_percentage = 0,
 		},
 	}
 	self.colors.vehicle_health_colors = {
 		{
-			start_percentage = 0,
 			color = self.colors.progress_red,
+			start_percentage = 0,
 		},
 		{
-			start_percentage = 0.25,
 			color = self.colors.light_grey,
+			start_percentage = 0.25,
 		},
 	}
 	self.colors.vehicle_carry_amount_colors = {
 		{
-			start_percentage = 0,
 			color = self.colors.light_grey,
+			start_percentage = 0,
 		},
 		{
-			start_percentage = 0.25,
 			color = self.colors.progress_red,
+			start_percentage = 0.25,
 		},
 	}
 	self.colors.player_carry_amount_colors = {
 		{
-			start_percentage = 0,
 			color = self.colors.raid_gold,
+			start_percentage = 0,
 		},
 		{
-			start_percentage = 0.75,
 			color = self.colors.progress_red,
+			start_percentage = 0.75,
 		},
 	}
 
@@ -424,6 +424,7 @@ function GuiTweakData:_setup_crosshairs()
 		core_dot = "weapons_reticles_static_diamond",
 		degree_field = 0,
 		edge_pips = 0,
+		edge_pips_icon = nil,
 	}
 end
 
@@ -5640,9 +5641,10 @@ function GuiTweakData:_setup_hud_reticles()
 end
 
 function GuiTweakData:_setup_hud_status_effects()
-	local function _make_icon(name, x, y)
+	local function _make_icon(name, x, y, path, color)
 		self.icons[name] = {
-			texture = "ui/atlas/raid_atlas_hud_status_effects",
+			color = color,
+			texture = path or "ui/atlas/raid_atlas_hud_status_effects",
 			texture_rect = {
 				64 * x,
 				64 * y,
@@ -5783,6 +5785,7 @@ function GuiTweakData:_setup_skill_icons()
 	_make_icon("skills_toughness", 0, 7)
 	_make_icon("skills_big_game", 1, 7)
 	_make_icon("skills_sapper", 2, 7)
+	_make_icon("skills_cache_basket", 3, 7)
 
 	self.icons.player_panel_warcry_berserk = {}
 	self.icons.player_panel_warcry_berserk.texture = "ui/atlas/skilltree/raid_atlas_wc_hud_small"
@@ -7605,13 +7608,11 @@ function GuiTweakData:_setup_old_tweak_data()
 	end
 
 	self.fav_videos = {
-		db_url = "http://www.overkillsoftware.com/?page_id=1263",
-		num_items = 3,
-		title_id = "menu_fav_videos",
 		button = {
 			text_id = "menu_fav_video_homepage",
 			url = "http://www.overkillsoftware.com/?page_id=1263",
 		},
+		db_url = "http://www.overkillsoftware.com/?page_id=1263",
 		item_list = {
 			{
 				id = "fav3",
@@ -7629,6 +7630,8 @@ function GuiTweakData:_setup_old_tweak_data()
 				use_db = true,
 			},
 		},
+		num_items = 3,
+		title_id = "menu_fav_videos",
 	}
 	self.masks_sort_order = {}
 	self.suspicion_to_visibility = {}
@@ -7666,7 +7669,7 @@ function GuiTweakData:_setup_old_tweak_data()
 	self.server_browser.new_job_min_time = 1.5
 	self.server_browser.new_job_max_time = 3.5
 	self.server_browser.refresh_servers_time = 5
-	self.server_browser.total_active_jobs = 40
+	self.server_browser.total_active_jobs = 50
 	self.server_browser.max_active_server_jobs = 100
 	self.rename_max_letters = 20
 	self.rename_skill_set_max_letters = 15

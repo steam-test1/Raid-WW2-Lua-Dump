@@ -279,8 +279,9 @@ function PlayerTweakData:_init_default_class_tweak_data()
 	self.class_defaults.default.damage.FALL_DAMAGE_MIN_HEIGHT = 310
 	self.class_defaults.default.damage.FALL_DAMAGE_FATAL_HEIGHT = 850
 	self.class_defaults.default.damage.FALL_DAMAGE_DEATH_HEIGHT = 1100
-	self.class_defaults.default.damage.FALL_DAMAGE_MIN = 10
-	self.class_defaults.default.damage.FALL_DAMAGE_MAX = 85
+	self.class_defaults.default.damage.FALL_DAMAGE_MIN = 5
+	self.class_defaults.default.damage.FALL_DAMAGE_MAX = 75
+	self.class_defaults.default.damage.FALL_DAMAGE_MUL_LADDER = 0.5
 	self.class_defaults.default.stealth = {}
 	self.class_defaults.default.stealth.FALL_ALERT_MIN_HEIGHT = 250
 	self.class_defaults.default.stealth.FALL_ALERT_MAX_HEIGHT = 600

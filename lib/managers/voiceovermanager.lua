@@ -155,6 +155,14 @@ function VoiceOverManager:guard_back_to_patrol(source_unit)
 	self:_play_sound(source_unit, "ste_investigateresult")
 end
 
+function VoiceOverManager:guard_found_coin(source_unit)
+	if self._disabled then
+		return
+	end
+
+	self:_play_sound(source_unit, "ste_coin_found")
+end
+
 function VoiceOverManager:enemy_reload(source_unit)
 	self:_play_sound(source_unit, "reload", false)
 end

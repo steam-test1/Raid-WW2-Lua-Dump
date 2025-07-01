@@ -94,17 +94,17 @@ function MenuNodeGui:_setup_panels(node)
 	})
 	self._topic_text2 = self._topic_panel2:text({
 		align = "right",
-		halign = "right",
-		valign = "bottom",
-		vertical = "bottom",
-		x = 0,
-		y = 0,
 		color = self.row_item_color,
 		font = tweak_data.gui.font_paths.din_compressed[20],
 		font_size = tweak_data.gui.font_sizes.size_20,
+		halign = "right",
 		layer = self.layers.items + 1,
 		text = node:parameters().topic_id and managers.localization:text(node:parameters().topic_id) or "Topic",
+		valign = "bottom",
+		vertical = "bottom",
 		w = safe_rect_pixels.width,
+		x = 0,
+		y = 0,
 	})
 
 	local _, _, w, h = self._topic_text2:text_rect()
@@ -120,12 +120,12 @@ function MenuNodeGui:_setup_panels(node)
 	local aw = safe_rect_pixels.width - self:_mid_align()
 
 	self._info_bg_rect = self.safe_rect_panel:rect({
-		visible = false,
-		x = 0,
 		color = Color(0.5, 0, 0, 0),
 		h = safe_rect_pixels.height - tweak_data.load_level.upper_saferect_border * 2,
 		layer = self.layers.first,
+		visible = false,
 		w = safe_rect_pixels.width * 0.41,
+		x = 0,
 		y = tweak_data.load_level.upper_saferect_border,
 	})
 
@@ -139,17 +139,17 @@ function MenuNodeGui:_setup_panels(node)
 	})
 	local mini_text = mini_info:text({
 		align = "left",
+		color = Color.white,
+		font = tweak_data.gui.font_paths.din_compressed[20],
+		font_size = tweak_data.gui.font_sizes.size_20,
 		halign = "top",
+		layer = self.layers.items,
 		text = "",
 		vertical = "top",
 		word_wrap = true,
 		wrap = true,
 		x = 0,
 		y = 0,
-		color = Color.white,
-		font = tweak_data.gui.font_paths.din_compressed[20],
-		font_size = tweak_data.gui.font_sizes.size_20,
-		layer = self.layers.items,
 	})
 
 	mini_info:set_width((self._info_bg_rect:w() - tweak_data.menu.info_padding * 2) * 2)
@@ -230,11 +230,11 @@ end
 function MenuNodeGui:_create_align(node)
 	self._align_data = {}
 	self._align_data.panel = self._item_panel_parent:panel({
-		y = 0,
 		h = self._item_panel_parent:h(),
 		layer = self.layers.marker,
 		w = self._align_line_padding * 2,
 		x = self:_left_align(),
+		y = 0,
 	})
 end
 
@@ -242,10 +242,10 @@ function MenuNodeGui:_create_marker(node)
 	self._marker_data = {}
 	self._marker_data.marker = self.item_panel:panel({
 		h = 10,
+		layer = self.layers.marker,
 		w = 1920,
 		x = 0,
 		y = 0,
-		layer = self.layers.marker,
 	})
 end
 
@@ -306,10 +306,10 @@ function MenuNodeGui:_setup_item_panel(safe_rect, res)
 
 		self.item_panel:rect({
 			alpha = 0,
+			color = Color.black,
 			halign = "scale",
 			name = "bg_color",
 			valign = "scale",
-			color = Color.black,
 			width = bg_width,
 		})
 	end
@@ -348,14 +348,14 @@ function MenuNodeGui:_create_menu_item(row_item)
 	elseif row_item.item:parameters().back then
 		row_item.gui_panel = self._item_panel_parent:panel({
 			h = 30,
-			w = 30,
 			layer = self.layers.items,
+			w = 30,
 		})
 	elseif row_item.item:parameters().pd2_corner then
 		row_item.gui_panel = self._item_panel_parent:panel({
 			h = 3,
-			w = 3,
 			layer = self.layers.items,
+			w = 3,
 		})
 		row_item.gui_pd2_panel = self.ws:panel():panel({
 			layer = self.layers.items,
@@ -385,12 +385,12 @@ function MenuNodeGui:_create_menu_item(row_item)
 		row_item.gui_panel:set_text(utf8.to_upper(row_item.gui_panel:text()))
 
 		row_item.gui_level_panel = self._item_panel_parent:panel({
-			visible = false,
-			x = 0,
-			y = 0,
 			h = self._item_panel_parent:h(),
 			layer = self.layers.items,
+			visible = false,
 			w = self:_left_align(),
+			x = 0,
+			y = 0,
 		})
 
 		local level_data = row_item.item:parameters().level_id
@@ -401,29 +401,29 @@ function MenuNodeGui:_create_menu_item(row_item)
 
 		row_item.level_title = row_item.gui_level_panel:text({
 			align = "left",
+			color = row_item.color,
+			font = self.font,
+			font_size = self.font_size,
 			h = 128,
 			layer = 1,
+			text = utf8.to_upper(row_item.gui_panel:text()),
 			vertical = "top",
 			w = 50,
 			word_wrap = false,
 			wrap = false,
-			color = row_item.color,
-			font = self.font,
-			font_size = self.font_size,
-			text = utf8.to_upper(row_item.gui_panel:text()),
 		})
 		row_item.level_text = row_item.gui_level_panel:text({
 			align = "left",
+			color = row_item.color,
+			font = tweak_data.gui.font_paths.din_compressed[20],
+			font_size = tweak_data.gui.font_sizes.size_20,
 			h = 128,
 			layer = 1,
+			text = utf8.to_upper(description),
 			vertical = "top",
 			w = 50,
 			word_wrap = true,
 			wrap = true,
-			color = row_item.color,
-			font = tweak_data.gui.font_paths.din_compressed[20],
-			font_size = tweak_data.gui.font_sizes.size_20,
-			text = utf8.to_upper(description),
 		})
 
 		self:_align_normal(row_item)
@@ -435,27 +435,27 @@ function MenuNodeGui:_create_menu_item(row_item)
 		row_item.chat_output = row_item.gui_panel:gui(Idstring("guis/chat/textscroll"), {
 			h = 120,
 			halign = "grow",
+			layer = self.layers.items,
 			valign = "grow",
 			w = 500,
-			layer = self.layers.items,
 		})
 		row_item.chat_input = row_item.gui_panel:gui(Idstring("guis/chat/chat_input"), {
 			h = 25,
 			halign = "grow",
+			layer = self.layers.items,
 			valign = "bottom",
 			w = 500,
 			y = 125,
-			layer = self.layers.items,
 		})
 		row_item.chat_input:script().enter_callback = callback(self, self, "_cb_chat", row_item)
 		row_item.chat_input:script().esc_callback = callback(self, self, "_cb_unlock", row_item)
 		row_item.chat_input:script().typing_callback = callback(self, self, "_cb_lock", row_item)
 		row_item.border = row_item.gui_panel:rect({
+			color = tweak_data.hud.prime_color,
 			h = 2,
+			layer = self.layers.items,
 			visible = false,
 			w = 800,
-			color = tweak_data.hud.prime_color,
-			layer = self.layers.items,
 		})
 
 		self:_align_chat(row_item)
@@ -514,38 +514,38 @@ end
 
 function MenuNodeGui:_create_info_panel(row_item)
 	row_item.gui_info_panel = self.safe_rect_panel:panel({
-		visible = false,
-		x = 0,
-		y = 0,
 		h = self._item_panel_parent:h(),
 		layer = self.layers.first,
+		visible = false,
 		w = self:_left_align(),
+		x = 0,
+		y = 0,
 	})
 	row_item.help_title = row_item.gui_info_panel:text({
 		align = "left",
-		halign = "top",
-		vertical = "top",
-		x = 0,
-		y = 0,
 		color = Color.white,
 		font = row_item.font,
 		font_size = self.font_size,
+		halign = "top",
 		layer = self.layers.items,
 		text = utf8.to_upper(row_item.text),
+		vertical = "top",
+		x = 0,
+		y = 0,
 	})
 	row_item.help_text = row_item.gui_info_panel:text({
 		align = "left",
+		color = Color.white,
+		font = tweak_data.gui.font_paths.din_compressed[20],
+		font_size = tweak_data.gui.font_sizes.size_20,
 		halign = "top",
+		layer = self.layers.items,
+		text = utf8.to_upper(row_item.help_text),
 		vertical = "top",
 		word_wrap = true,
 		wrap = true,
 		x = 0,
 		y = 0,
-		color = Color.white,
-		font = tweak_data.gui.font_paths.din_compressed[20],
-		font_size = tweak_data.gui.font_sizes.size_20,
-		layer = self.layers.items,
-		text = utf8.to_upper(row_item.help_text),
 	})
 end
 
@@ -562,42 +562,42 @@ end
 
 function MenuNodeGui:_create_lobby_campaign(row_item)
 	row_item.gui_info_panel = self.safe_rect_panel:panel({
-		visible = false,
-		x = 0,
-		y = 0,
 		h = self._item_panel_parent:h(),
 		layer = self.layers.items,
+		visible = false,
 		w = self:_left_align(),
+		x = 0,
+		y = 0,
 	})
 	row_item.level_id = Global.game_settings.level_id
 	row_item.level_title = row_item.gui_info_panel:text({
 		align = "left",
-		halign = "top",
-		vertical = "top",
-		x = 0,
-		y = 0,
 		color = Color.white,
 		font = row_item.font,
 		font_size = self.font_size,
+		halign = "top",
 		layer = self.layers.items,
 		text = string.upper(managers.localization:text(tweak_data.levels[row_item.level_id].name_id)),
+		vertical = "top",
+		x = 0,
+		y = 0,
 	})
 
 	local briefing_text = string.upper(managers.localization:text(tweak_data.levels[row_item.level_id].briefing_id))
 
 	row_item.level_briefing = row_item.gui_info_panel:text({
 		align = "left",
+		color = Color.white,
+		font = tweak_data.gui.font_paths.din_compressed[20],
+		font_size = tweak_data.gui.font_sizes.size_20,
 		halign = "top",
+		layer = self.layers.items,
+		text = briefing_text,
 		vertical = "top",
 		word_wrap = true,
 		wrap = true,
 		x = 0,
 		y = 0,
-		color = Color.white,
-		font = tweak_data.gui.font_paths.din_compressed[20],
-		font_size = tweak_data.gui.font_sizes.size_20,
-		layer = self.layers.items,
-		text = briefing_text,
 	})
 	MenuNodeGui.lobby_campaign = {
 		gui_info_panel = row_item.gui_info_panel,
@@ -673,52 +673,52 @@ end
 
 function MenuNodeGui:_create_lobby_difficulty(row_item)
 	row_item.gui_info_panel = self.safe_rect_panel:panel({
-		visible = false,
-		x = 0,
-		y = 0,
 		h = self._item_panel_parent:h(),
 		layer = self.layers.items,
+		visible = false,
 		w = self:_left_align(),
+		x = 0,
+		y = 0,
 	})
 	row_item.difficulty_title = row_item.gui_info_panel:text({
 		align = "left",
-		halign = "top",
-		vertical = "top",
-		x = 0,
-		y = 0,
 		color = Color.white,
 		font = row_item.font,
 		font_size = self.font_size,
+		halign = "top",
 		layer = self.layers.items,
 		text = utf8.to_upper(row_item.text),
+		vertical = "top",
+		x = 0,
+		y = 0,
 	})
 	row_item.help_text = row_item.gui_info_panel:text({
 		align = "left",
+		color = Color.white,
+		font = tweak_data.gui.font_paths.din_compressed[20],
+		font_size = tweak_data.gui.font_sizes.size_20,
 		halign = "top",
+		layer = self.layers.items,
+		text = utf8.to_upper(managers.localization:text("menu_difficulty_help")),
 		vertical = "top",
 		word_wrap = true,
 		wrap = true,
 		x = 0,
 		y = 0,
-		color = Color.white,
-		font = tweak_data.gui.font_paths.din_compressed[20],
-		font_size = tweak_data.gui.font_sizes.size_20,
-		layer = self.layers.items,
-		text = utf8.to_upper(managers.localization:text("menu_difficulty_help")),
 	})
 	row_item.difficulty_help_text = row_item.gui_info_panel:text({
 		align = "left",
+		color = Color.white,
+		font = tweak_data.gui.font_paths.din_compressed[20],
+		font_size = tweak_data.gui.font_sizes.size_20,
 		halign = "top",
+		layer = self.layers.items,
+		text = ut8f.to_upper("sdsd"),
 		vertical = "top",
 		word_wrap = true,
 		wrap = true,
 		x = 0,
 		y = 0,
-		color = Color.white,
-		font = tweak_data.gui.font_paths.din_compressed[20],
-		font_size = tweak_data.gui.font_sizes.size_20,
-		layer = self.layers.items,
-		text = ut8f.to_upper("sdsd"),
 	})
 end
 
@@ -996,21 +996,21 @@ end
 
 function MenuNodeGui:_text_item_part(row_item, panel, align_x, text_align)
 	local new_text = panel:text({
-		halign = "left",
-		kern = 2,
-		name = "row_item_gui_panel_text_item_part",
-		vertical = "center",
-		y = 0,
 		align = text_align or row_item.align or "left",
 		blend_mode = self.row_item_blend_mode or "normal",
 		color = row_item.item:parameters().color or row_item.color,
 		font = tweak_data.gui.font_paths.din_compressed[20],
 		font_size = tweak_data.gui.font_sizes.size_20,
+		halign = "left",
+		kern = 2,
 		layer = self.layers.items,
+		name = "row_item_gui_panel_text_item_part",
 		render_template = Idstring("VertexColorTextured"),
 		text = row_item.to_upper and utf8.to_upper(row_item.text) or row_item.text,
+		vertical = "center",
 		w = panel:w(),
 		x = align_x,
+		y = 0,
 	})
 	local color_ranges = row_item.color_ranges
 
@@ -1526,13 +1526,13 @@ function MenuNodeMainGui:_setup_item_rows(node)
 
 	if Application:debug_enabled() or IS_PC then
 		self._version_string = self.ws:panel():text({
-			alpha = 0.5,
-			name = "version_string",
-			vertical = "bottom",
 			align = IS_PC and "right" or "left",
+			alpha = 0.5,
 			font = tweak_data.gui.font_paths.din_compressed[20],
 			font_size = tweak_data.gui.font_sizes.size_20,
+			name = "version_string",
 			text = Application:version(),
+			vertical = "bottom",
 		})
 	end
 end

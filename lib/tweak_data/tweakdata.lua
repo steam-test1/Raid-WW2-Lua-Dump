@@ -617,72 +617,72 @@ function TweakData:init()
 	self.overlay_effects = {}
 	self.overlay_effects.spectator = {
 		blend_mode = "normal",
+		color = Color(1, 0, 0, 0),
 		fade_in = 3,
 		fade_out = 2,
 		play_paused = true,
-		color = Color(1, 0, 0, 0),
 		timer = TimerManager:main(),
 	}
 	self.overlay_effects.level_fade_in = {
 		blend_mode = "normal",
+		color = Color(1, 0, 0, 0),
 		fade_in = 0,
 		fade_out = 3,
 		play_paused = true,
 		sustain = 1,
-		color = Color(1, 0, 0, 0),
 		timer = TimerManager:game(),
 	}
 	self.overlay_effects.fade_in = {
 		blend_mode = "normal",
+		color = Color(1, 0, 0, 0),
 		fade_in = 0,
 		fade_out = 3,
 		play_paused = true,
 		sustain = 0,
-		color = Color(1, 0, 0, 0),
 		timer = TimerManager:main(),
 	}
 	self.overlay_effects.fade_out = {
 		blend_mode = "normal",
+		color = Color(1, 0, 0, 0),
 		fade_in = 3,
 		fade_out = 0,
 		play_paused = true,
 		sustain = 30,
-		color = Color(1, 0, 0, 0),
 		timer = TimerManager:main(),
 	}
 	self.overlay_effects.fade_out_permanent = {
 		blend_mode = "normal",
+		color = Color(1, 0, 0, 0),
 		fade_in = 1,
 		fade_out = 0,
 		play_paused = true,
-		color = Color(1, 0, 0, 0),
 		timer = TimerManager:main(),
 	}
 	self.overlay_effects.fade_out_in = {
 		blend_mode = "normal",
+		color = Color(1, 0, 0, 0),
 		fade_in = 1,
 		fade_out = 1,
 		play_paused = true,
 		sustain = 1,
-		color = Color(1, 0, 0, 0),
 		timer = TimerManager:main(),
 	}
 	self.overlay_effects.element_fade_in = {
 		blend_mode = "normal",
+		color = Color(1, 0, 0, 0),
 		fade_in = 0,
 		fade_out = 3,
 		play_paused = true,
 		sustain = 0,
-		color = Color(1, 0, 0, 0),
 		timer = TimerManager:main(),
 	}
 	self.overlay_effects.element_fade_out = {
 		blend_mode = "normal",
+		color = Color(1, 0, 0, 0),
 		fade_in = 3,
 		fade_out = 0,
 		play_paused = true,
 		sustain = 0,
-		color = Color(1, 0, 0, 0),
 		timer = TimerManager:main(),
 	}
 
@@ -692,16 +692,15 @@ function TweakData:init()
 
 	self.overlay_effects.damage = {
 		blend_mode = "add",
-		fade_in = 0,
 		color = d_color,
+		fade_in = 0,
 		fade_out = d_fade_out,
 		sustain = d_sustain,
 	}
 	self.overlay_effects.damage_left = {
 		blend_mode = "add",
-		fade_in = 0,
-		orientation = "horizontal",
 		color = d_color,
+		fade_in = 0,
 		fade_out = d_fade_out,
 		gradient_points = {
 			0,
@@ -713,13 +712,13 @@ function TweakData:init()
 			1,
 			Color():with_alpha(0),
 		},
+		orientation = "horizontal",
 		sustain = d_sustain,
 	}
 	self.overlay_effects.damage_right = {
 		blend_mode = "add",
-		fade_in = 0,
-		orientation = "horizontal",
 		color = d_color,
+		fade_in = 0,
 		fade_out = d_fade_out,
 		gradient_points = {
 			1,
@@ -731,13 +730,13 @@ function TweakData:init()
 			0,
 			Color():with_alpha(0),
 		},
+		orientation = "horizontal",
 		sustain = d_sustain,
 	}
 	self.overlay_effects.damage_up = {
 		blend_mode = "add",
-		fade_in = 0,
-		orientation = "vertical",
 		color = d_color,
+		fade_in = 0,
 		fade_out = d_fade_out,
 		gradient_points = {
 			0,
@@ -749,13 +748,13 @@ function TweakData:init()
 			1,
 			Color():with_alpha(0),
 		},
+		orientation = "vertical",
 		sustain = d_sustain,
 	}
 	self.overlay_effects.damage_down = {
 		blend_mode = "add",
-		fade_in = 0,
-		orientation = "vertical",
 		color = d_color,
+		fade_in = 0,
 		fade_out = d_fade_out,
 		gradient_points = {
 			1,
@@ -767,17 +766,19 @@ function TweakData:init()
 			0,
 			Color():with_alpha(0),
 		},
+		orientation = "vertical",
 		sustain = d_sustain,
 	}
 	self.overlay_effects.maingun_zoomed = {
 		blend_mode = "add",
+		color = Color(0.1, 1, 1, 1),
 		fade_in = 0,
 		fade_out = 0.4,
 		sustain = 0,
-		color = Color(0.1, 1, 1, 1),
 	}
 	self.overlay_effects.fade_out_e3_demo = {
 		blend_mode = "normal",
+		color = Color(1, 0, 0, 0),
 		fade_in = 3,
 		fade_out = 0,
 		font = "fonts/font_large_mf",
@@ -786,9 +787,8 @@ function TweakData:init()
 		sustain = 20,
 		text = "Great job, Raid gang!\n\nYou've reached the end of our PAX EAST demo.\n",
 		text_blend_mode = "add",
-		text_to_upper = true,
-		color = Color(1, 0, 0, 0),
 		text_color = Color(255, 255, 204, 0) / 255,
+		text_to_upper = true,
 		timer = TimerManager:main(),
 	}
 	self.materials = {}

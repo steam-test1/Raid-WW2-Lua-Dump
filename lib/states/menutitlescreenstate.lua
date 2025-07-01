@@ -36,8 +36,8 @@ function MenuTitlescreenState:setup()
 	local panel = self._full_workspace:panel()
 
 	panel:rect({
-		visible = false,
 		color = Color.black,
+		visible = false,
 	})
 
 	self._background = panel:bitmap({
@@ -58,12 +58,6 @@ function MenuTitlescreenState:setup()
 	self._background:set_center_x(panel:center_x())
 
 	local gradient_params = {
-		h = 320,
-		name = "text_background_gradient",
-		orientation = "vertical",
-		valign = "grow",
-		x = 0,
-		y = 0,
 		gradient_points = {
 			0,
 			Color.black:with_alpha(0),
@@ -72,8 +66,14 @@ function MenuTitlescreenState:setup()
 			1,
 			Color.black:with_alpha(1),
 		},
+		h = 320,
 		layer = self._background:layer() + 10,
+		name = "text_background_gradient",
+		orientation = "vertical",
+		valign = "grow",
 		w = panel:w(),
+		x = 0,
+		y = 0,
 	}
 
 	self._text_gradient = panel:gradient(gradient_params)
@@ -82,9 +82,9 @@ function MenuTitlescreenState:setup()
 
 	local logo_params = {
 		alpha = 0,
-		name = "title_screen_game_logo",
 		h = tweak_data.gui:icon_h(MenuTitlescreenState.GAME_LOGO_IMAGE) * y_scale,
 		layer = self._text_gradient:layer() + 1,
+		name = "title_screen_game_logo",
 		texture = tweak_data.gui.icons[MenuTitlescreenState.GAME_LOGO_IMAGE].texture,
 		texture_rect = tweak_data.gui.icons[MenuTitlescreenState.GAME_LOGO_IMAGE].texture_rect,
 		w = tweak_data.gui:icon_w(MenuTitlescreenState.GAME_LOGO_IMAGE) * y_scale,
@@ -99,16 +99,16 @@ function MenuTitlescreenState:setup()
 	local legal_text_params = {
 		align = "center",
 		alpha = 0,
-		layer = 50,
-		name = "legal_text",
-		vertical = "bottom",
-		wrap = true,
 		color = MenuTitlescreenState.TEXT_COLOR,
 		font = tweak_data.gui:get_font_path(MenuTitlescreenState.LEGAL_TEXT_FONT, legal_text_font_size),
 		font_size = legal_text_font_size,
 		h = self._workspace:panel():h(),
+		layer = 50,
+		name = "legal_text",
 		text = managers.localization:text("legal_text"),
+		vertical = "bottom",
 		w = self._workspace:panel():w(),
+		wrap = true,
 	}
 
 	self._legal_text = self._workspace:panel():text(legal_text_params)
@@ -122,16 +122,16 @@ function MenuTitlescreenState:setup()
 	local press_any_key_prompt_params = {
 		align = "center",
 		alpha = 0,
-		name = "press_any_key_text",
-		vertical = "bottom",
-		wrap = true,
 		color = MenuTitlescreenState.TEXT_COLOR,
 		font = tweak_data.gui:get_font_path(MenuTitlescreenState.FONT, press_any_key_font_size),
 		font_size = press_any_key_font_size,
 		h = self._workspace:panel():h(),
 		layer = self._legal_text:layer(),
+		name = "press_any_key_text",
 		text = utf8.to_upper(managers.localization:text(IS_PC and "press_any_key" or "press_any_key_controller")),
+		vertical = "bottom",
 		w = self._workspace:panel():w(),
+		wrap = true,
 	}
 
 	self._press_any_key_text = self._workspace:panel():text(press_any_key_prompt_params)
@@ -145,14 +145,14 @@ function MenuTitlescreenState:setup()
 	local din_path = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.size_24)
 	local text = self._workspace:panel():text({
 		align = "center",
-		layer = 2,
-		vertical = "bottom",
-		visible = false,
 		color = Color.white,
 		font = din_path,
 		font_size = tweak_data.gui.font_sizes.size_24,
 		h = self._workspace:panel():h(),
+		layer = 2,
 		text = managers.localization:text(text_id),
+		vertical = "bottom",
+		visible = false,
 		w = self._workspace:panel():w(),
 	})
 

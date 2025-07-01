@@ -41,22 +41,22 @@ end
 function RaidGUIControlPeerRewardCardPack:_create_card_pack_details()
 	local params_weapon_point_image = {
 		name = "card_pack_image",
-		x = 0,
-		y = 0,
 		texture = tweak_data.gui.icons[RaidGUIControlPeerRewardCardPack.ICON].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlPeerRewardCardPack.ICON].texture_rect,
+		x = 0,
+		y = 0,
 	}
 
 	self._weapon_point_image = self._object:bitmap(params_weapon_point_image)
 
 	local params_player_name = {
 		align = "left",
-		layer = 1,
-		name = "peer_card_pack_name_label",
-		text = "",
 		color = RaidGUIControlPeerRewardCardPack.NAME_COLOR,
 		font = RaidGUIControlPeerRewardCardPack.FONT,
 		font_size = RaidGUIControlPeerRewardCardPack.NAME_FONT_SIZE,
+		layer = 1,
+		name = "peer_card_pack_name_label",
+		text = "",
 		w = self._object:w() - RaidGUIControlPeerRewardCardPack.TEXT_X,
 		x = RaidGUIControlPeerRewardCardPack.TEXT_X,
 		y = RaidGUIControlPeerRewardCardPack.NAME_Y,
@@ -70,11 +70,11 @@ function RaidGUIControlPeerRewardCardPack:_create_card_pack_details()
 
 	local params_card_pack_description = {
 		align = "left",
-		layer = 1,
-		name = "card_pack_description_label",
 		color = RaidGUIControlPeerRewardCardPack.DESCRIPTION_COLOR,
 		font = RaidGUIControlPeerRewardCardPack.FONT,
 		font_size = RaidGUIControlPeerRewardCardPack.DESCRIPTION_FONT_SIZE,
+		layer = 1,
+		name = "card_pack_description_label",
 		text = self:translate(RaidGUIControlPeerRewardCardPack.DESCRIPTION, true),
 		w = self._name_label:w(),
 		x = self._name_label:x(),

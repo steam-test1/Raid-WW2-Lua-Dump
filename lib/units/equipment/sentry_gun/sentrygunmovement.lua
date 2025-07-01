@@ -26,9 +26,9 @@ function SentryGunMovement:init(unit)
 		self._pos_rsrv_id = managers.navigation:get_pos_reservation_id()
 		self._nav_tracker = managers.navigation:create_nav_tracker(self._unit:position())
 		self._pos_reservation = {
-			radius = 30,
 			filter = self._pos_rsrv_id,
 			position = self._unit:position(),
+			radius = 30,
 		}
 
 		managers.navigation:add_pos_reservation(self._pos_reservation)
@@ -216,8 +216,8 @@ function SentryGunMovement:nav_tracker()
 	if not alive(self._nav_tracker) then
 		self._nav_tracker = managers.navigation:create_nav_tracker(self._unit:position())
 		self._pos_reservation = {
-			radius = 30,
 			position = self._unit:position(),
+			radius = 30,
 		}
 
 		managers.navigation:add_pos_reservation(self._pos_reservation)

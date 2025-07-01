@@ -226,8 +226,8 @@ function MenuCallbackHandler:on_account_picker()
 		end
 
 		managers.system_menu:show_select_user({
-			count = 1,
 			callback_func = f,
+			count = 1,
 		})
 	end
 
@@ -669,8 +669,8 @@ function MenuCallbackHandler:apply_and_save_render_settings()
 
 	if game_state_machine:current_state()._name ~= "menu_main" and alive(fullscreen_ws) then
 		local black_overlay = fullscreen_ws:panel():panel({
-			name = "apply_render_settings_panel",
 			layer = tweak_data.gui.MOUSE_LAYER - 1,
+			name = "apply_render_settings_panel",
 		})
 
 		black_overlay:rect({

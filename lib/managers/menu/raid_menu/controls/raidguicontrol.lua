@@ -47,10 +47,10 @@ function RaidGUIControl:create_border()
 	local h = self._object:h()
 
 	self._border_left = self._parent_panel:gradient({
+		h = h,
 		layer = 2,
 		name = "border_left",
 		orientation = "vertical",
-		h = h,
 		w = border_thickness,
 		x = x,
 		y = y,
@@ -64,10 +64,10 @@ function RaidGUIControl:create_border()
 	})
 
 	self._border_right = self._parent_panel:gradient({
+		h = h,
 		layer = 2,
 		name = "border_right",
 		orientation = "vertical",
-		h = h,
 		w = border_thickness,
 		x = x + w - border_thickness,
 		y = y,
@@ -81,10 +81,10 @@ function RaidGUIControl:create_border()
 	})
 
 	self._border_up = self._parent_panel:gradient({
+		h = border_thickness,
 		layer = 2,
 		name = "border_up",
 		orientation = "horizontal",
-		h = border_thickness,
 		w = w,
 		x = x,
 		y = y,
@@ -104,10 +104,10 @@ function RaidGUIControl:create_border()
 	})
 
 	self._border_down = self._parent_panel:gradient({
+		h = border_thickness,
 		layer = 2,
 		name = "border_down",
 		orientation = "horizontal",
-		h = border_thickness,
 		w = w,
 		x = x,
 		y = y + h - border_thickness,

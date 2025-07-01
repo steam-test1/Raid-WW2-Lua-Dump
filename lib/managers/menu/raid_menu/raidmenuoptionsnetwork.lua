@@ -30,8 +30,8 @@ function RaidMenuOptionsNetwork:_layout_network()
 	local start_y = 320
 	local default_width = 512
 	local packet_throttling_params = {
-		name = "packet_throttling_params",
 		description = utf8.to_upper(managers.localization:text("menu_packet_throttling")),
+		name = "packet_throttling_params",
 		on_click_callback = callback(self, self, "on_click_toggle_packet_throttling"),
 		on_menu_move = {
 			down = "push_to_talk",
@@ -44,8 +44,8 @@ function RaidMenuOptionsNetwork:_layout_network()
 	self._toggle_menu_packet_throttling = self._root_panel:toggle_button(packet_throttling_params)
 
 	local forwarding_params = {
-		name = "push_to_talk",
 		description = utf8.to_upper(managers.localization:text("menu_net_forwarding")),
+		name = "push_to_talk",
 		on_click_callback = callback(self, self, "on_click_toggle_net_forwarding"),
 		on_menu_move = {
 			down = "use_compression",
@@ -59,8 +59,8 @@ function RaidMenuOptionsNetwork:_layout_network()
 	self._toggle_menu_net_forwarding = self._root_panel:toggle_button(forwarding_params)
 
 	local use_compression_params = {
-		name = "use_compression",
 		description = utf8.to_upper(managers.localization:text("menu_net_use_compression")),
+		name = "use_compression",
 		on_click_callback = callback(self, self, "on_click_toggle_net_use_compression"),
 		on_menu_move = {
 			up = "push_to_talk",
@@ -118,8 +118,8 @@ function RaidMenuOptionsNetwork:bind_controller_inputs()
 		},
 		keyboard = {
 			{
-				key = "footer_back",
 				callback = callback(self, self, "_on_legend_pc_back", nil),
+				key = "footer_back",
 			},
 		},
 	}

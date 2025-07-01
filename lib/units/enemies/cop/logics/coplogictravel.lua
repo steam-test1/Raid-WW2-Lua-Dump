@@ -781,12 +781,12 @@ function CopLogicTravel._chk_request_action_walk_to_advance_pos(data, my_data, s
 		local path = my_data.advance_path
 		local new_action_data = {
 			body_part = 2,
-			type = "walk",
 			end_pose = end_pose,
 			end_rot = end_rot,
 			nav_path = path,
 			no_strafe = no_strafe,
 			path_simplified = my_data.path_is_precise,
+			type = "walk",
 			variant = speed or "run",
 		}
 
@@ -811,17 +811,17 @@ function CopLogicTravel._determine_destination_occupation(data, objective)
 	if objective.type == "defend_area" then
 		if objective.cover then
 			occupation = {
-				type = "defend",
 				cover = objective.cover,
 				radius = objective.radius,
 				seg = objective.nav_seg,
+				type = "defend",
 			}
 		elseif objective.pos then
 			occupation = {
-				type = "defend",
 				pos = objective.pos,
 				radius = objective.radius,
 				seg = objective.nav_seg,
+				type = "defend",
 			}
 		else
 			local near_pos = objective.follow_unit and objective.follow_unit:movement():nav_tracker():field_position()
@@ -833,10 +833,10 @@ function CopLogicTravel._determine_destination_occupation(data, objective)
 				}
 
 				occupation = {
-					type = "defend",
 					cover = cover_entry,
 					radius = objective.radius,
 					seg = objective.nav_seg,
+					type = "defend",
 				}
 			else
 				local nav_seg = managers.navigation._nav_segments[objective.nav_seg]
@@ -844,10 +844,10 @@ function CopLogicTravel._determine_destination_occupation(data, objective)
 				if nav_seg then
 					near_pos = CopLogicTravel._get_pos_on_wall(nav_seg.pos, 700)
 					occupation = {
-						type = "defend",
 						pos = near_pos,
 						radius = objective.radius,
 						seg = objective.nav_seg,
+						type = "defend",
 					}
 				else
 					debug_pause("[CopLogicTravel._determine_destination_occupation] Can't find nav_seg for the objective!?", inspect(objective), inspect(managers.navigation._nav_segments))
@@ -862,16 +862,16 @@ function CopLogicTravel._determine_destination_occupation(data, objective)
 		local phalanx_circle_pos = logic.calc_initial_phalanx_pos(data.m_pos, objective)
 
 		occupation = {
-			type = "defend",
 			pos = phalanx_circle_pos,
 			radius = objective.radius,
 			seg = objective.nav_seg,
+			type = "defend",
 		}
 	elseif objective.type == "act" then
 		occupation = {
-			type = "act",
 			pos = objective.pos,
 			seg = objective.nav_seg,
+			type = "act",
 		}
 	elseif objective.type == "follow" then
 		local my_data = data.internal_data
@@ -893,8 +893,8 @@ function CopLogicTravel._determine_destination_occupation(data, objective)
 			}
 
 			occupation = {
-				type = "defend",
 				cover = cover_entry,
+				type = "defend",
 			}
 		else
 			local max_dist
@@ -906,8 +906,8 @@ function CopLogicTravel._determine_destination_occupation(data, objective)
 			local to_pos = CopLogicTravel._get_pos_on_wall(dest_area.pos, max_dist)
 
 			occupation = {
-				type = "defend",
 				pos = to_pos,
+				type = "defend",
 			}
 		end
 	elseif objective.type == "revive" then
@@ -984,9 +984,9 @@ function CopLogicTravel._determine_destination_occupation(data, objective)
 		local revive_rot = Rotation(revive_rot, math.UP)
 
 		occupation = {
-			type = "revive",
 			pos = revive_pos,
 			rot = revive_rot,
+			type = "revive",
 		}
 	else
 		occupation = {
@@ -1017,8 +1017,8 @@ function CopLogicTravel._get_pos_on_wall(from_pos, max_dist, step_offset, is_rec
 	local from_tracker = nav_manager:create_nav_tracker(from_pos)
 	local ray_params = {
 		allow_entry = false,
-		trace = true,
 		pos_to = to_pos,
+		trace = true,
 		tracker_from = from_tracker,
 	}
 	local rsrv_desc = {
@@ -1136,9 +1136,9 @@ function CopLogicTravel.complete_coarse_path(data, my_data, coarse_path)
 
 		if not nav_seg.neighbours[next_nav_seg_id] then
 			local search_params = {
-				id = "CopLogicTravel_complete_coarse_path",
 				access_pos = data.SO_access,
 				from_seg = nav_seg_id,
+				id = "CopLogicTravel_complete_coarse_path",
 				to_seg = next_nav_seg_id,
 			}
 			local ins_coarse_path = managers.navigation:search_coarse(search_params)
@@ -1289,8 +1289,8 @@ function CopLogicTravel.apply_wall_offset_to_cover(data, my_data, cover, wall_fw
 	mvector3.add(to_pos_fwd, cover[1])
 
 	local ray_params = {
-		trace = true,
 		pos_to = to_pos_fwd,
+		trace = true,
 		tracker_from = cover[NavigationManager.COVER_TRACKER],
 	}
 	local collision = managers.navigation:raycast(ray_params)
@@ -1308,8 +1308,8 @@ function CopLogicTravel.apply_wall_offset_to_cover(data, my_data, cover, wall_fw
 	mvector3.add(to_pos_bwd, cover[1])
 
 	local ray_params = {
-		trace = true,
 		pos_to = to_pos_bwd,
+		trace = true,
 		tracker_from = cover[NavigationManager.COVER_TRACKER],
 	}
 	local collision = managers.navigation:raycast(ray_params)
@@ -1501,9 +1501,9 @@ function CopLogicTravel._get_exact_move_pos(data, nav_index)
 
 					if reservation then
 						local guard_object = {
-							type = "door",
 							door = guard_door,
 							from_seg = new_occupation.from_seg,
+							type = "door",
 						}
 
 						objective.guard_obj = guard_object
@@ -1586,8 +1586,8 @@ function CopLogicTravel._get_exact_move_pos(data, nav_index)
 
 	if not reservation and wants_reservation then
 		data.brain:add_pos_rsrv("path", {
-			radius = 60,
 			position = mvector3.copy(to_pos),
+			radius = 60,
 		})
 	end
 

@@ -15,6 +15,8 @@ VehicleOperatorUnitElement.ACTIONS = {
 	"enable_loot_interaction",
 	"disable_accepting_loot",
 	"enable_accepting_loot",
+	"disable_securing_loot",
+	"enable_securing_loot",
 }
 
 function VehicleOperatorUnitElement:init(unit)
@@ -34,9 +36,9 @@ end
 
 function VehicleOperatorUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
+		mask = managers.slot:get_mask("vehicles"),
 		ray_type = "body",
 		sample = true,
-		mask = managers.slot:get_mask("vehicles"),
 	})
 
 	if ray and ray.unit then
@@ -56,9 +58,9 @@ end
 
 function VehicleOperatorUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
+		mask = managers.slot:get_mask("vehicles"),
 		ray_type = "body",
 		sample = true,
-		mask = managers.slot:get_mask("vehicles"),
 	})
 
 	if ray and ray.unit then
@@ -79,9 +81,9 @@ function VehicleOperatorUnitElement:draw_links_unselected(...)
 		if alive(unit) then
 			local params = {
 				b = 0.5,
+				from_unit = unit,
 				g = 0,
 				r = 0,
-				from_unit = unit,
 				to_unit = self._unit,
 			}
 
@@ -101,9 +103,9 @@ function VehicleOperatorUnitElement:draw_links_selected(...)
 		local unit = managers.editor:unit_with_id(id)
 		local params = {
 			b = 0.5,
+			from_unit = unit,
 			g = 0,
 			r = 0,
-			from_unit = unit,
 			to_unit = self._unit,
 		}
 

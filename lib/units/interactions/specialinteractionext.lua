@@ -71,12 +71,12 @@ function SpecialInteractionExt:_show_fuse_sfx_and_waypoint(cuts)
 
 	managers.hud:add_waypoint(self._wp_id, {
 		distance = true,
-		text = "BoomBoom",
-		waypoint_type = "revive",
 		icon = icon,
 		lifetime = timer,
 		position = self._unit:position() + Vector3(0, 0, 35),
+		text = "BoomBoom",
 		timer = timer,
 		unit = self._unit,
+		waypoint_type = "revive",
 	})
 end

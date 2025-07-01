@@ -18,8 +18,8 @@ function BlackscreenVariantElement:_build_panel(panel, panel_sizer)
 	local bscreen = CoreEWS.combobox(bscreen_params)
 
 	bscreen:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "set_element_data"), {
-		value = "variant",
 		ctrlr = bscreen,
+		value = "variant",
 	})
 
 	local help = {}
@@ -37,8 +37,6 @@ function BlackscreenVariantElement:_get_params(panel, panel_sizer)
 		default = "0",
 		name = "Blackscreen variant:",
 		name_proportions = 1,
-		sorted = false,
-		tooltip = "Select variant, from level_tweak_data.level.intro_event",
 		options = {
 			"1",
 			"2",
@@ -73,6 +71,8 @@ function BlackscreenVariantElement:_get_params(panel, panel_sizer)
 		},
 		panel = panel,
 		sizer = panel_sizer,
+		sorted = false,
+		tooltip = "Select variant, from level_tweak_data.level.intro_event",
 		value = self._hed.variant,
 	}
 
@@ -91,8 +91,6 @@ function EndscreenVariantElement:_get_params(panel, panel_sizer)
 		default = "0",
 		name = "Endscreen variant:",
 		name_proportions = 1,
-		sorted = false,
-		tooltip = "Select variant, from level_tweak_data.level.outro_event",
 		options = {
 			"1",
 			"2",
@@ -127,6 +125,8 @@ function EndscreenVariantElement:_get_params(panel, panel_sizer)
 		},
 		panel = panel,
 		sizer = panel_sizer,
+		sorted = false,
+		tooltip = "Select variant, from level_tweak_data.level.outro_event",
 		value = self._hed.variant,
 	}
 

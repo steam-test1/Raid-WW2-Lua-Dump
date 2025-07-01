@@ -26,15 +26,15 @@ end
 
 function RaidMenuLeftOptions:_layout_list_menu()
 	local list_menu_options_params = {
+		data_source_callback = callback(self, self, "_list_menu_options_data_source"),
 		h = 640,
 		loop_items = true,
 		name = "list_menu_options",
+		on_item_clicked_callback = callback(self, self, "_on_list_menu_options_item_selected"),
 		selection_enabled = true,
 		w = 480,
 		x = 0,
 		y = 144,
-		data_source_callback = callback(self, self, "_list_menu_options_data_source"),
-		on_item_clicked_callback = callback(self, self, "_on_list_menu_options_item_selected"),
 	}
 
 	self.list_menu_options = self._root_panel:list(list_menu_options_params)
@@ -42,27 +42,27 @@ function RaidMenuLeftOptions:_layout_list_menu()
 	self.list_menu_options:set_selected(true)
 
 	local default_video_params = {
-		name = "default_video",
-		x = 1472,
-		y = 832,
 		layer = RaidGuiBase.FOREGROUND_LAYER,
+		name = "default_video",
 		on_click_callback = callback(self, self, "_on_list_menu_options_item_selected", {
 			callback = "menu_options_on_click_default",
 		}),
 		text = utf8.to_upper(managers.localization:text("menu_option_default")),
+		x = 1472,
+		y = 832,
 	}
 
 	self._default_video_button = self._root_panel:long_secondary_button(default_video_params)
 
 	local reset_progress_params = {
-		name = "reset_progress",
-		x = 1472,
-		y = 768,
 		layer = RaidGuiBase.FOREGROUND_LAYER,
+		name = "reset_progress",
 		on_click_callback = callback(self, self, "_on_list_menu_options_item_selected", {
 			callback = "menu_options_on_click_reset_progress",
 		}),
 		text = utf8.to_upper(managers.localization:text("menu_clear_progress")),
+		x = 1472,
+		y = 768,
 	}
 
 	self._reset_progress_button = self._root_panel:long_secondary_button(reset_progress_params)
@@ -130,8 +130,8 @@ function RaidMenuLeftOptions:bind_controller_inputs()
 		},
 		keyboard = {
 			{
-				key = "footer_back",
 				callback = callback(self, self, "_on_legend_pc_back", nil),
+				key = "footer_back",
 			},
 		},
 	}
@@ -165,8 +165,8 @@ function RaidMenuLeftOptions:bind_controller_inputs_reset_progress()
 		},
 		keyboard = {
 			{
-				key = "footer_back",
 				callback = callback(self, self, "_on_legend_pc_back", nil),
+				key = "footer_back",
 			},
 		},
 	}

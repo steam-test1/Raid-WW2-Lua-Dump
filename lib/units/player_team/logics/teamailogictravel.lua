@@ -331,17 +331,17 @@ function TeamAILogicTravel._determine_destination_occupation(data, objective)
 	if objective.type == "defend_area" then
 		if objective.cover then
 			occupation = {
-				type = "defend",
 				cover = objective.cover,
 				radius = objective.radius,
 				seg = objective.nav_seg,
+				type = "defend",
 			}
 		elseif objective.pos then
 			occupation = {
-				type = "defend",
 				pos = objective.pos,
 				radius = objective.radius,
 				seg = objective.nav_seg,
+				type = "defend",
 			}
 		else
 			local near_pos = objective.follow_unit and objective.follow_unit:movement():nav_tracker():field_position()
@@ -353,18 +353,18 @@ function TeamAILogicTravel._determine_destination_occupation(data, objective)
 				}
 
 				occupation = {
-					type = "defend",
 					cover = cover_entry,
 					radius = objective.radius,
 					seg = objective.nav_seg,
+					type = "defend",
 				}
 			else
 				near_pos = CopLogicTravel._get_pos_on_wall(managers.navigation._nav_segments[objective.nav_seg].pos, 700)
 				occupation = {
-					type = "defend",
 					pos = near_pos,
 					radius = objective.radius,
 					seg = objective.nav_seg,
+					type = "defend",
 				}
 			end
 		end
@@ -376,16 +376,16 @@ function TeamAILogicTravel._determine_destination_occupation(data, objective)
 		local phalanx_circle_pos = logic.calc_initial_phalanx_pos(data.m_pos, objective)
 
 		occupation = {
-			type = "defend",
 			pos = phalanx_circle_pos,
 			radius = objective.radius,
 			seg = objective.nav_seg,
+			type = "defend",
 		}
 	elseif objective.type == "act" then
 		occupation = {
-			type = "act",
 			pos = objective.pos,
 			seg = objective.nav_seg,
+			type = "act",
 		}
 	elseif objective.type == "follow" then
 		local my_data = data.internal_data
@@ -405,10 +405,10 @@ function TeamAILogicTravel._determine_destination_occupation(data, objective)
 
 		if cover then
 			occupation = {
-				type = "defend",
 				cover = {
 					cover,
 				},
+				type = "defend",
 			}
 		else
 			local max_dist
@@ -420,8 +420,8 @@ function TeamAILogicTravel._determine_destination_occupation(data, objective)
 			local to_pos = CopLogicTravel._get_pos_on_wall(dest_area.pos, max_dist)
 
 			occupation = {
-				type = "defend",
 				pos = to_pos,
+				type = "defend",
 			}
 		end
 	elseif objective.type == "revive" then
@@ -498,9 +498,9 @@ function TeamAILogicTravel._determine_destination_occupation(data, objective)
 		local revive_rot = Rotation(revive_rot, math.UP)
 
 		occupation = {
-			type = "revive",
 			pos = revive_pos,
 			rot = revive_rot,
+			type = "revive",
 		}
 	else
 		occupation = {

@@ -346,20 +346,20 @@ function PlayerTased:_register_revive_SO()
 	local objective = {
 		called = true,
 		destroy_clbk_key = false,
-		scan = true,
-		type = "follow",
 		follow_unit = self._unit,
 		nav_seg = self._unit:movement():nav_tracker():nav_segment(),
+		scan = true,
+		type = "follow",
 	}
 	local so_descriptor = {
 		AI_group = "friendlies",
 		base_chance = 1,
 		chance_inc = 0,
 		interval = 6,
-		search_dis_sq = 25000000,
-		usage_amount = 1,
 		objective = objective,
+		search_dis_sq = 25000000,
 		search_pos = self._unit:position(),
+		usage_amount = 1,
 	}
 	local so_id = "PlayerTased_assistance"
 
@@ -422,7 +422,6 @@ function PlayerTased:_give_shock_to_taser(taser_unit)
 	do return end
 
 	local action_data = {
-		variant = "counter_tased",
 		attack_dir = -taser_unit:movement()._action_common_data.fwd,
 		attacker_unit = self._unit,
 		col_ray = {
@@ -431,6 +430,7 @@ function PlayerTased:_give_shock_to_taser(taser_unit)
 		},
 		damage = taser_unit:character_damage()._HEALTH_INIT * (tweak_data.upgrades.counter_taser_damage or 0.2),
 		damage_effect = taser_unit:character_damage()._HEALTH_INIT * 2,
+		variant = "counter_tased",
 	}
 
 	taser_unit:character_damage():damage_melee(action_data)
@@ -442,15 +442,15 @@ function PlayerTased:give_shock_to_taser_no_damage()
 	end
 
 	local action_data = {
-		damage = 0,
-		variant = "counter_tased",
 		attack_dir = -self._taser_unit:movement()._action_common_data.fwd,
 		attacker_unit = self._unit,
 		col_ray = {
 			body = self._taser_unit:body("body"),
 			position = mvector3.copy(self._taser_unit:movement():m_head_pos()),
 		},
+		damage = 0,
 		damage_effect = self._taser_unit:character_damage()._HEALTH_INIT * 2,
+		variant = "counter_tased",
 	}
 
 	self._taser_unit:character_damage():damage_melee(action_data)
@@ -469,15 +469,15 @@ function PlayerTased:_on_malfunction_to_taser_event()
 	})
 
 	local action_data = {
-		damage = 0,
-		variant = "melee",
 		attack_dir = -self._taser_unit:movement()._action_common_data.fwd,
 		attacker_unit = self._unit,
 		col_ray = {
 			body = self._taser_unit:body("body"),
 			position = mvector3.copy(self._taser_unit:movement():m_head_pos()),
 		},
+		damage = 0,
 		damage_effect = self._taser_unit:character_damage()._HEALTH_INIT * 10,
+		variant = "melee",
 	}
 
 	self._taser_unit:character_damage():damage_melee(action_data)

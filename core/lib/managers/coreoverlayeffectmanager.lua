@@ -21,10 +21,10 @@ function OverlayEffectManager:init()
 
 	self:add_preset("custom", {
 		blend_mode = "normal",
+		color = Color(1, 0, 0, 0),
 		fade_in = 0,
 		fade_out = 0,
 		sustain = 0,
-		color = Color(1, 0, 0, 0),
 	})
 	self:set_default_layer(1999)
 	managers.viewport:add_resolution_changed_func(callback(self, self, "change_resolution"))
@@ -181,15 +181,15 @@ function OverlayEffectManager:play_effect(data)
 
 		local text = self._ws:panel():text({
 			align = "center",
-			halign = "center",
-			valign = "center",
-			vertical = "center",
 			blend_mode = data.text_blend_mode or data.blend_mode or "normal",
 			color = (data.text_color or Color.white):with_alpha(spawn_alpha * (data.text_color and data.text_color.alpha or 1)),
 			font = data.font or "core/fonts/system_font",
 			font_size = data.font_size or 21,
+			halign = "center",
 			layer = self._default_layer + 1,
 			text = data.text or "",
+			valign = "center",
+			vertical = "center",
 		})
 
 		if data.text_to_upper then

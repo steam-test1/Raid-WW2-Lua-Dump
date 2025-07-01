@@ -29,22 +29,22 @@ end
 
 function HUDToastNotification:_create_panel(hud)
 	self._object = hud.panel:panel({
+		h = HUDToastNotification.H,
 		layer = 20,
 		name = "toast_notification_panel",
 		visible = false,
-		h = HUDToastNotification.H,
 		w = HUDToastNotification.W,
 	})
 end
 
 function HUDToastNotification:_create_background()
 	self._background = self._object:bitmap({
+		h = HUDToastNotification.H,
 		halign = "center",
 		name = "background",
-		valign = "center",
-		h = HUDToastNotification.H,
 		texture = tweak_data.gui.icons[HUDToastNotification.BACKGROUND_IMAGE].texture,
 		texture_rect = tweak_data.gui.icons[HUDToastNotification.BACKGROUND_IMAGE].texture_rect,
+		valign = "center",
 		w = HUDToastNotification.W,
 	})
 end
@@ -52,15 +52,15 @@ end
 function HUDToastNotification:_create_title()
 	self._title = self._object:text({
 		align = "center",
+		color = HUDToastNotification.TITLE_COLOR,
+		font = tweak_data.gui:get_font_path(HUDToastNotification.TITLE_FONT, HUDToastNotification.TITLE_FONT_SIZE),
+		font_size = HUDToastNotification.TITLE_FONT_SIZE,
 		halign = "center",
+		layer = self._background:layer() + 1,
 		name = "text",
 		text = "OBJECTIVE ACTIVATED",
 		valign = "center",
 		vertical = "center",
-		color = HUDToastNotification.TITLE_COLOR,
-		font = tweak_data.gui:get_font_path(HUDToastNotification.TITLE_FONT, HUDToastNotification.TITLE_FONT_SIZE),
-		font_size = HUDToastNotification.TITLE_FONT_SIZE,
-		layer = self._background:layer() + 1,
 	})
 
 	self._title:set_h(self._object:h() / 2)
@@ -71,15 +71,15 @@ end
 function HUDToastNotification:_create_text()
 	self._text = self._object:text({
 		align = "center",
+		color = HUDToastNotification.TEXT_COLOR,
+		font = tweak_data.gui:get_font_path(HUDToastNotification.TEXT_FONT, HUDToastNotification.TEXT_FONT_SIZE),
+		font_size = HUDToastNotification.TEXT_FONT_SIZE,
 		halign = "center",
+		layer = self._background:layer() + 1,
 		name = "text",
 		text = "GET THE AMBER WAGON READY TO LIFT IT UP WITH THE CRANE!",
 		valign = "center",
 		vertical = "center",
-		color = HUDToastNotification.TEXT_COLOR,
-		font = tweak_data.gui:get_font_path(HUDToastNotification.TEXT_FONT, HUDToastNotification.TEXT_FONT_SIZE),
-		font_size = HUDToastNotification.TEXT_FONT_SIZE,
-		layer = self._background:layer() + 1,
 		w = HUDToastNotification.TEXT_W,
 	})
 
@@ -90,35 +90,35 @@ end
 
 function HUDToastNotification:_create_icon()
 	self._icon_panel = self._object:panel({
-		name = "toast_notification_panel",
 		h = HUDToastNotification.ICON_PANEL_SIZE,
 		layer = self._background:layer() + 1,
+		name = "toast_notification_panel",
 		w = HUDToastNotification.ICON_PANEL_SIZE,
 	})
 
 	self._icon_panel:set_center(self._object:w() / 2, self._object:h() / 2)
 
 	self._icon = self._icon_panel:bitmap({
+		color = HUDToastNotification.ICON_COLOR,
 		name = "icon",
 		rotation = 360,
-		color = HUDToastNotification.ICON_COLOR,
 	})
 
 	local blur = self._icon_panel:bitmap({
+		h = HUDToastNotification.ICON_PANEL_SIZE,
+		layer = self._icon:layer() - 1,
 		name = "blur",
 		render_template = "VertexColorTexturedBlur3D",
 		rotation = 360,
-		h = HUDToastNotification.ICON_PANEL_SIZE,
-		layer = self._icon:layer() - 1,
 		texture = tweak_data.gui.icons.presenter_blur.texture,
 		texture_rect = tweak_data.gui.icons.presenter_blur.texture_rect,
 		w = HUDToastNotification.ICON_PANEL_SIZE,
 	})
 	local icon_bg = self._icon_panel:bitmap({
-		name = "icon_bg",
-		rotation = 360,
 		h = HUDToastNotification.ICON_PANEL_SIZE,
 		layer = self._icon:layer() - 2,
+		name = "icon_bg",
+		rotation = 360,
 		texture = tweak_data.gui.icons.presenter_background.texture,
 		texture_rect = tweak_data.gui.icons.presenter_background.texture_rect,
 		w = HUDToastNotification.ICON_PANEL_SIZE,

@@ -36,12 +36,12 @@ function ElementExplosion:on_executed(instigator)
 
 	if Network:is_server() then
 		managers.explosion:detect_and_give_dmg({
-			curve_pow = 5,
-			player_damage = 0,
 			collision_slotmask = managers.slot:get_mask("explosion_targets"),
+			curve_pow = 5,
 			damage = self._values.damage,
 			hit_pos = pos,
 			no_raycast_check_characters = self._values.no_raycast_check_characters,
+			player_damage = 0,
 			range = self._values.range,
 		})
 		managers.network:session():send_to_peers_synched("element_explode_on_client", pos, rot:z(), self._values.damage, self._values.range, 5)

@@ -38,18 +38,18 @@ function CoreActivateScriptUnitElement:_build_panel(panel, panel_sizer)
 		default = "none",
 		name = "Script:",
 		name_proportions = 1,
-		sorted = true,
-		tooltip = "Select a script from the combobox",
 		options = self:_scripts(),
 		panel = panel,
 		sizer = panel_sizer,
+		sorted = true,
+		tooltip = "Select a script from the combobox",
 		value = self._hed.activate_script,
 	}
 
 	local scripts = CoreEWS.combobox(self._script_params)
 
 	scripts:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "set_element_data"), {
-		value = "activate_script",
 		ctrlr = scripts,
+		value = "activate_script",
 	})
 end

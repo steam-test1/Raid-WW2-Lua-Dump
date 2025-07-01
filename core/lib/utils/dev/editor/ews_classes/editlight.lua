@@ -9,8 +9,8 @@ function EditUnitLight:init(editor)
 	EditUnitLight.super.init(self)
 
 	local panel, sizer = (editor or managers.editor):add_unit_edit_page({
-		name = "Light",
 		class = self,
+		name = "Light",
 	})
 	local debug_sizer = EWS:BoxSizer("VERTICAL")
 	local debug_ctrlr = EWS:CheckBox(panel, "Debug", "")
@@ -26,12 +26,12 @@ function EditUnitLight:init(editor)
 		ctrlr_proportions = 4,
 		name = "Lights:",
 		name_proportions = 3,
-		sizer_proportions = 4,
-		sorted = true,
-		tooltip = "Select a light to edit from the combobox",
 		options = {},
 		panel = panel,
 		sizer = lights_sizer,
+		sizer_proportions = 4,
+		sorted = true,
+		tooltip = "Select a light to edit from the combobox",
 	}
 
 	CoreEws.combobox(self._lights_params)
@@ -55,94 +55,94 @@ function EditUnitLight:init(editor)
 
 	self._near_range_params = {
 		ctrlr_proportions = 1,
+		events = {
+			{
+				callback = callback(self, self, "update_near_range"),
+				event = "EVT_COMMAND_TEXT_ENTER",
+			},
+			{
+				callback = callback(self, self, "update_near_range"),
+				event = "EVT_KILL_FOCUS",
+			},
+		},
 		floats = 0,
 		min = 0,
 		name = "Near range [cm]:",
 		name_proportions = 1,
-		tooltip = "Sets the near range of the light in cm",
-		value = 0,
-		events = {
-			{
-				event = "EVT_COMMAND_TEXT_ENTER",
-				callback = callback(self, self, "update_near_range"),
-			},
-			{
-				event = "EVT_KILL_FOCUS",
-				callback = callback(self, self, "update_near_range"),
-			},
-		},
 		panel = panel,
 		sizer = sizer,
+		tooltip = "Sets the near range of the light in cm",
+		value = 0,
 	}
 
 	CoreEws.number_controller(self._near_range_params)
 
 	self._range_params = {
 		ctrlr_proportions = 1,
+		events = {
+			{
+				callback = callback(self, self, "update_far_range"),
+				event = "EVT_COMMAND_TEXT_ENTER",
+			},
+			{
+				callback = callback(self, self, "update_far_range"),
+				event = "EVT_KILL_FOCUS",
+			},
+		},
 		floats = 0,
 		min = 0,
 		name = "Far range [cm]:",
 		name_proportions = 1,
-		tooltip = "Sets the range of the light in cm",
-		value = 0,
-		events = {
-			{
-				event = "EVT_COMMAND_TEXT_ENTER",
-				callback = callback(self, self, "update_far_range"),
-			},
-			{
-				event = "EVT_KILL_FOCUS",
-				callback = callback(self, self, "update_far_range"),
-			},
-		},
 		panel = panel,
 		sizer = sizer,
+		tooltip = "Sets the range of the light in cm",
+		value = 0,
 	}
 
 	CoreEws.number_controller(self._range_params)
 
 	self._upper_clipping_params = {
 		ctrlr_proportions = 1,
+		events = {
+			{
+				callback = callback(self, self, "update_clipping", "x"),
+				event = "EVT_COMMAND_TEXT_ENTER",
+			},
+			{
+				callback = callback(self, self, "update_clipping", "x"),
+				event = "EVT_KILL_FOCUS",
+			},
+		},
 		floats = 0,
 		name = "Set the upper clipping [cm]:",
 		name_proportions = 1,
-		tooltip = "Sets the upper clipping in cm",
-		value = 0,
-		events = {
-			{
-				event = "EVT_COMMAND_TEXT_ENTER",
-				callback = callback(self, self, "update_clipping", "x"),
-			},
-			{
-				event = "EVT_KILL_FOCUS",
-				callback = callback(self, self, "update_clipping", "x"),
-			},
-		},
 		panel = panel,
 		sizer = sizer,
+		tooltip = "Sets the upper clipping in cm",
+		value = 0,
 	}
 
 	CoreEws.number_controller(self._upper_clipping_params)
 
 	self._lower_clipping_params = {
 		ctrlr_proportions = 1,
+		events = {
+			{
+				callback = callback(self, self, "update_clipping", "y"),
+				event = "EVT_COMMAND_TEXT_ENTER",
+			},
+			{
+				callback = callback(self, self, "update_clipping", "y"),
+				event = "EVT_KILL_FOCUS",
+			},
+		},
 		floats = 0,
 		name = "Set the lower clipping [cm]:",
 		name_proportions = 1,
-		tooltip = "Sets the lower clipping in cm",
-		value = 0,
-		events = {
-			{
-				event = "EVT_COMMAND_TEXT_ENTER",
-				callback = callback(self, self, "update_clipping", "y"),
-			},
-			{
-				event = "EVT_KILL_FOCUS",
-				callback = callback(self, self, "update_clipping", "y"),
-			},
-		},
 		panel = panel,
 		sizer = sizer,
+		tooltip = "Sets the lower clipping in cm",
+		value = 0,
 	}
 
 	CoreEws.number_controller(self._lower_clipping_params)
@@ -158,11 +158,11 @@ function EditUnitLight:init(editor)
 		default = "none",
 		name = "Intensity:",
 		name_proportions = 1,
-		sorted = false,
-		tooltip = "Select an intensity from the combobox",
 		options = intensity_options,
 		panel = panel,
 		sizer = sizer,
+		sorted = false,
+		tooltip = "Select an intensity from the combobox",
 	}
 
 	CoreEws.combobox(self._intensity_params)
@@ -175,10 +175,10 @@ function EditUnitLight:init(editor)
 		min = 0,
 		name = "Quadratic attenuation:",
 		name_proportions = 1,
-		tooltip = "Controls quadratic attenuation factor",
-		value = 0.0001,
 		panel = panel,
 		sizer = sizer,
+		tooltip = "Controls quadratic attenuation factor",
+		value = 0.0001,
 	}
 
 	CoreEws.slider_and_number_controller(self._falloff_params)
@@ -194,10 +194,10 @@ function EditUnitLight:init(editor)
 		min = 1e-07,
 		name = "Linear attenuation:",
 		name_proportions = 1,
-		tooltip = "Controls linear attenuation factor",
-		value = 0.0001,
 		panel = panel,
 		sizer = sizer,
+		tooltip = "Controls linear attenuation factor",
+		value = 0.0001,
 	}
 
 	CoreEws.slider_and_number_controller(self._linear_atten_params)
@@ -213,10 +213,10 @@ function EditUnitLight:init(editor)
 		min = 1,
 		name = "Start angle:",
 		name_proportions = 1,
-		tooltip = "Controls the start angle of the spot light",
-		value = 1,
 		panel = panel,
 		sizer = sizer,
+		tooltip = "Controls the start angle of the spot light",
+		value = 1,
 	}
 
 	CoreEws.slider_and_number_controller(self._spot_start_angle_params)
@@ -232,10 +232,10 @@ function EditUnitLight:init(editor)
 		min = 1,
 		name = "End angle:",
 		name_proportions = 1,
-		tooltip = "Controls the end angle of the spot light",
-		value = 1,
 		panel = panel,
 		sizer = sizer,
+		tooltip = "Controls the end angle of the spot light",
+		value = 1,
 	}
 
 	CoreEws.slider_and_number_controller(self._spot_end_angle_params)
@@ -249,8 +249,6 @@ function EditUnitLight:init(editor)
 		name = "Shadow Resolution:",
 		name_proportions = 1,
 		numbers = true,
-		sorted = false,
-		tooltip = "Select an resolution from the combobox",
 		options = {
 			64,
 			128,
@@ -261,6 +259,8 @@ function EditUnitLight:init(editor)
 		},
 		panel = panel,
 		sizer = sizer,
+		sorted = false,
+		tooltip = "Select an resolution from the combobox",
 		value = EditUnitLight.DEFAULT_SHADOW_RESOLUTION,
 	}
 
@@ -271,11 +271,11 @@ function EditUnitLight:init(editor)
 		ctrlr_proportions = 3,
 		name = "Spot Texture:",
 		name_proportions = 1,
-		sorted = true,
-		tooltip = "Select a spot projection texture from the combobox",
 		options = self:get_spot_projection_textures(),
 		panel = panel,
 		sizer = sizer,
+		sorted = true,
+		tooltip = "Select a spot projection texture from the combobox",
 		value = EditUnitLight.DEFAULT_SPOT_PROJECTION_TEXTURE,
 	}
 

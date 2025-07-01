@@ -14,8 +14,8 @@ function HUDCrosshair:init(hud)
 	self._crosshair_fade = false
 	self._icons = {}
 	self._object = self._hud_panel:panel({
-		name = "crosshair_panel",
 		h = HUDCrosshair.DEFAULT_H,
+		name = "crosshair_panel",
 		w = HUDCrosshair.DEFAULT_W,
 	})
 
@@ -44,9 +44,9 @@ function HUDCrosshair:set_crosshair_type(type_id)
 			end
 
 			local icon = self._object:bitmap({
-				layer = 1,
 				alpha = HUDCrosshair.DEFAULT_A,
 				color = gui.color or tweak_data.gui.colors.raid_white,
+				layer = 1,
 				texture = gui.texture,
 				texture_rect = gui.texture_rect,
 			})
@@ -58,9 +58,9 @@ function HUDCrosshair:set_crosshair_type(type_id)
 
 	if not not self._tweak_data.core_dot then
 		self._core_dot = self._object:bitmap({
-			layer = 1,
 			alpha = HUDCrosshair.DEFAULT_A,
 			color = tweak_data.gui.colors.raid_white,
+			layer = 1,
 			texture = tweak_data.gui.icons[self._tweak_data.core_dot].texture,
 			texture_rect = tweak_data.gui.icons[self._tweak_data.core_dot].texture_rect,
 		})

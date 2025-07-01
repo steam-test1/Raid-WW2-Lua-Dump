@@ -46,9 +46,9 @@ function DisableUnitUnitElement:update_selected()
 		else
 			local params = {
 				b = 0,
+				from_unit = self._unit,
 				g = 0,
 				r = 1,
-				from_unit = self._unit,
 				to_unit = unit,
 			}
 
@@ -82,9 +82,9 @@ function DisableUnitUnitElement:draw_links_unselected(...)
 	for id, unit in pairs(self._units) do
 		local params = {
 			b = 0,
+			from_unit = self._unit,
 			g = 0,
 			r = 0.5,
-			from_unit = self._unit,
 			to_unit = unit,
 		}
 
@@ -95,9 +95,9 @@ end
 
 function DisableUnitUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
+		mask = managers.slot:get_mask("all"),
 		ray_type = "body editor",
 		sample = true,
-		mask = managers.slot:get_mask("all"),
 	})
 
 	if ray and ray.unit then
@@ -107,9 +107,9 @@ end
 
 function DisableUnitUnitElement:select_unit()
 	local ray = managers.editor:unit_by_raycast({
+		mask = managers.slot:get_mask("all"),
 		ray_type = "body editor",
 		sample = true,
-		mask = managers.slot:get_mask("all"),
 	})
 
 	if ray and ray.unit then

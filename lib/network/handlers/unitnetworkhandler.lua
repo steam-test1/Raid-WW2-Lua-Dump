@@ -152,21 +152,21 @@ function UnitNetworkHandler:action_walk_start(unit, first_nav_point, nav_link_ya
 	end
 
 	local action_desc = {
-		body_part = 2,
-		path_simplified = true,
-		persistent = true,
-		type = "walk",
 		blocks = {
 			act = -1,
 			idle = -1,
 			turn = -1,
 			walk = -1,
 		},
+		body_part = 2,
 		end_pose = end_pose,
 		end_rot = end_rot,
 		nav_path = nav_path,
 		no_strafe = no_strafe,
 		no_walk = no_walk,
+		path_simplified = true,
+		persistent = true,
+		type = "walk",
 		variant = haste_code == 1 and "walk" or "run",
 	}
 
@@ -226,9 +226,9 @@ function UnitNetworkHandler:action_warp_start(unit, has_pos, pos, has_rot, yaw, 
 
 	local action_desc = {
 		body_part = 1,
-		type = "warp",
 		position = has_pos and pos,
 		rotation = has_rot and Rotation(360 * (yaw - 1) / 254, 0, 0),
+		type = "warp",
 	}
 
 	unit:movement():action_request(action_desc)
@@ -923,7 +923,6 @@ function UnitNetworkHandler:set_stance(unit, stance_code, instant, execute_queue
 		return
 	end
 
-	Application:debug("[UnitNetworkHandler:set_stance] unit, stance_code, instant, execute_queued, sender:", unit, stance_code, instant, execute_queued, sender)
 	unit:movement():sync_stance(stance_code, instant, execute_queued)
 end
 
@@ -1039,8 +1038,8 @@ function UnitNetworkHandler:action_idle_start(unit, body_part, sender)
 	end
 
 	unit:movement():action_request({
-		type = "idle",
 		body_part = body_part,
+		type = "idle",
 	})
 end
 
@@ -1881,8 +1880,8 @@ function UnitNetworkHandler:set_active_warcry(unit, warcry_name, fill_percentage
 
 		if fill_percentage then
 			managers.hud:set_teammate_warcry_meter_fill(character_data.panel_id, {
-				total = 100,
 				current = fill_percentage,
+				total = 100,
 			})
 		end
 	end
@@ -2293,9 +2292,9 @@ function UnitNetworkHandler:set_teammate_hud(unit, percent, id, sender)
 	if id == PlayerDamage.HUD_NET_EVENTS.health then
 		if character_data and character_data.panel_id then
 			managers.hud:set_teammate_health(character_data.panel_id, {
+				current = percent / 100,
 				max = 1,
 				total = 1,
-				current = percent / 100,
 			})
 			character_data.unit:character_damage():set_health_ratio(percent / 100)
 		else
@@ -2308,9 +2307,9 @@ function UnitNetworkHandler:set_teammate_hud(unit, percent, id, sender)
 	elseif id == PlayerDamage.HUD_NET_EVENTS.armor then
 		if character_data and character_data.panel_id then
 			managers.hud:set_teammate_armor(character_data.panel_id, {
+				current = percent / 100,
 				max = 1,
 				total = 1,
-				current = percent / 100,
 			})
 		else
 			managers.hud:set_mugshot_armor(unit:unit_data().mugshot_id, percent / 100)
@@ -2341,9 +2340,9 @@ function UnitNetworkHandler:set_armor(unit, percent, sender)
 
 	if character_data and character_data.panel_id then
 		managers.hud:set_teammate_armor(character_data.panel_id, {
+			current = percent / 100,
 			max = 1,
 			total = 1,
-			current = percent / 100,
 		})
 	else
 		managers.hud:set_mugshot_armor(unit:unit_data().mugshot_id, percent / 100)
@@ -2362,9 +2361,9 @@ function UnitNetworkHandler:set_health(unit, percent, sender)
 
 	if character_data and character_data.panel_id then
 		managers.hud:set_teammate_health(character_data.panel_id, {
+			current = health_ratio,
 			max = 1,
 			total = 1,
-			current = health_ratio,
 		})
 	else
 		managers.hud:set_mugshot_health(unit:unit_data().mugshot_id, health_ratio)
@@ -3164,7 +3163,7 @@ function UnitNetworkHandler:sync_remote_position(unit, head_pos, pos)
 end
 
 function UnitNetworkHandler:sync_vehicle_loot_enabled(vehicle, enabled)
-	if not vehicle then
+	if not vehicle or not vehicle:vehicle_driving() then
 		return
 	end
 
@@ -3176,7 +3175,7 @@ function UnitNetworkHandler:sync_vehicle_loot_enabled(vehicle, enabled)
 end
 
 function UnitNetworkHandler:sync_vehicle_accepting_loot(vehicle, enabled)
-	if not vehicle then
+	if not vehicle or not vehicle:vehicle_driving() then
 		return
 	end
 
@@ -3184,6 +3183,18 @@ function UnitNetworkHandler:sync_vehicle_accepting_loot(vehicle, enabled)
 		vehicle:vehicle_driving():enable_accepting_loot()
 	else
 		vehicle:vehicle_driving():disable_accepting_loot()
+	end
+end
+
+function UnitNetworkHandler:sync_vehicle_securing_loot(vehicle, enabled)
+	if not vehicle or not vehicle:vehicle_driving() then
+		return
+	end
+
+	if enabled then
+		vehicle:vehicle_driving():enable_securing_loot()
+	else
+		vehicle:vehicle_driving():disable_securing_loot()
 	end
 end
 
@@ -3592,8 +3603,8 @@ local function warcry_dmg_func(peer_name, data)
 		force = true,
 		icon = "test_icon",
 		id = "skill_ammo_warcry_from",
-		priority = 1,
 		notification_type = HUDNotification.ICON,
+		priority = 1,
 		text = managers.localization:text("skill_ammo_warcry_from", {
 			NAME = peer_name,
 			PERCENT = percent,
@@ -3833,4 +3844,38 @@ function UnitNetworkHandler:sync_martyrdom(unit, projectile_type, sender)
 	end
 
 	unit:character_damage():sync_martyrdom(projectile_entry)
+end
+
+function UnitNetworkHandler:sync_attach_projectile(unit, instant_dynamic_pickup, parent_unit, parent_body, parent_object, local_pos, dir, projectile_type_index, peer_id, sender)
+	if not alive(unit) or not self._verify_sender(sender) then
+		return
+	end
+
+	local world_position = parent_object and local_pos:rotate_with(parent_object:rotation()) + parent_object:position() or local_pos
+
+	if Network:is_server() then
+		local projectile_type = tweak_data.blackmarket:get_projectile_name_from_index(projectile_type_index)
+		local tweak_entry = tweak_data.blackmarket.projectiles[projectile_type]
+		local unit_name = Idstring(tweak_entry.unit)
+		local synced_unit = World:spawn_unit(unit_name, world_position, Rotation(dir, math.UP))
+
+		managers.network:session():send_to_peers_synched("sync_attach_projectile", synced_unit, instant_dynamic_pickup, alive(parent_unit) and parent_unit:id() ~= -1 and parent_unit or nil, alive(parent_unit) and parent_unit:id() ~= -1 and parent_body or nil, alive(parent_unit) and parent_unit:id() ~= -1 and parent_object or nil, local_pos, dir, projectile_type_index, peer_id)
+		synced_unit:base():set_thrower_unit_by_peer_id(peer_id)
+		synced_unit:base():set_projectile_entry(projectile_type)
+		synced_unit:base():sync_attach_to_unit(instant_dynamic_pickup, parent_unit, parent_body, parent_object, local_pos, dir)
+	elseif unit then
+		local projectile_type = tweak_data.blackmarket:get_projectile_name_from_index(projectile_type_index)
+
+		unit:set_position(world_position)
+		unit:base():set_projectile_entry(projectile_type)
+		unit:base():sync_attach_to_unit(instant_dynamic_pickup, parent_unit, parent_body, parent_object, local_pos, dir)
+	end
+
+	if peer_id ~= 1 then
+		local dummy_unit = ImpactHurt.find_nearest_impact_projectile(peer_id, world_position)
+
+		if dummy_unit then
+			dummy_unit:set_slot(0)
+		end
+	end
 end

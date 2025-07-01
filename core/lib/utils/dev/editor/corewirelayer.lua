@@ -227,10 +227,10 @@ function WireLayer:build_panel(notebook)
 		name = "Slack:",
 		name_proportions = 1,
 		number_ctrlr_proportions = 1,
-		slider_ctrlr_proportions = 3,
-		value = 0,
 		panel = self._ews_panel,
 		sizer = slack_sizer,
+		slider_ctrlr_proportions = 3,
+		value = 0,
 	}
 
 	CoreEws.slider_and_number_controller(slack_params)

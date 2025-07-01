@@ -147,8 +147,8 @@ function PlayerTurret:exit(state_data, new_state_name)
 
 	local exit_data = {
 		ducking = false,
-		skip_equip = true,
 		equip_weapon_expire_t = self._equip_weapon_expire_t,
+		skip_equip = true,
 	}
 
 	self:_activate_mover(PlayerStandard.MOVER_STAND)
@@ -326,8 +326,8 @@ end
 function PlayerTurret:_play_announce_shooting()
 	if self._firing then
 		managers.dialog:queue_dialog("player_shooting_turret", {
-			skip_idle_check = true,
 			instigator = self._unit,
+			skip_idle_check = true,
 		})
 	else
 		self._announce_shooting = false

@@ -41,23 +41,23 @@ function HUDNotification:init(notification_data)
 	local padding = 0.2
 
 	self._object = self._hud_panel:panel({
+		h = self._panel_shape_h,
 		layer = 100,
 		name = "notification_panel",
 		visible = true,
-		h = self._panel_shape_h,
 		w = self._panel_shape_w,
 		x = self._panel_shape_x,
 		y = self._panel_shape_y,
 	})
 	self._bg_texture = self._object:bitmap({
+		h = self._panel_shape_h,
 		layer = 1,
 		name = "bg_texture",
-		x = 0,
-		y = 0,
-		h = self._panel_shape_h,
 		texture = tweak_data.gui.icons.backgrounds_chat_bg.texture,
 		texture_rect = tweak_data.gui.icons.backgrounds_chat_bg.texture_rect,
 		w = self._panel_shape_w,
+		x = 0,
+		y = 0,
 	})
 
 	self._bg_texture:set_y(self._object:h() - self._panel_shape_h)
@@ -74,15 +74,15 @@ function HUDNotification:init(notification_data)
 
 	self._text = self._object:text({
 		align = "center",
+		font = self._font,
+		font_size = self._font_size,
 		halign = "scale",
 		layer = 2,
 		name = "text",
+		text = notification_text,
 		valign = "scale",
 		vertical = "center",
 		wrap = true,
-		font = self._font,
-		font_size = self._font_size,
-		text = notification_text,
 	})
 
 	self._text:set_x(self._object:h() * padding * 0.5)
@@ -164,11 +164,11 @@ function HUDNotificationCardFail:init(notification_data)
 	self._panel_shape_h = 432
 
 	local params_root_panel = {
+		h = self._panel_shape_h,
 		is_root_panel = true,
 		layer = 100,
 		name = "notification_panel",
 		visible = true,
-		h = self._panel_shape_h,
 		w = self._panel_shape_w,
 		x = self._panel_shape_x,
 		y = self._panel_shape_y,
@@ -179,9 +179,9 @@ function HUDNotificationCardFail:init(notification_data)
 	local padding = 0.1
 
 	self._bg_texture = self._object:bitmap({
+		h = self._panel_shape_h,
 		layer = 1,
 		name = "bg_texture",
-		h = self._panel_shape_h,
 		texture = tweak_data.gui.icons.backgrounds_chat_bg.texture,
 		texture_rect = tweak_data.gui.icons.backgrounds_chat_bg.texture_rect,
 		w = self._panel_shape_w,
@@ -198,15 +198,15 @@ function HUDNotificationCardFail:init(notification_data)
 	self._card_rarity = managers.challenge_cards:get_active_card()
 	self._upper_text = self._object:text({
 		align = "right",
+		font = self._font,
+		font_size = self._font_size,
 		halign = "scale",
 		layer = 2,
 		name = "card_fail_text",
+		text = self._card_fail_text,
 		valign = "scale",
 		vertical = "center",
 		wrap = true,
-		font = self._font,
-		font_size = self._font_size,
-		text = self._card_fail_text,
 	})
 
 	self._upper_text:set_x(32)
@@ -230,15 +230,15 @@ function HUDNotificationCardFail:init(notification_data)
 
 	self._text = self._object:text({
 		align = "right",
+		font = self._font,
+		font_size = self._font_size,
 		halign = "scale",
 		layer = 2,
 		name = "text",
+		text = prompt_text,
 		valign = "scale",
 		vertical = "center",
 		wrap = true,
-		font = self._font,
-		font_size = self._font_size,
-		text = prompt_text,
 	})
 
 	self._text:set_x(32)
@@ -329,11 +329,11 @@ function HUDNotificationRaidUnlocked:_create_panel()
 	self._initial_right_x = self._object:right()
 
 	local background_params = {
-		halign = "scale",
-		valign = "scale",
 		h = self._object:h(),
+		halign = "scale",
 		texture = tweak_data.gui.icons[HUDNotificationRaidUnlocked.BACKGROUND_IMAGE].texture,
 		texture_rect = tweak_data.gui.icons[HUDNotificationRaidUnlocked.BACKGROUND_IMAGE].texture_rect,
+		valign = "scale",
 		w = self._object:w(),
 	}
 
@@ -358,15 +358,15 @@ function HUDNotificationRaidUnlocked:_create_description()
 	local description_text = is_at_last_step and "raid_final_unlocked_title" or "raid_next_unlocked_title"
 	local description_params = {
 		align = "right",
-		layer = 3,
-		name = "notification_raid_unlocked_description",
-		vertical = "center",
-		wrap = true,
 		color = HUDNotificationRaidUnlocked.DESCRIPTION_COLOR,
 		font = HUDNotificationRaidUnlocked.FONT,
 		font_size = HUDNotificationRaidUnlocked.FONT_SIZE,
+		layer = 3,
+		name = "notification_raid_unlocked_description",
 		text = utf8.to_upper(managers.localization:text(description_text)),
+		vertical = "center",
 		w = self._object:w() - 64,
+		wrap = true,
 	}
 
 	self._description = self._object:text(description_params)
@@ -446,11 +446,11 @@ function HUDNotificationConsumablePickup:_create_panel()
 	self._initial_right_x = self._object:right()
 
 	local background_params = {
-		halign = "scale",
-		valign = "scale",
 		h = self._object:h(),
+		halign = "scale",
 		texture = tweak_data.gui.icons[HUDNotificationConsumablePickup.BACKGROUND_IMAGE].texture,
 		texture_rect = tweak_data.gui.icons[HUDNotificationConsumablePickup.BACKGROUND_IMAGE].texture_rect,
+		valign = "scale",
 		w = self._object:w(),
 	}
 
@@ -473,15 +473,15 @@ end
 function HUDNotificationConsumablePickup:_create_description()
 	local description_params = {
 		align = "center",
-		layer = 3,
-		name = "notification_outlaw_raid_unlocked_description",
-		vertical = "center",
-		wrap = true,
 		color = HUDNotificationConsumablePickup.DESCRIPTION_COLOR,
 		font = HUDNotificationConsumablePickup.FONT,
 		font_size = HUDNotificationConsumablePickup.FONT_SIZE,
+		layer = 3,
+		name = "notification_outlaw_raid_unlocked_description",
 		text = utf8.to_upper(managers.localization:text(self._doc_text)),
+		vertical = "center",
 		w = self._object:w() - 64,
+		wrap = true,
 	}
 
 	self._description = self._object:text(description_params)
@@ -569,9 +569,9 @@ function HUDNotificationGreedItem:_create_panel()
 	local hud = managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT)
 	local hud_panel = managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT).panel:root()
 	local panel_params = {
+		h = HUDNotificationGreedItem.HEIGHT,
 		name = "notification_greed_item_picked_up",
 		visible = true,
-		h = HUDNotificationGreedItem.HEIGHT,
 		w = HUDNotificationGreedItem.WIDTH,
 	}
 
@@ -584,11 +584,11 @@ function HUDNotificationGreedItem:_create_panel()
 	self._object:set_bottom(HUDNotificationGreedItem.BOTTOM)
 
 	local background_params = {
-		halign = "scale",
-		valign = "scale",
 		h = self._object:h() / 2,
+		halign = "scale",
 		texture = tweak_data.gui.icons[HUDNotificationGreedItem.BACKGROUND_IMAGE].texture,
 		texture_rect = tweak_data.gui.icons[HUDNotificationGreedItem.BACKGROUND_IMAGE].texture_rect,
+		valign = "scale",
 		w = self._object:w(),
 		y = self._object:h() / 4,
 	}
@@ -598,11 +598,11 @@ end
 
 function HUDNotificationGreedItem:_create_icons()
 	local icons_panel_params = {
+		h = self._object:h(),
 		halign = "left",
 		name = "icons_panel",
 		valign = "scale",
 		w = 160,
-		h = self._object:h(),
 	}
 
 	self._icons_panel = self._object:panel(icons_panel_params)
@@ -611,9 +611,9 @@ function HUDNotificationGreedItem:_create_icons()
 		halign = "center",
 		layer = 10,
 		name = "frame_icon",
-		valign = "center",
 		texture = tweak_data.gui.icons[HUDNotificationGreedItem.FRAME_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDNotificationGreedItem.FRAME_ICON].texture_rect,
+		valign = "center",
 	}
 
 	self._frame_icon = self._icons_panel:bitmap(frame_icon_params)
@@ -622,15 +622,15 @@ function HUDNotificationGreedItem:_create_icons()
 	self._frame_icon:set_center_y(self._icons_panel:h() / 2)
 
 	local frame_fill_params = {
+		color = tweak_data.gui.colors.raid_gold,
 		halign = "center",
 		layer = 5,
 		name = "frame_fill",
 		position_z = 0.76,
 		render_template = "VertexColorTexturedRadial",
-		valign = "center",
-		color = tweak_data.gui.colors.raid_gold,
 		texture = tweak_data.gui.icons[HUDNotificationGreedItem.FILL_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDNotificationGreedItem.FILL_ICON].texture_rect,
+		valign = "center",
 	}
 
 	self._frame_fill = self._icons_panel:bitmap(frame_fill_params)
@@ -642,9 +642,9 @@ function HUDNotificationGreedItem:_create_icons()
 		halign = "center",
 		layer = 10,
 		name = "loot_icon",
-		valign = "center",
 		texture = tweak_data.gui.icons[HUDNotificationGreedItem.LOOT_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDNotificationGreedItem.LOOT_ICON].texture_rect,
+		valign = "center",
 	}
 
 	self._loot_icon = self._icons_panel:bitmap(loot_icon_params)
@@ -654,13 +654,13 @@ function HUDNotificationGreedItem:_create_icons()
 
 	local gold_icon_params = {
 		alpha = 0,
+		color = tweak_data.gui.colors.raid_gold,
 		halign = "center",
 		layer = 10,
 		name = "gold_icon",
-		valign = "center",
-		color = tweak_data.gui.colors.raid_gold,
 		texture = tweak_data.gui.icons[HUDNotificationGreedItem.GOLD_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDNotificationGreedItem.GOLD_ICON].texture_rect,
+		valign = "center",
 	}
 
 	self._gold_icon = self._icons_panel:bitmap(gold_icon_params)
@@ -686,16 +686,16 @@ end
 function HUDNotificationGreedItem:_create_title()
 	self._title = self._right_panel:text({
 		align = "left",
-		h = 64,
-		halign = "left",
-		name = "greed_item_notification_title",
-		valign = "center",
-		vertical = "center",
-		w = 90,
 		color = tweak_data.gui.colors.raid_dirty_white,
 		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.size_56),
 		font_size = tweak_data.gui.font_sizes.size_56,
+		h = 64,
+		halign = "left",
+		name = "greed_item_notification_title",
 		text = managers.localization:to_upper_text(HUDNotificationGreedItem.TITLE_STRING),
+		valign = "center",
+		vertical = "center",
+		w = 90,
 	})
 
 	self._title:set_center_y(self._right_panel:h() / 2)
@@ -708,15 +708,15 @@ function HUDNotificationGreedItem:_create_title()
 
 	local progress_amount_text_params = {
 		align = "right",
-		h = 64,
-		halign = "left",
-		name = "greed_item_notification_amount_progress",
-		valign = "center",
-		vertical = "center",
 		color = tweak_data.gui.colors.raid_gold,
 		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.size_56),
 		font_size = tweak_data.gui.font_sizes.size_46,
+		h = 64,
+		halign = "left",
+		name = "greed_item_notification_amount_progress",
 		text = utf8.to_upper(managers.localization:text(HUDNotificationGreedItem.GOLD_ACQUIRED_STRING)),
+		valign = "center",
+		vertical = "center",
 	}
 
 	self._gold_progress = self._right_panel:text(progress_amount_text_params)
@@ -726,19 +726,19 @@ function HUDNotificationGreedItem:_create_title()
 	local title_params = {
 		align = "center",
 		alpha = 0,
-		halign = "left",
-		name = "greed_item_notification_gold_acquired",
-		valign = "center",
-		vertical = "center",
-		wrap = true,
-		x = 0,
-		y = 0,
 		color = tweak_data.gui.colors.raid_gold,
 		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.size_56),
 		font_size = tweak_data.gui.font_sizes.size_38,
 		h = self._right_panel:h(),
+		halign = "left",
+		name = "greed_item_notification_gold_acquired",
 		text = utf8.to_upper(managers.localization:text(HUDNotificationGreedItem.GOLD_ACQUIRED_STRING)),
+		valign = "center",
+		vertical = "center",
 		w = self._right_panel:w(),
+		wrap = true,
+		x = 0,
+		y = 0,
 	}
 
 	self._gold_acquired = self._right_panel:text(title_params)
@@ -749,8 +749,8 @@ function HUDNotificationGreedItem:_create_items_panel()
 	local hud_panel = managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT).panel:root()
 
 	self._items_panel = hud.panel:panel({
-		name = "notification_greed_item_secured",
 		h = (HUDNotificationGreedItem.ITEMS_HEIGHT + HUDNotificationGreedItem.ITEMS_MARGIN) * HUDNotificationGreedItem.ITEMS_MAX,
+		name = "notification_greed_item_secured",
 		w = HUDNotificationGreedItem.WIDTH,
 	})
 
@@ -760,8 +760,8 @@ end
 
 function HUDNotificationGreedItem:_create_item(data)
 	local item_panel = self._items_panel:panel({
-		name = "notification_greed_item_pickup",
 		h = HUDNotificationGreedItem.ITEMS_HEIGHT,
+		name = "notification_greed_item_pickup",
 		w = HUDNotificationGreedItem.WIDTH,
 	})
 
@@ -770,55 +770,55 @@ function HUDNotificationGreedItem:_create_item(data)
 
 	local icon_data = tweak_data.gui:get_full_gui_data(HUDNotificationGreedItem.BACKGROUND_IMAGE)
 	local background = item_panel:bitmap({
-		halign = "scale",
-		valign = "scale",
 		h = item_panel:h(),
+		halign = "scale",
 		texture = icon_data.texture,
 		texture_rect = icon_data.texture_rect,
+		valign = "scale",
 		w = item_panel:w(),
 	})
 
 	icon_data = tweak_data.gui:get_full_gui_data(data.icon)
 
 	local loot_icon = item_panel:bitmap({
-		halign = "center",
-		name = "loot_icon",
-		valign = "center",
 		h = item_panel:h(),
+		halign = "center",
 		layer = background:layer() + 1,
+		name = "loot_icon",
 		texture = icon_data.texture,
 		texture_rect = icon_data.texture_rect,
+		valign = "center",
 		w = item_panel:h(),
 		x = HUDNotificationGreedItem.ITEMS_PADDING,
 	})
 	local loot_title = item_panel:text({
 		align = "left",
-		halign = "left",
-		name = "loot_title",
-		valign = "center",
-		vertical = "center",
 		color = tweak_data.gui.colors.raid_dirty_white,
 		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.small),
 		font_size = tweak_data.gui.font_sizes.small,
 		h = item_panel:h(),
+		halign = "left",
 		layer = background:layer() + 1,
+		name = "loot_title",
 		text = utf8.to_upper(managers.localization:text(data.name_id)),
+		valign = "center",
+		vertical = "center",
 	})
 
 	loot_title:set_x(loot_icon:right() + 4)
 
 	local value_label = item_panel:text({
 		align = "right",
-		halign = "left",
-		name = "value_label",
-		valign = "center",
-		vertical = "center",
 		color = tweak_data.gui.colors.raid_gold,
 		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.small),
 		font_size = tweak_data.gui.font_sizes.small,
 		h = item_panel:h(),
+		halign = "left",
 		layer = background:layer() + 1,
+		name = "value_label",
 		text = "+" .. tostring(data.value) .. "g",
+		valign = "center",
+		vertical = "center",
 	})
 	local w = select(3, value_label:text_rect())
 
@@ -827,12 +827,12 @@ function HUDNotificationGreedItem:_create_item(data)
 
 	local col = tweak_data.gui.colors.raid_white
 	local attention_grabber = self._items_panel:gradient({
+		h = item_panel:h(),
 		halign = "center",
+		layer = background:layer() + 5,
 		name = "attention_grabber",
 		orientation = "horizontal",
 		valign = "center",
-		h = item_panel:h(),
-		layer = background:layer() + 5,
 		w = item_panel:w() / 2,
 	})
 
@@ -1174,9 +1174,9 @@ function HUDNotificationDogTag:_create_panel()
 	local hud = managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT)
 	local hud_panel = managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT).panel:root()
 	local panel_params = {
+		h = HUDNotificationDogTag.HEIGHT,
 		name = "notification_dog_tag_picked_up",
 		visible = true,
-		h = HUDNotificationDogTag.HEIGHT,
 		w = HUDNotificationDogTag.WIDTH,
 	}
 
@@ -1189,11 +1189,11 @@ function HUDNotificationDogTag:_create_panel()
 	self._object:set_bottom(HUDNotificationDogTag.BOTTOM)
 
 	local background_params = {
-		halign = "scale",
-		valign = "scale",
 		h = self._object:h(),
+		halign = "scale",
 		texture = tweak_data.gui.icons[HUDNotificationDogTag.BACKGROUND_IMAGE].texture,
 		texture_rect = tweak_data.gui.icons[HUDNotificationDogTag.BACKGROUND_IMAGE].texture_rect,
+		valign = "scale",
 		w = self._object:w(),
 	}
 
@@ -1202,12 +1202,12 @@ end
 
 function HUDNotificationDogTag:_create_icon()
 	local icon_panel_params = {
+		h = self._object:h(),
 		halign = "left",
 		name = "icon_panel",
 		valign = "scale",
 		w = 160,
 		x = 32,
-		h = self._object:h(),
 	}
 
 	self._icon_panel = self._object:panel(icon_panel_params)
@@ -1216,9 +1216,9 @@ function HUDNotificationDogTag:_create_icon()
 		halign = "center",
 		layer = 10,
 		name = "dog_tag_icon",
-		valign = "center",
 		texture = tweak_data.gui.icons[HUDNotificationDogTag.DOG_TAG_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDNotificationDogTag.DOG_TAG_ICON].texture_rect,
+		valign = "center",
 	}
 
 	self._dog_tag_icon = self._icon_panel:bitmap(dog_tag_icon_params)
@@ -1244,15 +1244,15 @@ end
 function HUDNotificationDogTag:_create_title()
 	local title_params = {
 		align = "center",
-		h = 64,
-		halign = "left",
-		name = "dog_tag_notification_title",
-		valign = "center",
-		vertical = "center",
 		color = tweak_data.gui.colors.raid_grey_effects,
 		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.size_32),
 		font_size = tweak_data.gui.font_sizes.size_32,
+		h = 64,
+		halign = "left",
+		name = "dog_tag_notification_title",
 		text = utf8.to_upper(managers.localization:text(HUDNotificationDogTag.TITLE_STRING)),
+		valign = "center",
+		vertical = "center",
 	}
 
 	self._title = self._right_panel:text(title_params)
@@ -1263,6 +1263,9 @@ end
 function HUDNotificationDogTag:_create_progress()
 	local progress_text_params = {
 		align = "center",
+		color = tweak_data.gui.colors.raid_dirty_white,
+		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.size_56),
+		font_size = tweak_data.gui.font_sizes.size_56,
 		h = 64,
 		halign = "left",
 		name = "dog_tag_notification_progress_text",
@@ -1270,9 +1273,6 @@ function HUDNotificationDogTag:_create_progress()
 		valign = "center",
 		vertical = "center",
 		wrap = true,
-		color = tweak_data.gui.colors.raid_dirty_white,
-		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.size_56),
-		font_size = tweak_data.gui.font_sizes.size_56,
 	}
 
 	self._progress_text = self._right_panel:text(progress_text_params)
@@ -1340,9 +1340,9 @@ function HUDNotificationWeaponChallenge:_create_panel()
 	local hud = managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT)
 	local hud_panel = managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT).panel:root()
 	local panel_params = {
+		h = HUDNotificationWeaponChallenge.HEIGHT,
 		name = "notification_weapon_challenge",
 		visible = true,
-		h = HUDNotificationWeaponChallenge.HEIGHT,
 		w = HUDNotificationWeaponChallenge.WIDTH,
 		y = HUDNotificationWeaponChallenge.Y,
 	}
@@ -1354,11 +1354,11 @@ function HUDNotificationWeaponChallenge:_create_panel()
 	self._initial_right_x = self._object:right()
 
 	local background_params = {
-		halign = "scale",
-		valign = "scale",
 		h = self._object:h(),
+		halign = "scale",
 		texture = tweak_data.gui.icons[HUDNotificationWeaponChallenge.BACKGROUND_IMAGE].texture,
 		texture_rect = tweak_data.gui.icons[HUDNotificationWeaponChallenge.BACKGROUND_IMAGE].texture_rect,
+		valign = "scale",
 		w = self._object:w(),
 	}
 
@@ -1368,14 +1368,14 @@ end
 function HUDNotificationWeaponChallenge:_create_title()
 	local title_params = {
 		align = "left",
-		layer = 3,
-		name = "notification_weapon_challenge_title",
-		text = "INCREASE ACCURACY",
-		vertical = "center",
 		color = HUDNotificationWeaponChallenge.TITLE_COLOR,
 		font = tweak_data.gui:get_font_path(HUDNotificationWeaponChallenge.TITLE_FONT, HUDNotificationWeaponChallenge.TITLE_FONT_SIZE),
 		font_size = HUDNotificationWeaponChallenge.TITLE_FONT_SIZE,
 		h = HUDNotificationWeaponChallenge.TITLE_H,
+		layer = 3,
+		name = "notification_weapon_challenge_title",
+		text = "INCREASE ACCURACY",
+		vertical = "center",
 		w = self._object:w() - HUDNotificationWeaponChallenge.RIGHT_SIDE_X,
 		x = HUDNotificationWeaponChallenge.RIGHT_SIDE_X,
 		y = HUDNotificationWeaponChallenge.TITLE_Y,
@@ -1387,14 +1387,14 @@ end
 function HUDNotificationWeaponChallenge:_create_tier_label()
 	local tier_label_params = {
 		align = "left",
-		layer = 3,
-		name = "weapon_challenge_tier",
-		text = "TI",
-		vertical = "center",
 		color = HUDNotificationWeaponChallenge.TITLE_COLOR,
 		font = tweak_data.gui:get_font_path(HUDNotificationWeaponChallenge.TITLE_FONT, HUDNotificationWeaponChallenge.TITLE_FONT_SIZE),
 		font_size = HUDNotificationWeaponChallenge.TITLE_FONT_SIZE,
 		h = HUDNotificationWeaponChallenge.TITLE_H,
+		layer = 3,
+		name = "weapon_challenge_tier",
+		text = "TI",
+		vertical = "center",
 		y = HUDNotificationWeaponChallenge.TITLE_Y,
 	}
 
@@ -1416,14 +1416,14 @@ end
 
 function HUDNotificationWeaponChallenge:_create_description()
 	local description_params = {
-		layer = 3,
-		name = "weapon_challenge_description",
-		text = "You have see too much.",
-		wrap = true,
 		color = HUDNotificationWeaponChallenge.DESCRIPTION_COLOR,
 		font = tweak_data.gui:get_font_path(HUDNotificationWeaponChallenge.DESCRIPTION_FONT, HUDNotificationWeaponChallenge.DESCRIPTION_FONT_SIZE),
 		font_size = HUDNotificationWeaponChallenge.DESCRIPTION_FONT_SIZE,
+		layer = 3,
+		name = "weapon_challenge_description",
+		text = "You have see too much.",
 		w = self._object:w() - HUDNotificationWeaponChallenge.RIGHT_SIDE_X - HUDNotificationWeaponChallenge.PADDING_RIGHT,
+		wrap = true,
 		x = HUDNotificationWeaponChallenge.RIGHT_SIDE_X,
 		y = HUDNotificationWeaponChallenge.DESCRIPTION_Y,
 	}
@@ -1436,13 +1436,13 @@ function HUDNotificationWeaponChallenge:_create_progress_bar()
 	local texture_left = "slider_large_left"
 	local texture_right = "slider_large_right"
 	local progress_bar_panel_params = {
+		h = tweak_data.gui:icon_h(texture_center),
 		is_root_panel = true,
 		layer = 3,
 		name = "weapon_challenge_progress_bar_panel",
 		vertical = "bottom",
-		x = 0,
-		h = tweak_data.gui:icon_h(texture_center),
 		w = self._object:w(),
+		x = 0,
 	}
 
 	self._progress_bar_panel = RaidGUIPanel:new(self._object, progress_bar_panel_params)
@@ -1450,52 +1450,52 @@ function HUDNotificationWeaponChallenge:_create_progress_bar()
 	self._progress_bar_panel:set_bottom(self._object:h() - HUDNotificationWeaponChallenge.PROGRESS_BAR_DISTANCE_FROM_BOTTOM)
 
 	local progress_bar_background_params = {
-		layer = 1,
-		name = "weapon_challenge_progress_bar_background",
 		center = texture_center,
 		color = Color.white:with_alpha(0.5),
 		h = tweak_data.gui:icon_h(texture_center),
+		layer = 1,
 		left = texture_left,
+		name = "weapon_challenge_progress_bar_background",
 		right = texture_right,
 		w = self._progress_bar_panel:w(),
 	}
 	local progress_bar_background = self._progress_bar_panel:three_cut_bitmap(progress_bar_background_params)
 	local progress_bar_foreground_panel_params = {
+		h = self._progress_bar_panel:h(),
 		halign = "scale",
 		layer = 2,
 		name = "weapon_challenge_progress_bar_foreground_panel",
 		valign = "scale",
+		w = self._progress_bar_panel:w(),
 		x = 0,
 		y = 0,
-		h = self._progress_bar_panel:h(),
-		w = self._progress_bar_panel:w(),
 	}
 
 	self._progress_bar_foreground_panel = self._progress_bar_panel:panel(progress_bar_foreground_panel_params)
 
 	local progress_bar_background_params = {
-		name = "weapon_challenge_progress_bar_background",
 		center = texture_center,
 		color = tweak_data.gui.colors.raid_red,
 		h = tweak_data.gui:icon_h(texture_center),
 		left = texture_left,
+		name = "weapon_challenge_progress_bar_background",
 		right = texture_right,
 		w = self._progress_bar_panel:w(),
 	}
 	local progress_bar_background = self._progress_bar_foreground_panel:three_cut_bitmap(progress_bar_background_params)
 	local progress_bar_text_params = {
 		align = "center",
-		layer = 5,
-		name = "weapon_challenge_progress_bar_text",
-		text = "123/456",
-		vertical = "center",
-		x = 0,
-		y = -2,
 		color = tweak_data.gui.colors.raid_dirty_white,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_24,
 		h = self._progress_bar_panel:h(),
+		layer = 5,
+		name = "weapon_challenge_progress_bar_text",
+		text = "123/456",
+		vertical = "center",
 		w = self._progress_bar_panel:w(),
+		x = 0,
+		y = -2,
 	}
 
 	self._progress_text = self._progress_bar_panel:label(progress_bar_text_params)
@@ -1638,11 +1638,11 @@ function HUDNotificationActiveDuty:_create_panel()
 	self._initial_right_x = self._object:right()
 
 	local background_params = {
-		halign = "scale",
-		valign = "scale",
 		h = self._object:h(),
+		halign = "scale",
 		texture = tweak_data.gui.icons[HUDNotificationRaidUnlocked.BACKGROUND_IMAGE].texture,
 		texture_rect = tweak_data.gui.icons[HUDNotificationRaidUnlocked.BACKGROUND_IMAGE].texture_rect,
+		valign = "scale",
 		w = self._object:w(),
 	}
 
@@ -1654,7 +1654,6 @@ function HUDNotificationActiveDuty:_create_image(icon)
 		height = 352,
 		layer = 3,
 		name = "notification_active_duty_gold_image",
-		width = 352,
 		texture = tweak_data.gui.icons[icon].texture,
 		texture_rect = {
 			0,
@@ -1662,6 +1661,7 @@ function HUDNotificationActiveDuty:_create_image(icon)
 			512,
 			512,
 		},
+		width = 352,
 	}
 
 	self._image = self._object:bitmap(image_params)
@@ -1690,15 +1690,15 @@ function HUDNotificationActiveDuty:_create_description(notification_data)
 
 	local description_params = {
 		align = "right",
-		layer = 3,
-		name = "notification_raid_unlocked_description",
-		vertical = "center",
-		wrap = true,
 		color = HUDNotificationActiveDuty.DESCRIPTION_COLOR,
 		font = HUDNotificationActiveDuty.FONT,
 		font_size = HUDNotificationActiveDuty.FONT_SIZE,
+		layer = 3,
+		name = "notification_raid_unlocked_description",
 		text = text,
+		vertical = "center",
 		w = self._object:w() - 64,
+		wrap = true,
 	}
 
 	self._description = self._object:text(description_params)

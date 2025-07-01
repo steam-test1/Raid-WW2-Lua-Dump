@@ -22,23 +22,23 @@ function ExplodingProp:detonate(pos, range, damage, player_damage)
 	local effect_params = {
 		camera_shake_max_mul = 4,
 		effect = "effects/vanilla/explosions/exp_hand_grenade_001",
-		sound_muffle_effect = true,
 		feedback_range = range * 2,
 		sound_event = sound_event,
+		sound_muffle_effect = true,
 	}
 
 	if Network:is_server() then
 		local normal = math.UP
 		local slot_mask = managers.slot:get_mask("explosion_targets")
 		local damage_params = {
-			curve_pow = 3,
-			no_raycast_check_characters = true,
-			player_damage = 0,
 			alert_radius = self._alert_radius,
 			collision_slotmask = slot_mask,
+			curve_pow = 3,
 			damage = damage,
 			hit_pos = pos,
 			ignore_unit = self._unit,
+			no_raycast_check_characters = true,
+			player_damage = 0,
 			range = range,
 		}
 

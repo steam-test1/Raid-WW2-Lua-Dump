@@ -19,37 +19,37 @@ function RaidGUIControlLootCardDetails:init(parent, params, item_data)
 	self._object = self._panel:panel(object_params)
 	self._params.panel = nil
 	self._card_panel = self._object:panel({
-		x = 5,
-		y = 10,
 		h = params.item_h - 20,
 		layer = object_params.layer + 1,
 		name = "card_panel_" .. self._name,
 		w = params.item_w - 10,
+		x = 5,
+		y = 10,
 	})
 	self._select_background_panel = self._object:panel({
+		h = params.item_h,
 		layer = 1,
 		visible = false,
+		w = params.item_w,
 		x = 0,
 		y = 0,
-		h = params.item_h,
-		w = params.item_w,
 	})
 	self._select_background = self._select_background_panel:rect({
-		layer = 2,
 		color = tweak_data.gui.colors.raid_select_card_background,
+		layer = 2,
 	})
 	self._top_select_triangle = self._select_background_panel:image({
-		layer = 15,
-		x = 0,
-		y = 0,
 		h = RaidGUIControlCardWithSelector.SELECT_TRINGLE_SIZE,
+		layer = 15,
 		texture = tweak_data.gui.icons.ico_sel_rect_top_left.texture,
 		texture_rect = tweak_data.gui.icons.ico_sel_rect_top_left.texture_rect,
 		w = RaidGUIControlCardWithSelector.SELECT_TRINGLE_SIZE,
+		x = 0,
+		y = 0,
 	})
 	self._bottom_select_triangle = self._select_background_panel:image({
-		layer = 15,
 		h = RaidGUIControlCardWithSelector.SELECT_TRINGLE_SIZE,
+		layer = 15,
 		texture = tweak_data.gui.icons.ico_sel_rect_bottom_right.texture,
 		texture_rect = tweak_data.gui.icons.ico_sel_rect_bottom_right.texture_rect,
 		w = RaidGUIControlCardWithSelector.SELECT_TRINGLE_SIZE,
@@ -70,14 +70,14 @@ function RaidGUIControlLootCardDetails:_create_empty_card()
 	local card_back_texture, card_back_texture_rect = managers.challenge_cards:get_cards_back_texture(self._item_data)
 
 	self._card_empty = self._card_panel:image({
-		name = "card_empty",
-		x = 0,
-		y = 0,
 		h = self._card_panel:h(),
 		layer = self._card_panel:layer() + 1,
+		name = "card_empty",
 		texture = card_back_texture,
 		texture_rect = card_back_texture_rect,
 		w = self._card_panel:w(),
+		x = 0,
+		y = 0,
 	})
 	self._state = "card_empty"
 end
@@ -101,56 +101,55 @@ function RaidGUIControlLootCardDetails:_create_card_details()
 
 	self._bonus_image = self._object:image({
 		h = 64,
-		visible = false,
-		w = 64,
-		x = 0,
-		layer = self._card_panel:layer(),
 		layer = self._card_control:layer(),
 		name = "bonus_image_" .. self._name,
 		texture = tweak_data.gui.icons.ico_bonus.texture,
 		texture_rect = tweak_data.gui.icons.ico_bonus.texture_rect,
+		visible = false,
+		w = 64,
+		x = 0,
 		y = self._card_panel:h() + 20,
 	})
 	self._malus_image = self._object:image({
 		h = 64,
-		visible = false,
-		w = 64,
-		x = 0,
 		layer = self._card_control:layer(),
 		name = "malus_image_" .. self._name,
 		texture = tweak_data.gui.icons.ico_malus.texture,
 		texture_rect = tweak_data.gui.icons.ico_malus.texture_rect,
+		visible = false,
+		w = 64,
+		x = 0,
 		y = self._bonus_image:y() + self._bonus_image:h() + 26,
 	})
 	self._bonus_label = self._object:label({
 		align = "left",
-		h = 64,
-		text = "",
-		vertical = "center",
-		visible = false,
-		wrap = true,
 		color = tweak_data.gui.colors.raid_white,
 		font = tweak_data.gui.fonts.lato,
 		font_size = tweak_data.gui.font_sizes.size_20,
+		h = 64,
 		layer = self._card_control:layer(),
 		name = "bonus_label_" .. self._name,
+		text = "",
+		vertical = "center",
+		visible = false,
 		w = self._card_control:w() - self._bonus_image:w() - 10,
+		wrap = true,
 		x = self._bonus_image:x() + self._bonus_image:w(),
 		y = self._bonus_image:y(),
 	})
 	self._malus_label = self._object:label({
 		align = "left",
-		h = 64,
-		text = "",
-		vertical = "center",
-		visible = false,
-		wrap = true,
 		color = tweak_data.gui.colors.raid_white,
 		font = tweak_data.gui.fonts.lato,
 		font_size = tweak_data.gui.font_sizes.size_20,
+		h = 64,
 		layer = self._card_control:layer(),
 		name = "malus_label_" .. self._name,
+		text = "",
+		vertical = "center",
+		visible = false,
 		w = self._bonus_label:w(),
+		wrap = true,
 		x = self._malus_image:x() + self._malus_image:w(),
 		y = self._malus_image:y(),
 	})

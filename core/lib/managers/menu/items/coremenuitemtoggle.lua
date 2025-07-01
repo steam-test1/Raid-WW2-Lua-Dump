@@ -120,8 +120,6 @@ function ItemToggle:setup_gui(node, row_item)
 
 	if self:selected_option():parameters().icon then
 		row_item.gui_icon = row_item.gui_panel:bitmap({
-			x = 0,
-			y = 0,
 			blend_mode = node.row_item_blend_mode,
 			layer = node.layers.items,
 			texture = self:selected_option():parameters().icon,
@@ -131,6 +129,8 @@ function ItemToggle:setup_gui(node, row_item)
 				24,
 				24,
 			},
+			x = 0,
+			y = 0,
 		})
 
 		row_item.gui_icon:set_color(row_item.disabled_color)

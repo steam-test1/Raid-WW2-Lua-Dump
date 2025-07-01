@@ -56,9 +56,9 @@ function BarrageManager:spawn_flare(spotter, target)
 	local rot = spotter:rotation()
 
 	managers.dialog:queue_dialog("player_gen_barrage_flare_drop", {
-		skip_idle_check = true,
 		instigator = target,
 		position = target:position(),
+		skip_idle_check = true,
 	})
 
 	local target_pos = Vector3(target:position().x, target:position().y, pos.z)
@@ -264,8 +264,8 @@ function BarrageManager:_start_barrage(barrage_params)
 
 				if distance < 6400 then
 					managers.dialog:queue_dialog("player_gen_mortars_started", {
-						skip_idle_check = true,
 						instigator = player,
+						skip_idle_check = true,
 					})
 
 					break
@@ -283,8 +283,8 @@ function BarrageManager:_comment_on_barrage_end(barrage_pos)
 
 			if distance < 6400 then
 				managers.dialog:queue_dialog("player_gen_mortars_end", {
-					skip_idle_check = true,
 					instigator = player,
+					skip_idle_check = true,
 				})
 
 				break
@@ -308,12 +308,12 @@ function BarrageManager:_waypoint_barrage_add(running_barrage)
 	local icon = "waypoint_special_air_strike"
 	local data = {
 		distance = false,
-		waypoint_type = "spotter",
 		icon = icon,
 		lifetime = running_barrage.duration + 7,
 		position = running_barrage.center_target + Vector3(0, 0, 65),
 		range_max = running_barrage.radius and running_barrage.radius * 3.5 or 1000,
 		waypoint_color = color or Color(1, 1, 1),
+		waypoint_type = "spotter",
 	}
 
 	managers.hud:add_waypoint(running_barrage.waypoint_id, data)

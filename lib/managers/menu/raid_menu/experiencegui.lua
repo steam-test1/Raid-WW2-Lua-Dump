@@ -23,8 +23,8 @@ function ExperienceGui:_layout()
 	self:_layout_subtitle_text()
 
 	self._object = self._root_panel:panel({
-		name = "menu_main_panel",
 		h = ExperienceGui.MAIN_PANEL_H,
+		name = "menu_main_panel",
 		y = ExperienceGui.MAIN_PANEL_Y,
 	})
 
@@ -33,9 +33,9 @@ function ExperienceGui:_layout()
 	local left_padding = 8
 
 	self._menu_left_side = self._object:panel({
+		h = self._object:h() - left_padding * 2,
 		layer = 1,
 		name = "menu_left_side",
-		h = self._object:h() - left_padding * 2,
 		w = center - menu_shift,
 		y = left_padding,
 	})
@@ -104,9 +104,9 @@ function ExperienceGui:_layout_equipped_upgrades()
 
 	self._equipped_upgrades_area = self._menu_left_side:bitmap({
 		alpha = 0.8,
+		h = block_size + 8,
 		layer = 0,
 		name = "_temp_equipped_upgrades",
-		h = block_size + 8,
 		texture = backgrounds_chat_bg.texture,
 		texture_rect = backgrounds_chat_bg.texture_rect,
 		w = self._menu_left_side:w(),
@@ -141,13 +141,12 @@ function ExperienceGui:_layout_equipped_upgrades()
 			end
 
 			local grid_item = self._menu_left_side:create_custom_control(RaidGUIControlButtonSkillTiny, {
-				layer = 1,
-				y = 4,
 				color = color,
 				color_edge = color * 0.5,
 				color_icon = color_icon,
 				h = block_size,
 				icon = icon,
+				layer = 1,
 				level_lock = level_lock,
 				locked = not unlocked,
 				name = "equippped_slot_" .. slot_type_str .. i,
@@ -155,6 +154,7 @@ function ExperienceGui:_layout_equipped_upgrades()
 				on_mouse_enter_callback = callback(self, self, "on_equipped_selected_upgrade"),
 				w = block_size,
 				x = x,
+				y = 4,
 			})
 
 			table.insert(self._toprow_icons[slot_type], grid_item)
@@ -169,14 +169,12 @@ function ExperienceGui:_layout_equipped_upgrades()
 	make_skill_button(unlocked_talent_slots, SkillTreeTweakData.TYPE_TALENT)
 	self:_update_equipped_upgrades()
 
-	local grid_item_fg = tweak_data.gui:get_full_gui_data("hslider_arrow_left_base")
-
 	self._skill_profiles_button = self._menu_left_side:create_custom_control(RaidGUIControlButtonSkillProfiles, {
-		name = "skill_profiles_button",
-		y = 4,
 		h = block_size,
+		name = "skill_profiles_button",
 		on_click_callback = callback(self, self, "_on_toggle_skill_profiles"),
 		w = skill_profiles_w,
+		y = 4,
 	})
 
 	self._skill_profiles_button:set_right(self._menu_left_side:w())
@@ -255,9 +253,9 @@ function ExperienceGui:_layout_equipable_upgrades()
 
 	self._equipable_upgrades_background = self._menu_left_side:bitmap({
 		alpha = 0.5,
+		h = h,
 		layer = -1,
 		name = "grid_item_icon_sprite",
-		h = h,
 		texture = backgrounds_chat_bg.texture,
 		texture_rect = backgrounds_chat_bg.texture_rect,
 		w = self._menu_left_side:w(),
@@ -266,10 +264,10 @@ function ExperienceGui:_layout_equipable_upgrades()
 
 	local item_size = 90
 	local equippable_upgrades_scrollable_area_params = {
-		name = "equippable_upgrades_scrollable_area_params",
-		scrollbar_offset = 8,
 		h = h,
+		name = "equippable_upgrades_scrollable_area_params",
 		scroll_step = item_size * 0.8,
+		scrollbar_offset = 8,
 		w = self._menu_left_side:w(),
 		y = y,
 	}
@@ -277,27 +275,27 @@ function ExperienceGui:_layout_equipable_upgrades()
 	self._equippable_upgrades_scrollable_area = self._menu_left_side:scrollable_area(equippable_upgrades_scrollable_area_params)
 
 	local equippable_upgrades_params = {
-		name = "equippable_upgrades_grid",
 		grid_params = {
-			scroll_marker_w = 16,
-			vertical_spacing = 12,
 			data_source_callback = callback(self, self, "data_source_upgrades"),
 			on_click_callback = callback(self, self, "on_item_clicked_upgrade"),
 			on_select_callback = callback(self, self, "on_item_selected_upgrade"),
+			scroll_marker_w = 16,
+			vertical_spacing = 12,
 		},
 		h = equippable_upgrades_scrollable_area_params.h,
 		item_params = {
 			grid_item_icon = "grid_icon",
 			grid_item_tag_color = "tag_color",
-			key_value_field = "key_name",
 			icon_size_off = item_size * 0.65,
 			icon_size_on = item_size * 0.85,
 			item_h = item_size,
 			item_w = item_size,
+			key_value_field = "key_name",
 			row_class = RaidGUIControlGridItemSkill,
 			selected_marker_h = item_size,
 			selected_marker_w = item_size,
 		},
+		name = "equippable_upgrades_grid",
 		scrollable_area_ref = self._equippable_upgrades_scrollable_area,
 		w = equippable_upgrades_scrollable_area_params.w,
 	}
@@ -314,16 +312,16 @@ function ExperienceGui:_layout_skill_profile()
 	local x, y, w, h = self._equipable_upgrades_background:shape()
 
 	self._skill_profiles_list = self._menu_left_side:create_custom_control(RaidGUIControlListSeparated, {
-		loop_items = true,
-		name = "skill_profiles_list",
-		selection_enabled = false,
-		visible = false,
 		data_source_callback = callback(self, self, "_skill_profile_data_source"),
 		h = h - y_padding * 2,
 		item_class = RaidGUIControlListItemSkillProfile,
+		loop_items = true,
+		name = "skill_profiles_list",
 		on_item_clicked_callback = callback(self, self, "_on_skill_profile_clicked"),
 		on_item_selected_callback = callback(self, self, "_on_skill_profile_selected"),
+		selection_enabled = false,
 		special_action_callback = callback(self, self, "_on_skill_profile_rename"),
+		visible = false,
 		w = w - x_padding * 2,
 		x = x + x_padding,
 		y = y + y_padding,
@@ -398,8 +396,8 @@ function ExperienceGui:_on_skill_profile_rename(profile_index)
 	local profile_name = managers.skilltree:get_skill_profile_name(profile_index)
 
 	managers.menu:show_skill_profile_rename_dialog({
-		capitalize = false,
 		callback_yes = callback(self, self, "_skill_profile_renamed_callback", profile_index),
+		capitalize = false,
 		textbox_value = profile_name,
 	})
 end
@@ -564,15 +562,14 @@ function ExperienceGui:_layout_player_stats()
 	local h = ExperienceGui.R_PANEL_STATS
 
 	self._player_stats_panel = self._menu_right_side:panel({
-		name = "player_stats_panel",
 		h = h,
+		name = "player_stats_panel",
 		w = self._menu_right_side:w(),
 	})
 
 	self._player_stats_panel:set_bottom(self._menu_right_side:h())
 
 	self._player_stats = self._player_stats_panel:player_stats({
-		name = "player_stats",
 		data_source_callback = callback(self, self, "data_source_stats"),
 		h = self._player_stats_panel:h(),
 		item_params = {
@@ -580,6 +577,7 @@ function ExperienceGui:_layout_player_stats()
 			font_size = tweak_data.gui.font_sizes.size_24,
 			value_font_size = tweak_data.gui.font_sizes.menu_list,
 		},
+		name = "player_stats",
 		w = self._player_stats_panel:w(),
 	})
 
@@ -638,18 +636,18 @@ function ExperienceGui:_layout_experience_progress()
 	local backgrounds_chat_bg = tweak_data.gui.icons.backgrounds_chat_bg
 
 	self._experience_progress_background = self._menu_right_side:bitmap({
+		h = h,
 		layer = -1,
 		name = "grid_item_icon_sprite",
-		h = h,
 		texture = backgrounds_chat_bg.texture,
 		texture_rect = backgrounds_chat_bg.texture_rect,
 		w = self._menu_right_side:w(),
 		y = y,
 	})
 	self._progress_bar = self._menu_right_side:create_custom_control(RaidGUIControlSkilltreeProgressBar, {
+		h = h - 12,
 		horizontal_padding = 15,
 		name = "progress_bar",
-		h = h - 12,
 		w = self._menu_right_side:w() - 100,
 	})
 
@@ -663,8 +661,8 @@ function ExperienceGui:_layout_upgrade_information()
 	local h = self._experience_progress_background:y() - ExperienceGui.R_PANEL_PADDING
 
 	self._upgrade_information = self._menu_right_side:create_custom_control(RaidGUIControlSkillDetails, {
-		layer = 1,
 		h = h,
+		layer = 1,
 		w = self._menu_right_side:w(),
 	})
 end
@@ -702,8 +700,8 @@ function ExperienceGui:bind_controller_inputs()
 		},
 		keyboard = {
 			{
-				key = "footer_back",
 				callback = callback(self, self, "_on_legend_pc_back", nil),
+				key = "footer_back",
 			},
 		},
 	}
@@ -730,8 +728,8 @@ function ExperienceGui:bind_controller_inputs_buy()
 		},
 		keyboard = {
 			{
-				key = "footer_back",
 				callback = callback(self, self, "_on_legend_pc_back", nil),
+				key = "footer_back",
 			},
 		},
 	}
@@ -762,8 +760,8 @@ function ExperienceGui:bind_controller_inputs_equip()
 		},
 		keyboard = {
 			{
-				key = "footer_back",
 				callback = callback(self, self, "_on_legend_pc_back", nil),
+				key = "footer_back",
 			},
 		},
 	}
@@ -788,8 +786,8 @@ function ExperienceGui:bind_controller_inputs_locked()
 		},
 		keyboard = {
 			{
-				key = "footer_back",
 				callback = callback(self, self, "_on_legend_pc_back", nil),
+				key = "footer_back",
 			},
 		},
 	}

@@ -276,8 +276,8 @@ function CopActionTase:update(t)
 		end
 
 		self._tase_effect = World:effect_manager():spawn({
-			force_synch = true,
 			effect = tweak_data.common_effects.taser_thread,
+			force_synch = true,
 			parent = self._ext_inventory:equipped_unit():get_object(Idstring("fire")),
 		})
 
@@ -374,15 +374,15 @@ function CopActionTase:clbk_malfunction()
 	})
 
 	local action_data = {
-		damage = 0,
-		variant = "melee",
 		attack_dir = -self._common_data.fwd,
 		attacker_unit = managers.player:player_unit() or self._unit,
 		col_ray = {
 			body = self._unit:body("body"),
 			position = mvector3.copy(self._ext_movement:m_head_pos()),
 		},
+		damage = 0,
 		damage_effect = self._unit:character_damage()._HEALTH_INIT * 10,
+		variant = "melee",
 	}
 
 	self._unit:character_damage():damage_melee(action_data)

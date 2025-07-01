@@ -193,8 +193,8 @@ function EventCompleteState:at_enter(old_state, params)
 	self:set_statistics_values()
 	managers.statistics:stop_session({
 		quit = false,
-		type = "victory",
 		success = self._success,
+		type = "victory",
 	})
 	managers.statistics:send_statistics()
 	self:get_personal_stats()
@@ -310,11 +310,11 @@ function EventCompleteState:_calculate_extra_loot_secured()
 
 	if extra_loot_value > 0 then
 		self.loot_data[LootScreenGui.LOOT_ITEM_EXTRA_LOOT] = {
+			acquired = extra_loot_count,
+			acquired_value = extra_loot_value,
 			icon = "rewards_extra_loot",
 			title = "menu_loot_screen_bonus_loot",
 			total_value = 0,
-			acquired = extra_loot_count,
-			acquired_value = extra_loot_value,
 		}
 	end
 end
@@ -333,10 +333,10 @@ function EventCompleteState:on_loot_data_ready()
 
 	self.peers_loot_drops = managers.lootdrop:get_loot_for_peers()
 	self.loot_data[LootScreenGui.LOOT_ITEM_DOG_TAGS] = {
-		icon = "rewards_dog_tags",
-		title = "menu_loot_screen_dog_tags",
 		acquired = self.loot_acquired,
 		acquired_value = self.loot_acquired * tweak_data.lootdrop.dog_tag.loot_value,
+		icon = "rewards_dog_tags",
+		title = "menu_loot_screen_dog_tags",
 		total = self.loot_spawned,
 		total_value = self.loot_spawned * tweak_data.lootdrop.dog_tag.loot_value,
 	}
@@ -427,11 +427,11 @@ function EventCompleteState:_create_debrief_video()
 
 	local full_panel = self._full_workspace:panel()
 	local params_root_panel = {
-		is_root_panel = true,
-		name = "event_complete_video_root_panel",
 		background_color = Color.black,
 		h = full_panel:h(),
+		is_root_panel = true,
 		layer = tweak_data.gui.DEBRIEF_VIDEO_LAYER,
+		name = "event_complete_video_root_panel",
 		w = full_panel:w(),
 		x = full_panel:x(),
 		y = full_panel:y(),
@@ -441,8 +441,8 @@ function EventCompleteState:_create_debrief_video()
 
 	local video = self:_get_debrief_video(self:is_success())
 	local debrief_video_params = {
-		name = "event_complete_debrief_video",
 		layer = self._panel:layer() + 1,
+		name = "event_complete_debrief_video",
 		video = video,
 		width = self._panel:w(),
 	}
@@ -457,11 +457,11 @@ function EventCompleteState:_create_debrief_video()
 	local press_any_key_text = managers.controller:is_using_controller() and "press_any_key_to_skip_controller" or "press_any_key_to_skip"
 	local press_any_key_prompt = self._safe_panel:text({
 		alpha = 0,
-		name = "press_any_key_prompt",
 		color = tweak_data.gui.colors.raid_dirty_white,
 		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.size_32),
 		font_size = tweak_data.gui.font_sizes.size_32,
 		layer = self._debrief_video:layer() + 1,
+		name = "press_any_key_prompt",
 		text = utf8.to_upper(managers.localization:text(press_any_key_text)),
 	})
 	local _, _, w, h = press_any_key_prompt:text_rect()
@@ -649,10 +649,10 @@ function EventCompleteState:on_top_stats_ready()
 			end
 
 			local top_stats_loot_data = {
-				icon = "rewards_top_stats",
-				title = "menu_loot_screen_top_stats",
 				acquired = #self.player_top_stats,
 				acquired_value = acquired_value,
+				icon = "rewards_top_stats",
+				title = "menu_loot_screen_top_stats",
 				total = #self.special_honors,
 				total_value = total_value,
 			}

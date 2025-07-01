@@ -42,60 +42,60 @@ end
 function CharacterSelectionGui:_layout()
 	self:_disable_dof()
 	self._root_panel:label({
-		h = 32,
-		name = "subtitle_profiles",
-		w = 416,
-		x = 0,
-		y = 96,
 		color = tweak_data.gui.colors.raid_white,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.large,
-		text = self:translate("character_selection_subtitle", true),
-	})
-	self._root_panel:label({
 		h = 32,
-		name = "subtitle_small_profiles",
+		name = "subtitle_profiles",
+		text = self:translate("character_selection_subtitle", true),
 		w = 416,
 		x = 0,
-		y = 128,
+		y = 96,
+	})
+	self._root_panel:label({
 		color = tweak_data.gui.colors.raid_grey,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.small,
+		h = 32,
+		name = "subtitle_small_profiles",
 		text = self:translate("character_selection_subtitle_small", true),
+		w = 416,
+		x = 0,
+		y = 128,
 	})
 
 	self._characters_list = self._root_panel:list_active({
+		data_source_callback = callback(self, self, "_data_source_characters_list"),
 		h = 480,
+		item_class = RaidGUIControlListItemCharacterSelect,
 		item_h = 94,
 		name = "characters_list",
+		on_item_clicked_callback = callback(self, self, "_on_item_click"),
+		on_item_double_clicked_callback = callback(self, self, "_on_item_double_click"),
+		on_item_selected_callback = callback(self, self, "_on_item_selected"),
 		selection_enabled = true,
+		special_action_callback = callback(self, self, "_character_action_callback"),
 		vertical_spacing = 2,
 		w = 650,
 		x = 0,
 		y = 224,
-		data_source_callback = callback(self, self, "_data_source_characters_list"),
-		item_class = RaidGUIControlListItemCharacterSelect,
-		on_item_clicked_callback = callback(self, self, "_on_item_click"),
-		on_item_double_clicked_callback = callback(self, self, "_on_item_double_click"),
-		on_item_selected_callback = callback(self, self, "_on_item_selected"),
-		special_action_callback = callback(self, self, "_character_action_callback"),
 	})
 	self._select_character_button = self._root_panel:long_primary_button({
+		layer = RaidGuiBase.FOREGROUND_LAYER,
 		name = "select_character_button",
+		on_click_callback = callback(self, self, "on_select_character_button"),
+		text = self:translate("character_selection_select_character_button", true),
 		visible = false,
 		x = 0,
 		y = 736,
-		layer = RaidGuiBase.FOREGROUND_LAYER,
-		on_click_callback = callback(self, self, "on_select_character_button"),
-		text = self:translate("character_selection_select_character_button", true),
 	})
 	self._select_character_button_disabled = self._root_panel:long_primary_button_disabled({
-		name = "select_character_button_disabled",
-		x = 0,
-		y = 736,
 		layer = RaidGuiBase.FOREGROUND_LAYER,
+		name = "select_character_button_disabled",
 		text = self:translate("character_selection_selected_character_button", true),
 		visible = not managers.controller:is_controller_present(),
+		x = 0,
+		y = 736,
 	})
 
 	self._select_character_button:set_x((416 - self._select_character_button:w()) / 2)
@@ -107,7 +107,10 @@ function CharacterSelectionGui:_layout()
 		w = 516,
 		x = 1308,
 		y = 0,
-	}, {})
+	}, {
+		class = nil,
+		slot = nil,
+	})
 
 	self._right_side_info:set_right(self._root_panel:right())
 	self._right_side_info:set_center_y(self._root_panel:h() / 2)
@@ -805,8 +808,8 @@ function CharacterSelectionGui:_bind_active_slot_controller_inputs()
 		},
 		keyboard = {
 			{
-				key = "footer_back",
 				callback = callback(self, self, "_on_legend_pc_back", nil),
+				key = "footer_back",
 			},
 		},
 	}
@@ -838,8 +841,8 @@ function CharacterSelectionGui:_bind_inactive_slot_controller_inputs()
 		},
 		keyboard = {
 			{
-				key = "footer_back",
 				callback = callback(self, self, "_on_legend_pc_back", nil),
+				key = "footer_back",
 			},
 		},
 	}
@@ -866,8 +869,8 @@ function CharacterSelectionGui:_bind_empty_slot_controller_inputs()
 		},
 		keyboard = {
 			{
-				key = "footer_back",
 				callback = callback(self, self, "_on_legend_pc_back", nil),
+				key = "footer_back",
 			},
 		},
 	}

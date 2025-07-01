@@ -66,8 +66,8 @@ function FilterUnitElement:_build_panel(panel, panel_sizer)
 
 	difficulty_normal:set_value(self._hed.difficulty_normal)
 	difficulty_normal:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		value = "difficulty_normal",
 		ctrlr = difficulty_normal,
+		value = "difficulty_normal",
 	})
 	difficulty_sizer:add(difficulty_normal, 0, 0, "EXPAND")
 
@@ -75,8 +75,8 @@ function FilterUnitElement:_build_panel(panel, panel_sizer)
 
 	difficulty_hard:set_value(self._hed.difficulty_hard)
 	difficulty_hard:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		value = "difficulty_hard",
 		ctrlr = difficulty_hard,
+		value = "difficulty_hard",
 	})
 	difficulty_sizer:add(difficulty_hard, 0, 0, "EXPAND")
 
@@ -84,8 +84,8 @@ function FilterUnitElement:_build_panel(panel, panel_sizer)
 
 	difficulty_overkill:set_value(self._hed.difficulty_overkill)
 	difficulty_overkill:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		value = "difficulty_overkill",
 		ctrlr = difficulty_overkill,
+		value = "difficulty_overkill",
 	})
 	difficulty_sizer:add(difficulty_overkill, 0, 0, "EXPAND")
 
@@ -93,8 +93,8 @@ function FilterUnitElement:_build_panel(panel, panel_sizer)
 
 	difficulty_overkill_145:set_value(self._hed.difficulty_overkill_145)
 	difficulty_overkill_145:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		value = "difficulty_overkill_145",
 		ctrlr = difficulty_overkill_145,
+		value = "difficulty_overkill_145",
 	})
 	difficulty_sizer:add(difficulty_overkill_145, 0, 0, "EXPAND")
 
@@ -106,8 +106,8 @@ function FilterUnitElement:_build_panel(panel, panel_sizer)
 
 	player_1:set_value(self._hed.player_1)
 	player_1:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		value = "player_1",
 		ctrlr = player_1,
+		value = "player_1",
 	})
 	players_sizer:add(player_1, 0, 0, "EXPAND")
 
@@ -115,8 +115,8 @@ function FilterUnitElement:_build_panel(panel, panel_sizer)
 
 	player_2:set_value(self._hed.player_2)
 	player_2:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		value = "player_2",
 		ctrlr = player_2,
+		value = "player_2",
 	})
 	players_sizer:add(player_2, 0, 0, "EXPAND")
 
@@ -124,8 +124,8 @@ function FilterUnitElement:_build_panel(panel, panel_sizer)
 
 	player_3:set_value(self._hed.player_3)
 	player_3:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		value = "player_3",
 		ctrlr = player_3,
+		value = "player_3",
 	})
 	players_sizer:add(player_3, 0, 0, "EXPAND")
 
@@ -133,8 +133,8 @@ function FilterUnitElement:_build_panel(panel, panel_sizer)
 
 	player_4:set_value(self._hed.player_4)
 	player_4:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		value = "player_4",
 		ctrlr = player_4,
+		value = "player_4",
 	})
 	players_sizer:add(player_4, 0, 0, "EXPAND")
 
@@ -146,8 +146,8 @@ function FilterUnitElement:_build_panel(panel, panel_sizer)
 
 	platform_win32:set_value(self._hed.platform_win32)
 	platform_win32:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		value = "platform_win32",
 		ctrlr = platform_win32,
+		value = "platform_win32",
 	})
 	platform_sizer:add(platform_win32, 0, 0, "EXPAND")
 
@@ -155,8 +155,8 @@ function FilterUnitElement:_build_panel(panel, panel_sizer)
 
 	platform_console:set_value(self._hed.platform_console)
 	platform_console:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		value = "platform_console",
 		ctrlr = platform_console,
+		value = "platform_console",
 	})
 	platform_sizer:add(platform_console, 0, 0, "EXPAND")
 
@@ -168,8 +168,8 @@ function FilterUnitElement:_build_panel(panel, panel_sizer)
 
 	mode_control:set_value(self._hed.mode_control == nil and true or self._hed.mode_control)
 	mode_control:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		value = "mode_control",
 		ctrlr = mode_control,
+		value = "mode_control",
 	})
 	mode_sizer:add(mode_control, 0, 0, "EXPAND")
 
@@ -177,8 +177,8 @@ function FilterUnitElement:_build_panel(panel, panel_sizer)
 
 	mode_assault:set_value(self._hed.mode_assault == nil and true or self._hed.mode_assault)
 	mode_assault:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		value = "mode_assault",
 		ctrlr = mode_assault,
+		value = "mode_assault",
 	})
 	mode_sizer:add(mode_assault, 0, 0, "EXPAND")
 
@@ -190,8 +190,8 @@ function FilterUnitElement:_build_panel(panel, panel_sizer)
 
 	alarm_on:set_value(self._hed.alarm_on == nil and true or self._hed.alarm_on)
 	alarm_on:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		value = "alarm_on",
 		ctrlr = alarm_on,
+		value = "alarm_on",
 	})
 	alarm_sizer:add(alarm_on, 0, 0, "EXPAND")
 
@@ -199,8 +199,8 @@ function FilterUnitElement:_build_panel(panel, panel_sizer)
 
 	alarm_off:set_value(self._hed.alarm_off == nil and true or self._hed.alarm_off)
 	alarm_off:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		value = "alarm_off",
 		ctrlr = alarm_off,
+		value = "alarm_off",
 	})
 	alarm_sizer:add(alarm_off, 0, 0, "EXPAND")
 end

@@ -53,9 +53,9 @@ function CoreAreaTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 		if self:_should_draw_link(selected_unit, unit) then
 			self:_draw_link({
 				b = 0,
+				from_unit = self._unit,
 				g = 0,
 				r = 0.75,
-				from_unit = self._unit,
 				to_unit = unit,
 			})
 		end
@@ -69,9 +69,9 @@ function CoreAreaTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 				if self:_should_draw_link(selected_unit, unit) then
 					self:_draw_link({
 						b = 0.75,
+						from_unit = unit,
 						g = 0.5,
 						r = 0,
-						from_unit = unit,
 						to_unit = self._unit,
 					})
 					Application:draw(unit, 0, 0.5, 0.75)
@@ -569,9 +569,9 @@ function CoreAreaOperatorUnitElement:draw_links(t, dt, selected_unit, all_units)
 		if draw then
 			self:_draw_link({
 				b = 0.25,
+				from_unit = self._unit,
 				g = 0.75,
 				r = 0.75,
-				from_unit = self._unit,
 				to_unit = unit,
 			})
 		end

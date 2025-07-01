@@ -54,13 +54,13 @@ end
 
 function RaidGUIControlStatsBreakdown:_create_stats_label()
 	local stats_label_params = {
-		name = "stats_label",
-		vertical = "center",
 		color = RaidGUIControlStatsBreakdown.LABEL_COLOR,
 		font = RaidGUIControlStatsBreakdown.FONT,
 		font_size = RaidGUIControlStatsBreakdown.LABEL_FONT_SIZE,
 		h = RaidGUIControlStatsBreakdown.STATS_LABEL_H,
+		name = "stats_label",
 		text = self:translate("stats_label", true),
+		vertical = "center",
 		w = RaidGUIControlStatsBreakdown.DEFAULT_W,
 		x = RaidGUIControlStatsBreakdown.STATS_LABEL_X,
 		y = RaidGUIControlStatsBreakdown.STATS_LABEL_Y,
@@ -72,24 +72,22 @@ end
 function RaidGUIControlStatsBreakdown:_create_breakdown_table(params)
 	local breakdown_table_params = {
 		name = "breakdown_table",
-		use_selector_mark = false,
-		x = 0,
 		table_params = {
 			columns = {
 				{
 					align = "left",
-					vertical = "center",
 					cell_class = RaidGUIControlTableCell,
 					color = RaidGUIControlStatsBreakdown.TABLE_COLOR,
 					h = RaidGUIControlStatsBreakdown.TABLE_COLUMN_HEIGHT,
+					vertical = "center",
 					w = self._object:w() * RaidGUIControlStatsBreakdown.TABLE_DESCRIPTION_W_PERCENT / 100,
 				},
 				{
 					align = "right",
-					vertical = "center",
 					cell_class = RaidGUIControlTableCell,
 					color = RaidGUIControlStatsBreakdown.TABLE_COLOR,
 					h = RaidGUIControlStatsBreakdown.TABLE_COLUMN_HEIGHT,
+					vertical = "center",
 					w = self._object:w() * RaidGUIControlStatsBreakdown.TABLE_VALUE_W_PERCENT / 100,
 				},
 			},
@@ -99,7 +97,9 @@ function RaidGUIControlStatsBreakdown:_create_breakdown_table(params)
 				height = RaidGUIControlStatsBreakdown.TABLE_ROW_HEIGHT,
 			},
 		},
+		use_selector_mark = false,
 		w = RaidGUIControlStatsBreakdown.DEFAULT_W,
+		x = 0,
 		y = self._stats_label:y() + self._stats_label:h() + RaidGUIControlStatsBreakdown.LABEL_PADDING_DOWN,
 	}
 

@@ -29,10 +29,10 @@ end
 
 function HUDTabWeaponChallenge:_create_panel(panel)
 	local panel_params = {
+		h = HUDTabWeaponChallenge.HEIGHT,
 		halign = "left",
 		name = "weapon_challenge_panel",
 		valign = "bottom",
-		h = HUDTabWeaponChallenge.HEIGHT,
 		w = HUDTabWeaponChallenge.WIDTH + HUDTabWeaponChallenge.ANIMATION_MOVE_X_DISTANCE,
 	}
 
@@ -68,13 +68,13 @@ end
 function HUDTabWeaponChallenge:_create_title()
 	local title_params = {
 		align = "left",
-		name = "weapon_challenge_title",
-		text = "INCREASE ACCURACY",
-		vertical = "center",
 		color = HUDTabWeaponChallenge.TITLE_COLOR,
 		font = tweak_data.gui:get_font_path(HUDTabWeaponChallenge.TITLE_FONT, HUDTabWeaponChallenge.TITLE_FONT_SIZE),
 		font_size = HUDTabWeaponChallenge.TITLE_FONT_SIZE,
 		h = HUDTabWeaponChallenge.TITLE_H,
+		name = "weapon_challenge_title",
+		text = "INCREASE ACCURACY",
+		vertical = "center",
 		w = self._inner_panel:w() - HUDTabWeaponChallenge.RIGHT_SIDE_X,
 		x = HUDTabWeaponChallenge.RIGHT_SIDE_X,
 		y = HUDTabWeaponChallenge.TITLE_Y,
@@ -86,13 +86,13 @@ end
 function HUDTabWeaponChallenge:_create_tier_label()
 	local tier_label_params = {
 		align = "left",
-		name = "weapon_challenge_tier",
-		text = "TI",
-		vertical = "center",
 		color = HUDTabWeaponChallenge.TITLE_COLOR,
 		font = tweak_data.gui:get_font_path(HUDTabWeaponChallenge.TITLE_FONT, HUDTabWeaponChallenge.TITLE_FONT_SIZE),
 		font_size = HUDTabWeaponChallenge.TITLE_FONT_SIZE,
 		h = HUDTabWeaponChallenge.TITLE_H,
+		name = "weapon_challenge_tier",
+		text = "TI",
+		vertical = "center",
 		y = HUDTabWeaponChallenge.TITLE_Y,
 	}
 
@@ -113,13 +113,13 @@ end
 
 function HUDTabWeaponChallenge:_create_description()
 	local description_params = {
-		name = "weapon_challenge_description",
-		text = "Bla bla bla bla",
-		wrap = true,
 		color = HUDTabWeaponChallenge.DESCRIPTION_COLOR,
 		font = tweak_data.gui:get_font_path(HUDTabWeaponChallenge.DESCRIPTION_FONT, HUDTabWeaponChallenge.DESCRIPTION_FONT_SIZE),
 		font_size = HUDTabWeaponChallenge.DESCRIPTION_FONT_SIZE,
+		name = "weapon_challenge_description",
+		text = "Bla bla bla bla",
 		w = self._inner_panel:w() - HUDTabWeaponChallenge.RIGHT_SIDE_X,
+		wrap = true,
 		x = HUDTabWeaponChallenge.RIGHT_SIDE_X,
 		y = HUDTabWeaponChallenge.TITLE_Y + HUDTabWeaponChallenge.TITLE_H,
 	}
@@ -132,12 +132,12 @@ function HUDTabWeaponChallenge:_create_progress_bar()
 	local texture_left = "slider_large_left"
 	local texture_right = "slider_large_right"
 	local progress_bar_panel_params = {
+		h = tweak_data.gui:icon_h(texture_center),
 		is_root_panel = true,
 		name = "weapon_challenge_progress_bar_panel",
 		vertical = "bottom",
-		x = 0,
-		h = tweak_data.gui:icon_h(texture_center),
 		w = self._inner_panel:w(),
+		x = 0,
 	}
 
 	self._progress_bar_panel = RaidGUIPanel:new(self._inner_panel, progress_bar_panel_params)
@@ -145,52 +145,52 @@ function HUDTabWeaponChallenge:_create_progress_bar()
 	self._progress_bar_panel:set_center_y(self._inner_panel:h() - 32)
 
 	local progress_bar_background_params = {
-		layer = 1,
-		name = "weapon_challenge_progress_bar_background",
 		center = texture_center,
 		color = Color.white:with_alpha(0.5),
 		h = tweak_data.gui:icon_h(texture_center),
+		layer = 1,
 		left = texture_left,
+		name = "weapon_challenge_progress_bar_background",
 		right = texture_right,
 		w = self._progress_bar_panel:w(),
 	}
 	local progress_bar_background = self._progress_bar_panel:three_cut_bitmap(progress_bar_background_params)
 	local progress_bar_foreground_panel_params = {
+		h = self._progress_bar_panel:h(),
 		halign = "scale",
 		layer = 2,
 		name = "weapon_challenge_progress_bar_foreground_panel",
 		valign = "scale",
+		w = self._progress_bar_panel:w(),
 		x = 0,
 		y = 0,
-		h = self._progress_bar_panel:h(),
-		w = self._progress_bar_panel:w(),
 	}
 
 	self._progress_bar_foreground_panel = self._progress_bar_panel:panel(progress_bar_foreground_panel_params)
 
 	local progress_bar_background_params = {
-		name = "weapon_challenge_progress_bar_background",
 		center = texture_center,
 		color = tweak_data.gui.colors.raid_red,
 		h = tweak_data.gui:icon_h(texture_center),
 		left = texture_left,
+		name = "weapon_challenge_progress_bar_background",
 		right = texture_right,
 		w = self._progress_bar_panel:w(),
 	}
 	local progress_bar_background = self._progress_bar_foreground_panel:three_cut_bitmap(progress_bar_background_params)
 	local progress_bar_text_params = {
 		align = "center",
-		layer = 5,
-		name = "weapon_challenge_progress_bar_text",
-		text = "123/456",
-		vertical = "center",
-		x = 0,
-		y = -2,
 		color = tweak_data.gui.colors.raid_dirty_white,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_24,
 		h = self._progress_bar_panel:h(),
+		layer = 5,
+		name = "weapon_challenge_progress_bar_text",
+		text = "123/456",
+		vertical = "center",
 		w = self._progress_bar_panel:w(),
+		x = 0,
+		y = -2,
 	}
 
 	self._progress_text = self._progress_bar_panel:label(progress_bar_text_params)

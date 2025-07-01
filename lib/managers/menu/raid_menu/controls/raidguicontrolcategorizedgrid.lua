@@ -73,9 +73,9 @@ function RaidGUIControlCategorizedGrid:_create_category(category_data, vertical_
 	local backgrounds_chat_bg = tweak_data.gui.icons.backgrounds_chat_bg
 	local background = category_panel:image({
 		alpha = 0.4,
+		h = category_panel:h() - RaidGUIControlCategorizedGrid.LABEL_H,
 		layer = -1,
 		name = "category_background",
-		h = category_panel:h() - RaidGUIControlCategorizedGrid.LABEL_H,
 		texture = backgrounds_chat_bg.texture,
 		texture_rect = backgrounds_chat_bg.texture_rect,
 		w = category_panel:w(),

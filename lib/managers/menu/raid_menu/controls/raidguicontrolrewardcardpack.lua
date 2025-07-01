@@ -34,10 +34,10 @@ end
 
 function RaidGUIControlRewardCardPack:_create_panel()
 	local panel_params = {
-		name = "local_player_card_pack_reward_panel",
-		visible = false,
 		h = self._params.h,
 		layer = self._panel:layer() + 1,
+		name = "local_player_card_pack_reward_panel",
+		visible = false,
 		w = self._params.w,
 		x = self._params.x or 0,
 		y = self._params.y or 0,
@@ -60,8 +60,8 @@ end
 
 function RaidGUIControlRewardCardPack:_create_left_panel()
 	local left_panel_params = {
-		name = "left_panel",
 		h = self._object:h(),
+		name = "left_panel",
 		w = RaidGUIControlRewardCardPack.LEFT_PANEL_W,
 	}
 
@@ -72,13 +72,13 @@ function RaidGUIControlRewardCardPack:_create_title()
 	local title_description_params = {
 		align = "left",
 		alpha = 0,
-		name = "title_description",
-		vertical = "center",
 		color = RaidGUIControlRewardCardPack.TITLE_DESCRIPTION_COLOR,
 		font = RaidGUIControlRewardCardPack.FONT,
 		font_size = RaidGUIControlRewardCardPack.TITLE_DESCRIPTION_FONT_SIZE,
 		h = RaidGUIControlRewardCardPack.TITLE_DESCRIPTION_H,
+		name = "title_description",
 		text = self:translate("menu_loot_screen_bracket_unlocked_title", true),
+		vertical = "center",
 		y = RaidGUIControlRewardCardPack.TITLE_DESCRIPTION_Y,
 	}
 
@@ -93,12 +93,12 @@ function RaidGUIControlRewardCardPack:_create_title()
 	local title_params = {
 		align = "center",
 		alpha = 0,
-		name = "pack_title",
-		vertical = "top",
 		color = RaidGUIControlRewardCardPack.TITLE_COLOR,
 		font = RaidGUIControlRewardCardPack.FONT,
 		font_size = RaidGUIControlRewardCardPack.TITLE_FONT_SIZE,
+		name = "pack_title",
 		text = self:translate("menu_loot_screen_card_pack", true),
+		vertical = "top",
 		y = self._title_description:y() + self._title_description:h() + RaidGUIControlRewardCardPack.TITLE_PADDING_TOP,
 	}
 
@@ -115,16 +115,16 @@ end
 function RaidGUIControlRewardCardPack:_create_cards_control()
 	local cards_control_params = {
 		h = 900,
-		name = "cards_control",
-		visible = false,
-		w = 780,
-		x = 0,
-		y = 0,
 		item_params = {
 			item_h = 352,
 			item_w = 256,
 			wrapper_h = 600,
 		},
+		name = "cards_control",
+		visible = false,
+		w = 780,
+		x = 0,
+		y = 0,
 	}
 
 	self._cards_control = self._left_panel:create_custom_control(RaidGUIControlLootRewardCards, cards_control_params)
@@ -135,8 +135,8 @@ end
 
 function RaidGUIControlRewardCardPack:_create_right_panel()
 	local right_panel_params = {
-		name = "right_panel",
 		h = self._object:h(),
+		name = "right_panel",
 		w = self._object:w() - self._left_panel:w(),
 	}
 
@@ -149,14 +149,14 @@ function RaidGUIControlRewardCardPack:_create_description()
 	local description_params = {
 		align = "left",
 		alpha = 0,
-		name = "description",
-		vertical = "top",
-		wrap = true,
 		color = RaidGUIControlRewardCardPack.DESCRIPTION_COLOR,
 		font = RaidGUIControlRewardCardPack.DESCRIPTION_FONT,
 		font_size = RaidGUIControlRewardCardPack.DESCRIPTION_FONT_SIZE,
+		name = "description",
 		text = self:translate("menu_loot_screen_card_pack_description"),
+		vertical = "top",
 		w = RaidGUIControlRewardCardPack.DESCRIPTION_W,
+		wrap = true,
 		y = RaidGUIControlRewardCardPack.DESCRIPTION_Y,
 	}
 
@@ -169,13 +169,13 @@ function RaidGUIControlRewardCardPack:_create_item_description_name()
 	local item_type_params = {
 		align = "left",
 		alpha = 0,
-		name = "item_type",
-		vertical = "center",
 		color = RaidGUIControlRewardCardPack.ITEM_TYPE_COLOR,
 		font = RaidGUIControlRewardCardPack.FONT,
 		font_size = RaidGUIControlRewardCardPack.ITEM_TYPE_FONT_SIZE,
 		h = RaidGUIControlRewardCardPack.ITEM_TYPE_H,
+		name = "item_type",
 		text = self:translate("menu_loot_screen_card_pack", true),
+		vertical = "center",
 		w = self._right_panel:w(),
 		x = self._description:x(),
 		y = RaidGUIControlRewardCardPack.ITEM_TYPE_Y,

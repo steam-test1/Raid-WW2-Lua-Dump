@@ -167,8 +167,8 @@ function ElementNavLink:clbk_objective_administered(unit)
 			managers.navigation:unreserve_pos(unit_rsrv)
 		else
 			unit_rsrv = {
-				radius = 30,
 				position = self._values.align_position and self._values.position or unit:position(),
+				radius = 30,
 			}
 			self._pos_rsrv[unit:key()] = unit_rsrv
 		end
@@ -235,8 +235,8 @@ end
 function ElementNavLink:clbk_verify_administration(unit)
 	if self._values.needs_pos_rsrv then
 		self._tmp_pos_rsrv = self._tmp_pos_rsrv or {
-			radius = 30,
 			position = self._values.position,
+			radius = 30,
 		}
 
 		local pos_rsrv = self._tmp_pos_rsrv
@@ -309,7 +309,6 @@ function ElementNavLink:get_objective(instigator)
 	local is_AI_SO = self._is_AI_SO or string.begins(self._values.so_action, "AI")
 	local pose, stance, attitude, path_style, pos, rot, interrupt_dis, interrupt_health, haste, trigger_on, interaction_voice = self:_get_misc_SO_params()
 	local objective = {
-		type = "act",
 		action_start_clbk = callback(self, self, "clbk_objective_action_start"),
 		attitude = attitude,
 		complete_clbk = callback(self, self, "clbk_objective_complete"),
@@ -328,6 +327,7 @@ function ElementNavLink:get_objective(instigator)
 		scan = self._values.scan,
 		stance = stance,
 		trigger_on = trigger_on,
+		type = "act",
 		verification_clbk = callback(self, self, "clbk_verify_administration"),
 	}
 	local action
@@ -335,9 +335,6 @@ function ElementNavLink:get_objective(instigator)
 	if self._values.so_action then
 		action = {
 			align_sync = true,
-			body_part = 1,
-			needs_full_blend = true,
-			type = "act",
 			blocks = {
 				action = -1,
 				heavy_hurt = -1,
@@ -345,6 +342,9 @@ function ElementNavLink:get_objective(instigator)
 				light_hurt = -1,
 				walk = -1,
 			},
+			body_part = 1,
+			needs_full_blend = true,
+			type = "act",
 			variant = self._values.so_action,
 		}
 		objective.type = "act"
@@ -438,8 +438,8 @@ function ElementNavLink:_administer_objective(unit, objective)
 	if objective.trigger_on == "interact" then
 		if not unit:brain():objective() then
 			local idle_objective = {
-				type = "free",
 				followup_objective = objective,
+				type = "free",
 			}
 
 			unit:brain():set_objective(idle_objective)

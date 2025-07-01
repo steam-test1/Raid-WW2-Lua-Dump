@@ -149,6 +149,7 @@ function ChallengeCardsTweakData:init(tweak_data)
 		},
 	}
 	self.rarity_definition.loot_rarity_none = {
+		color = nil,
 		texture = ChallengeCardsTweakData.CARDS_TEXTURE_PATH,
 		texture_gui = tweak_data.gui.icons.loot_rarity_common,
 		texture_gui_dirty = tweak_data.gui.icons.loot_rarity_common_dirty,
@@ -204,14 +205,14 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.ra_on_the_scrounge.description = "card_ra_on_the_scrounge_desc_id"
 	self.cards.ra_on_the_scrounge.effects = {
 		{
-			value = 1.15,
 			name = BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_REWARD_INCREASE,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+			value = 1.15,
 		},
 		{
-			value = 0.8,
 			name = BuffEffectManager.EFFECT_PLAYER_ALL_AMMO_CAPACITY,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+			value = 0.8,
 		},
 	}
 	self.cards.ra_on_the_scrounge.positive_description = {
@@ -238,14 +239,14 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.ra_no_backups.description = "card_ra_no_backups_desc_id"
 	self.cards.ra_no_backups.effects = {
 		{
-			value = 1.15,
 			name = BuffEffectManager.EFFECT_PLAYER_RELOAD_SPEED,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+			value = 1.15,
 		},
 		{
-			value = 0,
 			name = BuffEffectManager.EFFECT_PLAYER_SECONDARY_AMMO_CAPACITY,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+			value = 0,
 		},
 	}
 	self.cards.ra_no_backups.positive_description = {
@@ -269,14 +270,14 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.ra_this_is_gonna_hurt.description = "card_ra_this_is_gonna_hurt_desc_id"
 	self.cards.ra_this_is_gonna_hurt.effects = {
 		{
-			value = 1.15,
 			name = BuffEffectManager.EFFECT_ENEMIES_RECEIVE_DAMAGE,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+			value = 1.15,
 		},
 		{
-			value = 15,
 			name = BuffEffectManager.EFFECT_SET_BLEEDOUT_TIMER,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+			value = 15,
 		},
 	}
 	self.cards.ra_this_is_gonna_hurt.positive_description = {
@@ -303,14 +304,14 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.ra_not_in_the_face.description = "card_ra_not_in_the_face_desc_id"
 	self.cards.ra_not_in_the_face.effects = {
 		{
-			value = 1.1,
 			name = BuffEffectManager.EFFECT_PLAYER_CRITICAL_HIT_CHANCE,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+			value = 1.1,
 		},
 		{
-			value = true,
 			name = BuffEffectManager.EFFECT_PLAYER_HEADSHOT_DOESNT_DO_DAMAGE,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+			value = true,
 		},
 	}
 	self.cards.ra_not_in_the_face.positive_description = {
@@ -334,14 +335,14 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.ra_loaded_for_bear.description = "card_ra_loaded_for_bear_desc_id"
 	self.cards.ra_loaded_for_bear.effects = {
 		{
-			value = 1.2,
 			name = BuffEffectManager.EFFECT_PLAYER_ALL_AMMO_CAPACITY,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+			value = 1.2,
 		},
 		{
-			value = 0.85,
 			name = BuffEffectManager.EFFECT_PLAYER_MOVEMENT_SPEED,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+			value = 0.85,
 		},
 	}
 	self.cards.ra_loaded_for_bear.positive_description = {
@@ -368,19 +369,19 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.ra_total_carnage.description = "card_ra_total_carnage_desc_id"
 	self.cards.ra_total_carnage.effects = {
 		{
-			value = 1,
 			name = BuffEffectManager.EFFECT_AMMO_PICKUPS_REFIL_GRENADES,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+			value = 1,
 		},
 		{
-			value = true,
 			name = BuffEffectManager.EFFECT_ENEMIES_VULNERABLE_ONLY_TO_EXPLOSION,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+			value = true,
 		},
 		{
-			value = true,
 			name = BuffEffectManager.EFFECT_ENEMIES_VULNERABLE_ONLY_TO_MELEE,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+			value = true,
 		},
 	}
 	self.cards.ra_total_carnage.positive_description = {
@@ -401,14 +402,14 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.ra_switch_hitter.description = "card_ra_switch_hitter_desc_id"
 	self.cards.ra_switch_hitter.effects = {
 		{
-			value = 1,
 			name = BuffEffectManager.EFFECT_SHOOTING_SECONDARY_WEAPON_FILLS_PRIMARY_AMMO,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+			value = 1,
 		},
 		{
-			value = true,
 			name = BuffEffectManager.EFFECT_SHOOTING_PRIMARY_WEAPON_CONSUMES_BOTH_AMMOS,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+			value = true,
 		},
 	}
 	self.cards.ra_switch_hitter.positive_description = {
@@ -429,14 +430,14 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.ra_gunslingers.description = "card_ra_gunslingers_desc_id"
 	self.cards.ra_gunslingers.effects = {
 		{
-			value = 1.15,
 			name = BuffEffectManager.EFFECT_PLAYER_PISTOL_DAMAGE,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+			value = 1.15,
 		},
 		{
-			value = 0,
 			name = BuffEffectManager.EFFECT_PLAYER_PRIMARY_AMMO_CAPACITY,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+			value = 0,
 		},
 	}
 	self.cards.ra_gunslingers.positive_description = {
@@ -460,14 +461,14 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.ra_fresh_troops.description = "card_ra_fresh_troops_desc_id"
 	self.cards.ra_fresh_troops.effects = {
 		{
-			value = 1.25,
 			name = BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_CHANCE,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+			value = 1.25,
 		},
 		{
-			value = 1.5,
 			name = BuffEffectManager.EFFECT_ENEMY_HEALTH,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+			value = 1.5,
 		},
 	}
 	self.cards.ra_fresh_troops.positive_description = {
@@ -494,15 +495,15 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.ra_dont_you_die_on_me.description = "card_ra_dont_you_die_on_me_desc_id"
 	self.cards.ra_dont_you_die_on_me.effects = {
 		{
-			value = 10,
 			name = BuffEffectManager.EFFECT_MODIFY_BLEEDOUT_TIMER,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+			value = 10,
 		},
 		{
-			value = true,
 			fail_message = BuffEffectManager.FAIL_EFFECT_MESSAGE_PLAYER_DIED,
 			name = BuffEffectManager.EFFECT_PLAYER_DIED,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+			value = true,
 		},
 	}
 	self.cards.ra_dont_you_die_on_me.positive_description = {
@@ -526,15 +527,15 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.ra_no_second_chances.description = "card_ra_no_second_chances_desc_id"
 	self.cards.ra_no_second_chances.effects = {
 		{
-			value = 1.1,
 			name = BuffEffectManager.EFFECT_PLAYER_HEALTH,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+			value = 1.1,
 		},
 		{
-			value = true,
 			fail_message = BuffEffectManager.FAIL_EFFECT_MESSAGE_PLAYER_WENT_TO_BLEEDOUT,
 			name = BuffEffectManager.EFFECT_PLAYER_BLEEDOUT,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+			value = true,
 		},
 	}
 	self.cards.ra_no_second_chances.positive_description = {
@@ -558,15 +559,15 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.ra_a_perfect_score.description = "card_ra_a_perfect_score_desc_id"
 	self.cards.ra_a_perfect_score.effects = {
 		{
-			value = true,
-			name = BuffEffectManager.EFFECT_ALL_CHESTS_ARE_LOCKED,
+			name = BuffEffectManager.EFFECT_FORCED_CRATE_TIER,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+			value = 2,
 		},
 		{
-			value = true,
 			fail_message = BuffEffectManager.FAIL_EFFECT_MESSAGE_PLAYER_FAILED_INTERACTION_MINI_GAME,
 			name = BuffEffectManager.EFFECT_PLAYER_FAILED_INTERACTION_MINI_GAME,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+			value = true,
 		},
 	}
 	self.cards.ra_a_perfect_score.positive_description = {
@@ -587,14 +588,14 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.ra_helmet_shortage.description = "card_ra_helmet_shortage_desc_id"
 	self.cards.ra_helmet_shortage.effects = {
 		{
-			value = true,
 			name = BuffEffectManager.EFFECT_PLAYER_HEADSHOT_AUTO_KILL,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+			value = true,
 		},
 		{
-			value = 0.5,
 			name = BuffEffectManager.EFFECT_PLAYER_HEALTH,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+			value = 0.5,
 		},
 	}
 	self.cards.ra_helmet_shortage.positive_description = {
@@ -618,14 +619,14 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.ra_hemorrhaging.description = "card_ra_hemorrhaging_desc_id"
 	self.cards.ra_hemorrhaging.effects = {
 		{
-			value = 0.1,
 			name = BuffEffectManager.EFFECT_PLAYER_MELEE_KILL_REGENERATES_HEALTH,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+			value = 0.1,
 		},
 		{
-			value = -0.00333,
 			name = BuffEffectManager.EFFECT_PLAYER_HEALTH_REGEN,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+			value = -0.00333,
 		},
 	}
 	self.cards.ra_hemorrhaging.positive_description = {
@@ -652,14 +653,14 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.ra_crab_people.description = "card_ra_crab_people_desc_id"
 	self.cards.ra_crab_people.effects = {
 		{
-			value = 1.3,
 			name = BuffEffectManager.EFFECT_PLAYER_MOVEMENT_SPEED,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+			value = 1.3,
 		},
 		{
-			value = true,
 			name = BuffEffectManager.EFFECT_PLAYER_CAN_MOVE_ONLY_BACK_AND_SIDE,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+			value = true,
 		},
 	}
 	self.cards.ra_crab_people.positive_description = {
@@ -680,24 +681,24 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.ra_slasher_movie.description = "card_ra_slasher_movie_desc_id"
 	self.cards.ra_slasher_movie.effects = {
 		{
-			value = 0.01666,
 			name = BuffEffectManager.EFFECT_PLAYER_HEALTH_REGEN,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+			value = 0.01666,
 		},
 		{
-			value = 20,
 			name = BuffEffectManager.EFFECT_MELEE_DAMAGE_INCREASE,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+			value = 20,
 		},
 		{
-			value = true,
 			name = BuffEffectManager.EFFECT_ONLY_MELEE_AVAILABLE,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+			value = true,
 		},
 		{
-			value = true,
 			name = BuffEffectManager.EFFECT_WARCRIES_DISABLED,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+			value = true,
 		},
 	}
 	self.cards.ra_slasher_movie.positive_description = {
@@ -725,14 +726,19 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.ra_pumpkin_pie.description = "card_ra_pumpkin_pie_desc_id"
 	self.cards.ra_pumpkin_pie.effects = {
 		{
-			value = 3,
 			name = BuffEffectManager.EFFECT_PLAYER_HEADSHOT_DAMAGE,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+			value = 3,
 		},
 		{
+			name = BuffEffectManager.EFFECT_PUMKIN_HEADS,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
 			value = true,
+		},
+		{
 			name = BuffEffectManager.EFFECT_ATTACK_ONLY_IN_AIR,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+			value = true,
 		},
 	}
 	self.cards.ra_pumpkin_pie.positive_description = {
@@ -760,14 +766,14 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.ra_season_of_resurrection.description = "card_ra_season_of_resurrection_desc_id"
 	self.cards.ra_season_of_resurrection.effects = {
 		{
-			value = 4,
 			name = BuffEffectManager.EFFECT_PLAYER_LOW_HEALTH_DAMAGE,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+			value = 4,
 		},
 		{
-			value = true,
 			name = BuffEffectManager.EFFECT_NO_BLEEDOUT_PUMPIKIN_REVIVE,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+			value = true,
 		},
 	}
 	self.cards.ra_season_of_resurrection.positive_description = {
@@ -792,14 +798,14 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.op_limited_supplies.description = "card_op_limited_supplies_desc_id"
 	self.cards.op_limited_supplies.effects = {
 		{
-			value = 1.15,
 			name = BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_REWARD_INCREASE,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+			value = 1.15,
 		},
 		{
-			value = 0.8,
 			name = BuffEffectManager.EFFECT_PLAYER_ALL_AMMO_CAPACITY,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+			value = 0.8,
 		},
 	}
 	self.cards.op_limited_supplies.positive_description = {
@@ -826,14 +832,14 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.op_take_the_cannoli.description = "card_op_take_the_cannoli_desc_id"
 	self.cards.op_take_the_cannoli.effects = {
 		{
-			value = true,
 			name = BuffEffectManager.EFFECT_BAGS_DONT_SLOW_PLAYERS_DOWN,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+			value = true,
 		},
 		{
-			value = 0.85,
 			name = BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_CHANCE,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+			value = 0.85,
 		},
 	}
 	self.cards.op_take_the_cannoli.positive_description = {
@@ -857,14 +863,14 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.op_everyones_a_tough_guy.description = "card_op_everyones_a_tough_guy_desc_id"
 	self.cards.op_everyones_a_tough_guy.effects = {
 		{
-			value = 5,
 			name = BuffEffectManager.EFFECT_MODIFY_BLEEDOUT_TIMER,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+			value = 5,
 		},
 		{
-			value = 1.1,
 			name = BuffEffectManager.EFFECT_ENEMY_HEALTH,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+			value = 1.1,
 		},
 	}
 	self.cards.op_everyones_a_tough_guy.positive_description = {
@@ -891,14 +897,14 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.op_nichtsplosions.description = "card_op_nichtsplosions_desc_id"
 	self.cards.op_nichtsplosions.effects = {
 		{
-			value = 1.15,
 			name = BuffEffectManager.EFFECT_PLAYER_RELOAD_SPEED,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+			value = 1.15,
 		},
 		{
-			value = true,
 			name = BuffEffectManager.EFFECT_ENEMIES_IMPERVIOUS_TO_EXPLOSIVE_DAMAGE,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+			value = true,
 		},
 	}
 	self.cards.op_nichtsplosions.positive_description = {
@@ -922,14 +928,14 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.op_war_weary.description = "card_op_war_weary_desc_id"
 	self.cards.op_war_weary.effects = {
 		{
-			value = 1.1,
 			name = BuffEffectManager.EFFECT_ENEMIES_RECEIVE_DAMAGE,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+			value = 1.1,
 		},
 		{
-			value = 0.75,
 			name = BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_REWARD_INCREASE,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+			value = 0.75,
 		},
 	}
 	self.cards.op_war_weary.positive_description = {
@@ -956,14 +962,14 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.op_special_for_a_reason.description = "card_op_special_for_a_reason_desc_id"
 	self.cards.op_special_for_a_reason.effects = {
 		{
-			value = 1.1,
 			name = BuffEffectManager.EFFECT_PLAYER_MOVEMENT_SPEED,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+			value = 1.1,
 		},
 		{
-			value = 1.5,
 			name = BuffEffectManager.EFFECT_ENEMY_DOES_DAMAGE,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+			value = 1.5,
 		},
 	}
 	self.cards.op_special_for_a_reason.positive_description = {
@@ -990,19 +996,19 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.op_dont_blink.description = "card_op_dont_blink_desc_id"
 	self.cards.op_dont_blink.effects = {
 		{
-			value = 1.1,
 			name = BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_CHANCE,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+			value = 1.1,
 		},
 		{
-			value = 5,
 			name = BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_DESPAWN_HEALTH,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+			value = 5,
 		},
 		{
-			value = 5,
 			name = BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_DESPAWN_AMMO,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+			value = 5,
 		},
 	}
 	self.cards.op_dont_blink.positive_description = {
@@ -1029,14 +1035,14 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.op_bad_coffee.description = "card_op_bad_coffee_desc_id"
 	self.cards.op_bad_coffee.effects = {
 		{
-			value = 1.1,
 			name = BuffEffectManager.EFFECT_PLAYER_RELOAD_SPEED,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+			value = 1.1,
 		},
 		{
-			value = 15,
 			name = BuffEffectManager.EFFECT_SET_BLEEDOUT_TIMER,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+			value = 15,
 		},
 	}
 	self.cards.op_bad_coffee.positive_description = {
@@ -1063,14 +1069,14 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.op_playing_for_keeps.description = "card_op_playing_for_keeps_desc_id"
 	self.cards.op_playing_for_keeps.effects = {
 		{
-			value = 1.1,
 			name = BuffEffectManager.EFFECT_ENEMIES_RECEIVE_DAMAGE,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+			value = 1.1,
 		},
 		{
-			value = 0.75,
 			name = BuffEffectManager.EFFECT_PLAYER_HEALTH,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+			value = 0.75,
 		},
 	}
 	self.cards.op_playing_for_keeps.positive_description = {
@@ -1097,15 +1103,15 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.op_silent_shout.description = "card_op_silent_shout_desc_id"
 	self.cards.op_silent_shout.effects = {
 		{
-			value = 0.1,
 			name = BuffEffectManager.EFFECT_PLAYER_MELEE_KILL_REGENERATES_HEALTH,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+			value = 0.1,
 		},
 		{
-			value = true,
 			fail_message = BuffEffectManager.FAIL_EFFECT_MESSAGE_PLAYER_USED_WARCRY,
 			name = BuffEffectManager.EFFECT_PLAYERS_CANT_USE_WARCRIES,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+			value = true,
 		},
 	}
 	self.cards.op_silent_shout.positive_description = {
@@ -1129,14 +1135,14 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.op_blow_me.description = "card_op_blow_me_desc_id"
 	self.cards.op_blow_me.effects = {
 		{
-			value = 2,
 			name = BuffEffectManager.EFFECT_GRENADE_DAMAGE,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+			value = 2,
 		},
 		{
-			value = 0.5,
 			name = BuffEffectManager.EFFECT_PLAYER_ALL_AMMO_CAPACITY,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+			value = 0.5,
 		},
 	}
 	self.cards.op_blow_me.positive_description = {
@@ -1163,15 +1169,15 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.op_you_only_live_once.description = "card_op_you_only_live_once_desc_id"
 	self.cards.op_you_only_live_once.effects = {
 		{
-			value = 0.05,
 			name = BuffEffectManager.EFFECT_PLAYER_KILL_REGENERATES_HEALTH,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+			value = 0.05,
 		},
 		{
-			value = true,
 			fail_message = BuffEffectManager.FAIL_EFFECT_MESSAGE_PLAYER_DIED,
 			name = BuffEffectManager.EFFECT_PLAYER_DIED,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+			value = true,
 		},
 	}
 	self.cards.op_you_only_live_once.positive_description = {
@@ -1195,15 +1201,15 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.op_short_controlled_bursts.description = "card_op_short_controlled_bursts_desc_id"
 	self.cards.op_short_controlled_bursts.effects = {
 		{
-			value = 1.07,
 			name = BuffEffectManager.EFFECT_PLAYER_CRITICAL_HIT_CHANCE,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+			value = 1.07,
 		},
 		{
-			value = true,
 			fail_message = BuffEffectManager.FAIL_EFFECT_MESSAGE_PLAYER_EMPTIED_A_CLIP,
 			name = BuffEffectManager.EFFECT_PLAYERS_CANT_EMPTY_CLIPS,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+			value = true,
 		},
 	}
 	self.cards.op_short_controlled_bursts.positive_description = {
@@ -1227,14 +1233,14 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.op_elite_opponents.description = "card_op_elite_opponents_desc_id"
 	self.cards.op_elite_opponents.effects = {
 		{
-			value = 1.25,
 			name = BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_CHANCE,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+			value = 1.25,
 		},
 		{
-			value = 1.5,
 			name = BuffEffectManager.EFFECT_ENEMY_HEALTH,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+			value = 1.5,
 		},
 	}
 	self.cards.op_elite_opponents.positive_description = {
@@ -1261,14 +1267,14 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.op_and_headaches_for_all.description = "card_op_and_headaches_for_all_desc_id"
 	self.cards.op_and_headaches_for_all.effects = {
 		{
-			value = 1.5,
 			name = BuffEffectManager.EFFECT_PLAYER_HEADSHOT_DAMAGE,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+			value = 1.5,
 		},
 		{
-			value = true,
 			name = BuffEffectManager.EFFECT_ENEMIES_DIE_ONLY_ON_HEADSHOT,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+			value = true,
 		},
 	}
 	self.cards.op_and_headaches_for_all.positive_description = {
@@ -1292,9 +1298,9 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.ra_b_walk_it_off.description = "challenge_card_ra_b_walk_it_off_desc_id"
 	self.cards.ra_b_walk_it_off.effects = {
 		{
-			value = 5,
 			name = BuffEffectManager.EFFECT_MODIFY_BLEEDOUT_TIMER,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+			value = 5,
 		},
 	}
 	self.cards.ra_b_walk_it_off.positive_description = {
@@ -1314,9 +1320,9 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.ra_b_in_fine_feather.description = "challenge_card_ra_b_in_fine_feather_desc_id"
 	self.cards.ra_b_in_fine_feather.effects = {
 		{
-			value = 1.1,
 			name = BuffEffectManager.EFFECT_PLAYER_HEALTH,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+			value = 1.1,
 		},
 	}
 	self.cards.ra_b_in_fine_feather.positive_description = {
@@ -1336,9 +1342,9 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.ra_b_precision_fire.description = "challenge_card_ra_b_precision_fire_desc_id"
 	self.cards.ra_b_precision_fire.effects = {
 		{
-			value = 1.1,
 			name = BuffEffectManager.EFFECT_ENEMIES_RECEIVE_DAMAGE,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+			value = 1.1,
 		},
 	}
 	self.cards.ra_b_precision_fire.positive_description = {
@@ -1358,9 +1364,9 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.op_b_recycle_for_victory.description = "challenge_card_op_b_recycle_for_victory_desc_id"
 	self.cards.op_b_recycle_for_victory.effects = {
 		{
-			value = 1.1,
 			name = BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_REWARD_INCREASE,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+			value = 1.1,
 		},
 	}
 	self.cards.op_b_recycle_for_victory.positive_description = {
@@ -1380,9 +1386,9 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.op_b_will_not_go_quietly.description = "challenge_card_op_b_will_not_go_quietly_desc_id"
 	self.cards.op_b_will_not_go_quietly.effects = {
 		{
-			value = 7.5,
 			name = BuffEffectManager.EFFECT_MODIFY_BLEEDOUT_TIMER,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+			value = 7.5,
 		},
 	}
 	self.cards.op_b_will_not_go_quietly.positive_description = {
@@ -1402,9 +1408,9 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.op_b_on_top_form.description = "challenge_card_op_b_on_top_form_desc_id"
 	self.cards.op_b_on_top_form.effects = {
 		{
-			value = 1.15,
 			name = BuffEffectManager.EFFECT_PLAYER_HEALTH,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+			value = 1.15,
 		},
 	}
 	self.cards.op_b_on_top_form.positive_description = {
@@ -1422,24 +1428,24 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.ra_dooms_day = setup_card("ra_dooms_day")
 	self.cards.ra_dooms_day.effects = {
 		{
-			value = 1.5,
 			name = BuffEffectManager.EFFECT_PLAYER_MOVEMENT_SPEED,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+			value = 1.5,
 		},
 		{
-			value = true,
 			name = BuffEffectManager.EFFECT_PLAYER_DOOMS_DAY,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+			value = true,
 		},
 		{
-			value = true,
 			name = BuffEffectManager.EFFECT_PLAYER_CANNOT_ADS,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+			value = true,
 		},
 		{
-			value = true,
 			name = BuffEffectManager.EFFECT_PLAYER_CANNOT_SPRINT,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+			value = true,
 		},
 	}
 	self.cards.ra_dooms_day.positive_description = {
@@ -1459,9 +1465,9 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.ra_roulette = setup_card("ra_roulette")
 	self.cards.ra_roulette.effects = {
 		{
-			value = true,
 			name = BuffEffectManager.EFFECT_PLAYER_ROULETTE,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+			value = true,
 		},
 	}
 	self.cards.ra_roulette.negative_description = {
@@ -1476,14 +1482,14 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.ra_holiday_rush = setup_card("ra_holiday_rush")
 	self.cards.ra_holiday_rush.effects = {
 		{
-			value = true,
 			name = BuffEffectManager.EFFECT_PLAYER_CARRY_INVERT_SPEED,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+			value = true,
 		},
 		{
-			value = 4,
 			name = BuffEffectManager.EFFECT_ENEMIES_MELEE_DAMAGE_INCREASE,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+			value = 4,
 		},
 	}
 	self.cards.ra_holiday_rush.positive_description = {
@@ -1503,18 +1509,18 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.free_crowbar = setup_card("free_crowbar")
 	self.cards.free_crowbar.effects = {
 		{
-			value = true,
-			name = BuffEffectManager.EFFECT_ALL_CHESTS_ARE_TIER3,
+			name = BuffEffectManager.EFFECT_FORCED_CRATE_TIER,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+			value = 3,
 		},
 		{
-			value = true,
 			name = BuffEffectManager.EFFECT_PLAYER_EQUIP_CROWBAR,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+			value = true,
 		},
 	}
 	self.cards.free_crowbar.positive_description = {
-		desc_id = BuffEffectManager.EFFECT_ALL_CHESTS_ARE_TIER3,
+		desc_id = "effect_all_chests_are_tier3",
 	}
 	self.cards.free_crowbar.rarity = LootDropTweakData.RARITY_COMMON
 	self.cards.free_crowbar.card_type = ChallengeCardsTweakData.CARD_TYPE_RAID
@@ -1524,14 +1530,14 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.lucky_day = setup_card("lucky_day")
 	self.cards.lucky_day.effects = {
 		{
-			value = 1.1,
 			name = BuffEffectManager.EFFECT_PLAYER_CRITICAL_HIT_CHANCE,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+			value = 1.1,
 		},
 		{
-			value = 1.1,
 			name = BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_REWARD_INCREASE,
 			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+			value = 1.1,
 		},
 	}
 	self.cards.lucky_day.positive_description = {
@@ -1545,6 +1551,33 @@ function ChallengeCardsTweakData:init(tweak_data)
 	self.cards.lucky_day.achievement_id = ""
 	self.cards.lucky_day.def_id = 404
 	self.cards.lucky_day.card_category = ChallengeCardsTweakData.CARD_CATEGORY_BOOSTER
+	self.cards.ra_mag_roulette = setup_card("mag_roulette")
+	self.cards.ra_mag_roulette.effects = {
+		{
+			name = BuffEffectManager.EFFECT_PLAYER_RELOAD_SPEED,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE,
+			value = 1.3,
+		},
+		{
+			name = BuffEffectManager.EFFECT_PLAYER_RANDOM_RELOAD,
+			type = ChallengeCardsTweakData.EFFECT_TYPE_NEGATIVE,
+			value = true,
+		},
+	}
+	self.cards.ra_mag_roulette.positive_description = {
+		desc_id = "effect_player_faster_reload",
+		desc_params = {
+			EFFECT_VALUE_1 = "30%",
+		},
+	}
+	self.cards.ra_mag_roulette.negative_description = {
+		desc_id = "effect_player_random_reload",
+	}
+	self.cards.ra_mag_roulette.rarity = LootDropTweakData.RARITY_HALLOWEEN_2017
+	self.cards.ra_mag_roulette.card_type = ChallengeCardsTweakData.CARD_TYPE_RAID
+	self.cards.ra_mag_roulette.achievement_id = ""
+	self.cards.ra_mag_roulette.def_id = 405
+	self.cards.ra_mag_roulette.card_category = ChallengeCardsTweakData.CARD_CATEGORY_CHALLENGE_CARD
 	self.cards_index = {
 		"ra_on_the_scrounge",
 		"ra_no_backups",
@@ -1590,6 +1623,7 @@ function ChallengeCardsTweakData:init(tweak_data)
 		"ra_roulette",
 		"free_crowbar",
 		"lucky_day",
+		"ra_mag_roulette",
 	}
 	self.playtimegenerator = {}
 	self.bundledefinitions = {}

@@ -228,12 +228,7 @@ end
 
 function TeamAILogicDisabled._register_revive_SO(data, my_data, rescue_type)
 	local followup_objective = {
-		scan = true,
-		type = "act",
 		action = {
-			body_part = 1,
-			type = "act",
-			variant = "crouch",
 			blocks = {
 				action = -1,
 				aim = -1,
@@ -241,17 +236,16 @@ function TeamAILogicDisabled._register_revive_SO(data, my_data, rescue_type)
 				hurt = -1,
 				walk = -1,
 			},
-		},
-	}
-	local objective = {
-		called = true,
-		destroy_clbk_key = false,
-		scan = true,
-		type = "revive",
-		action = {
-			align_sync = true,
 			body_part = 1,
 			type = "act",
+			variant = "crouch",
+		},
+		scan = true,
+		type = "act",
+	}
+	local objective = {
+		action = {
+			align_sync = true,
 			blocks = {
 				action = -1,
 				aim = -1,
@@ -260,24 +254,30 @@ function TeamAILogicDisabled._register_revive_SO(data, my_data, rescue_type)
 				light_hurt = -1,
 				walk = -1,
 			},
+			body_part = 1,
+			type = "act",
 			variant = rescue_type,
 		},
 		action_duration = tweak_data.interaction:get_interaction(data.name == "surrender" and "free" or "revive").timer,
+		called = true,
+		destroy_clbk_key = false,
 		fail_clbk = callback(TeamAILogicDisabled, TeamAILogicDisabled, "on_revive_SO_failed", data),
 		follow_unit = data.unit,
 		followup_objective = followup_objective,
 		nav_seg = data.unit:movement():nav_tracker():nav_segment(),
+		scan = true,
+		type = "revive",
 	}
 	local so_descriptor = {
 		AI_group = "friendlies",
+		admin_clbk = callback(TeamAILogicDisabled, TeamAILogicDisabled, "on_revive_SO_administered", data),
 		base_chance = 1,
 		chance_inc = 0,
 		interval = 6,
-		search_dis_sq = 1000000,
-		usage_amount = 1,
-		admin_clbk = callback(TeamAILogicDisabled, TeamAILogicDisabled, "on_revive_SO_administered", data),
 		objective = objective,
+		search_dis_sq = 1000000,
 		search_pos = mvector3.copy(data.m_pos),
+		usage_amount = 1,
 	}
 	local so_id = "TeamAIrevive" .. tostring(data.key)
 

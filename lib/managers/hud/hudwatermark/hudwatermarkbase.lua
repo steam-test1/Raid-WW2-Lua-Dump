@@ -17,11 +17,11 @@ end
 
 function HUDWatermarkBase:_create_panel(hud)
 	local panel_params = {
+		h = HUDWatermarkBase.H,
 		halign = "center",
 		layer = 1000,
 		name = "watermark_panel",
 		valign = "center",
-		h = HUDWatermarkBase.H,
 		w = HUDWatermarkBase.W,
 	}
 
@@ -39,15 +39,15 @@ function HUDWatermarkBase:_create_text()
 	watermark_title = utf8.to_upper(managers.localization:text(watermark_title))
 	self._wmtitle = self._object:text({
 		align = "center",
-		halign = "scale",
-		name = "watermark_title",
-		valign = "scale",
-		vertical = "top",
 		alpha = HUDWatermarkBase.A,
 		font = HUDWatermarkBase.TITLE_FONT,
 		font_size = HUDWatermarkBase.TITLE_FONT_SIZE,
 		h = self._object:h(),
+		halign = "scale",
+		name = "watermark_title",
 		text = watermark_title,
+		valign = "scale",
+		vertical = "top",
 		w = self._object:w(),
 	})
 end

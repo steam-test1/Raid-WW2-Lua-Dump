@@ -23,8 +23,8 @@ end
 
 function RaidGUIControlLootRewardCards:layout()
 	self._object = self._panel:panel({
-		name = "loot_rewards_cards_panel",
 		h = self._params.h,
+		name = "loot_rewards_cards_panel",
 		w = self._params.w,
 		x = self._params.x,
 		y = self._params.y,
@@ -79,13 +79,13 @@ function RaidGUIControlLootRewardCards:_create_title()
 	local title_description_params = {
 		align = "left",
 		alpha = 0,
-		name = "title_description",
-		vertical = "center",
 		color = RaidGUIControlLootRewardCards.TITLE_DESCRIPTION_COLOR,
 		font = RaidGUIControlLootRewardCards.FONT,
 		font_size = RaidGUIControlLootRewardCards.TITLE_DESCRIPTION_FONT_SIZE,
 		h = RaidGUIControlLootRewardCards.TITLE_DESCRIPTION_H,
+		name = "title_description",
 		text = self:translate("menu_loot_screen_bracket_unlocked_title", true),
+		vertical = "center",
 		y = RaidGUIControlLootRewardCards.TITLE_DESCRIPTION_Y,
 	}
 
@@ -98,12 +98,12 @@ function RaidGUIControlLootRewardCards:_create_title()
 	local title_params = {
 		align = "center",
 		alpha = 0,
-		name = "pack_title",
-		vertical = "top",
 		color = RaidGUIControlLootRewardCards.TITLE_COLOR,
 		font = RaidGUIControlLootRewardCards.FONT,
 		font_size = RaidGUIControlLootRewardCards.TITLE_FONT_SIZE,
+		name = "pack_title",
 		text = self:translate("menu_loot_screen_card_pack", true),
+		vertical = "top",
 		y = self._title_description:y() + self._title_description:h() + RaidGUIControlLootRewardCards.TITLE_PADDING_TOP,
 	}
 
@@ -145,15 +145,15 @@ function RaidGUIControlLootRewardCards:_create_card_details()
 
 	local bonus_label_params = {
 		align = "left",
+		color = tweak_data.gui.colors.raid_grey,
+		font = tweak_data.gui.fonts.lato,
+		font_size = tweak_data.gui.font_sizes.size_20,
 		h = 64,
+		name = "bonus_label_" .. self._name,
 		text = "",
 		vertical = "center",
 		w = 390,
 		wrap = true,
-		color = tweak_data.gui.colors.raid_grey,
-		font = tweak_data.gui.fonts.lato,
-		font_size = tweak_data.gui.font_sizes.size_20,
-		name = "bonus_label_" .. self._name,
 		x = self._bonus_image:x() + self._bonus_image:w() + 16,
 		y = self._bonus_image:y(),
 	}
@@ -162,15 +162,15 @@ function RaidGUIControlLootRewardCards:_create_card_details()
 
 	local malus_label_params = {
 		align = "left",
+		color = tweak_data.gui.colors.raid_grey,
+		font = tweak_data.gui.fonts.lato,
+		font_size = tweak_data.gui.font_sizes.size_20,
 		h = 64,
+		name = "malus_label_" .. self._name,
 		text = "",
 		vertical = "center",
 		w = 390,
 		wrap = true,
-		color = tweak_data.gui.colors.raid_grey,
-		font = tweak_data.gui.fonts.lato,
-		font_size = tweak_data.gui.font_sizes.size_20,
-		name = "malus_label_" .. self._name,
 		x = self._malus_image:x() + self._malus_image:w() + 16,
 		y = self._malus_image:y(),
 	}

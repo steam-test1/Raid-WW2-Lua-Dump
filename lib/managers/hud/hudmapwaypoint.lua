@@ -64,10 +64,10 @@ end
 function HUDMapWaypointCircle:_create_panel(panel, waypoint_data)
 	local radius = waypoint_data.waypoint_radius
 	local panel_params = {
-		is_root_panel = true,
-		visible = false,
 		h = radius * 2,
+		is_root_panel = true,
 		name = "map_waypoint_circle_" .. tostring(self._id),
+		visible = false,
 		w = radius * 2,
 	}
 
@@ -77,8 +77,8 @@ end
 function HUDMapWaypointCircle:_create_radar_icon(waypoint_data)
 	local radius = waypoint_data.waypoint_radius
 	local radar_icon_params = {
-		name = "radar_icon",
 		h = radius,
+		name = "radar_icon",
 		texture = tweak_data.gui.icons[HUDMapWaypointCircle.RADAR_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDMapWaypointCircle.RADAR_ICON].texture_rect,
 		w = radius - 3,
@@ -178,11 +178,11 @@ end
 
 function HUDMapWaypointPoint:_create_panel(panel)
 	local panel_params = {
+		h = HUDMapWaypointPoint.H,
 		halign = "center",
+		name = "map_waypoint_point_" .. tostring(self._id),
 		valign = "center",
 		visible = false,
-		h = HUDMapWaypointPoint.H,
-		name = "map_waypoint_point_" .. tostring(self._id),
 		w = HUDMapWaypointPoint.W,
 	}
 
@@ -219,13 +219,13 @@ end
 function HUDMapWaypointPoint:_create_distance()
 	local distance_text_params = {
 		align = "center",
-		name = "distance_text",
-		text = "",
-		vertical = "center",
 		font = HUDMapWaypointPoint.DISTANCE_FONT,
 		font_size = HUDMapWaypointPoint.DISTANCE_FONT_SIZE,
 		h = HUDMapWaypointPoint.DISTANCE_H,
 		layer = HUDMapWaypointPoint.DISTANCE_LAYER,
+		name = "distance_text",
+		text = "",
+		vertical = "center",
 		w = self._object:w(),
 	}
 
@@ -297,10 +297,10 @@ end
 function HUDMapWaypointIcon:_create_panel(panel, waypoint_data)
 	local icon = waypoint_data.map_icon
 	local panel_params = {
-		halign = "center",
-		valign = "center",
 		h = tweak_data.gui:icon_h(icon),
+		halign = "center",
 		name = "map_waypoint_icon_" .. tostring(self._id),
+		valign = "center",
 		w = tweak_data.gui:icon_w(icon),
 	}
 

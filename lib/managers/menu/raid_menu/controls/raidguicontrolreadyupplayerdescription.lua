@@ -23,75 +23,75 @@ function RaidGUIControlReadyUpPlayerDescription:_layout()
 
 	self._class_icon = self._object:bitmap({
 		name = "class_icon",
-		x = 32,
-		y = 32,
 		texture = class_icon.texture,
 		texture_rect = class_icon.texture_rect,
+		x = 32,
+		y = 32,
 	})
 	self._player_name = self._object:label({
 		align = "left",
+		color = tweak_data.gui.colors.raid_dirty_white,
+		font = tweak_data.gui.fonts.din_compressed,
+		font_size = tweak_data.gui.font_sizes.small,
 		h = 26,
 		name = "player_name",
 		text = "PLAYER NAME 1",
 		vertical = "center",
 		w = 256,
-		color = tweak_data.gui.colors.raid_dirty_white,
-		font = tweak_data.gui.fonts.din_compressed,
-		font_size = tweak_data.gui.font_sizes.small,
 		x = self._class_icon:right() + 8,
 		y = self._class_icon:top(),
 	})
 	self._status_label = self._object:label({
 		align = "left",
-		h = 22,
-		name = "player_status",
-		vertical = "center",
-		w = 256,
 		color = tweak_data.gui.colors.raid_grey_effects,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.extra_small,
+		h = 22,
+		name = "player_status",
 		text = self:translate("menu_not_ready", true),
+		vertical = "center",
+		w = 256,
 		x = self._player_name:left(),
 		y = self._player_name:bottom() + 6,
 	})
 	self._selected_card_icon = self._object:bitmap({
 		name = "selected_card_icon",
-		x = 352,
 		texture = tweak_data.gui.icons.ready_up_card_not_selected.texture,
 		texture_rect = tweak_data.gui.icons.ready_up_card_not_selected.texture_rect,
+		x = 352,
 		y = self._player_name:top(),
 	})
 	self._player_level = self._object:label({
 		align = "left",
+		color = tweak_data.gui.colors.raid_dirty_white,
+		font = tweak_data.gui.fonts.din_compressed,
+		font_size = tweak_data.gui.font_sizes.size_24,
 		h = 24,
 		name = "player_level",
 		text = "00",
 		vertical = "center",
 		w = 64,
-		color = tweak_data.gui.colors.raid_dirty_white,
-		font = tweak_data.gui.fonts.din_compressed,
-		font_size = tweak_data.gui.font_sizes.size_24,
 		x = self._selected_card_icon:right() + 16,
 		y = self._player_name:top(),
 	})
 	self._select_marker_rect = self._object:rect({
-		name = "select_marker_rect",
-		x = 0,
-		y = 0,
 		color = tweak_data.gui.colors.raid_select_card_background,
 		h = self._object:h(),
+		name = "select_marker_rect",
 		w = self._object:w(),
+		x = 0,
+		y = 0,
 	})
 
 	self._select_marker_rect:hide()
 
 	self._top_select_triangle = self._object:image({
-		x = 0,
-		y = 0,
 		h = RaidGUIControlCardSuggestedLarge.SELECT_TRINGLE_SIZE,
 		texture = tweak_data.gui.icons.ico_sel_rect_top_left.texture,
 		texture_rect = tweak_data.gui.icons.ico_sel_rect_top_left.texture_rect,
 		w = RaidGUIControlCardSuggestedLarge.SELECT_TRINGLE_SIZE,
+		x = 0,
+		y = 0,
 	})
 
 	self._top_select_triangle:hide()

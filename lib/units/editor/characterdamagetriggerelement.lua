@@ -22,9 +22,9 @@ function CharacterDamageTriggerUnitElement:draw_links(t, dt, selected_unit, all_
 		if draw then
 			self:_draw_link({
 				b = 0,
+				from_unit = unit,
 				g = 0.85,
 				r = 0,
-				from_unit = unit,
 				to_unit = self._unit,
 			})
 		end
@@ -92,12 +92,12 @@ function CharacterDamageTriggerUnitElement:_build_panel(panel, panel_sizer)
 	local dmg_types = EWS:TextCtrl(panel, self._hed.damage_types, "", "TE_PROCESS_ENTER")
 
 	dmg_types:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
-		value = "damage_types",
 		ctrlr = dmg_types,
+		value = "damage_types",
 	})
 	dmg_types:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
-		value = "damage_types",
 		ctrlr = dmg_types,
+		value = "damage_types",
 	})
 	dmg_sizer:add(dmg_types, 2, 0, "ALIGN_CENTER_VERTICAL")
 	panel_sizer:add(dmg_sizer, 0, 0, "EXPAND")
@@ -106,13 +106,13 @@ function CharacterDamageTriggerUnitElement:_build_panel(panel, panel_sizer)
 
 	percentage:set_value(self._hed.percentage)
 	percentage:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		value = "percentage",
 		ctrlr = percentage,
+		value = "percentage",
 	})
 	panel_sizer:add(percentage, 0, 0, "EXPAND")
 	self:add_help_text({
-		text = "logic_counter_operator elements will use the reported <damage> as the amount to add/subtract/set.\nDamage types can be filtered by specifying specific damage types separated by spaces.",
 		panel = panel,
 		sizer = panel_sizer,
+		text = "logic_counter_operator elements will use the reported <damage> as the amount to add/subtract/set.\nDamage types can be filtered by specifying specific damage types separated by spaces.",
 	})
 end

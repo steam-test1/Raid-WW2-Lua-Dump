@@ -25,8 +25,8 @@ function WeaponFlashLight:init(unit)
 	local effect_path = "effects/vanilla/weapons/flashlight/fp_flashlight"
 
 	self._light_effect = World:effect_manager():spawn({
-		force_synch = true,
 		effect = Idstring(effect_path),
+		force_synch = true,
 		parent = self._a_flashlight_obj,
 	})
 

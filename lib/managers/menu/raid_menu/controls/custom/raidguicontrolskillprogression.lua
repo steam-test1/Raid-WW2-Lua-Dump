@@ -53,9 +53,9 @@ function RaidGUIControlSkillProgression:_init_skill_icon()
 	local size = self._object:w() * 0.65
 
 	self._skill_icon = self._object:bitmap({
-		name = "skill_icon",
 		h = size,
 		layer = self._object:layer() + 1,
+		name = "skill_icon",
 		texture = gui_icon_data.texture,
 		texture_rect = gui_icon_data.texture_rect,
 		w = size,
@@ -67,12 +67,12 @@ function RaidGUIControlSkillProgression:_init_skill_icon()
 
 	size = self._skill_icon:w() / 2
 	self._lock_icon = self._object:bitmap({
-		name = "lock_icon",
-		visible = false,
 		h = size,
 		layer = self._object:layer() + 2,
+		name = "lock_icon",
 		texture = lock_icon_data.texture,
 		texture_rect = lock_icon_data.texture_rect,
+		visible = false,
 		w = size,
 	})
 
@@ -86,7 +86,6 @@ end
 function RaidGUIControlSkillProgression:_init_skill_progress()
 	self._exp_fill = CircleBitmapGuiObject:new(self._object, {
 		bg_alpha = 0.5,
-		use_bg = true,
 		bg_color = tweak_data.gui.colors.raid_dark_grey,
 		bg_image = tweak_data.gui.icons.skill_progress_circle_256px.texture,
 		color = tweak_data.gui.colors.raid_red,
@@ -94,19 +93,20 @@ function RaidGUIControlSkillProgression:_init_skill_progress()
 		image = tweak_data.gui.icons.skill_progress_circle_256px.texture,
 		layer = self._object:layer() + 1,
 		radius = self._object:w() / 2,
+		use_bg = true,
 		w = self._object:w(),
 	})
 end
 
 function RaidGUIControlSkillProgression:_init_earned_progress()
 	self._earned_exp_fill = CircleBitmapGuiObject:new(self._object, {
-		rotation = 360,
 		bg_color = tweak_data.gui.colors.raid_dark_grey,
 		bg_image = tweak_data.gui.icons.skill_progress_circle_256px.texture,
 		h = self._object:w(),
 		image = tweak_data.gui.icons.skill_progress_circle_256px.texture,
 		layer = self._exp_fill:layer() - 1,
 		radius = self._object:w() / 2,
+		rotation = 360,
 		w = self._object:w(),
 	})
 
@@ -116,11 +116,10 @@ function RaidGUIControlSkillProgression:_init_earned_progress()
 	local gui_data = tweak_data.gui:get_full_gui_data("ico_map_mini_raid")
 
 	self._level_up_icon = self._object:bitmap({
-		name = "level_up_icon",
-		visible = false,
 		color = tweak_data.gui.colors.raid_gold,
 		h = size,
 		layer = self._object:layer() + 2,
+		name = "level_up_icon",
 		texture = gui_data.texture,
 		texture_rect = {
 			gui_data.texture_rect[1],
@@ -128,6 +127,7 @@ function RaidGUIControlSkillProgression:_init_earned_progress()
 			gui_data.texture_rect[3],
 			-gui_data.texture_rect[4],
 		},
+		visible = false,
 		w = size,
 	})
 
@@ -229,12 +229,12 @@ end
 function RaidGUIControlSkillProgression:_init_skill_text()
 	self._progress_text = self._object:label({
 		align = "center",
-		name = "progress_text",
-		text = "???",
 		color = RaidGUIControlSkillProgression.COLOR,
 		font = RaidGUIControlSkillProgression.FONT,
 		font_size = RaidGUIControlSkillProgression.FONT_SIZE,
 		layer = self._object:layer() + 1,
+		name = "progress_text",
+		text = "???",
 		w = self._object:w(),
 	})
 
@@ -245,13 +245,13 @@ function RaidGUIControlSkillProgression:_init_skill_text()
 
 	self._progress_desc = self._object:label({
 		align = "center",
-		name = "progress_desc",
-		text = "UNTIL NEXT TIER",
 		color = RaidGUIControlSkillProgression.DESCRIPTION_COLOR,
 		font = RaidGUIControlSkillProgression.FONT,
 		font_size = RaidGUIControlSkillProgression.DESCRIPTION_FONT_SIZE,
 		h = h,
 		layer = self._object:layer() + 1,
+		name = "progress_desc",
+		text = "UNTIL NEXT TIER",
 		w = self._object:w(),
 	})
 
@@ -260,11 +260,11 @@ function RaidGUIControlSkillProgression:_init_skill_text()
 	local gold_amount_footer = tweak_data.gui:get_full_gui_data("gold_amount_footer")
 
 	self._resource_icon = self._object:image({
-		name = "resource_icon",
-		visible = false,
 		color = tweak_data.gui.colors.gold_orange,
+		name = "resource_icon",
 		texture = gold_amount_footer.texture,
 		texture_rect = gold_amount_footer.texture_rect,
+		visible = false,
 	})
 
 	self._resource_icon:set_center(self._progress_text:center_x(), self._progress_text:center_y())

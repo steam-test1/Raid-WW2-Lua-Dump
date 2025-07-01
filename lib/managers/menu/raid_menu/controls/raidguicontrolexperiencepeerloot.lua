@@ -43,9 +43,9 @@ end
 function RaidGUIControlExperiencePeerLoot:_create_experience_details()
 	local params_xp_image = {
 		name = "xp_image",
-		x = 0,
 		texture = tweak_data.gui.icons[RaidGUIControlExperiencePeerLoot.ICON].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlExperiencePeerLoot.ICON].texture_rect,
+		x = 0,
 	}
 
 	self._xp_image = self._object:bitmap(params_xp_image)
@@ -54,12 +54,12 @@ function RaidGUIControlExperiencePeerLoot:_create_experience_details()
 
 	local params_player_name = {
 		align = "left",
-		layer = 1,
-		name = "peer_xp_name_label",
-		text = "aa",
 		color = RaidGUIControlExperiencePeerLoot.NAME_COLOR,
 		font = RaidGUIControlExperiencePeerLoot.FONT,
 		font_size = RaidGUIControlExperiencePeerLoot.NAME_FONT_SIZE,
+		layer = 1,
+		name = "peer_xp_name_label",
+		text = "aa",
 		w = self._object:w() - RaidGUIControlExperiencePeerLoot.TEXT_X,
 		x = RaidGUIControlExperiencePeerLoot.TEXT_X,
 		y = RaidGUIControlExperiencePeerLoot.NAME_Y,
@@ -73,12 +73,12 @@ function RaidGUIControlExperiencePeerLoot:_create_experience_details()
 
 	local params_customization_xp_value = {
 		align = "left",
-		layer = 1,
-		name = "customization_xp_value_label",
-		text = "a",
 		color = RaidGUIControlExperiencePeerLoot.XP_VALUE_COLOR,
 		font = RaidGUIControlExperiencePeerLoot.FONT,
 		font_size = RaidGUIControlExperiencePeerLoot.XP_VALUE_FONT_SIZE,
+		layer = 1,
+		name = "customization_xp_value_label",
+		text = "a",
 		w = self._name_label:w(),
 		x = self._name_label:x(),
 		y = self._name_label:y() + self._name_label:h() + RaidGUIControlExperiencePeerLoot.NAME_PADDING_DOWN,

@@ -26,29 +26,29 @@ function MousePointerManager:_setup()
 
 	self._mouse = self._ws:panel():panel({
 		h = 23,
+		layer = tweak_data.gui.MOUSE_LAYER,
 		name = "mouse",
 		name_s = "mouse",
 		w = 19,
-		layer = tweak_data.gui.MOUSE_LAYER,
 		x = x,
 		y = y,
 	})
 
 	self._mouse:bitmap({
+		color = Color(1, 0.7, 0.7, 0.7),
 		h = 23,
 		name = "pointer",
 		rotation = 360,
 		texture = "guis/textures/mouse_pointer",
-		w = 19,
-		x = -7,
-		y = -2,
-		color = Color(1, 0.7, 0.7, 0.7),
 		texture_rect = {
 			0,
 			0,
 			19,
 			23,
 		},
+		w = 19,
+		x = -7,
+		y = -2,
 	})
 	self._ws:hide()
 

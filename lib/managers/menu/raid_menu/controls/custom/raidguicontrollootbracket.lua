@@ -47,13 +47,13 @@ end
 
 function RaidGUIControlLootBracket:_create_notch()
 	local notch_params = {
-		name = "notch",
-		x = 0,
-		y = 0,
 		color = RaidGUIControlLootBracket.NOTCH_COLOR_INACTIVE,
 		layer = self._object:layer() + 1,
+		name = "notch",
 		texture = tweak_data.gui.icons[RaidGUIControlLootBracket.NOTCH_ICON].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlLootBracket.NOTCH_ICON].texture_rect,
+		x = 0,
+		y = 0,
 	}
 
 	self._notch = self._object:bitmap(notch_params)
@@ -64,15 +64,15 @@ end
 
 function RaidGUIControlLootBracket:_create_bracket_icon()
 	local bracket_icon_params = {
-		name = "bracket_icon",
-		x = 0,
-		y = 0,
 		color = self._bracket,
 		h = RaidGUIControlLootBracket.ICON_INACTIVE_H,
 		layer = self._object:layer() + 2,
+		name = "bracket_icon",
 		texture = tweak_data.gui.icons[RaidGUIControlLootBracket.ICON].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlLootBracket.ICON].texture_rect,
 		w = RaidGUIControlLootBracket.ICON_INACTIVE_H * (tweak_data.gui:icon_w(RaidGUIControlLootBracket.ICON) / tweak_data.gui:icon_h(RaidGUIControlLootBracket.ICON)),
+		x = 0,
+		y = 0,
 	}
 
 	self._bracket_icon = self._object:bitmap(bracket_icon_params)

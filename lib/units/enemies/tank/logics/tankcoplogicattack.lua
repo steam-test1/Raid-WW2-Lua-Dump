@@ -150,8 +150,8 @@ function TankCopLogicAttack.update(data)
 			my_data.chase_pos = nil
 
 			data.brain:add_pos_rsrv("path", {
-				radius = 60,
 				position = mvector3.copy(to_pos),
+				radius = 60,
 			})
 			unit:brain():search_for_path(my_data.chase_path_search_id, to_pos)
 		elseif focus_enemy.nav_tracker then
@@ -259,9 +259,9 @@ function TankCopLogicAttack._chk_request_action_walk_to_chase_pos(data, my_data,
 	if not data.unit:movement():chk_action_forbidden("walk") then
 		local new_action_data = {
 			body_part = 2,
-			type = "walk",
 			end_rot = end_rot,
 			nav_path = my_data.chase_path,
+			type = "walk",
 			variant = speed or "run",
 		}
 

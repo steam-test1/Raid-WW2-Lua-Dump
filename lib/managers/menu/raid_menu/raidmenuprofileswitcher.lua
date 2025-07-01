@@ -7,11 +7,11 @@ end
 
 function RaidMenuProfileSwitcher:_layout()
 	self._object = self._root_panel:panel({
+		h = self._root_panel:h(),
 		name = "profile_switcher_object_panel",
+		w = self._root_panel:w(),
 		x = 0,
 		y = 0,
-		h = self._root_panel:h(),
-		w = self._root_panel:w(),
 	})
 
 	if IS_XB1 then
@@ -22,9 +22,9 @@ end
 function RaidMenuProfileSwitcher:_bind_raid_controller_inputs()
 	local bindings = {
 		{
-			label = "",
 			callback = callback(self, self, "_show_account_picker"),
 			key = Idstring("menu_controller_face_top"),
+			label = "",
 		},
 	}
 

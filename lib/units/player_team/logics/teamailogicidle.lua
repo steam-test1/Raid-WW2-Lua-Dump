@@ -90,8 +90,8 @@ function TeamAILogicIdle.enter(data, new_logic_name, enter_params)
 
 				CopLogicBase.add_delayed_clbk(my_data, my_data.revive_complete_clbk_id, callback(TeamAILogicIdle, TeamAILogicIdle, "clbk_revive_complete", data), revive_t)
 				managers.dialog:queue_dialog("player_gen_revive_start", {
-					skip_idle_check = true,
 					instigator = data.unit,
+					skip_idle_check = true,
 				})
 			else
 				data.unit:brain():set_objective()
@@ -155,9 +155,6 @@ function TeamAILogicIdle.exit(data, new_logic_name, enter_params)
 		my_data.performing_act_objective = nil
 
 		local crouch_action = {
-			body_part = 1,
-			type = "act",
-			variant = "crouch",
 			blocks = {
 				action = -1,
 				aim = -1,
@@ -165,6 +162,9 @@ function TeamAILogicIdle.exit(data, new_logic_name, enter_params)
 				hurt = -1,
 				walk = -1,
 			},
+			body_part = 1,
+			type = "act",
+			variant = "crouch",
 		}
 
 		data.unit:movement():action_request(crouch_action)
@@ -325,18 +325,13 @@ function TeamAILogicIdle.on_long_dis_interacted(data, other_unit)
 		objective = {
 			called = true,
 			destroy_clbk_key = false,
-			scan = true,
 			follow_unit = other_unit,
+			scan = true,
 			type = objective_type,
 		}
 	else
 		local followup_objective = {
-			scan = true,
-			type = "act",
 			action = {
-				body_part = 1,
-				type = "act",
-				variant = "crouch",
 				blocks = {
 					action = -1,
 					aim = -1,
@@ -344,18 +339,17 @@ function TeamAILogicIdle.on_long_dis_interacted(data, other_unit)
 					hurt = -1,
 					walk = -1,
 				},
+				body_part = 1,
+				type = "act",
+				variant = "crouch",
 			},
+			scan = true,
+			type = "act",
 		}
 
 		objective = {
-			called = true,
-			destroy_clbk_key = false,
-			scan = true,
-			type = "revive",
 			action = {
 				align_sync = true,
-				body_part = 1,
-				type = "act",
 				blocks = {
 					action = -1,
 					aim = -1,
@@ -364,12 +358,18 @@ function TeamAILogicIdle.on_long_dis_interacted(data, other_unit)
 					light_hurt = -1,
 					walk = -1,
 				},
+				body_part = 1,
+				type = "act",
 				variant = objective_action,
 			},
 			action_duration = tweak_data.interaction:get_interaction(objective_action == "untie" and "free" or objective_action).timer,
+			called = true,
+			destroy_clbk_key = false,
 			follow_unit = other_unit,
 			followup_objective = followup_objective,
 			nav_seg = other_unit:movement():nav_tracker():nav_segment(),
+			scan = true,
+			type = "revive",
 		}
 
 		other_unit:sound():say("player_gen_call_help", true)

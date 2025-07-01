@@ -54,9 +54,9 @@ function CoreUnitSequenceTriggerUnitElement:update_selected()
 		else
 			local params = {
 				b = 1,
+				from_unit = unit,
 				g = 0,
 				r = 0,
-				from_unit = unit,
 				to_unit = self._unit,
 			}
 
@@ -86,9 +86,9 @@ function CoreUnitSequenceTriggerUnitElement:draw_links_unselected(...)
 	for id, unit in pairs(self._sequence_units) do
 		local params = {
 			b = 0.5,
+			from_unit = unit,
 			g = 0,
 			r = 0,
-			from_unit = unit,
 			to_unit = self._unit,
 		}
 
@@ -112,9 +112,9 @@ end
 
 function CoreUnitSequenceTriggerUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
+		mask = managers.slot:get_mask("all"),
 		ray_type = "body editor",
 		sample = true,
-		mask = managers.slot:get_mask("all"),
 	})
 
 	if ray and ray.unit then
@@ -128,9 +128,9 @@ end
 
 function CoreUnitSequenceTriggerUnitElement:select_unit()
 	local ray = managers.editor:unit_by_raycast({
+		mask = managers.slot:get_mask("all"),
 		ray_type = "body editor",
 		sample = true,
-		mask = managers.slot:get_mask("all"),
 	})
 
 	if ray and ray.unit then
@@ -275,12 +275,12 @@ function CoreUnitSequenceTriggerUnitElement:_add_unit(unit, sequences, sequence_
 		default = "none",
 		name = "Sequence:",
 		name_proportions = 1,
-		sizer_proportions = 1,
-		sorted = true,
-		tooltip = "Select a sequence from the combobox",
 		options = sequences,
 		panel = panel,
 		sizer = h_sizer,
+		sizer_proportions = 1,
+		sorted = true,
+		tooltip = "Select a sequence from the combobox",
 		value = sequence_list_data.sequence,
 	}
 	local sequence = CoreEws.combobox(sequence_params)

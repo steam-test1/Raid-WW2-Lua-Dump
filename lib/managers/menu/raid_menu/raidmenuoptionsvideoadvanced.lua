@@ -81,8 +81,8 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 	local start_y = 320
 	local default_width = 512
 	local toggle_menu_toggle_ssao_params = {
-		name = "toggle_menu_toggle_ssao",
 		description = utf8.to_upper(managers.localization:text("menu_toggle_ssao")),
+		name = "toggle_menu_toggle_ssao",
 		on_click_callback = callback(self, self, "on_click_toggle_ssao"),
 		on_menu_move = {
 			down = "toggle_menu_toggle_parallax",
@@ -95,8 +95,8 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 	self._toggle_menu_toggle_ssao = self._root_panel:toggle_button(toggle_menu_toggle_ssao_params)
 
 	local toggle_menu_toggle_parallax_params = {
-		name = "toggle_menu_toggle_parallax",
 		description = utf8.to_upper(managers.localization:text("menu_toggle_parallax")),
+		name = "toggle_menu_toggle_parallax",
 		on_click_callback = callback(self, self, "on_click_toggle_parallax"),
 		on_menu_move = {
 			down = "toggle_menu_toggle_motion_blur",
@@ -110,8 +110,8 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 	self._toggle_menu_toggle_parallax = self._root_panel:toggle_button(toggle_menu_toggle_parallax_params)
 
 	local toggle_menu_toggle_motion_blur_params = {
-		name = "toggle_menu_toggle_motion_blur",
 		description = utf8.to_upper(managers.localization:text("menu_toggle_motion_blur")),
+		name = "toggle_menu_toggle_motion_blur",
 		on_click_callback = callback(self, self, "on_click_toggle_motion_blur"),
 		on_menu_move = {
 			down = "toggle_menu_toggle_dof",
@@ -125,8 +125,8 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 	self._toggle_menu_toggle_motion_blur = self._root_panel:toggle_button(toggle_menu_toggle_motion_blur_params)
 
 	local toggle_menu_toggle_dof_params = {
-		name = "toggle_menu_toggle_dof",
 		description = utf8.to_upper(managers.localization:text("menu_toggle_dof")),
+		name = "toggle_menu_toggle_dof",
 		on_click_callback = callback(self, self, "on_click_toggle_dof"),
 		on_menu_move = {
 			down = "toggle_menu_toggle_volumetric_light_scattering",
@@ -140,8 +140,8 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 	self._toggle_menu_toggle_dof = self._root_panel:toggle_button(toggle_menu_toggle_dof_params)
 
 	local toggle_menu_toggle_volumetric_light_scattering_params = {
-		name = "toggle_menu_toggle_volumetric_light_scattering",
 		description = utf8.to_upper(managers.localization:text("menu_toggle_volumetric_light_scattering")),
+		name = "toggle_menu_toggle_volumetric_light_scattering",
 		on_click_callback = callback(self, self, "on_click_toggle_volumetric_light_scattering"),
 		on_menu_move = {
 			down = "progress_bar_menu_detail_distance",
@@ -155,14 +155,14 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 	self._toggle_menu_toggle_volumetric_light_scattering = self._root_panel:toggle_button(toggle_menu_toggle_volumetric_light_scattering_params)
 
 	local progress_bar_menu_detail_distance_params = {
-		name = "progress_bar_menu_detail_distance",
-		value_format = "%02d%%",
 		description = utf8.to_upper(managers.localization:text("menu_detail_distance")),
+		name = "progress_bar_menu_detail_distance",
 		on_menu_move = {
 			down = "stepper_menu_antialias",
 			up = "toggle_menu_toggle_volumetric_light_scattering",
 		},
 		on_value_change_callback = callback(self, self, "on_value_change_detail_distance"),
+		value_format = "%02d%%",
 		x = start_x,
 		y = toggle_menu_toggle_volumetric_light_scattering_params.y + RaidGuiBase.PADDING,
 	}
@@ -171,9 +171,9 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 	start_x = 704
 
 	local stepper_menu_antialias_params = {
-		name = "stepper_menu_antialias",
 		data_source_callback = callback(self, self, "data_source_stepper_menu_antialias"),
 		description = utf8.to_upper(managers.localization:text("menu_options_video_advanced_antialias")),
+		name = "stepper_menu_antialias",
 		on_item_selected_callback = callback(self, self, "on_item_selected_antialias"),
 		on_menu_move = {
 			down = "stepper_menu_texture_quality",
@@ -187,9 +187,9 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 	self._stepper_menu_antialias = self._root_panel:stepper(stepper_menu_antialias_params)
 
 	local stepper_menu_texture_quality_params = {
-		name = "stepper_menu_texture_quality",
 		data_source_callback = callback(self, self, "data_source_stepper_menu_texture_quality"),
 		description = utf8.to_upper(managers.localization:text("menu_texture_quality")),
+		name = "stepper_menu_texture_quality",
 		on_item_selected_callback = callback(self, self, "on_item_selected_texture_quality"),
 		on_menu_move = {
 			down = "stepper_menu_shadow_quality",
@@ -203,9 +203,9 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 	self._stepper_menu_texture_quality = self._root_panel:stepper(stepper_menu_texture_quality_params)
 
 	local stepper_menu_shadow_quality_params = {
-		name = "stepper_menu_shadow_quality",
 		data_source_callback = callback(self, self, "data_source_stepper_menu_shadow_quality"),
 		description = utf8.to_upper(managers.localization:text("menu_shadow_quality")),
+		name = "stepper_menu_shadow_quality",
 		on_item_selected_callback = callback(self, self, "on_item_selected_shadow_quality"),
 		on_menu_move = {
 			down = "stepper_menu_anisotropic",
@@ -219,9 +219,9 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 	self._stepper_menu_shadow_quality = self._root_panel:stepper(stepper_menu_shadow_quality_params)
 
 	local stepper_menu_anisotropic_params = {
-		name = "stepper_menu_anisotropic",
 		data_source_callback = callback(self, self, "data_source_stepper_menu_anisotropic"),
 		description = utf8.to_upper(managers.localization:text("menu_options_video_advanced_anisotropic")),
+		name = "stepper_menu_anisotropic",
 		on_item_selected_callback = callback(self, self, "on_item_selected_anisotropic"),
 		on_menu_move = {
 			down = "stepper_menu_anim_lod",
@@ -235,9 +235,9 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 	self._stepper_menu_anisotropic = self._root_panel:stepper(stepper_menu_anisotropic_params)
 
 	local stepper_menu_anim_lod_params = {
-		name = "stepper_menu_anim_lod",
 		data_source_callback = callback(self, self, "data_source_stepper_menu_anim_lod"),
 		description = utf8.to_upper(managers.localization:text("menu_anim_lod")),
+		name = "stepper_menu_anim_lod",
 		on_item_selected_callback = callback(self, self, "on_item_selected_anim_lod"),
 		on_menu_move = {
 			down = "stepper_menu_fps_limit",
@@ -251,9 +251,9 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 	self._stepper_menu_anim_lod = self._root_panel:stepper(stepper_menu_anim_lod_params)
 
 	local stepper_menu_fps_limit_params = {
-		name = "stepper_menu_fps_limit",
 		data_source_callback = callback(self, self, "data_source_stepper_menu_fps_limit"),
 		description = utf8.to_upper(managers.localization:text("menu_fps_limit")),
+		name = "stepper_menu_fps_limit",
 		on_item_selected_callback = callback(self, self, "on_item_selected_fps_limit"),
 		on_menu_move = {
 			down = "stepper_menu_colorblind_setting",
@@ -267,9 +267,9 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 	self._stepper_menu_fps_limit = self._root_panel:stepper(stepper_menu_fps_limit_params)
 
 	local stepper_menu_colorblind_setting_params = {
-		name = "stepper_menu_colorblind_setting",
 		data_source_callback = callback(self, self, "data_source_stepper_menu_colorblind_setting"),
 		description = utf8.to_upper(managers.localization:text("menu_colorblind_setting")),
+		name = "stepper_menu_colorblind_setting",
 		on_item_selected_callback = callback(self, self, "on_item_selected_colorblind_setting"),
 		on_menu_move = {
 			down = "label_menu_vsync",
@@ -283,9 +283,9 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 	self._stepper_menu_colorblind_setting = self._root_panel:stepper(stepper_menu_colorblind_setting_params)
 
 	local _stepper_menu_toggle_vsync_params = {
-		name = "label_menu_vsync",
 		data_source_callback = callback(self, self, "data_source_stepper_menu_vsync"),
 		description = utf8.to_upper(managers.localization:text("menu_options_video_advanced_vsync")),
+		name = "label_menu_vsync",
 		on_item_selected_callback = callback(self, self, "on_item_selected_vsync"),
 		on_menu_move = {
 			up = "stepper_menu_colorblind_setting",
@@ -298,12 +298,12 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 	self._stepper_menu_toggle_vsync = self._root_panel:stepper(_stepper_menu_toggle_vsync_params)
 
 	local default_advanced_video_params = {
-		name = "default_advanced_video",
-		x = 1472,
-		y = 832,
 		layer = RaidGuiBase.FOREGROUND_LAYER,
+		name = "default_advanced_video",
 		on_click_callback = callback(self, self, "on_click_default_advanced_video"),
 		text = utf8.to_upper(managers.localization:text("menu_options_controls_default")),
+		x = 1472,
+		y = 832,
 	}
 
 	self._default_advanced_video_button = self._root_panel:long_secondary_button(default_advanced_video_params)
@@ -367,20 +367,20 @@ function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_vsync()
 	local result = {}
 
 	table.insert(result, {
-		value = "OFF",
 		info = utf8.to_upper(managers.localization:text("menu_vsync_quality_off")),
 		text = utf8.to_upper(managers.localization:text("menu_vsync_quality_off")),
+		value = "OFF",
 	})
 	table.insert(result, {
-		value = "DOUBLE_BUFFER",
 		info = utf8.to_upper(managers.localization:text("menu_vsync_quality_db")),
 		text = utf8.to_upper(managers.localization:text("menu_vsync_quality_db")),
+		value = "DOUBLE_BUFFER",
 	})
 	table.insert(result, {
-		selected = true,
-		value = "TRIPLE_BUFFER",
 		info = utf8.to_upper(managers.localization:text("menu_vsync_quality_tb")),
+		selected = true,
 		text = utf8.to_upper(managers.localization:text("menu_vsync_quality_tb")),
+		value = "TRIPLE_BUFFER",
 	})
 
 	return result
@@ -396,20 +396,20 @@ function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_antialias()
 	local result = {}
 
 	table.insert(result, {
-		value = "OFF",
 		info = utf8.to_upper(managers.localization:text("menu_AA_quality_off")),
 		text = utf8.to_upper(managers.localization:text("menu_AA_quality_off")),
+		value = "OFF",
 	})
 	table.insert(result, {
-		value = "FXAA",
 		info = utf8.to_upper(managers.localization:text("menu_AA_quality_fxaa")),
 		text = utf8.to_upper(managers.localization:text("menu_AA_quality_fxaa")),
+		value = "FXAA",
 	})
 	table.insert(result, {
-		selected = true,
-		value = "SMAA",
 		info = utf8.to_upper(managers.localization:text("menu_AA_quality_smaa")),
+		selected = true,
 		text = utf8.to_upper(managers.localization:text("menu_AA_quality_smaa")),
+		value = "SMAA",
 	})
 
 	return result
@@ -425,25 +425,25 @@ function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_texture_quality()
 	local result = {}
 
 	table.insert(result, {
-		value = "very low",
 		info = utf8.to_upper(managers.localization:text("menu_texture_quality_very_low")),
 		text = utf8.to_upper(managers.localization:text("menu_texture_quality_very_low")),
+		value = "very low",
 	})
 	table.insert(result, {
-		value = "low",
 		info = utf8.to_upper(managers.localization:text("menu_texture_quality_low")),
 		text = utf8.to_upper(managers.localization:text("menu_texture_quality_low")),
+		value = "low",
 	})
 	table.insert(result, {
-		value = "medium",
 		info = utf8.to_upper(managers.localization:text("menu_texture_quality_medium")),
 		text = utf8.to_upper(managers.localization:text("menu_texture_quality_medium")),
+		value = "medium",
 	})
 	table.insert(result, {
-		selected = true,
-		value = "high",
 		info = utf8.to_upper(managers.localization:text("menu_texture_quality_high")),
+		selected = true,
 		text = utf8.to_upper(managers.localization:text("menu_texture_quality_high")),
+		value = "high",
 	})
 
 	return result
@@ -459,30 +459,30 @@ function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_shadow_quality()
 	local result = {}
 
 	table.insert(result, {
-		value = "very low",
 		info = utf8.to_upper(managers.localization:text("menu_texture_quality_very_low")),
 		text = utf8.to_upper(managers.localization:text("menu_texture_quality_very_low")),
+		value = "very low",
 	})
 	table.insert(result, {
-		value = "low",
 		info = utf8.to_upper(managers.localization:text("menu_texture_quality_low")),
 		text = utf8.to_upper(managers.localization:text("menu_texture_quality_low")),
+		value = "low",
 	})
 	table.insert(result, {
-		value = "medium",
 		info = utf8.to_upper(managers.localization:text("menu_texture_quality_medium")),
 		text = utf8.to_upper(managers.localization:text("menu_texture_quality_medium")),
+		value = "medium",
 	})
 	table.insert(result, {
-		value = "high",
 		info = utf8.to_upper(managers.localization:text("menu_texture_quality_high")),
 		text = utf8.to_upper(managers.localization:text("menu_texture_quality_high")),
+		value = "high",
 	})
 	table.insert(result, {
-		selected = true,
-		value = "very high",
 		info = utf8.to_upper(managers.localization:text("menu_texture_quality_very_high")),
+		selected = true,
 		text = utf8.to_upper(managers.localization:text("menu_texture_quality_very_high")),
+		value = "very high",
 	})
 
 	return result
@@ -498,30 +498,30 @@ function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_anisotropic()
 	local result = {}
 
 	table.insert(result, {
-		value = 1,
 		info = utf8.to_upper(managers.localization:text("menu_anisotropic_1")),
 		text = utf8.to_upper(managers.localization:text("menu_anisotropic_1")),
+		value = 1,
 	})
 	table.insert(result, {
-		value = 2,
 		info = utf8.to_upper(managers.localization:text("menu_anisotropic_2")),
 		text = utf8.to_upper(managers.localization:text("menu_anisotropic_2")),
+		value = 2,
 	})
 	table.insert(result, {
-		value = 4,
 		info = utf8.to_upper(managers.localization:text("menu_anisotropic_4")),
 		text = utf8.to_upper(managers.localization:text("menu_anisotropic_4")),
+		value = 4,
 	})
 	table.insert(result, {
-		value = 8,
 		info = utf8.to_upper(managers.localization:text("menu_anisotropic_8")),
 		text = utf8.to_upper(managers.localization:text("menu_anisotropic_8")),
+		value = 8,
 	})
 	table.insert(result, {
-		selected = true,
-		value = 16,
 		info = utf8.to_upper(managers.localization:text("menu_anisotropic_16")),
+		selected = true,
 		text = utf8.to_upper(managers.localization:text("menu_anisotropic_16")),
+		value = 16,
 	})
 
 	return result
@@ -537,20 +537,20 @@ function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_anim_lod()
 	local result = {}
 
 	table.insert(result, {
-		value = 1,
 		info = utf8.to_upper(managers.localization:text("menu_anim_lod_1")),
 		text = utf8.to_upper(managers.localization:text("menu_anim_lod_1")),
+		value = 1,
 	})
 	table.insert(result, {
-		value = 2,
 		info = utf8.to_upper(managers.localization:text("menu_anim_lod_2")),
 		text = utf8.to_upper(managers.localization:text("menu_anim_lod_2")),
+		value = 2,
 	})
 	table.insert(result, {
-		selected = true,
-		value = 3,
 		info = utf8.to_upper(managers.localization:text("menu_anim_lod_3")),
+		selected = true,
 		text = utf8.to_upper(managers.localization:text("menu_anim_lod_3")),
+		value = 3,
 	})
 
 	return result
@@ -627,9 +627,9 @@ function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_fps_limit()
 		value = 240,
 	})
 	table.insert(result, {
-		value = 600,
 		info = utf8.to_upper(managers.localization:text("menu_fps_unlimited")),
 		text = utf8.to_upper(managers.localization:text("menu_fps_unlimited")),
+		value = 600,
 	})
 
 	return result
@@ -693,24 +693,24 @@ function RaidMenuOptionsVideoAdvanced:data_source_stepper_menu_colorblind_settin
 	local result = {}
 
 	table.insert(result, {
-		value = "off",
 		info = utf8.to_upper(managers.localization:text("menu_colorblind_setting_off")),
 		text = utf8.to_upper(managers.localization:text("menu_colorblind_setting_off")),
+		value = "off",
 	})
 	table.insert(result, {
-		value = "protanope",
 		info = utf8.to_upper(managers.localization:text("menu_colorblind_setting_protanope")),
 		text = utf8.to_upper(managers.localization:text("menu_colorblind_setting_protanope")),
+		value = "protanope",
 	})
 	table.insert(result, {
-		value = "deuteranope",
 		info = utf8.to_upper(managers.localization:text("menu_colorblind_setting_deuteranope")),
 		text = utf8.to_upper(managers.localization:text("menu_colorblind_setting_deuteranope")),
+		value = "deuteranope",
 	})
 	table.insert(result, {
-		value = "tritanope",
 		info = utf8.to_upper(managers.localization:text("menu_colorblind_setting_tritanope")),
 		text = utf8.to_upper(managers.localization:text("menu_colorblind_setting_tritanope")),
+		value = "tritanope",
 	})
 
 	return result
@@ -763,8 +763,8 @@ function RaidMenuOptionsVideoAdvanced:bind_controller_inputs()
 		},
 		keyboard = {
 			{
-				key = "footer_back",
 				callback = callback(self, self, "_on_legend_pc_back", nil),
+				key = "footer_back",
 			},
 		},
 	}

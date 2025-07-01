@@ -14,6 +14,7 @@ local UpgradeToughness = require("lib/managers/upgrades/UpgradeToughness")
 local UpgradeRevenant = require("lib/managers/upgrades/UpgradeRevenant")
 local UpgradeLeaded = require("lib/managers/upgrades/UpgradeLeaded")
 local UpgradeRally = require("lib/managers/upgrades/UpgradeRally")
+local UpgradeCacheBasket = require("lib/managers/upgrades/UpgradeCacheBasket")
 
 function PlayerManager:init()
 	self._coroutine_mgr = CoroutineManager:new()
@@ -189,6 +190,7 @@ end
 function PlayerManager:soft_reset()
 	self._listener_holder = EventListenerHolder:new()
 	self._equipment = {
+		nationality = nil,
 		selections = {},
 		specials = {},
 	}
@@ -204,6 +206,7 @@ end
 
 function PlayerManager:_setup()
 	self._equipment = {
+		nationality = nil,
 		selections = {},
 		specials = {},
 	}
@@ -271,6 +274,10 @@ function PlayerManager:_setup_upgrades()
 	UpgradeRevenant:check_activate()
 	UpgradeLeaded:check_activate()
 	UpgradeRally:check_activate()
+end
+
+function PlayerManager:warcry_ammo_regeneration()
+	UpgradeCacheBasket:check_activate()
 end
 
 function PlayerManager:get_customization_equiped_head_name()
@@ -562,8 +569,8 @@ function PlayerManager:_internal_load()
 
 				if upgrade and (upgrade.slot and upgrade.slot < 2 or not upgrade.slot) then
 					self:add_equipment({
-						silent = true,
 						equipment = upgrade.equipment_id,
+						silent = true,
 					})
 				end
 			end
@@ -577,8 +584,8 @@ function PlayerManager:_internal_load()
 
 				if upgrade and (upgrade.slot and upgrade.slot < 2 or not upgrade.slot) then
 					self:add_equipment({
-						silent = true,
 						equipment = upgrade.equipment_id,
+						silent = true,
 					})
 				end
 			end
@@ -613,8 +620,8 @@ function PlayerManager:_add_level_equipment(player)
 	for _, eq in ipairs(equipment) do
 		Application:debug("[PlayerManager:_add_level_equipment] -- Giving equipment item:", eq)
 		self:add_equipment({
-			silent = true,
 			equipment = eq,
+			silent = true,
 		})
 	end
 end
@@ -1017,8 +1024,8 @@ function PlayerManager:on_headshot_dealt(is_kill)
 
 	if is_kill then
 		managers.dialog:queue_dialog("player_gen_critical_hit", {
-			skip_idle_check = true,
 			instigator = player_unit,
+			skip_idle_check = true,
 		})
 	end
 end
@@ -1184,11 +1191,13 @@ function PlayerManager:activate_temporary_upgrade(category, upgrade)
 		return
 	end
 
-	local time = upgrade_value[2]
+	local lifetime = upgrade_value[2]
+	local upgrade_level = self:upgrade_level(category, upgrade, 0)
 
 	self._temporary_upgrades[category] = self._temporary_upgrades[category] or {}
-	self._temporary_upgrades[category][upgrade] = {}
-	self._temporary_upgrades[category][upgrade].expire_time = Application:time() + time
+	self._temporary_upgrades[category][upgrade] = {
+		expire_time = Application:time() + lifetime,
+	}
 end
 
 function PlayerManager:activate_temporary_upgrade_by_level(category, upgrade, level)
@@ -1204,12 +1213,13 @@ function PlayerManager:activate_temporary_upgrade_by_level(category, upgrade, le
 		return
 	end
 
-	local time = upgrade_value[2]
+	local lifetime = upgrade_value[2]
 
 	self._temporary_upgrades[category] = self._temporary_upgrades[category] or {}
-	self._temporary_upgrades[category][upgrade] = {}
-	self._temporary_upgrades[category][upgrade].upgrade_value = upgrade_value[1]
-	self._temporary_upgrades[category][upgrade].expire_time = Application:time() + time
+	self._temporary_upgrades[category][upgrade] = {
+		expire_time = Application:time() + lifetime,
+		upgrade_value = upgrade_value[1],
+	}
 end
 
 function PlayerManager:deactivate_temporary_upgrade(category, upgrade)
@@ -2299,6 +2309,12 @@ function PlayerManager:aquire_team_upgrade(upgrade)
 	self._global.team_upgrades[upgrade.category][upgrade.upgrade] = upgrade.value
 
 	self:update_team_upgrades_to_peers()
+
+	local value = tweak_data.upgrades.values.team[upgrade.category][upgrade.upgrade][upgrade.value]
+
+	if self[upgrade.upgrade] then
+		self[upgrade.upgrade](self, value)
+	end
 end
 
 function PlayerManager:unaquire_team_upgrade(upgrade_definition)
@@ -2525,9 +2541,9 @@ function PlayerManager:transfer_special_equipment(peer_id, include_custody)
 						if Network:is_server() then
 							if id == local_peer_id then
 								managers.player:add_special({
-									transfer = true,
 									amount = transfer_amount,
 									name = name,
+									transfer = true,
 								})
 							else
 								p:send("give_equipment", name, transfer_amount, true)
@@ -3173,9 +3189,9 @@ end
 
 function PlayerManager:_set_grenade(params)
 	local grenade = params.grenade
-	local tweak_data = tweak_data.projectiles[grenade]
+	local grenade_data = tweak_data.projectiles[grenade]
 	local amount = params.amount
-	local icon = tweak_data.icon
+	local icon = grenade_data.icon
 	local player = self:player_unit()
 
 	self:update_grenades_amount_to_peers(grenade, amount)
@@ -3297,14 +3313,28 @@ function PlayerManager:get_max_grenades(grenade_id)
 	grenade_id = grenade_id or managers.blackmarket:equipped_grenade()
 
 	local projectile_tweak = tweak_data.projectiles[grenade_id]
-	local upgrade = projectile_tweak and projectile_tweak.upgrade_amount
+
+	if not projectile_tweak then
+		return 0
+	end
+
 	local upgrade_amount = 0
 
-	if upgrade then
+	if projectile_tweak.upgrade_amount then
+		local upgrade = projectile_tweak.upgrade_amount
+
 		upgrade_amount = self:upgrade_value(upgrade.category, upgrade.upgrade, 0)
 	end
 
-	return projectile_tweak and (projectile_tweak.max_amount or 0) + upgrade_amount
+	if projectile_tweak.upgrade_amounts then
+		for _, upgrade in pairs(projectile_tweak.upgrade_amounts) do
+			upgrade_amount = upgrade_amount + managers.player:upgrade_value(upgrade.category, upgrade.upgrade, 0)
+		end
+	end
+
+	local max_amount = projectile_tweak.max_amount or 0
+
+	return max_amount + upgrade_amount
 end
 
 function PlayerManager:got_max_grenades()
@@ -3463,8 +3493,8 @@ function PlayerManager:_update_carry_wheel()
 		local option = {
 			disabled = true,
 			icon = "comm_wheel_no",
-			text_id = "",
 			id = "carry_" .. i,
+			text_id = "",
 		}
 
 		if carry_data and carry_data[i] then
@@ -3563,6 +3593,13 @@ function PlayerManager:drop_carry(carry_id, zipline_unit, skip_cooldown)
 
 	local camera_ext = player:camera()
 	local position, rotation = self:carry_align_throw()
+
+	if carry_tweak and carry_tweak.throw_positions then
+		local offset = mvector3.copy(carry_tweak.throw_positions)
+
+		mvector3.rotate_with(offset, rotation)
+		mvector3.add(position, offset)
+	end
 
 	if carry_tweak and carry_tweak.throw_rotations then
 		rotation = Rotation(rotation:yaw() + carry_tweak.throw_rotations:yaw(), rotation:pitch() + carry_tweak.throw_rotations:pitch(), rotation:roll() + carry_tweak.throw_rotations:roll())
@@ -4303,14 +4340,14 @@ function PlayerManager:remove_from_player_list(unit)
 	end
 end
 
-function PlayerManager:add_ammo_to_weapons(ammo)
+function PlayerManager:add_ammo_to_weapons(ratio, ammo)
 	local player = self:local_player()
 
 	if not alive(player) then
 		return
 	end
 
-	player:inventory():add_ammo(ammo)
+	player:inventory():add_ammo(ratio, ammo)
 end
 
 function PlayerManager:add_ammo_to_equipped_weapon(ratio, ammo)
@@ -4481,6 +4518,55 @@ function PlayerManager:_on_camp_presence_changed()
 	if Network:is_server() then
 		managers.network:session():send_to_peers_synched("sync_camp_presence", self._local_player_in_camp)
 	end
+end
+
+function PlayerManager:is_player_looking_at(target_pos, data)
+	local player = data and data.player_unit or managers.player:player_unit()
+	local sensitivity = data and data.sensitivity or 0.65
+
+	if alive(player) and player:camera() then
+		local camera_fwd = player:camera():forward()
+		local camera_pos = player:camera():position()
+		local dir = target_pos - camera_pos
+
+		if data then
+			if data.distance and data.distance > 0 then
+				local distance = dir:length()
+
+				if distance > data.distance then
+					return false
+				end
+			end
+
+			if data.at_facing then
+				local dot = camera_fwd:dot(data.at_facing)
+
+				if dot > 0 then
+					return false
+				end
+			end
+
+			if data.raycheck then
+				local ray = World:raycast("ray", camera_pos, target_pos, "ray_type", "ai_vision", "slot_mask", managers.slot:get_mask("world_geometry"), "report")
+
+				if ray then
+					return false
+				end
+			end
+		end
+
+		dir = dir:normalized()
+
+		local dot = camera_fwd:dot(dir)
+
+		if sensitivity <= dot then
+			return true
+		else
+			return false
+		end
+	end
+
+	return false
 end
 
 function PlayerManager:tutorial_make_invulnerable()

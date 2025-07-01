@@ -133,8 +133,8 @@ function CoreCutsceneFootage:_camera_cut_list()
 			end
 
 			local previous_key = responder_map({
-				frame = 0,
 				camera = self._cutscene:default_camera(),
+				frame = 0,
 			})
 
 			for key in self._cutscene:keys(CoreChangeCameraCutsceneKey.ELEMENT_NAME) do

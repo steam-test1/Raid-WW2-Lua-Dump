@@ -21,8 +21,8 @@ function RaidGUIPanel:init(parent, params)
 
 	if params.background_color then
 		self._background = self:rect({
-			layer = 1,
 			color = params.background_color,
+			layer = 1,
 			name = self._name .. "_bg",
 		})
 	end
@@ -504,8 +504,8 @@ function RaidGUIPanel:set_background(params)
 		end
 
 		self._background = self:rect({
-			layer = 1,
 			color = params.background_color,
+			layer = 1,
 			name = self._name .. "_bg",
 		})
 	end

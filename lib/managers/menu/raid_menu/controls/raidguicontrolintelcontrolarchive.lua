@@ -25,49 +25,49 @@ end
 
 function RaidGUIControlIntelControlArchive:_layout()
 	self._bg_image = self._object:bitmap({
-		visible = false,
-		x = 0,
-		y = 0,
 		h = tweak_data.gui.icons.intel_table_archive.texture_rect[4],
 		layer = self._object:layer() + 1,
 		texture = tweak_data.gui.icons.intel_table_archive.texture,
 		texture_rect = tweak_data.gui.icons.intel_table_archive.texture_rect,
+		visible = false,
 		w = tweak_data.gui.icons.intel_table_archive.texture_rect[3],
+		x = 0,
+		y = 0,
 	})
 	self._image = self._object:bitmap({
 		h = 448,
+		layer = self._object:layer() + 2,
+		texture = tweak_data.gui.icons.intel_table_archive.texture,
+		texture_rect = tweak_data.gui.icons.intel_table_archive.texture_rect,
 		visible = false,
 		w = 796,
 		x = 112,
 		y = 128,
-		layer = self._object:layer() + 2,
-		texture = tweak_data.gui.icons.intel_table_archive.texture,
-		texture_rect = tweak_data.gui.icons.intel_table_archive.texture_rect,
 	})
 	self._play_panel = self._object:panel({
-		visible = false,
-		x = 0,
-		y = 0,
 		h = tweak_data.gui.icons.play_icon_outline.texture_rect[4],
 		layer = self._object:layer() + 2,
-		w = tweak_data.gui.icons.play_icon_outline.texture_rect[3],
-	})
-	self._play_circle = self._play_panel:bitmap({
 		visible = false,
+		w = tweak_data.gui.icons.play_icon_outline.texture_rect[3],
 		x = 0,
 		y = 0,
+	})
+	self._play_circle = self._play_panel:bitmap({
 		color = tweak_data.gui.colors.raid_dirty_white,
 		layer = self._object:layer() + 3,
 		texture = tweak_data.gui.icons.play_icon_outline.texture,
 		texture_rect = tweak_data.gui.icons.play_icon_outline.texture_rect,
-	})
-	self._play_icon = self._play_panel:bitmap({
 		visible = false,
 		x = 0,
 		y = 0,
+	})
+	self._play_icon = self._play_panel:bitmap({
 		layer = self._object:layer() + 4,
 		texture = tweak_data.gui.icons.play_icon.texture,
 		texture_rect = tweak_data.gui.icons.play_icon.texture_rect,
+		visible = false,
+		x = 0,
+		y = 0,
 	})
 end
 
@@ -247,11 +247,11 @@ function RaidGUIControlIntelControlArchive:_play_video()
 
 	local full_panel = self._full_workspace:panel()
 	local params_root_panel = {
-		is_root_panel = true,
-		name = "control_video_root_panel",
 		background_color = Color.black,
 		h = full_panel:h(),
+		is_root_panel = true,
 		layer = tweak_data.gui.DEBRIEF_VIDEO_LAYER + 10,
+		name = "control_video_root_panel",
 		w = full_panel:w(),
 		x = full_panel:x(),
 		y = full_panel:y(),
@@ -261,8 +261,8 @@ function RaidGUIControlIntelControlArchive:_play_video()
 
 	local video = self._data.video_path
 	local control_video_params = {
-		name = "control_video",
 		layer = self._panel:layer() + 1,
+		name = "control_video",
 		video = video,
 		width = self._panel:w(),
 	}
@@ -278,11 +278,11 @@ function RaidGUIControlIntelControlArchive:_play_video()
 	local press_any_key_text = managers.controller:is_using_controller() and "press_any_key_to_skip_controller" or "press_any_key_to_skip"
 	local press_any_key_params = {
 		alpha = 0,
-		name = "press_any_key_prompt",
 		color = tweak_data.gui.colors.raid_dirty_white,
 		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.size_32),
 		font_size = tweak_data.gui.font_sizes.size_32,
 		layer = self._control_video:layer() + 100,
+		name = "press_any_key_prompt",
 		text = utf8.to_upper(managers.localization:text(press_any_key_text)),
 	}
 	local press_any_key_prompt = self._safe_panel:text(press_any_key_params)

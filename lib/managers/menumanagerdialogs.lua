@@ -272,8 +272,8 @@ end
 
 function MenuManager:show_searching_match_dialog(params)
 	local cancel_button = {
-		cancel_button = true,
 		callback_func = params.cancel_func,
+		cancel_button = true,
 		text = managers.localization:text("dialog_cancel"),
 	}
 	local dialog_data = {}
@@ -2790,19 +2790,19 @@ function MenuManager:show_skill_profile_rename_dialog(params)
 		text = managers.localization:to_upper_text("dialog_rename"),
 	}
 	local no_button = {
-		cancel_button = true,
 		callback_func = params.callback_no,
+		cancel_button = true,
 		class = RaidGUIControlButtonShortSecondary,
 		text = managers.localization:to_upper_text("dialog_cancel"),
 	}
 	local dialog_data = {
-		capitalize = false,
-		focus_button = 1,
-		textbox = true,
 		button_list = {
 			yes_button,
 			no_button,
 		},
+		capitalize = false,
+		focus_button = 1,
+		textbox = true,
 		textbox_value = params.textbox_value,
 		title = managers.localization:to_upper_text("menu_skill_profile_rename_title"),
 	}

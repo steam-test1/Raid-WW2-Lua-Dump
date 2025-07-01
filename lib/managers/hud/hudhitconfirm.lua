@@ -41,11 +41,11 @@ function HUDHitConfirm:_create_icon(name, icon)
 	local icon_params = {
 		halign = "center",
 		layer = 2,
-		valign = "center",
-		visible = false,
 		name = name,
 		texture = tweak_data.gui.icons[icon].texture,
 		texture_rect = tweak_data.gui.icons[icon].texture_rect,
+		valign = "center",
+		visible = false,
 	}
 	local icon = self._hud_panel:bitmap(icon_params)
 

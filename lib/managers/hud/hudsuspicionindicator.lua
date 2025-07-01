@@ -46,8 +46,8 @@ end
 function HUDSuspicionIndicator:_create_panel(hud)
 	local panel_params = {
 		alpha = 0,
-		name = "suspicion_indicator",
 		h = HUDSuspicionIndicator.H,
+		name = "suspicion_indicator",
 		w = HUDSuspicionIndicator.W,
 	}
 
@@ -64,8 +64,8 @@ function HUDSuspicionIndicator:_create_eye_background()
 	self._eye_panel = self._object:panel(eye_panel_params)
 
 	local eye_background_params = {
-		name = "eye_background",
 		layer = self._object:layer() + 1,
+		name = "eye_background",
 		texture = tweak_data.gui.icons[HUDSuspicionIndicator.EYE_BG_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDSuspicionIndicator.EYE_BG_ICON].texture_rect,
 	}
@@ -77,8 +77,8 @@ end
 
 function HUDSuspicionIndicator:_create_eye_outside_ring()
 	local eye_outside_ring_params = {
-		name = "eye_outside_ring",
 		layer = self._eye_background:layer() + 1,
+		name = "eye_outside_ring",
 		texture = tweak_data.gui.icons[HUDSuspicionIndicator.EYE_OUTER_RING_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDSuspicionIndicator.EYE_OUTER_RING_ICON].texture_rect,
 	}
@@ -90,11 +90,11 @@ end
 
 function HUDSuspicionIndicator:_create_eye_fill()
 	local eye_fill_params = {
+		h = tweak_data.gui:icon_h(HUDSuspicionIndicator.EYE_FILL_ICON),
+		layer = self._eye_background:layer() + 1,
 		name = "eye_fill",
 		position_z = 0,
 		render_template = "VertexColorTexturedRadial",
-		h = tweak_data.gui:icon_h(HUDSuspicionIndicator.EYE_FILL_ICON),
-		layer = self._eye_background:layer() + 1,
 		texture = tweak_data.gui.icons[HUDSuspicionIndicator.EYE_FILL_ICON].texture,
 		texture_rect = {
 			tweak_data.gui:icon_w(HUDSuspicionIndicator.EYE_FILL_ICON),

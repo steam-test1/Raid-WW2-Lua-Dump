@@ -5,8 +5,8 @@ EditUnitVariation = EditUnitVariation or class(EditUnitBase)
 
 function EditUnitVariation:init(editor)
 	local panel, sizer = (editor or managers.editor):add_unit_edit_page({
-		name = "Variations",
 		class = self,
+		name = "Variations",
 	})
 
 	self._panel = panel
@@ -20,12 +20,12 @@ function EditUnitVariation:init(editor)
 		default = "default",
 		name = "Mesh:",
 		name_proportions = 1,
-		sizer_proportions = 2,
-		sorted = true,
-		tooltip = "Select a mesh variation from the combobox",
 		options = {},
 		panel = panel,
 		sizer = all_variations_sizer,
+		sizer_proportions = 2,
+		sorted = true,
+		tooltip = "Select a mesh variation from the combobox",
 	}
 
 	CoreEws.combobox(self._mesh_params)
@@ -36,12 +36,12 @@ function EditUnitVariation:init(editor)
 		default = "default",
 		name = "Material:",
 		name_proportions = 1,
-		sizer_proportions = 2,
-		sorted = true,
-		tooltip = "Select a material variation from the combobox",
 		options = {},
 		panel = panel,
 		sizer = all_variations_sizer,
+		sizer_proportions = 2,
+		sorted = true,
+		tooltip = "Select a material variation from the combobox",
 	}
 
 	CoreEws.combobox(self._material_params)

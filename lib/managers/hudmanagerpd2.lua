@@ -98,7 +98,7 @@ function HUDManager:add_weapon(data)
 
 	local tweak_data = data.unit:base():weapon_tweak_data()
 
-	if tweak_data.hud and (not self._weapon_panels[data.inventory_index] or self._weapon_panels[data.inventory_index] and self._weapon_panels[data.inventory_index]:name_id() ~= tweak_data.name_id) then
+	if tweak_data.hud and not self._weapon_panels[data.inventory_index] or self._weapon_panels[data.inventory_index] and (data.force or self._weapon_panels[data.inventory_index]:name_id() ~= tweak_data.name_id) then
 		if self._weapon_panels[data.inventory_index] then
 			self._weapon_panels[data.inventory_index]:destroy()
 		end
@@ -725,13 +725,13 @@ function HUDManager:_create_ammo_test()
 	panel:set_center_y(hud.panel:h() / 2 - 40)
 	panel:set_center_x(hud.panel:w() / 2)
 	panel:rect({
-		name = "ammo_test_bg_rect",
 		color = Color.black:with_alpha(0.5),
+		name = "ammo_test_bg_rect",
 	})
 	panel:rect({
+		color = Color.white,
 		layer = 1,
 		name = "ammo_test_rect",
-		color = Color.white,
 	})
 end
 
@@ -964,20 +964,20 @@ function HUDManager:_create_teammates_panel(hud)
 	end
 
 	local teammates_panel_params = {
+		h = hud.panel:h(),
 		halign = "left",
 		name = "teammates_panel",
 		valign = "grow",
+		w = HUDManager.TEAMMATE_PANEL_W,
 		x = 0,
 		y = 0,
-		h = hud.panel:h(),
-		w = HUDManager.TEAMMATE_PANEL_W,
 	}
 	local teammates_panel = hud.panel:panel(teammates_panel_params)
 
 	for i = 1, 3 do
 		self._hud.teammate_panels_data[i] = {
-			taken = false,
 			special_equipments = {},
+			taken = false,
 		}
 
 		local ai_teammate = HUDTeammateAI:new(i, teammates_panel)
@@ -1001,8 +1001,8 @@ function HUDManager:_create_teammates_panel(hud)
 	table.insert(self._teammate_panels, teammate)
 
 	self._hud.teammate_panels_data[HUDManager.PLAYER_PANEL] = {
-		taken = false,
 		special_equipments = {},
+		taken = false,
 	}
 end
 
@@ -1028,10 +1028,10 @@ function HUDManager:_create_weapons_panel(hud)
 	hud = hud or managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT)
 
 	local weapons_panel_params = {
+		h = HUDManager.WEAPONS_PANEL_H,
 		halign = "right",
 		name = "weapons_panel",
 		valign = "bottom",
-		h = HUDManager.WEAPONS_PANEL_H,
 		w = HUDManager.WEAPONS_PANEL_W,
 	}
 	local weapons_panel = hud.panel:panel(weapons_panel_params)
@@ -1307,11 +1307,11 @@ end
 function HUDManager:show_progress_timer_bar(current, total, description)
 	local hud = managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT)
 	local progress_bar_params = {
+		color = Color(1, 0.6666666666666666, 0):with_alpha(0.8),
+		description = description,
 		height = 8,
 		name = "progress_timer_progress_bar",
 		width = 256,
-		color = Color(1, 0.6666666666666666, 0):with_alpha(0.8),
-		description = description,
 		x = hud.panel:w() / 2,
 		y = hud.panel:h() / 2,
 	}
@@ -1393,8 +1393,8 @@ function HUDManager:on_progression_cycle_completed()
 	local notification_params = {
 		duration = 6,
 		id = "progression_cycle_completed",
-		priority = 4,
 		notification_type = HUDNotification.RAID_UNLOCKED,
+		priority = 4,
 	}
 
 	managers.notification:add_notification(notification_params)
@@ -1407,11 +1407,11 @@ function HUDManager:on_greed_loot_picked_up(old_progress, new_progress, notifica
 
 	managers.notification:add_notification({
 		id = "greed_item_picked_up",
-		shelf_life = 8,
 		initial_progress = old_progress,
 		item = notification_item,
 		new_progress = new_progress,
 		notification_type = HUDNotification.GREED_ITEM,
+		shelf_life = 8,
 	})
 end
 
@@ -1675,6 +1675,21 @@ end
 
 function HUDManager:player_turret_cooldown()
 	self._turret_hud:cooldown()
+end
+
+function HUDManager:_create_drama_hud(hud)
+	self._drama_hud = HUDDrama:new(hud)
+
+	self._drama_hud:set_x(480)
+	self._drama_hud:set_bottom(hud.panel:h())
+end
+
+function HUDManager:show_drama_hud(data)
+	self._drama_hud:show(data)
+end
+
+function HUDManager:hide_drama_hud(data)
+	self._drama_hud:hide(data)
 end
 
 function HUDManager:_create_watermark(hud)

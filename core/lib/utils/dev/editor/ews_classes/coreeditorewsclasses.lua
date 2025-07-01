@@ -1814,14 +1814,14 @@ function MoveTransformTypeIn:_create_ctrl(name, coor, value, type, sizer)
 	end
 
 	spin:connect("EVT_SCROLL_LINEUP", callback(self, self, "update_spin"), {
-		step = 0.1,
 		coor = coor,
 		ctrl = c,
+		step = 0.1,
 	})
 	spin:connect("EVT_SCROLL_LINEDOWN", callback(self, self, "update_spin"), {
-		step = -0.1,
 		coor = coor,
 		ctrl = c,
+		step = -0.1,
 	})
 	ctrl_sizer:add(spin, 0, 0, "EXPAND")
 	sizer:add(ctrl_sizer, 1, 10, "EXPAND,LEFT,RIGHT")
@@ -1834,7 +1834,7 @@ function MoveTransformTypeIn:update_spin(data)
 		data.ctrl:set_value(0)
 	end
 
-	data.ctrl:set_value(string.format("%.2f", data.ctrl:get_value() + data.step))
+	data.ctrl:set_value(string.format("%.3f", data.ctrl:get_value() + data.step))
 	self:update_absolut(data)
 end
 
@@ -1852,7 +1852,7 @@ function MoveTransformTypeIn:update_absolut(data)
 
 		pos = pos["with_" .. data.coor](pos, value)
 
-		data.ctrl:change_value(string.format("%.2f", value / 100))
+		data.ctrl:change_value(string.format("%.3f", value / 100))
 		data.ctrl:set_selection(-1, -1)
 		managers.editor:set_selected_units_position(pos)
 	end
@@ -1890,15 +1890,15 @@ function MoveTransformTypeIn:update(t, dt)
 		local pos = self._unit:position()
 
 		if not self._ax:in_focus() then
-			self._ax:change_value(string.format("%.2f", pos.x / 100))
+			self._ax:change_value(string.format("%.3f", pos.x / 100))
 		end
 
 		if not self._ay:in_focus() then
-			self._ay:change_value(string.format("%.2f", pos.y / 100))
+			self._ay:change_value(string.format("%.3f", pos.y / 100))
 		end
 
 		if not self._az:in_focus() then
-			self._az:change_value(string.format("%.2f", pos.z / 100))
+			self._az:change_value(string.format("%.3f", pos.z / 100))
 		end
 	end
 end
@@ -1972,14 +1972,14 @@ function RotateTransformTypeIn:_create_ctrl(name, coor, value, type, sizer)
 	end
 
 	spin:connect("EVT_SCROLL_LINEUP", callback(self, self, "update_spin"), {
-		step = 0.1,
 		coor = coor,
 		ctrl = c,
+		step = 0.1,
 	})
 	spin:connect("EVT_SCROLL_LINEDOWN", callback(self, self, "update_spin"), {
-		step = -0.1,
 		coor = coor,
 		ctrl = c,
+		step = -0.1,
 	})
 	ctrl_sizer:add(spin, 0, 0, "EXPAND")
 	sizer:add(ctrl_sizer, 1, 10, "EXPAND,LEFT,RIGHT")
@@ -1992,7 +1992,7 @@ function RotateTransformTypeIn:update_spin(data)
 		data.ctrl:set_value(0)
 	end
 
-	data.ctrl:set_value(string.format("%.2f", data.ctrl:get_value() + data.step))
+	data.ctrl:set_value(string.format("%.3f", data.ctrl:get_value() + data.step))
 	self:update_absolut(data)
 end
 
@@ -2014,7 +2014,7 @@ function RotateTransformTypeIn:update_absolut(data)
 			rot = Rotation(rot:yaw(), rot:pitch(), value)
 		end
 
-		data.ctrl:change_value(string.format("%.2f", value))
+		data.ctrl:change_value(string.format("%.3f", value))
 		data.ctrl:set_selection(-1, -1)
 		managers.editor:set_selected_units_rotation(rot * self._unit:rotation():inverse())
 	end
@@ -2052,15 +2052,15 @@ function RotateTransformTypeIn:update(t, dt)
 		local rot = self._unit:rotation()
 
 		if not self._ax:in_focus() then
-			self._ax:change_value(string.format("%.2f", rot:yaw()))
+			self._ax:change_value(string.format("%.3f", rot:yaw()))
 		end
 
 		if not self._ay:in_focus() then
-			self._ay:change_value(string.format("%.2f", rot:pitch()))
+			self._ay:change_value(string.format("%.3f", rot:pitch()))
 		end
 
 		if not self._az:in_focus() then
-			self._az:change_value(string.format("%.2f", rot:roll()))
+			self._az:change_value(string.format("%.3f", rot:roll()))
 		end
 	end
 end
@@ -2133,14 +2133,14 @@ function ScaleTransformTypeIn:_create_ctrl(name, coor, value, type, sizer)
 	end
 
 	spin:connect("EVT_SCROLL_LINEUP", callback(self, self, "update_spin"), {
-		step = 0.1,
 		coor = coor,
 		ctrl = c,
+		step = 0.1,
 	})
 	spin:connect("EVT_SCROLL_LINEDOWN", callback(self, self, "update_spin"), {
-		step = -0.1,
 		coor = coor,
 		ctrl = c,
+		step = -0.1,
 	})
 	ctrl_sizer:add(spin, 0, 0, "EXPAND")
 	sizer:add(ctrl_sizer, 1, 10, "EXPAND,LEFT,RIGHT")
@@ -2153,7 +2153,7 @@ function ScaleTransformTypeIn:update_spin(data)
 		data.ctrl:set_value(0)
 	end
 
-	data.ctrl:set_value(string.format("%.2f", data.ctrl:get_value() + data.step))
+	data.ctrl:set_value(string.format("%.3f", data.ctrl:get_value() + data.step))
 	self:update_absolut(data)
 end
 
@@ -2171,7 +2171,7 @@ function ScaleTransformTypeIn:update_absolut(data)
 
 		pos = pos["with_" .. data.coor](pos, value)
 
-		data.ctrl:change_value(string.format("%.2f", value / 100))
+		data.ctrl:change_value(string.format("%.3f", value / 100))
 		data.ctrl:set_selection(-1, -1)
 		managers.editor:set_selected_units_scale(pos)
 	end
@@ -2209,15 +2209,15 @@ function ScaleTransformTypeIn:update(t, dt)
 		local scale = self._unit:position()
 
 		if not self._ax:in_focus() then
-			self._ax:change_value(string.format("%.2f", scale.x / 100))
+			self._ax:change_value(string.format("%.3f", scale.x / 100))
 		end
 
 		if not self._ay:in_focus() then
-			self._ay:change_value(string.format("%.2f", scale.y / 100))
+			self._ay:change_value(string.format("%.3f", scale.y / 100))
 		end
 
 		if not self._az:in_focus() then
-			self._az:change_value(string.format("%.2f", scale.z / 100))
+			self._az:change_value(string.format("%.3f", scale.z / 100))
 		end
 	end
 end
@@ -2316,14 +2316,14 @@ function CameraTransformTypeIn:_create_ctrl(name, coor, value, type, sizer)
 			ctrl = ctrl,
 		})
 		spin:connect("EVT_SCROLL_LINEUP", callback(self, self, "update_rotation_spin"), {
-			step = 1,
 			coor = coor,
 			ctrl = ctrl,
+			step = 1,
 		})
 		spin:connect("EVT_SCROLL_LINEDOWN", callback(self, self, "update_rotation_spin"), {
-			step = -1,
 			coor = coor,
 			ctrl = ctrl,
+			step = -1,
 		})
 	else
 		ctrl:set_tool_tip("Type in absolut " .. coor .. "-coordinates in cm")
@@ -2336,14 +2336,14 @@ function CameraTransformTypeIn:_create_ctrl(name, coor, value, type, sizer)
 			ctrl = ctrl,
 		})
 		spin:connect("EVT_SCROLL_LINEUP", callback(self, self, "update_position_spin"), {
-			step = 10,
 			coor = coor,
 			ctrl = ctrl,
+			step = 10,
 		})
 		spin:connect("EVT_SCROLL_LINEDOWN", callback(self, self, "update_position_spin"), {
-			step = -10,
 			coor = coor,
 			ctrl = ctrl,
+			step = -10,
 		})
 	end
 
@@ -2426,7 +2426,7 @@ function CameraTransformTypeIn:update_far_range()
 	value = value < 1 and 1 or value
 	value = value * 100
 
-	self._far_range:set_value(string.format("%.2f", value / 100))
+	self._far_range:set_value(string.format("%.3f", value / 100))
 	self._far_range:set_selection(-1, -1)
 	managers.editor:set_camera_far_range(value)
 end
@@ -2465,7 +2465,7 @@ function CameraTransformTypeIn:update(t, dt)
 	end
 
 	if not self._far_range:in_focus() then
-		self._far_range:change_value(string.format("%.2f", managers.editor:camera_far_range() / 100))
+		self._far_range:change_value(string.format("%.3f", managers.editor:camera_far_range() / 100))
 	end
 end
 

@@ -45,15 +45,15 @@ function LevelLoadingScreenGuiScript:init(scene_gui, res, progress, base_layer)
 
 	self._level_title_text = background_safepanel:text({
 		align = "left",
+		color = Color.white,
 		font = "fonts/font_large_mf",
 		font_size = 36,
 		h = 36,
 		halign = "left",
 		layer = 0,
+		text = text,
 		vertical = "bottom",
 		y = 0,
-		color = Color.white,
-		text = text,
 	})
 
 	local _, _, w, h = self._level_title_text:text_rect()
@@ -72,14 +72,14 @@ function LevelLoadingScreenGuiScript:init(scene_gui, res, progress, base_layer)
 
 		for id, data in pairs(self._coords) do
 			data.text = background_safepanel:text({
+				align = data.align,
+				color = data.color,
 				font = "fonts/font_medium_mf",
 				font_size = 24,
 				halign = "center",
-				valign = "center",
-				align = data.align,
-				color = data.color,
 				name = data.id,
 				text = data.string,
+				valign = "center",
 				vertical = data.vertical,
 			})
 

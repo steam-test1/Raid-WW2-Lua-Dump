@@ -87,13 +87,13 @@ end
 
 function RaidGUIControlListItemRaids:_layout_background(params)
 	local background_params = {
-		visible = false,
-		x = 0,
-		y = 1,
 		color = tweak_data.gui.colors.raid_list_background,
 		h = self._object:h() - 2,
 		name = "list_item_back_" .. self._name,
+		visible = false,
 		w = params.w,
+		x = 0,
+		y = 1,
 	}
 
 	self._item_background = self._object:rect(background_params)
@@ -101,13 +101,13 @@ end
 
 function RaidGUIControlListItemRaids:_layout_highlight_marker()
 	local marker_params = {
+		color = self._selected_color,
+		h = self._object:h() - 2,
+		name = "list_item_highlight_" .. self._name,
 		visible = false,
 		w = 3,
 		x = 0,
 		y = 1,
-		color = self._selected_color,
-		h = self._object:h() - 2,
-		name = "list_item_highlight_" .. self._name,
 	}
 
 	self._item_highlight_marker = self._object:rect(marker_params)
@@ -131,13 +131,13 @@ end
 
 function RaidGUIControlListItemRaids:_layout_raid_name(params, data)
 	local raid_name_params = {
-		vertical = "center",
 		color = tweak_data.gui.colors.raid_dirty_white,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.small,
 		h = params.h,
 		name = "list_item_label_" .. self._name,
 		text = utf8.to_upper(data.text),
+		vertical = "center",
 		w = params.w,
 		x = self._item_icon:x() + self._item_icon:w() + RaidGUIControlListItemRaids.ICON_PADDING,
 	}
@@ -152,12 +152,12 @@ function RaidGUIControlListItemRaids:_layout_exp(params, data)
 
 	self._exp_label = self._object:text({
 		align = "right",
-		vertical = "center",
 		color = tweak_data.gui.colors.raid_grey,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.small,
 		name = "list_item_exp_label_" .. self._name,
 		text = utf8.to_upper(xp_value .. " XP"),
+		vertical = "center",
 	})
 
 	local _, _, w, h = self._exp_label:text_rect()
@@ -169,12 +169,12 @@ end
 
 function RaidGUIControlListItemRaids:_layout_consumable_mission_label()
 	local consumable_mission_label_params = {
-		vertical = "center",
 		color = tweak_data.gui.colors.raid_gold,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.extra_small,
 		name = "list_item_label_" .. self._name,
 		text = self:translate("menu_mission_selected_mission_type_consumable", true),
+		vertical = "center",
 		x = self._item_icon:x() + self._item_icon:w() + RaidGUIControlListItemRaids.ICON_PADDING,
 	}
 
@@ -192,12 +192,12 @@ end
 function RaidGUIControlListItemRaids:_layout_difficulty_locked()
 	local locked_subtext = self:translate("raid_next_raid_in_description", true)
 	local difficulty_locked_params = {
-		vertical = "center",
 		color = tweak_data.gui.colors.raid_dark_grey,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.extra_small,
 		name = "list_item_label_" .. self._name,
 		text = locked_subtext,
+		vertical = "center",
 		x = self._item_icon:x() + self._item_icon:w() + RaidGUIControlListItemRaids.ICON_PADDING,
 	}
 

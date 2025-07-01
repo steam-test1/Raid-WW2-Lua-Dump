@@ -25,9 +25,9 @@ function HUDSpecialInteractionLockPick:_create_bg_plate()
 	self._bg_plate = self._object:bitmap({
 		halign = "center",
 		name = "special_interaction_bg_plate",
-		valign = "center",
 		texture = gui_data.texture,
 		texture_rect = gui_data.texture_rect,
+		valign = "center",
 	})
 
 	self._bg_plate:set_center(self._object:center())
@@ -37,9 +37,9 @@ function HUDSpecialInteractionLockPick:_create_lockpick_texture()
 	local gui_data = tweak_data.gui:get_full_gui_data(HUDSpecialInteractionLockPick.LOCKPICK_ICON)
 
 	self._lockpick_texture = self._object:bitmap({
-		name = "special_interaction_icon",
 		h = HUDSpecialInteractionLockPick.SIZE,
 		layer = self._bg_plate:layer() + 1,
+		name = "special_interaction_icon",
 		texture = gui_data.texture,
 		texture_rect = gui_data.texture_rect,
 		w = HUDSpecialInteractionLockPick.SIZE,
@@ -53,13 +53,13 @@ function HUDSpecialInteractionLockPick:_create_circles()
 
 	for i = 1, self._tweak_data.number_of_circles do
 		local circle = CircleBitmapGuiObject:new(self._object, {
-			use_bg = false,
 			color = HUDSpecialInteractionLockPick.CIRCLE_COLOR,
 			image = tweak_data.gui.icons.interact_lockpick_circles[i].texture,
 			layer = self._bg_plate:layer() + 2,
 			radius = HUDSpecialInteractionLockPick.SIZE,
 			sides = self._sides,
 			total = self._sides,
+			use_bg = false,
 		})
 
 		circle:set_center(self._object:center())
@@ -73,9 +73,9 @@ function HUDSpecialInteractionLockPick:_create_circles()
 		circle:set_current(circle_diff)
 
 		self._circles[i] = {
+			circle = circle,
 			completed = false,
 			valid = true,
-			circle = circle,
 		}
 	end
 end

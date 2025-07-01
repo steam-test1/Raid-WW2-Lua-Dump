@@ -144,14 +144,14 @@ function CivilianBrain:on_hostage_move_interaction(interacting_unit, command)
 
 		local follow_objective = {
 			distance = 500,
+			fail_clbk = callback(self, self, "on_hostage_follow_objective_failed"),
+			follow_unit = interacting_unit,
 			interrupt_dis = 0,
 			interrupt_health = 0,
 			lose_track_dis = 2000,
+			nav_seg = interacting_unit:movement():nav_tracker():nav_segment(),
 			stance = "cbt",
 			type = "follow",
-			fail_clbk = callback(self, self, "on_hostage_follow_objective_failed"),
-			follow_unit = interacting_unit,
-			nav_seg = interacting_unit:movement():nav_tracker():nav_segment(),
 		}
 
 		self:set_objective(follow_objective)
@@ -168,9 +168,9 @@ function CivilianBrain:on_hostage_move_interaction(interacting_unit, command)
 		end
 
 		self:set_objective({
+			aggressor_unit = interacting_unit,
 			amount = 1,
 			type = "surrender",
-			aggressor_unit = interacting_unit,
 		})
 
 		if not self._unit:anim_data().stand then

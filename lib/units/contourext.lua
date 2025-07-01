@@ -8,100 +8,100 @@ local idstr_contour_distance = Idstring("contour_distance")
 ContourExt.UNSET_CONTOUR_DISTANCE = 200000
 ContourExt._types = {
 	deployable_active = {
+		color = tweak_data.contour.deployable.active_color,
 		priority = 3,
 		unique = true,
-		color = tweak_data.contour.deployable.active_color,
 	},
 	deployable_disabled = {
+		color = tweak_data.contour.deployable.disabled_color,
 		priority = 2,
 		unique = true,
-		color = tweak_data.contour.deployable.disabled_color,
 	},
 	deployable_interactable = {
+		color = tweak_data.contour.deployable.interact_color,
 		priority = 4,
 		unique = true,
-		color = tweak_data.contour.deployable.interact_color,
 	},
 	deployable_selected = {
+		color = tweak_data.contour.deployable.selected_color,
 		priority = 1,
 		unique = true,
-		color = tweak_data.contour.deployable.selected_color,
 	},
 	friendly = {
-		priority = 3,
 		color = tweak_data.contour.character.friendly_color,
+		priority = 3,
 	},
 	generic_interactable = {
-		priority = 2,
 		color = tweak_data.contour.character_interactable.standard_color,
+		priority = 2,
 	},
 	generic_interactable_selected = {
-		priority = 1,
 		color = tweak_data.contour.character_interactable.selected_color,
+		priority = 1,
 	},
 	highlight = {
-		priority = 4,
 		color = tweak_data.contour.interactable.standard_color,
+		priority = 4,
 	},
 	highlight_character = {
-		priority = 6,
 		color = tweak_data.contour.interactable.standard_color,
+		priority = 6,
 	},
 	hostage_trade = {
-		priority = 1,
 		color = tweak_data.contour.character_interactable.standard_color,
+		priority = 1,
 	},
 	mark_enemy = {
+		color = tweak_data.contour.character.dangerous_color,
 		fadeout = 4.5,
 		fadeout_silent = 13.5,
 		priority = 5,
-		color = tweak_data.contour.character.dangerous_color,
 	},
 	mark_enemy_damage_bonus = {
+		color = tweak_data.contour.character.more_dangerous_color,
 		fadeout = 16,
 		priority = 4,
-		color = tweak_data.contour.character.more_dangerous_color,
 	},
 	mark_enemy_ghost = {
+		color = tweak_data.contour.character.ghost_warcry,
 		distance = 3200,
 		fadeout = 0,
 		persistence = 0.1,
 		priority = 6,
-		color = tweak_data.contour.character.ghost_warcry,
 	},
 	mark_enemy_sharpshooter = {
+		color = tweak_data.contour.character.sharpshooter_warcry,
 		fadeout = 0,
 		persistence = 0.1,
 		priority = 3,
-		color = tweak_data.contour.character.sharpshooter_warcry,
 	},
 	mark_enemy_silver_bullet = {
+		color = tweak_data.contour.character.silver_bullet_warcry,
 		distance = 3000,
 		fadeout = 0,
 		persistence = 0.1,
 		priority = 6,
-		color = tweak_data.contour.character.silver_bullet_warcry,
 	},
 	mark_enemy_turret = {
+		color = tweak_data.contour.character.dangerous_color,
 		fadeout = 4.5,
 		fadeout_silent = 13.5,
 		priority = 5,
-		color = tweak_data.contour.character.dangerous_color,
 	},
 	mark_unit = {
+		color = tweak_data.contour.character.dangerous_color,
 		fadeout = 4.5,
 		priority = 4,
-		color = tweak_data.contour.character.dangerous_color,
 	},
 	mark_unit_dangerous = {
+		color = tweak_data.contour.character.dangerous_color,
 		fadeout = 9,
 		priority = 4,
-		color = tweak_data.contour.character.dangerous_color,
 	},
 	mark_unit_friendly = {
+		color = tweak_data.contour.character.friendly_color,
 		fadeout = 9,
 		priority = 3,
-		color = tweak_data.contour.character.friendly_color,
 	},
 	teammate = {
 		persistence = 0.1,
@@ -109,16 +109,16 @@ ContourExt._types = {
 		ray_check = true,
 	},
 	teammate_dead = {
-		priority = 4,
 		color = tweak_data.contour.character.dead_color,
+		priority = 4,
 	},
 	teammate_downed = {
-		priority = 4,
 		color = tweak_data.contour.character.downed_color,
+		priority = 4,
 	},
 	teammate_downed_selected = {
-		priority = 3,
 		color = tweak_data.contour.character_interactable.selected_color,
+		priority = 3,
 	},
 }
 ContourExt.indexed_types = {}
@@ -126,6 +126,8 @@ ContourExt.indexed_types = {}
 for name, preset in pairs(ContourExt._types) do
 	table.insert(ContourExt.indexed_types, name)
 end
+
+table.sort(ContourExt.indexed_types)
 
 if #ContourExt.indexed_types > 32 then
 	Application:error("[ContourExt] max # contour presets exceeded!")
@@ -188,8 +190,8 @@ function ContourExt:add(type, sync, multiplier, damage_multiplier)
 	end
 
 	local setup = {
-		ref_c = 1,
 		fadeout_t = fadeout and TimerManager:game():time() + fadeout or nil,
+		ref_c = 1,
 		sync = sync,
 		type = type,
 	}

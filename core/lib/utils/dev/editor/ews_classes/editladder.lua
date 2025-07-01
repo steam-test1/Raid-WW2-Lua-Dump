@@ -5,55 +5,55 @@ EditLadder = EditLadder or class(EditUnitBase)
 
 function EditLadder:init(editor)
 	local panel, sizer = (editor or managers.editor):add_unit_edit_page({
-		name = "Ladder",
 		class = self,
+		name = "Ladder",
 	})
 
 	self._panel = panel
 	self._width_params = {
 		ctrlr_proportions = 1,
+		events = {
+			{
+				callback = callback(self, self, "_update_width"),
+				event = "EVT_COMMAND_TEXT_ENTER",
+			},
+			{
+				callback = callback(self, self, "_update_width"),
+				event = "EVT_KILL_FOCUS",
+			},
+		},
 		floats = 0,
 		min = 0,
 		name = "Width [cm]:",
 		name_proportions = 1,
-		tooltip = "Sets the width of the ladder in cm",
-		value = 0,
-		events = {
-			{
-				event = "EVT_COMMAND_TEXT_ENTER",
-				callback = callback(self, self, "_update_width"),
-			},
-			{
-				event = "EVT_KILL_FOCUS",
-				callback = callback(self, self, "_update_width"),
-			},
-		},
 		panel = panel,
 		sizer = sizer,
+		tooltip = "Sets the width of the ladder in cm",
+		value = 0,
 	}
 
 	CoreEws.number_controller(self._width_params)
 
 	self._height_params = {
 		ctrlr_proportions = 1,
+		events = {
+			{
+				callback = callback(self, self, "_update_height"),
+				event = "EVT_COMMAND_TEXT_ENTER",
+			},
+			{
+				callback = callback(self, self, "_update_height"),
+				event = "EVT_KILL_FOCUS",
+			},
+		},
 		floats = 0,
 		min = 0,
 		name = "Height [cm]:",
 		name_proportions = 1,
-		tooltip = "Sets the height of the ladder in cm",
-		value = 0,
-		events = {
-			{
-				event = "EVT_COMMAND_TEXT_ENTER",
-				callback = callback(self, self, "_update_height"),
-			},
-			{
-				event = "EVT_KILL_FOCUS",
-				callback = callback(self, self, "_update_height"),
-			},
-		},
 		panel = panel,
 		sizer = sizer,
+		tooltip = "Sets the height of the ladder in cm",
+		value = 0,
 	}
 
 	CoreEws.number_controller(self._height_params)

@@ -1201,8 +1201,8 @@ function CopActionAct:init(action_desc, common_data)
 
 		if not stand_rsrv or mvector3.distance_sq(stand_rsrv.position, common_data.pos) > 400 then
 			self._unit:brain():add_pos_rsrv("stand", {
-				radius = 30,
 				position = mvector3.copy(common_data.pos),
+				radius = 30,
 			})
 		end
 	end

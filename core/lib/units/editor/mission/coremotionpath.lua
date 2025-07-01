@@ -29,9 +29,9 @@ function CoreMotionPathOperatorUnitElement:draw_links(t, dt, selected_unit, all_
 		if draw then
 			self:_draw_link({
 				b = 0.25,
+				from_unit = self._unit,
 				g = 0.25,
 				r = 0.75,
-				from_unit = self._unit,
 				to_unit = unit,
 			})
 		end
@@ -44,9 +44,9 @@ function CoreMotionPathOperatorUnitElement:draw_links(t, dt, selected_unit, all_
 		if draw and alive(unit) and alive(self._unit) then
 			self:_draw_link({
 				b = 0.05,
+				from_unit = self._unit,
 				g = 0.55,
 				r = 0.95,
-				from_unit = self._unit,
 				to_unit = unit,
 			})
 		end
@@ -60,9 +60,9 @@ end
 
 function CoreMotionPathOperatorUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
+		mask = managers.slot:get_mask("all"),
 		ray_type = "body editor",
 		sample = true,
-		mask = managers.slot:get_mask("all"),
 	})
 
 	if ray and ray.unit then
@@ -76,8 +76,8 @@ end
 
 function CoreMotionPathOperatorUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "body editor",
 		mask = managers.slot:get_mask("all"),
+		ray_type = "body editor",
 	})
 
 	if ray and ray.unit and ray.unit:name() == Idstring("units/dev_tools/mission_elements/motion_path_marker/motion_path_marker") then
@@ -183,9 +183,9 @@ function CoreMotionPathTriggerUnitElement:draw_links(t, dt, selected_unit, all_u
 		if draw then
 			self:_draw_link({
 				b = 0.25,
+				from_unit = unit,
 				g = 0.85,
 				r = 0.85,
-				from_unit = unit,
 				to_unit = self._unit,
 			})
 		end
@@ -199,9 +199,9 @@ end
 
 function CoreMotionPathTriggerUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
+		mask = managers.slot:get_mask("all"),
 		ray_type = "body editor",
 		sample = true,
-		mask = managers.slot:get_mask("all"),
 	})
 
 	if ray and ray.unit then
@@ -211,8 +211,8 @@ end
 
 function CoreMotionPathTriggerUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "body editor",
 		mask = managers.slot:get_mask("all"),
+		ray_type = "body editor",
 	})
 
 	if ray and ray.unit and ray.unit:name() == Idstring("units/dev_tools/mission_elements/motion_path_marker/motion_path_marker") then

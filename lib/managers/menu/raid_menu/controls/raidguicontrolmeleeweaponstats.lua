@@ -7,20 +7,20 @@ end
 function RaidGUIControlMeleeWeaponStats:_set_default_values()
 	self._values = {
 		charge_time = {
-			value = "00",
 			text = self:translate("menu_weapons_stats_charge_time", true),
+			value = "00",
 		},
 		damage = {
-			value = "00-000",
 			text = self:translate("menu_weapons_stats_damage", true),
+			value = "00-000",
 		},
 		knockback = {
-			value = "00-000",
 			text = self:translate("menu_weapons_stats_knockback", true),
+			value = "00-000",
 		},
 		range = {
-			value = "000",
 			text = self:translate("menu_weapons_stats_range", true),
+			value = "000",
 		},
 	}
 end

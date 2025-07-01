@@ -60,13 +60,13 @@ function DatabaseManager:recompile(...)
 	end
 
 	Application:data_compile({
-		preprocessor_definitions = "preprocessor_definitions",
-		target_db_name = "all",
-		verbose = false,
 		platform = string.lower(SystemInfo:platform():s()),
+		preprocessor_definitions = "preprocessor_definitions",
 		source_files = files,
 		source_root = self:base_path(),
+		target_db_name = "all",
 		target_db_root = Application:base_path() .. "assets",
+		verbose = false,
 	})
 	DB:reload()
 	self:clear_all_cached_indices()

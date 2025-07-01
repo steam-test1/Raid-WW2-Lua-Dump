@@ -258,10 +258,10 @@ function MountedWeapon:_tank_main_cannon_hit_explosion_on_client(position, radiu
 	local damage_radius = radius or self._tweak_data.turret.damage_radius or 1000
 	local custom_params = {
 		camera_shake_max_mul = 4,
-		sound_muffle_effect = true,
 		effect = self._effect_name,
 		feedback_range = damage_radius * 2,
 		sound_event = sound_event,
+		sound_muffle_effect = true,
 	}
 
 	managers.explosion:give_local_player_dmg(position, damage_radius, player_damage)

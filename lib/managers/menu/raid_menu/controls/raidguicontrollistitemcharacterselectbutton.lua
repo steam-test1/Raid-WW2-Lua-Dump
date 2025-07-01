@@ -10,37 +10,40 @@ function RaidGUIControlListItemCharacterSelectButton:init(parent, params)
 	RaidGUIControlListItemCharacterSelectButton.super.init(self, parent, params)
 
 	self._object = self._panel:panel({
-		visible = false,
 		h = self._params.h,
+		visible = false,
 		w = self._params.w,
 		x = self._params.x,
 		y = self._params.y,
 	})
 	self._special_action_callback = self._params.special_action_callback
 	self._background = self._object:image({
-		x = 0,
-		y = 0,
 		h = CharacterSelectionGui.BUTTON_H,
 		layer = self._object:layer(),
 		texture = tweak_data.gui.icons.btn_list_rect.texture,
 		texture_rect = tweak_data.gui.icons.btn_list_rect.texture_rect,
 		w = CharacterSelectionGui.BUTTON_W,
-	})
-	self._icon = self._object:image({
-		h = 32,
-		w = 32,
 		x = 0,
 		y = 0,
+	})
+	self._icon = self._object:image({
 		color = RaidGUIControlListItemCharacterSelectButton.BUTTON_COLOR,
+		h = 32,
 		layer = self._background:layer() + 1,
 		texture = tweak_data.gui.icons.list_btn_ico_plus.texture,
 		texture_rect = tweak_data.gui.icons.list_btn_ico_plus.texture_rect,
+		w = 32,
+		x = 0,
+		y = 0,
 	})
 
 	self._icon:set_center(CharacterSelectionGui.BUTTON_W / 2, CharacterSelectionGui.BUTTON_H / 2)
 
 	self._label = self._object:label({
 		align = "center",
+		color = tweak_data.gui.colors.raid_black,
+		font = tweak_data.gui.fonts.din_compressed,
+		font_size = tweak_data.gui.font_sizes.keybinding,
 		h = 25,
 		text = "",
 		vertical = "center",
@@ -48,9 +51,6 @@ function RaidGUIControlListItemCharacterSelectButton:init(parent, params)
 		w = 116,
 		x = 0,
 		y = 0,
-		color = tweak_data.gui.colors.raid_black,
-		font = tweak_data.gui.fonts.din_compressed,
-		font_size = tweak_data.gui.font_sizes.keybinding,
 	})
 
 	self._label:set_center(CharacterSelectionGui.BUTTON_W / 2, CharacterSelectionGui.BUTTON_H / 2)

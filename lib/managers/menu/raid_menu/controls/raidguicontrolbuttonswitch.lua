@@ -24,9 +24,6 @@ function RaidGUIControlButtonSwitch:init(parent, params)
 	self._params.h = RaidGUIControlButtonSwitch.HEIGHT
 	self._object = self._panel:panel(self._params)
 	self._description = self._object:text({
-		vertical = "top",
-		x = 0,
-		y = 0,
 		align = params.text_align or "center",
 		color = RaidGUIControlButtonSwitch.TEXT_COLOR,
 		font = RaidGUIControlButtonSwitch.TEXT_FONT,
@@ -34,7 +31,10 @@ function RaidGUIControlButtonSwitch:init(parent, params)
 		h = self._object:h(),
 		layer = self._object:layer() + 1,
 		text = params.description,
+		vertical = "top",
 		w = self._object:w(),
+		x = 0,
+		y = 0,
 	})
 
 	local switch_panel_params = {
@@ -47,31 +47,31 @@ function RaidGUIControlButtonSwitch:init(parent, params)
 	self._switch_panel = self._object:panel(switch_panel_params)
 
 	local switch_border_params = {
-		halign = "scale",
-		valign = "scale",
-		x = 0,
-		y = 0,
 		color = RaidGUIControlButtonSwitch.SWITCH_BORDER_COLOR,
 		h = RaidGUIControlButtonSwitch.SWITCH_BORDER_H,
+		halign = "scale",
 		layer = self._object:layer(),
 		texture = tweak_data.gui.icons[RaidGUIControlButtonSwitch.SWITCH_BORDER_ICON].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlButtonSwitch.SWITCH_BORDER_ICON].texture_rect,
+		valign = "scale",
 		w = RaidGUIControlButtonSwitch.SWITCH_BORDER_W,
+		x = 0,
+		y = 0,
 	}
 
 	self._border = self._switch_panel:bitmap(switch_border_params)
 
 	local switch_params = {
-		halign = "scale",
-		valign = "scale",
-		x = 1,
-		y = 0,
 		color = RaidGUIControlButtonSwitch.THUMB_COLOR_OFF,
 		h = RaidGUIControlButtonSwitch.THUMB_H,
+		halign = "scale",
 		layer = self._object:layer() + 1,
 		texture = tweak_data.gui.icons[RaidGUIControlButtonSwitch.THUMB_ICON].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlButtonSwitch.THUMB_ICON].texture_rect,
+		valign = "scale",
 		w = RaidGUIControlButtonSwitch.THUMB_W,
+		x = 1,
+		y = 0,
 	}
 
 	self._thumb = self._switch_panel:bitmap(switch_params)

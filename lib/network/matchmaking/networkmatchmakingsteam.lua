@@ -1,6 +1,6 @@
 NetworkMatchMakingSTEAM = NetworkMatchMakingSTEAM or class()
 NetworkMatchMakingSTEAM.OPEN_SLOTS = 4
-NetworkMatchMakingSTEAM._BUILD_SEARCH_INTEREST_KEY = "raid_ww2_retail_22_04"
+NetworkMatchMakingSTEAM._BUILD_SEARCH_INTEREST_KEY = "raid_ww2_retail_22_05"
 NetworkMatchMakingSTEAM.EMPTY_PLAYER_INFO = "-,-,-,-"
 
 function NetworkMatchMakingSTEAM:init()
@@ -313,11 +313,11 @@ function NetworkMatchMakingSTEAM:search_lobby(friends_only)
 				return
 			end
 
-			local lobbies = self.browser:lobbies()
 			local info = {
 				attribute_list = {},
 				room_list = {},
 			}
+			local lobbies = self.browser:lobbies()
 
 			if lobbies then
 				for _, lobby in ipairs(lobbies) do
@@ -473,8 +473,6 @@ function NetworkMatchMakingSTEAM:join_server_with_check(room_id, is_invite)
 				return
 			end
 		end
-
-		print(inspect(attributes))
 
 		local server_ok, ok_error = self:is_server_ok(nil, room_id, attributes, is_invite)
 

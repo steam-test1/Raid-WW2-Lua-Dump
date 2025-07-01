@@ -27,45 +27,45 @@ end
 function RaidGUIControlMenuBackground:_create_backgrounds()
 	local blur = self._object:bitmap({
 		alpha = 0.65,
+		h = self._object:h(),
 		halign = "scale",
 		name = "blur",
 		render_template = "VertexColorTexturedBlur3D",
 		texture = "ui/icons/white_df",
 		valign = "scale",
-		h = self._object:h(),
 		w = self._object:w(),
 	})
 	local tint = self._object:bitmap({
 		alpha = 0.92,
+		color = Color(0.9, 0.82, 0.6),
+		h = self._object:h(),
 		halign = "scale",
+		layer = blur:layer() - 1,
 		name = "color_tint",
 		render_template = "VertexColorTexturedGrayscale3D",
 		texture = "ui/icons/white_df",
 		valign = "scale",
-		color = Color(0.9, 0.82, 0.6),
-		h = self._object:h(),
-		layer = blur:layer() - 1,
 		w = self._object:w(),
 	})
 	local background = self._object:bitmap({
 		alpha = 0.75,
-		halign = "scale",
-		name = "fullscreen_background",
-		valign = "scale",
 		h = self._object:h(),
+		halign = "scale",
 		layer = blur:layer() + 1,
+		name = "fullscreen_background",
 		texture = tweak_data.gui.backgrounds.secondary_menu.texture,
 		texture_rect = tweak_data.gui.backgrounds.secondary_menu.texture_rect,
+		valign = "scale",
 		w = self._object:w(),
 	})
 
 	self._vignette = self._object:bitmap({
+		h = self._object:h(),
 		halign = "scale",
+		layer = blur:layer() + 4,
 		name = "vignette",
 		texture = "core/textures/vignette",
 		valign = "scale",
-		h = self._object:h(),
-		layer = blur:layer() + 4,
 		w = self._object:w(),
 	})
 
@@ -74,21 +74,21 @@ function RaidGUIControlMenuBackground:_create_backgrounds()
 
 	self._grain = self._object:bitmap({
 		blend_mode = "add",
+		color = Color(0.18, 0.2, 0.2, 0.2),
+		h = noise_h,
 		halign = "scale",
+		layer = blur:layer() + 2,
 		name = "film_grain",
 		texture = "core/textures/noise",
-		valign = "scale",
-		wrap_mode = "wrap",
-		color = Color(0.22, 0.2, 0.2, 0.2),
-		h = noise_h,
-		layer = blur:layer() + 2,
 		texture_rect = {
 			0,
 			0,
 			noise_w / 2,
 			noise_h / 2,
 		},
+		valign = "scale",
 		w = noise_w,
+		wrap_mode = "wrap",
 	})
 end
 

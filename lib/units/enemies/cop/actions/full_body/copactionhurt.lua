@@ -760,8 +760,8 @@ function CopActionHurt:init(action_desc, common_data)
 
 		if not stand_rsrv or mvector3.distance_sq(stand_rsrv.position, common_data.pos) > 400 then
 			self._unit:brain():add_pos_rsrv("stand", {
-				radius = 30,
 				position = mvector3.copy(common_data.pos),
+				radius = 30,
 			})
 		end
 	end
@@ -1000,8 +1000,8 @@ function CopActionHurt:_get_pos_clamped_to_graph(test_head)
 		mvec3_set_z(h, new_pos.z)
 
 		ray_params = {
-			trace = true,
 			pos_to = h,
+			trace = true,
 			tracker_from = tracker,
 		}
 

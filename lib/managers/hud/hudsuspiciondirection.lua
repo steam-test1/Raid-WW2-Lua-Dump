@@ -30,11 +30,11 @@ end
 
 function HUDSuspicionDirection:_create_panel(hud)
 	local panel_params = {
+		h = HUDSuspicionDirection.H,
 		halign = "center",
 		layer = -5,
 		name = "suspicion_direction_panel",
 		valign = "center",
-		h = HUDSuspicionDirection.H,
 		w = HUDSuspicionDirection.W,
 	}
 
@@ -52,11 +52,11 @@ function HUDSuspicionDirection:create_suspicion_indicator(observer_key, observer
 	local indicator_active_alpha = HUDManager.DIFFERENT_SUSPICION_INDICATORS_FOR_TEAMMATES == true and suspect == "teammate" and HUDSuspicionDirection.TEAMMATE_ACTIVE_ALPHA or HUDSuspicionDirection.PLAYER_ACTIVE_ALPHA
 
 	self._indicators[observer_key] = {
-		need_to_init = true,
-		state = "heard_something",
 		active_alpha = indicator_active_alpha,
 		indicator = indicator,
+		need_to_init = true,
 		position = observer_position,
+		state = "heard_something",
 		suspect = suspect,
 	}
 	self._number_of_indicators = self._number_of_indicators + 1

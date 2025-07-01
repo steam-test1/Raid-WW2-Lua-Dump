@@ -199,9 +199,6 @@ function CivilianLogicSurrender.on_tied(data, aggressor_unit, not_tied)
 		data.unit:character_damage():set_pickup(nil)
 	else
 		local action_data = {
-			body_part = 1,
-			type = "act",
-			variant = "tied",
 			blocks = {
 				heavy_hurt = -1,
 				hurt = -1,
@@ -209,6 +206,9 @@ function CivilianLogicSurrender.on_tied(data, aggressor_unit, not_tied)
 				light_hurt = -1,
 				walk = -1,
 			},
+			body_part = 1,
+			type = "act",
+			variant = "tied",
 		}
 		local action_res = data.unit:brain():action_request(action_data)
 
@@ -432,9 +432,9 @@ function CivilianLogicSurrender.on_alert(data, alert_data)
 				end
 			else
 				data.unit:brain():set_objective({
+					alert_data = clone(alert_data),
 					is_default = true,
 					type = "free",
-					alert_data = clone(alert_data),
 				})
 			end
 		end

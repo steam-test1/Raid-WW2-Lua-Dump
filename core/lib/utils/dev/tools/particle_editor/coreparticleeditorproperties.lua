@@ -35,6 +35,7 @@ end
 function CoreEffectPropertyContainer:validate_properties()
 	local ret = {
 		message = "",
+		self = nil,
 		valid = true,
 	}
 
@@ -217,6 +218,7 @@ end
 function CoreEffectProperty:validate()
 	local ret = {
 		message = "",
+		self = nil,
 		valid = true,
 	}
 
@@ -806,10 +808,10 @@ function CoreEffectProperty:create_widget(parent, view)
 		sizer:add(combo, 0, 0, "EXPAND")
 		sizer:add(variant_panel, 1, 0, "EXPAND")
 		combo:connect("EVT_COMMAND_TEXT_UPDATED", callback(self, self, "on_set_variant", {
-			update = true,
 			combo = combo,
 			container = widget,
 			container_sizer = sizer,
+			update = true,
 			variant_panel = variant_panel,
 			view = view,
 		}))
@@ -817,10 +819,10 @@ function CoreEffectProperty:create_widget(parent, view)
 		widget:set_sizer(sizer)
 		widget:set_min_size(sizer:get_min_size())
 		self:on_set_variant({
-			update = false,
 			combo = combo,
 			container = widget,
 			container_sizer = sizer,
+			update = false,
 			variant_panel = variant_panel,
 			view = view,
 		})

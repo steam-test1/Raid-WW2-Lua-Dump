@@ -71,9 +71,6 @@ end
 
 function CopLogicSpotter.throw_flare_so(data)
 	local action_desc = {
-		body_part = 1,
-		type = "act",
-		variant = "spotter_cbt_sup_throw_flare",
 		blocks = {
 			action = -1,
 			aim = -1,
@@ -82,6 +79,9 @@ function CopLogicSpotter.throw_flare_so(data)
 			light_hurt = -1,
 			walk = -1,
 		},
+		body_part = 1,
+		type = "act",
+		variant = "spotter_cbt_sup_throw_flare",
 	}
 
 	data.unit:movement():action_request(action_desc)

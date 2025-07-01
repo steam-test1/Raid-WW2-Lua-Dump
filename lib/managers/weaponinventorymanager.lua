@@ -61,33 +61,33 @@ function WeaponInventoryManager:_setup_initial_weapons()
 
 				if weapon_data.default then
 					self._weapons[category_name][weapon_id] = {
-						owned = true,
-						unlocked = true,
 						default = weapon_data.default,
 						droppable = weapon_data.droppable,
 						is_challenge_reward = weapon_data.is_challenge_reward,
+						owned = true,
 						redeemed_xp = weapon_data.redeemed_xp,
 						slot = weapon_data.slot,
+						unlocked = true,
 					}
 				elseif weapon_tweaks.dlc and unlocked_melee_weapons[weapon_data.weapon_id] then
 					self._weapons[category_name][weapon_id] = {
-						owned = true,
-						unlocked = true,
 						default = weapon_data.default,
 						droppable = weapon_data.droppable,
 						is_challenge_reward = weapon_data.is_challenge_reward,
+						owned = true,
 						redeemed_xp = weapon_data.redeemed_xp,
 						slot = weapon_data.slot,
+						unlocked = true,
 					}
 				else
 					self._weapons[category_name][weapon_id] = {
-						owned = true,
-						unlocked = false,
 						default = weapon_data.default,
 						droppable = weapon_data.droppable,
 						is_challenge_reward = weapon_data.is_challenge_reward,
+						owned = true,
 						redeemed_xp = weapon_data.redeemed_xp,
 						slot = weapon_data.slot,
+						unlocked = false,
 					}
 				end
 			end
@@ -232,13 +232,13 @@ function WeaponInventoryManager:load_account_wide_info(data, version_account_wid
 
 		if not self._weapons.melee_weapons[weapon_id] then
 			self._weapons.melee_weapons[weapon_id] = {
-				owned = true,
-				unlocked = false,
 				default = melee_weapon_data.default,
 				droppable = melee_weapon_data.droppable,
 				is_challenge_reward = melee_weapon_data.is_challenge_reward,
+				owned = true,
 				redeemed_xp = melee_weapon_data.redeemed_xp,
 				slot = melee_weapon_data.slot,
+				unlocked = false,
 			}
 
 			managers.savefile:set_resave_required()

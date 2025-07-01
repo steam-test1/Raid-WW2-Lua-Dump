@@ -29,9 +29,9 @@ function RaidGUIControlButtonSkillProfiles:_layout(params)
 	local background_data = tweak_data.gui:get_full_gui_data(self.BACKGROUND_ICON)
 
 	self._background = self._object:bitmap({
-		name = "background",
 		color = self.BACKGROUND_COLOR,
 		h = params.h,
+		name = "background",
 		texture = background_data.texture,
 		texture_rect = background_data.texture_rect,
 		w = params.w,
@@ -40,10 +40,10 @@ function RaidGUIControlButtonSkillProfiles:_layout(params)
 	local icon_data = tweak_data.gui:get_full_gui_data(self.ICON)
 
 	self._icon = self._object:bitmap({
-		name = "arrow_icon",
 		color = self.ICON_COLOR,
 		h = params.w * self.ICON_UNSELECTED_SCALE,
 		layer = self._background:layer() + 1,
+		name = "arrow_icon",
 		texture = icon_data.texture,
 		texture_rect = icon_data.texture_rect,
 		w = params.w * self.ICON_UNSELECTED_SCALE,
@@ -53,15 +53,15 @@ function RaidGUIControlButtonSkillProfiles:_layout(params)
 
 	self._controller_button = self._object:label({
 		align = "center",
-		name = "controller_switch_button",
-		vertical = "bottom",
-		x = 2,
 		color = self.ICON_COLOR,
 		font = self.CONTROLLER_FONT,
 		font_size = self.CONTROLLER_FONT_SIZE,
 		layer = self._background:layer() + 1,
+		name = "controller_switch_button",
 		text = self.CONTROLLER_BUTTON,
+		vertical = "bottom",
 		visible = managers.controller:is_using_controller(),
+		x = 2,
 	})
 	self._selected_icon_size = params.w * self.ICON_SELECTED_SCALE
 	self._unselected_icon_size = params.w * self.ICON_UNSELECTED_SCALE

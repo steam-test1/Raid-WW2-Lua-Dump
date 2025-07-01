@@ -552,8 +552,8 @@ function CoreWorldCameraManager:play_world_camera_sequence(name, sequence, stay_
 	if not self._sound_environment_check_object then
 		self._sound_environment_check_object = managers.sound_environment:add_check_object({
 			active = false,
-			primary = true,
 			object = self._camera,
+			primary = true,
 		})
 	end
 
@@ -669,10 +669,10 @@ function CoreWorldCamera:init(world_camera_name)
 	local far_dof = managers.worldcamera:default_far_dof()
 
 	table.insert(self._keys, {
-		roll = 0,
 		far_dof = far_dof,
 		fov = fov,
 		near_dof = near_dof,
+		roll = 0,
 		time = time,
 	})
 

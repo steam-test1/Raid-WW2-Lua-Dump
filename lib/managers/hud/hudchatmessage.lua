@@ -67,20 +67,20 @@ end
 
 function HUDChatMessage:_create_name(name)
 	local name_params = {
-		halign = "scale",
-		layer = 20,
-		name = "name",
-		valign = "top",
-		vertical = "center",
-		x = 0,
-		y = 0,
 		align = self._horizontal_text_align,
 		color = self._message_color,
 		font = HUDChatMessage.NAME_FONT,
 		font_size = HUDChatMessage.NAME_FONT_SIZE,
 		h = HUDChatMessage.NAME_H,
+		halign = "scale",
+		layer = 20,
+		name = "name",
 		text = utf8.to_upper(name),
+		valign = "top",
+		vertical = "center",
 		w = self._object:w(),
+		x = 0,
+		y = 0,
 	}
 
 	self._name = self._object:text(name_params)
@@ -88,12 +88,12 @@ end
 
 function HUDChatMessage:_create_message_panel()
 	local message_panel_params = {
+		h = self._object:h() - self._name:h(),
 		halign = "scale",
 		name = "message_panel",
 		valign = "bottom",
-		x = 0,
-		h = self._object:h() - self._name:h(),
 		w = self._object:w(),
+		x = 0,
 		y = self._name:y() + self._name:h(),
 	}
 
@@ -102,18 +102,18 @@ end
 
 function HUDChatMessage:_create_message(message)
 	local message_params = {
-		halign = "scale",
-		name = "message",
-		valign = "bottom",
-		vertical = "center",
-		wrap = true,
-		x = 0,
 		align = self._horizontal_text_align,
 		color = self._message_color,
 		font = HUDChatMessage.MESSAGE_FONT,
 		font_size = HUDChatMessage.MESSAGE_FONT_SIZE,
+		halign = "scale",
+		name = "message",
 		text = message,
+		valign = "bottom",
+		vertical = "center",
 		w = self._object:w(),
+		wrap = true,
+		x = 0,
 		y = self._name:h(),
 	}
 
@@ -147,19 +147,19 @@ end
 
 function HUDChatMessage:add_message(message)
 	local message_params = {
-		halign = "scale",
-		valign = "bottom",
-		vertical = "center",
-		wrap = true,
-		x = 0,
-		y = 0,
 		align = self._horizontal_text_align,
 		color = self._message_color,
 		font = HUDChatMessage.MESSAGE_FONT,
 		font_size = HUDChatMessage.MESSAGE_FONT_SIZE,
+		halign = "scale",
 		name = "message_" .. tostring(#self._messages + 1),
 		text = message,
+		valign = "bottom",
+		vertical = "center",
 		w = self._message_panel:w(),
+		wrap = true,
+		x = 0,
+		y = 0,
 	}
 	local new_message = self._message_panel:text(message_params)
 	local _, _, _, h = new_message:text_rect()

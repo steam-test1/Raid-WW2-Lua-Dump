@@ -43,8 +43,9 @@ function RaycastWeaponBase:init(unit)
 	self._autohit_data = tweak_data.weapon[self._name_id].autohit
 	self._autohit_current = self._autohit_data.INIT_RATIO
 	self._shoot_through_data = {
-		kills = 0,
+		_shooting = nil,
 		from = Vector3(),
+		kills = 0,
 	}
 	self._can_shoot_through_shield = tweak_data.weapon[self._name_id].can_shoot_through_shield
 	self._can_shoot_through_enemy = tweak_data.weapon[self._name_id].can_shoot_through_enemy
@@ -56,16 +57,16 @@ function RaycastWeaponBase:init(unit)
 	self._obj_fire = self._unit:get_object(Idstring("fire"))
 	self._muzzle_effect = Idstring(self:weapon_tweak_data().muzzleflash or "effects/vanilla/weapons/muzzleflash_maingun")
 	self._muzzle_effect_table = {
-		force_synch = true,
 		effect = self._muzzle_effect,
+		force_synch = true,
 		parent = self._obj_fire,
 	}
 	self._muzzletrail_effect = self:weapon_tweak_data().muzzletrail and Idstring(self:weapon_tweak_data().muzzletrail) or false
 
 	if self._muzzletrail_effect then
 		self._muzzletrail_effect_table = {
-			force_synch = true,
 			effect = self._muzzletrail_effect,
+			force_synch = true,
 			parent = self._obj_fire,
 		}
 	end
@@ -562,8 +563,8 @@ end
 function RaycastWeaponBase:_check_last_clip(user_unit)
 	if self:get_ammo_total() <= self:get_ammo_max_per_clip() and alive(user_unit) and user_unit:base().is_local_player then
 		managers.dialog:queue_dialog("player_gen_out_of_ammo", {
-			skip_idle_check = true,
 			instigator = user_unit,
+			skip_idle_check = true,
 		})
 	end
 end
@@ -1383,6 +1384,7 @@ function RaycastWeaponBase:replenish()
 		end
 
 		ammo_max_multiplier = ammo_max_multiplier * managers.player:upgrade_value("player", "pack_mule_ammo_total_increase", 1)
+		ammo_max_multiplier = ammo_max_multiplier * managers.player:upgrade_value("player", "cache_basket_ammo_total_increase", 1)
 	end
 
 	local ammo_max_per_clip = self:calculate_ammo_max_per_clip()
@@ -1640,6 +1642,10 @@ function RaycastWeaponBase:on_reload()
 	if self._setup.expend_ammo then
 		local reload_full_magazine = managers.player:has_category_upgrade("weapon", "clipazines_reload_full_magazine")
 
+		if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_PLAYER_RANDOM_RELOAD) then
+			ammo_max_per_clip = math.random(0, ammo_max_per_clip)
+		end
+
 		if reload_full_magazine then
 			self:set_ammo_remaining_in_clip(ammo_max_per_clip)
 
@@ -1692,7 +1698,7 @@ function RaycastWeaponBase:add_ammo_ratio(ratio)
 	return true
 end
 
-function RaycastWeaponBase:add_ammo(ratio, add_amount_override)
+function RaycastWeaponBase:add_ammo(ratio, add_amount_override, skip_event)
 	if self:ammo_max() then
 		return false, self._ammo_pickup_amount, 0
 	end
@@ -1709,10 +1715,12 @@ function RaycastWeaponBase:add_ammo(ratio, add_amount_override)
 
 	local ammo_actually_picked_up = self:get_ammo_total() - ammo_before_pickup
 
-	managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.PLAYER_PICKED_UP_AMMO, {
-		amount = ammo_actually_picked_up,
-		weapon = self._name_id,
-	})
+	if not skip_event then
+		managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.PLAYER_PICKED_UP_AMMO, {
+			amount = ammo_actually_picked_up,
+			weapon = self._name_id,
+		})
+	end
 
 	if Application:production_build() then
 		managers.player:add_weapon_ammo_gain(self._name_id, add_amount)
@@ -1857,6 +1865,13 @@ InstantBulletBase = InstantBulletBase or class()
 
 function InstantBulletBase:on_collision(col_ray, weapon_unit, user_unit, damage, blank, no_sound)
 	local weapon_base = weapon_unit:base()
+
+	if not weapon_base or not weapon_base.weapon_tweak_data or not weapon_base:weapon_tweak_data() then
+		Application:error("[InstantBulletBase:on_collision] Cannot progress without weapon tweakdata from weapon unit!", weapon_unit, weapon_base.weapon_tweak_data)
+
+		return
+	end
+
 	local weapon_tweak_data = weapon_base and weapon_base:weapon_tweak_data()
 	local hit_unit = col_ray.unit
 	local play_impact = hit_unit:vehicle() or not hit_unit:character_damage() or not hit_unit:character_damage()._no_blood
@@ -2005,14 +2020,14 @@ InstantExplosiveBulletBase.CURVE_POW = tweak_data.upgrades.explosive_bullet.curv
 InstantExplosiveBulletBase.PLAYER_DMG_MUL = tweak_data.upgrades.explosive_bullet.player_dmg_mul
 InstantExplosiveBulletBase.RANGE = tweak_data.upgrades.explosive_bullet.range
 InstantExplosiveBulletBase.EFFECT_PARAMS = {
-	effect = "effects/vanilla/weapons/shotgun/sho_explosive_round",
-	on_unit = true,
-	sound_event = "round_explode",
-	sound_muffle_effect = true,
 	camera_shake_max_mul = tweak_data.upgrades.explosive_bullet.camera_shake_max_mul,
+	effect = "effects/vanilla/weapons/shotgun/sho_explosive_round",
 	feedback_range = tweak_data.upgrades.explosive_bullet.feedback_range,
 	idstr_decal = Idstring("explosion_round"),
 	idstr_effect = Idstring(""),
+	on_unit = true,
+	sound_event = "round_explode",
+	sound_muffle_effect = true,
 }
 
 function InstantExplosiveBulletBase:bullet_slotmask()
@@ -2025,8 +2040,8 @@ end
 
 function InstantExplosiveBulletBase:play_impact_sound_and_effects(col_ray)
 	managers.game_play_central:play_impact_sound_and_effects({
-		no_decal = true,
 		col_ray = col_ray,
+		no_decal = true,
 	})
 end
 
@@ -2075,8 +2090,8 @@ function InstantExplosiveBulletBase:on_collision(col_ray, weapon_unit, user_unit
 		end
 
 		return {
-			variant = "explosion",
 			col_ray = col_ray,
+			variant = "explosion",
 		}
 	end
 
@@ -2141,14 +2156,14 @@ end
 
 FlameBulletBase = FlameBulletBase or class(InstantExplosiveBulletBase)
 FlameBulletBase.EFFECT_PARAMS = {
-	on_unit = true,
-	sound_event = "round_explode",
-	sound_muffle_effect = true,
 	camera_shake_max_mul = tweak_data.upgrades.flame_bullet.camera_shake_max_mul,
 	feedback_range = tweak_data.upgrades.flame_bullet.feedback_range,
 	idstr_decal = Idstring("explosion_round"),
 	idstr_effect = Idstring(""),
+	on_unit = true,
 	pushunits = tweak_data.upgrades,
+	sound_event = "round_explode",
+	sound_muffle_effect = true,
 }
 
 function FlameBulletBase:on_hit_player(col_ray, weapon_unit, user_unit, damage)
@@ -2206,8 +2221,8 @@ function FlameBulletBase:on_collision(col_ray, weapon_unit, user_unit, damage, b
 
 	if play_impact_flesh then
 		managers.game_play_central:play_impact_flesh({
-			no_sound = true,
 			col_ray = col_ray,
+			no_sound = true,
 		})
 		self:play_impact_sound_and_effects(col_ray)
 	end

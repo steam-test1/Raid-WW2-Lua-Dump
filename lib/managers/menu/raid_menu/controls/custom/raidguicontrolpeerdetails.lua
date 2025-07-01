@@ -43,16 +43,16 @@ end
 function RaidGUIControlPeerDetails:_create_profile_name()
 	local profile_name_params = {
 		align = "left",
+		color = tweak_data.gui.colors.raid_black,
+		font = RaidGUIControlPeerDetails.FONT,
+		font_size = RaidGUIControlPeerDetails.NAME_FONT_SIZE,
 		h = 32,
 		name = "profile_name",
 		text = "PROFILE NAME",
 		vertical = "center",
-		y = 0,
-		color = tweak_data.gui.colors.raid_black,
-		font = RaidGUIControlPeerDetails.FONT,
-		font_size = RaidGUIControlPeerDetails.NAME_FONT_SIZE,
 		w = self._object:w() - RaidGUIControlPeerDetails.NAME_X - RaidGUIControlPeerDetails.LEVEL_W,
 		x = RaidGUIControlPeerDetails.NAME_X,
+		y = 0,
 	}
 
 	self._profile_name = self._object:text(profile_name_params)
@@ -60,8 +60,8 @@ end
 
 function RaidGUIControlPeerDetails:_create_profile_details()
 	local class_icon_params = {
-		name = "class_icon",
 		color = tweak_data.gui.colors.raid_black,
+		name = "class_icon",
 		texture = tweak_data.gui.icons.ico_class_infiltrator.texture,
 		texture_rect = tweak_data.gui.icons.ico_class_infiltrator.texture_rect,
 	}
@@ -72,16 +72,16 @@ function RaidGUIControlPeerDetails:_create_profile_details()
 
 	local nationality_params = {
 		align = "left",
+		color = tweak_data.gui.colors.raid_black,
+		font = RaidGUIControlPeerDetails.FONT,
+		font_size = tweak_data.gui.font_sizes.extra_small,
 		h = 32,
 		name = "nationality",
 		text = "GERMAN",
 		vertical = "center",
-		y = 0,
-		color = tweak_data.gui.colors.raid_black,
-		font = RaidGUIControlPeerDetails.FONT,
-		font_size = tweak_data.gui.font_sizes.extra_small,
 		w = self._object:w() - RaidGUIControlPeerDetails.NAME_X,
 		x = RaidGUIControlPeerDetails.NAME_X,
+		y = 0,
 	}
 
 	self._nationality = self._object:text(nationality_params)
@@ -90,13 +90,13 @@ function RaidGUIControlPeerDetails:_create_profile_details()
 
 	local level_text_params = {
 		align = "center",
+		color = tweak_data.gui.colors.raid_black,
+		font = RaidGUIControlPeerDetails.FONT,
+		font_size = tweak_data.gui.font_sizes.size_24,
 		h = 32,
 		name = "level_text",
 		text = "10",
 		vertical = "center",
-		color = tweak_data.gui.colors.raid_black,
-		font = RaidGUIControlPeerDetails.FONT,
-		font_size = tweak_data.gui.font_sizes.size_24,
 		w = RaidGUIControlPeerDetails.LEVEL_W,
 	}
 

@@ -24,12 +24,10 @@ function RaidMenuOptionsControlsKeybinds:_layout()
 		dont_trigger_special_buttons = true,
 		initial_tab_idx = 1,
 		name = "tabs_keybind_types",
+		on_click_callback = callback(self, self, "on_click_tabs_keybind_types"),
 		tab_align = "center",
 		tab_height = 64,
 		tab_width = 160,
-		x = 0,
-		y = 96,
-		on_click_callback = callback(self, self, "on_click_tabs_keybind_types"),
 		tabs_params = {
 			{
 				callback_param = "normal",
@@ -42,15 +40,17 @@ function RaidMenuOptionsControlsKeybinds:_layout()
 				text = self:translate("menu_options_binding_type_in_vehicle", true),
 			},
 		},
+		x = 0,
+		y = 96,
 	})
 
 	local default_controls_keybinds_params = {
-		name = "default_controls_keybinds",
-		x = 1472,
-		y = 832,
 		layer = RaidGuiBase.FOREGROUND_LAYER,
+		name = "default_controls_keybinds",
 		on_click_callback = callback(self, self, "on_click_default_controls_keybinds"),
 		text = utf8.to_upper(managers.localization:text("menu_options_controls_default")),
+		x = 1472,
+		y = 832,
 	}
 
 	self._default_controls_button = self._root_panel:long_secondary_button(default_controls_keybinds_params)
@@ -138,9 +138,9 @@ function RaidMenuOptionsControlsKeybinds:_layout_controls_keybinds()
 
 		for row, keybind_params in ipairs(self._keybinds[keybind_type]) do
 			local keybind_control = self._keybind_panel:keybind({
-				keybind_w = 120,
 				h = MenuManager.MENU_ITEM_HEIGHT,
 				keybind_params = keybind_params,
+				keybind_w = 120,
 				name = "keybind_" .. keybind_params.button,
 				text = utf8.to_upper(keybind_params.button),
 				w = keybind_width,
@@ -186,11 +186,11 @@ function RaidMenuOptionsControlsKeybinds:_keybinds_per_type(keybind_type)
 				if btn_connection then
 					local name_id = name
 					local params = {
-						localize = "false",
 						axis = connection._name,
 						binding = btn_connection.name,
 						button = btn_name,
 						connection_name = name,
+						localize = "false",
 						name = btn_name,
 						text_id = utf8.to_upper(managers.localization:text(MenuCustomizeControllerCreator.CONTROLS_INFO[btn_name].text_id)),
 					}
@@ -200,10 +200,10 @@ function RaidMenuOptionsControlsKeybinds:_keybinds_per_type(keybind_type)
 			end
 		else
 			local params = {
-				localize = "false",
 				binding = connection:get_input_name_list()[1],
 				button = name,
 				connection_name = name,
+				localize = "false",
 				name = name_id,
 				text_id = utf8.to_upper(managers.localization:text(MenuCustomizeControllerCreator.CONTROLS_INFO[name].text_id)),
 			}
@@ -239,8 +239,8 @@ function RaidMenuOptionsControlsKeybinds:bind_controller_inputs()
 		},
 		keyboard = {
 			{
-				key = "footer_back",
 				callback = callback(self, self, "_on_legend_pc_back", nil),
+				key = "footer_back",
 			},
 		},
 	}

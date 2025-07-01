@@ -764,8 +764,8 @@ function EnemyManager:register_enemy(enemy)
 
 	local char_tweak = tweak_data.character[enemy:base()._tweak_table]
 	local u_data = {
-		importance = 0,
 		char_tweak = char_tweak,
+		importance = 0,
 		m_pos = enemy:movement():m_pos(),
 		so_access = managers.navigation:convert_access_flag(char_tweak.access),
 		tracker = enemy:movement():nav_tracker(),
@@ -802,8 +802,8 @@ function EnemyManager:on_enemy_died(dead_unit, damage_info)
 
 		if not alarm and is_cool then
 			managers.dialog:queue_dialog("player_gen_stealth_kill", {
-				skip_idle_check = true,
 				instigator = damage_info.attacker_unit,
+				skip_idle_check = true,
 			})
 		end
 	end
@@ -901,8 +901,8 @@ function EnemyManager:register_civilian(unit)
 	local char_tweak = tweak_data.character[unit:base()._tweak_table]
 
 	self._civilian_data.unit_data[unit:key()] = {
-		is_civilian = true,
 		char_tweak = char_tweak,
+		is_civilian = true,
 		m_pos = unit:movement():m_pos(),
 		so_access = managers.navigation:convert_access_flag(char_tweak.access),
 		tracker = unit:movement():nav_tracker(),
@@ -1240,11 +1240,7 @@ function EnemyManager:is_spawn_group_allowed(group_type)
 	return allowed
 end
 
-function EnemyManager:register_commander(commander_unit)
-	if not alive(commander_unit) then
-		return
-	end
-
+function EnemyManager:register_commander()
 	self._commander_active = self._commander_active + 1
 
 	if self._commander_active == 1 then
@@ -1263,9 +1259,9 @@ function EnemyManager:register_commander(commander_unit)
 
 		if count < 5 then
 			managers.hud:set_big_prompt({
+				description = managers.localization:text("hint_commander_arrived_desc"),
 				duration = 5,
 				id = "commander_arrived",
-				description = managers.localization:text("hint_commander_arrived_desc"),
 				title = utf8.to_upper(managers.localization:text("hint_commander_arrived")),
 			})
 		end
@@ -1274,8 +1270,8 @@ function EnemyManager:register_commander(commander_unit)
 	end
 end
 
-function EnemyManager:unregister_commander(commander_unit)
-	self._commander_active = math.clamp(self._commander_active - 1, 0, self._commander_active)
+function EnemyManager:unregister_commander()
+	self._commander_active = math.max(self._commander_active - 1, 0)
 
 	if not self:is_commander_active() and self._difficulty_difference > 0 then
 		local old_diff = managers.groupai:state():get_difficulty()

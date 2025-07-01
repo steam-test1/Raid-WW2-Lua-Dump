@@ -21,20 +21,20 @@ function DifficultyUnitElement:_build_panel(panel, panel_sizer)
 		min = 0,
 		name = "Difficulty:",
 		name_proportions = 1,
-		tooltip = "Set the current difficulty in level",
 		panel = panel,
 		sizer = panel_sizer,
+		tooltip = "Set the current difficulty in level",
 		value = self._hed.difficulty,
 	}
 	local difficulty = CoreEWS.number_controller(difficulty_params)
 
 	difficulty:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
-		value = "difficulty",
 		ctrlr = difficulty,
+		value = "difficulty",
 	})
 	difficulty:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
-		value = "difficulty",
 		ctrlr = difficulty,
+		value = "difficulty",
 	})
 
 	local help = {}

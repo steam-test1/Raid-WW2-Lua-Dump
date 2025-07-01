@@ -81,34 +81,34 @@ end
 function RaidGUIControlSlider:_create_slider_controls()
 	local sideline_params = {
 		alpha = 0,
-		x = 0,
-		y = 0,
 		color = RaidGUIControlSlider.SIDELINE_COLOR,
 		h = self._object:h(),
 		w = RaidGUIControlSlider.SIDELINE_W,
+		x = 0,
+		y = 0,
 	}
 
 	self._sideline = self._object:rect(sideline_params)
 
 	local value_label_params = {
 		align = "left",
-		vertical = "center",
-		y = 0,
 		color = RaidGUIControlSlider.TEXT_COLOR,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.small,
 		h = self._object:h(),
 		layer = self._object:layer() + 1,
+		vertical = "center",
 		w = RaidGUIControlSlider.VALUE_LABEL_W,
 		x = self._object:w() - RaidGUIControlSlider.VALUE_LABEL_W,
+		y = 0,
 	}
 
 	self._value_label = self._object:text(value_label_params)
 	self._slider = self._object:slider_simple({
-		x = 0,
-		y = 0,
 		name = "slider_simple_" .. self._name,
 		on_value_change_callback = callback(self, self, "_on_value_changed"),
+		x = 0,
+		y = 0,
 	})
 
 	self._slider:set_right(self._value_label:x())
@@ -116,16 +116,16 @@ function RaidGUIControlSlider:_create_slider_controls()
 
 	local description_params = {
 		align = "left",
-		vertical = "center",
-		y = 0,
 		color = RaidGUIControlSlider.TEXT_COLOR,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.small,
 		h = self._object:h(),
 		layer = self._object:layer() + 1,
 		text = self._params.description,
+		vertical = "center",
 		w = self._object:w() - RaidGUIControlSlider.SIDELINE_W - RaidGUIControlSlider.VALUE_LABEL_W - RaidGUIControlSlider.TEXT_PADDING * 2,
 		x = RaidGUIControlSlider.SIDELINE_W + RaidGUIControlSlider.TEXT_PADDING,
+		y = 0,
 	}
 
 	self._description = self._object:text(description_params)

@@ -124,9 +124,9 @@ function DynamicResourceManager:load(resource_type, resource_name, package_name,
 		end
 	else
 		entry = {
-			ref_c = 1,
 			callbacks = {},
 			package_name = package_name,
+			ref_c = 1,
 			resource_name = resource_name,
 			resource_type = resource_type,
 		}

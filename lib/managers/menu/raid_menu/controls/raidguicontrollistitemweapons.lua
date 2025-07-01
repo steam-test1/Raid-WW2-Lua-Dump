@@ -19,9 +19,9 @@ function RaidGUIControlListItemWeapons:init(parent, params, data)
 
 		local text_rect = ico_weapon.texture_rect
 		local weapon_icon_object = self._object:image({
-			name = "weapon_icon",
 			color = self._data.value.unlocked and tweak_data.gui.colors.raid_white or tweak_data.gui.colors.raid_dark_grey,
 			h = text_rect[4],
+			name = "weapon_icon",
 			texture = ico_weapon.texture,
 			texture_rect = text_rect,
 			w = text_rect[3],

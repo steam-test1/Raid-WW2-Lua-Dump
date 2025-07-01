@@ -41,34 +41,34 @@ end
 function RaidGUIControlTopStatSmall:_create_stat_info()
 	local player_name_params = {
 		align = "right",
-		layer = 1,
-		name = "player_name_label",
-		text = "PLAYER NAME",
-		vertical = "center",
-		y = -3,
 		color = RaidGUIControlTopStatSmall.PLAYER_NAME_COLOR,
 		font = RaidGUIControlTopStatSmall.FONT,
 		font_size = RaidGUIControlTopStatSmall.PLAYER_NAME_FONT_SIZE,
 		h = RaidGUIControlTopStatSmall.PLAYER_NAME_H,
+		layer = 1,
+		name = "player_name_label",
+		text = "PLAYER NAME",
+		vertical = "center",
 		w = self._object:w() - RaidGUIControlTopStatSmall.ICON_SIZE,
 		x = RaidGUIControlTopStatSmall.ICON_SIZE,
+		y = -3,
 	}
 
 	self._player_name_label = self._object:label(player_name_params)
 
 	local stat_name_params = {
 		align = "right",
-		layer = 3,
-		name = "stat_name_label",
-		text = "Most things done well",
-		vertical = "center",
-		word_wrap = true,
-		wrap = true,
 		color = RaidGUIControlTopStatSmall.STAT_NAME_COLOR,
 		font = RaidGUIControlTopStatSmall.FONT,
 		font_size = RaidGUIControlTopStatSmall.STAT_NAME_FONT_SIZE,
 		h = RaidGUIControlTopStatSmall.STAT_NAME_H,
+		layer = 3,
+		name = "stat_name_label",
+		text = "Most things done well",
+		vertical = "center",
 		w = self._object:w(),
+		word_wrap = true,
+		wrap = true,
 	}
 
 	self._stat_name_label = self._object:label(stat_name_params)
@@ -81,8 +81,8 @@ function RaidGUIControlTopStatSmall:set_data(data)
 	self._stat_name_label:set_text(self:translate(data.stat, true))
 
 	local icon_params = {
-		name = "stat_icon",
 		h = RaidGUIControlTopStatSmall.ICON_SIZE,
+		name = "stat_icon",
 		texture = tweak_data.gui.icons[data.icon].texture,
 		texture_rect = tweak_data.gui.icons[data.icon].texture_rect,
 		w = RaidGUIControlTopStatSmall.ICON_SIZE,

@@ -195,8 +195,8 @@ function GreedLootScreenGui:_create_greed_bar()
 
 	local gold_icon_params = {
 		alpha = 0,
-		name = "gold_icon",
 		color = tweak_data.gui.colors.raid_gold,
+		name = "gold_icon",
 		texture = tweak_data.gui.icons[GreedLootScreenGui.GOLD_ICON].texture,
 		texture_rect = tweak_data.gui.icons[GreedLootScreenGui.GOLD_ICON].texture_rect,
 	}
@@ -208,15 +208,15 @@ function GreedLootScreenGui:_create_greed_bar()
 
 	local loot_title_params = {
 		align = "center",
-		h = 64,
-		halign = "left",
-		name = "loot_title",
-		valign = "center",
-		vertical = "center",
 		color = tweak_data.gui.colors.raid_dirty_white,
 		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.size_56),
 		font_size = tweak_data.gui.font_sizes.size_56,
+		h = 64,
+		halign = "left",
+		name = "loot_title",
 		text = utf8.to_upper(managers.localization:text(GreedLootScreenGui.TITLE_STRING)),
+		valign = "center",
+		vertical = "center",
 	}
 
 	self._title = self._greed_bar_panel:text(loot_title_params)
@@ -225,13 +225,13 @@ function GreedLootScreenGui:_create_greed_bar()
 	self._title:set_center_y(self._greed_bar_panel:h() / 2 - 16)
 
 	local progress_bar_background_params = {
-		layer = 1,
-		name = "greed_loot_menu_progress_bar_background",
-		w = 160,
 		center = GreedLootScreenGui.LOOT_BAR_ICON_M,
 		color = GreedLootScreenGui.LOOT_BAR_COLOR,
+		layer = 1,
 		left = GreedLootScreenGui.LOOT_BAR_ICON_L,
+		name = "greed_loot_menu_progress_bar_background",
 		right = GreedLootScreenGui.LOOT_BAR_ICON_R,
+		w = 160,
 	}
 
 	self._progress_bar_background = self._greed_bar_panel:three_cut_bitmap(progress_bar_background_params)
@@ -240,9 +240,9 @@ function GreedLootScreenGui:_create_greed_bar()
 	self._progress_bar_background:set_center_y(self._greed_bar_panel:h() / 2 + 32)
 
 	local progress_bar_progress_panel_params = {
-		name = "progress_bar_progress_panel",
 		h = self._progress_bar_background:h(),
 		layer = self._progress_bar_background:layer() + 1,
+		name = "progress_bar_progress_panel",
 		w = self._progress_bar_background:w(),
 	}
 
@@ -253,10 +253,10 @@ function GreedLootScreenGui:_create_greed_bar()
 
 	local progress_bar_foreground_params = {
 		alpha = 0,
-		name = "loot_bar_foreground",
 		center = GreedLootScreenGui.LOOT_BAR_ICON_M,
 		color = GreedLootScreenGui.LOOT_BAR_FOREGROUND_COLOR,
 		left = GreedLootScreenGui.LOOT_BAR_ICON_L,
+		name = "loot_bar_foreground",
 		right = GreedLootScreenGui.LOOT_BAR_ICON_R,
 		w = self._progress_bar_background:w(),
 	}
@@ -265,13 +265,13 @@ function GreedLootScreenGui:_create_greed_bar()
 
 	local counter_params = {
 		align = "left",
-		name = "greed_bar_counter",
-		text = "0",
-		vertical = "center",
 		color = GreedLootScreenGui.COUNTER_COLOR,
 		font = GreedLootScreenGui.COUNTER_FONT,
 		font_size = GreedLootScreenGui.COUNTER_FONT_SIZE,
 		h = GreedLootScreenGui.COUNTER_H,
+		name = "greed_bar_counter",
+		text = "0",
+		vertical = "center",
 		x = self._progress_bar_progress_panel:right() + 10,
 	}
 
@@ -304,13 +304,13 @@ function GreedLootScreenGui:_create_gold_bar_image()
 	local title_description_params = {
 		align = "left",
 		alpha = 0,
-		name = "title_description",
-		vertical = "center",
 		color = GreedLootScreenGui.TITLE_DESCRIPTION_COLOR,
 		font = GreedLootScreenGui.COUNTER_FONT,
 		font_size = GreedLootScreenGui.TITLE_DESCRIPTION_FONT_SIZE,
 		h = GreedLootScreenGui.TITLE_DESCRIPTION_H,
+		name = "title_description",
 		text = self:translate("menu_loot_screen_bracket_unlocked_title", true),
+		vertical = "center",
 		y = GreedLootScreenGui.TITLE_DESCRIPTION_Y,
 	}
 
@@ -323,12 +323,12 @@ function GreedLootScreenGui:_create_gold_bar_image()
 	local title_params = {
 		align = "center",
 		alpha = 0,
-		name = "gold_bars_name",
-		text = "GOLD BAR",
-		vertical = "top",
 		color = GreedLootScreenGui.TITLE_COLOR,
 		font = GreedLootScreenGui.COUNTER_FONT,
 		font_size = GreedLootScreenGui.TITLE_FONT_SIZE,
+		name = "gold_bars_name",
+		text = "GOLD BAR",
+		vertical = "top",
 		y = self._title_description:y() + self._title_description:h() + GreedLootScreenGui.TITLE_PADDING_TOP,
 	}
 
@@ -340,11 +340,11 @@ end
 function GreedLootScreenGui:_create_description_panel()
 	local description_panel_params = {
 		alpha = 0,
+		h = self._second_panel:h(),
 		halign = "right",
 		name = "description_panel",
 		valign = "scale",
 		w = 416,
-		h = self._second_panel:h(),
 	}
 
 	self._description_panel = self._second_panel:panel(description_panel_params)
@@ -353,28 +353,28 @@ function GreedLootScreenGui:_create_description_panel()
 
 	local item_type_params = {
 		align = "left",
-		halign = "left",
-		name = "item_type",
-		valign = "center",
-		vertical = "center",
 		color = GreedLootScreenGui.ITEM_TYPE_COLOR,
 		font = GreedLootScreenGui.COUNTER_FONT,
 		font_size = GreedLootScreenGui.ITEM_TYPE_FONT_SIZE,
 		h = GreedLootScreenGui.ITEM_TYPE_H,
+		halign = "left",
+		name = "item_type",
 		text = self:translate("menu_loot_screen_gold_bars_type", true),
+		valign = "center",
+		vertical = "center",
 	}
 	local item_type = self._description_panel:text(item_type_params)
 	local item_type_description_params = {
 		align = "left",
-		halign = "left",
-		name = "item_type_description",
-		valign = "center",
-		vertical = "top",
-		wrap = true,
 		color = GreedLootScreenGui.DESCRIPTION_COLOR,
 		font = GreedLootScreenGui.DESCRIPTION_FONT,
 		font_size = GreedLootScreenGui.DESCRIPTION_FONT_SIZE,
+		halign = "left",
+		name = "item_type_description",
 		text = self:translate("menu_loot_screen_gold_bars_description", false),
+		valign = "center",
+		vertical = "top",
+		wrap = true,
 	}
 	local item_type_description = self._description_panel:text(item_type_description_params)
 	local _, _, _, h = item_type_description:text_rect()
@@ -391,15 +391,15 @@ function GreedLootScreenGui:_create_description_panel()
 
 	local greed_description_params = {
 		align = "left",
-		halign = "left",
-		name = "greed_description_params",
-		valign = "center",
-		vertical = "top",
-		wrap = true,
 		color = GreedLootScreenGui.DESCRIPTION_COLOR,
 		font = GreedLootScreenGui.DESCRIPTION_FONT,
 		font_size = GreedLootScreenGui.DESCRIPTION_FONT_SIZE,
+		halign = "left",
+		name = "greed_description_params",
 		text = self:translate("menu_greed_description", false),
+		valign = "center",
+		vertical = "top",
+		wrap = true,
 	}
 	local greed_description = self._description_panel:text(greed_description_params)
 	local _, _, _, h = greed_description:text_rect()
@@ -821,8 +821,8 @@ function GreedLootScreenGui:bind_controller_inputs()
 		},
 		keyboard = {
 			{
-				key = "footer_continue",
 				callback = callback(self, self, "_continue_button_on_click", nil),
+				key = "footer_continue",
 			},
 		},
 	}

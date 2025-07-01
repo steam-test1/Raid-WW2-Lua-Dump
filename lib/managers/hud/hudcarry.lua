@@ -20,10 +20,10 @@ end
 function HUDCarry:_create_panel(hud)
 	local panel_params = {
 		alpha = 0,
+		h = HUDCarry.H,
 		halign = "center",
 		name = "carry_panel",
 		valign = "bottom",
-		h = HUDCarry.H,
 	}
 
 	self._object = hud.panel:panel(panel_params)
@@ -31,47 +31,47 @@ end
 
 function HUDCarry:_create_icon()
 	self._icon_panel = self._object:panel({
+		h = HUDCarry.ICON_SIZE,
 		halign = "center",
 		name = "icon_panel",
 		valign = "top",
-		h = HUDCarry.ICON_SIZE,
 		w = HUDCarry.ICON_SIZE,
 	})
 	self._icon = self._icon_panel:bitmap({
+		h = HUDCarry.ICON_SIZE,
 		halign = "center",
 		name = "icon",
-		valign = "center",
-		h = HUDCarry.ICON_SIZE,
 		texture = tweak_data.gui.icons[HUDCarry.WEIGHT_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDCarry.WEIGHT_ICON].texture_rect,
+		valign = "center",
 		w = HUDCarry.ICON_SIZE,
 	})
 	self._icon_fill_left = self._icon_panel:bitmap({
-		halign = "left",
-		name = "icon_fill_left",
-		render_template = "VertexColorTexturedRadial",
-		valign = "center",
 		color = HUDCarry.WEIGHT_FILL_COLOR,
 		h = -HUDCarry.ICON_SIZE,
+		halign = "left",
 		layer = self._icon:layer() + 1,
+		name = "icon_fill_left",
+		render_template = "VertexColorTexturedRadial",
 		texture = tweak_data.gui.icons[HUDCarry.WEIGHT_FILL_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDCarry.WEIGHT_FILL_ICON].texture_rect,
+		valign = "center",
 		w = -HUDCarry.ICON_SIZE,
 		x = HUDCarry.ICON_SIZE,
 		y = HUDCarry.ICON_SIZE,
 	})
 	self._icon_fill_right = self._icon_panel:bitmap({
-		halign = "right",
-		name = "icon_fill_right",
-		render_template = "VertexColorTexturedRadial",
-		valign = "center",
-		x = 0,
 		color = HUDCarry.WEIGHT_FILL_COLOR,
 		h = -HUDCarry.ICON_SIZE,
+		halign = "right",
 		layer = self._icon:layer() + 2,
+		name = "icon_fill_right",
+		render_template = "VertexColorTexturedRadial",
 		texture = tweak_data.gui.icons[HUDCarry.WEIGHT_FILL_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDCarry.WEIGHT_FILL_ICON].texture_rect,
+		valign = "center",
 		w = HUDCarry.ICON_SIZE,
+		x = 0,
 		y = HUDCarry.ICON_SIZE,
 	})
 end
@@ -79,14 +79,14 @@ end
 function HUDCarry:_create_prompt()
 	local prompt_params = {
 		align = "center",
+		font = HUDCarry.PROMPT_FONT,
+		font_size = HUDCarry.PROMPT_FONT_SIZE,
+		h = self._object:h(),
 		halign = "left",
 		name = "prompt",
 		text = "",
 		valign = "top",
 		vertical = "top",
-		font = HUDCarry.PROMPT_FONT,
-		font_size = HUDCarry.PROMPT_FONT_SIZE,
-		h = self._object:h(),
 		w = HUDCarry.PROMPT_W,
 	}
 

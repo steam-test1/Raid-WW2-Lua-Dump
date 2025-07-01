@@ -560,6 +560,7 @@ function NewRaycastWeaponBase:replenish()
 		end
 
 		ammo_max_multiplier = ammo_max_multiplier * managers.player:upgrade_value("player", "pack_mule_ammo_total_increase", 1)
+		ammo_max_multiplier = ammo_max_multiplier * managers.player:upgrade_value("player", "cache_basket_ammo_total_increase", 1)
 	end
 
 	local ammo_max_per_clip = self:calculate_ammo_max_per_clip()
@@ -1485,11 +1486,20 @@ function NewRaycastWeaponBase:update_reloading(t, dt, time_left)
 	if self:use_shotgun_reload() and self._next_shell_reloded_t and t >= self._next_shell_reloded_t then
 		local reload_clip_single = self:get_ammo_reload_clip_single()
 		local ammo_in_clip = self:get_ammo_remaining_in_clip()
+		local ammo_max_per_clip = self:get_ammo_max_per_clip()
 		local new_total = math.max(0, self:get_ammo_total() - ammo_in_clip)
 		local reload_amount = math.min(reload_clip_single, new_total)
 
+		if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_PLAYER_RANDOM_RELOAD) then
+			ammo_in_clip = 0
+			reload_amount = math.random(1, ammo_max_per_clip)
+		end
+
 		self:update_next_shell_reload_t()
-		self:set_ammo_remaining_in_clip(math.min(self:get_ammo_max_per_clip(), ammo_in_clip + reload_amount))
+
+		local new_remaining = math.min(ammo_max_per_clip, ammo_in_clip + reload_amount)
+
+		self:set_ammo_remaining_in_clip(new_remaining)
 		managers.raid_job:set_memory("kill_count_no_reload_" .. tostring(self._name_id), nil, true)
 
 		return true

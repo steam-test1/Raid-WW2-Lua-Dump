@@ -21,33 +21,33 @@ end
 
 function RaidGUIControlListItemCharacterCreateNation:_layout()
 	self._background = self._object:rect({
+		color = tweak_data.gui.colors.raid_list_background,
+		h = self._params.h,
 		visible = false,
 		w = 416,
 		x = 0,
 		y = 0,
-		color = tweak_data.gui.colors.raid_list_background,
-		h = self._params.h,
 	})
 	self._red_selected_line = self._object:rect({
+		color = tweak_data.gui.colors.raid_red,
+		h = self._params.h,
 		visible = false,
 		w = 2,
 		x = 0,
 		y = 0,
-		color = tweak_data.gui.colors.raid_red,
-		h = self._params.h,
 	})
 
 	local nationality_text = self:translate("character_profile_creation_" .. self._nation_name, true)
 
 	self._nation_name_label = self._object:label({
-		h = 32,
-		w = 272,
-		x = 96,
-		y = 32,
 		color = tweak_data.gui.colors.raid_dirty_white,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_32,
+		h = 32,
 		text = nationality_text,
+		w = 272,
+		x = 96,
+		y = 32,
 	})
 
 	self._nation_name_label:set_w(self._object:w() - self._nation_name_label:x())
@@ -56,12 +56,12 @@ function RaidGUIControlListItemCharacterCreateNation:_layout()
 	local tex_rect = nation_icon_data.texture_rect
 
 	self._nationality_icon = self._object:image({
-		x = 22,
-		y = 24,
 		h = tex_rect[4],
 		texture = nation_icon_data.texture,
 		texture_rect = tex_rect,
 		w = tex_rect[3],
+		x = 22,
+		y = 24,
 	})
 
 	self._nationality_icon:set_center_x(48)

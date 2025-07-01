@@ -20,19 +20,19 @@ function AreaMinPoliceForceUnitElement:_build_panel(panel, panel_sizer)
 		min = 0,
 		name = "Amount:",
 		name_proportions = 1,
-		tooltip = "Set amount of enemy forces in area. Use 0 to define dynamic spawn area for \"street\" GroupAI.",
 		panel = panel,
 		sizer = panel_sizer,
+		tooltip = "Set amount of enemy forces in area. Use 0 to define dynamic spawn area for \"street\" GroupAI.",
 		value = self._hed.amount,
 	}
 	local amount_points = CoreEWS.number_controller(amount_params)
 
 	amount_points:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
-		value = "amount",
 		ctrlr = amount_points,
+		value = "amount",
 	})
 	amount_points:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
-		value = "amount",
 		ctrlr = amount_points,
+		value = "amount",
 	})
 end

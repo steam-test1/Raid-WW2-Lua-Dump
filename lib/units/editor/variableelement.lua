@@ -29,12 +29,12 @@ function VariableElement:_build_panel(panel, panel_sizer)
 	input:set_tool_tip("Name of the variable to be used.")
 	text_sizer:add(input, 3, 0, "RIGHT,EXPAND")
 	input:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
-		value = "variable",
 		ctrlr = input,
+		value = "variable",
 	})
 	input:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
-		value = "variable",
 		ctrlr = input,
+		value = "variable",
 	})
 	panel_sizer:add(text_sizer, 0, 0, "EXPAND")
 	self:_build_value_checkbox(panel, panel_sizer, "activated", "Set if the variable is active and uncheck if the variable is disabled.")

@@ -49,10 +49,10 @@ function RaidGUIControlGridItemSkill:_layout_grid_item_icon(params)
 	local gui_icon = tweak_data.gui:get_full_gui_data(self._item_data[self._params.grid_item_icon])
 
 	self._grid_item_icon = self._object:rect({
-		layer = 10,
-		name = "grid_item_icon",
 		color = tweak_data.gui.colors.raid_grey,
 		h = params.item_h,
+		layer = 10,
+		name = "grid_item_icon",
 		w = params.item_w,
 		x = image_coord_x,
 		y = image_coord_y,
@@ -61,10 +61,10 @@ function RaidGUIControlGridItemSkill:_layout_grid_item_icon(params)
 	local grid_item_fg = tweak_data.gui:get_full_gui_data("grid_item_fg")
 
 	self._grid_item_icon_fg = self._object:bitmap({
-		layer = 12,
-		name = "grid_item_icon_fg",
 		color = tweak_data.gui.colors.grid_item_grey,
 		h = params.item_h - RaidGUIControlGridItemSkill.OUTLINE_THICKNESS * 2,
+		layer = 12,
+		name = "grid_item_icon_fg",
 		texture = grid_item_fg.texture,
 		texture_rect = grid_item_fg.texture_rect,
 		w = params.item_w - RaidGUIControlGridItemSkill.OUTLINE_THICKNESS * 2,
@@ -72,9 +72,9 @@ function RaidGUIControlGridItemSkill:_layout_grid_item_icon(params)
 		y = image_coord_y + RaidGUIControlGridItemSkill.OUTLINE_THICKNESS,
 	})
 	self._grid_item_icon_sprite = self._object:bitmap({
+		h = params.icon_size_off or params.item_w * 0.6,
 		layer = 13,
 		name = "grid_item_icon_sprite",
-		h = params.icon_size_off or params.item_w * 0.6,
 		texture = gui_icon.texture,
 		texture_rect = gui_icon.texture_rect,
 		w = params.icon_size_off or params.item_w * 0.6,
@@ -90,14 +90,14 @@ function RaidGUIControlGridItemSkill:_layout_level_tier(level)
 	if level and level > 0 then
 		self._level_tier_text = self._object:text({
 			align = "left",
+			font = tweak_data.gui.fonts.lato,
+			font_size = tweak_data.gui.font_sizes.size_18,
 			h = 32,
 			layer = 50,
 			name = "level_tier_text",
+			text = to_roman(level),
 			vertical = "center",
 			w = 32,
-			font = tweak_data.gui.fonts.lato,
-			font_size = tweak_data.gui.font_sizes.size_18,
-			text = to_roman(level),
 		})
 
 		self._level_tier_text:set_left(self._grid_item_icon_fg:left() + 4)
@@ -127,9 +127,9 @@ function RaidGUIControlGridItemSkill:_layout_lock_locked()
 
 	local grid_item_locked = tweak_data.gui:get_full_gui_data("grid_item_locked")
 	local status_lock_bg = self._item_status_panel:image({
-		name = "grid_item_lock_bg",
 		color = grid_item_locked.color,
 		h = self._item_status_panel:h(),
+		name = "grid_item_lock_bg",
 		texture = grid_item_locked.texture,
 		texture_rect = grid_item_locked.texture_rect,
 		w = self._item_status_panel:w(),
@@ -137,13 +137,13 @@ function RaidGUIControlGridItemSkill:_layout_lock_locked()
 	local ico_locker = tweak_data.gui:get_full_gui_data("ico_locker")
 
 	self._item_status_lock_icon = self._item_status_panel:image({
-		h = 40,
-		name = "grid_item_lock_icon",
-		w = 40,
 		color = ico_locker.color,
+		h = 40,
 		layer = status_lock_bg:layer() + 1,
+		name = "grid_item_lock_icon",
 		texture = ico_locker.texture,
 		texture_rect = ico_locker.texture_rect,
+		w = 40,
 	})
 
 	self._item_status_lock_icon:set_center_x(self._grid_item_icon:w() / 2)
@@ -153,12 +153,12 @@ function RaidGUIControlGridItemSkill:_layout_lock_locked()
 
 	self._item_status_lock_text = self._item_status_panel:text({
 		align = "center",
-		h = 24,
-		name = "grid_item_lock_text",
 		color = tweak_data.gui.colors.raid_white,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_24,
+		h = 24,
 		layer = status_lock_bg:layer() + 1,
+		name = "grid_item_lock_text",
 		text = text,
 	})
 
@@ -172,12 +172,12 @@ function RaidGUIControlGridItemSkill:_layout_lock_purchasable()
 	local gold_amount_footer = tweak_data.gui:get_full_gui_data("gold_amount_footer")
 
 	self._item_status_resource_icon = self._item_status_panel:image({
+		color = tweak_data.gui.colors.gold_orange,
 		h = 25,
 		name = "grid_item_resource_icon",
-		w = 25,
-		color = tweak_data.gui.colors.gold_orange,
 		texture = gold_amount_footer.texture,
 		texture_rect = gold_amount_footer.texture_rect,
+		w = 25,
 	})
 
 	self._item_status_resource_icon:set_left(self._grid_item_icon:left() + 4)
@@ -205,10 +205,10 @@ function RaidGUIControlGridItemSkill:_layout_triangles()
 	local ico_sel_rect_top_left_white = tweak_data.gui:get_full_gui_data("ico_sel_rect_top_left_white")
 	local params = {
 		h = 18,
-		w = -18,
 		layer = layer,
 		texture = ico_sel_rect_top_left_white.texture,
 		texture_rect = ico_sel_rect_top_left_white.texture_rect,
+		w = -18,
 	}
 
 	self._skill_triangle = self._triangle_markers_panel:image(params)
@@ -482,40 +482,40 @@ end
 function RaidGUIControlGridItemSkill:_init_state_data()
 	self._state_data = {}
 	self._state_data[RaidGUIControlGridItemSkill.STATE_NORMAL] = {
-		locks_alpha_highlight_off = 0,
-		locks_alpha_highlight_on = 0,
-		show_selector_triangles_alpha = 1,
 		highlight_off = tweak_data.gui.colors.raid_dark_grey,
 		highlight_on = tweak_data.gui.colors.raid_red,
 		icon_off = tweak_data.gui.colors.raid_grey,
 		icon_on = tweak_data.gui.colors.raid_dirty_white,
-	}
-	self._state_data[RaidGUIControlGridItemSkill.STATE_APPLIED] = {
 		locks_alpha_highlight_off = 0,
 		locks_alpha_highlight_on = 0,
 		show_selector_triangles_alpha = 1,
+	}
+	self._state_data[RaidGUIControlGridItemSkill.STATE_APPLIED] = {
 		highlight_off = tweak_data.gui.colors.raid_dark_grey,
 		highlight_on = tweak_data.gui.colors.raid_red,
 		icon_off = tweak_data.gui.colors.raid_dirty_white,
 		icon_on = tweak_data.gui.colors.raid_white,
+		locks_alpha_highlight_off = 0,
+		locks_alpha_highlight_on = 0,
+		show_selector_triangles_alpha = 1,
 	}
 	self._state_data[RaidGUIControlGridItemSkill.STATE_PURCHASABLE] = {
-		locks_alpha_highlight_off = 1,
-		locks_alpha_highlight_on = 0.35,
-		show_selector_triangles_alpha = 0,
 		highlight_off = tweak_data.gui.colors.raid_dark_grey,
 		highlight_on = tweak_data.gui.colors.raid_gold,
 		icon_off = tweak_data.gui.colors.raid_dark_grey,
 		icon_on = tweak_data.gui.colors.raid_gold,
+		locks_alpha_highlight_off = 1,
+		locks_alpha_highlight_on = 0.35,
+		show_selector_triangles_alpha = 0,
 	}
 	self._state_data[RaidGUIControlGridItemSkill.STATE_LOCKED] = {
-		locks_alpha_highlight_off = 0.85,
-		locks_alpha_highlight_on = 0.1,
-		show_selector_triangles_alpha = 0,
 		highlight_off = tweak_data.gui.colors.raid_dark_grey,
 		highlight_on = tweak_data.gui.colors.raid_brown_red,
 		icon_off = tweak_data.gui.colors.raid_dark_grey,
 		icon_on = tweak_data.gui.colors.raid_red,
+		locks_alpha_highlight_off = 0.85,
+		locks_alpha_highlight_on = 0.1,
+		show_selector_triangles_alpha = 0,
 	}
 end
 

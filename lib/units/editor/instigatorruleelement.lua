@@ -33,18 +33,18 @@ function InstigatorRuleUnitElement:_build_panel(panel, panel_sizer)
 		ctrlr_proportions = 2,
 		name = "Instigator:",
 		name_proportions = 1,
-		sorted = false,
-		tooltip = "Select an instigator type for the area",
 		options = managers.mission:area_instigator_categories(),
 		panel = panel,
 		sizer = panel_sizer,
+		sorted = false,
+		tooltip = "Select an instigator type for the area",
 		value = self._hed.instigator,
 	}
 	local instigator = CoreEWS.combobox(instigator_params)
 
 	instigator:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "set_element_data"), {
-		value = "instigator",
 		ctrlr = instigator,
+		value = "instigator",
 	})
 	instigator:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "_instigator_changed"), {
 		ctrlr = instigator,
@@ -71,20 +71,20 @@ function InstigatorRuleUnitElement:_update_rules_panel(panel, panel_sizer)
 	if instigator == "player" then
 		local states_params = {
 			name = "Player states:",
-			tooltip = "Select player state rules",
 			options = managers.player:player_states(),
 			panel = panel,
 			sizer = panel_sizer,
+			tooltip = "Select player state rules",
 			updated_callback = callback(self, self, "_rule_updated", "states"),
 			value = self._hed.rules[instigator] and self._hed.rules[instigator].states,
 		}
 		local states = CoreEws.list_selector(states_params)
 		local carry_ids_params = {
 			name = "Carry ids:",
-			tooltip = "Select player carry ids rules",
 			options = tweak_data.carry:get_carry_ids(),
 			panel = panel,
 			sizer = panel_sizer,
+			tooltip = "Select player carry ids rules",
 			updated_callback = callback(self, self, "_rule_updated", "carry_ids"),
 			value = self._hed.rules[instigator] and self._hed.rules[instigator].carry_ids,
 		}
@@ -97,10 +97,10 @@ function InstigatorRuleUnitElement:_update_rules_panel(panel, panel_sizer)
 
 		local mission_equipment_params = {
 			name = "Mission equipment:",
-			tooltip = "Select player mission equipment rules",
 			options = options,
 			panel = panel,
 			sizer = panel_sizer,
+			tooltip = "Select player mission equipment rules",
 			updated_callback = callback(self, self, "_rule_updated", "mission_equipment"),
 			value = self._hed.rules[instigator] and self._hed.rules[instigator].mission_equipment,
 		}
@@ -108,20 +108,20 @@ function InstigatorRuleUnitElement:_update_rules_panel(panel, panel_sizer)
 	elseif instigator == "enemies" then
 		local carry_ids_params = {
 			name = "Enemy name:",
-			tooltip = "Select enemy names rules",
 			options = managers.enemy:enemy_units(),
 			panel = panel,
 			sizer = panel_sizer,
+			tooltip = "Select enemy names rules",
 			updated_callback = callback(self, self, "_rule_updated", "enemy_names"),
 			value = self._hed.rules[instigator] and self._hed.rules[instigator].enemy_names,
 		}
 		local states = CoreEws.list_selector(carry_ids_params)
 		local pickups_params = {
 			name = "Pickup:",
-			tooltip = "Select a pickup rule",
 			options = PickupUnitElement.get_options(),
 			panel = panel,
 			sizer = panel_sizer,
+			tooltip = "Select a pickup rule",
 			updated_callback = callback(self, self, "_rule_updated", "pickup"),
 			value = self._hed.rules[instigator] and self._hed.rules[instigator].pickup,
 		}
@@ -129,20 +129,20 @@ function InstigatorRuleUnitElement:_update_rules_panel(panel, panel_sizer)
 	elseif instigator == "civilians" then
 		local civilian_names_params = {
 			name = "Civilian name:",
-			tooltip = "Select civilian names rules",
 			options = SpawnCivilianUnitElement._options,
 			panel = panel,
 			sizer = panel_sizer,
+			tooltip = "Select civilian names rules",
 			updated_callback = callback(self, self, "_rule_updated", "civilian_names"),
 			value = self._hed.rules[instigator] and self._hed.rules[instigator].civilian_names,
 		}
 		local states = CoreEws.list_selector(civilian_names_params)
 		local pickups_params = {
 			name = "Pickup:",
-			tooltip = "Select a pickup rule",
 			options = PickupUnitElement.get_options(),
 			panel = panel,
 			sizer = panel_sizer,
+			tooltip = "Select a pickup rule",
 			updated_callback = callback(self, self, "_rule_updated", "pickup"),
 			value = self._hed.rules[instigator] and self._hed.rules[instigator].pickup,
 		}
@@ -150,10 +150,10 @@ function InstigatorRuleUnitElement:_update_rules_panel(panel, panel_sizer)
 	elseif instigator == "loot" then
 		local params = {
 			name = "Carry ids:",
-			tooltip = "Select a loot carry id rule",
 			options = tweak_data.carry:get_carry_ids(),
 			panel = panel,
 			sizer = panel_sizer,
+			tooltip = "Select a loot carry id rule",
 			updated_callback = callback(self, self, "_rule_updated", "carry_ids"),
 			value = self._hed.rules[instigator] and self._hed.rules[instigator].carry_ids,
 		}

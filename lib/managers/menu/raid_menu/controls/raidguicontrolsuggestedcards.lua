@@ -17,8 +17,8 @@ end
 
 function RaidGUIControlSuggestedCards:layout()
 	self._suggested_cards_panel = self._panel:panel({
-		name = "suggested_cards_panel",
 		h = self._params.h,
+		name = "suggested_cards_panel",
 		w = self._params.w,
 		x = self._params.x,
 		y = self._params.y,
@@ -53,14 +53,14 @@ function RaidGUIControlSuggestedCards:_create_items()
 
 		self._label_peer_name = self._suggested_cards_panel:label({
 			align = "center",
-			h = 30,
-			name = "label_peer_name",
-			vertical = "center",
-			wrap = true,
 			font = tweak_data.gui.fonts.din_compressed,
 			font_size = tweak_data.gui.font_sizes.filter,
+			h = 30,
+			name = "label_peer_name",
 			text = utf8.to_upper(peer_name),
+			vertical = "center",
 			w = self._item_width,
+			wrap = true,
 			x = item_params.x,
 			y = self._suggested_cards_panel:h() - 30,
 		})

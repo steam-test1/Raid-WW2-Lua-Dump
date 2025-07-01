@@ -80,11 +80,11 @@ function MenuNodeBaseGui:create_text_button(params)
 	})
 	local gui_text = button_panel:text({
 		blend_mode = "add",
-		layer = 0,
-		name = "button_text",
 		color = self.is_win32 and self.button_default_color or self.text_color,
 		font = font,
 		font_size = font_size,
+		layer = 0,
+		name = "button_text",
 		text = text,
 	})
 
@@ -120,9 +120,10 @@ function MenuNodeBaseGui:create_text_button(params)
 	end
 
 	table.insert(self._text_buttons, {
-		highlighted = false,
 		blur = gui_blur,
 		clbk = clbk,
+		highlighted = false,
+		legend_text = nil,
 		panel = button_panel,
 		params = params.params,
 		text = gui_text,

@@ -136,18 +136,21 @@ function OverlayPresenter:show_text(text, duration, color, nationality_icon)
 
 	local label = self.__subtitle_panel:child("label") or self.__subtitle_panel:text({
 		align = "center",
+		color = Color.white,
+		font = self.__font_name,
+		font_size = self.__font_size,
 		layer = 1,
 		name = "label",
 		vertical = "top",
 		wrap = true,
 		x = 32,
 		y = 1,
-		color = Color.white,
-		font = self.__font_name,
-		font_size = self.__font_size,
 	})
 	local shadow = self.__subtitle_panel:child("shadow") or self.__subtitle_panel:text({
 		align = "center",
+		color = Color.black:with_alpha(0.5),
+		font = self.__font_name,
+		font_size = self.__font_size,
 		layer = 0,
 		name = "shadow",
 		vertical = "top",
@@ -156,9 +159,6 @@ function OverlayPresenter:show_text(text, duration, color, nationality_icon)
 		wrap = true,
 		x = 33,
 		y = 2,
-		color = Color.black:with_alpha(0.5),
-		font = self.__font_name,
-		font_size = self.__font_size,
 	})
 
 	label:set_w(self.__subtitle_panel:w() - 64)
@@ -169,12 +169,12 @@ function OverlayPresenter:show_text(text, duration, color, nationality_icon)
 			h = 32,
 			layer = 1,
 			name = "nation_icon",
+			texture = nationality_icon.texture,
+			texture_rect = nationality_icon.texture_rect,
 			visible = true,
 			w = 32,
 			x = 1,
 			y = 1,
-			texture = nationality_icon.texture,
-			texture_rect = nationality_icon.texture_rect,
 		})
 
 		nation_icon:set_image(nationality_icon.texture)
@@ -270,24 +270,24 @@ function OverlayPresenter:_layout_text_field()
 
 	return self.__subtitle_panel:child("layout") or self.__subtitle_panel:text({
 		align = "center",
+		font = self.__font_name,
+		font_size = self.__font_size,
 		name = "layout",
 		vertical = "top",
 		visible = false,
+		width = self.__subtitle_panel:w() - 64,
 		word_wrap = true,
 		wrap = true,
-		font = self.__font_name,
-		font_size = self.__font_size,
-		width = self.__subtitle_panel:w() - 64,
 	})
 end
 
 function OverlayPresenter:_string_width(subtitle_string)
 	local string_width_measure_text_field = self.__ws:panel():child("string_width") or self.__ws:panel():text({
+		font = self.__font_name,
+		font_size = self.__font_size,
 		name = "string_width",
 		visible = false,
 		wrap = true,
-		font = self.__font_name,
-		font_size = self.__font_size,
 	})
 
 	string_width_measure_text_field:set_text(subtitle_string)

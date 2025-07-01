@@ -15,9 +15,9 @@ function LightLoadingScreenGuiScript:init(scene_gui, res, progress, base_layer, 
 
 	self._panel = panel
 	self._bg_gui = panel:rect({
-		visible = false,
 		color = Color.black,
 		layer = base_layer,
+		visible = false,
 	})
 	self._saferect_panel = self._saferect:panel()
 	self._gui_tweak_data = {}
@@ -28,29 +28,29 @@ function LightLoadingScreenGuiScript:init(scene_gui, res, progress, base_layer, 
 
 	self._title_text = self._saferect_panel:text({
 		align = "left",
+		color = Color.white,
 		font = "ui/fonts/pf_din_text_comp_pro_medium_32",
 		font_size = 32,
 		h = 24,
 		halign = "left",
+		layer = self._base_layer + 1,
+		text = text,
 		vertical = "bottom",
 		visible = false,
 		y = 0,
-		color = Color.white,
-		layer = self._base_layer + 1,
-		text = text,
 	})
 	self._stonecold_small_logo = self._saferect_panel:bitmap({
 		h = 56,
+		layer = self._base_layer + 1,
 		name = "stonecold_small_logo",
 		texture = "guis/textures/game_small_logo",
-		visible = false,
-		layer = self._base_layer + 1,
 		texture_rect = {
 			0,
 			0,
 			256,
 			56,
 		},
+		visible = false,
 	})
 
 	self._stonecold_small_logo:set_size(256, 56)

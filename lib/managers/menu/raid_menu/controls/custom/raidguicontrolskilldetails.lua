@@ -49,9 +49,9 @@ function RaidGUIControlSkillDetails:_create_control_panel()
 	control_params.h = self._params.h or RaidGUIControlSkillDetails.DEFAULT_H
 	self._object = self._panel:panel(control_params)
 	self._main = self._object:panel({
-		name = "main_frame",
 		h = self._object:h() - RaidGUIControlSkillDetails.FRAME_MARGIN_H * 2,
 		layer = self._object:layer() + 1,
+		name = "main_frame",
 		w = self._object:w() - RaidGUIControlSkillDetails.FRAME_MARGIN_W * 2,
 		x = RaidGUIControlSkillDetails.FRAME_MARGIN_W,
 		y = RaidGUIControlSkillDetails.FRAME_MARGIN_H,
@@ -62,10 +62,10 @@ function RaidGUIControlSkillDetails:_create_control_panel_bg()
 	self._background = self._object:nine_cut_bitmap({
 		alpha = 0.8,
 		corner_size = 64,
-		icon = "dialog_rect",
-		name = "background",
 		h = self._object:h(),
+		icon = "dialog_rect",
 		layer = self._object:layer() - 1,
+		name = "background",
 		w = self._object:w(),
 	})
 end
@@ -73,15 +73,15 @@ end
 function RaidGUIControlSkillDetails:_create_skill_title()
 	self._title = self._main:label({
 		align = "center",
-		name = "skill_title",
-		text = "DEFAULT DABBLER",
-		y = 4,
 		color = RaidGUIControlSkillDetails.TITLE_COLOR,
 		font = RaidGUIControlSkillDetails.TITLE_FONT,
 		font_size = RaidGUIControlSkillDetails.TITLE_FONT_SIZE,
 		h = RaidGUIControlSkillDetails.TITLE_H,
 		layer = self._main:layer() + 1,
+		name = "skill_title",
+		text = "DEFAULT DABBLER",
 		w = self._main:w(),
+		y = 4,
 	})
 	self._seperator_title = self._main:gradient({
 		h = 4,
@@ -121,8 +121,8 @@ function RaidGUIControlSkillDetails:_create_skill_description()
 	local y = self._title:bottom() + RaidGUIControlSkillDetails.DESCRIPTION_PADDING_Y
 
 	self._description_panel = self._main:panel({
-		name = "description_panel",
 		h = self._main:h() - y,
+		name = "description_panel",
 		w = self._main:w() - x,
 		x = x,
 		y = y,
@@ -134,18 +134,18 @@ function RaidGUIControlSkillDetails:_create_skill_description()
 	local text = "Sunburn can occur in less than 15 minutes, and in seconds when exposed to non-shielded welding arcs or other sources of intense ultraviolet light."
 	local template = {
 		align = "left",
-		h = 68,
-		rotation = 360,
-		vertical = "center",
-		word_wrap = true,
-		wrap = true,
-		y = 0,
 		color = RaidGUIControlSkillDetails.INFORMATION_COLOR,
 		font = RaidGUIControlSkillDetails.DESCRIPTION_FONT,
 		font_size = RaidGUIControlSkillDetails.DESCRIPTION_FONT_SIZE,
+		h = 68,
 		layer = self._main:layer() + 2,
+		rotation = 360,
+		vertical = "center",
 		w = self._description_panel:w() - tier_icon_size - padding,
+		word_wrap = true,
+		wrap = true,
 		x = tier_icon_size + padding,
+		y = 0,
 	}
 
 	self._descriptions = {}
@@ -183,8 +183,8 @@ function RaidGUIControlSkillDetails:_create_skill_description()
 	local info_icon_gui = tweak_data.gui.icons.ico_info
 
 	self._info_icon = self._description_panel:bitmap({
-		name = "skill_icon_info",
 		h = info_icon_size,
+		name = "skill_icon_info",
 		texture = info_icon_gui.texture,
 		texture_rect = info_icon_gui.texture_rect,
 		w = info_icon_size,
@@ -200,14 +200,14 @@ function RaidGUIControlSkillDetails:_create_skill_flavor()
 
 	self._flavor = self._main:label({
 		align = "center",
-		name = "skill_flavor",
-		vertical = "center",
 		color = RaidGUIControlSkillDetails.DESCRIPTION_COLOR,
 		font = RaidGUIControlSkillDetails.DESCRIPTION_FONT,
 		font_size = RaidGUIControlSkillDetails.FLAVOR_FONT_SIZE,
 		h = h,
 		layer = self._main:layer() + 2,
+		name = "skill_flavor",
 		text = text,
+		vertical = "center",
 		w = self._main:w(),
 		y = self._main:h() - h,
 	})

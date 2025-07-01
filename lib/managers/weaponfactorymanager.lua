@@ -239,8 +239,8 @@ function WeaponFactoryManager:_indexed_parts(factory_id)
 			end
 
 			table.insert(i_table, {
-				i = 1,
 				amount = #parts,
+				i = 1,
 				parts = parts,
 			})
 
@@ -291,10 +291,10 @@ function WeaponFactoryManager:_preload_parts(factory_id, factory_weapon, bluepri
 
 	if not only_record and self._uses_streaming then
 		async_task_data = {
-			spawn = false,
 			blueprint = blueprint,
 			done_cb = done_cb,
 			parts = parts,
+			spawn = false,
 			third_person = third_person,
 		}
 		self._async_load_tasks = self._async_load_tasks or {}
@@ -446,8 +446,6 @@ function WeaponFactoryManager:assemble_default(factory_id, p_unit, third_person,
 end
 
 function WeaponFactoryManager:assemble_from_blueprint(factory_id, p_unit, blueprint, third_person, done_cb, skip_queue)
-	Application:trace("[WEPTEST] assemble_from_blueprint", debug.traceback())
-
 	return self:_assemble(factory_id, p_unit, blueprint, third_person, done_cb, skip_queue)
 end
 
@@ -681,13 +679,13 @@ function WeaponFactoryManager:_add_parts(p_unit, factory_id, factory_weapon, blu
 
 	if self._uses_tasks and not skip_queue then
 		table.insert(self._tasks, {
-			blueprint_i = 1,
-			need_parent_i = 1,
 			blueprint = blueprint,
+			blueprint_i = 1,
 			done_cb = done_cb,
 			factory_id = factory_id,
 			forbidden = forbidden,
 			need_parent = need_parent,
+			need_parent_i = 1,
 			override = override,
 			p_unit = p_unit,
 			parts = parts,
@@ -698,10 +696,10 @@ function WeaponFactoryManager:_add_parts(p_unit, factory_id, factory_weapon, blu
 
 		if self._uses_streaming then
 			async_task_data = {
-				spawn = true,
 				blueprint = blueprint,
 				done_cb = done_cb,
 				parts = parts,
+				spawn = true,
 				third_person = third_person,
 			}
 			self._async_load_tasks = self._async_load_tasks or {}
@@ -832,9 +830,9 @@ function WeaponFactoryManager:_add_part(p_unit, factory_id, part_id, forbidden, 
 
 	if async_task_data then
 		parts[part_id] = {
-			is_streaming = true,
 			a_obj = Idstring(part.a_obj),
 			animations = part.animations,
+			is_streaming = true,
 			link_to_unit = link_to_unit,
 			name = ids_unit_name,
 			parent = part.parent,

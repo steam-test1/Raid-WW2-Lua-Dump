@@ -1150,21 +1150,21 @@ function MenuComponentManager:add_minimized(config)
 
 	local panel = self._main_panel:panel({
 		h = 20,
-		w = 100,
 		layer = tweak_data.gui.MENU_COMPONENT_LAYER,
+		w = 100,
 	})
 	local text
 
 	if config.text then
 		text = panel:text({
 			align = "center",
+			font = tweak_data.menu.default_font,
 			font_size = 22,
 			halign = "left",
 			hvertical = "center",
 			layer = 2,
-			vertical = "center",
-			font = tweak_data.menu.default_font,
 			text = config.text,
+			vertical = "center",
 		})
 
 		text:set_center_y(panel:center_y())
@@ -1177,15 +1177,15 @@ function MenuComponentManager:add_minimized(config)
 
 	local help_text = panel:parent():text({
 		align = "left",
-		halign = "left",
-		hvertical = "center",
-		layer = 3,
-		vertical = "center",
-		visible = false,
 		color = Color.white,
 		font = tweak_data.menu.small_font,
 		font_size = tweak_data.menu.small_font_size,
+		halign = "left",
+		hvertical = "center",
+		layer = 3,
 		text = config.help_text or "CLICK TO MAXIMIZE WEAPON INFO",
+		vertical = "center",
+		visible = false,
 	})
 
 	help_text:set_shape(help_text:text_rect())
@@ -1217,10 +1217,10 @@ function MenuComponentManager:add_minimized(config)
 
 	top_line:set_bottom(panel:top())
 	table.insert(self._minimized_list, {
-		mouse_over = false,
 		callback = config.callback,
 		help_text = help_text,
 		id = self._minimized_id,
+		mouse_over = false,
 		panel = panel,
 		selected = selected,
 		text = text,
@@ -3095,10 +3095,10 @@ end
 
 function MenuComponentManager:_create_voice_chat_status_info()
 	local widget_panel_params = {
-		name = "voice_chat_panel",
-		x = 0,
 		h = HUDPlayerVoiceChatStatus.DEFAULT_H * 4,
+		name = "voice_chat_panel",
 		w = HUDPlayerVoiceChatStatus.DEFAULT_W,
+		x = 0,
 	}
 
 	self._voice_chat_panel = self._voicechat_ws:panel():panel(widget_panel_params)

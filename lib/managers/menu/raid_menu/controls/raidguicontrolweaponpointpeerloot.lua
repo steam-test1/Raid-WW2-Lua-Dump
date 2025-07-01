@@ -40,22 +40,22 @@ end
 function RaidGUIControlWeaponPointPeerLoot:_create_weapon_point_details()
 	local params_weapon_point_image = {
 		name = "weapon_point_image",
-		x = 0,
-		y = 0,
 		texture = tweak_data.gui.icons[RaidGUIControlWeaponPointPeerLoot.ICON].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlWeaponPointPeerLoot.ICON].texture_rect,
+		x = 0,
+		y = 0,
 	}
 
 	self._weapon_point_image = self._object:bitmap(params_weapon_point_image)
 
 	local params_player_name = {
 		align = "left",
-		layer = 1,
-		name = "peer_weapon_point_name_label",
-		text = "",
 		color = RaidGUIControlWeaponPointPeerLoot.NAME_COLOR,
 		font = RaidGUIControlWeaponPointPeerLoot.FONT,
 		font_size = RaidGUIControlWeaponPointPeerLoot.NAME_FONT_SIZE,
+		layer = 1,
+		name = "peer_weapon_point_name_label",
+		text = "",
 		w = self._object:w() - RaidGUIControlWeaponPointPeerLoot.TEXT_X,
 		x = RaidGUIControlWeaponPointPeerLoot.TEXT_X,
 		y = RaidGUIControlWeaponPointPeerLoot.NAME_Y,
@@ -69,11 +69,11 @@ function RaidGUIControlWeaponPointPeerLoot:_create_weapon_point_details()
 
 	local params_weapon_point_description = {
 		align = "left",
-		layer = 1,
-		name = "weapon_point_description_label",
 		color = RaidGUIControlWeaponPointPeerLoot.DESCRIPTION_COLOR,
 		font = RaidGUIControlWeaponPointPeerLoot.FONT,
 		font_size = RaidGUIControlWeaponPointPeerLoot.DESCRIPTION_FONT_SIZE,
+		layer = 1,
+		name = "weapon_point_description_label",
 		text = self:translate("weapon_point", true),
 		w = self._name_label:w(),
 		x = self._name_label:x(),

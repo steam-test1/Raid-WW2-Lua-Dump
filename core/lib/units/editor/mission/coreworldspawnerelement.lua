@@ -125,12 +125,12 @@ function CoreWorldEventUnitElement:_add_world_gui(world_name, events, event_list
 	local events_params = {
 		ctrlr_proportions = 2,
 		name_proportions = 0,
-		sizer_proportions = 2,
-		sorted = true,
-		tooltip = "Select an event from the combobox",
 		options = events,
 		panel = panel,
 		sizer = h_sizer,
+		sizer_proportions = 2,
+		sorted = true,
+		tooltip = "Select an event from the combobox",
 		value = event_list_data.event,
 	}
 	local event = CoreEws.combobox(events_params)
@@ -270,12 +270,12 @@ function CoreWorldInputUnitElement:_build_panel(panel, panel_sizer)
 
 	panel_sizer:add(event, 0, 0, "EXPAND")
 	event:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
-		value = "event",
 		ctrlr = event,
+		value = "event",
 	})
 	event:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
-		value = "event",
 		ctrlr = event,
+		value = "event",
 	})
 end
 
@@ -299,12 +299,12 @@ function CoreWorldOutputUnitElement:_build_panel(panel, panel_sizer)
 
 	panel_sizer:add(event, 0, 0, "EXPAND")
 	event:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
-		value = "event",
 		ctrlr = event,
+		value = "event",
 	})
 	event:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
-		value = "event",
 		ctrlr = event,
+		value = "event",
 	})
 end
 

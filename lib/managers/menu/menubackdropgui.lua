@@ -14,11 +14,11 @@ function MenuBackdropGUI:init(ws, gui_data_manager, fixed_dt)
 		self._black_bg_ws = self._gui_data_scene_gui:create_screen_workspace()
 
 		self._black_bg_ws:panel():rect({
+			color = Color.black,
 			halign = "scale",
 			layer = -1000,
 			name = "bg",
 			valign = "scale",
-			color = Color.black,
 		})
 
 		if managers and managers.viewport then
@@ -88,8 +88,8 @@ function MenuBackdropGUI:setup_saferect_shape()
 	local saferect_shape = {}
 	local safe_scaled_size = (self._gui_data_manager or managers.gui_data):safe_scaled_size()
 	local temp_saferect_panel = self._panel:panel({
-		name = "temp_saferect_panel",
 		h = safe_scaled_size.h,
+		name = "temp_saferect_panel",
 		w = safe_scaled_size.w,
 	})
 
@@ -121,11 +121,11 @@ function MenuBackdropGUI:create_black_borders()
 	self._black_bg_ws = self._gui_data_scene_gui:create_screen_workspace()
 
 	self._black_bg_ws:panel():rect({
+		color = Color.black,
 		halign = "scale",
 		layer = -1000,
 		name = "bg",
 		valign = "scale",
-		color = Color.black,
 	})
 end
 
@@ -193,9 +193,9 @@ function MenuBackdropGUI:_create_base_layer()
 	self:_set_layers_of_layer(1, 1)
 
 	local bd_base_layer = self._panel:bitmap({
+		h = self._workspace:height(),
 		name = "bd_base_layer",
 		texture = "ui/loading_screens/loading_raid_ww2",
-		h = self._workspace:height(),
 	})
 
 	self:set_fullscreen_bitmap_shape(bd_base_layer, 1)
@@ -255,8 +255,8 @@ function MenuBackdropGUI:set_pattern(bitmap_texture, alpha, blend_mode)
 	end
 
 	local object = bg_layer:bitmap({
-		name = "object",
 		blend_mode = blend_mode,
+		name = "object",
 		texture = bitmap_texture,
 	})
 
@@ -363,7 +363,6 @@ function MenuBackdropGUI:_create_particle()
 	local particle = particles_layer:bitmap({
 		alpha = 0,
 		h = 32,
-		w = 32,
 		texture = self._bitmap_texture,
 		texture_rect = {
 			texture_rect_x,
@@ -371,6 +370,7 @@ function MenuBackdropGUI:_create_particle()
 			32,
 			32,
 		},
+		w = 32,
 	})
 	local from_longside = math.random(2) == 1
 	local otherside_start = math.random(2) == 1

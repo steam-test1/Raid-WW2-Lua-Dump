@@ -197,12 +197,12 @@ function CoreMissionElement:build_default_gui(panel, sizer)
 		ctrlr_proportions = 2,
 		name = "Element:",
 		name_proportions = 1,
-		sizer_proportions = 1,
-		sorted = true,
-		tooltip = "Select an element from the combobox",
 		options = {},
 		panel = panel,
 		sizer = element_sizer,
+		sizer_proportions = 1,
+		sorted = true,
+		tooltip = "Select an element from the combobox",
 	}
 
 	local elements = CoreEWS.combobox(self._elements_params)
@@ -232,11 +232,11 @@ function CoreMissionElement:build_default_gui(panel, sizer)
 			ctrlr_proportions = 2,
 			name = "Alternative:",
 			name_proportions = 1,
-			sorted = false,
-			tooltip = "Select an alternative on executed from the combobox",
 			options = self.ON_EXECUTED_ALTERNATIVES,
 			panel = panel,
 			sizer = on_executed_sizer,
+			sorted = false,
+			tooltip = "Select an alternative on executed from the combobox",
 			value = self.ON_EXECUTED_ALTERNATIVES[1],
 		}
 		local on_executed_alternatives_types = CoreEws.combobox(on_executed_alternatives_params)
@@ -256,11 +256,11 @@ function CoreMissionElement:build_default_gui(panel, sizer)
 		min = 0,
 		name = "Delay:",
 		name_proportions = 1,
+		panel = panel,
+		sizer = delay_sizer,
 		sizer_proportions = 2,
 		tooltip = "Sets the delay time for the selected on executed element",
 		value = 0,
-		panel = panel,
-		sizer = delay_sizer,
 	}
 
 	local element_delay = CoreEws.number_controller(self._element_delay_params)
@@ -274,11 +274,11 @@ function CoreMissionElement:build_default_gui(panel, sizer)
 		min = 0,
 		name = "  Random:",
 		name_proportions = 0,
+		panel = panel,
+		sizer = delay_sizer,
 		sizer_proportions = 1,
 		tooltip = "Specifies an additional random time to be added to delay (delay + rand)",
 		value = 0,
-		panel = panel,
-		sizer = delay_sizer,
 	}
 
 	local element_delay_rand = CoreEws.number_controller(self._element_delay_rand_params)
@@ -329,8 +329,8 @@ function CoreMissionElement:_build_point_orientation(panel)
 
 	use_orientation_sequenced:set_value(self._hed.use_orientation_sequenced)
 	use_orientation_sequenced:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		value = "use_orientation_sequenced",
 		ctrlr = use_orientation_sequenced,
+		value = "use_orientation_sequenced",
 	})
 	sizer:add(use_orientation_sequenced, 0, 4, "EXPAND,LEFT")
 
@@ -338,8 +338,8 @@ function CoreMissionElement:_build_point_orientation(panel)
 
 	disable_orientation_on_use:set_value(self._hed.disable_orientation_on_use)
 	disable_orientation_on_use:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		value = "disable_orientation_on_use",
 		ctrlr = disable_orientation_on_use,
+		value = "disable_orientation_on_use",
 	})
 	sizer:add(disable_orientation_on_use, 0, 4, "EXPAND,LEFT")
 
@@ -413,14 +413,14 @@ function CoreMissionElement:_build_instance_var_names(panel)
 		local params = {
 			ctrlr_proportions = 2,
 			default = "not_used",
-			name_proportions = 1,
-			sizer_proportions = 1,
-			sorted = true,
-			tooltip = "Select a value",
 			name = string.pretty(data.value, true) .. ":",
+			name_proportions = 1,
 			options = options[data.type] or {},
 			panel = panel,
 			sizer = sizer,
+			sizer_proportions = 1,
+			sorted = true,
+			tooltip = "Select a value",
 			value = self._hed.instance_var_names and self._hed.instance_var_names[data.value] or "not_used",
 		}
 		local ctrlr = CoreEws.combobox(params)
@@ -692,11 +692,11 @@ function CoreMissionElement:draw_links_selected(t, dt, selected_unit)
 
 		if unit and self._unit and self:_should_draw_link(unit, self._unit) then
 			self:_draw_link({
-				thick = true,
 				b = b,
 				from_unit = self._unit,
 				g = g,
 				r = r,
+				thick = true,
 				to_unit = unit,
 			})
 		end
@@ -1239,13 +1239,13 @@ function CoreMissionElement:_build_value_combobox(panel, sizer, value_name, opti
 
 	local combobox_params = {
 		ctrlr_proportions = 2,
-		name_proportions = 1,
-		sizer_proportions = 1,
-		sorted = false,
 		name = string.pretty(custom_name or value_name, true) .. ":",
+		name_proportions = 1,
 		options = options,
 		panel = panel,
 		sizer = horizontal_sizer,
+		sizer_proportions = 1,
+		sorted = false,
 		tooltip = tooltip or "Select an option from the combobox",
 		value = self._hed[value_name],
 	}
@@ -1387,39 +1387,39 @@ function CoreMissionElement:_build_value_random_number(panel, sizer, value_name,
 	local ctrlr = CoreEws.number_controller(number_params)
 
 	ctrlr:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "_set_random_number_element_data"), {
-		index = 1,
 		ctrlr = ctrlr,
+		index = 1,
 		value = value_name,
 	})
 	ctrlr:connect("EVT_KILL_FOCUS", callback(self, self, "_set_random_number_element_data"), {
-		index = 1,
 		ctrlr = ctrlr,
+		index = 1,
 		value = value_name,
 	})
 
 	local number2_params = {
-		name = "+ random:",
-		tooltip = "Add a random amount",
 		ctrlr_proportions = options.ctrlr_proportions or 2,
 		floats = options.floats,
 		max = options.max,
 		min = options.min,
+		name = "+ random:",
 		name_proportions = options.name_proportions or 1,
 		panel = panel,
 		sizer = horizontal_sizer,
 		sizer_proportions = options.sizer_proportions or 1,
+		tooltip = "Add a random amount",
 		value = self._hed[value_name][2],
 	}
 	local ctrlr2 = CoreEws.number_controller(number2_params)
 
 	ctrlr2:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "_set_random_number_element_data"), {
-		index = 2,
 		ctrlr = ctrlr2,
+		index = 2,
 		value = value_name,
 	})
 	ctrlr2:connect("EVT_KILL_FOCUS", callback(self, self, "_set_random_number_element_data"), {
-		index = 2,
 		ctrlr = ctrlr2,
+		index = 2,
 		value = value_name,
 	})
 

@@ -183,12 +183,12 @@ function CarryData:_explode()
 	managers.explosion:play_sound_and_effects(pos, normal, range, CarryData.EXPLOSION_CUSTOM_PARAMS)
 
 	local hit_units, splinters = managers.explosion:detect_and_give_dmg({
-		player_damage = 0,
 		collision_slotmask = slot_mask,
 		curve_pow = CarryData.EXPLOSION_SETTINGS.curve_pow,
 		damage = CarryData.EXPLOSION_SETTINGS.damage,
 		hit_pos = pos,
 		ignore_unit = self._unit,
+		player_damage = 0,
 		range = range,
 	})
 
@@ -413,31 +413,25 @@ function CarryData:_chk_register_steal_SO()
 	end
 
 	local drop_objective = {
-		action_duration = 2,
-		haste = "walk",
-		interrupt_dis = 700,
-		interrupt_health = 0.9,
-		pose = "crouch",
-		type = "act",
 		action = {
 			align_sync = true,
 			body_part = 1,
 			type = "act",
 			variant = "untie",
 		},
+		action_duration = 2,
 		area = drop_area,
 		complete_clbk = callback(self, self, "on_secure_SO_completed"),
 		fail_clbk = callback(self, self, "on_secure_SO_failed"),
-		nav_seg = drop_nav_seg,
-		pos = drop_pos,
-	}
-	local pickup_objective = {
-		destroy_clbk_key = false,
-		haste = "run",
+		haste = "walk",
 		interrupt_dis = 700,
 		interrupt_health = 0.9,
+		nav_seg = drop_nav_seg,
+		pos = drop_pos,
 		pose = "crouch",
 		type = "act",
+	}
+	local pickup_objective = {
 		action = {
 			align_sync = true,
 			body_part = 1,
@@ -447,28 +441,34 @@ function CarryData:_chk_register_steal_SO()
 		action_duration = math.lerp(1, 2.5, math.random()),
 		area = pickup_area,
 		complete_clbk = callback(self, self, "on_pickup_SO_completed"),
+		destroy_clbk_key = false,
 		fail_clbk = callback(self, self, "on_pickup_SO_failed"),
 		followup_objective = drop_objective,
+		haste = "run",
+		interrupt_dis = 700,
+		interrupt_health = 0.9,
 		nav_seg = pickup_nav_seg,
 		pos = pickup_pos,
+		pose = "crouch",
+		type = "act",
 	}
 	local so_descriptor = {
+		AI_group = AI_carry.SO_category,
+		admin_clbk = callback(self, self, "on_pickup_SO_administered"),
 		base_chance = 1,
 		chance_inc = 0,
 		interval = 0,
-		usage_amount = 1,
-		AI_group = AI_carry.SO_category,
-		admin_clbk = callback(self, self, "on_pickup_SO_administered"),
 		objective = pickup_objective,
 		search_pos = pickup_objective.pos,
+		usage_amount = 1,
 		verification_clbk = callback(self, self, "clbk_pickup_SO_verification"),
 	}
 	local so_id = "carrysteal" .. tostring(self._unit:key())
 
 	self._steal_SO_data = {
+		SO_id = so_id,
 		SO_registered = true,
 		picked_up = false,
-		SO_id = so_id,
 		pickup_area = pickup_area,
 		pickup_objective = pickup_objective,
 	}

@@ -144,8 +144,8 @@ end
 
 function WaypointUnitElement:_create_shapes()
 	self._square_shape = CoreShapeManager.ShapeBoxMiddle:new({
-		height = 200,
 		depth = self._hed.depth,
+		height = 200,
 		width = self._hed.width,
 	})
 

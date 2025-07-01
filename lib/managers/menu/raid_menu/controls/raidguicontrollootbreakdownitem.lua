@@ -56,8 +56,8 @@ function RaidGUIControlLootBreakdownItem:_add_point(main_icon, duration)
 	local y_move = 160
 	local fade_out_distance = 40
 	local icon_params = {
-		name = "icon_clone",
 		layer = self._icon:layer() + 1,
+		name = "icon_clone",
 		texture = tweak_data.gui.icons[self._params.icon].texture,
 		texture_rect = tweak_data.gui.icons[self._params.icon].texture_rect,
 	}
@@ -109,8 +109,8 @@ end
 
 function RaidGUIControlLootBreakdownItem:_create_text_panel()
 	local text_panel_params = {
-		name = "text_panel",
 		h = RaidGUIControlLootBreakdownItem.TEXT_PANEL_H,
+		name = "text_panel",
 	}
 
 	self._text_panel = self._object:panel(text_panel_params)
@@ -121,15 +121,15 @@ end
 function RaidGUIControlLootBreakdownItem:_create_counter()
 	local counter_params = {
 		align = "center",
+		color = RaidGUIControlLootBreakdownItem.COUNTER_COLOR,
+		font = RaidGUIControlLootBreakdownItem.FONT,
+		font_size = RaidGUIControlLootBreakdownItem.COUNTER_FONT_SIZE,
+		h = RaidGUIControlLootBreakdownItem.COUNTER_H,
 		halign = "scale",
 		name = "counter",
 		text = "",
 		valign = "top",
 		vertical = "center",
-		color = RaidGUIControlLootBreakdownItem.COUNTER_COLOR,
-		font = RaidGUIControlLootBreakdownItem.FONT,
-		font_size = RaidGUIControlLootBreakdownItem.COUNTER_FONT_SIZE,
-		h = RaidGUIControlLootBreakdownItem.COUNTER_H,
 	}
 
 	self._counter = self._text_panel:text(counter_params)
@@ -150,15 +150,15 @@ end
 function RaidGUIControlLootBreakdownItem:_create_title()
 	local title_params = {
 		align = "center",
-		halign = "scale",
-		name = "counter",
-		valign = "top",
-		vertical = "center",
 		color = RaidGUIControlLootBreakdownItem.TITLE_COLOR,
 		font = RaidGUIControlLootBreakdownItem.FONT,
 		font_size = RaidGUIControlLootBreakdownItem.TITLE_FONT_SIZE,
 		h = RaidGUIControlLootBreakdownItem.TITLE_H,
+		halign = "scale",
+		name = "counter",
 		text = self:translate(self._params.title, true),
+		valign = "top",
+		vertical = "center",
 		y = self._counter:y() + self._counter:h(),
 	}
 

@@ -267,9 +267,9 @@ end
 
 function IngameWaitingForPlayersState:show_intro_video()
 	local params_root_panel = {
-		is_root_panel = true,
 		background_color = Color.black,
 		h = self._full_panel:h(),
+		is_root_panel = true,
 		layer = tweak_data.gui.DEBRIEF_VIDEO_LAYER,
 		w = self._full_panel:w(),
 		x = self._full_panel:x(),
@@ -293,11 +293,11 @@ function IngameWaitingForPlayersState:show_intro_video()
 	local press_any_key_text = managers.controller:is_using_controller() and "press_any_key_to_skip_controller" or "press_any_key_to_skip"
 	local press_any_key_params = {
 		alpha = 0,
-		name = "press_any_key_prompt",
 		color = tweak_data.gui.colors.raid_dirty_white,
 		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.size_32),
 		font_size = tweak_data.gui.font_sizes.size_32,
 		layer = self._intro_video:layer() + 1,
+		name = "press_any_key_prompt",
 		text = utf8.to_upper(managers.localization:text(press_any_key_text)),
 	}
 	local press_any_key_prompt = self._safe_panel:text(press_any_key_params)

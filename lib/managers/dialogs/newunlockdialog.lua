@@ -17,12 +17,12 @@ function NewUnlockDialog:init(manager, data, is_title_outside)
 	self._ws = self._data.ws or manager:_get_ws()
 
 	local text_config = {
-		no_close_legend = true,
-		no_scroll_legend = true,
 		font = data.font,
 		font_size = data.font_size,
 		h = data.h or 400,
 		is_title_outside = is_title_outside,
+		no_close_legend = true,
+		no_scroll_legend = true,
 		text_blend_mode = data.text_blend_mode,
 		text_formating_color = data.text_formating_color,
 		text_formating_color_table = data.text_formating_color_table,
@@ -32,12 +32,12 @@ function NewUnlockDialog:init(manager, data, is_title_outside)
 		w = data.w or 420,
 	}
 	local image_config = {
-		keep_ratio = true,
-		layer = 2,
-		padding = 10,
 		blend_mode = data.image_blend_mode,
 		h = data.image_h or 128,
 		halign = data.image_halign,
+		keep_ratio = true,
+		layer = 2,
+		padding = 10,
 		render_template = data.render_template,
 		shapes = data.shapes,
 		texture = data.texture,

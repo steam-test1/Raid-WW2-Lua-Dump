@@ -155,8 +155,8 @@ end
 
 function MotionpathMarkerUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "body editor",
 		mask = managers.slot:get_mask("all"),
+		ray_type = "body editor",
 	})
 
 	if ray and ray.unit then
@@ -235,9 +235,9 @@ function MotionpathMarkerUnitElement:draw_links(t, dt, selected_unit, all_units)
 		if draw and unit then
 			self:_draw_link({
 				b = 0.01,
+				from_unit = unit,
 				g = 0.849,
 				r = 0.514,
-				from_unit = unit,
 				to_unit = self._unit,
 			})
 		end
@@ -251,9 +251,9 @@ function MotionpathMarkerUnitElement:draw_links(t, dt, selected_unit, all_units)
 			if draw and alive(unit) and alive(self._unit) then
 				self:_draw_link({
 					b = 0.01,
+					from_unit = unit,
 					g = 0.449,
 					r = 0.8,
-					from_unit = unit,
 					to_unit = self._unit,
 				})
 			end
@@ -268,9 +268,9 @@ function MotionpathMarkerUnitElement:draw_links(t, dt, selected_unit, all_units)
 			if alive(marker_from) and alive(marker_to) then
 				self:_draw_link({
 					b = 0.01,
+					from_unit = marker_from,
 					g = 1,
 					r = 1,
-					from_unit = marker_from,
 					to_unit = marker_to,
 				})
 			end
@@ -280,9 +280,9 @@ end
 
 function MotionpathMarkerUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
+		mask = managers.slot:get_mask("all"),
 		ray_type = "body editor",
 		sample = true,
-		mask = managers.slot:get_mask("all"),
 	})
 
 	if ray and ray.unit then
@@ -304,28 +304,28 @@ function MotionpathMarkerUnitElement:_build_panel(panel, panel_sizer)
 		name = "Control Point Length:",
 		name_proportions = 1,
 		number_ctrlr_proportions = 1,
-		slider_ctrlr_proportions = 3,
 		panel = panel,
 		sizer = panel_sizer,
+		slider_ctrlr_proportions = 3,
 		value = self._hed.cp_length,
 	}
 
 	CoreEws.slider_and_number_controller(cp_length_params)
 	cp_length_params.slider_ctrlr:connect("EVT_SCROLL_THUMBTRACK", callback(self, self, "set_element_data"), {
-		value = "cp_length",
 		ctrlr = cp_length_params.number_ctrlr,
+		value = "cp_length",
 	})
 	cp_length_params.slider_ctrlr:connect("EVT_SCROLL_CHANGED", callback(self, self, "set_element_data"), {
-		value = "cp_length",
 		ctrlr = cp_length_params.number_ctrlr,
+		value = "cp_length",
 	})
 	cp_length_params.number_ctrlr:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
-		value = "cp_length",
 		ctrlr = cp_length_params.number_ctrlr,
+		value = "cp_length",
 	})
 	cp_length_params.number_ctrlr:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
-		value = "cp_length",
 		ctrlr = cp_length_params.number_ctrlr,
+		value = "cp_length",
 	})
 	self:_build_value_combobox(panel, panel_sizer, "motion_state", {
 		"move",
@@ -339,20 +339,20 @@ function MotionpathMarkerUnitElement:_build_panel(panel, panel_sizer)
 		min = -1,
 		name = "Speed [km/h]:",
 		name_proportions = 1,
-		tooltip = "Set the target unit speed at this marker in km/h. Set to -1 to ignore.",
 		panel = panel,
 		sizer = panel_sizer,
+		tooltip = "Set the target unit speed at this marker in km/h. Set to -1 to ignore.",
 		value = self._hed.marker_target_speed,
 	}
 	local speed_ctrlr = CoreEWS.number_controller(speed_params)
 
 	speed_ctrlr:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
-		value = "marker_target_speed",
 		ctrlr = speed_ctrlr,
+		value = "marker_target_speed",
 	})
 	speed_ctrlr:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
-		value = "marker_target_speed",
 		ctrlr = speed_ctrlr,
+		value = "marker_target_speed",
 	})
 
 	local add_marker_btn = EWS:Button(panel, "Insert Marker", "", "BU_EXACTFIT,NO_BORDER")

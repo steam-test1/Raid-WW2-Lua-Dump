@@ -42,18 +42,18 @@ function BootupState:setup()
 		table.insert(self._play_data_list, {
 			can_skip = false,
 			duration = 6,
-			height = 200,
-			width = 600,
 			fade_in = fade_time,
 			fade_out = fade_time,
 			gui = Idstring("guis/autosave_warning"),
+			height = 200,
 			layer = item_layer,
+			width = 600,
 		})
 	end
 
 	table.insert(self._play_data_list, {
-		duration = 4.5,
 		can_skip = has_full_game,
+		duration = 4.5,
 		fade_in = fade_time,
 		fade_out = fade_time,
 		height = image_h,
@@ -64,8 +64,8 @@ function BootupState:setup()
 	})
 	table.insert(self._play_data_list, {
 		auto_skip = true,
-		duration = 4.5,
 		can_skip = has_full_game,
+		duration = 4.5,
 		fade_in = fade_time,
 		fade_out = fade_time,
 		height = image_h,
@@ -76,8 +76,8 @@ function BootupState:setup()
 	})
 	table.insert(self._play_data_list, {
 		auto_skip = true,
-		duration = 5,
 		can_skip = has_full_game,
+		duration = 5,
 		fade_in = fade_time,
 		fade_out = fade_time,
 		height = image_w / 2,
@@ -93,25 +93,25 @@ function BootupState:setup()
 	self._panel = self._workspace:panel()
 
 	self._full_panel:rect({
+		color = Color.red,
 		layer = 0,
 		visible = false,
-		color = Color.red,
 	})
 
 	local press_any_key_font_size = tweak_data.gui.font_sizes.medium
 	local press_any_key_prompt_params = {
 		align = "center",
 		alpha = 0,
-		layer = 3,
-		name = "press_any_key_text",
-		vertical = "bottom",
-		wrap = true,
 		color = MenuTitlescreenState.TEXT_COLOR,
 		font = tweak_data.gui:get_font_path(MenuTitlescreenState.FONT, press_any_key_font_size),
 		font_size = press_any_key_font_size,
 		h = press_any_key_font_size,
+		layer = 3,
+		name = "press_any_key_text",
 		text = utf8.to_upper(managers.localization:text(IS_PC and "press_any_key" or "press_any_key_to_skip_controller")),
+		vertical = "bottom",
 		w = self._full_panel:w(),
+		wrap = true,
 	}
 
 	self._press_any_key_text = self._full_panel:text(press_any_key_prompt_params)

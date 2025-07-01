@@ -114,8 +114,8 @@ function ShieldLogicAttack.queued_update(data)
 			my_data.optimal_pos = nil
 
 			local ray_params = {
-				trace = true,
 				pos_to = to_pos,
+				trace = true,
 				tracker_from = unit:movement():nav_tracker(),
 			}
 			local ray_res = managers.navigation:raycast(ray_params)
@@ -171,9 +171,9 @@ function ShieldLogicAttack.queued_update(data)
 					to_pos = reservation.position
 				else
 					reservation = {
-						radius = 60,
 						filter = data.pos_rsrv_id,
 						position = mvector3.copy(to_pos),
+						radius = 60,
 					}
 
 					managers.navigation:add_pos_reservation(reservation)
@@ -244,10 +244,10 @@ function ShieldLogicAttack._chk_request_action_walk_to_optimal_pos(data, my_data
 	if not data.unit:movement():chk_action_forbidden("walk") then
 		local new_action_data = {
 			body_part = 2,
-			type = "walk",
-			variant = "walk",
 			end_rot = end_rot,
 			nav_path = my_data.optimal_path,
+			type = "walk",
+			variant = "walk",
 		}
 
 		my_data.optimal_path = nil
@@ -588,9 +588,9 @@ function ShieldLogicAttack.chk_wall_distance(data, my_data, pos, second_pass)
 	local tracker_lost = my_tracker:lost()
 	local my_fwd = data.unit:movement():m_fwd()
 	local ray_params = {
-		trace = true,
 		pos_from = tracker_lost and my_tracker:field_position() or nil,
 		pos_to = pos + my_fwd * data.char_tweak.wall_fwd_offset,
+		trace = true,
 		tracker_from = not tracker_lost and my_tracker or nil,
 	}
 

@@ -166,8 +166,9 @@ function ObjectivesManager:_remind_objetive(id, title_id)
 
 		managers.hud:remind_objective(id)
 		managers.hud:present_mid_text({
-			time = 4,
+			["P\x00\x00\x00\x00"] = nil,
 			text = text,
+			time = 4,
 			title = title_message,
 		})
 	end
@@ -246,8 +247,8 @@ function ObjectivesManager:activate_objective(id, load_data, data, world_id, ski
 
 	if data and data.delay_presentation then
 		self._delayed_presentation = {
-			t = 1,
 			activate_params = activate_params,
+			t = 1,
 		}
 	else
 		managers.hud:activate_objective(activate_params)
@@ -258,8 +259,9 @@ function ObjectivesManager:activate_objective(id, load_data, data, world_id, ski
 
 	if not skip_toast then
 		managers.hud:present_mid_text({
-			time = 4.5,
+			set_sub_objective_current_amount = nil,
 			text = text,
+			time = 4.5,
 			title = title_message,
 		})
 	end
@@ -287,8 +289,8 @@ function ObjectivesManager:remove_objective(id, load_data)
 	local objective = self._objectives[id]
 
 	managers.hud:complete_objective({
-		remove = true,
 		id = id,
+		remove = true,
 		text = objective.text,
 	})
 
@@ -304,8 +306,8 @@ function ObjectivesManager:remove_objective_for_world(world_id)
 	for id, objective in pairs(self._active_objectives) do
 		if objective.world_id == world_id then
 			managers.hud:complete_objective({
-				remove = true,
 				id = id,
+				remove = true,
 				text = objective.text,
 			})
 
@@ -419,6 +421,10 @@ function ObjectivesManager:complete_sub_objective(id, sub_id, load_data)
 			text = sub_objective.text,
 		})
 
+		if self._remind_objectives[id] then
+			self._remind_objectives[id].next_t = Application:time() + self.REMINDER_INTERVAL
+		end
+
 		if sub_objective.current_amount < sub_objective.amount then
 			self:_remind_sub_objective(id, "mission_sub_objective_updated")
 
@@ -463,6 +469,10 @@ function ObjectivesManager:set_objective_current_amount(objective_id, current_am
 
 	if objective.amount then
 		objective.current_amount = current_amount
+
+		if self._remind_objectives[objective_id] then
+			self._remind_objectives[objective_id].next_t = Application:time() + self.REMINDER_INTERVAL
+		end
 	end
 end
 
@@ -517,6 +527,10 @@ function ObjectivesManager:set_sub_objective_current_amount(objective_id, sub_id
 
 	if sub_objective.amount and sub_objective.amount == sub_objective.current_amount then
 		self:check_and_set_subobjective_finished(objective, sub_objective)
+	end
+
+	if self._remind_objectives[objective_id] then
+		self._remind_objectives[objective_id].next_t = Application:time() + self.REMINDER_INTERVAL
 	end
 
 	managers.hud:render_objective()

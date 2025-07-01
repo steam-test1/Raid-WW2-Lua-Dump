@@ -287,9 +287,9 @@ function PlayerDamage:restore_armor(armor_restored)
 	self:set_armor(new_armor)
 	self:_send_set_armor()
 	managers.hud:set_player_armor({
-		no_hint = true,
 		current = self:get_real_armor(),
 		max = max_armor,
+		no_hint = true,
 		total = self:_max_armor(),
 	})
 end
@@ -319,12 +319,12 @@ function PlayerDamage:_regenerated(downs_regen)
 	if downs_regen and downs_regen > 0 then
 		if self:_change_revives(downs_regen) then
 			managers.hud:set_big_prompt({
-				duration = 3,
-				id = "hint_downs_remaining",
 				description = managers.localization:to_upper_text("hud_hint_downs_desc", {
 					DOWNS = self._revives - 1,
 					DOWNSMAX = max_lives - 1,
 				}),
+				duration = 3,
+				id = "hint_downs_remaining",
 				title = managers.localization:to_upper_text("hud_hint_down_restored_title"),
 			})
 		end
@@ -561,11 +561,7 @@ function PlayerDamage:damage_melee(attack_data)
 
 	self._unit:camera():play_shaker(vars[math.random(#vars)], 1 * managers.player:upgrade_value("player", "on_hit_flinch_reduction", 1))
 
-	if managers.player:current_state() == "bipod" then
-		managers.player:set_player_state("standard")
-	end
-
-	if managers.player:current_state() == "turret" then
+	if managers.player:current_state() == "bipod" or managers.player:current_state() == "turret" then
 		managers.player:set_player_state("standard")
 	end
 
@@ -714,8 +710,8 @@ function PlayerDamage:damage_bullet(attack_data)
 	if health_subtracted > 0 then
 		self:_send_damage_drama(attack_data, health_subtracted)
 		managers.dialog:queue_dialog("player_gen_taking_fire", {
-			skip_idle_check = true,
 			instigator = self._unit,
+			skip_idle_check = true,
 		})
 	end
 
@@ -930,9 +926,9 @@ function PlayerDamage:damage_fall(data)
 	end
 
 	managers.hud:set_player_armor({
-		no_hint = true,
 		current = self:get_real_armor(),
 		max = max_armor,
+		no_hint = true,
 		total = self:_max_armor(),
 	})
 	SoundDevice:set_rtpc("shield_status", 0)
@@ -1106,19 +1102,19 @@ function PlayerDamage:_check_bleed_out(ignore_upgrades, ignore_movement_state)
 
 				managers.hud:set_big_prompt({
 					background = "backgrounds_detected_msg",
-					duration = 4,
-					id = "hint_downed",
-					priority = true,
 					description = managers.localization:to_upper_text("hud_hint_downs_desc", {
 						DOWNS = self._revives - 1,
 						DOWNSMAX = max_lives - 1,
 					}),
+					duration = 4,
+					id = "hint_downed",
+					priority = true,
 					text_color = tweak_data.gui.colors.raid_red,
 					title = managers.localization:to_upper_text("hud_hint_downs_title"),
 				})
 				managers.dialog:queue_dialog("player_gen_downed", {
-					skip_idle_check = true,
 					instigator = self._unit,
+					skip_idle_check = true,
 				})
 			end
 
@@ -1340,8 +1336,8 @@ function PlayerDamage:revive(helped_self)
 		local callout = revives <= 1 and "player_gen_last_life" or "player_gen_revive_thanks"
 
 		managers.dialog:queue_dialog(callout, {
-			skip_idle_check = true,
 			instigator = self._unit,
+			skip_idle_check = true,
 		})
 	end
 
@@ -1627,8 +1623,8 @@ function PlayerDamage:_upd_health_regen(t, dt)
 			local health_change = regen_rate * max_health
 
 			self:_calc_health_damage({
-				variant = "bullet",
 				damage = math.abs(health_change),
+				variant = "bullet",
 			})
 		elseif regen_rate > 0 and max_health > self:get_real_health() then
 			self:restore_health(regen_rate, false)
@@ -1770,7 +1766,6 @@ function PlayerDamage:set_damage_fall_disabled()
 end
 
 function PlayerDamage:setup_upgrades()
-	local event = managers.system_event_listener
 	local interval_multiplier = managers.player:upgrade_value("player", "painkiller_damage_interval_multiplier", 1)
 
 	self._dmg_interval = tweak_data.player.damage.MIN_DAMAGE_INTERVAL * interval_multiplier
@@ -1842,10 +1837,19 @@ function PlayerDamage:on_martyrdom(projectile_entry)
 	local projectile_data = tweak_data.projectiles[projectile_entry]
 	local clusters_to_spawn = projectile_data.max_amount
 	local upgraded = PlayerSkill.skill_data("player", "fragstone_downed_martyrdom", husk_player)
-	local upgrade_amount = projectile_data.upgrade_amount
 
-	if upgraded and upgrade_amount then
-		clusters_to_spawn = clusters_to_spawn + PlayerSkill.skill_data(upgrade_amount.category, upgrade_amount.upgrade, 0, husk_player)
+	if upgraded then
+		if projectile_data.upgrade_amount then
+			local upgrade = projectile_data.upgrade_amount
+
+			clusters_to_spawn = clusters_to_spawn + PlayerSkill.skill_data(upgrade.category, upgrade.upgrade, 0, husk_player)
+		end
+
+		if projectile_data.upgrade_amounts then
+			for _, upgrade in pairs(projectile_data.upgrade_amounts) do
+				clusters_to_spawn = clusters_to_spawn + PlayerSkill.skill_data(upgrade.category, upgrade.upgrade, 0, husk_player)
+			end
+		end
 	end
 
 	for i = 1, clusters_to_spawn do

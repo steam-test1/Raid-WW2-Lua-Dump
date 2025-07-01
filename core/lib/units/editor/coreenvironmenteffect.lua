@@ -35,8 +35,8 @@ function CoreEnvironmentEffectHubElement:_build_panel(panel, panel_sizer)
 
 	effects:set_value(self._hed.environment_effect)
 	effects:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "set_element_data"), {
-		value = "environment_effect",
 		ctrlr = effects,
+		value = "environment_effect",
 	})
 	effect_sizer:add(effects, 3, 0, "EXPAND")
 	self._panel_sizer:add(effect_sizer, 0, 0, "EXPAND")

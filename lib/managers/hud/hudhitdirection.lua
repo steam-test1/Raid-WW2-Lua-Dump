@@ -30,12 +30,12 @@ function HUDHitDirection:_create_panel(hud)
 	end
 
 	local panel_params = {
+		h = HUDHitDirection.H,
 		halign = "center",
 		layer = -5,
 		name = "hit_direction_panel",
 		valign = "center",
 		visible = true,
-		h = HUDHitDirection.H,
 		w = HUDHitDirection.W,
 	}
 
@@ -69,13 +69,13 @@ end
 function HUDHitDirection:_create_indicator(name, rotation, halign, valign)
 	local indicator_params = {
 		alpha = 0,
-		visible = true,
 		halign = halign,
 		name = name,
 		rotation = rotation,
 		texture = tweak_data.gui.icons[HUDHitDirection.DAMAGE_INDICATOR_BASE .. HUDHitDirection.DEFAULT_DAMAGE_INDICATOR].texture,
 		texture_rect = tweak_data.gui.icons[HUDHitDirection.DAMAGE_INDICATOR_BASE .. HUDHitDirection.DEFAULT_DAMAGE_INDICATOR].texture_rect,
 		valign = valign,
+		visible = true,
 	}
 	local indicator = self._object:bitmap(indicator_params)
 
@@ -114,13 +114,13 @@ function HUDHitDirection:on_hit_unit(attack_data, unit_type_hit)
 		local enemy_position = attack_data.attacker_unit:position()
 
 		self._indicators[attacker_id] = {
-			fade_out_t = 0,
-			need_to_extend = false,
-			severity = 1,
 			damage = attack_data.damage,
 			fade_in_t = HUDHitDirection.INDICATOR_FADE_IN_DURATION,
+			fade_out_t = 0,
 			indicator = indicator,
+			need_to_extend = false,
 			position = enemy_position,
+			severity = 1,
 			t = HUDHitDirection.DAMAGE_INDICATOR_DURATION,
 		}
 	else

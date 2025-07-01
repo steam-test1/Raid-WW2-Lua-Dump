@@ -132,9 +132,9 @@ function CivilianLogicTravel.update(data)
 		local haste = objective and objective.haste or "walk"
 		local new_action_data = {
 			body_part = 2,
-			type = "walk",
 			end_rot = end_rot,
 			nav_path = my_data.advance_path,
+			type = "walk",
 			variant = haste,
 		}
 
@@ -202,9 +202,9 @@ function CivilianLogicTravel.on_intimidated(data, amount, aggressor_unit)
 	end
 
 	local new_objective = {
-		type = "surrender",
 		aggressor_unit = aggressor_unit,
 		amount = amount,
+		type = "surrender",
 	}
 	local anim_data = data.unit:anim_data()
 

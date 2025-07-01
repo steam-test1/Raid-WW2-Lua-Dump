@@ -54,9 +54,9 @@ function CoreEditor:create_projection_light(type)
 		resolution = resolution or EditUnitLight.DEFAULT_SHADOW_RESOLUTION
 
 		table.insert(lights, {
-			name = "",
 			enabled = light:enable(),
 			light = light,
+			name = "",
 			output_name = unit:unit_data().unit_id,
 			position = light:position(),
 			resolution = resolution,
@@ -88,9 +88,9 @@ function CoreEditor:create_projection_light(type)
 
 	managers.viewport:set_default_environment("core/environments/default_depthlight", nil, nil)
 	self:_create_cube_light({
-		simple_postfix = true,
 		cubes = lights,
 		saved_environment = saved_environment,
+		simple_postfix = true,
 	})
 
 	self._cube_map_done = false

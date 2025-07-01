@@ -181,8 +181,8 @@ function CivilianLogicFlee.update(data)
 					unit:brain():search_for_path_to_cover(my_data.flee_path_search_id, to_cover[1], nil, nil)
 				else
 					data.brain:add_pos_rsrv("path", {
-						radius = 30,
 						position = to_pos,
+						radius = 30,
 					})
 					unit:brain():search_for_path(my_data.flee_path_search_id, to_pos)
 				end
@@ -658,9 +658,9 @@ function CivilianLogicFlee._start_moving_to_cover(data, my_data)
 
 	local new_action_data = {
 		body_part = 2,
+		nav_path = my_data.flee_path,
 		type = "walk",
 		variant = "run",
-		nav_path = my_data.flee_path,
 	}
 
 	my_data.advancing = data.unit:brain():action_request(new_action_data)
@@ -729,8 +729,8 @@ function CivilianLogicFlee.register_rescue_SO(ignore_this, data)
 	local so_pos, so_rot
 	local ray_params = {
 		allow_entry = false,
-		trace = true,
 		pos_to = test_pos,
+		trace = true,
 		tracker_from = data.unit:movement():nav_tracker(),
 	}
 
@@ -754,40 +754,40 @@ function CivilianLogicFlee.register_rescue_SO(ignore_this, data)
 	end
 
 	local objective = {
-		destroy_clbk_key = false,
-		interrupt_dis = 700,
-		interrupt_health = 0.75,
-		scan = true,
-		stance = "hos",
-		type = "act",
 		action = {
-			body_part = 1,
-			type = "act",
-			variant = "untie",
 			blocks = {
 				action = -1,
 				walk = -1,
 			},
+			body_part = 1,
+			type = "act",
+			variant = "untie",
 		},
 		action_duration = tweak_data.interaction:get_interaction("free").timer,
 		complete_clbk = callback(CivilianLogicFlee, CivilianLogicFlee, "on_rescue_SO_completed", data),
+		destroy_clbk_key = false,
 		fail_clbk = callback(CivilianLogicFlee, CivilianLogicFlee, "on_rescue_SO_failed", data),
 		follow_unit = data.unit,
+		interrupt_dis = 700,
+		interrupt_health = 0.75,
 		nav_seg = data.unit:movement():nav_tracker():nav_segment(),
 		pos = so_pos,
 		rot = so_rot,
+		scan = true,
+		stance = "hos",
+		type = "act",
 	}
 	local receiver_areas = managers.groupai:state():get_areas_from_nav_seg_id(objective.nav_seg)
 	local so_descriptor = {
 		AI_group = "enemies",
+		admin_clbk = callback(CivilianLogicFlee, CivilianLogicFlee, "on_rescue_SO_administered", data),
 		base_chance = 1,
 		chance_inc = 0,
 		interval = 10,
-		search_dis_sq = 25000000,
-		usage_amount = 1,
-		admin_clbk = callback(CivilianLogicFlee, CivilianLogicFlee, "on_rescue_SO_administered", data),
 		objective = objective,
+		search_dis_sq = 25000000,
 		search_pos = mvector3.copy(data.m_pos),
+		usage_amount = 1,
 		verification_clbk = callback(CivilianLogicFlee, CivilianLogicFlee, "rescue_SO_verification", {
 			areas = receiver_areas,
 			logic_data = data,
@@ -1033,10 +1033,10 @@ function CivilianLogicFlee.clbk_chk_call_the_police(ignore_this, data)
 
 	if not already_calling and (not my_data.calling_the_police or not data.unit:movement():chk_action_forbidden("walk")) then
 		local action = {
+			blocks = {},
 			body_part = 1,
 			type = "act",
 			variant = "cmf_so_call_police",
-			blocks = {},
 		}
 
 		my_data.calling_the_police = data.unit:movement():action_request(action)

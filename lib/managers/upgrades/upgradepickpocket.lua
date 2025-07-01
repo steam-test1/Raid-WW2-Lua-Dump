@@ -33,7 +33,7 @@ function UpgradePickpocket:_on_enemy_melee(params)
 
 	steal_amount_ammo = (steal_amount_ammo - 1) * 10
 
-	local _, ammo_gained = managers.player:add_ammo_to_equipped_weapon(steal_amount_ammo)
+	local _, ammo_gained = local_player:inventory():add_ammo_to_equipped(steal_amount_ammo)
 
 	success = ammo_gained and ammo_gained > 0
 

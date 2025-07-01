@@ -955,11 +955,11 @@ function ConnectionNetworkHandler:sync_picked_up_loot_values(picked_up_current_l
 	managers.lootdrop:set_picked_up_current_leg(picked_up_current_leg)
 	managers.lootdrop:set_picked_up_total(picked_up_total)
 	managers.notification:add_notification({
+		acquired = picked_up_current_leg,
 		duration = 2,
 		id = "hud_hint_grabbed_nazi_gold",
-		shelf_life = 5,
-		acquired = picked_up_current_leg,
 		notification_type = HUDNotification.DOG_TAG,
+		shelf_life = 5,
 		total = picked_up_total,
 	})
 end
@@ -1092,8 +1092,8 @@ function ConnectionNetworkHandler:sync_warcry_meter_fill_percentage(fill_percent
 
 	if managers.hud and character_data then
 		managers.hud:set_teammate_warcry_meter_fill(character_data.panel_id, {
-			total = 100,
 			current = fill_percentage,
+			total = 100,
 		})
 	end
 end
@@ -1162,8 +1162,8 @@ function ConnectionNetworkHandler:sync_queue_dialog(id, instigator, sender)
 
 	if Network:is_server() then
 		managers.dialog:queue_dialog(id, {
-			skip_idle_check = true,
 			instigator = instigator,
+			skip_idle_check = true,
 		})
 	else
 		managers.dialog:sync_queue_dialog(id, instigator)

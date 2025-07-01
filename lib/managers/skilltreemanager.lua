@@ -709,10 +709,10 @@ function SkillTreeManager:reset_skills()
 	local purchased_profiles = self._global.main_profile_purchased_profiles or {}
 
 	Global.skilltree_manager = {
-		reset_message = false,
 		VERSION = SkillTreeManager.VERSION,
 		main_profile_purchased_profiles = purchased_profiles,
 		main_profile_purchased_skills = purchased_skills,
+		reset_message = false,
 	}
 	self._global = Global.skilltree_manager
 end

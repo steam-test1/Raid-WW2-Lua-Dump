@@ -7,15 +7,15 @@ function ChallengeTweakData:init()
 	self.tighter_spread_easy = {
 		challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
 		challenge_done_text_id = "weapon_skill_headshot_kill_completed",
-		target = 25,
 		modifiers = {
-			headshot = true,
 			damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
+			headshot = true,
 		},
 		reminders = {
 			10,
 			20,
 		},
+		target = 25,
 		type = ChallengeTweakData.TASK_KILL_ENEMIES,
 	}
 	self.tighter_spread_medium = deep_clone(self.tighter_spread_easy)
@@ -35,11 +35,11 @@ function ChallengeTweakData:init()
 	self.increase_magazine_easy = {
 		challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
 		challenge_done_text_id = "weapon_skill_collect_ammo_completed",
-		target = 175,
 		reminders = {
 			100,
 			150,
 		},
+		target = 175,
 		type = ChallengeTweakData.TASK_COLLECT_AMMO,
 	}
 	self.increase_magazine_medium = deep_clone(self.increase_magazine_easy)
@@ -58,16 +58,16 @@ function ChallengeTweakData:init()
 	self.kill_enemies_hipfire_easy = {
 		challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
 		challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
-		target = 100,
 		modifiers = {
-			hip_fire = true,
 			damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
+			hip_fire = true,
 		},
 		reminders = {
 			40,
 			70,
 			90,
 		},
+		target = 100,
 		type = ChallengeTweakData.TASK_KILL_ENEMIES,
 	}
 	self.kill_enemies_hipfire_medium = deep_clone(self.kill_enemies_hipfire_easy)
@@ -89,13 +89,13 @@ function ChallengeTweakData:init()
 	self.kill_enemies_basic_easy = {
 		challenge_briefing_id = "weapon_skill_generic_kill_briefing",
 		challenge_done_text_id = "weapon_skill_generic_kill_completed",
-		target = 200,
 		reminders = {
 			60,
 			125,
 			150,
 			180,
 		},
+		target = 200,
 		type = ChallengeTweakData.TASK_KILL_ENEMIES,
 	}
 	self.kill_enemies_basic_medium = deep_clone(self.kill_enemies_basic_easy)

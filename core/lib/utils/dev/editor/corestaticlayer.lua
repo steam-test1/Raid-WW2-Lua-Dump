@@ -282,9 +282,9 @@ end
 function StaticLayer:position_as()
 	if self._selected_unit and not self:condition() then
 		local data = {
+			mask = self._position_as_slot_mask,
 			ray_type = "body editor",
 			sample = true,
-			mask = self._position_as_slot_mask,
 		}
 		local ray = managers.editor:unit_by_raycast(data)
 

@@ -55,11 +55,11 @@ end
 
 function HUDChat:_create_panel(panel)
 	local panel_params = {
+		h = HUDChat.H,
 		halign = "left",
 		name = "chat_panel",
 		valign = "bottom",
 		visible = false,
-		h = HUDChat.H,
 		w = HUDChat.W,
 	}
 
@@ -77,10 +77,10 @@ end
 function HUDChat:_create_input()
 	local input_panel_params = {
 		alpha = 0.3,
+		h = HUDChat.INPUT_PANEL_H,
 		halign = "scale",
 		name = "input_panel",
 		valign = "bottom",
-		h = HUDChat.INPUT_PANEL_H,
 		w = self._object:w(),
 	}
 
@@ -89,10 +89,10 @@ function HUDChat:_create_input()
 	self._input_panel:set_bottom(self._object:h())
 
 	local input_text_panel_params = {
+		h = HUDChat.INPUT_TEXT_PANEL_H,
 		halign = "scale",
 		name = "input_text_panel",
 		valign = "bottom",
-		h = HUDChat.INPUT_TEXT_PANEL_H,
 		w = self._input_panel:w() - HUDChat.CHAT_BOX_PADDING * 2,
 		x = HUDChat.CHAT_BOX_PADDING,
 	}
@@ -105,9 +105,9 @@ function HUDChat:_create_input()
 		halign = "center",
 		layer = 2,
 		name = "input_text_background",
-		valign = "center",
 		texture = tweak_data.gui.icons[HUDChat.INPUT_TEXT_BACKGROUND].texture,
 		texture_rect = tweak_data.gui.icons[HUDChat.INPUT_TEXT_BACKGROUND].texture_rect,
+		valign = "center",
 	}
 	local background = self._input_text_panel:bitmap(input_text_background_params)
 
@@ -116,15 +116,15 @@ function HUDChat:_create_input()
 
 	local input_text_params = {
 		align = "left",
+		color = HUDChat.PLAYER_MESSAGE_COLOR,
+		font = HUDChat.MESSAGE_FONT,
+		font_size = HUDChat.MESSAGE_FONT_SIZE,
 		halign = "scale",
 		layer = 5,
 		name = "input_text",
 		text = "",
 		valign = "center",
 		vertical = "center",
-		color = HUDChat.PLAYER_MESSAGE_COLOR,
-		font = HUDChat.MESSAGE_FONT,
-		font_size = HUDChat.MESSAGE_FONT_SIZE,
 		w = self._input_text_panel:w() - HUDChat.INPUT_TEXT_X - HUDChat.INPUT_TEXT_PADDING_RIGHT,
 		x = HUDChat.INPUT_TEXT_X,
 	}
@@ -132,11 +132,11 @@ function HUDChat:_create_input()
 	self._input_text = self._input_text_panel:text(input_text_params)
 
 	local caret_params = {
+		color = HUDChat.PLAYER_MESSAGE_COLOR,
+		h = HUDChat.CARET_H,
 		layer = 10,
 		name = "caret",
 		visible = false,
-		color = HUDChat.PLAYER_MESSAGE_COLOR,
-		h = HUDChat.CARET_H,
 		w = HUDChat.CARET_W,
 		x = HUDChat.INPUT_TEXT_X,
 	}
@@ -149,14 +149,14 @@ end
 function HUDChat:_create_message_panel()
 	local message_panel_layer = self._object:child("background") and self._object:child("background"):layer() + 1 or 20
 	local message_panel_params = {
+		h = self._object:h() - self._input_panel:h(),
 		halign = "center",
+		layer = message_panel_layer,
 		name = "message_panel",
 		valign = "scale",
-		y = 0,
-		h = self._object:h() - self._input_panel:h(),
-		layer = message_panel_layer,
 		w = self._object:w() - HUDChat.CHAT_BOX_PADDING * 2,
 		x = HUDChat.CHAT_BOX_PADDING,
+		y = 0,
 	}
 
 	self._message_panel = self._object:panel(message_panel_params)
@@ -218,31 +218,31 @@ function HUDChat:_create_input_panel()
 		h = 24,
 		layer = 1,
 		name = "input_panel",
-		x = 0,
 		w = self._panel_width,
+		x = 0,
 	})
 
 	self._input_panel:rect({
+		color = Color.white:with_alpha(0.2),
 		layer = 0,
 		name = "focus_indicator",
 		visible = false,
-		color = Color.white:with_alpha(0.2),
 	})
 
 	local say = self._input_panel:text({
 		align = "left",
 		blend_mode = "normal",
+		color = Color.white,
+		font = tweak_data.menu.pd2_small_font,
+		font_size = tweak_data.menu.pd2_small_font_size,
 		halign = "left",
 		hvertical = "center",
 		layer = 1,
 		name = "say",
+		text = utf8.to_upper(managers.localization:text("menu_chat_say")),
 		vertical = "center",
 		x = 0,
 		y = 0,
-		color = Color.white,
-		font = tweak_data.menu.pd2_small_font,
-		font_size = tweak_data.menu.pd2_small_font_size,
-		text = utf8.to_upper(managers.localization:text("menu_chat_say")),
 	})
 	local _, _, w, h = say:text_rect()
 
@@ -251,6 +251,9 @@ function HUDChat:_create_input_panel()
 	local input_text = self._input_panel:text({
 		align = "left",
 		blend_mode = "normal",
+		color = Color.white,
+		font = tweak_data.menu.pd2_small_font,
+		font_size = tweak_data.menu.pd2_small_font_size,
 		halign = "left",
 		hvertical = "center",
 		layer = 1,
@@ -261,25 +264,19 @@ function HUDChat:_create_input_panel()
 		wrap = true,
 		x = 0,
 		y = 0,
-		color = Color.white,
-		font = tweak_data.menu.pd2_small_font,
-		font_size = tweak_data.menu.pd2_small_font_size,
 	})
 	local caret = self._input_panel:rect({
+		color = Color(0.05, 1, 1, 1),
 		h = 0,
 		layer = 2,
 		name = "caret",
 		w = 0,
 		x = 0,
 		y = 0,
-		color = Color(0.05, 1, 1, 1),
 	})
 
 	self._input_panel:gradient({
 		blend_mode = "sub",
-		layer = -1,
-		name = "input_bg",
-		valign = "grow",
 		gradient_points = {
 			0,
 			Color.white:with_alpha(0),
@@ -289,6 +286,9 @@ function HUDChat:_create_input_panel()
 			Color.white:with_alpha(0),
 		},
 		h = self._input_panel:h(),
+		layer = -1,
+		name = "input_bg",
+		valign = "grow",
 	})
 end
 

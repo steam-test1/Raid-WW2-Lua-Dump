@@ -234,9 +234,9 @@ function CoreWorldCollection:prepare_world(world, world_id, editor_name, spawn_c
 	Application:debug("[CoreWorldCollection:prepare_world()] world_id:", world_id, spawn_counter)
 
 	local params = {
-		file_type = "world",
 		excluded_continents = excluded_continents,
 		file_path = file_path,
+		file_type = "world",
 		translation = world.translation,
 		world_dir = world_dir,
 		world_id = world_id,
@@ -263,6 +263,7 @@ function CoreWorldCollection:prepare_world(world, world_id, editor_name, spawn_c
 	table.insert(self.queued_world_creation, world_id)
 
 	if definition.is_prepared then
+		Application:debug("[CoreWorldCollection:prepare_world] Stage Prepare", definition._world_id)
 		self:complete_world_loading_stage(definition._world_id, CoreWorldCollection.STAGE_PREPARE)
 	end
 
@@ -1473,8 +1474,22 @@ function CoreWorldCollection:_plant_loot_on_spawned_levels()
 	local job_id = job_data and job_data.job_id
 	local total_value = LootDropTweakData.TOTAL_DOGTAGS_DEFAULT
 
-	if job_data and job_data.dogtags_min and job_data.dogtags_max then
-		total_value = math.random(job_data.dogtags_min, job_data.dogtags_max)
+	if job_data and job_data.dogtags and job_data.dogtags.min and job_data.dogtags.max then
+		total_value = math.random(job_data.dogtags.min, job_data.dogtags.max)
+
+		if job_data.dogtags.diff_bonus then
+			local difficulty = Global.game_settings and Global.game_settings.difficulty or Global.DEFAULT_DIFFICULTY
+			local difficulty_index = tweak_data:difficulty_to_index(difficulty)
+			local diff_value = job_data.dogtags.diff_bonus * (difficulty_index - 1)
+
+			total_value = total_value + diff_value
+
+			Application:info("[CoreWorldCollection:_plant_loot_on_spawned_levels] total dogtag value", total_value, "+difficulty value", diff_value, "- index", difficulty_index)
+		else
+			Application:info("[CoreWorldCollection:_plant_loot_on_spawned_levels] total dogtag value", total_value, "without difficulty values")
+		end
+	else
+		Application:warn("[CoreWorldCollection:_plant_loot_on_spawned_levels] Cant get a total dogtag value from job_id:", job_id)
 	end
 
 	if not self._world_spawns or self:count_world_spawns() == 0 then

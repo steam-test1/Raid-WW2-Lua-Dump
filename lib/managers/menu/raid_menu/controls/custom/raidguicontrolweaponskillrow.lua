@@ -51,17 +51,17 @@ end
 function RaidGUIControlWeaponSkillRow:_create_skill_label()
 	local name_label_params = {
 		align = "left",
-		h = 24,
-		text = "UNKNOWN",
-		vertical = "center",
-		wrap = true,
-		x = 0,
-		y = 0,
 		color = tweak_data.gui.colors.raid_grey,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_20,
+		h = 24,
 		name = self._params.name .. "_name_label",
+		text = "UNKNOWN",
+		vertical = "center",
 		w = self._object:w(),
+		wrap = true,
+		x = 0,
+		y = 0,
 	}
 
 	self._name_label = self._object:label(name_label_params)
@@ -87,17 +87,17 @@ function RaidGUIControlWeaponSkillRow:_create_items()
 	end
 
 	local skill_params = {
-		line_enabled = true,
-		text = "",
 		get_available_points_callback = self._params.get_available_points_callback,
 		h = RaidGUIControlWeaponSkillRow.BUTTON_HEIGHT,
 		layer = self._object:layer() + 3,
+		line_enabled = true,
 		on_click_callback = callback(self, self, "on_click_weapon_skill_button"),
 		on_click_weapon_skill_callback = self._params.on_click_weapon_skill_callback,
 		on_mouse_enter_callback = self._params.on_mouse_enter_callback,
 		on_mouse_exit_callback = self._params.on_mouse_exit_callback,
 		on_selected_weapon_skill_callback = self._params.on_selected_weapon_skill_callback,
 		on_unselected_weapon_skill_callback = self._params.on_unselected_weapon_skill_callback,
+		text = "",
 		toggle_select_item_callback = self._params.toggle_select_item_callback,
 		w = RaidGUIControlWeaponSkillRow.BUTTON_WIDTH,
 		x = RaidGUIControlWeaponSkillRow.BUTTON_START_X,

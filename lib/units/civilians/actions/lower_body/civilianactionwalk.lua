@@ -34,9 +34,6 @@ CivilianActionWalk._walk_anim_velocities = {
 CivilianActionWalk._walk_anim_velocities.stand.cbt = CivilianActionWalk._walk_anim_velocities.stand.hos
 CivilianActionWalk._anim_movement = {
 	stand = {
-		run_stop_fwd = 120,
-		run_stop_l = 110,
-		run_stop_r = 80,
 		run_start_turn_bwd = {
 			ds = Vector3(49, -161, 0),
 		},
@@ -46,5 +43,8 @@ CivilianActionWalk._anim_movement = {
 		run_start_turn_r = {
 			ds = Vector3(240, 68, 0),
 		},
+		run_stop_fwd = 120,
+		run_stop_l = 110,
+		run_stop_r = 80,
 	},
 }

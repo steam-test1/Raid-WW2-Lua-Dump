@@ -310,12 +310,12 @@ function CopLogicAttack._start_action_move_back(data, my_data, focus_enemy, enga
 
 	local new_action_data = {
 		body_part = 2,
-		type = "walk",
-		variant = "walk",
 		nav_path = {
 			from_pos,
 			retreat_to,
 		},
+		type = "walk",
+		variant = "walk",
 	}
 
 	my_data.advancing = data.unit:brain():action_request(new_action_data)
@@ -332,9 +332,9 @@ end
 function CopLogicAttack._start_action_move_out_of_the_way(data, my_data)
 	local my_tracker = data.unit:movement():nav_tracker()
 	local reservation = {
-		radius = 30,
 		filter = data.pos_rsrv_id,
 		position = data.m_pos,
+		radius = 30,
 	}
 
 	if not managers.navigation:is_pos_free(reservation) then
@@ -364,8 +364,8 @@ function CopLogicAttack._peek_for_pos_sideways(data, my_data, from_racker, peek_
 	local back_pos = my_pos + back_vec
 	local ray_params = {
 		allow_entry = true,
-		trace = true,
 		pos_to = back_pos,
+		trace = true,
 		tracker_from = my_tracker,
 	}
 	local ray_res = managers.navigation:raycast(ray_params)
@@ -508,9 +508,9 @@ function CopLogicAttack._request_action_walk_to_cover(data, my_data)
 
 	local new_action_data = {
 		body_part = 2,
-		type = "walk",
 		end_pose = end_pose,
 		nav_path = my_data.cover_path,
+		type = "walk",
 		variant = movement_mode,
 	}
 
@@ -542,8 +542,8 @@ function CopLogicAttack._request_action_walk_to_cover_shoot_pos(data, my_data, p
 
 	local new_action_data = {
 		body_part = 2,
-		type = "walk",
 		nav_path = path,
+		type = "walk",
 		variant = speed or "walk",
 	}
 
@@ -967,8 +967,8 @@ end
 
 function CopLogicAttack._is_threat_visible(retreat_pos, threat_pos, threat_head_pos, threat_tracker)
 	local ray_params = {
-		trace = true,
 		pos_from = retreat_pos,
+		trace = true,
 		tracker_to = threat_tracker,
 	}
 	local walk_ray_res = managers.navigation:raycast(ray_params)
@@ -1325,8 +1325,8 @@ function CopLogicAttack._get_cover_offset_pos(data, cover_data, threat_pos)
 	mvector3.add(offset_pos, cover_data[1][1])
 
 	local ray_params = {
-		trace = true,
 		pos_to = offset_pos,
+		trace = true,
 		tracker_from = cover_data[1][3],
 	}
 
@@ -1360,9 +1360,9 @@ function CopLogicAttack._find_flank_pos(data, my_data, flank_tracker, max_dist)
 				if is_hit then
 					if error_dis < best_error_dis then
 						local reservation = {
-							radius = 30,
 							filter = data.pos_rsrv_id,
 							position = accross_pos[1],
+							radius = 30,
 						}
 
 						if managers.navigation:is_pos_free(reservation) then
@@ -1373,9 +1373,9 @@ function CopLogicAttack._find_flank_pos(data, my_data, flank_tracker, max_dist)
 					end
 				elseif best_has_too_much_error then
 					local reservation = {
-						radius = 30,
 						filter = data.pos_rsrv_id,
 						position = accross_pos[1],
+						radius = 30,
 					}
 
 					if managers.navigation:is_pos_free(reservation) then
@@ -1388,9 +1388,9 @@ function CopLogicAttack._find_flank_pos(data, my_data, flank_tracker, max_dist)
 			elseif best_is_miss then
 				if not too_much_error then
 					local reservation = {
-						radius = 30,
 						filter = data.pos_rsrv_id,
 						position = accross_pos[1],
+						radius = 30,
 					}
 
 					if managers.navigation:is_pos_free(reservation) then
@@ -1403,9 +1403,9 @@ function CopLogicAttack._find_flank_pos(data, my_data, flank_tracker, max_dist)
 				end
 			else
 				local reservation = {
-					radius = 30,
 					filter = data.pos_rsrv_id,
 					position = accross_pos[1],
+					radius = 30,
 				}
 
 				if managers.navigation:is_pos_free(reservation) then

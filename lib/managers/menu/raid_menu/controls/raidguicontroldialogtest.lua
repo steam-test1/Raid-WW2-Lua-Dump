@@ -6,34 +6,34 @@ function RaidGUIControlDialogTest:init(parent, params)
 	self._yes_callback = self._params.yes_callback
 	self._no_callback = self._params.no_callback
 	self._object = self._panel:panel({
-		name = "dialog_panel",
-		x = 0,
-		y = 0,
 		h = self._panel:h(),
 		layer = self._panel:layer() + 100,
+		name = "dialog_panel",
 		w = self._panel:w(),
-	})
-	self._background = self._object:rect({
-		name = "background",
 		x = 0,
 		y = 0,
+	})
+	self._background = self._object:rect({
 		color = tweak_data.gui.colors.raid_black:with_alpha(0.9),
 		h = self._object:h(),
+		name = "background",
 		w = self._object:w(),
+		x = 0,
+		y = 0,
 	})
 
 	local center_x, center_y = self._object:center()
 
 	self._title_label = self._object:label({
 		align = "center",
+		font = tweak_data.gui.fonts.din_compressed,
+		font_size = tweak_data.gui.font_sizes.dialg_title,
 		h = 32,
 		name = "dialog_title",
+		text = self:translate("character_creation_create_title", true),
 		vertical = "center",
 		visible = false,
 		w = 576,
-		font = tweak_data.gui.fonts.din_compressed,
-		font_size = tweak_data.gui.font_sizes.dialg_title,
-		text = self:translate("character_creation_create_title", true),
 		x = center_x,
 		y = center_y - 82,
 	})

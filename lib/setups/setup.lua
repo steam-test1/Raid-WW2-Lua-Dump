@@ -323,17 +323,17 @@ end
 
 function Setup:init_managers(managers)
 	Global.game_settings = Global.game_settings or {
+		difficulty = Global.DEFAULT_DIFFICULTY,
 		drop_in_allowed = true,
 		is_playing = false,
 		job_plan = -1,
 		kick_option = 1,
+		level_id = OperationsTweakData.ENTRY_POINT_LEVEL,
 		permission = "public",
 		reputation_permission = 0,
 		search_appropriate_jobs = true,
 		selected_team_ai = true,
 		team_ai = true,
-		difficulty = Global.DEFAULT_DIFFICULTY,
-		level_id = OperationsTweakData.ENTRY_POINT_LEVEL,
 	}
 
 	managers.dlc:setup()
@@ -511,10 +511,10 @@ function Setup:_start_loading_screen()
 				y = safe_rect.y,
 			},
 			workspace_size = {
-				x = 0,
-				y = 0,
 				h = res.y,
 				w = res.x,
+				x = 0,
+				y = 0,
 			},
 		}
 	else
@@ -535,11 +535,11 @@ function Setup:_setup_loading_environment()
 	local env_map = {
 		deferred = {
 			apply_ambient = {
+				ambient_color = Vector3(1, 1, 1),
 				ambient_color_scale = 0.31999999284744,
 				ambient_falloff_scale = 0,
 				ambient_scale = 1,
 				effect_light_scale = 1,
-				ambient_color = Vector3(1, 1, 1),
 				sky_bottom_color = Vector3(0, 0, 0),
 				sky_top_color = Vector3(0, 0, 0),
 			},

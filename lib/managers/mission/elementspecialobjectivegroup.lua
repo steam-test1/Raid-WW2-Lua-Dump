@@ -194,10 +194,10 @@ function ElementSpecialObjectiveGroup:get_grp_objective()
 	end
 
 	local grp_objective = {
-		no_retry = true,
 		area = self._area,
 		element = self,
 		fail_clbk = callback(self, self, "clbk_objective_failed"),
+		no_retry = true,
 		type = self._values.mode,
 	}
 

@@ -101,13 +101,13 @@ function RaidGuiBase:_create_border()
 	local border_thickness = 1.6
 
 	self._border_left = self._root_panel:gradient({
+		h = self._root_panel:h(),
 		layer = 100,
 		name = "border_left",
 		orientation = "vertical",
+		w = border_thickness,
 		x = 0,
 		y = 0,
-		h = self._root_panel:h(),
-		w = border_thickness,
 	})
 
 	self._border_left:set_gradient_points({
@@ -118,13 +118,13 @@ function RaidGuiBase:_create_border()
 	})
 
 	self._border_right = self._root_panel:gradient({
+		h = self._root_panel:h(),
 		layer = 100,
 		name = "border_right",
 		orientation = "vertical",
-		y = 0,
-		h = self._root_panel:h(),
 		w = border_thickness,
 		x = self._root_panel:w() - border_thickness,
+		y = 0,
 	})
 
 	self._border_right:set_gradient_points({
@@ -135,13 +135,13 @@ function RaidGuiBase:_create_border()
 	})
 
 	self._border_up = self._root_panel:gradient({
+		h = border_thickness,
 		layer = 100,
 		name = "border_up",
 		orientation = "horizontal",
+		w = self._root_panel:w(),
 		x = 0,
 		y = 0,
-		h = border_thickness,
-		w = self._root_panel:w(),
 	})
 
 	self._border_up:set_gradient_points({
@@ -158,12 +158,12 @@ function RaidGuiBase:_create_border()
 	})
 
 	self._border_down = self._root_panel:gradient({
+		h = border_thickness,
 		layer = 100,
 		name = "border_down",
 		orientation = "horizontal",
-		x = 0,
-		h = border_thickness,
 		w = self._root_panel:w(),
+		x = 0,
 		y = self._root_panel:h() - border_thickness,
 	})
 

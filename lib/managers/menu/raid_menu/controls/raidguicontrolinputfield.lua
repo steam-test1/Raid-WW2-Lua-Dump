@@ -17,8 +17,8 @@ function RaidGUIControlInputField:init(parent, params)
 	self._ws = params.ws
 
 	local panel_params = {
-		is_root_panel = true,
 		h = params.h,
+		is_root_panel = true,
 		name = "input_field_panel_" .. self._name,
 		w = params.w,
 		x = params.x,
@@ -29,27 +29,27 @@ function RaidGUIControlInputField:init(parent, params)
 	self._object = self._panel
 
 	local background_params = {
-		name = "background_bar",
-		x = 0,
-		y = 0,
 		center = RaidGUIControlInputField.ICON_CENTER,
 		color = Color.white:with_alpha(RaidGUIControlInputField.INACTIVE_ALPHA),
 		h = self._params.h,
 		left = RaidGUIControlInputField.ICON_LEFT,
+		name = "background_bar",
 		right = RaidGUIControlInputField.ICON_RIGHT,
 		w = self._params.w,
+		x = 0,
+		y = 0,
 	}
 
 	self._background = self._object:three_cut_bitmap(background_params)
 	self._output_width = 256
 	self._panel_width = 256
 	self._character_name_frame = self._object:rect({
-		x = 0,
-		y = 0,
 		color = Color.red:with_alpha(0),
 		h = params.h,
 		name = "test_rect_input_field_" .. self._name,
 		w = params.w,
+		x = 0,
+		y = 0,
 	})
 	self._lines = {}
 	self._esc_callback = callback(self, self, "esc_key_callback")
@@ -60,12 +60,12 @@ function RaidGUIControlInputField:init(parent, params)
 	self._skip_first = false
 	self._input_panel = self._panel:panel({
 		alpha = 0,
+		h = self._params.h,
 		layer = 10,
 		name = "input_panel",
+		w = self._params.w,
 		x = 0,
 		y = 0,
-		h = self._params.h,
-		w = self._params.w,
 	})
 
 	local text_value = ""
@@ -76,31 +76,31 @@ function RaidGUIControlInputField:init(parent, params)
 
 	self._input_text = self._input_panel:text({
 		align = "left",
+		color = tweak_data.gui.colors.raid_white,
+		font = params.font or tweak_data.gui.fonts.din_compressed,
+		font_size = params.font_size or tweak_data.gui.font_sizes.small,
 		halign = "left",
 		hvertical = "center",
+		layer = self._character_name_frame:layer() + 10,
 		name = "input_text",
+		selection_color = Color.white,
+		text = text_value,
 		vertical = "center",
+		w = self._params.w - 60,
 		word_wrap = false,
 		wrap = true,
 		x = 30,
 		y = 0,
-		color = tweak_data.gui.colors.raid_white,
-		font = params.font or tweak_data.gui.fonts.din_compressed,
-		font_size = params.font_size or tweak_data.gui.font_sizes.small,
-		layer = self._character_name_frame:layer() + 10,
-		selection_color = Color.white,
-		text = text_value,
-		w = self._params.w - 60,
 	})
 
 	local caret = self._input_panel:rect({
+		color = Color(0.05, 1, 0.5, 1),
+		h = self._input_text:h(),
+		layer = self._character_name_frame:layer() + 10,
 		name = "caret",
 		vertical = "center",
 		w = 0,
 		x = 0,
-		color = Color(0.05, 1, 0.5, 1),
-		h = self._input_text:h(),
-		layer = self._character_name_frame:layer() + 10,
 		y = RaidGUIControlInputField.CARET_Y,
 	})
 

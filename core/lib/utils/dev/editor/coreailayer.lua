@@ -56,22 +56,22 @@ function AiLayer:save(save_params)
 	SystemFS:close(file)
 
 	local t = {
-		entry = "ai_nav_graphs",
-		single_data_block = true,
 		data = {
 			file = file_name,
 		},
+		entry = "ai_nav_graphs",
+		single_data_block = true,
 	}
 
 	managers.editor:add_save_data(t)
 
 	local t = {
-		entry = "ai_settings",
-		single_data_block = true,
 		data = {
 			ai_data = managers.ai_data:save_data(),
 			ai_settings = self._ai_settings,
 		},
+		entry = "ai_settings",
+		single_data_block = true,
 	}
 
 	managers.editor:add_save_data(t)
@@ -85,11 +85,11 @@ function AiLayer:save(save_params)
 		SystemFS:close(mop_file)
 
 		local t = {
-			entry = "ai_mop_graphs",
-			single_data_block = true,
 			data = {
 				file = mop_filename,
 			},
+			entry = "ai_mop_graphs",
+			single_data_block = true,
 		}
 
 		managers.editor:add_save_data(t)
@@ -142,9 +142,9 @@ function AiLayer:_draw(t, dt)
 						if to_unit:unit_data().unit_id == id then
 							Application:draw_link({
 								b = 0,
+								from_unit = unit,
 								g = 0,
 								r = 1,
-								from_unit = unit,
 								to_unit = to_unit,
 							})
 						end
@@ -156,9 +156,9 @@ function AiLayer:_draw(t, dt)
 						if to_unit:unit_data().unit_id == id then
 							Application:draw_link({
 								b = 0,
+								from_unit = unit,
 								g = 1,
 								r = 0,
-								from_unit = unit,
 								to_unit = to_unit,
 							})
 						end
@@ -210,12 +210,12 @@ function AiLayer:_draw_patrol_path(name, path, t, dt)
 			self._patrol_path_brush:set_color(Color.white:with_alpha(selected_path and 1 or 0.25))
 			Application:draw_link({
 				b = 1,
+				circle_multiplier = selected_path and 0.5 or 0.25,
+				from_unit = point.unit,
 				g = 1,
 				height_offset = 0,
 				r = 1,
 				thick = true,
-				circle_multiplier = selected_path and 0.5 or 0.25,
-				from_unit = point.unit,
 				to_unit = to_unit,
 			})
 			self:_draw_patrol_point(point.unit, i == 1, i == #path.points, selected_path, t, dt)
@@ -247,8 +247,8 @@ end
 
 function AiLayer:build_panel(notebook)
 	AiLayer.super.build_panel(self, notebook, {
-		units_noteboook_proportion = 0,
 		units_notebook_min_size = Vector3(-1, 140, 0),
+		units_noteboook_proportion = 0,
 	})
 
 	local ai_sizer = EWS:BoxSizer("VERTICAL")
@@ -329,11 +329,11 @@ function AiLayer:build_panel(notebook)
 		min = 1,
 		name = "Ray length [cm]:",
 		name_proportions = 1,
+		panel = self._ews_panel,
+		sizer = build_settings,
 		sizer_proportions = 1,
 		tooltip = "Specifies the visible graph ray lenght in centimeter",
 		value = 150,
-		panel = self._ews_panel,
-		sizer = build_settings,
 	}
 
 	CoreEws.number_controller(self._ray_length_params)
@@ -379,12 +379,12 @@ function AiLayer:_build_ai_settings()
 		ctrlr_proportions = 3,
 		name = "Group state:",
 		name_proportions = 1,
-		sizer_proportions = 1,
-		sorted = true,
-		tooltip = "Select a group state from the combo box",
 		options = managers.groupai:state_names(),
 		panel = self._ews_panel,
 		sizer = graphs_sizer,
+		sizer_proportions = 1,
+		sorted = true,
+		tooltip = "Select a group state from the combo box",
 		value = self._ai_settings.group_state,
 	}
 	local state = CoreEws.combobox(group_state)
@@ -405,11 +405,11 @@ function AiLayer:_build_ai_unit_settings()
 		min = 1,
 		name = "Suspicion Multiplier:",
 		name_proportions = 1,
+		panel = self._ews_panel,
+		sizer = sizer,
 		sizer_proportions = 1,
 		tooltip = "multiplier applied to suspicion buildup rate",
 		value = 1,
-		panel = self._ews_panel,
-		sizer = sizer,
 	}
 	local suspicion_multiplier_ctrlr = CoreEws.number_controller(suspicion_multiplier)
 
@@ -422,11 +422,11 @@ function AiLayer:_build_ai_unit_settings()
 		min = 0.01,
 		name = "Detection Multiplier:",
 		name_proportions = 1,
+		panel = self._ews_panel,
+		sizer = sizer,
 		sizer_proportions = 1,
 		tooltip = "multiplier applied to AI detection speed. min is 0.01",
 		value = 1,
-		panel = self._ews_panel,
-		sizer = sizer,
 	}
 	local detection_multiplier_ctrlr = CoreEws.number_controller(detection_multiplier)
 
@@ -511,11 +511,11 @@ function AiLayer:_build_motion_path_section()
 		ctrlr_proportions = 3,
 		name = "Selected path type:",
 		name_proportions = 1,
-		sorted = false,
-		tooltip = "Path is used for either ground or airborne units.",
 		options = mop_path_types,
 		panel = self._ews_panel,
 		sizer = motion_paths_sizer,
+		sorted = false,
+		tooltip = "Path is used for either ground or airborne units.",
 		value = self._motion_path_settings.path_type,
 	}
 	local path_type_ctrlr = CoreEws.combobox(mop_type)
@@ -528,10 +528,10 @@ function AiLayer:_build_motion_path_section()
 		min = -1,
 		name = "Default Speed Limit [km/h]:",
 		name_proportions = 1,
-		tooltip = "Default speed limit for units moved along this path. -1 for no limit.",
-		value = 50,
 		panel = self._ews_panel,
 		sizer = motion_paths_sizer,
+		tooltip = "Default speed limit for units moved along this path. -1 for no limit.",
+		value = 50,
 	}
 	local speed_limit_ctrlr = CoreEws.number_controller(speed_limit)
 
@@ -766,9 +766,9 @@ function AiLayer:_get_build_settings(type, build_type)
 
 	for _, unit in ipairs(units) do
 		local ray = managers.editor:unit_by_raycast({
-			sample = true,
 			from = unit:position() + Vector3(0, 0, 50),
 			mask = managers.slot:get_mask("all"),
+			sample = true,
 			to = unit:position() - Vector3(0, 0, 150),
 		})
 

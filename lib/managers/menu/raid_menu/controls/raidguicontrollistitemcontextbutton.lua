@@ -21,9 +21,9 @@ function RaidGUIControlListItemContextButton:_layout(params)
 	local background_data = tweak_data.gui:get_full_gui_data(self.BACKGROUND_ICON)
 
 	self._background = self._object:bitmap({
-		name = "context_background",
 		color = self.ICON_COLOR,
 		h = self._object:h(),
+		name = "context_background",
 		texture = background_data.texture,
 		texture_rect = background_data.texture_rect,
 		w = self._object:w(),
@@ -33,9 +33,9 @@ function RaidGUIControlListItemContextButton:_layout(params)
 
 	self._foreground = self._object:bitmap({
 		alpha = 0,
-		name = "context_foreground",
 		color = self.BACKGROUND_SELECTED_COLOR,
 		h = self._object:h(),
+		name = "context_foreground",
 		texture = foreground_data.texture,
 		texture_rect = foreground_data.texture_rect,
 		w = self._object:w(),
@@ -43,10 +43,10 @@ function RaidGUIControlListItemContextButton:_layout(params)
 
 	if params.texture then
 		self._icon = self._object:bitmap({
-			name = "context_icon",
 			color = self.ICON_COLOR,
 			h = self._unselected_icon_size,
 			layer = self._background:layer() + 1,
+			name = "context_icon",
 			texture = params.texture,
 			texture_rect = params.texture_rect,
 			w = self._unselected_icon_size,

@@ -32,9 +32,9 @@ function CharacterTeamElement:update_selected(t, dt, selected_unit, all_units)
 		if draw then
 			self:_draw_link({
 				b = 0,
+				from_unit = self._unit,
 				g = 0.75,
 				r = 0,
-				from_unit = self._unit,
 				to_unit = unit,
 			})
 		end
@@ -87,8 +87,8 @@ function CharacterTeamElement:_build_panel(panel, panel_sizer)
 
 	use_instigator:set_value(self._hed.use_instigator)
 	use_instigator:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		value = "use_instigator",
 		ctrlr = use_instigator,
+		value = "use_instigator",
 	})
 	panel_sizer:add(use_instigator, 0, 0, "EXPAND")
 
@@ -97,8 +97,8 @@ function CharacterTeamElement:_build_panel(panel, panel_sizer)
 	ignore_disabled:set_tool_tip("Select if disabled spawn points should be ignored or not")
 	ignore_disabled:set_value(self._hed.ignore_disabled)
 	ignore_disabled:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		value = "ignore_disabled",
 		ctrlr = ignore_disabled,
+		value = "ignore_disabled",
 	})
 	panel_sizer:add(ignore_disabled, 0, 0, "EXPAND")
 
@@ -107,21 +107,21 @@ function CharacterTeamElement:_build_panel(panel, panel_sizer)
 		default = "",
 		name = "Team:",
 		name_proportions = 1,
-		sorted = true,
-		tooltip = "Select wanted team for the character.",
 		options = tweak_data.levels:get_team_names_indexed(),
 		panel = panel,
 		sizer = panel_sizer,
+		sorted = true,
+		tooltip = "Select wanted team for the character.",
 		value = self._hed.team,
 	}
 	local team_combo_box = CoreEWS.combobox(team_params)
 
 	team_combo_box:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "set_element_data"), {
-		value = "team",
 		ctrlr = team_combo_box,
+		value = "team",
 	})
 	team_combo_box:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
-		value = "team",
 		ctrlr = team_combo_box,
+		value = "team",
 	})
 end

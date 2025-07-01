@@ -22,43 +22,43 @@ function RaidGUIControlListItemCharacterCreateClass:_layout()
 	local class_icon_data = tweak_data.gui.icons["ico_class_" .. self._class_name] or tweak_data.gui.icons.ico_flag_empty
 
 	self._background = self._object:rect({
-		visible = false,
-		x = 0,
-		y = 0,
 		color = tweak_data.gui.colors.raid_list_background,
 		h = self._params.h,
+		visible = false,
 		w = self._params.w,
+		x = 0,
+		y = 0,
 	})
 	self._red_selected_line = self._object:rect({
+		color = tweak_data.gui.colors.raid_red,
+		h = self._params.h,
 		visible = false,
 		w = 2,
 		x = 0,
 		y = 0,
-		color = tweak_data.gui.colors.raid_red,
-		h = self._params.h,
 	})
 	self._class_name_label = self._object:label({
 		align = "left",
+		color = tweak_data.gui.colors.raid_dirty_white,
+		font = tweak_data.gui.fonts.din_compressed,
+		font_size = tweak_data.gui.font_sizes.size_32,
 		h = 28,
+		text = self:translate(tweak_data.skilltree.classes[self._class_name].name_id, true),
 		vertical = "center",
 		w = 174,
 		x = 96,
 		y = 34,
-		color = tweak_data.gui.colors.raid_dirty_white,
-		font = tweak_data.gui.fonts.din_compressed,
-		font_size = tweak_data.gui.font_sizes.size_32,
-		text = self:translate(tweak_data.skilltree.classes[self._class_name].name_id, true),
 	})
 
 	self._class_name_label:set_w(self._object:w() - self._class_name_label:x())
 
 	self._class_icon = self._object:image({
-		x = 32,
-		y = 20,
 		h = class_icon_data.texture_rect[4],
 		texture = class_icon_data.texture,
 		texture_rect = class_icon_data.texture_rect,
 		w = class_icon_data.texture_rect[3],
+		x = 32,
+		y = 20,
 	})
 
 	self._class_icon:set_color(tweak_data.gui.colors.raid_dirty_white)

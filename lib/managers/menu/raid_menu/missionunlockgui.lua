@@ -62,8 +62,8 @@ end
 
 function MissionUnlockGui:_layout_offered_missions()
 	local offered_missions_panel_params = {
-		name = "offered_missions_panel",
 		h = MissionUnlockGui.CONTENT_HEIGHT,
+		name = "offered_missions_panel",
 		w = MissionUnlockGui.CONTENT_WIDTH,
 		y = MissionUnlockGui.CONTENT_Y,
 	}
@@ -163,11 +163,11 @@ function MissionUnlockGui:_play_control_briefing_video(mission_id)
 	self._video_panel = RaidGUIPanel:new(self._full_panel, video_panel_params)
 
 	local video_panel_background_params = {
+		color = Color.black,
 		halign = "scale",
 		layer = 1,
 		name = "video_background",
 		valign = "scale",
-		color = Color.black,
 	}
 	local video_panel_background = self._video_panel:rect(video_panel_background_params)
 	local video_params = {
@@ -188,11 +188,11 @@ function MissionUnlockGui:_play_control_briefing_video(mission_id)
 	local press_any_key_text = managers.controller:is_using_controller() and "press_any_key_to_skip_controller" or "press_any_key_to_skip"
 	local press_any_key_params = {
 		alpha = 0,
-		name = "press_any_key_prompt",
 		color = tweak_data.gui.colors.raid_dirty_white,
 		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.size_32),
 		font_size = tweak_data.gui.font_sizes.size_32,
 		layer = self._control_briefing_video:layer() + 100,
+		name = "press_any_key_prompt",
 		text = utf8.to_upper(managers.localization:text(press_any_key_text)),
 	}
 	local press_any_key_prompt = self._safe_panel:text(press_any_key_params)
@@ -421,8 +421,8 @@ function MissionUnlockGui:_bind_controller_inputs()
 		},
 		keyboard = {
 			{
-				key = "footer_back",
 				callback = callback(self, self, "_on_legend_pc_back", nil),
+				key = "footer_back",
 			},
 		},
 	}

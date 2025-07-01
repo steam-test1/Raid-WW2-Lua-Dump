@@ -192,17 +192,17 @@ end
 function MotionPathManager:operation_goto_marker(checkpoint_marker_id, goto_marker_id)
 	Application:debug("MotionPathManager:operation_goto_marker(checkpoint_marker_id, goto_marker_id)", checkpoint_marker_id, goto_marker_id)
 	table.insert(self._operations, {
-		operation = "goto_marker",
 		checkpoint_marker = checkpoint_marker_id,
 		goto_marker = goto_marker_id,
+		operation = "goto_marker",
 	})
 end
 
 function MotionPathManager:operation_teleport_to_marker(checkpoint_marker_id, teleport_to_marker_id)
 	Application:debug("MotionPathManager:operation_teleport_to_marker(checkpoint_marker_id, goto_marker_id)", checkpoint_marker_id, teleport_to_marker_id)
 	table.insert(self._operations, {
-		operation = "teleport",
 		checkpoint_marker = checkpoint_marker_id,
+		operation = "teleport",
 		teleport_to_marker = teleport_to_marker_id,
 	})
 end
@@ -210,8 +210,8 @@ end
 function MotionPathManager:operation_set_unit_target_rotation(checkpoint_marker_id, operator_id)
 	Application:debug("MotionPathManager:operation_set_unit_target_rotation(checkpoint_marker_id, goto_marker_id)", checkpoint_marker_id, operator_id)
 	table.insert(self._operations, {
-		operation = "rotate",
 		checkpoint_marker = checkpoint_marker_id,
+		operation = "rotate",
 		operator_id = operator_id,
 	})
 end
@@ -1075,6 +1075,7 @@ function MotionPathManager:find_nearest_ground_path(ground_unit_id)
 	local ground_unit_position = ground_unit:position()
 	local min_distance_marker = {
 		distance = 2000000,
+		path = nil,
 	}
 
 	for _, path in ipairs(self._paths) do

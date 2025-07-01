@@ -20,17 +20,17 @@ function RaidGUIControlVideo:init(parent, params)
 
 	self._subtitle = safe_panel:text({
 		align = "center",
+		color = tweak_data.gui.colors.light_grey,
+		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed_outlined_24, font_size),
+		font_size = font_size,
 		h = 64,
+		layer = safe_panel:layer() + 1,
 		text = "",
 		vertical = "center",
 		w = 736,
 		wrap = true,
 		x = 510,
 		y = 778,
-		color = tweak_data.gui.colors.light_grey,
-		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed_outlined_24, font_size),
-		font_size = font_size,
-		layer = safe_panel:layer() + 1,
 	})
 end
 

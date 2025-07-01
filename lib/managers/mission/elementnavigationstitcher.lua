@@ -213,10 +213,10 @@ function ElementNavigationStitcher:_collect_external_top_door(x, y, z, i_quad)
 	local external_quad_pos = Vector3(x, y + self._grid_size, z + 0.9)
 
 	table.insert(self._external_doors, {
-		side = "top",
 		door_high_pos = door_high_pos,
 		door_low_pos = door_low_pos,
 		external_quad_pos = external_quad_pos,
+		side = "top",
 		stitch_quad_pos = stitch_quad_pos,
 	})
 end
@@ -228,10 +228,10 @@ function ElementNavigationStitcher:_collect_external_left_door(x, y, z, i_quad)
 	local external_quad_pos = Vector3(x - self._grid_size, y, z + 0.9)
 
 	table.insert(self._external_doors, {
-		side = "left",
 		door_high_pos = door_high_pos,
 		door_low_pos = door_low_pos,
 		external_quad_pos = external_quad_pos,
+		side = "left",
 		stitch_quad_pos = stitch_quad_pos,
 	})
 end
@@ -243,10 +243,10 @@ function ElementNavigationStitcher:_collect_external_bottom_door(x, y, z, i_quad
 	local external_quad_pos = Vector3(x, y - self._grid_size, z + 0.9)
 
 	table.insert(self._external_doors, {
-		side = "bottom",
 		door_high_pos = door_high_pos,
 		door_low_pos = door_low_pos,
 		external_quad_pos = external_quad_pos,
+		side = "bottom",
 		stitch_quad_pos = stitch_quad_pos,
 	})
 end
@@ -258,10 +258,10 @@ function ElementNavigationStitcher:_collect_external_right_door(x, y, z, i_quad)
 	local external_quad_pos = Vector3(x + self._grid_size, y, z + 0.9)
 
 	table.insert(self._external_doors, {
-		side = "right",
 		door_high_pos = door_high_pos,
 		door_low_pos = door_low_pos,
 		external_quad_pos = external_quad_pos,
+		side = "right",
 		stitch_quad_pos = stitch_quad_pos,
 	})
 end

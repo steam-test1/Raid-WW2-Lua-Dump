@@ -34,11 +34,11 @@ end
 
 function RaidGUIControlKickMuteWidget:_create_panel(parent, params)
 	local parent_params = {
+		h = RaidGUIControlKickMuteWidget.HEIGHT,
 		halign = "scale",
 		name = "kick_mute_widget_panel",
 		valign = "top",
 		visible = false,
-		h = RaidGUIControlKickMuteWidget.HEIGHT,
 		y = params.y,
 	}
 
@@ -48,10 +48,10 @@ end
 function RaidGUIControlKickMuteWidget:_create_highlight_line()
 	local highlight_params = {
 		alpha = 0,
-		halign = "left",
-		name = "highlight_line",
 		color = tweak_data.gui.colors.raid_red,
 		h = RaidGUIControlKickMuteWidget.HIGHLIGHT_LINE_H,
+		halign = "left",
+		name = "highlight_line",
 		w = RaidGUIControlKickMuteWidget.HIGHLIGHT_LINE_W,
 		x = RaidGUIControlKickMuteWidget.HIGHLIGHT_LINE_X,
 	}
@@ -64,14 +64,14 @@ end
 function RaidGUIControlKickMuteWidget:_create_name_text()
 	local name_params = {
 		align = "left",
-		halign = "left",
-		name = "name",
-		text = "WWWWWWWWWWWWWWWW",
-		vertical = "center",
 		color = RaidGUIControlKickMuteWidget.NAME_FONT_COLOR_INACTIVE,
 		font = RaidGUIControlKickMuteWidget.NAME_FONT,
 		font_size = RaidGUIControlKickMuteWidget.NAME_FONT_SIZE,
 		h = RaidGUIControlKickMuteWidget.NAME_H,
+		halign = "left",
+		name = "name",
+		text = "WWWWWWWWWWWWWWWW",
+		vertical = "center",
 		w = self._object:w() - RaidGUIControlKickMuteWidget.NAME_X,
 		x = RaidGUIControlKickMuteWidget.NAME_X,
 	}
@@ -141,8 +141,8 @@ function RaidGUIControlKickMuteWidget:_create_gamercard_button()
 		name = "gamercard_button_" .. tostring(self._index),
 		on_click_callback = callback(self, self, "show_gamercard"),
 		on_menu_move = {
-			left = "list_menu",
 			down = "gamercard_button_" .. move_down_index,
+			left = "list_menu",
 			right = "mute_button_" .. tostring(self._index),
 			up = "gamercard_button_" .. move_up_index,
 		},
@@ -163,16 +163,16 @@ function RaidGUIControlKickMuteWidget:_create_invite_button()
 	local invite_button_params = {
 		active_icon = "players_icon_xbox_invite",
 		inactive_icon = "players_icon_xbox_invite",
-		visible = false,
 		name = "invite_button_" .. tostring(self._index),
 		on_click_callback = callback(self, self, "on_invite_pressed"),
 		on_menu_move = {
-			left = "list_menu",
 			down = "kick_button_" .. move_down_index,
+			left = "list_menu",
 			up = "kick_button_" .. move_up_index,
 		},
 		on_selected_callback = callback(self, self, "on_button_selected", "invite"),
 		on_unselected_callback = callback(self, self, "on_button_unselected", "invite"),
+		visible = false,
 	}
 
 	self._invite_button = self._object:create_custom_control(RaidGUIControlButtonToggleSmall, invite_button_params)
@@ -371,8 +371,8 @@ function RaidGUIControlKickMuteWidget:set_move_controls(number_of_widgets_shown,
 
 	if IS_XB1 then
 		on_menu_move = {
-			left = "list_menu",
 			down = is_invite_down and "invite_button_" .. tostring(move_down_index) or "gamercard_button_" .. tostring(move_down_index),
+			left = "list_menu",
 			right = "mute_button_" .. tostring(self._index),
 			up = is_invite_up and "invite_button_" .. tostring(move_up_index) or "gamercard_button_" .. tostring(move_up_index),
 		}
@@ -398,8 +398,8 @@ function RaidGUIControlKickMuteWidget:set_move_controls(number_of_widgets_shown,
 	self._kick_button:set_menu_move_controls(on_menu_move)
 
 	on_menu_move = {
-		left = "list_menu",
 		down = Network:is_server() and "kick_button_" .. tostring(move_down_index) or "mute_button_" .. tostring(move_down_index),
+		left = "list_menu",
 		up = Network:is_server() and "kick_button_" .. tostring(move_up_index) or "mute_button_" .. tostring(move_up_index),
 	}
 

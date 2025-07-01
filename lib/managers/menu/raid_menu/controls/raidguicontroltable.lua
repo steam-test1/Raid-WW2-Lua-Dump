@@ -158,13 +158,13 @@ end
 
 function RaidGUIControlTable:_create_header()
 	local header_params = {
-		x = 0,
-		y = 0,
 		background_color = self._table_params.header_params.background_color,
 		h = self._table_params.header_params.header_height,
 		layer = self._table_panel:layer() + 1,
 		panel = self._table_panel,
 		text_color = self._table_params.header_params.text_color,
+		x = 0,
+		y = 0,
 	}
 
 	if self._table_params.header_params.background_color then
@@ -232,10 +232,10 @@ end
 
 function RaidGUIControlTable:_create_row_separator(y)
 	local divider_line = self._table_panel:rect({
-		h = 1,
-		x = 0,
 		color = tweak_data.gui.colors.raid_white:with_alpha(0.25),
+		h = 1,
 		w = self._table_panel:w(),
+		x = 0,
 		y = y + 0.6,
 	})
 end

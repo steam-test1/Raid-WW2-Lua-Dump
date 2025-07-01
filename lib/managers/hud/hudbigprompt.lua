@@ -26,19 +26,19 @@ end
 function HUDBigPrompt:_create_panel(hud)
 	self._object = hud.panel:panel({
 		alpha = 0,
+		h = HUDBigPrompt.H,
 		halign = "center",
 		name = "big_prompt_panel",
 		valign = "center",
-		h = HUDBigPrompt.H,
 		w = HUDBigPrompt.W,
 	})
 end
 
 function HUDBigPrompt:_create_background()
 	self._background = self._object:bitmap({
+		h = HUDBigPrompt.BACKGROUND_H,
 		layer = 1,
 		name = "big_prompt_background",
-		h = HUDBigPrompt.BACKGROUND_H,
 		texture = tweak_data.gui.icons[HUDBigPrompt.DEFAULT_BACKGROUND].texture,
 		texture_rect = tweak_data.gui.icons[HUDBigPrompt.DEFAULT_BACKGROUND].texture_rect,
 		w = HUDBigPrompt.W,
@@ -51,15 +51,15 @@ end
 function HUDBigPrompt:_create_title()
 	self._title = self._object:text({
 		align = "center",
+		font = tweak_data.gui:get_font_path(HUDBigPrompt.TEXT_FONT, HUDBigPrompt.TEXT_FONT_SIZE),
+		font_size = HUDBigPrompt.TEXT_FONT_SIZE,
+		h = HUDBigPrompt.BACKGROUND_H,
 		halign = "scale",
+		layer = self._background:layer() + 1,
 		name = "big_prompt_text",
 		text = "TITLE",
 		valign = "scale",
 		vertical = "center",
-		font = tweak_data.gui:get_font_path(HUDBigPrompt.TEXT_FONT, HUDBigPrompt.TEXT_FONT_SIZE),
-		font_size = HUDBigPrompt.TEXT_FONT_SIZE,
-		h = HUDBigPrompt.BACKGROUND_H,
-		layer = self._background:layer() + 1,
 	})
 
 	self._title:set_y(70)
@@ -68,27 +68,27 @@ end
 function HUDBigPrompt:_create_description()
 	self._description = self._object:text({
 		align = "center",
-		halign = "scale",
-		name = "big_prompt_description",
-		text = "DESCRIPTION",
-		valign = "scale",
-		vertical = "bottom",
 		color = HUDBigPrompt.DEFAULT_TEXT_COLOR,
 		font = HUDBigPrompt.DESCRIPTION_FONT,
 		font_size = HUDBigPrompt.DESCRIPTION_FONT_SIZE,
 		h = self._object:h(),
+		halign = "scale",
 		layer = self._background:layer() + 1,
+		name = "big_prompt_description",
+		text = "DESCRIPTION",
+		valign = "scale",
+		vertical = "bottom",
 		w = self._object:w(),
 	})
 end
 
 function HUDBigPrompt:_create_icon()
 	self._icon = self._object:bitmap({
+		h = HUDBigPrompt.ICON_SIZE,
 		halign = "scale",
+		layer = self._background:layer(),
 		name = "big_prompt_icon",
 		valign = "scale",
-		h = HUDBigPrompt.ICON_SIZE,
-		layer = self._background:layer(),
 		w = HUDBigPrompt.ICON_SIZE,
 	})
 
@@ -99,9 +99,9 @@ end
 function HUDBigPrompt:_create_flares(color)
 	color = color or HUDBigPrompt.DEFAULT_TEXT_COLOR:with_alpha(0.65)
 	self._flare_panel = self._object:panel({
-		name = "big_prompt_flare_panel",
 		h = HUDBigPrompt.FLARES_SIZE,
 		layer = self._icon:layer() - 1,
+		name = "big_prompt_flare_panel",
 		w = HUDBigPrompt.FLARES_SIZE,
 	})
 
@@ -110,40 +110,40 @@ function HUDBigPrompt:_create_flares(color)
 	self._lens_glint = self._flare_panel:bitmap({
 		alpha = 0.65,
 		blend_mode = "add",
-		name = "big_prompt_glint",
-		rotation = 360,
 		color = color,
 		h = self._flare_panel:h(),
+		name = "big_prompt_glint",
+		rotation = 360,
 		texture = tweak_data.gui.icons.lens_glint.texture,
 		texture_rect = tweak_data.gui.icons.lens_glint.texture_rect,
 		w = self._flare_panel:w(),
 	})
 	self._lens_orbs = self._flare_panel:bitmap({
 		blend_mode = "add",
-		name = "loot_screen_orbs",
-		rotation = 360,
 		color = color,
 		h = self._flare_panel:h(),
+		name = "loot_screen_orbs",
+		rotation = 360,
 		texture = tweak_data.gui.icons.lens_orbs.texture,
 		texture_rect = tweak_data.gui.icons.lens_orbs.texture_rect,
 		w = self._flare_panel:w(),
 	})
 	self._lens_shimmer = self._flare_panel:bitmap({
 		blend_mode = "add",
-		name = "big_prompt_iris",
-		rotation = 360,
 		color = color,
 		h = self._flare_panel:h(),
+		name = "big_prompt_iris",
+		rotation = 360,
 		texture = tweak_data.gui.icons.lens_shimmer.texture,
 		texture_rect = tweak_data.gui.icons.lens_shimmer.texture_rect,
 		w = self._flare_panel:w(),
 	})
 	self._lens_spike_ball = self._flare_panel:bitmap({
 		blend_mode = "add",
-		name = "big_prompt_spike_ball",
-		rotation = 360,
 		color = color,
 		h = self._flare_panel:h(),
+		name = "big_prompt_spike_ball",
+		rotation = 360,
 		texture = tweak_data.gui.icons.lens_spike_ball.texture,
 		texture_rect = tweak_data.gui.icons.lens_spike_ball.texture_rect,
 		w = self._flare_panel:w(),

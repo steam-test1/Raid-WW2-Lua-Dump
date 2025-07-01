@@ -237,8 +237,8 @@ function TradeManager:play_custody_voice(criminal_name)
 
 		if alive(criminal_left) then
 			managers.dialog:queue_dialog("player_gen_only_survivor", {
-				skip_idle_check = true,
 				instigator = criminal_left,
+				skip_idle_check = true,
 			})
 		end
 	end
@@ -653,8 +653,8 @@ function TradeManager:sync_teammate_helped_hint(helped_unit, helping_unit, hint)
 
 		managers.notification:add_notification({
 			duration = 3,
-			shelf_life = 5,
 			id = hint_id,
+			shelf_life = 5,
 			text = notification_text,
 		})
 	end

@@ -93,8 +93,8 @@ function MenuNodeReticleSwitchGui:_setup_item_panel(safe_rect, res)
 	self.boxgui:set_layer(1000)
 	self.box_panel:rect({
 		alpha = 0.6,
-		rotation = 360,
 		color = Color.black,
+		rotation = 360,
 	})
 	self._align_data.panel:set_left(self.box_panel:left())
 	self._list_arrows.up:set_world_left(self._align_data.panel:world_left())

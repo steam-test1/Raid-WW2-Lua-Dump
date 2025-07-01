@@ -972,6 +972,10 @@ function MenuCallbackHandler:toggle_skip_cinematics_raid(value)
 	managers.user:set_setting("skip_cinematics", value)
 end
 
+function MenuCallbackHandler:toggle_warcry_ready_indicator_raid(value)
+	managers.user:set_setting("warcry_ready_indicator", value)
+end
+
 function MenuCallbackHandler:toggle_headbob_raid(value)
 	managers.user:set_setting("use_headbob", value)
 end

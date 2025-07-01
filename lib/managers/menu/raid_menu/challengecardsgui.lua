@@ -37,6 +37,9 @@ function ChallengeCardsGui:_layout()
 		y = 0,
 	})
 	self._cards_suggest_title = self._root_panel:label({
+		color = tweak_data.gui.colors.raid_red,
+		font = tweak_data.gui.fonts.din_compressed,
+		font_size = tweak_data.gui.font_sizes.title,
 		h = 60,
 		name = "cards_suggest_title",
 		text = "",
@@ -45,33 +48,31 @@ function ChallengeCardsGui:_layout()
 		w = 800,
 		x = 0,
 		y = 0,
-		color = tweak_data.gui.colors.raid_red,
-		font = tweak_data.gui.fonts.din_compressed,
-		font_size = tweak_data.gui.font_sizes.title,
 	})
 
 	local tabs_params = {
 		{
-			name = "tab_common",
 			callback_param = LootDropTweakData.RARITY_COMMON,
+			name = "tab_common",
 			text = self:translate("loot_rarity_common", true),
 		},
 		{
-			name = "tab_uncommon",
 			callback_param = LootDropTweakData.RARITY_UNCOMMON,
+			name = "tab_uncommon",
 			text = self:translate("loot_rarity_uncommon", true),
 		},
 		{
-			name = "tab_rare",
 			callback_param = LootDropTweakData.RARITY_RARE,
+			name = "tab_rare",
 			text = self:translate("loot_rarity_rare", true),
 		},
 		{
-			name = "tab_other",
 			callback_param = LootDropTweakData.RARITY_OTHER,
+			name = "tab_other",
 			text = self:translate("menu_filter_other", true),
 		},
 		{
+			callback_param = nil,
 			name = "tab_all",
 			text = self:translate("menu_filter_all", true),
 		},
@@ -79,15 +80,15 @@ function ChallengeCardsGui:_layout()
 
 	self._rarity_filters_tabs = self._phase_one_panel:tabs({
 		dont_trigger_special_buttons = true,
+		initial_tab_idx = #tabs_params,
 		name = "rarity_filters_tabs",
+		on_click_callback = callback(self, self, "on_click_filter_rarity"),
 		tab_align = "center",
 		tab_height = 64,
-		x = 0,
-		y = 96,
-		initial_tab_idx = #tabs_params,
-		on_click_callback = callback(self, self, "on_click_filter_rarity"),
 		tab_width = 640 / #tabs_params,
 		tabs_params = tabs_params,
+		x = 0,
+		y = 96,
 	})
 
 	local challenge_cards_grid_scrollable_area_params = {
@@ -102,26 +103,26 @@ function ChallengeCardsGui:_layout()
 	self._challenge_cards_grid_scrollable_area = self._phase_one_panel:scrollable_area(challenge_cards_grid_scrollable_area_params)
 
 	local challenge_cards_grid_params = {
-		name = "challenge_cards_grid",
-		w = 636,
-		x = 0,
-		y = 0,
 		grid_params = {
-			scroll_marker_w = 32,
-			vertical_spacing = 5,
 			data_source_callback = callback(self, self, "data_source_inventory_cards"),
 			on_click_callback = callback(self, self, "_on_click_inventory_cards"),
 			on_select_callback = callback(self, self, "_on_select_inventory_cards"),
+			scroll_marker_w = 32,
+			vertical_spacing = 5,
 		},
 		item_params = {
 			item_h = 216,
 			item_w = 156,
 			key_value_field = "key_name",
+			row_class = RaidGUIControlCardWithSelector,
 			selected_marker_h = 250,
 			selected_marker_w = 192,
-			row_class = RaidGUIControlCardWithSelector,
 		},
+		name = "challenge_cards_grid",
 		scrollable_area_ref = self._challenge_cards_grid_scrollable_area,
+		w = 636,
+		x = 0,
+		y = 0,
 	}
 
 	self._card_grid = self._challenge_cards_grid_scrollable_area:get_panel():grid(challenge_cards_grid_params)
@@ -135,25 +136,25 @@ function ChallengeCardsGui:_layout()
 		name = "card_deatils",
 		visible = true,
 		w = 892,
-		y = 96,
 		x = self._card_grid:right() + 224,
+		y = 96,
 	}
 
 	self._card_details = self._phase_one_panel:create_custom_control(RaidGUIControlCardDetails, card_details_params)
 
 	local suggested_cards_grid_params = {
-		h = 265,
-		name = "suggested_cards_grid",
-		visible = true,
-		w = 856,
 		grid_params = {
 			lock_texture = true,
 			remove_texture = true,
 		},
+		h = 265,
 		item_params = {
 			h = 232,
 			w = 192,
 		},
+		name = "suggested_cards_grid",
+		visible = true,
+		w = 856,
 		x = self._card_details:left(),
 		y = ChallengeCardsGui.SUGGESTED_CARDS_Y,
 	}
@@ -161,16 +162,16 @@ function ChallengeCardsGui:_layout()
 	self._suggested_cards_grid = self._phase_one_panel:suggested_cards_grid(suggested_cards_grid_params)
 	self._suggest_card_button = self._phase_one_panel:short_primary_button({
 		name = "suggest_card_button",
+		on_click_callback = callback(self, self, "suggest_card"),
 		text = "",
 		x = 0,
-		on_click_callback = callback(self, self, "suggest_card"),
 		y = self._phase_one_panel:bottom() - 128,
 	})
 	self._clear_card_button = self._phase_one_panel:short_secondary_button({
 		name = "clear_card_button",
-		x = 0,
 		on_click_callback = callback(self, self, "cancel_card"),
 		text = self:translate("menu_clear_selection", true),
+		x = 0,
 		y = self._suggest_card_button:top(),
 	})
 
@@ -178,63 +179,63 @@ function ChallengeCardsGui:_layout()
 	self:_setup_single_player()
 
 	self._cards_title_ph2_host = self._root_panel:label({
+		color = tweak_data.gui.colors.raid_red,
+		font = tweak_data.gui.fonts.din_compressed,
+		font_size = tweak_data.gui.font_sizes.title,
 		h = 60,
 		name = "cards_title_ph2_host",
+		text = self:translate("menu_challenge_cards_title_ph2_host", true),
 		vertical = "top",
 		visible = false,
 		w = 800,
 		x = 0,
 		y = 0,
-		color = tweak_data.gui.colors.raid_red,
-		font = tweak_data.gui.fonts.din_compressed,
-		font_size = tweak_data.gui.font_sizes.title,
-		text = self:translate("menu_challenge_cards_title_ph2_host", true),
 	})
 	self._cards_title_ph2_client = self._root_panel:label({
+		color = tweak_data.gui.colors.raid_red,
+		font = tweak_data.gui.fonts.din_compressed,
+		font_size = tweak_data.gui.font_sizes.title,
 		h = 60,
 		name = "cards_title_ph2_client",
+		text = self:translate("menu_challenge_cards_title_ph2_client", true),
 		vertical = "top",
 		visible = false,
 		w = 800,
 		x = 0,
 		y = 0,
-		color = tweak_data.gui.colors.raid_red,
-		font = tweak_data.gui.fonts.din_compressed,
-		font_size = tweak_data.gui.font_sizes.title,
-		text = self:translate("menu_challenge_cards_title_ph2_client", true),
 	})
 
 	local host_activates_card_grid_params = {
-		h = 675,
-		name = "host_activates_card_grid",
-		visible = true,
-		w = 1725,
-		x = 0,
-		y = 96,
 		grid_params = {
 			on_click_callback = callback(self, self, "on_item_host_clicks_suggested_card_grid"),
 		},
+		h = 675,
 		item_params = {
 			item_h = 383,
 			item_w = 266,
 			selected_marker_h = 675,
 			selected_marker_w = 352,
 		},
+		name = "host_activates_card_grid",
+		visible = true,
+		w = 1725,
+		x = 0,
+		y = 96,
 	}
 
 	self._host_activates_card_grid = self._phase_two_panel:suggested_cards_grid_large(host_activates_card_grid_params)
 	self._phase_two_activate_button = self._phase_two_panel:long_primary_button({
 		name = "phase_two_activate_button",
-		x = 0,
 		on_click_callback = callback(self, self, "phase_two_activate"),
 		text = self:translate("menu_select_card_button", true),
+		x = 0,
 		y = self._suggested_cards_grid:bottom() + 32,
 	})
 	self._continue_without_a_card_button = self._phase_two_panel:long_secondary_button({
 		name = "continue_without_a_card",
-		x = 0,
 		on_click_callback = callback(self, self, "_on_continue_without_card"),
 		text = self:translate("menu_challenge_cards_host_skip_suggestions", true),
+		x = 0,
 		y = self._suggested_cards_grid:bottom() + 32,
 	})
 
@@ -259,15 +260,15 @@ function ChallengeCardsGui:_layout()
 
 		self._host_ph2_message = self._phase_two_panel:label({
 			align = "center",
-			h = 36,
-			name = "client_waiting_message",
-			x = 0,
 			font = tweak_data.gui.fonts.din_compressed,
 			font_size = tweak_data.gui.font_sizes.large,
+			h = 36,
+			name = "client_waiting_message",
 			text = utf8.to_upper(managers.localization:text("menu_challenge_cards_waiting_choose_card_msg", {
 				PEER_NAME = host_name,
 			})),
 			w = self._phase_two_panel:w(),
+			x = 0,
 			y = self._phase_two_activate_button:y() - 48,
 		})
 	end
@@ -279,6 +280,9 @@ function ChallengeCardsGui:_layout()
 
 	if ChallengeCardsGui.PHASE == 2 then
 		self._timer_label = self._root_panel:label({
+			color = tweak_data.gui.colors.raid_white,
+			font = tweak_data.gui.fonts.din_compressed,
+			font_size = tweak_data.gui.font_sizes.title,
 			h = 60,
 			name = "timer_label",
 			text = "",
@@ -287,9 +291,6 @@ function ChallengeCardsGui:_layout()
 			w = 200,
 			x = 0,
 			y = 0,
-			color = tweak_data.gui.colors.raid_white,
-			font = tweak_data.gui.fonts.din_compressed,
-			font_size = tweak_data.gui.font_sizes.title,
 		})
 
 		self._timer_label:set_right(self._root_panel:right())
@@ -297,11 +298,11 @@ function ChallengeCardsGui:_layout()
 		self._timer_icon = self._root_panel:image({
 			h = 34,
 			name = "timer_icon",
+			texture = tweak_data.gui.icons.ico_time.texture,
+			texture_rect = tweak_data.gui.icons.ico_time.texture_rect,
 			w = 34,
 			x = 0,
 			y = 20,
-			texture = tweak_data.gui.icons.ico_time.texture,
-			texture_rect = tweak_data.gui.icons.ico_time.texture_rect,
 		})
 
 		self:redirect_to_phase_two_screen()
@@ -674,8 +675,8 @@ function ChallengeCardsGui:bind_controller_inputs()
 			},
 			keyboard = {
 				{
-					key = "footer_back",
 					callback = callback(self, self, "_on_legend_pc_back", nil),
+					key = "footer_back",
 				},
 			},
 		}
@@ -706,8 +707,8 @@ function ChallengeCardsGui:bind_controller_inputs()
 			},
 			keyboard = {
 				{
-					key = "footer_back",
 					callback = callback(self, self, "_on_legend_pc_back", nil),
+					key = "footer_back",
 				},
 			},
 		}

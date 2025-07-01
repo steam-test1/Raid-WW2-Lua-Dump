@@ -445,9 +445,9 @@ function MissionManager:start_root_level_script()
 	if level then
 		local level_path = "levels/" .. tostring(level)
 		local mission_params = {
-			stage_name = "stage1",
 			activate_mission = mission,
 			file_path = level_path .. "/mission",
+			stage_name = "stage1",
 		}
 
 		managers.mission:parse(mission_params)

@@ -13,8 +13,8 @@ function HuskServerSyncedCivilianDamage:sync_damage_bullet(attacker_unit, hit_of
 
 	local result_type = self._RESULT_NAME_TABLE[result_index]
 	local result = {
-		variant = "bullet",
 		type = result_type,
+		variant = "bullet",
 	}
 	local hit_pos = mvector3.copy(self._unit:movement():m_pos())
 
@@ -35,11 +35,11 @@ function HuskServerSyncedCivilianDamage:sync_damage_bullet(attacker_unit, hit_of
 	end
 
 	local attack_data = {
-		variant = "bullet",
 		attack_dir = attack_dir,
 		attacker_unit = attacker_unit,
 		pos = hit_pos,
 		result = result,
+		variant = "bullet",
 	}
 
 	if result_type == "death" then
@@ -56,8 +56,8 @@ function HuskServerSyncedCivilianDamage:sync_damage_explosion(attacker_unit, res
 
 	local result_type = self._RESULT_NAME_TABLE[result_index]
 	local result = {
-		variant = "explosion",
 		type = result_type,
+		variant = "explosion",
 	}
 	local hit_pos = mvector3.copy(self._unit:movement():m_pos())
 
@@ -78,11 +78,11 @@ function HuskServerSyncedCivilianDamage:sync_damage_explosion(attacker_unit, res
 	end
 
 	local attack_data = {
-		variant = "explosion",
 		attack_dir = attack_dir,
 		attacker_unit = attacker_unit,
 		pos = hit_pos,
 		result = result,
+		variant = "explosion",
 	}
 
 	if result_type == "death" then
@@ -99,8 +99,8 @@ function HuskServerSyncedCivilianDamage:sync_damage_fire(attacker_unit, result_i
 
 	local result_type = self._RESULT_NAME_TABLE[result_index]
 	local result = {
-		variant = "fire",
 		type = result_type,
+		variant = "fire",
 	}
 	local hit_pos = mvector3.copy(self._unit:movement():m_pos())
 
@@ -121,11 +121,11 @@ function HuskServerSyncedCivilianDamage:sync_damage_fire(attacker_unit, result_i
 	end
 
 	local attack_data = {
-		variant = "fire",
 		attack_dir = attack_dir,
 		attacker_unit = attacker_unit,
 		pos = hit_pos,
 		result = result,
+		variant = "fire",
 	}
 
 	if result_type == "death" then
@@ -142,8 +142,8 @@ function HuskServerSyncedCivilianDamage:sync_damage_melee(attacker_unit, attacke
 
 	local result_type = self._RESULT_NAME_TABLE[result_index]
 	local result = {
-		variant = "melee",
 		type = result_type,
+		variant = "melee",
 	}
 	local hit_pos = mvector3.copy(self._unit:movement():m_pos())
 
@@ -166,11 +166,11 @@ function HuskServerSyncedCivilianDamage:sync_damage_melee(attacker_unit, attacke
 	end
 
 	local attack_data = {
-		variant = "melee",
 		attack_dir = attack_dir,
 		attacker_unit = attacker_unit,
 		pos = hit_pos,
 		result = result,
+		variant = "melee",
 	}
 
 	if result_type == "death" then

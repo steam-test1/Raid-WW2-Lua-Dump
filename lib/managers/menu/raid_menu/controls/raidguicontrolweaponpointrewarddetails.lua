@@ -64,8 +64,8 @@ end
 
 function RaidGUIControlWeaponPointRewardDetails:_create_left_panel()
 	local left_panel_params = {
-		name = "left_panel",
 		h = self._object:h(),
+		name = "left_panel",
 		w = RaidGUIControlWeaponPointRewardDetails.LEFT_PANEL_W,
 	}
 
@@ -75,13 +75,13 @@ end
 function RaidGUIControlWeaponPointRewardDetails:_create_title()
 	local title_description_params = {
 		align = "left",
-		name = "title_description",
-		vertical = "center",
 		color = RaidGUIControlWeaponPointRewardDetails.TITLE_DESCRIPTION_COLOR,
 		font = RaidGUIControlWeaponPointRewardDetails.FONT,
 		font_size = RaidGUIControlWeaponPointRewardDetails.TITLE_DESCRIPTION_FONT_SIZE,
 		h = RaidGUIControlWeaponPointRewardDetails.TITLE_DESCRIPTION_H,
+		name = "title_description",
 		text = self:translate("menu_loot_screen_bracket_unlocked_title", true),
+		vertical = "center",
 	}
 	local title_description = self._left_panel:text(title_description_params)
 	local _, _, w, _ = title_description:text_rect()
@@ -90,12 +90,12 @@ function RaidGUIControlWeaponPointRewardDetails:_create_title()
 
 	local title_params = {
 		align = "center",
-		name = "customization_name",
-		vertical = "top",
 		color = RaidGUIControlWeaponPointRewardDetails.TITLE_COLOR,
 		font = RaidGUIControlWeaponPointRewardDetails.FONT,
 		font_size = RaidGUIControlWeaponPointRewardDetails.TITLE_FONT_SIZE,
+		name = "customization_name",
 		text = self:translate("menu_loot_screen_weapon_point", true),
+		vertical = "top",
 		y = title_description:y() + title_description:h() + RaidGUIControlWeaponPointRewardDetails.TITLE_PADDING_TOP,
 	}
 
@@ -118,8 +118,8 @@ end
 
 function RaidGUIControlWeaponPointRewardDetails:_create_reward_image()
 	local reward_image_panel_params = {
-		name = "reward_image_panel",
 		h = RaidGUIControlWeaponPointRewardDetails.REWARD_ICON_PANEL_H,
+		name = "reward_image_panel",
 		w = self._left_panel:w(),
 		y = RaidGUIControlWeaponPointRewardDetails.REWARD_ICON_PANEL_Y,
 	}
@@ -138,18 +138,18 @@ end
 
 function RaidGUIControlWeaponPointRewardDetails:_create_redeem_info()
 	local redeem_description_params = {
-		name = "redeem_description",
 		color = RaidGUIControlWeaponPointRewardDetails.REDEEM_DESCRIPTION_COLOR,
 		font = RaidGUIControlWeaponPointRewardDetails.FONT,
 		font_size = RaidGUIControlWeaponPointRewardDetails.REDEEM_DESCRIPTION_FONT_SIZE,
+		name = "redeem_description",
 		text = self:translate("menu_loot_screen_redeem_worth_title", true),
 	}
 	local redeem_description = self._left_panel:text(redeem_description_params)
 	local redeem_value_params = {
-		name = "redeem_value",
 		color = RaidGUIControlWeaponPointRewardDetails.REDEEM_VALUE_COLOR,
 		font = RaidGUIControlWeaponPointRewardDetails.FONT,
 		font_size = RaidGUIControlWeaponPointRewardDetails.REDEEM_VALUE_FONT_SIZE,
+		name = "redeem_value",
 		text = self._xp_redeem_value .. " " .. self:translate("menu_label_xp", true),
 	}
 
@@ -158,11 +158,11 @@ function RaidGUIControlWeaponPointRewardDetails:_create_redeem_info()
 	self:_layout_redeem_info()
 
 	local redeem_xp_button_params = {
-		name = "redeem_xp_button",
-		x = 0,
 		layer = RaidGuiBase.FOREGROUND_LAYER,
+		name = "redeem_xp_button",
 		on_click_callback = callback(self, self, "_on_click_redeem"),
 		text = self:translate("menu_loot_screen_redeem_xp", true),
+		x = 0,
 		y = self._left_panel:h() - RaidGUIControlWeaponPointRewardDetails.REDEEM_BUTTON_CENTER_Y_FROM_BOTTOM,
 	}
 
@@ -190,8 +190,8 @@ end
 
 function RaidGUIControlWeaponPointRewardDetails:_create_right_panel()
 	local right_panel_params = {
-		name = "right_panel",
 		h = self._object:h(),
+		name = "right_panel",
 		w = self._object:w() - self._left_panel:w(),
 	}
 
@@ -203,13 +203,13 @@ end
 function RaidGUIControlWeaponPointRewardDetails:_create_item_type()
 	local item_type_params = {
 		align = "right",
-		name = "item_type",
-		vertical = "center",
 		color = RaidGUIControlWeaponPointRewardDetails.ITEM_TYPE_COLOR,
 		font = RaidGUIControlWeaponPointRewardDetails.FONT,
 		font_size = RaidGUIControlWeaponPointRewardDetails.ITEM_TYPE_FONT_SIZE,
 		h = RaidGUIControlWeaponPointRewardDetails.ITEM_TYPE_H,
+		name = "item_type",
 		text = self:translate("menu_loot_screen_weapon_point_title_text", true),
+		vertical = "center",
 		w = self._right_panel:w(),
 		y = RaidGUIControlWeaponPointRewardDetails.ITEM_TYPE_Y,
 	}
@@ -220,14 +220,14 @@ end
 function RaidGUIControlWeaponPointRewardDetails:_create_description()
 	local description_params = {
 		align = "left",
-		name = "description",
-		vertical = "top",
-		wrap = true,
 		color = RaidGUIControlWeaponPointRewardDetails.DESCRIPTION_COLOR,
 		font = RaidGUIControlWeaponPointRewardDetails.DESCRIPTION_FONT,
 		font_size = RaidGUIControlWeaponPointRewardDetails.DESCRIPTION_FONT_SIZE,
+		name = "description",
 		text = self:translate("menu_loot_screen_weapon_point_description"),
+		vertical = "top",
 		w = RaidGUIControlWeaponPointRewardDetails.DESCRIPTION_W,
+		wrap = true,
 		y = RaidGUIControlWeaponPointRewardDetails.DESCRIPTION_Y,
 	}
 

@@ -383,9 +383,9 @@ function CivilianLogicEscort._begin_advance_action(data, my_data)
 	local haste = objective and objective.haste or "walk"
 	local new_action_data = {
 		body_part = 2,
-		type = "walk",
 		end_rot = objective.rot,
 		nav_path = my_data.advance_path,
+		type = "walk",
 		variant = haste,
 	}
 
@@ -402,16 +402,16 @@ end
 
 function CivilianLogicEscort._begin_stand_hesitant_action(data, my_data)
 	local action = {
-		body_part = 1,
-		clamp_to_graph = true,
-		type = "act",
-		variant = "cm_so_escort_get_up_hesitant",
 		blocks = {
 			action = -1,
 			heavy_hurt = -1,
 			hurt = -1,
 			walk = -1,
 		},
+		body_part = 1,
+		clamp_to_graph = true,
+		type = "act",
+		variant = "cm_so_escort_get_up_hesitant",
 	}
 
 	my_data.getting_up = data.unit:movement():action_request(action)

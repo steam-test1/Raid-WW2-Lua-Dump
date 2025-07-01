@@ -315,9 +315,9 @@ function CopActionShoot:update(t)
 				if fwd_dot_flat < 0.87 then
 					local spin = tar_vec_flat:to_polar_with_reference(fwd, math.UP).spin
 					local new_action_data = {
+						angle = spin,
 						body_part = 2,
 						type = "turn",
-						angle = spin,
 					}
 
 					self._ext_movement:action_request(new_action_data)
@@ -963,7 +963,6 @@ function CopActionShoot:anim_clbk_melee_strike()
 	end
 
 	local action_data = {
-		variant = "melee",
 		attacker_unit = self._common_data.unit,
 		col_ray = {
 			position = shoot_from_pos + fwd * 50,
@@ -972,6 +971,7 @@ function CopActionShoot:anim_clbk_melee_strike()
 		damage = damage,
 		melee_weapon = melee_weapon,
 		push_vel = push_vel,
+		variant = "melee",
 		weapon_unit = self._weapon_unit,
 	}
 	local defense_data = self._attention.unit:character_damage():damage_melee(action_data)
@@ -980,15 +980,15 @@ function CopActionShoot:anim_clbk_melee_strike()
 		self._common_data.melee_countered_t = TimerManager:game():time()
 
 		local action_data = {
-			damage = 0,
-			damage_effect = 1,
-			variant = "counter_spooc",
 			attack_dir = -1 * target_vec:normalized(),
 			attacker_unit = self._strike_unit,
 			col_ray = {
 				body = self._unit:body("body"),
 				position = self._common_data.pos + math.UP * 100,
 			},
+			damage = 0,
+			damage_effect = 1,
+			variant = "counter_spooc",
 		}
 
 		self._unit:character_damage():damage_melee(action_data)

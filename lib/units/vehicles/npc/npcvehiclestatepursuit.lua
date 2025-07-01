@@ -34,9 +34,9 @@ function NpcVehicleStatePursuit:init(unit)
 
 	self._tachograph = {
 		distance = 0,
-		timeframe = 1,
 		last_pos = cop_position,
 		tick_at = delayed_tick,
+		timeframe = 1,
 	}
 end
 
@@ -48,9 +48,9 @@ function NpcVehicleStatePursuit:on_enter(npc_driving_ext)
 
 	self._tachograph = {
 		distance = 0,
-		timeframe = 1,
 		last_pos = cop_position,
 		tick_at = delayed_tick,
+		timeframe = 1,
 	}
 	self._next_state = nil
 	self._desired_direction = 0

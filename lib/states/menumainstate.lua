@@ -22,10 +22,10 @@ function MenuMainState:at_enter(old_state)
 			if managers.network:session() and (Network:is_server() or managers.network:session():server_peer()) then
 				managers.overlay_effect:play_effect({
 					blend_mode = "normal",
+					color = Color.black,
 					fade_in = 0,
 					fade_out = 0.5,
 					sustain = 0.5,
-					color = Color.black,
 				})
 				managers.menu:external_enter_online_menus()
 				managers.menu:on_enter_lobby()
@@ -35,10 +35,10 @@ function MenuMainState:at_enter(old_state)
 		elseif Global.load_start_menu then
 			managers.overlay_effect:play_effect({
 				blend_mode = "normal",
+				color = Color.black,
 				fade_in = 0,
 				fade_out = 0.25,
 				sustain = 0.25,
-				color = Color.black,
 			})
 		end
 	end

@@ -85,21 +85,18 @@ function ItemSlider:setup_gui(node, row_item)
 
 	row_item.gui_slider_bg = row_item.gui_panel:rect({
 		align = "center",
+		color = Color.black:with_alpha(0.5),
 		h = 22,
 		halign = "center",
+		layer = node.layers.items - 1,
 		vertical = "center",
 		visible = false,
-		color = Color.black:with_alpha(0.5),
-		layer = node.layers.items - 1,
 		w = bar_w,
 		x = node._left_align(node) - bar_w,
 		y = h / 2 - 11,
 	})
 	row_item.gui_slider_gfx = row_item.gui_panel:gradient({
 		align = "center",
-		halign = "center",
-		orientation = "vertical",
-		vertical = "center",
 		blend_mode = node.row_item_blend_mode or "normal",
 		color = row_item.color,
 		gradient_points = {
@@ -109,27 +106,30 @@ function ItemSlider:setup_gui(node, row_item)
 			_G.tweak_data.screen_colors.button_stage_3,
 		},
 		h = row_item.gui_slider_bg:h() - 4,
+		halign = "center",
 		layer = node.layers.items,
+		orientation = "vertical",
+		vertical = "center",
 		w = (row_item.gui_slider_bg:w() - 4) * 0.23,
 		x = node._left_align(node) - bar_w + 2,
 		y = row_item.gui_slider_bg:y() + 2,
 	})
 	row_item.gui_slider = row_item.gui_panel:rect({
-		w = 100,
 		color = row_item.color:with_alpha(0),
 		h = row_item.gui_slider_bg:h() - 4,
 		layer = node.layers.items,
+		w = 100,
 	})
 	row_item.gui_slider_marker = row_item.gui_panel:bitmap({
-		texture = "guis/textures/debug_menu_icons",
-		visible = false,
 		layer = node.layers.items + 2,
+		texture = "guis/textures/debug_menu_icons",
 		texture_rect = {
 			0,
 			0,
 			24,
 			28,
 		},
+		visible = false,
 	})
 
 	local slider_text_align = row_item.align == "left" and "right" or row_item.align == "right" and "left" or row_item.align
@@ -137,7 +137,6 @@ function ItemSlider:setup_gui(node, row_item)
 	local slider_text_vertical = row_item.vertical == "top" and "bottom" or row_item.vertical == "bottom" and "top" or row_item.vertical
 
 	row_item.gui_slider_text = row_item.gui_panel:text({
-		y = 0,
 		align = slider_text_align,
 		blend_mode = node.row_item_blend_mode or "normal",
 		color = row_item.color,
@@ -153,6 +152,7 @@ function ItemSlider:setup_gui(node, row_item)
 		visible = self._show_slider_text,
 		w = row_item.gui_slider_bg:w(),
 		x = node._right_align(node),
+		y = 0,
 	})
 
 	if row_item.help_text then

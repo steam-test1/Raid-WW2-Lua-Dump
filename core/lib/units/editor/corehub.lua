@@ -564,8 +564,8 @@ function CoreHub:_build_panel()
 	use_as_start_cb:set_value(self._hed.use_as_start)
 	use_as_start_cb:set_tool_tip("Tell the mission that this is the start hub, not the one without triggers.")
 	use_as_start_cb:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		value = "use_as_start",
 		ctrlr = use_as_start_cb,
+		value = "use_as_start",
 	})
 
 	local trigger_once_cb = EWS:CheckBox(self._panel, "Trigger Once", "")
@@ -573,8 +573,8 @@ function CoreHub:_build_panel()
 	trigger_once_cb:set_value(self._hed.trigger_once)
 	trigger_once_cb:set_tool_tip("The hub will only perform actions once.")
 	trigger_once_cb:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		value = "trigger_once",
 		ctrlr = trigger_once_cb,
+		value = "trigger_once",
 	})
 
 	local trigger_on_inverse_cb = EWS:CheckBox(self._panel, "Actions On Inverse", "")
@@ -582,8 +582,8 @@ function CoreHub:_build_panel()
 	trigger_on_inverse_cb:set_value(self._hed.trigger_on_inverse)
 	trigger_on_inverse_cb:set_tool_tip("Will have the hub perform actions when triggers reaches start state again.")
 	trigger_on_inverse_cb:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		value = "trigger_on_inverse",
 		ctrlr = trigger_on_inverse_cb,
+		value = "trigger_on_inverse",
 	})
 
 	local trigger_cbs_sizer = EWS:BoxSizer("HORIZONTAL")
@@ -656,8 +656,8 @@ function CoreHub:_build_panel()
 
 	required_trigger_sizer:add(self._required_triggers, ctrl_prop, 0, "EXPAND")
 	self._required_triggers:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "set_element_data"), {
-		value = "required_triggers",
 		ctrlr = self._required_triggers,
+		value = "required_triggers",
 	})
 	triggers_sizer:add(required_trigger_sizer, 0, 0, "EXPAND")
 

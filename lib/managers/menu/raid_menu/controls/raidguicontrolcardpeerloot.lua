@@ -41,11 +41,9 @@ end
 
 function RaidGUIControlCardPeerLoot:_create_card_details()
 	local params_card_image = {
+		h = self._control_panel:w() * 1.45,
 		name = "card_image",
 		texture = "ui/main_menu/textures/cards_atlas",
-		x = 0,
-		y = 0,
-		h = self._control_panel:w() * 1.45,
 		texture_rect = {
 			56,
 			669,
@@ -53,21 +51,23 @@ function RaidGUIControlCardPeerLoot:_create_card_details()
 			209,
 		},
 		w = self._control_panel:w(),
+		x = 0,
+		y = 0,
 	}
 
 	self._card_image = self._control_panel:bitmap(params_card_image)
 
 	local params_player_name = {
 		align = "center",
-		layer = 1,
-		name = "peer_player_name_label",
-		text = "PLAYER 1",
-		x = 0,
 		color = tweak_data.menu.raid_red,
 		font = RaidGUIControlCardPeerLoot.TEXT_FONT,
 		font_size = RaidGUIControlCardPeerLoot.FONT_SIZE,
 		h = RaidGUIControlCardPeerLoot.TEXT_H,
+		layer = 1,
+		name = "peer_player_name_label",
+		text = "PLAYER 1",
 		w = self._control_panel:w(),
+		x = 0,
 		y = self._card_image:y() + self._card_image:h() + RaidGUIControlCardPeerLoot.IMAGE_PADDING_DOWN,
 	}
 
@@ -75,15 +75,15 @@ function RaidGUIControlCardPeerLoot:_create_card_details()
 
 	local params_card_title = {
 		align = "right",
-		layer = 1,
-		name = "card_title_label",
-		text = "22xp",
-		wrap = true,
 		color = Color.white,
 		font = tweak_data.menu.pd2_small_font,
 		font_size = tweak_data.menu.pd2_small_font_size,
 		h = RaidGUIControlCardPeerLoot.TEXT_H,
+		layer = 1,
+		name = "card_title_label",
+		text = "22xp",
 		w = self._card_image:w() * (1 - 2 * RaidGUIControlCardPeerLoot.CARD_TITLE_PADDING_PERCENT / 100),
+		wrap = true,
 		x = self._card_image:w() * RaidGUIControlCardPeerLoot.CARD_TITLE_PADDING_PERCENT / 100,
 		y = self._card_image:y() + self._card_image:h() / 2 - RaidGUIControlCardPeerLoot.TEXT_H / 2,
 	}

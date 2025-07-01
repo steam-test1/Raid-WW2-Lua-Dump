@@ -209,14 +209,14 @@ function Shape:_create_size_ctrl(name, property, value, parent, sizer)
 		property = property,
 	})
 	spin:connect("EVT_SCROLL_LINEUP", callback(self, self, "update_size_spin"), {
-		step = 0.1,
 		ctrl = ctrl,
 		property = property,
+		step = 0.1,
 	})
 	spin:connect("EVT_SCROLL_LINEDOWN", callback(self, self, "update_size_spin"), {
-		step = -0.1,
 		ctrl = ctrl,
 		property = property,
+		step = -0.1,
 	})
 
 	local params = {

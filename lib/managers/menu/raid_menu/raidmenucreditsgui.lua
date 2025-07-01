@@ -95,18 +95,18 @@ function RaidMenuCreditsGui:_build_credits_panel(file)
 			local height = font_size + 5
 			local text_field = self._credits_panel:text({
 				align = "center",
-				halign = "left",
-				layer = 3,
-				vertical = "top",
-				word_wrap = true,
-				wrap = true,
-				x = 0,
 				color = color,
 				font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, font_size),
 				font_size = font_size,
 				h = height,
+				halign = "left",
+				layer = 3,
 				text = data.text,
+				vertical = "top",
 				w = text_width,
+				word_wrap = true,
+				wrap = true,
+				x = 0,
 				y = ypos,
 			})
 
@@ -117,8 +117,8 @@ function RaidMenuCreditsGui:_build_credits_panel(file)
 			if data.src then
 				bitmap = self._credits_panel:bitmap({
 					layer = 3,
-					x = 0,
 					texture = data.src,
+					x = 0,
 					y = ypos,
 				})
 			elseif data.atlas_src then
@@ -163,9 +163,9 @@ function RaidMenuCreditsGui:_show_intro_video()
 	self._video_panel = RaidGUIPanel:new(self._full_panel, video_panel_params)
 
 	local video_panel_background_params = {
+		color = Color.black,
 		layer = 1,
 		name = "video_background",
-		color = Color.black,
 	}
 	local video_panel_background = self._video_panel:rect(video_panel_background_params)
 	local video_params = {
@@ -184,11 +184,11 @@ function RaidMenuCreditsGui:_show_intro_video()
 	local press_any_key_text = managers.controller:is_using_controller() and "press_any_key_to_skip_controller" or "press_any_key_to_skip"
 	local press_any_key_params = {
 		alpha = 0,
-		name = "press_any_key_prompt",
 		color = tweak_data.gui.colors.raid_dirty_white,
 		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.size_32),
 		font_size = tweak_data.gui.font_sizes.size_32,
 		layer = self._credits_intro_video:layer() + 100,
+		name = "press_any_key_prompt",
 		text = utf8.to_upper(managers.localization:text(press_any_key_text)),
 	}
 	local press_any_key_prompt = self._safe_panel:text(press_any_key_params)
@@ -439,8 +439,8 @@ function RaidMenuCreditsGui:bind_controller_inputs()
 		},
 		keyboard = {
 			{
-				key = "footer_back",
 				callback = callback(self, self, "back_pressed", nil),
+				key = "footer_back",
 			},
 		},
 	}

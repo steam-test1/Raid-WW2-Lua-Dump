@@ -11,85 +11,85 @@ end
 
 function RaidGUIControlIntelRaidPersonel:_layout()
 	self._bg_image = self._object:bitmap({
-		x = 0,
-		y = 0,
 		h = tweak_data.gui.icons.intel_table_personnel_folder.texture_rect[4],
 		layer = self._object:layer() + 1,
 		texture = tweak_data.gui.icons.intel_table_personnel_folder.texture,
 		texture_rect = tweak_data.gui.icons.intel_table_personnel_folder.texture_rect,
 		w = tweak_data.gui.icons.intel_table_personnel_folder.texture_rect[3],
+		x = 0,
+		y = 0,
 	})
 	self._title_name = self._object:text({
 		align = "left",
+		color = tweak_data.gui.colors.chat_border,
+		font = tweak_data.gui.fonts.din_compressed,
+		font_size = tweak_data.gui.font_sizes.size_32,
 		h = 32,
+		layer = self._object:layer() + 2,
 		text = "",
 		vertical = "center",
 		w = 384,
 		x = 608,
 		y = 128,
-		color = tweak_data.gui.colors.chat_border,
-		font = tweak_data.gui.fonts.din_compressed,
-		font_size = tweak_data.gui.font_sizes.size_32,
-		layer = self._object:layer() + 2,
 	})
 	self._real_name = self._object:text({
 		align = "left",
+		color = tweak_data.gui.colors.chat_border,
+		font = tweak_data.gui.fonts.din_compressed,
+		font_size = tweak_data.gui.font_sizes.size_18,
 		h = 32,
+		layer = self._object:layer() + 2,
 		text = "",
 		vertical = "center",
 		w = 384,
 		x = 608,
 		y = 160,
-		color = tweak_data.gui.colors.chat_border,
-		font = tweak_data.gui.fonts.din_compressed,
-		font_size = tweak_data.gui.font_sizes.size_18,
-		layer = self._object:layer() + 2,
 	})
 	self._former_rank = self._object:text({
 		align = "left",
+		color = tweak_data.gui.colors.chat_border,
+		font = tweak_data.gui.fonts.din_compressed,
+		font_size = tweak_data.gui.font_sizes.size_18,
 		h = 40,
+		layer = self._object:layer() + 2,
 		text = "",
 		vertical = "top",
 		w = 384,
 		x = 608,
 		y = 196,
-		color = tweak_data.gui.colors.chat_border,
-		font = tweak_data.gui.fonts.din_compressed,
-		font_size = tweak_data.gui.font_sizes.size_18,
-		layer = self._object:layer() + 2,
 	})
 	self._notes_title = self._object:text({
 		align = "left",
+		color = tweak_data.gui.colors.chat_border,
+		font = tweak_data.gui.fonts.din_compressed,
+		font_size = tweak_data.gui.font_sizes.size_20,
+		layer = self._object:layer() + 2,
 		text = "",
 		vertical = "top",
 		w = 384,
 		wrap = true,
 		x = 608,
 		y = 256,
-		color = tweak_data.gui.colors.chat_border,
-		font = tweak_data.gui.fonts.din_compressed,
-		font_size = tweak_data.gui.font_sizes.size_20,
-		layer = self._object:layer() + 2,
 	})
 
 	local scrollable_area_notes_params = {
 		h = 384,
+		layer = self._object:layer() + 2,
 		name = "scrollable_area_notes",
 		scroll_step = 19,
 		scrollbar_width = 10,
 		w = 384,
 		x = 608,
 		y = 288,
-		layer = self._object:layer() + 2,
 	}
 
 	self._scrollable_area_notes = self._object:scrollable_area(scrollable_area_notes_params)
 
 	local content_panel_params = {
+		layer = self._object:layer() + 2,
 		w = 380,
 		x = 0,
 		y = 0,
-		layer = self._object:layer() + 2,
 	}
 
 	self._content_panel = self._scrollable_area_notes:get_panel():panel(content_panel_params)
@@ -98,25 +98,25 @@ function RaidGUIControlIntelRaidPersonel:_layout()
 
 	self._notes = self._content_panel:text({
 		align = "left",
+		color = tweak_data.gui.colors.chat_border,
+		font = tweak_data.gui.fonts.din_compressed,
+		font_size = tweak_data.gui.font_sizes.size_20,
+		layer = self._object:layer() + 2,
 		text = "",
 		vertical = "top",
 		w = 380,
 		wrap = true,
 		x = 0,
 		y = 0,
-		color = tweak_data.gui.colors.chat_border,
-		font = tweak_data.gui.fonts.din_compressed,
-		font_size = tweak_data.gui.font_sizes.size_20,
-		layer = self._object:layer() + 2,
 	})
 	self._profile_photo = self._object:bitmap({
 		h = 448,
-		w = 320,
-		x = 96,
-		y = 160,
 		layer = self._object:layer() + 2,
 		texture = tweak_data.gui.icons.intel_table_personnel_img_rivet.texture,
 		texture_rect = tweak_data.gui.icons.intel_table_personnel_img_rivet.texture_rect,
+		w = 320,
+		x = 96,
+		y = 160,
 	})
 end
 

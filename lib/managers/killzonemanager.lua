@@ -138,8 +138,8 @@ function KillzoneManager:_add_unit(unit, type)
 		local next_shot = math.rand(1)
 
 		self._units[unit:key()] = {
-			timer = 0,
 			next_shot = next_shot,
+			timer = 0,
 			type = type,
 			unit = unit,
 		}
@@ -147,8 +147,8 @@ function KillzoneManager:_add_unit(unit, type)
 		local next_gas = math.rand(1)
 
 		self._units[unit:key()] = {
-			timer = 0,
 			next_gas = next_gas,
+			timer = 0,
 			type = type,
 			unit = unit,
 		}
@@ -156,8 +156,8 @@ function KillzoneManager:_add_unit(unit, type)
 		local next_fire = math.rand(1)
 
 		self._units[unit:key()] = {
-			timer = 0,
 			next_fire = next_fire,
+			timer = 0,
 			type = type,
 			unit = unit,
 		}
@@ -165,8 +165,8 @@ function KillzoneManager:_add_unit(unit, type)
 		local next_inferno = math.rand(1)
 
 		self._units[unit:key()] = {
-			timer = 0,
 			next_inferno = next_inferno,
+			timer = 0,
 			type = type,
 			unit = unit,
 		}

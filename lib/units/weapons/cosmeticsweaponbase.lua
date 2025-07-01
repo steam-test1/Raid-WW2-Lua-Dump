@@ -184,8 +184,8 @@ function NewRaycastWeaponBase:_apply_cosmetics(async_clbk)
 					texture_key = mat_texture and mat_texture:key() or base_texture and base_texture:key()
 					textures[texture_key] = textures[texture_key] or {
 						applied = false,
-						ready = false,
 						name = mat_texture or base_texture,
+						ready = false,
 					}
 				end
 			end

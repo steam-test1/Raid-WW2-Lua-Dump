@@ -179,8 +179,8 @@ function PlayerDriving:exit(state_data, new_state_name)
 	self._stance = PlayerDriving.STANCE_NORMAL
 
 	local exit_data = {
-		skip_equip = true,
 		equip_weapon_expire_t = self._equip_weapon_expire_t,
+		skip_equip = true,
 		unequip_weapon_expire_t = self._unequip_weapon_expire_t,
 	}
 	local velocity = self._unit:mover() and self._unit:mover():velocity() or math.ZERO

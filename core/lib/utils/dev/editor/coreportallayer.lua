@@ -142,12 +142,12 @@ function PortalLayer:save(save_params)
 	end
 
 	local t = {
-		single_data_block = true,
 		data = {
 			portals = portals,
 			unit_groups = unit_groups,
 		},
 		entry = self._save_name,
+		single_data_block = true,
 	}
 
 	self:_add_project_save_data(t.data)
@@ -307,8 +307,8 @@ end
 
 function PortalLayer:build_panel(notebook)
 	PortalLayer.super.build_panel(self, notebook, {
-		units_noteboook_proportion = 0,
 		units_notebook_min_size = Vector3(-1, 160, 0),
+		units_noteboook_proportion = 0,
 	})
 
 	local dont_draw = EWS:CheckBox(self._ews_panel, "Don't draw portals", "")
@@ -316,8 +316,8 @@ function PortalLayer:build_panel(notebook)
 	dont_draw:set_value(self._dont_draw)
 	self._sizer:add(dont_draw, 0, 2, "EXPAND,TOP,BOTTOM")
 	dont_draw:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "cb_toogle"), {
-		value = "_dont_draw",
 		cb = dont_draw,
+		value = "_dont_draw",
 	})
 
 	local only_draw_selected = EWS:CheckBox(self._ews_panel, "Only draw current", "")
@@ -325,8 +325,8 @@ function PortalLayer:build_panel(notebook)
 	only_draw_selected:set_value(self._only_draw_selected)
 	self._sizer:add(only_draw_selected, 0, 2, "EXPAND,TOP,BOTTOM")
 	only_draw_selected:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "cb_toogle"), {
-		value = "_only_draw_selected",
 		cb = only_draw_selected,
+		value = "_only_draw_selected",
 	})
 	only_draw_selected:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "on_only_draw_current"), nil)
 
@@ -335,8 +335,8 @@ function PortalLayer:build_panel(notebook)
 	dont_draw_boxes:set_value(self._dont_draw_boxes)
 	self._sizer:add(dont_draw_boxes, 0, 2, "EXPAND,TOP,BOTTOM")
 	dont_draw_boxes:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "cb_toogle"), {
-		value = "_dont_draw_boxes",
 		cb = dont_draw_boxes,
+		value = "_dont_draw_boxes",
 	})
 
 	local dont_draw_units = EWS:CheckBox(self._ews_panel, "Don't draw portal units", "")
@@ -344,8 +344,8 @@ function PortalLayer:build_panel(notebook)
 	dont_draw_units:set_value(self._dont_draw_units)
 	self._sizer:add(dont_draw_units, 0, 2, "EXPAND,TOP,BOTTOM")
 	dont_draw_units:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "cb_toogle"), {
-		value = "_dont_draw_units",
 		cb = dont_draw_units,
+		value = "_dont_draw_units",
 	})
 
 	local draw_nonportaled = EWS:CheckBox(self._ews_panel, "Draw non-portaled units", "")
@@ -353,8 +353,8 @@ function PortalLayer:build_panel(notebook)
 	draw_nonportaled:set_value(self._draw_units_in_no_portal_state)
 	self._sizer:add(draw_nonportaled, 0, 2, "EXPAND,TOP,BOTTOM")
 	draw_nonportaled:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "cb_toogle"), {
-		value = "_draw_units_in_no_portal_state",
 		cb = draw_nonportaled,
+		value = "_draw_units_in_no_portal_state",
 	})
 
 	local draw_not_current = EWS:CheckBox(self._ews_panel, "Draw units not in current portal", "")
@@ -362,8 +362,8 @@ function PortalLayer:build_panel(notebook)
 	draw_not_current:set_value(self._draw_not_current)
 	self._sizer:add(draw_not_current, 0, 2, "EXPAND,TOP,BOTTOM")
 	draw_not_current:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "cb_toogle"), {
-		value = "_draw_not_current",
 		cb = draw_not_current,
+		value = "_draw_not_current",
 	})
 
 	local draw_not_current = EWS:CheckBox(self._ews_panel, "Activate portal system in editor", "")
@@ -397,7 +397,7 @@ function PortalLayer:build_panel(notebook)
 	portals:connect("EVT_COMMAND_LISTBOX_SELECTED", callback(self, self, "select_portal"), portals)
 	new_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "new_portal"), portals)
 	delete_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "delete_portal"), portals)
-	portal_sizer:add(EWS:StaticText(self._portal_panel, "Draw Base", 0, ""), 0, 0, "ALIGN_CENTER_HORIZONTAL")
+	portal_sizer:add(EWS:StaticText(self._portal_panel, "Draw Base (Shift point height)", 0, ""), 0, 0, "ALIGN_CENTER_HORIZONTAL")
 
 	local draw_base = EWS:Slider(self._portal_panel, 0, -15000, 15000, "", "")
 
@@ -410,17 +410,17 @@ function PortalLayer:build_panel(notebook)
 
 	top_spin:set_range(-500, 500)
 	top_spin:connect("EVT_SCROLL_THUMBTRACK", callback(self, self, "update_spin"), {
-		value = "top",
 		spin = top_spin,
+		value = "top",
 	})
 	top_spin:connect("EVT_COMMAND_TEXT_UPDATED", callback(self, self, "update_spin"), {
-		value = "top",
 		spin = top_spin,
+		value = "top",
 	})
 
 	self._ews_triggers.set_portal_top = callback(self, self, "set_height", {
-		value = "top",
 		spin = top_spin,
+		value = "top",
 	})
 
 	spin_sizer:add(top_spin, 1, 0, "EXPAND")
@@ -429,17 +429,17 @@ function PortalLayer:build_panel(notebook)
 
 	bottom_spin:set_range(-500, 500)
 	bottom_spin:connect("EVT_SCROLL_THUMBTRACK", callback(self, self, "update_spin"), {
-		value = "bottom",
 		spin = bottom_spin,
+		value = "bottom",
 	})
 	bottom_spin:connect("EVT_COMMAND_TEXT_UPDATED", callback(self, self, "update_spin"), {
-		value = "bottom",
 		spin = bottom_spin,
+		value = "bottom",
 	})
 
 	self._ews_triggers.set_portal_bottom = callback(self, self, "set_height", {
-		value = "bottom",
 		spin = bottom_spin,
+		value = "bottom",
 	})
 
 	spin_sizer:add(bottom_spin, 1, 0, "EXPAND")
@@ -448,12 +448,12 @@ function PortalLayer:build_panel(notebook)
 	self._ctrlrs = {}
 	self._ctrlrs.draw_base = draw_base
 	self._ctrlrs.top_spin = {
-		value = "top",
 		spin = top_spin,
+		value = "top",
 	}
 	self._ctrlrs.bottom_spin = {
-		value = "bottom",
 		spin = bottom_spin,
+		value = "bottom",
 	}
 	self._ctrlrs.portals = portals
 
@@ -677,13 +677,13 @@ function PortalLayer:new_portal(portals)
 	local b = 0.25 + math.rand(0.75)
 
 	self._portal_shapes[name] = {
+		b = b,
 		bottom = 0,
 		draw_base = 0,
-		top = 0,
-		b = b,
 		g = g,
 		portal = {},
 		r = r,
+		top = 0,
 	}
 
 	self:update_shapes_listbox(portals)

@@ -64,8 +64,8 @@ end
 
 function RaidGUIControlXPRewardDetails:_create_left_panel()
 	local left_panel_params = {
-		name = "left_panel",
 		h = self._object:h(),
+		name = "left_panel",
 		w = RaidGUIControlXPRewardDetails.LEFT_PANEL_W,
 	}
 
@@ -76,13 +76,13 @@ function RaidGUIControlXPRewardDetails:_create_title()
 	local title_description_params = {
 		align = "left",
 		alpha = 0,
-		name = "title_description",
-		vertical = "center",
 		color = RaidGUIControlXPRewardDetails.TITLE_DESCRIPTION_COLOR,
 		font = RaidGUIControlXPRewardDetails.FONT,
 		font_size = RaidGUIControlXPRewardDetails.TITLE_DESCRIPTION_FONT_SIZE,
 		h = RaidGUIControlXPRewardDetails.TITLE_DESCRIPTION_H,
+		name = "title_description",
 		text = self:translate("menu_loot_screen_bracket_unlocked_title", true),
+		vertical = "center",
 		y = RaidGUIControlXPRewardDetails.TITLE_DESCRIPTION_Y,
 	}
 
@@ -95,12 +95,12 @@ function RaidGUIControlXPRewardDetails:_create_title()
 	local title_params = {
 		align = "center",
 		alpha = 0,
-		name = "customization_name",
-		vertical = "top",
 		color = RaidGUIControlXPRewardDetails.TITLE_COLOR,
 		font = RaidGUIControlXPRewardDetails.FONT,
 		font_size = RaidGUIControlXPRewardDetails.TITLE_FONT_SIZE,
+		name = "customization_name",
 		text = self:translate("menu_loot_screen_experience_bonus_title", true),
+		vertical = "top",
 		y = self._title_description:y() + self._title_description:h() + RaidGUIControlXPRewardDetails.TITLE_PADDING_TOP,
 	}
 
@@ -120,8 +120,8 @@ end
 
 function RaidGUIControlXPRewardDetails:_create_reward_image()
 	local reward_image_panel_params = {
-		name = "reward_image_panel",
 		h = RaidGUIControlXPRewardDetails.REWARD_ICON_PANEL_H,
+		name = "reward_image_panel",
 		w = self._left_panel:w(),
 		y = RaidGUIControlXPRewardDetails.REWARD_ICON_PANEL_Y,
 	}
@@ -144,21 +144,21 @@ end
 function RaidGUIControlXPRewardDetails:_create_xp_value()
 	local xp_value_params = {
 		alpha = 0,
-		name = "xp_value",
-		text = "456 XP",
 		color = RaidGUIControlXPRewardDetails.XP_VALUE_COLOR,
 		font = RaidGUIControlXPRewardDetails.FONT,
 		font_size = RaidGUIControlXPRewardDetails.XP_VALUE_FONT_SIZE,
+		name = "xp_value",
+		text = "456 XP",
 	}
 
 	self._xp_value_text = self._right_panel:text(xp_value_params)
 
 	local xp_value_label_params = {
 		alpha = 0,
-		name = "xp_value_label",
 		color = RaidGUIControlXPRewardDetails.XP_VALUE_LABEL_COLOR,
 		font = RaidGUIControlXPRewardDetails.FONT,
 		font_size = RaidGUIControlXPRewardDetails.XP_VALUE_LABEL_FONT_SIZE,
+		name = "xp_value_label",
 		text = self:translate("xp_label", true),
 	}
 
@@ -281,8 +281,8 @@ end
 
 function RaidGUIControlXPRewardDetails:_create_right_panel()
 	local right_panel_params = {
-		name = "right_panel",
 		h = self._object:h(),
+		name = "right_panel",
 		w = self._object:w() - self._left_panel:w(),
 	}
 
@@ -295,14 +295,14 @@ function RaidGUIControlXPRewardDetails:_create_description()
 	local description_params = {
 		align = "left",
 		alpha = 0,
-		name = "description",
-		vertical = "top",
-		wrap = true,
 		color = RaidGUIControlXPRewardDetails.DESCRIPTION_COLOR,
 		font = RaidGUIControlXPRewardDetails.DESCRIPTION_FONT,
 		font_size = RaidGUIControlXPRewardDetails.DESCRIPTION_FONT_SIZE,
+		name = "description",
 		text = self:translate("menu_loot_screen_experience_bonus_description"),
+		vertical = "top",
 		w = RaidGUIControlXPRewardDetails.DESCRIPTION_W,
+		wrap = true,
 		y = RaidGUIControlXPRewardDetails.DESCRIPTION_Y,
 	}
 
@@ -313,15 +313,15 @@ function RaidGUIControlXPRewardDetails:_create_description()
 	local title_description_right_params = {
 		align = "left",
 		alpha = 0,
-		name = "title_description_right",
-		vertical = "center",
-		wrap = true,
 		color = RaidGUIControlXPRewardDetails.TITLE_DESCRIPTION_RIGHT_COLOR,
 		font = RaidGUIControlXPRewardDetails.FONT,
 		font_size = RaidGUIControlXPRewardDetails.TITLE_DESCRIPTION_RIGHT_FONT_SIZE,
 		h = RaidGUIControlXPRewardDetails.TITLE_DESCRIPTION_RIGHT_H,
+		name = "title_description_right",
 		text = self:translate("menu_loot_screen_bonus_xp_points", true),
+		vertical = "center",
 		w = RaidGUIControlXPRewardDetails.DESCRIPTION_W,
+		wrap = true,
 		x = self._description:x(),
 		y = RaidGUIControlXPRewardDetails.TITLE_DESCRIPTION_RIGHT_Y,
 	}

@@ -40,9 +40,9 @@ function SpecialObjectiveGroupElement:draw_links(t, dt, selected_unit, all_units
 					if draw then
 						self:_draw_link({
 							b = 0.75,
+							from_unit = self._unit,
 							g = 0,
 							r = 0,
-							from_unit = self._unit,
 							to_unit = unit,
 						})
 					end
@@ -66,9 +66,9 @@ function SpecialObjectiveGroupElement:update_selected(t, dt, selected_unit, all_
 			if draw then
 				self:_draw_link({
 					b = 0.75,
+					from_unit = unit,
 					g = 0,
 					r = 0,
-					from_unit = unit,
 					to_unit = self._unit,
 				})
 			end
@@ -382,7 +382,6 @@ function SpecialObjectiveGroupElement:_build_panel(panel, panel_sizer)
 		ctrlr_proportions = 2,
 		name = "Mode:",
 		name_proportions = 1,
-		sorted = false,
 		options = {
 			"randomizer",
 			"patrol_group",
@@ -392,22 +391,23 @@ function SpecialObjectiveGroupElement:_build_panel(panel, panel_sizer)
 		},
 		panel = panel,
 		sizer = panel_sizer,
+		sorted = false,
 		tooltip = tooltip,
 		value = self._hed.mode,
 	}
 	local mode = CoreEws.combobox(mode_params)
 
 	mode:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "set_element_data"), {
-		value = "mode",
 		ctrlr = mode,
+		value = "mode",
 	})
 
 	local use_instigator = EWS:CheckBox(panel, "Use instigator", "")
 
 	use_instigator:set_value(self._hed.use_instigator)
 	use_instigator:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		value = "use_instigator",
 		ctrlr = use_instigator,
+		value = "use_instigator",
 	})
 	panel_sizer:add(use_instigator, 0, 0, "EXPAND")
 
@@ -418,20 +418,20 @@ function SpecialObjectiveGroupElement:_build_panel(panel, panel_sizer)
 		min = 0,
 		name = "Base chance:",
 		name_proportions = 1,
-		tooltip = "Used to specify chance to happen (1.0 == 100%)",
 		panel = panel,
 		sizer = panel_sizer,
+		tooltip = "Used to specify chance to happen (1.0 == 100%)",
 		value = self._hed.base_chance,
 	}
 	local base_chance = CoreEws.number_controller(base_chance_params)
 
 	base_chance:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
-		value = "base_chance",
 		ctrlr = base_chance,
+		value = "base_chance",
 	})
 	base_chance:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
-		value = "base_chance",
 		ctrlr = base_chance,
+		value = "base_chance",
 	})
 
 	self._btn_toolbar = EWS:ToolBar(panel, "", "TB_FLAT,TB_NODIVIDER")

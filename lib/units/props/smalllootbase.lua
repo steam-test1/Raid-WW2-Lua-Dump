@@ -28,15 +28,15 @@ function SmallLootBase:take(unit)
 
 	managers.statistics:collect_dogtags(count)
 	managers.dialog:queue_dialog("player_gen_loot_" .. tostring(loot_size), {
-		skip_idle_check = true,
 		instigator = managers.player:local_player(),
+		skip_idle_check = true,
 	})
 	managers.notification:add_notification({
+		acquired = managers.lootdrop:picked_up_current_leg(),
 		duration = 2,
 		id = "hud_hint_grabbed_nazi_gold",
-		shelf_life = 5,
-		acquired = managers.lootdrop:picked_up_current_leg(),
 		notification_type = HUDNotification.DOG_TAG,
+		shelf_life = 5,
 		total = managers.lootdrop:loot_spawned_current_leg(),
 	})
 end
@@ -46,11 +46,11 @@ function SmallLootBase:taken(skip_sync)
 
 	if Network:is_server() then
 		managers.notification:add_notification({
+			acquired = managers.lootdrop:picked_up_current_leg(),
 			duration = 2,
 			id = "hud_hint_grabbed_nazi_gold",
-			shelf_life = 5,
-			acquired = managers.lootdrop:picked_up_current_leg(),
 			notification_type = HUDNotification.DOG_TAG,
+			shelf_life = 5,
 			total = managers.lootdrop:loot_spawned_current_leg(),
 		})
 		self:_set_empty()

@@ -30,10 +30,10 @@ function FragGrenade:_setup_from_tweak_data()
 
 	self._custom_params = {
 		camera_shake_max_mul = 4,
-		sound_muffle_effect = true,
 		effect = self._effect_name,
 		feedback_range = self._range * 2,
 		sound_event = sound_event,
+		sound_muffle_effect = true,
 	}
 end
 
@@ -91,8 +91,6 @@ function FragGrenade:_detonate(tag, unit, body, other_unit, other_body, position
 	managers.explosion:play_sound_and_effects(pos, normal, range, self._custom_params)
 
 	local hit_units, splinters, results = managers.explosion:detect_and_give_dmg({
-		player_damage = 0,
-		push_units = true,
 		alert_radius = self._alert_radius,
 		collision_slotmask = slot_mask,
 		curve_pow = self._curve_pow,
@@ -101,6 +99,8 @@ function FragGrenade:_detonate(tag, unit, body, other_unit, other_body, position
 		ignore_unit = self._unit,
 		killzone_range = self._killzone_range,
 		owner = self._unit,
+		player_damage = 0,
+		push_units = true,
 		range = range,
 		user = self._unit,
 	})

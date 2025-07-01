@@ -67,8 +67,8 @@ function CopActionIdle:init(action_desc, common_data)
 
 		if not stand_rsrv or mvector3.distance_sq(stand_rsrv.position, common_data.pos) > 400 then
 			self._unit:brain():add_pos_rsrv("stand", {
-				radius = 30,
 				position = mvector3.copy(common_data.pos),
+				radius = 30,
 			})
 		end
 	end
@@ -152,9 +152,9 @@ function CopActionIdle:update(t)
 						self._rot_offset = -spin
 
 						local new_action_data = {
+							angle = spin,
 							body_part = 2,
 							type = "turn",
-							angle = spin,
 						}
 
 						self._ext_movement:action_request(new_action_data)
@@ -170,9 +170,9 @@ function CopActionIdle:update(t)
 		self._modifier:set_target_z(target_vec)
 	elseif self._rot_offset then
 		local new_action_data = {
+			angle = self._start_fwd:to_polar_with_reference(self._common_data.fwd, math.UP).spin,
 			body_part = 2,
 			type = "turn",
-			angle = self._start_fwd:to_polar_with_reference(self._common_data.fwd, math.UP).spin,
 		}
 
 		self._ext_movement:action_request(new_action_data)

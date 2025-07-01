@@ -488,6 +488,7 @@ function NpcVehicleDrivingExt:_find_bridge(cop_path, target_path, unit_and_pos)
 	local player_position = player_unit:position()
 	local cop_on_checkpoint = cop_path.marker_checkpoints[point_id_in_direction]
 	local min_distance_marker = {
+		direction = nil,
 		distance = 2000000,
 	}
 
@@ -607,13 +608,13 @@ function NpcVehicleDrivingExt:_debug_show()
 	self._debug.ws = Overlay:newgui():create_screen_workspace()
 	self._debug.panel = self._debug.ws:panel()
 	self._debug.info = self._debug.panel:text({
+		color = Color.yellow,
+		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.lato, 14),
 		font_size = 14,
 		layer = 2000,
 		name = "debug_info",
 		text = "",
 		x = 14,
-		color = Color.yellow,
-		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.lato, 14),
 		y = 100 + debug_output_offset,
 	})
 	managers.motion_path._debug_output_offset = managers.motion_path._debug_output_offset + 170

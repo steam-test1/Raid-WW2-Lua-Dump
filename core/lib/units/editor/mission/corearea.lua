@@ -494,8 +494,8 @@ function CoreAreaUnitElement:_build_panel(panel, panel_sizer)
 	area_type:set_value(self._hed.area_type)
 	types_sizer:add(area_type, 3, 0, "EXPAND")
 	area_type:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "set_element_data"), {
-		value = "area_type",
 		ctrlr = area_type,
+		value = "area_type",
 	})
 	panel_sizer:add(types_sizer, 0, 0, "EXPAND")
 
@@ -585,13 +585,13 @@ function CoreAreaUnitElement:_altitude_ctrlr(panel, name, value, type, sizer)
 
 	spin:set_min_size(Vector3(-1, 10, 0))
 	spin:connect("EVT_SCROLL_LINEUP", callback(self, self, "set_altitude_spin"), {
-		step = 1,
 		ctrl = ctrl,
+		step = 1,
 		type = type,
 	})
 	spin:connect("EVT_SCROLL_LINEDOWN", callback(self, self, "set_altitude_spin"), {
-		step = -1,
 		ctrl = ctrl,
+		step = -1,
 		type = type,
 	})
 	ctrl_sizer:add(spin, 0, 0, "EXPAND")

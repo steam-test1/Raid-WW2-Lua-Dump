@@ -91,9 +91,9 @@ end
 
 function NavObstacleElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
+		mask = self:_select_unit_mask(),
 		ray_type = "body editor",
 		sample = true,
-		mask = self:_select_unit_mask(),
 	})
 
 	if ray and ray.unit then
@@ -103,9 +103,9 @@ end
 
 function NavObstacleElement:select_unit()
 	local ray = managers.editor:unit_by_raycast({
+		mask = self:_select_unit_mask(),
 		ray_type = "body editor",
 		sample = true,
-		mask = self:_select_unit_mask(),
 	})
 
 	if ray and ray.unit then
@@ -200,12 +200,12 @@ function NavObstacleElement:_add_unit(unit, all_object_names, obstacle_list_data
 		ctrlr_proportions = 2,
 		name = "Object:",
 		name_proportions = 1,
-		sizer_proportions = 1,
-		sorted = true,
-		tooltip = "Select an object from the combobox",
 		options = all_object_names,
 		panel = panel,
 		sizer = h_sizer,
+		sizer_proportions = 1,
+		sorted = true,
+		tooltip = "Select an object from the combobox",
 		value = self._get_indented_obj_name(nil, unit, default_obj_idstr),
 	}
 	local obj_names = CoreEws.combobox(obj_names_params)

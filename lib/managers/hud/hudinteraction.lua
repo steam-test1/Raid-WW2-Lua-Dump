@@ -11,12 +11,12 @@ function HUDInteraction:init(hud, child_name)
 	self._progress_bar_x = self._hud_panel:w() / 2 - self._progress_bar_width / 2
 	self._progress_bar_y = self._hud_panel:h() / 2 + 191
 	self._progress_bar_bg = self._hud_panel:bitmap({
+		h = self._progress_bar_height,
 		layer = 2,
 		name = "progress_bar_bg",
-		visible = false,
-		h = self._progress_bar_height,
 		texture = tweak_data.gui.icons.interaction_hold_meter_bg.texture,
 		texture_rect = tweak_data.gui.icons.interaction_hold_meter_bg.texture_rect,
+		visible = false,
 		w = self._progress_bar_width,
 		x = self._progress_bar_x,
 		y = self._progress_bar_y,
@@ -34,27 +34,27 @@ function HUDInteraction:init(hud, child_name)
 
 	local interact_text = self._hud_panel:text({
 		align = "center",
+		font = HUDInteraction.FONT,
+		font_size = HUDInteraction.FONT_SIZE,
 		h = 64,
 		layer = 1,
+		name = self._child_name_text,
 		text = "HELLO",
 		valign = "center",
 		visible = false,
-		font = HUDInteraction.FONT,
-		font_size = HUDInteraction.FONT_SIZE,
-		name = self._child_name_text,
 	})
 	local invalid_text = self._hud_panel:text({
 		align = "center",
 		blend_mode = "normal",
+		color = Color(1, 0.3, 0.3),
+		font = tweak_data.gui.fonts.din_compressed_outlined_24,
 		font_size = 24,
 		h = 64,
 		layer = 3,
+		name = self._child_ivalid_name_text,
 		text = "HELLO",
 		valign = "center",
 		visible = false,
-		color = Color(1, 0.3, 0.3),
-		font = tweak_data.gui.fonts.din_compressed_outlined_24,
-		name = self._child_ivalid_name_text,
 	})
 
 	interact_text:set_center_y(self._hud_panel:h() / 2 + 200)
@@ -130,11 +130,11 @@ function HUDInteraction:show_interaction_bar(current, total)
 	self._progress_bar = self._hud_panel:rect({
 		alpha = 1,
 		blend_mode = "normal",
+		color = tweak_data.gui.colors.interaction_bar,
 		h = 0,
 		layer = 3,
 		name = "interaction_progress_bar_show",
 		w = 0,
-		color = tweak_data.gui.colors.interaction_bar,
 		x = self._progress_bar_x,
 		y = self._progress_bar_y,
 	})
@@ -166,10 +166,10 @@ function HUDInteraction:hide_interaction_bar(complete, show_interact_at_finish)
 		local progress_full = self._hud_panel:rect({
 			alpha = 1,
 			blend_mode = "normal",
-			layer = 3,
-			name = "interaction_progress_bar_hide",
 			color = Color(0.8666666666666667, 0.6039215686274509, 0.2196078431372549),
 			h = self._progress_bar_height,
+			layer = 3,
+			name = "interaction_progress_bar_hide",
 			w = self._progress_bar_width,
 			x = self._progress_bar_x,
 			y = self._progress_bar_y,
@@ -182,10 +182,10 @@ function HUDInteraction:hide_interaction_bar(complete, show_interact_at_finish)
 		local progress_cancel = self._hud_panel:rect({
 			alpha = 1,
 			blend_mode = "normal",
-			layer = 3,
-			name = "interaction_progress_bar_cancel",
 			color = Color(0.8666666666666667, 0.6039215686274509, 0.2196078431372549),
 			h = self._progress_bar:h(),
+			layer = 3,
+			name = "interaction_progress_bar_cancel",
 			w = self._progress_bar:w(),
 			x = self._progress_bar_x,
 			y = self._progress_bar_y,
@@ -251,21 +251,21 @@ function HUDInteraction:_show_details(params)
 
 	local icon_gui = tweak_data.gui:get_full_gui_data(params.icon)
 	local detail_icon = self._details_panel:bitmap({
-		name = "details_icon",
 		color = params.color,
 		h = HUDInteraction.DETAILS_ICON_SIZE,
+		name = "details_icon",
 		texture = icon_gui.texture,
 		texture_rect = icon_gui.texture_rect,
 		w = HUDInteraction.DETAILS_ICON_SIZE,
 		x = HUDInteraction.DETAILS_PADDING,
 	})
 	local detail_text = self._details_panel:text({
-		name = "detail_text",
-		vertical = "center",
 		color = params.color,
 		font = HUDInteraction.FONT,
 		font_size = HUDInteraction.FONT_SIZE,
+		name = "detail_text",
 		text = tostring(params.text),
+		vertical = "center",
 	})
 	local _, _, w, h = detail_text:text_rect()
 

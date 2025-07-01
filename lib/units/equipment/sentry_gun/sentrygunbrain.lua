@@ -565,6 +565,7 @@ function SentryGunBrain:_upd_fire(t)
 				self._allow_turret_abandon = true
 
 				managers.dialog:queue_dialog("player_gen_mg_under_fire", {
+					position = nil,
 					skip_idle_check = true,
 				})
 			end

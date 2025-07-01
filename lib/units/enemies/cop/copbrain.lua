@@ -81,7 +81,11 @@ logic_variants.german_gasmask_shotgun = security_variant
 logic_variants.german_gasmask_commander_backup = security_variant
 logic_variants.german_gasmask_commander_backup_shotgun = security_variant
 logic_variants.german_light_commander_backup = security_variant
+logic_variants.german_light_commander_backup_kar98 = security_variant
+logic_variants.german_light_commander_backup_shotgun = security_variant
 logic_variants.german_heavy_commander_backup = security_variant
+logic_variants.german_heavy_commander_backup_kar98 = security_variant
+logic_variants.german_heavy_commander_backup_shotgun = security_variant
 logic_variants.german_fallschirmjager_light = security_variant
 logic_variants.german_fallschirmjager_light_kar98 = security_variant
 logic_variants.german_fallschirmjager_light_shotgun = security_variant
@@ -191,8 +195,8 @@ function CopBrain:post_init()
 
 	if Network:is_server() then
 		self:add_pos_rsrv("stand", {
-			radius = 30,
 			position = mvector3.copy(self._unit:movement():m_pos()),
+			radius = 30,
 		})
 
 		if not managers.groupai:state():enemy_weapons_hot() then
@@ -208,7 +212,7 @@ function CopBrain:post_init()
 		debug_pause_unit(self._unit, "[CopBrain:post_init] character missing contour extension", self._unit)
 	end
 
-	if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ATTACK_ONLY_IN_AIR) and self._unit:damage() then
+	if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_PUMKIN_HEADS) and self._unit:damage() then
 		self._unit:damage():has_then_run_sequence_simple("halloween_2017")
 	end
 end
@@ -1057,10 +1061,6 @@ function CopBrain:convert_to_criminal(mastermind_criminal)
 	self._unit:movement():set_stance("hos")
 
 	local action_data = {
-		body_part = 1,
-		clamp_to_graph = true,
-		type = "act",
-		variant = "attached_collar_enter",
 		blocks = {
 			action = -1,
 			heavy_hurt = -1,
@@ -1068,6 +1068,10 @@ function CopBrain:convert_to_criminal(mastermind_criminal)
 			light_hurt = -1,
 			walk = -1,
 		},
+		body_part = 1,
+		clamp_to_graph = true,
+		type = "act",
+		variant = "attached_collar_enter",
 	}
 
 	self._unit:brain():action_request(action_data)
@@ -1232,8 +1236,8 @@ function CopBrain:on_pickpocket_interaction(player)
 		local value_line = tweak_data.greed:value_line_id(tweak_table and tweak_table.value)
 
 		managers.dialog:queue_dialog("player_gen_loot_" .. value_line, {
-			skip_idle_check = true,
 			instigator = player,
+			skip_idle_check = true,
 		})
 
 		return tweak_table_name

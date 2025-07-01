@@ -43,7 +43,6 @@ function RaidGUIControlNavigationButton:init(parent, params)
 	end
 
 	self._icon = self._object:image({
-		y = 0,
 		color = RaidGUIControlNavigationButton.COLOR_NORMAL,
 		h = RaidGUIControlNavigationButton.ICON_SIZE,
 		layer = self._object:layer() - 1,
@@ -52,11 +51,10 @@ function RaidGUIControlNavigationButton:init(parent, params)
 		texture_rect = params.icon_texture_rect,
 		w = RaidGUIControlNavigationButton.ICON_SIZE,
 		x = icon_coord_x,
+		y = 0,
 	})
 	self._text = self._object:label({
 		align = "left",
-		vertical = "center",
-		y = 0,
 		color = RaidGUIControlNavigationButton.COLOR_NORMAL,
 		font = params.font,
 		font_size = params.font_size,
@@ -64,7 +62,9 @@ function RaidGUIControlNavigationButton:init(parent, params)
 		layer = self._object:layer() - 1,
 		name = "navigation_button_text_" .. self._name,
 		text = params.text,
+		vertical = "center",
 		x = text_coord_x,
+		y = 0,
 	})
 
 	local x, y, w, h = self._text:text_rect()

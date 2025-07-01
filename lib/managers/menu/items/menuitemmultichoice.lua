@@ -219,9 +219,6 @@ function MenuItemMultiChoice:setup_gui(node, row_item)
 	})
 	row_item.choice_text = row_item.choice_panel:text({
 		align = "center",
-		vertical = "center",
-		x = 0,
-		y = 0,
 		blend_mode = node.row_item_blend_mode,
 		color = node.row_item_hightlight_color,
 		font = row_item.font,
@@ -229,6 +226,9 @@ function MenuItemMultiChoice:setup_gui(node, row_item)
 		layer = node.layers.items,
 		render_template = Idstring("VertexColorTextured"),
 		text = utf8.to_upper(""),
+		vertical = "center",
+		x = 0,
+		y = 0,
 	})
 
 	local w = 20
@@ -237,12 +237,10 @@ function MenuItemMultiChoice:setup_gui(node, row_item)
 	local height = 15
 
 	row_item.arrow_left = row_item.gui_panel:bitmap({
-		texture = "guis/textures/menu_arrows",
-		x = 0,
-		y = 0,
 		blend_mode = node.row_item_blend_mode,
 		color = Color(0.5, 0.5, 0.5),
 		layer = node.layers.items,
+		texture = "guis/textures/menu_arrows",
 		texture_rect = {
 			0,
 			0,
@@ -250,14 +248,14 @@ function MenuItemMultiChoice:setup_gui(node, row_item)
 			24,
 		},
 		visible = self:arrow_visible(),
-	})
-	row_item.arrow_right = row_item.gui_panel:bitmap({
-		texture = "guis/textures/menu_arrows",
 		x = 0,
 		y = 0,
+	})
+	row_item.arrow_right = row_item.gui_panel:bitmap({
 		blend_mode = node.row_item_blend_mode,
 		color = Color(0.5, 0.5, 0.5),
 		layer = node.layers.items,
+		texture = "guis/textures/menu_arrows",
 		texture_rect = {
 			24,
 			0,
@@ -265,6 +263,8 @@ function MenuItemMultiChoice:setup_gui(node, row_item)
 			24,
 		},
 		visible = self:arrow_visible(),
+		x = 0,
+		y = 0,
 	})
 
 	if self:info_panel() == "lobby_campaign" then
@@ -472,13 +472,13 @@ function MenuItemMultiChoiceWithIcon:setup_gui(node, row_item, ...)
 	MenuItemMultiChoiceWithIcon.super.setup_gui(self, node, row_item, ...)
 
 	self._icon = row_item.gui_panel:bitmap({
+		blend_mode = node.row_item_blend_mode,
 		h = 16,
 		layer = 0,
 		name = "icon",
+		texture = self._icon_texture,
 		w = 16,
 		y = 6,
-		blend_mode = node.row_item_blend_mode,
-		texture = self._icon_texture,
 	})
 
 	self._icon:set_right(row_item.arrow_right:x())

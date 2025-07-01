@@ -143,11 +143,11 @@ end
 
 function RaidJobManager:_select_job_dynamic_objectives(obj_id, sub_id_list, sub_completed_list)
 	local obj_data = {
-		prio = 1,
-		xp_weight = 1,
 		description = obj_id .. "_desc",
 		id = "dyn_" .. obj_id,
+		prio = 1,
 		text = obj_id .. "_hl",
+		xp_weight = 1,
 	}
 	local i = 1
 

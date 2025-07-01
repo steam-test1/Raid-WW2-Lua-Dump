@@ -257,9 +257,9 @@ function CoreShapeUnitElement:draw_links(t, dt, selected_unit, all_units)
 				if self:_should_draw_link(selected_unit, unit) then
 					self:_draw_link({
 						b = 0.75,
+						from_unit = unit,
 						g = 0.5,
 						r = 0,
-						from_unit = unit,
 						to_unit = self._unit,
 					})
 					Application:draw(unit, 0, 0.5, 0.75)
@@ -273,9 +273,9 @@ end
 
 function CoreShapeUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
+		mask = managers.slot:get_mask("all"),
 		ray_type = "body editor",
 		sample = true,
-		mask = managers.slot:get_mask("all"),
 	})
 
 	if ray and ray.unit then

@@ -201,14 +201,14 @@ end
 function LootScreenGui:_layout_profile_name()
 	local x, y, w, h = self._node.components.raid_menu_header:get_screen_name_rect()
 	local profile_name_label_params = {
-		h = 64,
-		name = "loot_screen_profile_name_label",
-		w = 400,
-		y = 0,
 		font = LootScreenGui.FONT,
 		font_size = LootScreenGui.PROFILE_NAME_FONT_SIZE,
+		h = 64,
+		name = "loot_screen_profile_name_label",
 		text = utf8.to_upper(managers.player:get_character_profile_name()),
+		w = 400,
 		x = x + w + LootScreenGui.PROFILE_NAME_PADDING_LEFT,
+		y = 0,
 	}
 
 	self._profile_name = self._root_panel:text(profile_name_label_params)
@@ -232,8 +232,8 @@ function LootScreenGui:_layout_loot_breakdown_items()
 	local loot_data_panel_params = {
 		h = 426,
 		name = "loot_screen_loot_data_panel",
-		y = 51,
 		visible = v,
+		y = 51,
 	}
 
 	self._loot_data_panel = self._persistent_panel:panel(loot_data_panel_params)
@@ -320,20 +320,20 @@ end
 function LootScreenGui:_layout_first_screen()
 	local first_screen_panel_params = {
 		alpha = 0,
+		h = self._root_panel:h(),
 		name = "first_screen_panel",
+		w = self._root_panel:w(),
 		x = 0,
 		y = 0,
-		h = self._root_panel:h(),
-		w = self._root_panel:w(),
 	}
 
 	self._first_screen_panel = self._root_panel:panel(first_screen_panel_params)
 	self._brackets = self:_get_loot_point_data()
 
 	local loot_progress_bar_params = {
+		brackets = self._brackets,
 		name = "loot_progress_bar",
 		total_points = 1100,
-		brackets = self._brackets,
 		x = LootScreenGui.LOOT_PROGRESS_BAR_X,
 		y = LootScreenGui.LOOT_PROGRESS_BAR_Y,
 	}
@@ -342,13 +342,13 @@ function LootScreenGui:_layout_first_screen()
 
 	local total_loot_params = {
 		align = "center",
-		name = "total_loot",
-		text = "0000",
-		vertical = "center",
 		color = LootScreenGui.LOOT_COLOR,
 		font = LootScreenGui.FONT,
 		font_size = LootScreenGui.LOOT_FONT_SIZE,
 		h = LootScreenGui.TOTAL_LOOT_H,
+		name = "total_loot",
+		text = "0000",
+		vertical = "center",
 		w = LootScreenGui.TOTAL_LOOT_W,
 		x = self._first_screen_panel:w() / 2,
 		y = self._loot_progress_bar:y() + self._loot_progress_bar:h() + LootScreenGui.LOOT_PROGRESS_BAR_PADDING_DOWN,
@@ -358,13 +358,13 @@ function LootScreenGui:_layout_first_screen()
 
 	local total_loot_description_params = {
 		align = "center",
-		name = "total_loot",
-		vertical = "center",
 		color = LootScreenGui.LOOT_DESCRIPTION_COLOR,
 		font = LootScreenGui.FONT,
 		font_size = LootScreenGui.LOOT_DESCRIPTION_FONT_SIZE,
 		h = LootScreenGui.TOTAL_LOOT_H,
+		name = "total_loot",
 		text = self:translate("menu_loot_screen_total_loot", true),
+		vertical = "center",
 		w = LootScreenGui.TOTAL_LOOT_W,
 		x = self._first_screen_panel:w() / 2,
 		y = self._total_loot_label:y() + self._total_loot_label:h(),
@@ -372,13 +372,13 @@ function LootScreenGui:_layout_first_screen()
 	local total_loot_description = self._first_screen_panel:text(total_loot_description_params)
 	local acquired_loot_params = {
 		align = "center",
-		name = "acquired_loot",
-		text = "0000",
-		vertical = "center",
 		color = LootScreenGui.LOOT_COLOR,
 		font = LootScreenGui.FONT,
 		font_size = LootScreenGui.LOOT_FONT_SIZE,
 		h = LootScreenGui.ACQUIRED_LOOT_H,
+		name = "acquired_loot",
+		text = "0000",
+		vertical = "center",
 		w = LootScreenGui.ACQUIRED_LOOT_W,
 		y = self._total_loot_label:y(),
 	}
@@ -389,13 +389,13 @@ function LootScreenGui:_layout_first_screen()
 
 	local acquired_loot_description_params = {
 		align = "center",
-		name = "total_loot",
-		vertical = "center",
 		color = LootScreenGui.LOOT_DESCRIPTION_COLOR,
 		font = LootScreenGui.FONT,
 		font_size = LootScreenGui.LOOT_DESCRIPTION_FONT_SIZE,
 		h = LootScreenGui.ACQUIRED_LOOT_H,
+		name = "total_loot",
 		text = self:translate("menu_loot_screen_acquired_loot", true),
+		vertical = "center",
 		w = LootScreenGui.ACQUIRED_LOOT_W,
 		y = total_loot_description:y(),
 	}
@@ -406,15 +406,15 @@ function LootScreenGui:_layout_first_screen()
 	local bracket_unlocked_title_params = {
 		align = "left",
 		alpha = 0,
-		name = "bracket_unlocked_title",
-		vertical = "top",
-		w = 400,
-		x = 0,
 		color = LootScreenGui.BRACKET_UNLOCKED_TITLE_COLOR,
 		font = LootScreenGui.FONT,
 		font_size = LootScreenGui.BRACKET_UNLOCKED_TITLE_FONT_SIZE,
 		h = LootScreenGui.BRACKET_UNLOCKED_TITLE_H,
+		name = "bracket_unlocked_title",
 		text = self:translate("menu_loot_screen_bracket_unlocked_title", true),
+		vertical = "top",
+		w = 400,
+		x = 0,
 		y = LootScreenGui.BRACKET_UNLOCKED_TITLE_Y,
 	}
 
@@ -423,15 +423,15 @@ function LootScreenGui:_layout_first_screen()
 	local bracket_unlocked_label_params = {
 		align = "center",
 		alpha = 0,
+		color = LootScreenGui.BRACKET_UNLOCKED_LABEL_COLOR,
+		font = LootScreenGui.FONT,
+		font_size = LootScreenGui.BRACKET_UNLOCKED_LABEL_FONT_SIZE,
+		h = LootScreenGui.BRACKET_UNLOCKED_LABEL_H,
 		name = "bracket_unlocked_label",
 		text = "",
 		vertical = "center",
 		w = 100,
 		x = 0,
-		color = LootScreenGui.BRACKET_UNLOCKED_LABEL_COLOR,
-		font = LootScreenGui.FONT,
-		font_size = LootScreenGui.BRACKET_UNLOCKED_LABEL_FONT_SIZE,
-		h = LootScreenGui.BRACKET_UNLOCKED_LABEL_H,
 		y = self._bracket_unlocked_title:y() + self._bracket_unlocked_title:h(),
 	}
 
@@ -440,41 +440,41 @@ end
 
 function LootScreenGui:_layout_second_screen()
 	local second_screen_panel_params = {
+		h = self._root_panel:h(),
 		name = "second_screen_panel",
+		w = self._root_panel:w(),
 		x = 0,
 		y = 0,
-		h = self._root_panel:h(),
-		w = self._root_panel:w(),
 	}
 
 	self._second_screen_panel = self._root_panel:panel(second_screen_panel_params)
 	self._local_loot_panel = self._second_screen_panel:panel({
+		h = LootScreenGui.LOCAL_LOOT_H,
 		layer = 10,
 		name = "local_loot_panel",
 		visible = false,
-		h = LootScreenGui.LOCAL_LOOT_H,
 		w = LootScreenGui.LOCAL_LOOT_W,
 		x = LootScreenGui.LOCAL_LOOT_X,
 		y = LootScreenGui.LOCAL_LOOT_Y,
 	})
 	self._peer_loot_panel = self._second_screen_panel:panel({
 		alpha = 0,
+		h = LootScreenGui.PEER_LOOT_PANEL_H,
 		name = "peer_loot_panel",
 		visible = false,
-		h = LootScreenGui.PEER_LOOT_PANEL_H,
 		w = LootScreenGui.PEER_LOOT_PANEL_W,
 		x = LootScreenGui.PEER_LOOT_PANEL_X,
 		y = LootScreenGui.PEER_LOOT_PANEL_Y,
 	})
 
 	local customization_reward_params = {
+		h = LootScreenGui.LOCAL_LOOT_H,
 		name = "customization_reward",
+		redeem_customization_callback = callback(self, self, "redeem_customization_xp"),
 		visible = false,
+		w = LootScreenGui.LOCAL_LOOT_W,
 		x = 0,
 		y = 0,
-		h = LootScreenGui.LOCAL_LOOT_H,
-		redeem_customization_callback = callback(self, self, "redeem_customization_xp"),
-		w = LootScreenGui.LOCAL_LOOT_W,
 	}
 
 	self._customization_details = self._local_loot_panel:create_custom_control(RaidGUIControlCharacterCustomizationDetails, customization_reward_params)
@@ -484,57 +484,57 @@ function LootScreenGui:_layout_second_screen()
 	self._customization_details:set_customization(customization)
 
 	local card_pack_reward_params = {
+		h = LootScreenGui.LOCAL_LOOT_H,
 		layer = 15,
 		name = "card_pack_reward",
 		visible = false,
+		w = LootScreenGui.LOCAL_LOOT_W,
 		x = 0,
 		y = 0,
-		h = LootScreenGui.LOCAL_LOOT_H,
-		w = LootScreenGui.LOCAL_LOOT_W,
 	}
 
 	self._card_pack_reward = self._local_loot_panel:create_custom_control(RaidGUIControlRewardCardPack, card_pack_reward_params)
 
 	local xp_reward_params = {
+		h = LootScreenGui.LOCAL_LOOT_H,
 		name = "xp_reward",
 		visible = false,
+		w = LootScreenGui.LOCAL_LOOT_W,
 		x = 0,
 		y = 0,
-		h = LootScreenGui.LOCAL_LOOT_H,
-		w = LootScreenGui.LOCAL_LOOT_W,
 	}
 
 	self._xp_reward = self._local_loot_panel:create_custom_control(RaidGUIControlXPRewardDetails, xp_reward_params)
 
 	local weapon_point_reward_params = {
+		h = LootScreenGui.LOCAL_LOOT_H,
 		name = "weapon_point_reward",
 		visible = false,
+		w = LootScreenGui.LOCAL_LOOT_W,
 		x = 0,
 		y = 0,
-		h = LootScreenGui.LOCAL_LOOT_H,
-		w = LootScreenGui.LOCAL_LOOT_W,
 	}
 
 	self._weapon_point_reward = self._local_loot_panel:create_custom_control(RaidGUIControlWeaponPointRewardDetails, weapon_point_reward_params)
 
 	local melee_weapon_reward_params = {
+		h = LootScreenGui.LOCAL_LOOT_H,
 		name = "melee_weapon_reward",
 		visible = false,
+		w = LootScreenGui.LOCAL_LOOT_W,
 		x = 0,
 		y = 0,
-		h = LootScreenGui.LOCAL_LOOT_H,
-		w = LootScreenGui.LOCAL_LOOT_W,
 	}
 
 	self._melee_weapon_reward = self._local_loot_panel:create_custom_control(RaidGUIControlMeleeWeaponRewardDetails, melee_weapon_reward_params)
 
 	local gold_bar_reward_params = {
+		h = LootScreenGui.LOCAL_LOOT_H,
 		name = "gold_bar_reward",
 		visible = false,
+		w = LootScreenGui.LOCAL_LOOT_W,
 		x = 0,
 		y = 0,
-		h = LootScreenGui.LOCAL_LOOT_H,
-		w = LootScreenGui.LOCAL_LOOT_W,
 	}
 
 	self._gold_bar_reward = self._local_loot_panel:create_custom_control(RaidGUIControlGoldBarRewardDetails, gold_bar_reward_params)
@@ -544,18 +544,18 @@ function LootScreenGui:_get_loot_point_data()
 	local tree = {
 		{
 			activated = false,
-			tier = "bronze",
 			points_needed = LootDropTweakData.BRONZE_POINT_REQUIREMENT,
+			tier = "bronze",
 		},
 		{
 			activated = false,
-			tier = "silver",
 			points_needed = LootDropTweakData.SILVER_POINT_REQUIREMENT,
+			tier = "silver",
 		},
 		{
 			activated = false,
-			tier = "gold",
 			points_needed = LootDropTweakData.GOLD_POINT_REQUIREMENT,
+			tier = "gold",
 		},
 	}
 
@@ -693,10 +693,10 @@ function LootScreenGui:on_loot_dropped_for_peer(drop)
 	end
 
 	local peer_loot_params = {
+		name = "peer_reward_" .. slot.peer_id,
 		text = "",
 		visible = true,
 		x = 0,
-		name = "peer_reward_" .. slot.peer_id,
 		y = (slot.index - 1) * self._peer_loot_panel:h() / 3,
 	}
 
@@ -1238,8 +1238,8 @@ function LootScreenGui:bind_controller_inputs()
 		},
 		keyboard = {
 			{
-				key = "footer_continue",
 				callback = callback(self, self, "_continue_button_on_click", nil),
+				key = "footer_continue",
 			},
 		},
 	}
@@ -1256,8 +1256,8 @@ function LootScreenGui:bind_controller_inputs_card_rewards()
 		controller = {},
 		keyboard = {
 			{
-				key = "footer_continue",
 				callback = callback(self, self, "_continue_button_on_click", nil),
+				key = "footer_continue",
 			},
 		},
 	}

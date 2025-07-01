@@ -2381,15 +2381,15 @@ function NetworkMatchMakingPSN:_error_message_solver(info)
 	end
 
 	local error_texts = {
+		["8002231d"] = self._creating_lobby and "dialog_err_failed_creating_lobby" or self._searching_lobbys and "dialog_err_failed_searching_lobbys" or self._joining_lobby and "dialog_err_failed_joining_lobby" or nil,
 		["80022328"] = "dialog_err_room_allready_joined",
+		["8002233a"] = self._creating_lobby and "dialog_err_failed_creating_lobby" or self._searching_lobbys and "dialog_err_failed_searching_lobbys" or self._joining_lobby and "dialog_err_failed_joining_lobby" or nil,
 		["80550C3A"] = "dialog_err_failed_joining_lobby",
 		["80550D15"] = "dialog_err_failed_joining_lobby",
 		["80550c30"] = "dialog_err_room_no_longer_exists",
 		["80550d13"] = "dialog_err_room_no_longer_exists",
 		["80550d15"] = "dialog_err_room_no_longer_exists",
 		["80550d19"] = "dialog_err_room_is_full",
-		["8002231d"] = self._creating_lobby and "dialog_err_failed_creating_lobby" or self._searching_lobbys and "dialog_err_failed_searching_lobbys" or self._joining_lobby and "dialog_err_failed_joining_lobby" or nil,
-		["8002233a"] = self._creating_lobby and "dialog_err_failed_creating_lobby" or self._searching_lobbys and "dialog_err_failed_searching_lobbys" or self._joining_lobby and "dialog_err_failed_joining_lobby" or nil,
 	}
 	local text_id = error_texts[info.error]
 	local title = managers.localization:text("dialog_error_title")
@@ -2442,7 +2442,6 @@ function NetworkMatchMakingPSN:send_join_invite(friend)
 	end
 
 	PSN:send_message_gui({
-		type = "INVITE",
 		attachment = {
 			room_id = self._room_id,
 			version = self:_game_version(),
@@ -2452,6 +2451,7 @@ function NetworkMatchMakingPSN:send_join_invite(friend)
 			tostring(friend),
 		},
 		subject = managers.localization:text("dialog_mp_invite_title"),
+		type = "INVITE",
 	})
 end
 

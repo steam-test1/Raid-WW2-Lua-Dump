@@ -11,12 +11,12 @@ function CopInventory:init(unit)
 	self._use_data_alias = "npc"
 	self._align_places = {}
 	self._align_places.right_hand = {
-		on_body = true,
 		obj3d_name = Idstring("a_weapon_right_front"),
+		on_body = true,
 	}
 	self._align_places.back = {
-		on_body = true,
 		obj3d_name = Idstring("Hips"),
+		on_body = true,
 	}
 	self._listener_id = "CopInventory" .. tostring(unit:key())
 end

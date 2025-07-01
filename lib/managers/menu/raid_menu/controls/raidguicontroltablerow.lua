@@ -15,12 +15,12 @@ function RaidGUIControlTableRow:init(parent, params, row_data, table_params)
 	cell_params.layer = self:layer() + 150
 	cell_params.y = 0
 	self._selector_mark = self:rect({
+		color = tweak_data.gui.colors.raid_red,
+		h = params.height,
 		visible = false,
 		w = 2,
 		x = 0,
 		y = 0,
-		color = tweak_data.gui.colors.raid_red,
-		h = params.height,
 	})
 
 	local x = 0

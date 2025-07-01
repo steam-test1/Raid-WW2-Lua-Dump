@@ -179,9 +179,9 @@ function EscortUnitElement:draw_links(t, dt, selected_unit, all_units)
 			for _, unit in ipairs(units) do
 				self:_draw_link({
 					b = 0,
+					from_unit = from_unit,
 					g = 0.85,
 					r = 0,
-					from_unit = from_unit,
 					to_unit = unit,
 				})
 			end
@@ -194,9 +194,9 @@ function EscortUnitElement:draw_links(t, dt, selected_unit, all_units)
 		if unit == selected_unit or self._unit == selected_unit then
 			self:_draw_link({
 				b = 0.85,
+				from_unit = unit,
 				g = 0.85,
 				r = 0.85,
-				from_unit = unit,
 				to_unit = self._unit,
 			})
 		end

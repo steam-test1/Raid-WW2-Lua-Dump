@@ -47,11 +47,11 @@ end
 
 function HUDTabGreedBar:_create_panel(panel, params)
 	local panel_params = {
+		h = HUDTabGreedBar.HEIGHT,
 		halign = "right",
+		layer = params.layer or panel:layer(),
 		name = "hud_tab_greed_bar",
 		valign = "bottom",
-		h = HUDTabGreedBar.HEIGHT,
-		layer = params.layer or panel:layer(),
 		w = HUDTabGreedBar.WIDTH,
 		x = params.x or 0,
 		y = params.y or 0,
@@ -62,10 +62,10 @@ end
 
 function HUDTabGreedBar:_create_icons()
 	local icons_panel_params = {
+		h = self._object:h(),
 		halign = "left",
 		name = "icons_panel",
 		valign = "top",
-		h = self._object:h(),
 		w = HUDTabGreedBar.ICONS_W,
 	}
 
@@ -75,9 +75,9 @@ function HUDTabGreedBar:_create_icons()
 		halign = "center",
 		layer = 10,
 		name = "frame_icon",
-		valign = "center",
 		texture = tweak_data.gui.icons[HUDTabGreedBar.FRAME_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDTabGreedBar.FRAME_ICON].texture_rect,
+		valign = "center",
 	}
 
 	self._frame_icon = self._icons_panel:bitmap(frame_icon_params)
@@ -89,9 +89,9 @@ function HUDTabGreedBar:_create_icons()
 		halign = "center",
 		layer = 10,
 		name = "loot_icon",
-		valign = "center",
 		texture = tweak_data.gui.icons[HUDTabGreedBar.LOOT_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDTabGreedBar.LOOT_ICON].texture_rect,
+		valign = "center",
 	}
 
 	self._loot_icon = self._icons_panel:bitmap(loot_icon_params)
@@ -101,13 +101,13 @@ function HUDTabGreedBar:_create_icons()
 
 	local gold_icon_params = {
 		alpha = 0,
+		color = tweak_data.gui.colors.raid_gold,
 		halign = "center",
 		layer = 10,
 		name = "gold_icon",
-		valign = "center",
-		color = tweak_data.gui.colors.raid_gold,
 		texture = tweak_data.gui.icons[HUDTabGreedBar.GOLD_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDTabGreedBar.GOLD_ICON].texture_rect,
+		valign = "center",
 	}
 
 	self._gold_icon = self._icons_panel:bitmap(gold_icon_params)
@@ -118,10 +118,10 @@ end
 
 function HUDTabGreedBar:_create_right_panel()
 	local right_panel_params = {
+		h = self._object:h(),
 		halign = "right",
 		name = "right_panel",
 		valign = "top",
-		h = self._object:h(),
 		w = self._object:w() - self._icons_panel:w(),
 	}
 
@@ -133,13 +133,13 @@ end
 function HUDTabGreedBar:_create_title()
 	local title_params = {
 		align = "center",
-		name = "tab_greed_bar_title",
-		vertical = "center",
 		color = HUDTabGreedBar.TITLE_COLOR,
 		font = tweak_data.gui:get_font_path(HUDTabGreedBar.TITLE_FONT, HUDTabGreedBar.TITLE_FONT_SIZE),
 		font_size = HUDTabGreedBar.TITLE_FONT_SIZE,
 		h = HUDTabGreedBar.TITLE_H,
+		name = "tab_greed_bar_title",
 		text = utf8.to_upper(managers.localization:text(HUDTabGreedBar.TITLE_STRING)),
+		vertical = "center",
 		w = self._right_panel:w(),
 	}
 
@@ -151,11 +151,11 @@ end
 
 function HUDTabGreedBar:_create_bar()
 	local progress_bar_background_params = {
-		layer = 1,
-		name = "tab_greed_progress_bar_background",
 		center = HUDTabGreedBar.LOOT_BAR_ICON_M,
 		color = HUDTabGreedBar.LOOT_BAR_COLOR,
+		layer = 1,
 		left = HUDTabGreedBar.LOOT_BAR_ICON_L,
+		name = "tab_greed_progress_bar_background",
 		right = HUDTabGreedBar.LOOT_BAR_ICON_R,
 		w = HUDTabGreedBar.LOOT_BAR_W,
 	}
@@ -165,9 +165,9 @@ function HUDTabGreedBar:_create_bar()
 	self._progress_bar_background:set_center_y(64)
 
 	local progress_bar_progress_panel_params = {
-		name = "tab_progress_bar_progress_panel",
 		h = self._progress_bar_background:h(),
 		layer = self._progress_bar_background:layer() + 1,
+		name = "tab_progress_bar_progress_panel",
 		w = self._progress_bar_background:w(),
 	}
 
@@ -178,10 +178,10 @@ function HUDTabGreedBar:_create_bar()
 
 	local progress_bar_foreground_params = {
 		alpha = 0,
-		name = "tab_loot_bar_foreground",
 		center = HUDTabGreedBar.LOOT_BAR_ICON_M,
 		color = HUDTabGreedBar.LOOT_BAR_FOREGROUND_COLOR,
 		left = HUDTabGreedBar.LOOT_BAR_ICON_L,
+		name = "tab_loot_bar_foreground",
 		right = HUDTabGreedBar.LOOT_BAR_ICON_R,
 		w = self._progress_bar_background:w(),
 	}
@@ -192,13 +192,13 @@ end
 function HUDTabGreedBar:_create_counter()
 	local counter_params = {
 		align = "right",
-		name = "tab_greed_bar_counter",
-		text = "0",
-		vertical = "center",
 		color = HUDTabGreedBar.COUNTER_COLOR,
 		font = tweak_data.gui:get_font_path(HUDTabGreedBar.COUNTER_FONT, HUDTabGreedBar.COUNTER_FONT_SIZE),
 		font_size = HUDTabGreedBar.COUNTER_FONT_SIZE,
 		h = HUDTabGreedBar.COUNTER_H,
+		name = "tab_greed_bar_counter",
+		text = "0",
+		vertical = "center",
 		w = self._right_panel:w(),
 	}
 
@@ -210,13 +210,13 @@ end
 
 function HUDTabGreedBar:_create_tutorialization()
 	local tutorialization_params = {
-		name = "tab_greed_tutorialization",
-		wrap = true,
 		color = HUDTabGreedBar.TUTORIALIZATION_COLOR,
 		font = tweak_data.gui:get_font_path(HUDTabGreedBar.TUTORIALIZATION_FONT, HUDTabGreedBar.TUTORIALIZATION_FONT_SIZE),
 		font_size = HUDTabGreedBar.TUTORIALIZATION_FONT_SIZE,
+		name = "tab_greed_tutorialization",
 		text = managers.localization:text(HUDTabGreedBar.TUTORIALIZATION_STRING),
 		w = self._object:w(),
+		wrap = true,
 		y = self._object:h(),
 	}
 

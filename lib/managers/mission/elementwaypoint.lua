@@ -43,16 +43,16 @@ function ElementWaypoint:on_executed(instigator)
 
 		managers.hud:add_waypoint(self:_get_unique_id(), {
 			distance = true,
-			show_on_screen = true,
-			state = "sneak_present",
-			waypoint_type = "objective",
 			icon = self._values.icon,
 			position = self._values.position,
+			show_on_screen = true,
+			state = "sneak_present",
 			text = text,
 			waypoint_color = wp_color,
 			waypoint_depth = self._values.depth,
 			waypoint_display = self._values.map_display,
 			waypoint_radius = self._values.radius,
+			waypoint_type = "objective",
 			waypoint_width = self._values.width,
 		})
 	elseif managers.hud:get_waypoint_data(self:_get_unique_id()) then

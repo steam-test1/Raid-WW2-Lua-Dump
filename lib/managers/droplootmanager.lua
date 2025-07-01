@@ -146,9 +146,7 @@ function DropLootManager:enemy_drop_item(tweak_table, killer_unit, position, rot
 	local spawned_pickup = self:drop_item(tweak_table, position, rotation, nil, multipliers)
 
 	if alive(spawned_pickup) then
-		spawned_pickup:damage():run_sequence_simple("show_beam")
-
-		local despawn_time = self.DROPED_LOOT_DESPAWN_TIME
+		local despawn_time = spawned_pickup:pickup().despawn_time or self.DROPED_LOOT_DESPAWN_TIME
 		local pickup_type = spawned_pickup:pickup() and spawned_pickup:pickup():get_pickup_type() or ""
 
 		if pickup_type == "health" and managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_DESPAWN_HEALTH) then
@@ -187,14 +185,13 @@ end
 
 function DropLootManager:despawn_item(unit)
 	local ukey = unit:key()
-	local sp_unit = self._spawned_units[ukey]
 
-	if sp_unit then
-		if alive(sp_unit) then
-			sp_unit:set_slot(0)
-		end
-
+	if self._spawned_units[ukey] then
 		self._spawned_units[ukey] = nil
+	end
+
+	if alive(unit) then
+		unit:pickup():despawn_item()
 	end
 end
 
@@ -204,10 +201,10 @@ function DropLootManager:_setup_crate_pattern()
 	self._crate_pattern_idx = 999999
 	self._crate_pattern = {}
 
-	if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ALL_CHESTS_ARE_TIER3) then
-		table.fill_with_item(self._crate_pattern, 3, tweak_data.lootcrate_tiers[3])
-	elseif managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ALL_CHESTS_ARE_LOCKED) then
-		table.fill_with_item(self._crate_pattern, 2, tweak_data.lootcrate_tiers[2])
+	if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_FORCED_CRATE_TIER) then
+		local tier = managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_FORCED_CRATE_TIER)
+
+		table.fill_with_item(self._crate_pattern, tier, tweak_data.lootcrate_tiers[tier])
 	else
 		for tier, amount in ipairs(tweak_data.lootcrate_tiers) do
 			table.fill_with_item(self._crate_pattern, tier, amount)

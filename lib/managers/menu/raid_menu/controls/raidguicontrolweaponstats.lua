@@ -48,33 +48,33 @@ function RaidGUIControlWeaponStats:_set_default_values()
 		accuracy = {
 			accuracy_as_spread = false,
 			delta_value = "00",
-			value = "00",
 			text = self:translate("menu_weapons_stats_accuracy", true),
+			value = "00",
 		},
 		damage = {
 			delta_value = "00",
-			value = "00",
 			text = self:translate("menu_weapons_stats_damage", true),
+			value = "00",
 		},
 		magazine = {
 			delta_value = "00",
-			value = "000",
 			text = self:translate("menu_weapons_stats_magazine", true),
+			value = "000",
 		},
 		rate_of_fire = {
 			delta_value = "00",
-			value = "00",
 			text = self:translate("menu_weapons_stats_rate_of_fire", true),
+			value = "00",
 		},
 		stability = {
 			delta_value = "00",
-			value = "00",
 			text = self:translate("menu_weapons_stats_stability", true),
+			value = "00",
 		},
 		total_ammo = {
 			delta_value = "00",
-			value = "000",
 			text = self:translate("menu_weapons_stats_total_ammo", true),
+			value = "000",
 		},
 	}
 end
@@ -82,39 +82,39 @@ end
 function RaidGUIControlWeaponStats:_get_tabs_params()
 	local tabs_params = {
 		{
-			name = "damage",
 			applied_value = self._values.damage.applied_value or 0,
 			modified_value = self._values.damage.modified_value or 0,
+			name = "damage",
 			text = self._values.damage.text,
 		},
 		{
-			name = "magazine",
 			applied_value = self._values.magazine.applied_value or 0,
 			modified_value = self._values.magazine.modified_value or 0,
+			name = "magazine",
 			text = self._values.magazine.text,
 		},
 		{
-			name = "total_ammo",
 			applied_value = self._values.total_ammo.applied_value or 0,
 			modified_value = self._values.total_ammo.modified_value or 0,
+			name = "total_ammo",
 			text = self._values.total_ammo.text,
 		},
 		{
-			name = "rate_of_fire",
 			applied_value = self._values.rate_of_fire.applied_value or 0,
 			modified_value = self._values.rate_of_fire.modified_value or 0,
+			name = "rate_of_fire",
 			text = self._values.rate_of_fire.text,
 		},
 		{
-			name = "accuracy",
 			applied_value = self._values.accuracy.applied_value or 0,
 			modified_value = self._values.accuracy.modified_value or 0,
+			name = "accuracy",
 			text = self._values.accuracy.text,
 		},
 		{
-			name = "stability",
 			applied_value = self._values.stability.applied_value or 0,
 			modified_value = self._values.stability.modified_value or 0,
+			name = "stability",
 			text = self._values.stability.text,
 		},
 	}

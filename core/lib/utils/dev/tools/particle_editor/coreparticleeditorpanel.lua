@@ -856,16 +856,16 @@ function CoreParticleEditorPanel:do_save(warn_on_overwrite)
 
 	if self._valid_effect then
 		Application:data_compile({
+			platform = string.lower(SystemInfo:platform():s()),
 			preprocessor_definitions = "preprocessor_definitions",
 			send_idstrings = false,
-			target_db_name = "all",
-			verbose = false,
-			platform = string.lower(SystemInfo:platform():s()),
 			source_files = {
 				managers.database:entry_relative_path(self._effect:name()),
 			},
 			source_root = managers.database:base_path(),
+			target_db_name = "all",
 			target_db_root = Application:base_path() .. "/assets",
+			verbose = false,
 		})
 		DB:reload()
 		managers.database:clear_all_cached_indices()

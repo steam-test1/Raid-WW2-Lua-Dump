@@ -195,8 +195,8 @@ function CoreEditor:_init_listener()
 	self._listener_always_enabled = false
 	self._sound_check_object = managers.sound_environment:add_check_object({
 		active = true,
-		primary = true,
 		object = self:camera(),
+		primary = true,
 	})
 end
 
@@ -857,9 +857,9 @@ function CoreEditor:run_simulation(with_mission)
 		end
 
 		self._world_holder = WorldHolder:new({
-			file_type = "world",
 			cube_lights_path = managers.database:entry_path(self._lastdir) .. "/",
 			file_path = managers.database:entry_path(file),
+			file_type = "world",
 		})
 	end
 
@@ -1902,14 +1902,14 @@ function CoreEditor:reload_units(unit_names, small_compile, skip_replace_units)
 		end
 
 		Application:data_compile({
+			platform = string.lower(SystemInfo:platform():s()),
 			preprocessor_definitions = "preprocessor_definitions",
 			send_idstrings = false,
-			target_db_name = "all",
-			verbose = false,
-			platform = string.lower(SystemInfo:platform():s()),
 			source_files = files,
 			source_root = managers.database:base_path(),
+			target_db_name = "all",
 			target_db_root = Application:base_path() .. "assets",
+			verbose = false,
 		})
 		DB:reload()
 		managers.database:clear_all_cached_indices()
@@ -2199,8 +2199,8 @@ end
 function CoreEditor:left_mouse_btn()
 	if self._trigger_add_unit then
 		local ray = self:unit_by_raycast({
-			sample = true,
 			mask = managers.slot:get_mask("all"),
+			sample = true,
 		})
 
 		if ray and ray.unit then
@@ -2280,8 +2280,8 @@ function CoreEditor:set_world_holder(path)
 	Application:error("FIXME: Either unused or broken.")
 
 	self._world_holder = WorldHolder:new({
-		file_type = "world",
 		file_path = path,
+		file_type = "world",
 	})
 end
 
@@ -2691,9 +2691,9 @@ function CoreEditor:update_ruler(t, dt)
 	Application:draw_sphere(pos, 10, 1, 1, 1)
 
 	local ray = self:unit_by_raycast({
+		mask = managers.slot:get_mask("all"),
 		ray_type = "body editor",
 		sample = true,
-		mask = managers.slot:get_mask("all"),
 	})
 
 	if not ray or not ray.position then
@@ -3086,8 +3086,8 @@ function CoreEditor:_copy_files(src, dest, rules)
 
 	for _, file in ipairs(SystemFS:list(src)) do
 		table.insert(files, {
-			sub_dir = "",
 			file = src .. "/" .. file,
+			sub_dir = "",
 		})
 	end
 
@@ -3168,10 +3168,10 @@ function CoreEditor:do_save(path, dir, save_continents)
 
 	for continent, values in pairs(self._values) do
 		local t = {
-			entry = "values",
-			single_data_block = true,
 			continent = continent,
 			data = values,
+			entry = "values",
+			single_data_block = true,
 		}
 
 		self:add_save_data(t)
@@ -3280,14 +3280,14 @@ end
 function CoreEditor:_recompile(dir)
 	local source_files = self:_source_files(dir)
 	local t = {
+		platform = string.lower(SystemInfo:platform():s()),
 		preprocessor_definitions = "preprocessor_definitions",
 		send_idstrings = false,
-		target_db_name = "all",
-		verbose = false,
-		platform = string.lower(SystemInfo:platform():s()),
 		source_files = source_files,
 		source_root = managers.database:root_path() .. "/assets",
+		target_db_name = "all",
 		target_db_root = Application:base_path() .. "assets",
+		verbose = false,
 	}
 
 	Application:data_compile(t)
@@ -3882,8 +3882,8 @@ function CoreEditor:load_level(dir, path)
 
 	self._load_progress = EWS:ProgressDialog(Global.frame_panel, "Loading..", "Parsing world file", 100, "PD_AUTO_HIDE,PD_SMOOTH,PD_ESTIMATED_TIME,PD_REMAINING_TIME")
 	self._world_holder = WorldHolder:new({
-		file_type = "world",
 		file_path = managers.database:entry_path(path),
+		file_type = "world",
 	})
 
 	local status = self._world_holder:status()
@@ -4367,9 +4367,9 @@ end
 
 function CoreEditor:change_continent_by_unit()
 	local ray = self:unit_by_raycast({
+		mask = managers.slot:get_mask("all"),
 		ray_type = "body editor",
 		sample = true,
-		mask = managers.slot:get_mask("all"),
 	})
 
 	if ray and ray.unit and ray.unit:unit_data().continent then
@@ -4417,9 +4417,9 @@ function CoreEditor:add_workview(name)
 	local continent = self:current_continent_name()
 
 	self._values[continent].workviews[name] = {
-		text = "",
 		position = self:camera():position(),
 		rotation = self:camera():rotation(),
+		text = "",
 	}
 
 	if self._dialogs.workview_by_name then
@@ -4445,9 +4445,9 @@ function CoreEditor:set_ruler_points()
 	end
 
 	local ray = self:unit_by_raycast({
+		mask = managers.slot:get_mask("all"),
 		ray_type = "body editor",
 		sample = true,
-		mask = managers.slot:get_mask("all"),
 	})
 
 	if not ray or not ray.position then

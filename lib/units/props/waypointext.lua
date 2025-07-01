@@ -36,23 +36,23 @@ function WaypointExt:add_waypoint_external(data)
 	self._icon_pos = position
 	self._icon_rot = rotation
 	self._waypoint_data = {
-		no_sync = false,
-		radius = 200,
-		waypoint_origin = "waypoint_extension",
-		waypoint_type = "unit_waypoint",
 		color = data.color or Color(1, 1, 1),
 		distance = data.distance,
 		icon = self._icon_name,
 		lifetime = data.lifetime,
 		map_icon = self._map_icon,
+		no_sync = false,
 		position = position,
 		present_timer = data.present_timer,
+		radius = 200,
 		range_max = data.range_max,
 		range_min = data.range_min,
 		rotation = rotation,
 		show_on_screen = self._show_on_hud or self._show_on_hud == nil and true,
 		unit = self._unit,
 		waypoint_color = data.waypoint_color or Color(1, 1, 1),
+		waypoint_origin = "waypoint_extension",
+		waypoint_type = "unit_waypoint",
 	}
 	self._icon_id = tostring(self._unit:key())
 

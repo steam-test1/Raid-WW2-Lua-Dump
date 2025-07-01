@@ -128,28 +128,28 @@ function MissionSelectionGui:_layout_lists()
 
 	local list_tabs_params = {
 		name = "list_tabs",
-		tab_align = "center",
-		x = 3,
-		y = 0,
 		on_click_callback = callback(self, self, "_on_mission_type_changed"),
+		tab_align = "center",
 		tabs_params = {
 			{
-				callback_param = "raids",
-				name = "tab_raid",
 				breadcrumb = {
 					category = BreadcrumbManager.CATEGORY_CONSUMABLE_MISSION,
 				},
+				callback_param = "raids",
+				name = "tab_raid",
 				text = self:translate("menu_mission_selected_mission_type_raid", true),
 			},
 			{
-				callback_param = "operations",
-				name = "tab_operation",
 				breadcrumb = {
 					category = BreadcrumbManager.CATEGORY_OPERATIONS,
 				},
+				callback_param = "operations",
+				name = "tab_operation",
 				text = self:translate("menu_mission_selected_mission_type_operation", true),
 			},
 		},
+		x = 3,
+		y = 0,
 	}
 
 	list_tabs_params.tab_width = (self._primary_lists_panel:w() - 2 * list_tabs_params.x) / #list_tabs_params.tabs_params
@@ -157,32 +157,32 @@ function MissionSelectionGui:_layout_lists()
 	self._current_mission_type = "raids"
 
 	local raid_list_scrollable_area_params = {
+		h = self._primary_lists_panel:h() - self._list_tabs:h(),
 		name = "raid_list_scrollable_area",
 		scroll_step = 35,
-		x = 0,
-		h = self._primary_lists_panel:h() - self._list_tabs:h(),
 		w = self._primary_lists_panel:w(),
+		x = 0,
 		y = self._list_tabs:h(),
 	}
 
 	self._raid_list_panel = self._primary_lists_panel:scrollable_area(raid_list_scrollable_area_params)
 
 	local raid_list_params = {
-		name = "raid_list",
-		on_mouse_click_sound_event = "menu_enter",
-		on_mouse_over_sound_event = "highlight",
-		padding_top = 2,
-		selection_enabled = true,
-		vertical_spacing = 2,
-		x = 0,
-		y = 0,
 		data_source_callback = callback(self, self, "_raid_list_data_source"),
 		item_class = RaidGUIControlListItemRaids,
+		name = "raid_list",
 		on_item_clicked_callback = callback(self, self, "_on_raid_clicked"),
 		on_item_double_clicked_callback = callback(self, self, "_on_mission_list_double_clicked"),
 		on_item_selected_callback = callback(self, self, "_on_raid_selected"),
+		on_mouse_click_sound_event = "menu_enter",
+		on_mouse_over_sound_event = "highlight",
+		padding_top = 2,
 		scrollable_area_ref = self._raid_list_panel,
+		selection_enabled = true,
+		vertical_spacing = 2,
 		w = self._raid_list_panel:w(),
+		x = 0,
+		y = 0,
 	}
 
 	self._raid_list = self._raid_list_panel:get_panel():list(raid_list_params)
@@ -197,10 +197,10 @@ function MissionSelectionGui:_layout_slot_list()
 		self._slot_list_panel:clear()
 	else
 		local slot_list_panel_params = {
-			name = "slot_list_panel",
-			x = 0,
 			h = self._primary_lists_panel:h() - self._list_tabs:h(),
+			name = "slot_list_panel",
 			w = self._primary_lists_panel:w(),
+			x = 0,
 			y = self._list_tabs:h(),
 		}
 
@@ -211,21 +211,21 @@ function MissionSelectionGui:_layout_slot_list()
 	end
 
 	local slot_list_params = {
+		data_source_callback = callback(self, self, "_slot_list_data_source"),
+		h = self._slot_list_panel:h(),
+		item_class = RaidGUIControlListItemSaveSlots,
 		name = "slot_list",
+		on_item_clicked_callback = callback(self, self, "_on_slot_clicked"),
+		on_item_double_clicked_callback = callback(self, self, "_on_slot_double_clicked"),
+		on_item_selected_callback = callback(self, self, "_on_slot_selected"),
 		on_mouse_click_sound_event = "menu_enter",
 		on_mouse_over_sound_event = "highlight",
 		padding_top = 2,
 		selection_enabled = true,
 		vertical_spacing = 2,
+		w = self._slot_list_panel:w(),
 		x = 0,
 		y = 0,
-		data_source_callback = callback(self, self, "_slot_list_data_source"),
-		h = self._slot_list_panel:h(),
-		item_class = RaidGUIControlListItemSaveSlots,
-		on_item_clicked_callback = callback(self, self, "_on_slot_clicked"),
-		on_item_double_clicked_callback = callback(self, self, "_on_slot_double_clicked"),
-		on_item_selected_callback = callback(self, self, "_on_slot_selected"),
-		w = self._slot_list_panel:w(),
 	}
 
 	self._slot_list = self._slot_list_panel:list(slot_list_params)
@@ -233,28 +233,28 @@ end
 
 function MissionSelectionGui:_layout_operations_list()
 	local operations_list_panel_params = {
+		h = self._list_panel:h() - self._list_tabs:h(),
 		name = "operations_list_panel",
 		visible = false,
-		h = self._list_panel:h() - self._list_tabs:h(),
 		y = self._list_tabs:h(),
 	}
 
 	self._operations_list_panel = self._list_panel:panel(operations_list_panel_params)
 
 	local operations_list_params = {
-		name = "operation_list",
-		on_mouse_click_sound_event = "menu_enter",
-		on_mouse_over_sound_event = "highlight",
-		padding_top = 2,
-		selection_enabled = true,
-		vertical_spacing = 2,
 		data_source_callback = callback(self, self, "_operation_list_data_source"),
 		item_class = RaidGUIControlListItemOperations,
+		name = "operation_list",
 		on_item_clicked_callback = callback(self, self, "_on_operation_selected"),
 		on_item_double_clicked_callback = callback(self, self, "_on_mission_list_double_clicked"),
 		on_item_selected_callback = callback(self, self, "_on_operation_selected"),
+		on_mouse_click_sound_event = "menu_enter",
+		on_mouse_over_sound_event = "highlight",
+		padding_top = 2,
 		selected_callback = callback(self, self, "_on_operation_list_selected"),
+		selection_enabled = true,
 		unselected_callback = callback(self, self, "_on_operation_list_unselected"),
+		vertical_spacing = 2,
 	}
 
 	self._new_operation_list = self._operations_list_panel:list(operations_list_params)
@@ -262,11 +262,11 @@ end
 
 function MissionSelectionGui:_layout_raid_wrapper_panel()
 	local raid_wrapper_panel_params = {
+		h = self._root_panel:h(),
 		name = "raid_wrapper_panel",
+		w = self._root_panel:w(),
 		x = 0,
 		y = 0,
-		h = self._root_panel:h(),
-		w = self._root_panel:w(),
 	}
 
 	self._raid_panel = self._root_panel:panel(raid_wrapper_panel_params)
@@ -293,9 +293,9 @@ function MissionSelectionGui:_layout_settings()
 	self._settings_controls = {}
 
 	local difficulty_stepper_params = {
-		name = "difficulty",
 		data_source_callback = callback(self, self, "data_source_difficulty_stepper"),
 		description = self:translate("menu_difficulty_title", true),
+		name = "difficulty",
 		on_item_selected_callback = callback(self, self, "_on_difficulty_selected"),
 		on_menu_move = {
 			down = "permission",
@@ -308,9 +308,9 @@ function MissionSelectionGui:_layout_settings()
 	table.insert(self._settings_controls, self._difficulty_stepper)
 
 	local permission_stepper_params = {
-		name = "permission",
 		data_source_callback = callback(self, self, "data_source_permission_stepper"),
 		description = self:translate("menu_permission_title", true),
+		name = "permission",
 		on_item_selected_callback = callback(self, self, "_on_permission_selected"),
 		on_menu_move = {
 			down = "drop_in_checkbox",
@@ -325,14 +325,14 @@ function MissionSelectionGui:_layout_settings()
 	table.insert(self._settings_controls, self._permission_stepper)
 
 	local drop_in_checkbox_params = {
-		name = "drop_in_checkbox",
-		value = true,
 		description = self:translate("menu_allow_drop_in_title", true),
+		name = "drop_in_checkbox",
 		on_click_callback = callback(self, self, "_on_toggle_drop_in"),
 		on_menu_move = {
 			down = "team_ai_checkbox",
 			up = "permission",
 		},
+		value = true,
 		y = self._permission_stepper:y() + self._permission_stepper:h() + MissionSelectionGui.SETTINGS_PADDING,
 	}
 
@@ -342,13 +342,13 @@ function MissionSelectionGui:_layout_settings()
 	table.insert(self._settings_controls, self._drop_in_checkbox)
 
 	local team_ai_checkbox_params = {
-		name = "team_ai_checkbox",
-		value = true,
 		description = self:translate("menu_play_with_team_ai_title", true),
+		name = "team_ai_checkbox",
 		on_click_callback = callback(self, self, "_on_toggle_team_ai"),
 		on_menu_move = {
 			up = "drop_in_checkbox",
 		},
+		value = true,
 		y = self._drop_in_checkbox:y() + self._drop_in_checkbox:h() + MissionSelectionGui.SETTINGS_PADDING,
 	}
 
@@ -361,33 +361,33 @@ end
 function MissionSelectionGui:_layout_operation_tutorialization()
 	self._operation_tutorialization_panel = self._root_panel:panel({
 		alpha = 0,
-		name = "operation_tutorialization",
 		h = self._right_panel:h(),
+		name = "operation_tutorialization",
 		w = self._right_panel:w(),
 		x = self._right_panel:x(),
 		y = self._right_panel:y(),
 	})
 
 	local title = self._operation_tutorialization_panel:text({
-		h = 40,
-		halign = "left",
-		vertical = "center",
 		color = tweak_data.gui.colors.raid_dirty_white,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_38,
+		h = 40,
+		halign = "left",
 		text = self:translate("operations_tutorialization_title", true),
+		vertical = "center",
 	})
 
 	title:set_center_y(16)
 
 	local description = self._operation_tutorialization_panel:text({
-		halign = "left",
-		wrap = true,
-		y = 64,
 		color = tweak_data.gui.colors.raid_grey,
 		font = tweak_data.gui.fonts.lato,
 		font_size = tweak_data.gui.font_sizes.size_20,
+		halign = "left",
 		text = self:translate("operations_tutorialization_description", false),
+		wrap = true,
+		y = 64,
 	})
 end
 
@@ -397,15 +397,15 @@ function MissionSelectionGui:_layout_settings_offline()
 	self._settings_controls = {}
 
 	local difficulty_stepper_params = {
-		name = "difficulty",
-		x = 0,
-		y = 0,
 		data_source_callback = callback(self, self, "data_source_difficulty_stepper"),
 		description = self:translate("menu_difficulty_title", true),
+		name = "difficulty",
 		on_item_selected_callback = callback(self, self, "_on_difficulty_selected"),
 		on_menu_move = {
 			down = "team_ai_checkbox",
 		},
+		x = 0,
+		y = 0,
 	}
 
 	self._difficulty_stepper = self._right_panel:stepper(difficulty_stepper_params)
@@ -414,14 +414,14 @@ function MissionSelectionGui:_layout_settings_offline()
 	table.insert(self._settings_controls, self._difficulty_stepper)
 
 	local team_ai_checkbox_params = {
-		name = "team_ai_checkbox",
-		value = true,
-		x = 0,
 		description = self:translate("menu_play_with_team_ai_title", true),
+		name = "team_ai_checkbox",
 		on_click_callback = callback(self, self, "_on_toggle_team_ai"),
 		on_menu_move = {
 			up = "difficulty",
 		},
+		value = true,
+		x = 0,
 		y = self._difficulty_stepper:y() + self._difficulty_stepper:h() + MissionSelectionGui.SETTINGS_PADDING,
 	}
 
@@ -442,14 +442,14 @@ function MissionSelectionGui:_layout_difficulty_warning()
 
 	local difficulty_warning_text_params = {
 		align = "left",
-		name = "difficulty_warning_text",
-		text = "Bla bla bla",
-		vertical = "top",
-		wrap = true,
 		color = tweak_data.gui.colors.raid_red,
 		font = tweak_data.gui.fonts.lato,
 		font_size = tweak_data.gui.font_sizes.size_20,
+		name = "difficulty_warning_text",
+		text = "Bla bla bla",
+		vertical = "top",
 		w = self._difficulty_warning_panel:w() - self._difficulty_stepper:label_x(),
+		wrap = true,
 		x = self._difficulty_stepper:label_x(),
 	}
 
@@ -461,12 +461,12 @@ end
 function MissionSelectionGui:_layout_folder_front_page()
 	local front_page_panel_params = {
 		alpha = 0,
+		h = self._root_panel:h(),
 		halign = "center",
+		layer = self._primary_paper_panel:layer() + 1000,
 		name = "front_page_panel",
 		valign = "scale",
 		w = 704,
-		h = self._root_panel:h(),
-		layer = self._primary_paper_panel:layer() + 1000,
 	}
 
 	self._front_page_panel = self._root_panel:panel(front_page_panel_params)
@@ -476,9 +476,9 @@ function MissionSelectionGui:_layout_folder_front_page()
 	local front_page_params = {
 		halign = "center",
 		name = "front_page_image",
-		valign = "center",
 		texture = tweak_data.gui.icons.folder_mission.texture,
 		texture_rect = tweak_data.gui.icons.folder_mission.texture_rect,
+		valign = "center",
 	}
 
 	self._front_page_image = self._front_page_panel:bitmap(front_page_params)
@@ -496,13 +496,13 @@ function MissionSelectionGui:_layout_folder_front_page()
 	self._front_page_content_panel = self._front_page_panel:panel(front_page_content_panel_params)
 
 	local front_page_icon_params = {
-		halign = "center",
-		name = "front_page_icon",
-		valign = "center",
 		color = tweak_data.gui.colors.raid_light_red,
+		halign = "center",
 		layer = self._front_page_image:layer() + 1,
+		name = "front_page_icon",
 		texture = tweak_data.gui.icons.xp_events_mission_raid_railyard.texture,
 		texture_rect = tweak_data.gui.icons.xp_events_mission_raid_railyard.texture_rect,
+		valign = "center",
 	}
 
 	self._front_page_icon = self._front_page_content_panel:bitmap(front_page_icon_params)
@@ -512,15 +512,15 @@ function MissionSelectionGui:_layout_folder_front_page()
 
 	local front_page_title_params = {
 		align = "center",
+		color = tweak_data.gui.colors.raid_light_red,
+		font = tweak_data.gui.fonts.din_compressed,
+		font_size = tweak_data.gui.font_sizes.title,
 		h = 80,
+		layer = self._front_page_icon:layer(),
 		name = "front_page_title",
 		text = "TRAINYARD",
 		vertical = "center",
 		w = 448,
-		color = tweak_data.gui.colors.raid_light_red,
-		font = tweak_data.gui.fonts.din_compressed,
-		font_size = tweak_data.gui.font_sizes.title,
-		layer = self._front_page_icon:layer(),
 	}
 
 	self._front_page_title = self._front_page_content_panel:text(front_page_title_params)
@@ -534,95 +534,95 @@ function MissionSelectionGui:_layout_primary_paper()
 	local soe_emblem_image = "icon_paper_stamp"
 	local primary_paper_panel_params = {
 		h = 768,
+		layer = RaidGuiBase.FOREGROUND_LAYER + 150,
 		name = "primary_paper_panel",
 		w = 524,
 		x = 580,
 		y = 117,
-		layer = RaidGuiBase.FOREGROUND_LAYER + 150,
 	}
 
 	self._primary_paper_panel = self._root_panel:panel(primary_paper_panel_params)
 
 	local primary_paper_params = {
-		name = "primary_paper",
-		x = 0,
-		y = 0,
 		h = self._primary_paper_panel:h(),
+		name = "primary_paper",
 		texture = tweak_data.gui.images[paper_image].texture,
 		texture_rect = tweak_data.gui.images[paper_image].texture_rect,
 		w = self._primary_paper_panel:w(),
+		x = 0,
+		y = 0,
 	}
 
 	self._primary_paper = self._primary_paper_panel:bitmap(primary_paper_params)
 
 	local soe_emblem_params = {
-		name = "soe_emblem",
-		x = 384,
-		y = 22,
 		layer = self._primary_paper:layer() + 1,
+		name = "soe_emblem",
 		texture = tweak_data.gui.icons[soe_emblem_image].texture,
 		texture_rect = tweak_data.gui.icons[soe_emblem_image].texture_rect,
+		x = 384,
+		y = 22,
 	}
 
 	self._soe_emblem = self._primary_paper_panel:bitmap(soe_emblem_params)
 
 	local mission_icon_params = {
-		name = "mission_icon",
-		x = 32,
-		y = 44,
 		color = tweak_data.gui.colors.raid_black,
 		layer = self._primary_paper:layer() + 1,
+		name = "mission_icon",
 		texture = tweak_data.gui.icons[soe_emblem_image].texture,
 		texture_rect = tweak_data.gui.icons[soe_emblem_image].texture_rect,
+		x = 32,
+		y = 44,
 	}
 
 	self._primary_paper_mission_icon = self._primary_paper_panel:bitmap(mission_icon_params)
 
 	local title_params = {
-		name = "primary_paper_title",
-		text = "",
-		x = 112,
-		y = 44,
 		color = tweak_data.gui.colors.raid_black,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.small,
 		layer = self._primary_paper:layer() + 1,
+		name = "primary_paper_title",
+		text = "",
+		x = 112,
+		y = 44,
 	}
 
 	self._primary_paper_title = self._primary_paper_panel:label(title_params)
 
 	local subtitle_params = {
-		name = "primary_paper_title",
-		text = "",
-		x = 112,
-		y = 78,
 		color = tweak_data.gui.colors.raid_black,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.extra_small,
 		layer = self._primary_paper:layer() + 1,
+		name = "primary_paper_title",
+		text = "",
+		x = 112,
+		y = 78,
 	}
 
 	self._primary_paper_subtitle = self._primary_paper_panel:label(subtitle_params)
 
 	local mission_difficulty_params = {
-		name = "mission_difficulty",
-		x = 112,
-		y = 78,
 		amount = tweak_data:number_of_difficulties(),
 		fill_color = tweak_data.gui.colors.raid_black,
+		name = "mission_difficulty",
 		unavailable_color = tweak_data.gui.colors.raid_dark_grey,
+		x = 112,
+		y = 78,
 	}
 
 	self._primary_paper_difficulty_indicator = self._primary_paper_panel:create_custom_control(RaidGuiControlDifficultyStars, mission_difficulty_params)
 
 	local separator_params = {
+		color = tweak_data.gui.colors.raid_black,
 		h = 2,
+		layer = self._primary_paper:layer() + 1,
 		name = "primary_paper_separator",
 		w = 350,
 		x = 34,
 		y = 123,
-		color = tweak_data.gui.colors.raid_black,
-		layer = self._primary_paper:layer() + 1,
 	}
 
 	self._primary_paper_separator = self._primary_paper_panel:rect(separator_params)
@@ -635,17 +635,17 @@ end
 
 function MissionSelectionGui:_layout_raid_description()
 	local mission_description_params = {
+		color = tweak_data.gui.colors.raid_black,
+		font = tweak_data.gui.fonts.lato,
+		font_size = tweak_data.gui.font_sizes.paragraph,
 		h = 528,
+		layer = self._primary_paper_panel:layer() + 1,
 		name = "mission_descripton",
 		text = "",
 		w = 432,
 		wrap = true,
 		x = 38,
 		y = 136,
-		color = tweak_data.gui.colors.raid_black,
-		font = tweak_data.gui.fonts.lato,
-		font_size = tweak_data.gui.font_sizes.paragraph,
-		layer = self._primary_paper_panel:layer() + 1,
 	}
 
 	self._mission_description = self._primary_paper_panel:label(mission_description_params)
@@ -667,12 +667,12 @@ function MissionSelectionGui:_layout_operation_progress_text()
 	self._operation_progress_panel = self._primary_paper_panel:panel(operation_progress_panel_params)
 
 	local operation_progress_params = {
+		h = self._operation_progress_panel:h(),
 		name = "operation_progress",
 		operation = "clear_skies",
+		w = self._operation_progress_panel:w(),
 		x = 0,
 		y = 0,
-		h = self._operation_progress_panel:h(),
-		w = self._operation_progress_panel:w(),
 	}
 
 	self._operation_progress = self._operation_progress_panel:create_custom_control(RaidGUIControlOperationProgress, operation_progress_params)
@@ -684,26 +684,23 @@ end
 function MissionSelectionGui:_layout_operation_list()
 	local operation_list_panel_params = {
 		h = 448,
+		layer = self._primary_paper_panel:layer() + 1,
 		name = "operation_list_panel",
 		w = 432,
 		x = 31,
 		y = 136,
-		layer = self._primary_paper_panel:layer() + 1,
 	}
 
 	self._operation_list_panel = self._primary_paper_panel:panel(operation_list_panel_params)
 
 	local operation_list_params = {
-		name = "operation_list",
-		selection_enabled = true,
-		x = 0,
-		y = 0,
 		data_source_callback = callback(self, self, "_operation_list_data_source"),
 		h = self._operation_list_panel:h(),
 		item_class = RaidGUIControlListItemIconDescription,
 		item_params = {
 			icon_color = Color.black,
 		},
+		name = "operation_list",
 		on_item_clicked_callback = callback(self, self, "_on_operation_selected"),
 		on_item_double_clicked_callback = callback(self, self, "_on_mission_list_double_clicked"),
 		on_item_selected_callback = callback(self, self, "_on_operation_selected"),
@@ -711,8 +708,11 @@ function MissionSelectionGui:_layout_operation_list()
 			down = "info_button",
 		},
 		selected_callback = callback(self, self, "_on_operation_list_selected"),
+		selection_enabled = true,
 		unselected_callback = callback(self, self, "_on_operation_list_unselected"),
 		w = self._operation_list_panel:w(),
+		x = 0,
+		y = 0,
 	}
 
 	self._operation_list = self._operation_list_panel:list_active(operation_list_params)
@@ -723,14 +723,14 @@ end
 
 function MissionSelectionGui:_layout_intel_image_grid()
 	local intel_image_grid_params = {
-		name = "intel_image_grid",
-		x = 10,
-		y = 128,
 		layer = self._primary_paper_panel:layer() + 1,
+		name = "intel_image_grid",
 		on_click_callback = callback(self, self, "_on_intel_image_selected"),
 		on_menu_move = {
 			down = "intel_button",
 		},
+		x = 10,
+		y = 128,
 	}
 
 	self._intel_image_grid = self._primary_paper_panel:create_custom_control(RaidGUIControlIntelImageGrid, intel_image_grid_params)
@@ -747,11 +747,11 @@ function MissionSelectionGui:_layout_info_buttons()
 	local wrapper_panel_padding = 10
 	local info_buttons_panel_params = {
 		h = 96,
-		name = "info_buttons_panel",
-		y = 0,
 		layer = self._primary_paper_panel:layer() + 1,
+		name = "info_buttons_panel",
 		w = self._primary_paper_panel:w() * 0.85,
 		x = self._primary_paper_title:x(),
+		y = 0,
 	}
 
 	self._info_buttons_panel = self._primary_paper_panel:panel(info_buttons_panel_params)
@@ -817,23 +817,23 @@ function MissionSelectionGui:_layout_secondary_paper()
 	local soe_emblem_image = "icon_paper_stamp"
 	local secondary_paper_panel_params = {
 		h = 768,
+		layer = RaidGuiBase.FOREGROUND_LAYER,
 		name = "secondary_paper_panel",
 		w = 524,
 		x = 580,
 		y = 118,
-		layer = RaidGuiBase.FOREGROUND_LAYER,
 	}
 
 	self._secondary_paper_panel = self._root_panel:panel(secondary_paper_panel_params)
 
 	local secondary_paper_params = {
-		name = "secondary_paper",
-		x = 0,
-		y = 0,
 		h = self._secondary_paper_panel:h(),
+		name = "secondary_paper",
 		texture = tweak_data.gui.images[paper_image].texture,
 		texture_rect = tweak_data.gui.images[paper_image].texture_rect,
 		w = self._secondary_paper_panel:w(),
+		x = 0,
+		y = 0,
 	}
 
 	self._secondary_paper = self._secondary_paper_panel:bitmap(secondary_paper_params)
@@ -864,12 +864,12 @@ end
 
 function MissionSelectionGui:_layout_secondary_save_info()
 	local save_info_params = {
-		name = "save_info",
-		x = 0,
-		y = 0,
 		h = self._secondary_paper_panel:h(),
 		layer = self._secondary_paper_panel:layer() + 1,
+		name = "save_info",
 		w = self._secondary_paper_panel:w(),
+		x = 0,
+		y = 0,
 	}
 
 	self._save_info = self._secondary_paper_panel:create_custom_control(RaidGUIControlSaveInfo, save_info_params)
@@ -879,9 +879,9 @@ function MissionSelectionGui:_layout_start_button()
 	local raid_start_button_params = {
 		layer = 1,
 		name = "raid_start_button",
-		x = 6,
 		on_click_callback = callback(self, self, "_on_start_button_click"),
 		text = self:translate("menu_start_button_title", true),
+		x = 6,
 		y = self._right_panel:y() + self._right_panel:h() + 248,
 	}
 
@@ -893,10 +893,10 @@ function MissionSelectionGui:_layout_start_button()
 		self._raid_start_button:set_visible(false)
 
 		local client_message_params = {
-			name = "client_message",
 			color = tweak_data.gui.colors.raid_red,
 			font = tweak_data.gui.fonts.din_compressed,
 			font_size = tweak_data.gui.font_sizes.size_32,
+			name = "client_message",
 			text = self:translate("menu_only_host_can_start_missions", true),
 		}
 		local client_message = self._raid_panel:label(client_message_params)
@@ -909,14 +909,14 @@ end
 
 function MissionSelectionGui:_layout_start_disabled_message()
 	local start_disabled_message_params = {
+		color = tweak_data.gui.colors.raid_red,
+		font = tweak_data.gui.fonts.din_compressed,
+		font_size = tweak_data.gui.font_sizes.small,
 		h = 96,
 		name = "start_disabled_message",
 		text = "",
 		vertical = "center",
 		visible = false,
-		color = tweak_data.gui.colors.raid_red,
-		font = tweak_data.gui.fonts.din_compressed,
-		font_size = tweak_data.gui.font_sizes.small,
 		w = self._list_panel:w(),
 	}
 
@@ -929,9 +929,9 @@ function MissionSelectionGui:_layout_delete_button()
 	local save_delete_button_params = {
 		layer = 1,
 		name = "save_delete_button",
-		x = 6,
 		on_click_callback = callback(self, self, "_on_delete_button_click"),
 		text = self:translate("menu_delete_save_button_title", true),
+		x = 6,
 		y = self._right_panel:y() + self._right_panel:h() + 248,
 	}
 
@@ -953,12 +953,12 @@ function MissionSelectionGui:_layout_progression_unlock_timer()
 	self._progression_timer_panel = self._raid_panel:panel(progression_timer_panel_params)
 
 	local progression_timer_icon_params = {
+		color = tweak_data.gui.colors.raid_dirty_white,
 		halign = "left",
 		name = "progression_timer_icon",
-		valign = "center",
-		color = tweak_data.gui.colors.raid_dirty_white,
 		texture = tweak_data.gui.icons.missions_raids_category_menu.texture,
 		texture_rect = tweak_data.gui.icons.missions_raids_category_menu.texture_rect,
+		valign = "center",
 	}
 	local progression_timer_icon = self._progression_timer_panel:bitmap(progression_timer_icon_params)
 
@@ -966,42 +966,42 @@ function MissionSelectionGui:_layout_progression_unlock_timer()
 
 	local is_final_unlock_cycle = managers.progression:at_final_unlock_cycle()
 	local timer_title_params = {
-		h = 32,
-		halign = "left",
-		name = "progression_timer_title",
-		vertical = "center",
-		x = 64,
 		color = tweak_data.gui.colors.raid_dirty_white,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.small,
+		h = 32,
+		halign = "left",
+		name = "progression_timer_title",
 		text = self:translate(is_final_unlock_cycle and "raid_final_raids_in_title" or "raid_next_raid_in_title", true),
+		vertical = "center",
+		x = 64,
 	}
 	local timer_title = self._progression_timer_panel:text(timer_title_params)
 	local timer_description_params = {
-		h = 32,
-		halign = "left",
-		name = "progression_timer_description",
-		vertical = "center",
-		x = 64,
 		color = tweak_data.gui.colors.raid_grey_effects,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_20,
+		h = 32,
+		halign = "left",
+		name = "progression_timer_description",
 		text = self:translate(is_final_unlock_cycle and "raid_final_raids_in_description" or "raid_next_raid_in_description", true),
+		vertical = "center",
+		x = 64,
 	}
 	local timer_description = self._progression_timer_panel:text(timer_description_params)
 
 	timer_description:set_bottom(self._progression_timer_panel:h())
 
 	local timer_params = {
+		color = tweak_data.gui.colors.raid_dirty_white,
+		font = tweak_data.gui.fonts.din_compressed,
+		font_size = tweak_data.gui.font_sizes.small,
 		h = 32,
 		halign = "right",
 		horizontal = "right",
 		name = "timer",
 		text = "",
 		vertical = "center",
-		color = tweak_data.gui.colors.raid_dirty_white,
-		font = tweak_data.gui.fonts.din_compressed,
-		font_size = tweak_data.gui.font_sizes.small,
 	}
 	local timer = self._progression_timer_panel:text(timer_params)
 	local remaining_time = math.floor(managers.progression:time_until_next_unlock())
@@ -1076,11 +1076,11 @@ function MissionSelectionGui:_play_operations_intro_video()
 	self._video_panel = RaidGUIPanel:new(self._full_panel, video_panel_params)
 
 	local video_panel_background_params = {
+		color = Color.black,
 		halign = "scale",
 		layer = 1,
 		name = "video_background",
 		valign = "scale",
-		color = Color.black,
 	}
 	local video_panel_background = self._video_panel:rect(video_panel_background_params)
 	local video_params = {
@@ -1099,11 +1099,11 @@ function MissionSelectionGui:_play_operations_intro_video()
 	local press_any_key_text = managers.controller:is_using_controller() and "press_any_key_to_skip_controller" or "press_any_key_to_skip"
 	local press_any_key_params = {
 		alpha = 0,
-		name = "press_any_key_prompt",
 		color = tweak_data.gui.colors.raid_dirty_white,
 		font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.din_compressed, tweak_data.gui.font_sizes.size_32),
 		font_size = tweak_data.gui.font_sizes.size_32,
 		layer = self._control_briefing_video:layer() + 100,
+		name = "press_any_key_prompt",
 		text = utf8.to_upper(managers.localization:text(press_any_key_text)),
 	}
 	local press_any_key_prompt = self._safe_panel:text(press_any_key_params)
@@ -1977,23 +1977,23 @@ function MissionSelectionGui:data_source_difficulty_stepper()
 
 	table.insert(difficulties, {
 		info = "difficulty_1",
-		value = "difficulty_1",
 		text = self:translate("menu_difficulty_1", true),
+		value = "difficulty_1",
 	})
 	table.insert(difficulties, {
 		info = "difficulty_2",
-		value = "difficulty_2",
 		text = self:translate("menu_difficulty_2", true),
+		value = "difficulty_2",
 	})
 	table.insert(difficulties, {
 		info = "difficulty_3",
-		value = "difficulty_3",
 		text = self:translate("menu_difficulty_3", true),
+		value = "difficulty_3",
 	})
 	table.insert(difficulties, {
 		info = "difficulty_4",
-		value = "difficulty_4",
 		text = self:translate("menu_difficulty_4", true),
+		value = "difficulty_4",
 	})
 
 	return difficulties
@@ -2204,18 +2204,18 @@ function MissionSelectionGui:data_source_permission_stepper()
 
 	table.insert(permissions, {
 		info = "public",
-		value = "public",
 		text = self:translate("menu_permission_public", true),
+		value = "public",
 	})
 	table.insert(permissions, {
 		info = "friends_only",
-		value = "friends_only",
 		text = self:translate("menu_permission_friends", true),
+		value = "friends_only",
 	})
 	table.insert(permissions, {
 		info = "private",
-		value = "private",
 		text = self:translate("menu_permission_private", true),
+		value = "private",
 	})
 
 	return permissions
@@ -2260,7 +2260,6 @@ function MissionSelectionGui:_raid_list_data_source()
 		if mission_data.consumable then
 			if managers.consumable_missions:is_mission_unlocked(mission_name) then
 				table.insert(consumable_list, {
-					unlocked = true,
 					breadcrumb = {
 						category = BreadcrumbManager.CATEGORY_CONSUMABLE_MISSION,
 						identifiers = {
@@ -2270,6 +2269,7 @@ function MissionSelectionGui:_raid_list_data_source()
 					icon = item_icon,
 					selected_color = tweak_data.gui.colors.raid_gold,
 					text = item_text,
+					unlocked = true,
 					value = mission_name,
 				})
 			end
@@ -2411,9 +2411,8 @@ function MissionSelectionGui:_start_job(job_id)
 
 	Global.game_settings.team_ai = team_ai
 	Global.game_settings.selected_team_ai = team_ai
-	Global.player_manager.game_settings_difficulty = difficulty
 	Global.player_manager.game_settings_team_ai = team_ai
-	Global.player_manager.game_settings_selected_team_ai = team_ai
+	Global.player_manager.game_settings_difficulty = difficulty
 
 	if not Global.game_settings.single_player then
 		permission = self._permission_stepper:get_value()
@@ -2948,9 +2947,9 @@ end
 function MissionSelectionGui:_bind_raid_controller_inputs()
 	local bindings = {
 		{
-			label = "",
 			callback = callback(self, self, "_on_list_tabs_left"),
 			key = Idstring("menu_controller_shoulder_left"),
+			label = "",
 		},
 		{
 			callback = callback(self, self, "_on_list_tabs_right"),
@@ -2984,8 +2983,8 @@ function MissionSelectionGui:_bind_raid_controller_inputs()
 		},
 		keyboard = {
 			{
-				key = "footer_back",
 				callback = callback(self, self, "_on_legend_pc_back", nil),
+				key = "footer_back",
 			},
 		},
 	}
@@ -3000,9 +2999,9 @@ end
 function MissionSelectionGui:_bind_locked_raid_controller_inputs()
 	local bindings = {
 		{
-			label = "",
 			callback = callback(self, self, "_on_list_tabs_left"),
 			key = Idstring("menu_controller_shoulder_left"),
+			label = "",
 		},
 		{
 			callback = callback(self, self, "_on_list_tabs_right"),
@@ -3029,8 +3028,8 @@ function MissionSelectionGui:_bind_locked_raid_controller_inputs()
 		},
 		keyboard = {
 			{
-				key = "footer_back",
 				callback = callback(self, self, "_on_legend_pc_back", nil),
+				key = "footer_back",
 			},
 		},
 	}
@@ -3041,9 +3040,9 @@ end
 function MissionSelectionGui:_bind_save_slot_controller_inputs()
 	local bindings = {
 		{
-			label = "",
 			callback = callback(self, self, "_on_list_tabs_left"),
 			key = Idstring("menu_controller_shoulder_left"),
+			label = "",
 		},
 		{
 			callback = callback(self, self, "_on_list_tabs_right"),
@@ -3073,8 +3072,8 @@ function MissionSelectionGui:_bind_save_slot_controller_inputs()
 		},
 		keyboard = {
 			{
-				key = "footer_back",
 				callback = callback(self, self, "_on_legend_pc_back", nil),
+				key = "footer_back",
 			},
 		},
 	}
@@ -3089,9 +3088,9 @@ end
 function MissionSelectionGui:_bind_empty_slot_controller_inputs()
 	local bindings = {
 		{
-			label = "",
 			callback = callback(self, self, "_on_list_tabs_left"),
 			key = Idstring("menu_controller_shoulder_left"),
+			label = "",
 		},
 		{
 			callback = callback(self, self, "_on_list_tabs_right"),
@@ -3125,8 +3124,8 @@ function MissionSelectionGui:_bind_empty_slot_controller_inputs()
 		},
 		keyboard = {
 			{
-				key = "footer_back",
 				callback = callback(self, self, "_on_legend_pc_back", nil),
+				key = "footer_back",
 			},
 		},
 	}
@@ -3166,8 +3165,8 @@ function MissionSelectionGui:_bind_operation_list_controller_inputs()
 		},
 		keyboard = {
 			{
-				key = "footer_back",
 				callback = callback(self, self, "_on_legend_pc_back", nil),
+				key = "footer_back",
 			},
 		},
 	}
@@ -3190,8 +3189,8 @@ function MissionSelectionGui:_bind_locked_operation_list_controller_inputs()
 		},
 		keyboard = {
 			{
-				key = "footer_back",
 				callback = callback(self, self, "_on_legend_pc_back", nil),
+				key = "footer_back",
 			},
 		},
 	}

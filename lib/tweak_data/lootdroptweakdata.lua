@@ -45,8 +45,14 @@ LootDropTweakData.POINT_REQUIREMENTS = {
 LootDropTweakData.EVENT_MONTH_FOOLSDAY = "EVENT_MONTH_FOOLSDAY"
 LootDropTweakData.EVENT_MONTH_HALLOWEEN = "EVENT_MONTH_HALLOWEEN"
 LootDropTweakData.EVENT_MONTH_CHRISTMAS = "EVENT_MONTH_CHRISTMAS"
-LootDropTweakData.EVENT_MONTHS = {
-	[10] = LootDropTweakData.EVENT_MONTH_HALLOWEEN,
+LootDropTweakData.EVENT_MONTHS = {}
+LootDropTweakData.RARITY_PRICES = {
+	[LootDropTweakData.RARITY_ALL] = 100,
+	[LootDropTweakData.RARITY_DEFAULT] = 100,
+	[LootDropTweakData.RARITY_COMMON] = 150,
+	[LootDropTweakData.RARITY_UNCOMMON] = 200,
+	[LootDropTweakData.RARITY_RARE] = 250,
+	[LootDropTweakData.RARITY_HALLOWEEN_2017] = 666,
 }
 
 function LootDropTweakData:init(tweak_data)
@@ -260,8 +266,8 @@ function LootDropTweakData:_init_categories()
 	self.loot_categories.category_halloween_2017[1] = {
 		chance = 20,
 		value = {
-			weapon_id = "lc14b",
 			reward_type = LootDropTweakData.REWARD_HALLOWEEN_2017,
+			weapon_id = "lc14b",
 		},
 	}
 	self.loot_categories.category_halloween_2017[2] = {
@@ -771,25 +777,11 @@ function LootDropTweakData:_create_global_value_list_map()
 end
 
 function LootDropTweakData:get_gold_from_rarity(rarity)
-	if LootDropTweakData.RARITY_ALL == rarity then
-		return 100
-	elseif LootDropTweakData.RARITY_DEFAULT == rarity then
-		return 100
-	elseif LootDropTweakData.RARITY_COMMON == rarity then
-		return 150
-	elseif LootDropTweakData.RARITY_UNCOMMON == rarity then
-		return 200
-	elseif LootDropTweakData.RARITY_RARE == rarity then
-		return 250
-	elseif LootDropTweakData.RARITY_HALLOWEEN_2017 == rarity then
-		return 666
-	else
-		return nil
-	end
+	return self.RARITY_PRICES[rarity]
 end
 
 function LootDropTweakData:get_month_event()
 	local tdate = os.date("*t")
 
-	return LootDropTweakData.EVENT_MONTHS[tdate.month]
+	return self.EVENT_MONTHS[tdate.month]
 end

@@ -115,63 +115,63 @@ end
 
 function RaidGUIControlWeaponSkillDesc:_create_labels()
 	local params_name_label = {
-		h = 38,
-		text = "UNKNOWN SKILL NAME",
-		x = 0,
-		y = 0,
 		color = tweak_data.gui.colors.raid_dirty_white,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_38,
+		h = 38,
 		name = self._params.name .. "_name_label",
+		text = "UNKNOWN SKILL NAME",
+		x = 0,
+		y = 0,
 	}
 
 	self._name_label = self._object:label(params_name_label)
 
 	local params_status_label = {
 		align = "left",
-		h = 32,
-		text = "lol",
-		vertical = "bottom",
-		x = 0,
-		y = 32,
 		color = RaidGUIControlWeaponSkillDesc.STATUS_COLOR,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_24,
+		h = 32,
 		name = self._params.name .. "_status_label",
+		text = "lol",
+		vertical = "bottom",
 		w = RaidGUIControlWeaponSkillDesc.CONTENT_W,
+		x = 0,
+		y = 32,
 	}
 
 	self._status_label = self._object:label(params_status_label)
 
 	local params_desc_label = {
+		color = tweak_data.gui.colors.raid_grey,
+		font = tweak_data.gui.fonts.lato,
+		font_size = tweak_data.gui.font_sizes.size_20,
 		h = 100,
+		name = self._params.name .. "_desc_label",
 		text = "Unknown skill description. Lorem ipsum glupsum tumsum. Kajaznam kolko ovog stane u tri linije mozda jos malo a mozda i ne.",
+		w = RaidGUIControlWeaponSkillDesc.CONTENT_W,
 		word_wrap = true,
 		wrap = true,
 		x = 0,
 		y = 96,
-		color = tweak_data.gui.colors.raid_grey,
-		font = tweak_data.gui.fonts.lato,
-		font_size = tweak_data.gui.font_sizes.size_20,
-		name = self._params.name .. "_desc_label",
-		w = RaidGUIControlWeaponSkillDesc.CONTENT_W,
 	}
 
 	self._desc_label = self._object:label(params_desc_label)
 
 	local tier_unlocks_at_level_label_params = {
 		align = "left",
+		color = tweak_data.gui.colors.raid_red,
+		font = tweak_data.gui.fonts.din_compressed,
+		font_size = tweak_data.gui.font_sizes.small,
 		h = 58,
 		layer = 1,
 		name = "cant_equip_explenation_label",
 		text = "",
 		visible = false,
+		w = RaidGUIControlWeaponSkillDesc.CONTENT_W,
 		wrap = true,
 		x = 0,
-		color = tweak_data.gui.colors.raid_red,
-		font = tweak_data.gui.fonts.din_compressed,
-		font_size = tweak_data.gui.font_sizes.small,
-		w = RaidGUIControlWeaponSkillDesc.CONTENT_W,
 		y = self._desc_label:y(),
 	}
 
@@ -181,10 +181,10 @@ end
 function RaidGUIControlWeaponSkillDesc:_create_progress_bar()
 	local progress_bar_panel_params = {
 		h = 32,
-		vertical = "bottom",
-		x = 0,
 		name = self._params.name .. "_progress_bar_panel",
+		vertical = "bottom",
 		w = RaidGUIControlWeaponSkillDesc.CONTENT_W,
+		x = 0,
 	}
 
 	self._progress_bar_panel = self._object:panel(progress_bar_panel_params)
@@ -195,10 +195,10 @@ function RaidGUIControlWeaponSkillDesc:_create_progress_bar()
 	local texture_left = "slider_large_left"
 	local texture_right = "slider_large_right"
 	local progress_bar_background_params = {
-		layer = 1,
 		center = texture_center,
 		color = Color.white:with_alpha(0.5),
 		h = tweak_data.gui:icon_h(texture_center),
+		layer = 1,
 		left = texture_left,
 		name = self._params.name .. "_progress_bar_background",
 		right = texture_right,
@@ -206,14 +206,14 @@ function RaidGUIControlWeaponSkillDesc:_create_progress_bar()
 	}
 	local progress_bar_background = self._progress_bar_panel:three_cut_bitmap(progress_bar_background_params)
 	local progress_bar_foreground_panel_params = {
+		h = self._progress_bar_panel:h(),
 		halign = "scale",
 		layer = 2,
+		name = self._params.name .. "_progress_bar_foreground_panel",
 		valign = "scale",
+		w = self._progress_bar_panel:w(),
 		x = 0,
 		y = 0,
-		h = self._progress_bar_panel:h(),
-		name = self._params.name .. "_progress_bar_foreground_panel",
-		w = self._progress_bar_panel:w(),
 	}
 
 	self._progress_bar_foreground_panel = self._progress_bar_panel:panel(progress_bar_foreground_panel_params)
@@ -230,17 +230,17 @@ function RaidGUIControlWeaponSkillDesc:_create_progress_bar()
 	local progress_bar_background = self._progress_bar_foreground_panel:three_cut_bitmap(progress_bar_background_params)
 	local progress_bar_text_params = {
 		align = "center",
-		layer = 5,
-		text = "123/456",
-		vertical = "center",
-		x = 0,
-		y = -2,
 		color = tweak_data.gui.colors.raid_dirty_white,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_24,
 		h = self._progress_bar_panel:h(),
+		layer = 5,
 		name = self._params.name .. "_progress_bar_text",
+		text = "123/456",
+		vertical = "center",
 		w = self._progress_bar_panel:w(),
+		x = 0,
+		y = -2,
 	}
 
 	self._progress_text = self._progress_bar_panel:label(progress_bar_text_params)

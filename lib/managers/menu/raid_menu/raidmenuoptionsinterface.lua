@@ -27,8 +27,8 @@ function RaidMenuOptionsInterface:_layout_menu()
 	local previous_panel
 
 	previous_panel = {
-		name = "subtitle",
 		description = managers.localization:to_upper_text("menu_options_video_subtitle"),
+		name = "subtitle",
 		on_click_callback = callback(self, self, "on_click_subtitle"),
 		on_menu_move = {
 			down = "objective_reminder",
@@ -43,11 +43,11 @@ function RaidMenuOptionsInterface:_layout_menu()
 	self._toggle_menu_subtitle:set_selected(true)
 
 	previous_panel = {
-		name = "objective_reminder",
 		description = managers.localization:to_upper_text("menu_objective_reminder"),
+		name = "objective_reminder",
 		on_click_callback = callback(self, self, "on_click_objective_reminders"),
 		on_menu_move = {
-			down = "skip_cinematics",
+			down = "warcry_ready_indicator",
 			up = previous_panel.name,
 		},
 		w = default_width,
@@ -56,8 +56,21 @@ function RaidMenuOptionsInterface:_layout_menu()
 	}
 	self._toggle_objective_reminders = self._root_panel:toggle_button(previous_panel)
 	previous_panel = {
-		name = "skip_cinematics",
+		description = managers.localization:to_upper_text("menu_warcry_ready_indicator"),
+		name = "warcry_ready_indicator",
+		on_click_callback = callback(self, self, "on_click_warcry_ready_indicator"),
+		on_menu_move = {
+			down = "skip_cinematics",
+			up = previous_panel.name,
+		},
+		w = default_width,
+		x = start_x,
+		y = previous_panel.y + RaidGuiBase.PADDING,
+	}
+	self._toggle_warcry_ready_indicator = self._root_panel:toggle_button(previous_panel)
+	previous_panel = {
 		description = managers.localization:to_upper_text("menu_skip_cinematics"),
+		name = "skip_cinematics",
 		on_click_callback = callback(self, self, "on_click_skip_cinematics"),
 		on_menu_move = {
 			down = "hud_special_weapon_panels",
@@ -69,8 +82,8 @@ function RaidMenuOptionsInterface:_layout_menu()
 	}
 	self._toggle_skip_cinematics = self._root_panel:toggle_button(previous_panel)
 	previous_panel = {
-		name = "hud_special_weapon_panels",
 		description = managers.localization:to_upper_text("menu_options_video_hud_special_weapon_panels"),
+		name = "hud_special_weapon_panels",
 		on_click_callback = callback(self, self, "on_click_hud_special_weapon_panels"),
 		on_menu_move = {
 			down = "hud_crosshairs",
@@ -82,8 +95,8 @@ function RaidMenuOptionsInterface:_layout_menu()
 	}
 	self._toggle_menu_hud_special_weapon_panels = self._root_panel:toggle_button(previous_panel)
 	previous_panel = {
-		name = "hud_crosshairs",
 		description = managers.localization:to_upper_text("menu_options_video_hud_crosshairs"),
+		name = "hud_crosshairs",
 		on_click_callback = callback(self, self, "on_click_hud_crosshairs"),
 		on_menu_move = {
 			down = "hit_confirm_indicator",
@@ -95,9 +108,9 @@ function RaidMenuOptionsInterface:_layout_menu()
 	}
 	self._toggle_menu_hud_crosshairs = self._root_panel:toggle_button(previous_panel)
 	previous_panel = {
-		name = "hit_confirm_indicator",
 		data_source_callback = callback(self, self, "data_source_stepper_menu_hit_confirm_indicator"),
 		description = managers.localization:to_upper_text("menu_options_video_hit_confirm_indicator"),
+		name = "hit_confirm_indicator",
 		on_item_selected_callback = callback(self, self, "on_click_hit_indicator"),
 		on_menu_move = {
 			down = "motion_dot",
@@ -109,46 +122,46 @@ function RaidMenuOptionsInterface:_layout_menu()
 	}
 	self._stepper_menu_hit_indicator = self._root_panel:stepper(previous_panel)
 	previous_panel = {
-		name = "motion_dot",
-		stepper_w = 280,
 		data_source_callback = callback(self, self, "data_source_stepper_menu_motion_dot"),
 		description = managers.localization:to_upper_text("menu_options_video_motion_dot"),
+		name = "motion_dot",
 		on_item_selected_callback = callback(self, self, "on_click_motion_dot"),
 		on_menu_move = {
 			down = "motion_dot_size",
 			up = previous_panel.name,
 		},
+		stepper_w = 280,
 		w = default_width,
 		x = start_x,
 		y = previous_panel.y + RaidGuiBase.PADDING * 2,
 	}
 	self._stepper_menu_motion_dot = self._root_panel:stepper(previous_panel)
 	previous_panel = {
-		name = "motion_dot_size",
-		stepper_w = 280,
 		data_source_callback = callback(self, self, "data_source_stepper_menu_motion_dot_size"),
 		description = managers.localization:to_upper_text("menu_options_video_motion_dot_size"),
+		name = "motion_dot_size",
 		on_item_selected_callback = callback(self, self, "on_click_motion_dot_size"),
 		on_menu_move = {
 			down = "default_interface",
 			up = previous_panel.name,
 		},
+		stepper_w = 280,
 		w = default_width,
 		x = start_x,
 		y = previous_panel.y + RaidGuiBase.PADDING,
 	}
 	self._stepper_menu_motion_dot_size = self._root_panel:stepper(previous_panel)
 	self._default_settings_button = self._root_panel:long_secondary_button({
-		name = "default_interface",
-		x = 1472,
-		y = 832,
 		layer = RaidGuiBase.FOREGROUND_LAYER,
+		name = "default_interface",
 		on_click_callback = callback(self, self, "on_click_default_interface"),
 		on_menu_move = {
 			down = "subtitle",
 			up = previous_panel.name,
 		},
 		text = managers.localization:to_upper_text("menu_options_controls_default"),
+		x = 1472,
+		y = 832,
 	})
 
 	if managers.raid_menu:is_pc_controller() then
@@ -226,6 +239,10 @@ function RaidMenuOptionsInterface:_load_menu_values()
 
 	self._toggle_skip_cinematics:set_value_and_render(skip_cinematics, true)
 
+	local warcry_ready_indicator = managers.user:get_setting("warcry_ready_indicator")
+
+	self._toggle_warcry_ready_indicator:set_value_and_render(warcry_ready_indicator, true)
+
 	local subtitle = managers.user:get_setting("subtitle")
 
 	self._toggle_menu_subtitle:set_value_and_render(subtitle, true)
@@ -266,6 +283,12 @@ function RaidMenuOptionsInterface:on_click_objective_reminders()
 	local reminders = self._toggle_objective_reminders:get_value()
 
 	managers.menu:active_menu().callback_handler:toggle_objective_reminder_raid(reminders)
+end
+
+function RaidMenuOptionsInterface:on_click_warcry_ready_indicator()
+	local warcry_ready_indicator = self._toggle_warcry_ready_indicator:get_value()
+
+	managers.menu:active_menu().callback_handler:toggle_warcry_ready_indicator_raid(warcry_ready_indicator)
 end
 
 function RaidMenuOptionsInterface:on_click_skip_cinematics()
@@ -337,8 +360,8 @@ function RaidMenuOptionsInterface:bind_controller_inputs()
 		},
 		keyboard = {
 			{
-				key = "footer_back",
 				callback = callback(self, self, "_on_legend_pc_back"),
+				key = "footer_back",
 			},
 		},
 	}

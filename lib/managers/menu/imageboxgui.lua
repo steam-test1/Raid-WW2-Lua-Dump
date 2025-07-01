@@ -83,9 +83,9 @@ function ImageBoxGui:_create_image_box(image_config)
 	scroll_down_indicator_arrow:set_leftbottom(scroll_panel:right() + 2, scroll_down_indicator_shade:bottom() - 8)
 
 	local image_panel = main:panel({
-		name = "image_panel",
 		h = image_height,
 		layer = image_layer,
+		name = "image_panel",
 		w = image_width,
 	})
 

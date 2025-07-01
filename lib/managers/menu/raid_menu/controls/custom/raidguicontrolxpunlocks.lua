@@ -54,15 +54,15 @@ end
 function RaidGUIControlXPSkillSet:_create_text()
 	local title_text_params = {
 		align = "center",
-		name = "skill_set_unlock_title_text",
-		vertical = "center",
 		color = RaidGUIControlXPSkillSet.TITLE_COLOR,
 		font = RaidGUIControlXPSkillSet.FONT,
 		font_size = RaidGUIControlXPSkillSet.TITLE_FONT_SIZE,
 		h = RaidGUIControlXPSkillSet.TEXT_H,
+		name = "skill_set_unlock_title_text",
 		text = utf8.to_upper(managers.localization:text("menu_skill_set_unlocked", {
 			LEVEL = tostring(1),
 		})),
+		vertical = "center",
 	}
 	local title = self._content_panel:text(title_text_params)
 	local _, _, w, _ = title:text_rect()
@@ -73,13 +73,13 @@ function RaidGUIControlXPSkillSet:_create_text()
 
 	local flavor_text_params = {
 		align = "center",
-		name = "skill_set_unlock_flavor_text",
-		vertical = "center",
 		color = RaidGUIControlXPSkillSet.FLAVOR_TEXT_COLOR,
 		font = RaidGUIControlXPSkillSet.FONT,
 		font_size = RaidGUIControlXPSkillSet.FLAVOR_TEXT_FONT_SIZE,
 		h = RaidGUIControlXPSkillSet.TEXT_H,
+		name = "skill_set_unlock_flavor_text",
 		text = self:translate("menu_congratulations", true),
+		vertical = "center",
 	}
 	local flavor_text = self._content_panel:text(flavor_text_params)
 	local _, _, w, _ = flavor_text:text_rect()
@@ -244,10 +244,10 @@ end
 function RaidGUIControlXPDoubleUnlock:_create_weapon_panel()
 	local weapon_panel_params = {
 		alpha = 0,
+		h = RaidGUIControlXPDoubleUnlock.CONTENT_PANELS_H,
 		halign = "scale",
 		name = "weapon_panel",
 		valign = "scale",
-		h = RaidGUIControlXPDoubleUnlock.CONTENT_PANELS_H,
 		w = self._object:w() / 2,
 		y = RaidGUIControlXPDoubleUnlock.CONTENT_PANELS_Y,
 	}
@@ -264,13 +264,13 @@ function RaidGUIControlXPDoubleUnlock:_create_weapon_panel()
 
 	local weapon_name_params = {
 		align = "center",
-		name = "weapon_name",
-		text = "",
-		vertical = "center",
 		color = RaidGUIControlXPDoubleUnlock.SUBTITLE_COLOR,
 		font = RaidGUIControlXPDoubleUnlock.FONT,
 		font_size = RaidGUIControlXPDoubleUnlock.SUBTITLE_FONT_SIZE,
 		h = RaidGUIControlXPDoubleUnlock.TEXT_H,
+		name = "weapon_name",
+		text = "",
+		vertical = "center",
 	}
 
 	self._weapon_name = self._weapon_panel:text(weapon_name_params)
@@ -282,10 +282,10 @@ end
 function RaidGUIControlXPDoubleUnlock:_create_skill_panel()
 	local skill_panel_params = {
 		alpha = 0,
+		h = RaidGUIControlXPDoubleUnlock.CONTENT_PANELS_H,
 		halign = "scale",
 		name = "skill_panel",
 		valign = "scale",
-		h = RaidGUIControlXPDoubleUnlock.CONTENT_PANELS_H,
 		w = self._object:w() / 2,
 		x = self._object:w() / 2,
 		y = RaidGUIControlXPDoubleUnlock.CONTENT_PANELS_Y,
@@ -303,13 +303,13 @@ function RaidGUIControlXPDoubleUnlock:_create_skill_panel()
 
 	local skill_set_title_params = {
 		align = "center",
-		name = "skill_set_title",
-		text = "",
-		vertical = "center",
 		color = RaidGUIControlXPDoubleUnlock.SUBTITLE_COLOR,
 		font = RaidGUIControlXPDoubleUnlock.FONT,
 		font_size = RaidGUIControlXPDoubleUnlock.SUBTITLE_FONT_SIZE,
 		h = RaidGUIControlXPDoubleUnlock.TEXT_H,
+		name = "skill_set_title",
+		text = "",
+		vertical = "center",
 	}
 
 	self._skill_set_title = self._skill_panel:text(skill_set_title_params)
@@ -321,13 +321,13 @@ end
 function RaidGUIControlXPDoubleUnlock:_create_title_text()
 	local title_text_params = {
 		align = "center",
-		name = "skill_set_unlock_title_text",
-		vertical = "center",
 		color = RaidGUIControlXPDoubleUnlock.TITLE_COLOR,
 		font = RaidGUIControlXPDoubleUnlock.FONT,
 		font_size = RaidGUIControlXPDoubleUnlock.TITLE_FONT_SIZE,
 		h = RaidGUIControlXPDoubleUnlock.TEXT_H,
+		name = "skill_set_unlock_title_text",
 		text = self:translate("menu_double_unlock", true),
+		vertical = "center",
 	}
 	local title = self._object:text(title_text_params)
 	local _, _, w, _ = title:text_rect()
@@ -338,13 +338,13 @@ function RaidGUIControlXPDoubleUnlock:_create_title_text()
 
 	local flavor_text_params = {
 		align = "center",
-		name = "skill_set_unlock_flavor_text",
-		vertical = "center",
 		color = RaidGUIControlXPDoubleUnlock.FLAVOR_TEXT_COLOR,
 		font = RaidGUIControlXPDoubleUnlock.FONT,
 		font_size = RaidGUIControlXPDoubleUnlock.FLAVOR_TEXT_FONT_SIZE,
 		h = RaidGUIControlXPDoubleUnlock.TEXT_H,
+		name = "skill_set_unlock_flavor_text",
 		text = self:translate("menu_congratulations", true),
+		vertical = "center",
 	}
 	local flavor_text = self._object:text(flavor_text_params)
 	local _, _, w, _ = flavor_text:text_rect()

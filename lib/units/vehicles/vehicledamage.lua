@@ -63,8 +63,8 @@ function VehicleDamage:damage_mission(dmg)
 		},
 	}
 	local attack_data = {
-		variant = "killzone",
 		damage = dmg,
+		variant = "killzone",
 	}
 	local result = damage_info.result
 	local damage = attack_data.damage
@@ -172,8 +172,8 @@ function VehicleDamage:damage_bullet(attack_data)
 
 	if occupant then
 		managers.dialog:queue_dialog("gen_vehicle_taking_damage", {
-			skip_idle_check = true,
 			instigator = occupant,
+			skip_idle_check = true,
 		})
 	end
 
@@ -339,8 +339,8 @@ function VehicleDamage:sync_damage_explosion(attacker_unit, damage_percent, i_at
 
 		local data = {
 			head_shot = false,
-			variant = "explosion",
 			name = self._unit:base()._tweak_table,
+			variant = "explosion",
 			weapon_unit = attacker_unit and attacker_unit:inventory() and attacker_unit:inventory():equipped_unit(),
 		}
 	else
@@ -477,8 +477,8 @@ function VehicleDamage:sync_damage_fire(attacker_unit, damage_percent, i_attack_
 
 		local data = {
 			head_shot = false,
-			variant = "fire",
 			name = self._unit:base()._tweak_table,
+			variant = "fire",
 			weapon_unit = attacker_unit and attacker_unit:inventory() and attacker_unit:inventory():equipped_unit(),
 		}
 	else
@@ -576,8 +576,8 @@ function VehicleDamage:damage_collision(attack_data)
 
 		if occupant then
 			managers.dialog:queue_dialog("gen_vehicle_collision", {
-				skip_idle_check = true,
 				instigator = occupant,
+				skip_idle_check = true,
 			})
 		end
 
@@ -621,8 +621,8 @@ function VehicleDamage:revive(instigator)
 
 	if alive(instigator) then
 		managers.dialog:queue_dialog("gen_vehicle_repaired", {
-			skip_idle_check = true,
 			instigator = instigator,
+			skip_idle_check = true,
 		})
 	end
 
@@ -774,8 +774,8 @@ function VehicleDamage:_health_recap()
 
 		if occupant then
 			managers.dialog:queue_dialog("gen_vehicle_at_50_percent", {
-				skip_idle_check = true,
 				instigator = occupant,
+				skip_idle_check = true,
 			})
 		end
 

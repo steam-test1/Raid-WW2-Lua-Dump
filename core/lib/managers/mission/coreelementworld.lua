@@ -188,6 +188,7 @@ function ElementWorldPoint:on_executed(instigator)
 
 		local que_data = {
 			alarmed = alarmed,
+			world_id = nil,
 		}
 
 		managers.queued_tasks:queue(nil, self._create_world, self, que_data, delay_create, nil, true)

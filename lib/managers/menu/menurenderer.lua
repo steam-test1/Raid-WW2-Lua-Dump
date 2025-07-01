@@ -27,16 +27,16 @@ function MenuRenderer:show_node(node)
 
 	local parameters = {
 		align = "left",
-		marker_alpha = 1,
-		row_item_blend_mode = "normal",
-		to_upper = true,
 		font = tweak_data.menu.pd2_medium_font,
 		font_size = tweak_data.menu.pd2_medium_font_size,
+		marker_alpha = 1,
 		marker_color = tweak_data.screen_colors.button_stage_3:with_alpha(1),
 		node_gui_class = gui_class,
+		row_item_blend_mode = "normal",
 		row_item_color = tweak_data.menu.default_font_row_item_color,
 		row_item_hightlight_color = tweak_data.menu.default_hightlight_row_item_color,
 		spacing = node:parameters().spacing,
+		to_upper = true,
 	}
 
 	MenuRenderer.super.show_node(self, node, parameters)
@@ -288,20 +288,20 @@ function MenuRenderer:ws_test()
 	local y = 200
 	local fx, fy = managers.gui_data:safe_to_full(x, y)
 	local safe = self._test_safe:panel():rect({
+		color = Color.green,
 		h = 48,
 		layer = 0,
 		orientation = "vertical",
 		w = 48,
-		color = Color.green,
 		x = x,
 		y = y,
 	})
 	local full = self._test_full:panel():rect({
+		color = Color.red,
 		h = 48,
 		layer = 0,
 		orientation = "vertical",
 		w = 48,
-		color = Color.red,
 		x = fx,
 		y = fy,
 	})

@@ -16,26 +16,27 @@ end
 function ChallengeCardsViewGui:_layout()
 	local tabs_params = {
 		{
-			name = "tab_common",
 			callback_param = LootDropTweakData.RARITY_COMMON,
+			name = "tab_common",
 			text = self:translate("loot_rarity_common", true),
 		},
 		{
-			name = "tab_uncommon",
 			callback_param = LootDropTweakData.RARITY_UNCOMMON,
+			name = "tab_uncommon",
 			text = self:translate("loot_rarity_uncommon", true),
 		},
 		{
-			name = "tab_rare",
 			callback_param = LootDropTweakData.RARITY_RARE,
+			name = "tab_rare",
 			text = self:translate("loot_rarity_rare", true),
 		},
 		{
-			name = "tab_other",
 			callback_param = LootDropTweakData.RARITY_OTHER,
+			name = "tab_other",
 			text = self:translate("menu_filter_other", true),
 		},
 		{
+			callback_param = nil,
 			name = "tab_all",
 			text = self:translate("menu_filter_all", true),
 		},
@@ -43,44 +44,45 @@ function ChallengeCardsViewGui:_layout()
 
 	self._rarity_filters_tabs = self._root_panel:tabs({
 		dont_trigger_special_buttons = true,
+		initial_tab_idx = #tabs_params,
 		name = "rarity_filters_tabs",
+		on_click_callback = callback(self, self, "on_click_filter_rarity"),
 		tab_align = "center",
 		tab_height = 64,
-		x = 0,
-		y = 96,
-		initial_tab_idx = #tabs_params,
-		on_click_callback = callback(self, self, "on_click_filter_rarity"),
 		tab_width = 640 / #tabs_params,
 		tabs_params = tabs_params,
+		x = 0,
+		y = 96,
 	})
 	self._type_filters_tabs = self._root_panel:tabs({
 		dont_trigger_special_buttons = true,
+		icon = tweak_data.gui.icons.ico_filter,
 		initial_tab_idx = 3,
+		item_class = RaidGUIControlTabFilter,
 		name = "type_filters_tabs",
+		on_click_callback = callback(self, self, "on_click_filter_type"),
 		tab_align = "center",
 		tab_height = 32,
 		tab_width = 140,
-		x = 0,
-		y = 176,
-		icon = tweak_data.gui.icons.ico_filter,
-		item_class = RaidGUIControlTabFilter,
-		on_click_callback = callback(self, self, "on_click_filter_type"),
 		tabs_params = {
 			{
-				name = "filter_raid",
 				callback_param = OperationsTweakData.JOB_TYPE_RAID,
+				name = "filter_raid",
 				text = self:translate("menu_mission_selected_mission_type_raid", true),
 			},
 			{
-				name = "filter_operation",
 				callback_param = OperationsTweakData.JOB_TYPE_OPERATION,
+				name = "filter_operation",
 				text = self:translate("menu_mission_selected_mission_type_operation", true),
 			},
 			{
+				callback_param = nil,
 				name = "filter_type_all",
 				text = self:translate("menu_mission_selected_mission_type_both", true),
 			},
 		},
+		x = 0,
+		y = 176,
 	})
 
 	local challenge_cards_grid_scrollable_area_params = {
@@ -95,27 +97,27 @@ function ChallengeCardsViewGui:_layout()
 	self._challenge_cards_grid_scrollable_area = self._root_panel:scrollable_area(challenge_cards_grid_scrollable_area_params)
 
 	local challenge_cards_grid_params = {
-		name = "challenge_cards_grid",
-		w = 636,
-		x = 0,
-		y = 0,
 		grid_params = {
-			scroll_marker_w = 32,
-			vertical_spacing = 5,
 			data_source_callback = callback(self, self, "data_source_inventory_cards"),
 			on_click_callback = callback(self, self, "_on_click_inventory_cards"),
 			on_select_callback = callback(self, self, "_on_select_inventory_cards"),
+			scroll_marker_w = 32,
+			vertical_spacing = 5,
 		},
 		item_params = {
 			hover_selects = true,
 			item_h = 216,
 			item_w = 156,
 			key_value_field = "key_name",
+			row_class = RaidGUIControlCardWithSelector,
 			selected_marker_h = 250,
 			selected_marker_w = 192,
-			row_class = RaidGUIControlCardWithSelector,
 		},
+		name = "challenge_cards_grid",
 		scrollable_area_ref = self._challenge_cards_grid_scrollable_area,
+		w = 636,
+		x = 0,
+		y = 0,
 	}
 
 	self._card_grid = self._challenge_cards_grid_scrollable_area:get_panel():grid(challenge_cards_grid_params)
@@ -282,8 +284,8 @@ function ChallengeCardsViewGui:bind_controller_inputs()
 		},
 		keyboard = {
 			{
-				key = "footer_back",
 				callback = callback(self, self, "_on_legend_pc_back", nil),
+				key = "footer_back",
 			},
 		},
 	}

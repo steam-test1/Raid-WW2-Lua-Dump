@@ -48,11 +48,11 @@ function MenuItemInput:setup_gui(node, row_item)
 		align = "scale",
 		alpha = 0,
 		blend_mdoe = "add",
+		color = Color(0.5, 0.5, 0.5),
 		halign = "scale",
+		layer = node.layers.items - 1,
 		valign = "scale",
 		vertical = "scale",
-		color = Color(0.5, 0.5, 0.5),
-		layer = node.layers.items - 1,
 	})
 
 	row_item.empty_gui_text:set_alpha(0.8)
@@ -60,14 +60,14 @@ function MenuItemInput:setup_gui(node, row_item)
 
 	row_item.caret = row_item.gui_panel:rect({
 		blend_mode = "add",
+		color = Color(0.1, 1, 1, 1),
 		h = 0,
+		layer = node.layers.items + 2,
 		name = "caret",
 		rotation = 360,
 		w = 0,
 		x = 0,
 		y = 0,
-		color = Color(0.1, 1, 1, 1),
-		layer = node.layers.items + 2,
 	})
 
 	self:_layout_gui(node, row_item)

@@ -299,8 +299,8 @@ function CoreSoundEnvironmentManager:_set_environment(environment)
 	self._current_environment = environment
 
 	SoundDevice:set_default_environment({
-		gain = 1,
 		effect = environment,
+		gain = 1,
 	})
 end
 
@@ -488,13 +488,13 @@ function CoreSoundEnvironmentManager:add_check_object(data)
 	end
 
 	local t = {
-		sound_area_counter = 1,
 		active = data.active,
 		id = self._check_object_id,
 		listener = data.listener,
 		next_occasional = self:_next_occasional(),
 		object = data.object,
 		primary = data.primary,
+		sound_area_counter = 1,
 		soundsource = soundsource,
 		surround = surround,
 		surround_iterator = surround and 0 or nil,
@@ -668,8 +668,8 @@ function CoreSoundEnvironmentManager:_fallback_on_camera()
 	elseif not next(self._check_objects) then
 		self._fallback_id = self:add_check_object({
 			active = true,
-			primary = true,
 			object = camera,
+			primary = true,
 		})
 		self:check_object(self._fallback_id).fallback = true
 	end

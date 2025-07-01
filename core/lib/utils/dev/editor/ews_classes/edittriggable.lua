@@ -5,8 +5,8 @@ EditUnitTriggable = EditUnitTriggable or class(EditUnitBase)
 
 function EditUnitTriggable:init(editor)
 	local panel, sizer = (editor or managers.editor):add_unit_edit_page({
-		name = "Sequences",
 		class = self,
+		name = "Sequences",
 	})
 
 	self._panel = panel
@@ -19,12 +19,12 @@ function EditUnitTriggable:init(editor)
 		ctrlr_proportions = 2,
 		name = "Triggers:",
 		name_proportions = 1,
-		sizer_proportions = 1,
-		sorted = true,
-		tooltip = "Select a sequence that should trigger other unit sequences",
 		options = {},
 		panel = panel,
 		sizer = sequence_sizer,
+		sizer_proportions = 1,
+		sorted = true,
+		tooltip = "Select a sequence that should trigger other unit sequences",
 	}
 
 	CoreEws.combobox(self._triggers_params)

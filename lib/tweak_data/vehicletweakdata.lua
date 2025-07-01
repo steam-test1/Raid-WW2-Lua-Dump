@@ -130,49 +130,49 @@ function VehicleTweakData:_init_data_kubelwagen()
 	self.kubelwagen.seats = {
 		driver = {
 			allow_shooting = false,
-			driving = true,
-			has_shooting_mode = false,
-			name = "driver",
-			next_seat = "passenger_front",
 			camera_limits = {
 				50,
 				45,
 			},
+			driving = true,
+			has_shooting_mode = false,
+			name = "driver",
+			next_seat = "passenger_front",
 		},
 		passenger_back_left = {
 			allow_shooting = false,
+			camera_limits = {
+				90,
+				45,
+			},
 			driving = false,
 			has_shooting_mode = true,
 			name = "passenger_back_left",
 			next_seat = "driver",
-			camera_limits = {
-				90,
-				45,
-			},
 			shooting_pos = Vector3(-40, -20, 50),
 		},
 		passenger_back_right = {
 			allow_shooting = false,
+			camera_limits = {
+				90,
+				45,
+			},
 			driving = false,
 			has_shooting_mode = true,
 			name = "passenger_back_right",
 			next_seat = "passenger_back_left",
-			camera_limits = {
-				90,
-				45,
-			},
 			shooting_pos = Vector3(30, -20, 50),
 		},
 		passenger_front = {
 			allow_shooting = true,
-			driving = false,
-			has_shooting_mode = false,
-			name = "passenger_front",
-			next_seat = "passenger_back_right",
 			camera_limits = {
 				90,
 				45,
 			},
+			driving = false,
+			has_shooting_mode = false,
+			name = "passenger_front",
+			next_seat = "passenger_back_right",
 			shooting_pos = Vector3(40, -20, 50),
 		},
 	}
@@ -199,8 +199,8 @@ function VehicleTweakData:_init_data_kubelwagen()
 	self.kubelwagen.interact_distance = 350
 	self.kubelwagen.skins = {}
 	self.kubelwagen.skins.special_edition = {
-		sequence = "state_collector_edition_skin",
 		dlc = DLCTweakData.DLC_NAME_SPECIAL_EDITION,
+		sequence = "state_collector_edition_skin",
 	}
 	self.kubelwagen.driver_camera_offset = Vector3(0, 2, 22)
 end
@@ -267,17 +267,17 @@ function VehicleTweakData:_init_data_truck()
 		},
 		passenger_front = {
 			allow_shooting = false,
-			driving = false,
-			has_shooting_mode = true,
-			name = "passenger_front",
-			next_seat = "passenger_back_right",
-			sound_environment_end = "leave_truck",
-			sound_environment_start = "enter_truck",
 			camera_limits = {
 				90,
 				45,
 			},
+			driving = false,
+			has_shooting_mode = true,
+			name = "passenger_front",
+			next_seat = "passenger_back_right",
 			shooting_pos = Vector3(50, -20, 50),
+			sound_environment_end = "leave_truck",
+			sound_environment_start = "enter_truck",
 		},
 	}
 	self.truck.loot_points = {
@@ -352,14 +352,14 @@ function VehicleTweakData:_init_data_foxhole()
 	}
 	self.foxhole.seats = {
 		driver = {
-			driving = false,
-			has_shooting_mode = false,
-			name = "driver",
-			next_seat = "driver",
 			camera_limits = {
 				90,
 				45,
 			},
+			driving = false,
+			has_shooting_mode = false,
+			name = "driver",
+			next_seat = "driver",
 		},
 	}
 	self.foxhole.loot_points = {

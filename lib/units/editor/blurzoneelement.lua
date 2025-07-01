@@ -40,20 +40,20 @@ function BlurZoneUnitElement:_build_panel(panel, panel_sizer)
 		min = 0,
 		name = "Mode:",
 		name_proportions = 1,
-		tooltip = "Set the mode, 0 is disable, 2 is flash, 1 is normal",
 		panel = panel,
 		sizer = panel_sizer,
+		tooltip = "Set the mode, 0 is disable, 2 is flash, 1 is normal",
 		value = self._hed.mode,
 	}
 	local mode = CoreEWS.number_controller(mode_params)
 
 	mode:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
-		value = "mode",
 		ctrlr = mode,
+		value = "mode",
 	})
 	mode:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
-		value = "mode",
 		ctrlr = mode,
+		value = "mode",
 	})
 
 	local radius_params = {
@@ -62,20 +62,20 @@ function BlurZoneUnitElement:_build_panel(panel, panel_sizer)
 		min = 1,
 		name = "Radius:",
 		name_proportions = 1,
-		tooltip = "Set the radius",
 		panel = panel,
 		sizer = panel_sizer,
+		tooltip = "Set the radius",
 		value = self._hed.radius,
 	}
 	local radius = CoreEWS.number_controller(radius_params)
 
 	radius:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
-		value = "radius",
 		ctrlr = radius,
+		value = "radius",
 	})
 	radius:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
-		value = "radius",
 		ctrlr = radius,
+		value = "radius",
 	})
 
 	local height_params = {
@@ -84,19 +84,19 @@ function BlurZoneUnitElement:_build_panel(panel, panel_sizer)
 		min = 0,
 		name = "Height:",
 		name_proportions = 1,
-		tooltip = "Set the height",
 		panel = panel,
 		sizer = panel_sizer,
+		tooltip = "Set the height",
 		value = self._hed.height,
 	}
 	local height = CoreEWS.number_controller(height_params)
 
 	height:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
-		value = "height",
 		ctrlr = height,
+		value = "height",
 	})
 	height:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
-		value = "height",
 		ctrlr = height,
+		value = "height",
 	})
 end

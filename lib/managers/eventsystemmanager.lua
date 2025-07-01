@@ -90,24 +90,24 @@ end
 function EventSystemManager:_fire_daily_event()
 	self._consecutive_logins = self._consecutive_logins + 1
 
-	if self._consecutive_logins > #tweak_data.events.active_duty_bonus_rewards then
+	if self._consecutive_logins > #tweak_data.events.login_rewards.active_duty then
 		self._consecutive_logins = 1
 	end
 
 	Application:debug("[EventSystemManager:_fire_daily_event()] Award daily reward!", self._consecutive_logins)
 
-	local reward_data = tweak_data.events.active_duty_bonus_rewards[self._consecutive_logins]
+	local reward_data = tweak_data.events.login_rewards.active_duty[self._consecutive_logins]
 	local reward = reward_data.reward
 	local notification_params = {
+		consecutive = self._consecutive_logins,
 		duration = 13,
 		name = "active_duty_bonus",
 		notification_type = "active_duty_bonus",
 		priority = 4,
-		consecutive = self._consecutive_logins,
-		total = #tweak_data.events.active_duty_bonus_rewards,
+		total = #tweak_data.events.login_rewards.active_duty,
 	}
 
-	if reward == EventsTweakData.REWERD_TYPE_OUTLAW then
+	if reward == EventsTweakData.REWARD_TYPE_OUTLAW then
 		if not managers.consumable_missions:is_all_missions_unlocked() then
 			local outlaw_id = tweak_data.operations:get_random_unowned_consumable_raid()
 
@@ -116,15 +116,15 @@ function EventSystemManager:_fire_daily_event()
 			notification_params.notification_type = HUDNotification.ACTIVE_DUTY_BONUS_OUTLAW
 			notification_params.icon = reward_data.icon_outlaw
 		else
-			local amount = tweak_data.events.active_duty_bonus_rewards[self._consecutive_logins].amount
+			local amount = reward_data.amount
 
 			managers.gold_economy:add_gold(amount)
 
 			notification_params.amount = amount
 			notification_params.icon = reward_data.icon
 		end
-	elseif reward == EventsTweakData.REWERD_TYPE_GOLD then
-		local amount = tweak_data.events.active_duty_bonus_rewards[self._consecutive_logins].amount
+	elseif reward == EventsTweakData.REWARD_TYPE_GOLD then
+		local amount = reward_data.amount
 
 		managers.gold_economy:add_gold(amount)
 

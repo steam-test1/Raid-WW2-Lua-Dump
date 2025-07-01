@@ -33,12 +33,12 @@ function CoreDebugUnitElement:_build_panel(panel, panel_sizer)
 
 	panel_sizer:add(debug, 0, 0, "EXPAND")
 	debug:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
-		value = "debug_string",
 		ctrlr = debug,
+		value = "debug_string",
 	})
 	debug:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
-		value = "debug_string",
 		ctrlr = debug,
+		value = "debug_string",
 	})
 	self:_build_value_checkbox(panel, panel_sizer, "as_subtitle", "Show as subtitle")
 	self:_build_value_checkbox(panel, panel_sizer, "show_instigator", "Show instigator")
@@ -46,9 +46,9 @@ end
 
 function CoreDebugUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
+		mask = managers.slot:get_mask("all"),
 		ray_type = "editor",
 		sample = true,
-		mask = managers.slot:get_mask("all"),
 	})
 
 	if ray and ray.unit then
@@ -62,8 +62,8 @@ end
 
 function CoreDebugUnitElement:add_monitored_unit()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
 		mask = managers.slot:get_mask("all"),
+		ray_type = "editor",
 	})
 
 	if ray and ray.unit and ray.unit:slot() == 10 then
@@ -89,9 +89,9 @@ function CoreDebugUnitElement:draw_links(t, dt, selected_unit, all_units)
 		if draw then
 			self:_draw_link({
 				b = 0.75,
+				from_unit = self._unit,
 				g = 0.25,
 				r = 0.75,
-				from_unit = self._unit,
 				to_unit = unit,
 			})
 		end

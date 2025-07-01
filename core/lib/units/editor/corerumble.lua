@@ -46,8 +46,8 @@ function CoreRumbleHubElement:_build_panel(panel, panel_sizer)
 	engines:set_value(self._hed.rumble_engine)
 	engines_sizer:add(engines, 2, 0, "EXPAND")
 	engines:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "set_element_data"), {
-		value = "rumble_engine",
 		ctrlr = engines,
+		value = "rumble_engine",
 	})
 	ctrlr_sizer:add(engines_sizer, 0, 0, "EXPAND")
 
@@ -62,8 +62,8 @@ function CoreRumbleHubElement:_build_panel(panel, panel_sizer)
 	peak_sizer:add(peak, 2, 0, "EXPAND")
 	peak:connect("EVT_CHAR", callback(nil, _G, "verify_number"), peak)
 	peak:connect("EVT_COMMAND_TEXT_UPDATED", callback(self, self, "set_element_data"), {
-		value = "rumble_peak",
 		ctrlr = peak,
+		value = "rumble_peak",
 	})
 	ctrlr_sizer:add(peak_sizer, 0, 0, "EXPAND")
 
@@ -78,8 +78,8 @@ function CoreRumbleHubElement:_build_panel(panel, panel_sizer)
 	attack_sizer:add(attack, 2, 0, "EXPAND")
 	attack:connect("EVT_CHAR", callback(nil, _G, "verify_number"), attack)
 	attack:connect("EVT_COMMAND_TEXT_UPDATED", callback(self, self, "set_element_data"), {
-		value = "rumble_attack",
 		ctrlr = attack,
+		value = "rumble_attack",
 	})
 	ctrlr_sizer:add(attack_sizer, 0, 0, "EXPAND")
 
@@ -94,8 +94,8 @@ function CoreRumbleHubElement:_build_panel(panel, panel_sizer)
 	sustain_sizer:add(sustain, 2, 0, "EXPAND")
 	sustain:connect("EVT_CHAR", callback(nil, _G, "verify_number"), sustain)
 	sustain:connect("EVT_COMMAND_TEXT_UPDATED", callback(self, self, "set_element_data"), {
-		value = "rumble_sustain",
 		ctrlr = sustain,
+		value = "rumble_sustain",
 	})
 	ctrlr_sizer:add(sustain_sizer, 0, 0, "EXPAND")
 
@@ -110,8 +110,8 @@ function CoreRumbleHubElement:_build_panel(panel, panel_sizer)
 	release_sizer:add(release, 2, 0, "EXPAND")
 	release:connect("EVT_CHAR", callback(nil, _G, "verify_number"), release)
 	release:connect("EVT_COMMAND_TEXT_UPDATED", callback(self, self, "set_element_data"), {
-		value = "rumble_release",
 		ctrlr = release,
+		value = "rumble_release",
 	})
 	ctrlr_sizer:add(release_sizer, 0, 0, "EXPAND")
 	rumble_sizer:add(ctrlr_sizer, 2, 0, "EXPAND")

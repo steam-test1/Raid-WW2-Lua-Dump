@@ -7,11 +7,11 @@ end
 
 function RaidMenuFooter:_layout()
 	self._object = self._root_panel:panel({
+		h = self._root_panel:h(),
 		name = "footer_object_panel",
+		w = self._root_panel:w(),
 		x = 0,
 		y = 0,
-		h = self._root_panel:h(),
-		w = self._root_panel:w(),
 	})
 	self._legend = self._object:legend({
 		name = "footer_legend",
@@ -35,11 +35,11 @@ end
 
 function RaidMenuFooter:_create_name_and_gold_panel()
 	local string_width_measure_text_field = self._object:child("string_width") or self._object:text({
+		font = tweak_data.gui.fonts.din_compressed,
+		font_size = tweak_data.gui.font_sizes.size_24,
 		name = "string_width",
 		visible = false,
 		wrap = true,
-		font = tweak_data.gui.fonts.din_compressed,
-		font_size = tweak_data.gui.font_sizes.size_24,
 	})
 	local username = utf8.to_upper(managers.network.account:username())
 
@@ -50,30 +50,30 @@ function RaidMenuFooter:_create_name_and_gold_panel()
 	w1 = w1 + 64
 
 	local params_profile_gold_label = {
-		h = 32,
-		name = "gold_label",
-		type = "label",
-		vertical = "bottom",
-		x = 0,
-		y = 0,
 		color = tweak_data.gui.colors.raid_grey,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_24,
+		h = 32,
+		name = "gold_label",
 		text = username,
+		type = "label",
+		vertical = "bottom",
 		w = w1,
+		x = 0,
+		y = 0,
 	}
 	local gold_icon = tweak_data.gui.icons.gold_amount_footer
 	local gold_icon_params = {
-		halign = "scale",
-		valign = "scale",
-		y = 0,
 		color = tweak_data.gui.colors.raid_grey,
 		h = gold_icon.texture_rect[4],
+		halign = "scale",
 		layer = self._object:layer(),
 		texture = gold_icon.texture,
 		texture_rect = gold_icon.texture_rect,
+		valign = "scale",
 		w = gold_icon.texture_rect[3],
 		x = w1,
+		y = 0,
 	}
 	local w2 = gold_icon_params.w + 10
 	local gold = managers.gold_economy:gold_string(managers.gold_economy:current())
@@ -82,36 +82,36 @@ function RaidMenuFooter:_create_name_and_gold_panel()
 
 	local _, _, w3, _ = string_width_measure_text_field:text_rect()
 	local params_profile_name_label = {
-		h = 32,
-		name = "profile_name_label",
-		type = "label",
-		vertical = "bottom",
 		color = tweak_data.gui.colors.raid_grey,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_24,
+		h = 32,
+		name = "profile_name_label",
 		text = gold,
+		type = "label",
+		vertical = "bottom",
 		w = w3,
 		x = w1 + w2,
 	}
 	local total_width = w1 + w2 + w3
 	local separator_params = {
+		color = tweak_data.gui.colors.raid_grey,
 		h = 14,
+		layer = self._object:layer(),
 		name = "separator",
 		vertical = "bottom",
 		w = 2,
-		y = 14,
-		color = tweak_data.gui.colors.raid_grey,
-		layer = self._object:layer(),
 		x = w1 - 32,
+		y = 14,
 	}
 
 	self._name_and_gold_panel = self._object:panel({
 		align = "right",
-		name = "name_and_gold_panel",
-		y = 0,
 		h = self._object:h(),
+		name = "name_and_gold_panel",
 		w = total_width,
 		x = self._object:w() - total_width,
+		y = 0,
 	})
 	self._profile_name_label = self._name_and_gold_panel:label(params_profile_name_label)
 	self._gold_icon = self._name_and_gold_panel:bitmap(gold_icon_params)

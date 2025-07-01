@@ -43,11 +43,11 @@ end
 
 function LevelSettingsLayer:save(save_params)
 	local t = {
-		single_data_block = true,
 		data = {
 			settings = self._settings,
 		},
 		entry = self._save_name,
+		single_data_block = true,
 	}
 
 	self:_add_project_save_data(t.data)
@@ -84,12 +84,12 @@ function LevelSettingsLayer:_add_simulation_level_id(sizer)
 		default = "none",
 		name = "Simulation level id:",
 		name_proportions = 1,
-		sorted = true,
-		tooltip = "Select a level id to use when simulating the level.",
-		value = "none",
 		options = rawget(_G, "tweak_data").levels:get_level_index(),
 		panel = self._ews_panel,
 		sizer = sizer,
+		sorted = true,
+		tooltip = "Select a level id to use when simulating the level.",
+		value = "none",
 	}
 	local ctrlr = CoreEws.combobox(params)
 
@@ -99,10 +99,10 @@ function LevelSettingsLayer:_add_simulation_level_id(sizer)
 	})
 
 	self._settings_ctrlrs[id] = {
-		default = "none",
-		type = "combobox",
 		ctrlr = ctrlr,
+		default = "none",
 		params = params,
+		type = "combobox",
 	}
 end
 
@@ -113,12 +113,12 @@ function LevelSettingsLayer:_add_simulation_mission_flag(sizer)
 		default = "none",
 		name = "Simulation mission flag:",
 		name_proportions = 1,
-		sorted = true,
-		tooltip = "Select a mission flag to use when simulating the level.",
-		value = "none",
 		options = rawget(_G, "tweak_data").operations:get_all_mission_flags(),
 		panel = self._ews_panel,
 		sizer = sizer,
+		sorted = true,
+		tooltip = "Select a mission flag to use when simulating the level.",
+		value = "none",
 	}
 	local ctrlr = CoreEws.combobox(params)
 
@@ -128,10 +128,10 @@ function LevelSettingsLayer:_add_simulation_mission_flag(sizer)
 	})
 
 	self._settings_ctrlrs[id] = {
-		default = "none",
-		type = "combobox",
 		ctrlr = ctrlr,
+		default = "none",
 		params = params,
+		type = "combobox",
 	}
 end
 
@@ -148,9 +148,9 @@ function LevelSettingsLayer:_add_simulation_mission_filter(sizer)
 		sizer:add(ctrlr, 0, 0, "EXPAND")
 
 		self._settings_ctrlrs[id] = {
+			ctrlr = ctrlr,
 			default = false,
 			type = "checkbox",
-			ctrlr = ctrlr,
 		}
 	end
 end
@@ -169,12 +169,12 @@ function LevelSettingsLayer:_add_chunk_name(panel, sizer)
 		ctrlr_proportions = 2,
 		name = "Chunk Name",
 		name_proportions = 1,
-		sizer_proportions = 1,
-		sorted = false,
-		tooltip = "Select an option from the combobox",
 		options = options,
 		panel = panel,
 		sizer = horizontal_sizer,
+		sizer_proportions = 1,
+		sorted = false,
+		tooltip = "Select an option from the combobox",
 		value = self._settings.chunk_name or options[1],
 	}
 	local ctrlr = CoreEws.combobox(combobox_params)
@@ -185,10 +185,10 @@ function LevelSettingsLayer:_add_chunk_name(panel, sizer)
 	})
 
 	self._settings_ctrlrs[id] = {
-		type = "combobox",
 		ctrlr = ctrlr,
 		default = options[1],
 		params = combobox_params,
+		type = "combobox",
 	}
 end
 

@@ -61,9 +61,9 @@ function CoreCounterUnitElement:update_selected()
 		else
 			local params = {
 				b = 0,
+				from_unit = self._unit,
 				g = 1,
 				r = 0,
-				from_unit = self._unit,
 				to_unit = unit,
 			}
 
@@ -97,9 +97,9 @@ function CoreCounterUnitElement:draw_links_unselected(...)
 	for id, unit in pairs(self._digital_gui_units) do
 		local params = {
 			b = 0,
+			from_unit = self._unit,
 			g = 0.5,
 			r = 0,
-			from_unit = self._unit,
 			to_unit = unit,
 		}
 
@@ -110,9 +110,9 @@ end
 
 function CoreCounterUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
+		mask = managers.slot:get_mask("all"),
 		ray_type = "body editor",
 		sample = true,
-		mask = managers.slot:get_mask("all"),
 	})
 
 	if ray and ray.unit and ray.unit:digital_gui() and ray.unit:digital_gui():is_number() then
@@ -122,9 +122,9 @@ end
 
 function CoreCounterUnitElement:select_unit()
 	local ray = managers.editor:unit_by_raycast({
+		mask = managers.slot:get_mask("all"),
 		ray_type = "body editor",
 		sample = true,
-		mask = managers.slot:get_mask("all"),
 	})
 
 	if ray and ray.unit and ray.unit:digital_gui() and ray.unit:digital_gui():is_number() then
@@ -230,9 +230,9 @@ function CoreCounterOperatorUnitElement:draw_links(t, dt, selected_unit, all_uni
 		if draw then
 			self:_draw_link({
 				b = 0.25,
+				from_unit = self._unit,
 				g = 0.75,
 				r = 0.75,
-				from_unit = self._unit,
 				to_unit = unit,
 			})
 		end
@@ -333,9 +333,9 @@ function CoreCounterTriggerUnitElement:draw_links(t, dt, selected_unit, all_unit
 		if draw then
 			self:_draw_link({
 				b = 0.25,
+				from_unit = unit,
 				g = 0.85,
 				r = 0.85,
-				from_unit = unit,
 				to_unit = self._unit,
 			})
 		end
@@ -438,9 +438,9 @@ function CoreCounterFilterUnitElement:draw_links(t, dt, selected_unit, all_units
 		if draw then
 			self:_draw_link({
 				b = 0.25,
+				from_unit = unit,
 				g = 0.85,
 				r = 0.85,
-				from_unit = unit,
 				to_unit = self._unit,
 			})
 		end

@@ -74,45 +74,44 @@ function MissionJoinGui:_layout_filters()
 	local row_spacing = 5
 
 	self._friends_only_button = self._filters_panel:toggle_button({
-		name = "friends_only_button",
-		no_highlight = true,
-		text = "",
-		w = 470,
-		x = 0,
-		y = 32,
 		button_h = MissionJoinGui.FILTER_BUTTON_H,
 		button_w = MissionJoinGui.FILTER_BUTTON_W,
 		description = utf8.to_upper(managers.localization:text("menu_mission_join_filters_friends_only")),
 		description_color = Color.white,
 		font_size = MissionJoinGui.FILTER_FONT_SIZE,
 		h = MissionJoinGui.FILTER_HEIGHT,
+		name = "friends_only_button",
+		no_highlight = true,
 		on_click_callback = callback(self, self, "friends_only_button_on_click"),
 		on_menu_move = {
 			down = "in_camp_servers_only",
 			up = "mission_filter_stepper",
 		},
-	})
-	self._in_camp_servers_only = self._filters_panel:toggle_button({
-		name = "in_camp_servers_only",
-		no_highlight = true,
 		text = "",
 		w = 470,
+		x = 0,
+		y = 32,
+	})
+	self._in_camp_servers_only = self._filters_panel:toggle_button({
 		button_h = MissionJoinGui.FILTER_BUTTON_H,
 		button_w = MissionJoinGui.FILTER_BUTTON_W,
 		description = utf8.to_upper(managers.localization:text("menu_mission_join_filters_in_camp_servers_only")),
 		description_color = Color.white,
 		font_size = MissionJoinGui.FILTER_FONT_SIZE,
 		h = MissionJoinGui.FILTER_HEIGHT,
+		name = "in_camp_servers_only",
+		no_highlight = true,
 		on_click_callback = callback(self, self, "in_camp_servers_only_button_on_click"),
 		on_menu_move = {
 			down = "distance_filter_stepper",
 			up = "friends_only_button",
 		},
+		text = "",
+		w = 470,
 		x = self._friends_only_button:x(),
 		y = self._friends_only_button:y() + 50,
 	})
 	self._distance_filter_stepper = self._filters_panel:stepper({
-		name = "distance_filter_stepper",
 		arrow_color = tweak_data.menu.raid_red,
 		arrow_highlight_color = Color.white,
 		button_h = MissionJoinGui.FILTER_BUTTON_H,
@@ -124,6 +123,7 @@ function MissionJoinGui:_layout_filters()
 		font_size = MissionJoinGui.FILTER_FONT_SIZE,
 		h = MissionJoinGui.FILTER_HEIGHT,
 		highlight_color = Color.white,
+		name = "distance_filter_stepper",
 		on_menu_move = {
 			down = "difficulty_filter_stepper",
 			up = "in_camp_servers_only",
@@ -134,7 +134,6 @@ function MissionJoinGui:_layout_filters()
 		y = self._in_camp_servers_only:y() + 50,
 	})
 	self._difficulty_filter_stepper = self._filters_panel:stepper({
-		name = "difficulty_filter_stepper",
 		arrow_color = tweak_data.menu.raid_red,
 		arrow_highlight_color = Color.white,
 		button_h = MissionJoinGui.FILTER_BUTTON_H,
@@ -146,6 +145,7 @@ function MissionJoinGui:_layout_filters()
 		font_size = MissionJoinGui.FILTER_FONT_SIZE,
 		h = MissionJoinGui.FILTER_HEIGHT,
 		highlight_color = Color.white,
+		name = "difficulty_filter_stepper",
 		on_menu_move = {
 			down = "mission_filter_stepper",
 			up = "distance_filter_stepper",
@@ -156,7 +156,6 @@ function MissionJoinGui:_layout_filters()
 		y = self._distance_filter_stepper:y() + 50,
 	})
 	self._mission_filter_stepper = self._filters_panel:stepper({
-		name = "mission_filter_stepper",
 		arrow_color = tweak_data.menu.raid_red,
 		arrow_highlight_color = Color.white,
 		button_h = MissionJoinGui.FILTER_BUTTON_H,
@@ -168,6 +167,7 @@ function MissionJoinGui:_layout_filters()
 		font_size = MissionJoinGui.FILTER_FONT_SIZE,
 		h = MissionJoinGui.FILTER_HEIGHT,
 		highlight_color = Color.white,
+		name = "mission_filter_stepper",
 		on_menu_move = {
 			down = "friends_only_button",
 			up = "difficulty_filter_stepper",
@@ -181,14 +181,14 @@ end
 
 function MissionJoinGui:_layout_server_list_table()
 	self._servers_title_label = self._list_panel:label({
-		h = 69,
-		name = "servers_title_label",
-		vertical = "top",
-		w = 320,
 		color = tweak_data.gui.colors.raid_red,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.title,
+		h = 69,
+		name = "servers_title_label",
 		text = utf8.to_upper(managers.localization:text("menu_mission_join_server_list_title")),
+		vertical = "top",
+		w = 320,
 	})
 	self._server_list_scrollable_area = self._list_panel:scrollable_area({
 		h = 720,
@@ -200,74 +200,71 @@ function MissionJoinGui:_layout_server_list_table()
 	self._params_servers_table = {
 		loop_items = true,
 		name = "servers_table",
-		use_row_dividers = true,
-		use_selector_mark = true,
 		on_selected_callback = callback(self, self, "bind_controller_inputs"),
 		scrollable_area_ref = self._server_list_scrollable_area,
 		table_params = {
 			columns = {
 				{
 					align = "left",
-					header_padding = 32,
-					padding = 32,
-					vertical = "center",
-					w = 480,
 					cell_class = RaidGUIControlTableCell,
 					color = tweak_data.gui.colors.raid_grey,
+					header_padding = 32,
 					header_text = self:translate("menu_mission_join_server_list_columns_mission_type", true),
 					highlight_color = tweak_data.gui.colors.raid_white,
 					on_cell_click_callback = callback(self, self, "on_cell_click_servers_table"),
+					padding = 32,
 					selected_color = tweak_data.gui.colors.raid_red,
+					vertical = "center",
+					w = 480,
 				},
 				{
 					align = "left",
-					header_padding = 0,
-					padding = 0,
-					vertical = "center",
-					w = 224,
 					cell_class = RaidGUIControlTableCell,
 					color = tweak_data.gui.colors.raid_grey,
+					header_padding = 0,
 					header_text = self:translate("menu_mission_join_server_list_columns_difficulty", true),
 					highlight_color = tweak_data.gui.colors.raid_white,
 					on_cell_click_callback = callback(self, self, "on_cell_click_servers_table"),
+					padding = 0,
 					selected_color = tweak_data.gui.colors.raid_red,
+					vertical = "center",
+					w = 224,
 				},
 				{
 					align = "left",
-					header_padding = 0,
-					padding = 0,
-					vertical = "center",
-					w = 352,
 					cell_class = RaidGUIControlTableCell,
 					color = tweak_data.gui.colors.raid_grey,
+					header_padding = 0,
 					header_text = self:translate("menu_mission_join_server_list_columns_host_name", true),
 					highlight_color = tweak_data.gui.colors.raid_white,
 					on_cell_click_callback = callback(self, self, "on_cell_click_servers_table"),
+					padding = 0,
 					selected_color = tweak_data.gui.colors.raid_red,
+					vertical = "center",
+					w = 352,
 				},
 				{
 					align = "left",
-					header_padding = 0,
-					padding = 0,
-					vertical = "center",
-					w = 144,
 					cell_class = RaidGUIControlTableCell,
 					color = tweak_data.gui.colors.raid_grey,
+					header_padding = 0,
 					header_text = self:translate("menu_mission_join_server_list_columns_players", true),
 					highlight_color = tweak_data.gui.colors.raid_white,
 					on_cell_click_callback = callback(self, self, "on_cell_click_servers_table"),
+					padding = 0,
 					selected_color = tweak_data.gui.colors.raid_red,
+					vertical = "center",
+					w = 144,
 				},
 			},
 			data_source_callback = callback(self, self, "data_source_servers_table"),
 			header_params = {
-				header_height = 32,
 				font = tweak_data.gui.fonts.din_compressed,
 				font_size = tweak_data.gui.font_sizes.small,
+				header_height = 32,
 				text_color = tweak_data.gui.colors.raid_white,
 			},
 			row_params = {
-				spacing = 0,
 				color = tweak_data.gui.colors.raid_grey,
 				font = tweak_data.gui.fonts.din_compressed,
 				font_size = tweak_data.gui.font_sizes.extra_small,
@@ -280,8 +277,11 @@ function MissionJoinGui:_layout_server_list_table()
 				row_highlight_background_color = tweak_data.gui.colors.raid_white:with_alpha(0.1),
 				row_selected_background_color = tweak_data.gui.colors.raid_white:with_alpha(0.1),
 				selected_color = tweak_data.gui.colors.raid_red,
+				spacing = 0,
 			},
 		},
+		use_row_dividers = true,
+		use_selector_mark = true,
 		w = self._server_list_scrollable_area:w(),
 	}
 
@@ -304,14 +304,17 @@ function MissionJoinGui:_layout_game_description()
 	}
 
 	self._desc_mission_icon = self._game_description_panel:bitmap({
+		texture = desc_mission_icon.texture,
+		texture_rect = desc_mission_icon.texture_rect,
 		visible = false,
 		x = 0,
 		y = 0,
-		texture = desc_mission_icon.texture,
-		texture_rect = desc_mission_icon.texture_rect,
 	})
 	self._desc_mission_name = self._game_description_panel:label({
 		align = "left",
+		color = tweak_data.gui.colors.raid_red,
+		font = tweak_data.gui.fonts.din_compressed,
+		font_size = tweak_data.gui.font_sizes.menu_list,
 		h = 96,
 		text = "FLAKTURM",
 		vertical = "center",
@@ -319,12 +322,12 @@ function MissionJoinGui:_layout_game_description()
 		w = 400,
 		x = 80,
 		y = 0,
-		color = tweak_data.gui.colors.raid_red,
-		font = tweak_data.gui.fonts.din_compressed,
-		font_size = tweak_data.gui.font_sizes.menu_list,
 	})
 	self._desc_mission_name_small = self._game_description_panel:label({
 		align = "left",
+		color = tweak_data.gui.colors.raid_red,
+		font = tweak_data.gui.fonts.din_compressed,
+		font_size = tweak_data.gui.font_sizes.small,
 		h = 32,
 		text = "FLAKTURM",
 		vertical = "center",
@@ -332,14 +335,11 @@ function MissionJoinGui:_layout_game_description()
 		w = 400,
 		x = 80,
 		y = 0,
-		color = tweak_data.gui.colors.raid_red,
-		font = tweak_data.gui.fonts.din_compressed,
-		font_size = tweak_data.gui.font_sizes.small,
 	})
 
 	local difficulty_params = {
-		name = "mission_difficulty",
 		amount = tweak_data:number_of_difficulties(),
+		name = "mission_difficulty",
 	}
 
 	self._server_difficulty_indicator = RaidGuiControlDifficultyStars:new(self._game_description_panel, difficulty_params)
@@ -348,6 +348,9 @@ function MissionJoinGui:_layout_game_description()
 
 	self._desc_xp_amount = self._game_description_panel:label({
 		align = "right",
+		color = tweak_data.gui.colors.raid_grey,
+		font = tweak_data.gui.fonts.din_compressed,
+		font_size = tweak_data.gui.font_sizes.extra_small,
 		h = 32,
 		text = "1000 XP",
 		vertical = "center",
@@ -355,9 +358,6 @@ function MissionJoinGui:_layout_game_description()
 		w = 240,
 		x = 240,
 		y = 96,
-		color = tweak_data.gui.colors.raid_grey,
-		font = tweak_data.gui.fonts.din_compressed,
-		font_size = tweak_data.gui.font_sizes.extra_small,
 	})
 	self._player_info_panel = self._game_description_panel:panel({
 		h = 288,
@@ -371,16 +371,16 @@ function MissionJoinGui:_layout_game_description()
 	for counter = 1, 3 do
 		local player_description_params = {
 			h = 96,
+			name = "player_description_" .. tostring(counter),
 			w = 480,
 			x = 0,
-			name = "player_description_" .. tostring(counter),
 			y = (counter - 1) * 96,
 		}
 
 		if IS_XB1 then
 			player_description_params.on_menu_move = {
-				left = "servers_table",
 				down = "player_description_" .. tostring(counter % 3 + 1),
+				left = "servers_table",
 				up = "player_description_" .. tostring(counter > 1 and counter - 1 or 3),
 			}
 			player_description_params.on_selected_callback = callback(self, self, "bind_controller_inputs_player_description")
@@ -401,57 +401,57 @@ function MissionJoinGui:_layout_game_description()
 	})
 	self.desc_challenge_card_icon = self._desc_challenge_card_panel:bitmap({
 		h = 138,
+		texture = tweak_data.challenge_cards.rarity_definition.loot_rarity_common.texture_path,
+		texture_rect = tweak_data.challenge_cards.rarity_definition.loot_rarity_common.texture_rect,
 		w = 96,
 		x = 0,
 		y = 64,
-		texture = tweak_data.challenge_cards.rarity_definition.loot_rarity_common.texture_path,
-		texture_rect = tweak_data.challenge_cards.rarity_definition.loot_rarity_common.texture_rect,
 	})
 	self._desc_challenge_card_name = self._desc_challenge_card_panel:label({
 		align = "left",
+		color = tweak_data.gui.colors.raid_dirty_white,
+		font = tweak_data.gui.fonts.din_compressed,
+		font_size = tweak_data.gui.font_sizes.small,
 		h = 64,
 		text = "SWITCH HITLER",
 		vertical = "center",
 		w = 384,
 		x = 0,
 		y = 0,
-		color = tweak_data.gui.colors.raid_dirty_white,
-		font = tweak_data.gui.fonts.din_compressed,
-		font_size = tweak_data.gui.font_sizes.small,
 	})
 
 	local desc_challenge_card_rarity_icon = tweak_data.gui.icons.loot_rarity_uncommon
 
 	self._desc_challenge_card_rarity_icon = self._desc_challenge_card_panel:bitmap({
 		h = 32,
+		texture = desc_challenge_card_rarity_icon.texture,
+		texture_rect = desc_challenge_card_rarity_icon.texture_rect,
 		w = 32,
 		x = 384,
 		y = 16,
-		texture = desc_challenge_card_rarity_icon.texture,
-		texture_rect = desc_challenge_card_rarity_icon.texture_rect,
 	})
 	self._desc_challenge_card_xp = self._desc_challenge_card_panel:label({
 		align = "right",
+		color = tweak_data.gui.colors.raid_dirty_white,
+		font = tweak_data.gui.fonts.din_compressed,
+		font_size = tweak_data.gui.font_sizes.size_24,
 		h = 64,
 		text = "X1.5",
 		vertical = "center",
 		w = 64,
 		x = 416,
 		y = 0,
-		color = tweak_data.gui.colors.raid_dirty_white,
-		font = tweak_data.gui.fonts.din_compressed,
-		font_size = tweak_data.gui.font_sizes.size_24,
 	})
 	self._desc_challenge_card_name_on_card = self._desc_challenge_card_panel:label({
 		align = "center",
-		text = "SWITCH HITLER",
-		vertical = "center",
-		wrap = true,
 		color = tweak_data.gui.colors.raid_dirty_white,
 		font = RaidGUIControlCardBase.TITLE_FONT,
 		font_size = math.ceil(RaidGUIControlCardBase.TITLE_TEXT_SIZE * (self.desc_challenge_card_icon:h() / 255)),
 		h = self.desc_challenge_card_icon:h() * RaidGUIControlCardBase.TITLE_H,
+		text = "SWITCH HITLER",
+		vertical = "center",
 		w = self.desc_challenge_card_icon:w() * (1 - 2 * RaidGUIControlCardBase.TITLE_PADDING),
+		wrap = true,
 		x = self.desc_challenge_card_icon:x() + self.desc_challenge_card_icon:w() * RaidGUIControlCardBase.TITLE_PADDING,
 		y = self.desc_challenge_card_icon:y() + self.desc_challenge_card_icon:h() * RaidGUIControlCardBase.TITLE_Y,
 	})
@@ -475,9 +475,9 @@ function MissionJoinGui:_layout_game_description()
 	local card_type_h = card_rarity_h
 	local card_type_w = card_type_h * (card_type.texture_rect[3] / card_type.texture_rect[4])
 	local params_card_type = {
-		name = "card_type_icon",
 		h = card_type_h,
 		layer = self.desc_challenge_card_icon:layer() + 1,
+		name = "card_type_icon",
 		texture = card_type.texture,
 		texture_rect = card_type.texture_rect,
 		w = card_type_w,
@@ -488,18 +488,21 @@ function MissionJoinGui:_layout_game_description()
 	self._desc_challenge_card_type_icon_on_card = self._desc_challenge_card_panel:image(params_card_type)
 	self._desc_challenge_card_xp_on_card = self._desc_challenge_card_panel:label({
 		align = "center",
-		text = "X1.5",
-		vertical = "center",
-		x = 0,
 		color = tweak_data.gui.colors.raid_dirty_white,
 		font = RaidGUIControlCardBase.XP_BONUS_FONT,
 		font_size = math.ceil(RaidGUIControlCardBase.XP_BONUS_FONT_SIZE * self.desc_challenge_card_icon:w() * 0.002),
 		h = self.desc_challenge_card_icon:h() * RaidGUIControlCardBase.XP_BONUS_H,
+		text = "X1.5",
+		vertical = "center",
 		w = self.desc_challenge_card_icon:w() * RaidGUIControlCardBase.XP_BONUS_W,
+		x = 0,
 		y = self.desc_challenge_card_icon:y() + self.desc_challenge_card_icon:h() * RaidGUIControlCardBase.XP_BONUS_Y,
 	})
 	self._desc_challenge_card_bonus = self._desc_challenge_card_panel:label({
 		align = "left",
+		color = tweak_data.gui.colors.raid_grey_effects,
+		font = tweak_data.gui.fonts.lato,
+		font_size = tweak_data.gui.font_sizes.size_18,
 		h = 64,
 		text = "+ shooting your secondary weapon fills up your primary ammo",
 		vertical = "top",
@@ -507,12 +510,12 @@ function MissionJoinGui:_layout_game_description()
 		wrap = true,
 		x = 128,
 		y = 64,
-		color = tweak_data.gui.colors.raid_grey_effects,
-		font = tweak_data.gui.fonts.lato,
-		font_size = tweak_data.gui.font_sizes.size_18,
 	})
 	self._desc_challenge_card_malus = self._desc_challenge_card_panel:label({
 		align = "left",
+		color = tweak_data.gui.colors.raid_grey_effects,
+		font = tweak_data.gui.fonts.lato,
+		font_size = tweak_data.gui.font_sizes.size_18,
 		h = 64,
 		text = "- shooting your primary weapon consumes both primary and secondary ammo",
 		vertical = "top",
@@ -520,9 +523,6 @@ function MissionJoinGui:_layout_game_description()
 		wrap = true,
 		x = 128,
 		y = 128,
-		color = tweak_data.gui.colors.raid_grey_effects,
-		font = tweak_data.gui.fonts.lato,
-		font_size = tweak_data.gui.font_sizes.size_18,
 	})
 end
 
@@ -538,43 +538,43 @@ function MissionJoinGui:_layout_footer_buttons()
 	})
 	self._apply_filters_button = self._footer_buttons_panel:short_tertiary_button({
 		align = "center",
-		h = 28,
-		name = "apply_filters_button",
-		vertical = "center",
-		w = 128,
-		x = 1280,
 		color = Color.black,
+		h = 28,
 		highlight_color = Color.white,
+		name = "apply_filters_button",
 		on_click_callback = callback(self, self, "on_click_apply_filters_button"),
 		text = self:translate("menu_mission_join_filters_apply", true),
 		texture_color = tweak_data.menu.raid_red,
 		texture_highlight_color = tweak_data.menu.raid_red,
+		vertical = "center",
+		w = 128,
+		x = 1280,
 	})
 	self._show_filters_button = self._footer_buttons_panel:short_secondary_button({
 		align = "center",
-		h = 28,
-		name = "show_filters_button",
-		vertical = "center",
-		w = 128,
-		x = 1536,
 		color = Color.black,
+		h = 28,
 		highlight_color = Color.white,
+		name = "show_filters_button",
 		on_click_callback = callback(self, self, "on_click_show_filters_button"),
 		text = self:translate("menu_mission_join_filters_show", true),
 		texture_color = tweak_data.menu.raid_red,
 		texture_highlight_color = tweak_data.menu.raid_red,
+		vertical = "center",
+		w = 128,
+		x = 1536,
 	})
 	self._online_users_count = self._footer_buttons_panel:label({
 		align = "left",
+		color = tweak_data.gui.colors.raid_white,
+		font = tweak_data.gui.fonts.din_compressed,
+		font_size = tweak_data.gui.font_sizes.large,
 		h = 64,
 		name = "online_users_count",
 		text = "",
 		vertical = "center",
 		w = 320,
 		x = 960,
-		color = tweak_data.gui.colors.raid_white,
-		font = tweak_data.gui.fonts.din_compressed,
-		font_size = tweak_data.gui.font_sizes.large,
 	})
 end
 
@@ -708,18 +708,18 @@ function MissionJoinGui:data_source_distance_filter_stepper()
 
 	table.insert(result, {
 		info = "Close",
-		value = 0,
 		text = utf8.to_upper(managers.localization:text("menu_dist_filter_close")),
+		value = 0,
 	})
 	table.insert(result, {
 		info = "Far",
-		value = 2,
 		text = utf8.to_upper(managers.localization:text("menu_dist_filter_far")),
+		value = 2,
 	})
 	table.insert(result, {
 		info = "Worldwide",
-		value = 3,
 		text = utf8.to_upper(managers.localization:text("menu_dist_filter_worldwide")),
+		value = 3,
 	})
 
 	return result
@@ -731,8 +731,8 @@ function MissionJoinGui:data_source_difficulty_filter_stepper()
 	if tweak_data.difficulties then
 		table.insert(result, {
 			info = "Any",
-			value = 0,
 			text = utf8.to_upper(managers.localization:text("menu_any")),
+			value = 0,
 		})
 
 		for diff_index, diff_name in pairs(tweak_data.difficulties) do
@@ -752,8 +752,8 @@ function MissionJoinGui:data_source_mission_filter_stepper()
 
 	table.insert(result, {
 		info = "Any",
-		value = -1,
 		text = utf8.to_upper(managers.localization:text("menu_any")),
+		value = -1,
 	})
 
 	for _, mission_name_id in pairs(tweak_data.operations:get_raids_index()) do
@@ -966,8 +966,8 @@ function MissionJoinGui:_set_game_description_data(data)
 			end
 
 			local on_menu_move = {
-				left = "servers_table",
 				down = "player_description_" .. tostring(i % control_counter + 1),
+				left = "servers_table",
 				up = "player_description_" .. tostring(i > 1 and i - 1 or control_counter),
 			}
 
@@ -1854,8 +1854,8 @@ function MissionJoinGui:bind_controller_inputs()
 		},
 		keyboard = {
 			{
-				key = "footer_back",
 				callback = callback(self, self, "_on_legend_pc_back", nil),
+				key = "footer_back",
 			},
 		},
 	}
@@ -1885,8 +1885,8 @@ function MissionJoinGui:bind_controller_inputs_no_join()
 		},
 		keyboard = {
 			{
-				key = "footer_back",
 				callback = callback(self, self, "_on_legend_pc_back", nil),
+				key = "footer_back",
 			},
 		},
 	}
@@ -1919,8 +1919,8 @@ function MissionJoinGui:bind_controller_inputs_player_description()
 		},
 		keyboard = {
 			{
-				key = "footer_back",
 				callback = callback(self, self, "_on_legend_pc_back", nil),
+				key = "footer_back",
 			},
 		},
 	}

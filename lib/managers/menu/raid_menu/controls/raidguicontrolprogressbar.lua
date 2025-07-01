@@ -17,23 +17,23 @@ function RaidGUIControlProgressBar:init(parent, params)
 	self._bg_color = params.bar_background_color
 	self._bg = self._object:rect({
 		params.layer,
-		y = 0,
 		color = self._bg_color,
 		h = params.h,
 		layer = self._params.layer + 1,
 		name = self._name .. "_bg",
 		w = self._bar_width,
 		x = self._object:w() - self._bar_width,
+		y = 0,
 	})
 	self._description = self._object:text({
 		align = "left",
-		x = 0,
 		color = self._params.description_color or Color.white,
 		font = self._params.font,
 		font_size = self._params.font_size,
 		layer = self._params.layer + 1,
 		text = utf8.to_upper(params.description),
 		w = self._object:w() / 5 * 4,
+		x = 0,
 	})
 	self._params.layer = self._params.layer + 2
 	self._bar = self._object:rect(self._params)

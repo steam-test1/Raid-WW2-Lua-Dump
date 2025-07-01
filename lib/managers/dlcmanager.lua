@@ -360,8 +360,8 @@ function PS4DLCManager:buy_product(product_name)
 	managers.menu:show_waiting_NPCommerce_open()
 
 	self._request = {
-		type = "buy_product",
 		product = product_name,
+		type = "buy_product",
 	}
 	self._activity = {
 		type = "open",
@@ -537,10 +537,10 @@ function WINDLCManager:init()
 		Global.dlc_manager = {}
 		Global.dlc_manager.all_dlc_data = {
 			full_game = {
+				app_id = tostring(self:get_app_id()),
 				external = true,
 				no_install = true,
 				verified = true,
-				app_id = tostring(self:get_app_id()),
 			},
 			official_soundtrack = {
 				app_id = "720860",

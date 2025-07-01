@@ -31,13 +31,13 @@ function HUDSpecialInteractionFuseCutting:_create_bg_plate()
 	local gui_data = tweak_data.gui:get_full_gui_data(HUDSpecialInteractionFuseCutting.BACKGROUND_PLATE_IMAGE)
 
 	self._bg_plate = self._object:bitmap({
+		h = HUDSpecialInteractionFuseCutting.SIZE + 118,
 		halign = "center",
 		layer = 1,
 		name = "special_interaction_bg_plate",
-		valign = "center",
-		h = HUDSpecialInteractionFuseCutting.SIZE + 118,
 		texture = gui_data.texture,
 		texture_rect = gui_data.texture_rect,
+		valign = "center",
 		w = HUDSpecialInteractionFuseCutting.SIZE + 118,
 	})
 
@@ -48,9 +48,9 @@ function HUDSpecialInteractionFuseCutting:_create_interact_arrow()
 	local gui_data = tweak_data.gui:get_full_gui_data(HUDSpecialInteractionFuseCutting.KNIFE_ICON)
 
 	self._interact_arrow = self._object:bitmap({
-		name = "special_interaction_icon",
 		h = HUDSpecialInteractionFuseCutting.SIZE * 0.9,
 		layer = self._bg_plate:layer() + 2,
+		name = "special_interaction_icon",
 		texture = gui_data.texture,
 		texture_rect = gui_data.texture_rect,
 		w = HUDSpecialInteractionFuseCutting.SIZE * 0.9,
@@ -62,14 +62,14 @@ end
 function HUDSpecialInteractionFuseCutting:_create_fuse_timer()
 	self._interact_text = self._object:text({
 		align = "center",
+		font = HUDSpecialInteractionFuseCutting.TIMER_FONT,
+		font_size = HUDSpecialInteractionFuseCutting.TIMER_FONT_SIZE,
 		h = 60,
+		layer = self._bg_plate:layer() + 2,
 		name = "_interact_text",
 		text = "--:--",
 		valign = "center",
 		w = 240,
-		font = HUDSpecialInteractionFuseCutting.TIMER_FONT,
-		font_size = HUDSpecialInteractionFuseCutting.TIMER_FONT_SIZE,
-		layer = self._bg_plate:layer() + 2,
 	})
 
 	self._interact_text:set_center_x(self._object:w() / 2)
@@ -93,10 +93,10 @@ function HUDSpecialInteractionFuseCutting:_create_circles()
 	for i = 1, max_cuts do
 		local circle = CircleBitmapGuiObject:new(self._object, {
 			blend_mode = "add",
-			position_z = 0,
 			color = HUDSpecialInteractionFuseCutting.STATE_DEFAULT_COLOR,
 			image = tweak_data.gui.icons.interact_fuse_thread.texture,
 			layer = self._bg_plate:layer() + 1,
+			position_z = 0,
 			radius = HUDSpecialInteractionFuseCutting.SIZE,
 			rotation = HUDSpecialInteractionFuseCutting.ENDING_ANGLE,
 		})
@@ -107,11 +107,11 @@ function HUDSpecialInteractionFuseCutting:_create_circles()
 		local fill = current_gap * deviation
 
 		table.insert(self._circles, {
-			cut_point = true,
-			size = 0,
 			circle = circle,
+			cut_point = true,
 			max_size = fill * fill_mul,
 			rotation = HUDSpecialInteractionFuseCutting.TOTAL_ANGLE,
+			size = 0,
 		})
 
 		current_gap = current_gap * self._tweak_data.circle_difficulty_mul
@@ -122,10 +122,10 @@ function HUDSpecialInteractionFuseCutting:_create_circles()
 
 	for i = 1, max_segments, 2 do
 		local circle = CircleBitmapGuiObject:new(self._object, {
-			position_z = 0,
 			color = HUDSpecialInteractionFuseCutting.CIRCLE_COLOR,
 			image = tweak_data.gui.icons.interact_lockpick_circles[1].texture,
 			layer = self._bg_plate:layer() + 1,
+			position_z = 0,
 			radius = HUDSpecialInteractionFuseCutting.SIZE,
 			rotation = HUDSpecialInteractionFuseCutting.ENDING_ANGLE,
 		})
@@ -135,10 +135,10 @@ function HUDSpecialInteractionFuseCutting:_create_circles()
 		local fill = 0.092 + math.random() * segment_size
 
 		table.insert(self._circles, i, {
-			size = 0,
 			circle = circle,
 			max_size = fill * fill_mul,
 			rotation = HUDSpecialInteractionFuseCutting.TOTAL_ANGLE,
+			size = 0,
 		})
 
 		segment_size = segment_size * self._tweak_data.circle_difficulty_mul

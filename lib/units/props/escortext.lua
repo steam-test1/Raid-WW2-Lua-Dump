@@ -45,9 +45,9 @@ function EscortExt:_setup_health_bar()
 		halign = "center",
 		layer = -1,
 		name = "bg",
-		valign = "center",
 		texture = tweak_data.gui.icons[HUDTeammatePlayer.PLAYER_HEALTH_BG_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDTeammatePlayer.PLAYER_HEALTH_BG_ICON].texture_rect,
+		valign = "center",
 	})
 
 	self._health_bar_bg:set_w(self._health_bar_bg:w() / 2)
@@ -57,9 +57,9 @@ function EscortExt:_setup_health_bar()
 	self._health_bar_bg:set_center_y(self._health_panel:h() / 2)
 
 	self._health_bar = self._health_panel:rect({
-		name = "fg",
 		color = tweak_data.gui.colors.progress_75,
 		h = self._health_bar_bg:h() - 2,
+		name = "fg",
 		w = self._health_bar_bg:w() - 2,
 	})
 
@@ -114,19 +114,19 @@ function EscortExt:add_waypoint()
 	self._rotation = self._unit:rotation()
 	self._waypoint_data = {
 		blend_mode = "add",
+		color = self._unsafe_color,
 		distance = true,
 		icon = "waypoint_escort_crouch",
 		map_icon = "waypoint_escort_crouch",
 		no_sync = true,
+		position = self._position,
 		present_timer = 0,
 		radius = 200,
-		show_on_screen = true,
-		waypoint_type = "unit_waypoint",
-		color = self._unsafe_color,
-		position = self._position,
 		rotation = self._rotation,
+		show_on_screen = true,
 		unit = self._unit,
 		waypoint_color = self._unsafe_color,
+		waypoint_type = "unit_waypoint",
 	}
 	self._icon_id = tostring(self._unit:key())
 

@@ -50,13 +50,13 @@ end
 
 function RaidGUIControlSkillsBreakdown:_create_skills_label()
 	self._skills_label = self._object:text({
-		name = "skills_label",
-		vertical = "center",
 		color = RaidGUIControlSkillsBreakdown.LABEL_COLOR,
 		font = RaidGUIControlSkillsBreakdown.FONT,
 		font_size = RaidGUIControlSkillsBreakdown.LABEL_FONT_SIZE,
 		h = RaidGUIControlSkillsBreakdown.LABEL_H,
+		name = "skills_label",
 		text = self:translate("menu_skills", true),
+		vertical = "center",
 		w = RaidGUIControlSkillsBreakdown.DEFAULT_W,
 		x = RaidGUIControlSkillsBreakdown.LABEL_X,
 		y = RaidGUIControlSkillsBreakdown.LABEL_Y,
@@ -65,8 +65,8 @@ end
 
 function RaidGUIControlSkillsBreakdown:_create_skills_panel()
 	self._skills_panel = self._object:panel({
-		name = "skills_panel",
 		h = self._object:h() - RaidGUIControlSkillsBreakdown.LABEL_H - RaidGUIControlSkillsBreakdown.LABEL_PADDING_DOWN,
+		name = "skills_panel",
 		y = RaidGUIControlSkillsBreakdown.LABEL_H + RaidGUIControlSkillsBreakdown.LABEL_PADDING_DOWN,
 	})
 end

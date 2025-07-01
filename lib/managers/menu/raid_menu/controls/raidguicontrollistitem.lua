@@ -19,34 +19,34 @@ function RaidGUIControlListItem:init(parent, params, data)
 		y = params.y,
 	})
 	self._item_label = self._object:label({
-		vertical = "center",
-		x = 32,
-		y = 0,
 		color = params.color or tweak_data.gui.colors.raid_white,
 		font = self._params.item_font or tweak_data.gui.fonts.din_compressed,
 		font_size = self._params.item_font_size or tweak_data.gui.font_sizes.menu_list,
 		h = params.h,
 		name = "list_item_label_" .. self._name,
 		text = data.text,
+		vertical = "center",
 		w = params.w,
+		x = 32,
+		y = 0,
 	})
 	self._item_background = self._object:rect({
-		visible = false,
-		x = 0,
-		y = 1,
 		color = tweak_data.gui.colors.raid_list_background,
 		h = params.h - 2,
 		name = "list_item_back_" .. self._name,
+		visible = false,
 		w = params.w,
+		x = 0,
+		y = 1,
 	})
 	self._item_highlight_marker = self._object:rect({
+		color = tweak_data.gui.colors.raid_red,
+		h = params.h - 2,
+		name = "list_item_highlight_" .. self._name,
 		visible = false,
 		w = 3,
 		x = 0,
 		y = 1,
-		color = tweak_data.gui.colors.raid_red,
-		h = params.h - 2,
-		name = "list_item_highlight_" .. self._name,
 	})
 
 	if params and params.use_unlocked and self._data and self._data.value and not self._data.value.unlocked then

@@ -259,6 +259,7 @@ function CoreParticleEditorSimulators:create_teleporter()
 	local function validate_lifetime(p)
 		local ret = {
 			message = "",
+			p = nil,
 			valid = true,
 		}
 		local a = tonumber(p._value)

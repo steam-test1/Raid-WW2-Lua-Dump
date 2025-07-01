@@ -30,12 +30,12 @@ function CharacterSequenceElement:_build_panel(panel, panel_sizer)
 	local text = EWS:TextCtrl(panel, self._hed.sequence, "", "TE_PROCESS_ENTER")
 
 	text:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
-		value = "sequence",
 		ctrlr = text,
+		value = "sequence",
 	})
 	text:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
-		value = "sequence",
 		ctrlr = text,
+		value = "sequence",
 	})
 	panel_sizer:add(text, 0, 0, "EXPAND")
 end
@@ -50,9 +50,9 @@ function CharacterSequenceElement:draw_links(t, dt, selected_unit, all_units)
 		if draw then
 			self:_draw_link({
 				b = 0,
+				from_unit = self._unit,
 				g = 0.75,
 				r = 0,
-				from_unit = self._unit,
 				to_unit = unit,
 			})
 		end

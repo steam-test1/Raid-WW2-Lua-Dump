@@ -42,11 +42,11 @@ end
 
 function HUDDriving:_create_panel(hud)
 	local panel_params = {
+		h = HUDDriving.H,
 		halign = "center",
 		name = "driving_panel",
 		valign = "bottom",
 		visible = false,
-		h = HUDDriving.H,
 		w = HUDDriving.W,
 	}
 
@@ -58,10 +58,10 @@ end
 
 function HUDDriving:_create_slot_panel()
 	local slot_panel_params = {
+		h = HUDDriving.SLOT_PANEL_H,
 		halign = "left",
 		name = "slot_panel",
 		valign = "bottom",
-		h = HUDDriving.SLOT_PANEL_H,
 		w = HUDDriving.SLOT_PANEL_W,
 	}
 
@@ -106,8 +106,8 @@ function HUDDriving:_create_slot_panel()
 		end
 
 		local slot = {
-			free = true,
 			empty = empty_slot,
+			free = true,
 			taken = taken_slot,
 		}
 
@@ -118,13 +118,13 @@ end
 function HUDDriving:_create_carry_info()
 	local carry_panel_x = self._slot_panel:x() + self._slot_panel:w() + HUDDriving.CARRY_PANEL_PADDING_LEFT
 	local carry_info_panel_params = {
+		h = self._slot_panel:h() + 20,
 		halign = "right",
 		name = "carry_info_panel",
 		valign = "scale",
-		y = 0,
-		h = self._slot_panel:h() + 20,
 		w = self._object:w() - carry_panel_x,
 		x = carry_panel_x,
+		y = 0,
 	}
 	local carry_info_panel = self._object:panel(carry_info_panel_params)
 
@@ -154,13 +154,13 @@ function HUDDriving:_create_carry_info()
 	local carry_info_text_x = self._carry_indicator:x() + self._carry_indicator:w() + HUDDriving.CARRY_PANEL_PADDING_RIGHT
 	local carry_info_text_params = {
 		align = "left",
+		font = HUDDriving.CARRY_INFO_TEXT_FONT,
+		font_size = HUDDriving.CARRY_INFO_TEXT_FONT_SIZE,
 		halign = "center",
 		name = "carry_info_text",
 		text = "",
 		valign = "left",
 		vertical = "center",
-		font = HUDDriving.CARRY_INFO_TEXT_FONT,
-		font_size = HUDDriving.CARRY_INFO_TEXT_FONT_SIZE,
 		w = carry_info_panel:w() - carry_info_text_x,
 		x = carry_info_text_x,
 	}
@@ -173,10 +173,10 @@ end
 function HUDDriving:_create_button_prompts()
 	local button_prompts_panel_params = {
 		alpha = 0,
+		h = HUDDriving.BUTTON_PROMPTS_H,
 		halign = "scale",
 		name = "button_prompts_panel",
 		valign = "top",
-		h = HUDDriving.BUTTON_PROMPTS_H,
 		w = self._object:w(),
 	}
 
@@ -250,13 +250,13 @@ function HUDDriving:_create_button_prompt(prompt_name, prompt, buttons)
 
 	local button_prompt_params = {
 		align = "center",
-		halign = "center",
-		valign = "center",
-		vertical = "center",
 		font = HUDDriving.BUTTON_PROMPT_TEXT_FONT,
 		font_size = HUDDriving.BUTTON_PROMPT_TEXT_FONT_SIZE,
+		halign = "center",
 		name = "button_prompt_" .. tostring(prompt_name),
 		text = utf8.to_upper(managers.localization:text(prompt, buttons)),
+		valign = "center",
+		vertical = "center",
 	}
 	local button_prompt = self._button_prompts_panel:text(button_prompt_params)
 	local _, _, w, h = button_prompt:text_rect()
@@ -301,36 +301,36 @@ function HUDDriving:_get_prompts_needed_for_current_seat()
 
 	if player_seat.driving then
 		table.insert(seat_prompts, {
-			name = "look_behind",
 			buttons = {
 				STICK_R = managers.localization:btn_macro("vehicle_rear_camera"),
 			},
+			name = "look_behind",
 			prompt = HUDDriving.BUTTON_PROMPT_LOOK_BEHIND,
 		})
 	end
 
 	if player_seat.has_shooting_mode then
 		table.insert(seat_prompts, {
-			name = "switch_pose",
 			buttons = {
 				BTN_B = managers.localization:btn_macro("vehicle_shooting_stance"),
 			},
+			name = "switch_pose",
 			prompt = HUDDriving.BUTTON_PROMPT_SWITCH_POSE,
 		})
 	end
 
 	table.insert(seat_prompts, {
-		name = "exit_vehicle",
 		buttons = {
 			BTN_TOP_R = managers.localization:btn_macro("vehicle_exit"),
 		},
+		name = "exit_vehicle",
 		prompt = HUDDriving.BUTTON_PROMPT_EXIT_VEHICLE,
 	})
 	table.insert(seat_prompts, {
-		name = "change_seat",
 		buttons = {
 			BTN_TOP_L = managers.localization:btn_macro("vehicle_change_seat"),
 		},
+		name = "change_seat",
 		prompt = HUDDriving.BUTTON_PROMPT_CHANGE_SEAT,
 	})
 

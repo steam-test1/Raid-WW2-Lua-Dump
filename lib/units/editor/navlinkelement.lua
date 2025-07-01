@@ -250,9 +250,9 @@ function NavLinkUnitElement:_draw_follow_up(selected_unit, all_units)
 			if draw then
 				self:_draw_link({
 					b = 0,
+					from_unit = self._unit,
 					g = 0.75,
 					r = 0,
-					from_unit = self._unit,
 					to_unit = unit,
 				})
 			end
@@ -437,8 +437,6 @@ function NavLinkUnitElement:_build_panel(panel, panel_sizer)
 		ctrlr_proportions = 2,
 		name = "Preset:",
 		name_proportions = 1,
-		sorted = true,
-		tooltip = "Select a preset.",
 		options = {
 			"clear",
 			"all",
@@ -450,6 +448,8 @@ function NavLinkUnitElement:_build_panel(panel, panel_sizer)
 		},
 		panel = panel,
 		sizer = opt_sizer,
+		sorted = true,
+		tooltip = "Select a preset.",
 	}
 	local filter_preset = CoreEWS.combobox(filter_preset_params)
 

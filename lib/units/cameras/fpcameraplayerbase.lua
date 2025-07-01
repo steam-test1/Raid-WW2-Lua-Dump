@@ -77,9 +77,9 @@ function FPCameraPlayerBase:init(unit)
 	self._camera_properties.target_tilt = 0
 	self._camera_properties.current_tilt = 0
 	self._view_kick = {
-		velocity = 0,
 		delta = Vector3(),
 		direction = Vector3(),
+		velocity = 0,
 	}
 
 	self:check_flashlight_enabled()

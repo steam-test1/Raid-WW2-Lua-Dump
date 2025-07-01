@@ -68,8 +68,8 @@ function TextGui:setup()
 
 	if self.BG_COLOR then
 		self._bg_rect = self._panel:rect({
-			layer = -1,
 			color = self.BG_COLOR,
+			layer = -1,
 		})
 	end
 
@@ -89,14 +89,14 @@ function TextGui:_create_text_gui(row)
 	local font = text_data.font or self.FONT
 	local gui = self._panel:text({
 		align = "center",
-		layer = 0,
-		vertical = "center",
-		visible = true,
-		y = 0,
 		color = color,
 		font = font,
 		font_size = font_size,
+		layer = 0,
 		text = text_data.text,
+		vertical = "center",
+		visible = true,
+		y = 0,
 	})
 
 	if self.RENDER_TEMPLATE then
@@ -193,8 +193,8 @@ function TextGui:set_bg_color_type(type)
 
 	if self.BG_COLOR then
 		self._bg_rect = self._bg_rect or self._panel:rect({
-			layer = -1,
 			color = self.BG_COLOR,
+			layer = -1,
 		})
 
 		self._bg_rect:set_color(self.BG_COLOR)

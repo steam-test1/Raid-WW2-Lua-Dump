@@ -27,16 +27,16 @@ end
 
 function RaidGUIControlProgressBarSimple:_create_background_bar(...)
 	local background_bar_params = {
-		name = "background_bar",
-		x = 0,
-		y = 0,
 		center = self._params.center or "if_center_base",
 		color = self._params.background_color or RaidGUIControlProgressBarSimple.DEFAULT_BACKGROUND_COLOR,
 		h = self._object:h(),
 		layer = self._object:layer() + 1,
 		left = self._params.left or "if_left_base",
+		name = "background_bar",
 		right = self._params.right or "if_right_base",
 		w = self._params.bar_w,
+		x = 0,
+		y = 0,
 	}
 
 	self._background = self._object:three_cut_bitmap(background_bar_params)
@@ -44,26 +44,26 @@ end
 
 function RaidGUIControlProgressBarSimple:_create_foreground_bar()
 	local foreground_panel_params = {
-		name = "foreground_panel",
-		x = 0,
-		y = 0,
 		h = self._object:h(),
 		layer = self._object:layer() + 10,
+		name = "foreground_panel",
 		w = self._background:w(),
+		x = 0,
+		y = 0,
 	}
 
 	self._foreground = self._object:panel(foreground_panel_params)
 
 	local foreground_image_params = {
-		name = "foreground_bar",
-		x = 0,
-		y = 0,
 		center = self._params.center or "if_center_base",
 		color = self._params.foreground_color or RaidGUIControlProgressBarSimple.DEFAULT_FOREGROUND_COLOR,
 		h = self._foreground:h(),
 		left = self._params.left or "if_left_base",
+		name = "foreground_bar",
 		right = self._params.right or "if_right_base",
 		w = self._foreground:w(),
+		x = 0,
+		y = 0,
 	}
 
 	self._foreground_image = self._foreground:three_cut_bitmap(foreground_image_params)

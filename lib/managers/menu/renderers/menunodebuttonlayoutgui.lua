@@ -26,16 +26,16 @@ function MenuNodeButtonLayoutGui:_setup()
 			local c = data.id == "menu_button_unassigned" and Color(0.5, 0.5, 0.5) or Color.white
 
 			data.text = self.ws:panel():text({
-				halign = "center",
-				valign = "center",
-				visible = false,
 				align = data.align,
 				color = c,
 				font = self.font,
 				font_size = self.font_size,
+				halign = "center",
 				layer = self.layers.items,
 				text = managers.localization:to_upper_text(data.id),
+				valign = "center",
 				vertical = data.vertical,
+				visible = false,
 			})
 		end
 	end
@@ -43,10 +43,10 @@ function MenuNodeButtonLayoutGui:_setup()
 	self._blur = managers.menu_component._fullscreen_ws:panel():panel()
 
 	self._blur:bitmap({
-		render_template = "VertexColorTexturedBlur3D",
-		texture = "guis/textures/test_blur_df",
 		h = managers.menu_component._fullscreen_ws:panel():h(),
 		layer = self.layers.background,
+		render_template = "VertexColorTexturedBlur3D",
+		texture = "guis/textures/test_blur_df",
 		w = managers.menu_component._fullscreen_ws:panel():w(),
 	})
 	self._blur:rect({
@@ -65,15 +65,15 @@ function MenuNodeButtonLayoutGui:_setup()
 	self._blur:animate(func)
 
 	self._bg = self.ws:panel():rect({
-		visible = false,
 		color = Color(1, 0.4, 0.4, 0.4),
 		layer = self.layers.background,
+		visible = false,
 	})
 	self._controller = self.ws:panel():bitmap({
 		h = 256,
+		layer = self.layers.items,
 		texture = "guis/textures/controller",
 		w = 512,
-		layer = self.layers.items,
 	})
 
 	self:_layout()

@@ -10,9 +10,9 @@ function RaidGUIControlTabs:init(parent, params)
 	self._tab_height = self._params.tab_height or RaidGUIControlTabs.DEFAULT_HEIGHT
 
 	local panel_params = {
-		name = "tabs_control",
 		h = self._tab_height,
 		layer = self._panel:layer() + 1,
+		name = "tabs_control",
 		w = self._tab_width * #self._params.tabs_params,
 		x = self._params.x,
 		y = self._params.y,
@@ -22,14 +22,14 @@ function RaidGUIControlTabs:init(parent, params)
 
 	if self._params.icon then
 		self._icon_title = self._object:image({
-			name = "tabs_control_icon_title",
-			vertical = "center",
-			x = 0,
-			y = 0,
 			h = self._params.icon.texture_rect[4],
+			name = "tabs_control_icon_title",
 			texture = self._params.icon.texture,
 			texture_rect = self._params.icon.texture_rect,
+			vertical = "center",
 			w = self._params.icon.texture_rect[3],
+			x = 0,
+			y = 0,
 		})
 
 		self._object:set_w(self._object:w() + self._icon_title:w())
@@ -79,10 +79,10 @@ end
 
 function RaidGUIControlTabs:_create_bottom_line()
 	local bottom_line_params = {
-		name = "bottom_line",
 		color = RaidGUIControlTabs.ACTIVE_LINE_COLOR,
 		h = RaidGUIControlTabs.BOTTOM_LINE_HEIGHT,
 		layer = self._object:layer() + 3,
+		name = "bottom_line",
 		w = self._tab_width,
 		x = (self._initial_tab_idx - 1) * self._tab_width,
 		y = self._object:h() - RaidGUIControlTabs.BOTTOM_LINE_HEIGHT,

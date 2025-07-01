@@ -143,21 +143,21 @@ function MenuNodeUpdatesGui:setup()
 
 	panel:text({
 		align = "left",
-		vertical = "top",
 		color = tweak_data.screen_colors.text,
 		font = tweak_data.menu.pd2_large_font,
 		font_size = tweak_data.menu.pd2_large_font_size,
 		text = title_text,
+		vertical = "top",
 	})
 
 	local back_button = panel:text({
 		align = "right",
-		name = "back_button",
-		vertical = "bottom",
 		color = tweak_data.screen_colors.button_stage_3,
 		font = tweak_data.menu.pd2_large_font,
 		font_size = tweak_data.menu.pd2_large_font_size,
+		name = "back_button",
 		text = managers.localization:to_upper_text("menu_back"),
+		vertical = "bottom",
 	})
 
 	self:make_fine_text(back_button)
@@ -169,13 +169,13 @@ function MenuNodeUpdatesGui:setup()
 		local bg_text = panel:text({
 			align = "left",
 			alpha = 0.4,
-			layer = -1,
-			rotation = 360,
-			vertical = "top",
 			color = tweak_data.screen_colors.button_stage_3,
 			font = tweak_data.menu.pd2_massive_font,
 			font_size = tweak_data.menu.pd2_massive_font_size,
+			layer = -1,
+			rotation = 360,
 			text = title_text,
+			vertical = "top",
 		})
 
 		self:make_fine_text(bg_text)
@@ -186,13 +186,13 @@ function MenuNodeUpdatesGui:setup()
 			local bg_back = panel:text({
 				align = "right",
 				alpha = 0.4,
-				layer = -1,
-				rotation = 360,
-				vertical = "bottom",
 				color = tweak_data.screen_colors.button_stage_3,
 				font = tweak_data.menu.pd2_massive_font,
 				font_size = tweak_data.menu.pd2_massive_font_size,
+				layer = -1,
+				rotation = 360,
 				text = managers.localization:to_upper_text("menu_back"),
+				vertical = "bottom",
 			})
 
 			self:make_fine_text(bg_back)
@@ -219,11 +219,11 @@ function MenuNodeUpdatesGui:setup()
 	self._num_previous_updates = num_previous_updates
 
 	local latest_update_panel = panel:panel({
+		h = panel:w() / 4,
 		name = "lastest_content_update",
+		w = panel:w() / 2,
 		x = 0,
 		y = 70,
-		h = panel:w() / 4,
-		w = panel:w() / 2,
 	})
 
 	if not IS_PC then
@@ -257,8 +257,8 @@ function MenuNodeUpdatesGui:setup()
 	local padding = IS_PC and 30 or 5
 	local dech_panel_h = IS_PC and latest_update_panel:h() or panel:h() / 2
 	local latest_desc_panel = panel:panel({
-		name = "latest_description",
 		h = dech_panel_h,
+		name = "latest_description",
 		w = panel:w() - latest_update_panel:w() - padding,
 		x = latest_update_panel:right() + padding,
 		y = latest_update_panel:top(),
@@ -277,30 +277,30 @@ function MenuNodeUpdatesGui:setup()
 	local date_string = latest_update.date_id and managers.localization:to_upper_text(latest_update.date_id) or self:_get_db_text(latest_update.id, "date") or ""
 	local desc_string = latest_update.desc_id and managers.localization:text(latest_update.desc_id) or self:_get_db_text(latest_update.id, "desc") or ""
 	local title_text = latest_desc_panel:text({
-		name = "title_text",
 		color = tweak_data.screen_colors.text,
 		font = tweak_data.menu.pd2_large_font,
 		font_size = tweak_data.menu.pd2_large_font_size,
+		name = "title_text",
 		text = title_string,
 		x = self.PADDING,
 		y = self.PADDING,
 	})
 	local date_text = latest_desc_panel:text({
-		name = "date_text",
 		color = tweak_data.screen_colors.text,
 		font = tweak_data.menu.pd2_medium_font,
 		font_size = tweak_data.menu.pd2_medium_font_size,
+		name = "date_text",
 		text = date_string,
 		x = self.PADDING,
 	})
 	local desc_text = latest_desc_panel:text({
-		name = "desc_text",
-		word_wrap = true,
-		wrap = true,
 		color = tweak_data.screen_colors.text,
 		font = tweak_data.menu.pd2_small_font,
 		font_size = tweak_data.menu.pd2_small_font_size,
+		name = "desc_text",
 		text = desc_string,
+		word_wrap = true,
+		wrap = true,
 		x = self.PADDING,
 	})
 
@@ -331,13 +331,13 @@ function MenuNodeUpdatesGui:setup()
 		if self._tweak_data.button.text_id then
 			local text = top_button:text({
 				align = "right",
-				halign = "right",
-				valign = "top",
-				vertical = "top",
 				color = tweak_data.screen_colors.button_stage_3,
 				font = tweak_data.menu.pd2_medium_font,
 				font_size = tweak_data.menu.pd2_medium_font_size,
+				halign = "right",
 				text = managers.localization:to_upper_text(self._tweak_data.button.text_id),
+				valign = "top",
+				vertical = "top",
 			})
 			local _, _, tw, th = self:make_fine_text(text)
 
@@ -350,10 +350,10 @@ function MenuNodeUpdatesGui:setup()
 
 		if self._tweak_data.button.image then
 			local bitmap = top_button:bitmap({
-				halign = "right",
-				valign = "top",
 				color = tweak_data.screen_colors.button_stage_3,
+				halign = "right",
 				texture = self._tweak_data.button.image,
+				valign = "top",
 			})
 
 			bitmap:set_top(0)
@@ -370,17 +370,17 @@ function MenuNodeUpdatesGui:setup()
 
 	local small_width = w / num_previous_updates - self.PADDING * 2
 	local previous_updates_panel = panel:panel({
-		name = "previous_content_updates",
-		x = 0,
 		h = small_width / 2 + self.PADDING * 2,
+		name = "previous_content_updates",
 		w = w,
+		x = 0,
 		y = math.max(latest_update_panel:bottom(), latest_desc_panel:bottom()) + 30,
 	})
 	local previous_update_text = panel:text({
-		name = "previous_update_text",
 		color = tweak_data.screen_colors.text,
 		font = tweak_data.menu.pd2_medium_font,
 		font_size = tweak_data.menu.pd2_medium_font_size,
+		name = "previous_update_text",
 		text = self._tweak_data.choice_id and managers.localization:to_upper_text(self._tweak_data.choice_id) or "",
 	})
 
@@ -464,39 +464,39 @@ function MenuNodeUpdatesGui:setup()
 		local num_pages = self._num_pages
 
 		self._prev_page = panel:panel({
-			name = "previous_page",
 			h = tweak_data.menu.pd2_medium_font_size,
+			name = "previous_page",
 			w = tweak_data.menu.pd2_medium_font_size,
 		})
 		self._next_page = panel:panel({
-			name = "next_page",
 			h = tweak_data.menu.pd2_medium_font_size,
+			name = "next_page",
 			w = tweak_data.menu.pd2_medium_font_size,
 		})
 
 		local prev_text = self._prev_page:text({
 			align = "center",
-			name = "text_obj",
-			vertical = "center",
 			font = tweak_data.menu.pd2_medium_font,
 			font_size = tweak_data.menu.pd2_medium_font_size,
+			name = "text_obj",
 			text = managers.menu:is_pc_controller() and "<" or managers.localization:get_default_macro("BTN_BOTTOM_L"),
+			vertical = "center",
 		})
 		local next_text = self._next_page:text({
 			align = "center",
-			name = "text_obj",
-			vertical = "center",
 			font = tweak_data.menu.pd2_medium_font,
 			font_size = tweak_data.menu.pd2_medium_font_size,
+			name = "text_obj",
 			text = managers.menu:is_pc_controller() and ">" or managers.localization:get_default_macro("BTN_BOTTOM_R"),
+			vertical = "center",
 		})
 		local page_text = panel:text({
 			align = "center",
-			vertical = "center",
 			color = tweak_data.screen_colors.text,
 			font = tweak_data.menu.pd2_medium_font,
 			font_size = tweak_data.menu.pd2_medium_font_size,
 			text = tostring(current_page) .. "/" .. tostring(num_pages),
+			vertical = "center",
 		})
 
 		self:make_fine_text(page_text)
@@ -521,8 +521,8 @@ end
 
 function MenuNodeUpdatesGui:texture_done_clbk(panel, texture_ids)
 	panel:bitmap({
-		name = "texture",
 		h = panel:h(),
+		name = "texture",
 		texture = texture_ids,
 		w = panel:w(),
 	})

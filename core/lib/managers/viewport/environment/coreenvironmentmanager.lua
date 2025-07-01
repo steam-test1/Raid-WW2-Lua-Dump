@@ -176,14 +176,14 @@ function EnvironmentManager:editor_reload(path)
 	end
 
 	local compile_settings = {
+		platform = string.lower(SystemInfo:platform():s()),
 		preprocessor_definitions = "preprocessor_definitions",
 		send_idstrings = false,
-		target_db_name = "all",
-		verbose = false,
-		platform = string.lower(SystemInfo:platform():s()),
 		source_files = source_files,
 		source_root = managers.database:base_path(),
+		target_db_name = "all",
 		target_db_root = Application:base_path() .. "assets",
+		verbose = false,
 	}
 
 	Application:data_compile(compile_settings)

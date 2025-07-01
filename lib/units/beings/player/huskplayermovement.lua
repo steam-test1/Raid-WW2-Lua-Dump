@@ -791,12 +791,7 @@ end
 
 function HuskPlayerMovement:_register_revive_SO()
 	local followup_objective = {
-		scan = true,
-		type = "act",
 		action = {
-			body_part = 1,
-			type = "act",
-			variant = "crouch",
 			blocks = {
 				action = -1,
 				aim = -1,
@@ -804,20 +799,16 @@ function HuskPlayerMovement:_register_revive_SO()
 				hurt = -1,
 				walk = -1,
 			},
-		},
-	}
-	local objective = {
-		called = true,
-		destroy_clbk_key = false,
-		haste = "run",
-		pose = "stand",
-		scan = true,
-		type = "revive",
-		action = {
-			align_sync = true,
 			body_part = 1,
 			type = "act",
-			variant = "revive",
+			variant = "crouch",
+		},
+		scan = true,
+		type = "act",
+	}
+	local objective = {
+		action = {
+			align_sync = true,
 			blocks = {
 				action = -1,
 				aim = -1,
@@ -826,23 +817,32 @@ function HuskPlayerMovement:_register_revive_SO()
 				light_hurt = -1,
 				walk = -1,
 			},
+			body_part = 1,
+			type = "act",
+			variant = "revive",
 		},
 		action_duration = tweak_data.interaction.revive.timer,
+		called = true,
 		complete_clbk = callback(self, self, "on_revive_SO_completed"),
+		destroy_clbk_key = false,
 		fail_clbk = callback(self, self, "on_revive_SO_failed"),
 		follow_unit = self._unit,
 		followup_objective = followup_objective,
+		haste = "run",
 		nav_seg = self._unit:movement():nav_tracker():nav_segment(),
+		pose = "stand",
+		scan = true,
+		type = "revive",
 	}
 	local so_descriptor = {
 		AI_group = "friendlies",
+		admin_clbk = callback(self, self, "on_revive_SO_administered"),
 		base_chance = 1,
 		chance_inc = 0,
 		interval = 1,
-		usage_amount = 1,
-		admin_clbk = callback(self, self, "on_revive_SO_administered"),
 		objective = objective,
 		search_pos = self._unit:position(),
+		usage_amount = 1,
 		verification_clbk = callback(HuskPlayerMovement, HuskPlayerMovement, "rescue_SO_verification", self._unit),
 	}
 	local so_id = "PlayerHusk_revive" .. tostring(self._unit:key())
@@ -896,20 +896,20 @@ function HuskPlayerMovement:set_need_assistance(need_assistance)
 			local objective = {
 				called = true,
 				destroy_clbk_key = false,
-				scan = true,
-				type = "follow",
 				follow_unit = self._unit,
 				nav_seg = self._unit:movement():nav_tracker():nav_segment(),
+				scan = true,
+				type = "follow",
 			}
 			local so_descriptor = {
 				AI_group = "friendlies",
 				base_chance = 1,
 				chance_inc = 0,
 				interval = 6,
-				search_dis_sq = 25000000,
-				usage_amount = 1,
 				objective = objective,
+				search_dis_sq = 25000000,
 				search_pos = self._unit:position(),
+				usage_amount = 1,
 			}
 			local so_id = "PlayerHusk_assistance" .. tostring(self._unit:key())
 
@@ -1814,14 +1814,14 @@ function HuskPlayerMovement:sync_action_walk_nav_point(pos)
 	if Network:is_server() then
 		if not self._pos_reservation then
 			self._pos_reservation = {
-				radius = 100,
 				filter = self._pos_rsrv_id,
 				position = mvector3.copy(pos),
+				radius = 100,
 			}
 			self._pos_reservation_slow = {
-				radius = 100,
 				filter = self._pos_rsrv_id,
 				position = mvector3.copy(pos),
+				radius = 100,
 			}
 
 			managers.navigation:add_pos_reservation(self._pos_reservation)
@@ -1854,10 +1854,10 @@ function HuskPlayerMovement:sync_action_walk_nav_point(pos)
 		table.insert(self._sequenced_events[#self._sequenced_events].path, pos)
 	else
 		local event_desc = {
-			type = "move",
 			path = {
 				pos,
 			},
+			type = "move",
 		}
 
 		self:_add_sequenced_event(event_desc)
@@ -2667,22 +2667,22 @@ function HuskPlayerMovement:sync_movement_state(state, down_time)
 
 	if state == "standard" then
 		local event_desc = {
-			type = "standard",
 			previous_state = previous_state,
+			type = "standard",
 		}
 
 		self:_add_sequenced_event(event_desc)
 	elseif state == "fatal" then
 		local event_desc = {
-			type = "fatal",
 			down_time = down_time,
+			type = "fatal",
 		}
 
 		self:_add_sequenced_event(event_desc)
 	elseif state == "bleed_out" then
 		local event_desc = {
-			type = "bleedout",
 			down_time = down_time,
+			type = "bleedout",
 		}
 
 		self:_add_sequenced_event(event_desc)
@@ -2694,50 +2694,50 @@ function HuskPlayerMovement:sync_movement_state(state, down_time)
 		self:_add_sequenced_event(event_desc)
 	elseif state == "incapacitated" then
 		local event_desc = {
-			type = "fatal",
 			down_time = down_time,
+			type = "fatal",
 		}
 
 		self:_add_sequenced_event(event_desc)
 	elseif state == "carry" or state == "carry_corpse" then
 		local event_desc = {
-			type = "standard",
 			previous_state = previous_state,
+			type = "standard",
 		}
 
 		self:_add_sequenced_event(event_desc)
 	elseif state == "bipod" then
 		local event_desc = {
-			type = "standard",
 			previous_state = previous_state,
+			type = "standard",
 		}
 
 		self:_add_sequenced_event(event_desc)
 	elseif state == "driving" then
 		local event_desc = {
-			type = "driving",
 			previous_state = previous_state,
+			type = "driving",
 		}
 
 		self:_add_sequenced_event(event_desc)
 	elseif state == "freefall" then
 		local event_desc = {
-			type = "freefall",
 			previous_state = previous_state,
+			type = "freefall",
 		}
 
 		self:_add_sequenced_event(event_desc)
 	elseif state == "parachuting" then
 		local event_desc = {
-			type = "parachuting",
 			previous_state = previous_state,
+			type = "parachuting",
 		}
 
 		self:_add_sequenced_event(event_desc)
 	elseif state == "turret" then
 		local event_desc = {
-			type = "standard",
 			previous_state = previous_state,
+			type = "standard",
 		}
 
 		self:_add_sequenced_event(event_desc)
@@ -3243,10 +3243,10 @@ function HuskPlayerMovement:sync_action_jump(pos, jump_vec)
 
 	local event_desc = {
 		is_no_move_slowdown = true,
-		type = "jump",
 		jump_vec = jump_vec,
 		pos = pos,
 		steer_velocity = Vector3(),
+		type = "jump",
 	}
 
 	self:_add_sequenced_event(event_desc)

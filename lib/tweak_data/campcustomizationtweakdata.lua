@@ -38,10 +38,10 @@ function CampCustomizationTweakData:_setup_camp_assets()
 			},
 			{
 				description_id = "special_edition_bomb_desc_id",
+				dlc = DLCTweakData.DLC_NAME_SPECIAL_EDITION,
 				grid_icon = "units/vanilla/props/props_camp_upgrades/props_special_edition_bomb/bomb_special_edition_hud",
 				name_id = "special_edition_bomb_name_id",
 				scene_unit = "units/vanilla/props/props_camp_upgrades/props_special_edition_bomb/props_special_edition_bomb_shop",
-				dlc = DLCTweakData.DLC_NAME_SPECIAL_EDITION,
 			},
 		},
 	}

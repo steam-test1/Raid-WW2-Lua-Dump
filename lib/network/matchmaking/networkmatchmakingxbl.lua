@@ -87,7 +87,9 @@ function NetworkMatchMakingXBL:invite_accepted_callback(invitee_xuid)
 
 		Global.boot_invite[invitee_xuid_str] = nil
 
-		managers.menu:show_inactive_user_accepted_invite({})
+		managers.menu:show_inactive_user_accepted_invite({
+			add_lobby_filter = nil,
+		})
 		managers.user:invite_accepted_by_inactive_user()
 
 		return
@@ -640,9 +642,9 @@ function NetworkMatchMakingXBL:join_server_with_check(session_id, skip_permissio
 	if data and data.info then
 		f({
 			{
-				open_private_slots = 0,
 				host_name = data.host_name,
 				info = data.info,
+				open_private_slots = 0,
 			},
 		})
 	else

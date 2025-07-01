@@ -76,27 +76,27 @@ end
 
 function RaidGUIControlStepperSimple:_create_stepper_controls(sort_descending)
 	local left_arrow_params = {
-		name = "stepper_simple_left_arrow",
-		x = 0,
 		color = RaidGUIControlStepperSimple.BUTTON_COLOR,
 		h = tweak_data.gui:icon_h(RaidGUIControlStepperSimple.BUTTON_LEFT_TEXTURE),
 		highlight_color = RaidGUIControlStepperSimple.BUTTON_HIGHLIGHT_COLOR,
 		layer = self._object:layer() + 1,
+		name = "stepper_simple_left_arrow",
 		on_click_callback = callback(self, self, "on_left_arrow_clicked"),
 		texture = tweak_data.gui.icons[RaidGUIControlStepperSimple.BUTTON_LEFT_TEXTURE].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlStepperSimple.BUTTON_LEFT_TEXTURE].texture_rect,
 		w = tweak_data.gui:icon_w(RaidGUIControlStepperSimple.BUTTON_LEFT_TEXTURE),
+		x = 0,
 		y = self._object:h() / 2 - tweak_data.gui:icon_h(RaidGUIControlStepperSimple.BUTTON_LEFT_TEXTURE) / 2,
 	}
 
 	self._arrow_left = self._object:image_button(left_arrow_params)
 
 	local right_arrow_params = {
-		name = "stepper_simple_right_arrow",
 		color = RaidGUIControlStepperSimple.BUTTON_COLOR,
 		h = tweak_data.gui:icon_h(RaidGUIControlStepperSimple.BUTTON_RIGHT_TEXTURE),
 		highlight_color = RaidGUIControlStepperSimple.BUTTON_HIGHLIGHT_COLOR,
 		layer = self._object:layer() + 1,
+		name = "stepper_simple_right_arrow",
 		on_click_callback = callback(self, self, "on_right_arrow_clicked"),
 		texture = tweak_data.gui.icons[RaidGUIControlStepperSimple.BUTTON_RIGHT_TEXTURE].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlStepperSimple.BUTTON_RIGHT_TEXTURE].texture_rect,
@@ -109,17 +109,17 @@ function RaidGUIControlStepperSimple:_create_stepper_controls(sort_descending)
 
 	local label_params = {
 		align = "center",
-		name = "stepper_simple_value",
-		text = "VALUE",
-		vertical = "center",
-		y = 0,
 		color = RaidGUIControlStepperSimple.TEXT_COLOR,
 		font = RaidGUIControlStepperSimple.FONT,
 		font_size = RaidGUIControlStepperSimple.FONT_SIZE,
 		h = self._object:h(),
 		layer = self._object:layer() + 1,
+		name = "stepper_simple_value",
+		text = "VALUE",
+		vertical = "center",
 		w = self._object:w() - self._arrow_left:w() - self._arrow_right:w(),
 		x = self._arrow_left:w(),
+		y = 0,
 	}
 
 	self._value_label = self._object:text(label_params)

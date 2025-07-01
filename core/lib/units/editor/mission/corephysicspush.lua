@@ -32,12 +32,12 @@ function CorePhysicsPushUnitElement:_build_panel(panel, panel_sizer)
 
 	range_sizer:add(range, 0, 0, "EXPAND")
 	range:connect("EVT_SCROLL_CHANGED", callback(self, self, "set_element_data"), {
-		value = "physicspush_range",
 		ctrlr = range,
+		value = "physicspush_range",
 	})
 	range:connect("EVT_SCROLL_THUMBTRACK", callback(self, self, "set_element_data"), {
-		value = "physicspush_range",
 		ctrlr = range,
+		value = "physicspush_range",
 	})
 
 	local velocity_sizer = EWS:StaticBoxSizer(panel, "VERTICAL", "Velocity")
@@ -45,12 +45,12 @@ function CorePhysicsPushUnitElement:_build_panel(panel, panel_sizer)
 
 	velocity_sizer:add(velocity, 0, 0, "EXPAND")
 	velocity:connect("EVT_SCROLL_CHANGED", callback(self, self, "set_element_data"), {
-		value = "physicspush_velocity",
 		ctrlr = velocity,
+		value = "physicspush_velocity",
 	})
 	velocity:connect("EVT_SCROLL_THUMBTRACK", callback(self, self, "set_element_data"), {
-		value = "physicspush_velocity",
 		ctrlr = velocity,
+		value = "physicspush_velocity",
 	})
 
 	local mass_sizer = EWS:StaticBoxSizer(panel, "VERTICAL", "Mass")
@@ -58,12 +58,12 @@ function CorePhysicsPushUnitElement:_build_panel(panel, panel_sizer)
 
 	mass_sizer:add(mass, 0, 0, "EXPAND")
 	mass:connect("EVT_SCROLL_CHANGED", callback(self, self, "set_element_data"), {
-		value = "physicspush_mass",
 		ctrlr = mass,
+		value = "physicspush_mass",
 	})
 	mass:connect("EVT_SCROLL_THUMBTRACK", callback(self, self, "set_element_data"), {
-		value = "physicspush_mass",
 		ctrlr = mass,
+		value = "physicspush_mass",
 	})
 	panel_sizer:add(range_sizer, 0, 0, "EXPAND")
 	panel_sizer:add(velocity_sizer, 0, 0, "EXPAND")
@@ -73,7 +73,7 @@ end
 function CorePhysicsPushUnitElement:add_to_mission_package()
 	managers.editor:add_to_world_package({
 		category = "physic_effects",
-		name = "core/physic_effects/hubelement_push",
 		continent = self._unit:unit_data().continent,
+		name = "core/physic_effects/hubelement_push",
 	})
 end

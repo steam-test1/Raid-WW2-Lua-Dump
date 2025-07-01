@@ -23,7 +23,7 @@ function DropLootTweakData:_init_pickups_properties()
 	self.health_big.restore_down = true
 	self.health_big.player_voice_over = "player_gain_huge_health"
 	self.health_medium = {}
-	self.health_medium.health_restored = 75
+	self.health_medium.health_restored = 55
 	self.health_medium.player_voice_over = "player_gain_moderate_health"
 	self.health_small = {}
 	self.health_small.health_restored = 35

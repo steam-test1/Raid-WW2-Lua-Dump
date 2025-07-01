@@ -27,14 +27,14 @@ function IntelGui:_layout_tab_categories()
 	local category_tabs_params = {
 		initial_tab_idx = 1,
 		name = "category_tabs",
-		tab_align = "center",
-		tab_height = 64,
-		tab_width = 220,
-		y = 80,
 		on_click_callback = callback(self, self, "on_intel_category_selected"),
 		parent_control_ref = self,
+		tab_align = "center",
 		tab_font_size = tweak_data.gui.font_sizes.small,
+		tab_height = 64,
+		tab_width = 220,
 		tabs_params = {},
+		y = 80,
 	}
 
 	for category_index, category_name in ipairs(tweak_data.intel.category_index) do
@@ -61,18 +61,18 @@ function IntelGui:_layout_list()
 	self._category_items_list_scrollable_area = self._root_panel:scrollable_area(category_items_list_scrollable_area_params)
 
 	local category_items_list_params = {
-		item_h = 62,
-		name = "category_items_list",
-		on_mouse_over_sound_event = "highlight",
-		selection_enabled = true,
-		use_unlocked = false,
 		data_source_callback = callback(self, self, "data_source_category_items_list"),
 		item_class = RaidGUIControlListItem,
 		item_font = tweak_data.gui.fonts.lato,
 		item_font_size = tweak_data.gui.font_sizes.size_24,
+		item_h = 62,
+		name = "category_items_list",
 		on_item_clicked_callback = callback(self, self, "on_item_clicked_category_items_list"),
 		on_item_selected_callback = callback(self, self, "on_item_selected_category_items_list"),
+		on_mouse_over_sound_event = "highlight",
 		scrollable_area_ref = self._category_items_list_scrollable_area,
+		selection_enabled = true,
+		use_unlocked = false,
 		w = category_items_list_scrollable_area_params.w,
 	}
 
@@ -234,7 +234,6 @@ function IntelGui:_setup_category_controls(selected_category)
 		self._raid_personel_control:set_visible(false)
 		self._opposite_forces_control:set_visible(false)
 		self._control_archive_control:set_visible(true)
-		self._secret_files_control:set_visible(false)
 	end
 end
 
@@ -288,8 +287,8 @@ function IntelGui:bind_controller_inputs()
 		},
 		keyboard = {
 			{
-				key = "footer_back",
 				callback = callback(self, self, "_on_legend_pc_back", nil),
+				key = "footer_back",
 			},
 		},
 	}
@@ -317,8 +316,8 @@ function IntelGui:bind_controller_inputs_play_video()
 		},
 		keyboard = {
 			{
-				key = "footer_back",
 				callback = callback(self, self, "_on_legend_pc_back", nil),
+				key = "footer_back",
 			},
 		},
 	}

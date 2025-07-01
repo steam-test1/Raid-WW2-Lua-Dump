@@ -11,44 +11,44 @@ end
 
 function RaidGUIControlIntelOppositeForces:_layout()
 	self._bg_image = self._object:bitmap({
-		x = 0,
-		y = 0,
 		h = tweak_data.gui.icons.intel_table_opposition_card.texture_rect[4],
 		layer = self._object:layer() + 1,
 		texture = tweak_data.gui.icons.intel_table_opposition_card.texture,
 		texture_rect = tweak_data.gui.icons.intel_table_opposition_card.texture_rect,
 		w = tweak_data.gui.icons.intel_table_opposition_card.texture_rect[3],
+		x = 0,
+		y = 0,
 	})
 	self._title = self._object:text({
+		color = tweak_data.gui.colors.chat_border,
+		font = tweak_data.gui.fonts.din_compressed,
+		font_size = tweak_data.gui.font_sizes.size_32,
 		h = 64,
+		layer = self._object:layer() + 2,
 		text = "",
 		w = 384,
 		x = 96,
 		y = 96,
-		color = tweak_data.gui.colors.chat_border,
-		font = tweak_data.gui.fonts.din_compressed,
-		font_size = tweak_data.gui.font_sizes.size_32,
-		layer = self._object:layer() + 2,
 	})
 
 	local scrollable_area_description_params = {
 		h = 448,
+		layer = self._object:layer() + 2,
 		name = "scrollable_area_description",
 		scroll_step = 19,
 		scrollbar_width = 10,
 		w = 416,
 		x = 96,
 		y = 160,
-		layer = self._object:layer() + 2,
 	}
 
 	self._scrollable_area_description = self._object:scrollable_area(scrollable_area_description_params)
 
 	local content_panel_params = {
+		layer = self._object:layer() + 2,
 		w = 384,
 		x = 0,
 		y = 0,
-		layer = self._object:layer() + 2,
 	}
 
 	self._content_panel = self._scrollable_area_description:get_panel():panel(content_panel_params)
@@ -56,15 +56,15 @@ function RaidGUIControlIntelOppositeForces:_layout()
 	self._scrollable_area_description:setup_scroll_area()
 
 	self._description = self._content_panel:text({
+		color = tweak_data.gui.colors.chat_border,
+		font = tweak_data.gui.fonts.din_compressed,
+		font_size = tweak_data.gui.font_sizes.size_20,
+		layer = self._object:layer() + 2,
 		text = "",
 		w = 380,
 		wrap = true,
 		x = 0,
 		y = 0,
-		color = tweak_data.gui.colors.chat_border,
-		font = tweak_data.gui.fonts.din_compressed,
-		font_size = tweak_data.gui.font_sizes.size_20,
-		layer = self._object:layer() + 2,
 	})
 
 	local image_viewer_params = {

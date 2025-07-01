@@ -218,12 +218,12 @@ function compile_and_reload()
 
 	assert(IS_WIN32, "You can only compile on win32 platforms!")
 	Application:data_compile({
-		preprocessor_definitions = "preprocessor_definitions",
-		target_db_name = "all",
-		verbose = false,
 		platform = string.lower(SystemInfo:platform():s()),
+		preprocessor_definitions = "preprocessor_definitions",
 		source_root = root_path() .. "//assets",
+		target_db_name = "all",
 		target_db_root = Application:base_path() .. "assets",
+		verbose = false,
 	})
 	DB:reload()
 	Application:console_command("reload")

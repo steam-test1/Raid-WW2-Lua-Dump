@@ -8,8 +8,8 @@ function WalletGuiObject.set_wallet(panel, layer)
 	WalletGuiObject.remove_wallet()
 
 	Global.wallet_panel = panel:panel({
-		name = "WalletGuiObject",
 		layer = layer or 0,
+		name = "WalletGuiObject",
 	})
 
 	local money_icon = Global.wallet_panel:bitmap({
@@ -25,24 +25,24 @@ function WalletGuiObject.set_wallet(panel, layer)
 		texture = "guis/textures/pd2/shared_skillpoint_symbol",
 	})
 	local money_text = Global.wallet_panel:text({
+		color = tweak_data.screen_colors.text,
+		font = tweak_data.menu.pd2_small_font,
+		font_size = tweak_data.menu.pd2_small_font_size,
 		name = "wallet_money_text",
 		text = "",
-		color = tweak_data.screen_colors.text,
-		font = tweak_data.menu.pd2_small_font,
-		font_size = tweak_data.menu.pd2_small_font_size,
 	})
 	local level_text = Global.wallet_panel:text({
-		name = "wallet_level_text",
 		color = tweak_data.screen_colors.text,
 		font = tweak_data.menu.pd2_small_font,
 		font_size = tweak_data.menu.pd2_small_font_size,
+		name = "wallet_level_text",
 		text = tostring(managers.experience:current_level()),
 	})
 	local skillpoint_text = Global.wallet_panel:text({
-		name = "wallet_skillpoint_text",
 		color = tweak_data.screen_colors.text,
 		font = tweak_data.menu.pd2_small_font,
 		font_size = tweak_data.menu.pd2_small_font_size,
+		name = "wallet_skillpoint_text",
 		text = tostring(0),
 	})
 	local mw, mh = WalletGuiObject.make_fine_text(money_text)

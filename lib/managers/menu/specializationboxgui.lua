@@ -31,17 +31,17 @@ function SpecializationBoxGui:_create_text_box(ws, title, text, content_data, co
 	local conversion_rate_number = math.round(xp_present / points_present)
 	local small_text = {
 		blend_mode = "add",
-		layer = 1,
-		text = "",
 		font = tweak_data.menu.pd2_small_font,
 		font_size = tweak_data.menu.pd2_small_font_size,
+		layer = 1,
+		text = "",
 	}
 	local medium_text = {
 		blend_mode = "add",
-		layer = 1,
-		text = "",
 		font = tweak_data.menu.pd2_medium_font,
 		font_size = tweak_data.menu.pd2_medium_font_size,
+		layer = 1,
+		text = "",
 	}
 	local progress_text = self._scroll_panel:text(medium_text)
 
@@ -51,9 +51,9 @@ function SpecializationBoxGui:_create_text_box(ws, title, text, content_data, co
 
 	local progress_bg = self._scroll_panel:rect({
 		alpha = 0.4,
-		layer = 1,
 		color = Color.black,
 		h = progress_text:h(),
+		layer = 1,
 	})
 
 	progress_bg:set_position(progress_text:right() + 4, progress_text:top())
@@ -62,8 +62,8 @@ function SpecializationBoxGui:_create_text_box(ws, title, text, content_data, co
 	local progress_bar = self._scroll_panel:rect({
 		alpha = 1,
 		blend_mode = "add",
-		layer = 2,
 		color = Color.white,
+		layer = 2,
 	})
 
 	progress_bar:set_shape(progress_bg:shape())
@@ -75,8 +75,8 @@ function SpecializationBoxGui:_create_text_box(ws, title, text, content_data, co
 	local progress_end = self._scroll_panel:rect({
 		alpha = 1,
 		blend_mode = "add",
-		layer = 3,
 		color = Color.white,
+		layer = 3,
 	})
 
 	progress_end:set_shape(progress_bg:shape())
@@ -170,22 +170,22 @@ function SpecializationBoxGui:_create_text_box(ws, title, text, content_data, co
 	self._scroll_panel:set_y(math.round(self._scroll_panel:y()))
 
 	self._anim_data = {
-		end_xp_present = 0,
-		goto_end = false,
-		points_present = 0,
-		progress_width = 0,
-		start_points_present = 0,
-		start_progress_width = 0,
 		available_points_count_text = available_points_count_text,
 		available_points_present = available_points - points_present,
 		conversion_rate = conversion_rate_number,
 		end_available_points_present = available_points,
 		end_points_present = points_present,
 		end_progress_width = progress_end:right() - progress_bar:left(),
+		end_xp_present = 0,
 		exp_count_text = exp_count_text,
+		goto_end = false,
 		points_gained_count_text = points_gained_count_text,
+		points_present = 0,
 		progress_bar = progress_bar,
+		progress_width = 0,
 		start_available_points_present = available_points - points_present,
+		start_points_present = 0,
+		start_progress_width = 0,
 		start_xp_present = xp_present,
 		xp_present = xp_present,
 	}

@@ -8,12 +8,12 @@ function EquipmentsTweakData:init()
 		icon = "equipment_first_aid_kit",
 		quantity = 4,
 		text_id = "debug_equipment_first_aid_kit",
-		use_function_name = "use_first_aid_kit",
-		visual_object = "g_firstaidbag",
 		upgrade_deploy_time_multiplier = {
 			category = "player",
 			upgrade = "first_aid_kit_deploy_time_multiplier",
 		},
+		use_function_name = "use_first_aid_kit",
+		visual_object = "g_firstaidbag",
 	}
 	self.specials = {}
 	self.specials.planks = {

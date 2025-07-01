@@ -184,8 +184,8 @@ function NpcVehicleDamage:sync_damage_explosion(attacker_unit, damage_percent, i
 
 		local data = {
 			head_shot = false,
-			variant = "explosion",
 			name = self._unit:base()._tweak_table,
+			variant = "explosion",
 			weapon_unit = attacker_unit and attacker_unit:inventory() and attacker_unit:inventory():equipped_unit(),
 		}
 	else
@@ -301,8 +301,8 @@ function NpcVehicleDamage:sync_damage_fire(attacker_unit, damage_percent, i_atta
 
 		local data = {
 			head_shot = false,
-			variant = "fire",
 			name = self._unit:base()._tweak_table,
+			variant = "fire",
 			weapon_unit = attacker_unit and attacker_unit:inventory() and attacker_unit:inventory():equipped_unit(),
 		}
 	else

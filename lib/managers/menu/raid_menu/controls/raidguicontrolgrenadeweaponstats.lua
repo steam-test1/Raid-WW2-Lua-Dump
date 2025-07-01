@@ -7,20 +7,20 @@ end
 function RaidGUIControlGrenadeWeaponStats:_set_default_values()
 	self._values = {
 		capacity = {
-			value = "0-00",
 			text = self:translate("menu_weapons_stats_grenade_capacity", true),
+			value = "0-00",
 		},
 		damage = {
-			value = "00-000",
 			text = self:translate("menu_weapons_stats_damage", true),
+			value = "00-000",
 		},
 		distance = {
-			value = "000",
 			text = self:translate("menu_weapons_stats_grenade_throw", true),
+			value = "000",
 		},
 		range = {
-			value = "000",
 			text = self:translate("menu_weapons_stats_grenade_diameter", true),
+			value = "000",
 		},
 	}
 end

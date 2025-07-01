@@ -67,9 +67,9 @@ function ComicBookGui:_layout_comic_pages()
 		h = self.PAGE_HEIGHT,
 	})
 	self._page_left = self._pages_panel:bitmap({
+		h = self.PAGE_HEIGHT,
 		rotation = 0,
 		texture = "ui/comic_book/raid_comic_01",
-		h = self.PAGE_HEIGHT,
 		texture_rect = self._texture_rect.left,
 		w = self.PAGE_WIDTH,
 	})
@@ -77,9 +77,9 @@ function ComicBookGui:_layout_comic_pages()
 	self._page_left:set_right(self._pages_panel:w() / 2)
 
 	self._page_right = self._pages_panel:bitmap({
+		h = self.PAGE_HEIGHT,
 		rotation = 0,
 		texture = "ui/comic_book/raid_comic_01",
-		h = self.PAGE_HEIGHT,
 		texture_rect = self._texture_rect.right,
 		w = self.PAGE_WIDTH,
 	})
@@ -87,9 +87,9 @@ function ComicBookGui:_layout_comic_pages()
 	self._page_right:set_center_x(self._pages_panel:w() / 2)
 
 	self._fake_page = self._pages_panel:bitmap({
-		visible = false,
 		h = self.PAGE_HEIGHT,
 		layer = self._page_left:layer() + 1,
+		visible = false,
 		w = self.PAGE_WIDTH,
 	})
 end
@@ -177,10 +177,10 @@ function ComicBookGui:_layout_page_bullets()
 
 		local active_bullet = self._bullet_panel:bitmap({
 			h = 0,
-			w = 0,
 			layer = normal_bullet:layer() + 1,
 			texture = bullet_active_icon.texture,
 			texture_rect = bullet_active_icon.texture_rect,
+			w = 0,
 			x = bullet_x,
 		})
 
@@ -308,8 +308,8 @@ function ComicBookGui:bind_controller_inputs()
 		},
 		keyboard = {
 			{
-				key = "footer_back",
 				callback = callback(self, self, "_on_legend_pc_back", nil),
+				key = "footer_back",
 			},
 		},
 	}

@@ -160,10 +160,10 @@ function BlackMarketManager:_setup_weapons()
 			local factory_id = managers.weapon_factory:get_factory_id_by_weapon_id(weapon)
 
 			weapons[weapon] = {
-				owned = true,
-				unlocked = true,
 				factory_id = factory_id,
+				owned = true,
 				selection_index = selection_index,
+				unlocked = true,
 			}
 
 			local is_default, weapon_level, got_parent = managers.upgrades:get_value(weapon)
@@ -981,9 +981,9 @@ function BlackMarketManager:create_preload_ws()
 		row_index = row_index + 1
 		last_rect = square_panel:rect({
 			blend_mode = "add",
+			color = Color(0.3, 0.3, 0.3),
 			h = 15,
 			w = 15,
-			color = Color(0.3, 0.3, 0.3),
 			x = x,
 			y = y,
 		})
@@ -1001,11 +1001,11 @@ function BlackMarketManager:create_preload_ws()
 	square_panel:set_size(max_w, max_h)
 	panel:rect({
 		blend_mode = "add",
+		color = Color(0.3, 0.3, 0.3),
 		h = 19,
 		layer = 2,
 		name = "progress",
 		w = 19,
-		color = Color(0.3, 0.3, 0.3),
 	})
 
 	local bg = panel:rect({
@@ -3361,10 +3361,10 @@ function BlackMarketManager:load(data)
 
 			self._global.weapons[weapon] = {
 				equipped = false,
-				owned = false,
-				unlocked = false,
 				factory_id = factory_id,
+				owned = false,
 				selection_index = selection_index,
+				unlocked = false,
 			}
 		end
 	end
@@ -3543,8 +3543,8 @@ function BlackMarketManager:_cleanup_blackmarket()
 
 									if default_mod then
 										table.insert(invalid_parts, {
-											global_value = "normal",
 											default_mod = default_mod,
+											global_value = "normal",
 											part_id = part_id,
 											slot = slot,
 										})
@@ -3679,8 +3679,8 @@ function BlackMarketManager:_verify_dlc_items()
 				local blueprint = deep_clone(managers.weapon_factory:get_default_blueprint_by_factory_id(factory_id))
 
 				self._global.crafted_items[category][free_slot] = {
-					equipped = true,
 					blueprint = blueprint,
+					equipped = true,
 					factory_id = factory_id,
 					weapon_id = weapon_id,
 				}
@@ -3817,8 +3817,8 @@ function BlackMarketManager:_verify_equipped_category(category)
 	local blueprint = deep_clone(managers.weapon_factory:get_default_blueprint_by_factory_id(factory_id))
 
 	self._global.crafted_items[category][free_slot] = {
-		equipped = true,
 		blueprint = blueprint,
+		equipped = true,
 		factory_id = factory_id,
 		weapon_id = weapon_id,
 	}

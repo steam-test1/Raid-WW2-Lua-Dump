@@ -89,10 +89,10 @@ function TurretWeapon:init(unit)
 	self._heat_material = tweak_data.weapon[self.name_id].heat_material
 	self._heat_material_parameter = tweak_data.weapon[self.name_id].heat_material_parameter
 	self._setup = {
-		turret_weapon_initialized = false,
 		ignore_units = {
 			self._unit,
 		},
+		turret_weapon_initialized = false,
 	}
 	self._SO_id = nil
 
@@ -178,8 +178,8 @@ function TurretWeapon:_setup_fire_effects()
 
 		if muzzle_effect_tweak then
 			table.insert(self._muzzle_effect_table, {
-				force_synch = false,
 				effect = self._muzzle_effect,
+				force_synch = false,
 				parent = self[fire_locator_property_name],
 			})
 		end
@@ -198,8 +198,8 @@ function TurretWeapon:_setup_smoke_effects()
 
 		if self[smoke_locator_property_name] then
 			table.insert(self._overheating_smoke_effect_table, {
-				force_synch = false,
 				effect = self._overheating_smoke_effect,
+				force_synch = false,
 				parent = self[smoke_locator_property_name],
 			})
 		end
@@ -1184,36 +1184,33 @@ function TurretWeapon:_create_turret_SO()
 	managers.navigation:destroy_nav_tracker(tracker_align)
 
 	local turret_objective = {
-		destroy_clbk_key = false,
-		haste = "run",
-		pose = "stand",
-		type = "turret",
 		action = {
 			align_sync = true,
-			body_part = 1,
-			needs_full_blend = true,
-			type = "act",
 			blocks = {
 				action = -1,
 				heavy_hurt = -1,
 				hurt = -1,
 				walk = -1,
 			},
+			body_part = 1,
+			needs_full_blend = true,
+			type = "act",
 			variant = variant,
 		},
 		area = align_area,
 		complete_clbk = callback(self, self, "on_turret_SO_completed"),
+		destroy_clbk_key = false,
 		fail_clbk = callback(self, self, "on_turret_SO_failed"),
+		haste = "run",
 		nav_seg = align_nav_seg,
 		pos = align_pos,
+		pose = "stand",
 		rot = align_rot,
+		type = "turret",
 	}
 	local twk_data = tweak_data.weapon[self.name_id]
 	local SO_descriptor = {
 		AI_group = "enemies",
-		interval = 1,
-		search_dis_sq = 4000000,
-		usage_amount = 1,
 		access = managers.navigation:convert_access_filter_to_number({
 			"gangster",
 			"security",
@@ -1225,14 +1222,17 @@ function TurretWeapon:_create_turret_SO()
 		admin_clbk = callback(self, self, "on_turret_SO_administered"),
 		base_chance = twk_data.SO_CHANCE_BASE or 1,
 		chance_inc = twk_data.SO_CHANCE_INC or 0.1,
+		interval = 1,
 		objective = turret_objective,
+		search_dis_sq = 4000000,
 		search_pos = turret_objective.pos,
+		usage_amount = 1,
 	}
 	local SO_id = "turret_" .. tostring(self._unit:key())
 
 	self._SO_data = {
-		SO_registered = true,
 		SO_id = SO_id,
+		SO_registered = true,
 		align_area = align_area,
 	}
 
@@ -1245,6 +1245,7 @@ end
 
 function TurretWeapon:sync_administered_unit(unit)
 	self._administered_unit_data = {
+		SO = nil,
 		unit = unit,
 	}
 end
@@ -1681,10 +1682,10 @@ function TurretWeapon:_shell_explosion_on_client(position, radius, damage, playe
 	local damage_radius = radius or tweak_data.weapon[self.name_id].damage_radius or 1000
 	local custom_params = {
 		camera_shake_max_mul = 4,
-		sound_muffle_effect = true,
 		effect = self._effect_name,
 		feedback_range = damage_radius * 2,
 		sound_event = sound_event,
+		sound_muffle_effect = true,
 	}
 
 	managers.explosion:give_local_player_dmg(position, damage_radius, player_damage)

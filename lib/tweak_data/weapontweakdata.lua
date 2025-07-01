@@ -1422,8 +1422,10 @@ function WeaponTweakData:_init_data_tiger_main_gun_module_npc(difficulty_index)
 		main_cannon_lock_on = "tiger_npc_canon_reload",
 	}
 	self.tiger_main_gun_module.effect = {
+		lmg_dp28 = nil,
 		main_cannon_fire = "effects/vanilla/explosions/tank_turret_fire",
 		main_cannon_fire_hit = "effects/vanilla/explosions/exp_airbomb_explosion_002",
+		style = nil,
 	}
 	self.tiger_main_gun_module.turret = {
 		armor_piercing = true,
@@ -2190,7 +2192,6 @@ end
 function WeaponTweakData:_init_data_crosshairs()
 	self._crosshairs = {}
 	self._crosshairs.pistol = {
-		style = "pistol",
 		crouching = {
 			hidden = false,
 			kick_offset = 1,
@@ -2209,11 +2210,11 @@ function WeaponTweakData:_init_data_crosshairs()
 			moving_offset = 0.1,
 			offset = 0.05,
 		},
+		style = "pistol",
 	}
 	self._crosshairs.smg = deep_clone(self._crosshairs.pistol)
 	self._crosshairs.smg.style = "smg"
 	self._crosshairs.shotgun = {
-		style = "shotgun",
 		crouching = {
 			hidden = false,
 			kick_offset = 1,
@@ -2232,11 +2233,11 @@ function WeaponTweakData:_init_data_crosshairs()
 			moving_offset = 0.1,
 			offset = 0.05,
 		},
+		style = "shotgun",
 	}
 	self._crosshairs.shotgun_db = deep_clone(self._crosshairs.shotgun)
 	self._crosshairs.shotgun_db.style = "shotgun_db"
 	self._crosshairs.lmg = {
-		style = "lmg",
 		crouching = {
 			hidden = false,
 			kick_offset = 1,
@@ -2255,13 +2256,13 @@ function WeaponTweakData:_init_data_crosshairs()
 			moving_offset = 0.1,
 			offset = 0.05,
 		},
+		style = "lmg",
 	}
 	self._crosshairs.lmg_mg42 = deep_clone(self._crosshairs.lmg)
 	self._crosshairs.lmg_mg42.style = "lmg_mg42"
 	self._crosshairs.lmg_dp28 = deep_clone(self._crosshairs.lmg)
 	self._crosshairs.lmg_dp28.style = "lmg_dp28"
 	self._crosshairs.assault_rifle = {
-		style = "assault_rifle",
 		crouching = {
 			hidden = false,
 			kick_offset = 1,
@@ -2280,6 +2281,7 @@ function WeaponTweakData:_init_data_crosshairs()
 			moving_offset = 0.1,
 			offset = 0.05,
 		},
+		style = "assault_rifle",
 	}
 	self._crosshairs.sniper = deep_clone(self._crosshairs.lmg)
 	self._crosshairs.sniper.style = "sniper"
@@ -2287,7 +2289,6 @@ function WeaponTweakData:_init_data_crosshairs()
 	local v = 1
 
 	self._crosshairs.grenade = {
-		style = "grenade",
 		crouching = {
 			hidden = false,
 			kick_offset = v,
@@ -2306,6 +2307,7 @@ function WeaponTweakData:_init_data_crosshairs()
 			moving_offset = v,
 			offset = v,
 		},
+		style = "grenade",
 	}
 end
 
@@ -3898,19 +3900,19 @@ function WeaponTweakData:_init_welrod(weapon_data, tweak_data)
 	self.welrod.use_data.selection_index = tweak_data.WEAPON_SLOT_SECONDARY
 	self.welrod.damage_profile = {
 		{
-			damage = 85,
+			damage = 90,
 			range = 1000,
 		},
 		{
-			damage = 40,
+			damage = 45,
 			range = 2000,
 		},
 	}
-	self.welrod.headshot_multiplier = 3
+	self.welrod.headshot_multiplier = 4
 	self.welrod.CLIP_AMMO_MAX = 5
 	self.welrod.NR_CLIPS_MAX = 4
 	self.welrod.AMMO_MAX = self.welrod.CLIP_AMMO_MAX * self.welrod.NR_CLIPS_MAX
-	self.welrod.ammo_pickup_base = 3
+	self.welrod.ammo_pickup_base = self.welrod.CLIP_AMMO_MAX
 	self.welrod.spread = {}
 	self.welrod.spread.standing = 2
 	self.welrod.spread.crouching = 1.25

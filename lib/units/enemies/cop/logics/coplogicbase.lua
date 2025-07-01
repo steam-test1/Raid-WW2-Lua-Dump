@@ -1180,14 +1180,14 @@ function CopLogicBase._detection_obj_lost(data, attention_info)
 
 	if data._queued_objective and not managers.groupai:state():enemy_weapons_hot() then
 		local stop_current_action = {
-			action_duration = 1,
-			stance = "ntl",
-			type = "act",
 			action = {
 				body_part = 1,
 				type = "idle",
 			},
+			action_duration = 1,
 			followup_objective = data._queued_objective,
+			stance = "ntl",
+			type = "act",
 		}
 
 		data.unit:brain():set_objective(stop_current_action)
@@ -1196,9 +1196,11 @@ end
 
 function CopLogicBase.on_search_SO_failed(cop, params)
 	managers.groupai:state():hide_investigate_icon(cop)
+	managers.voice_over:guard_back_to_patrol(cop)
 end
 
 function CopLogicBase.on_search_SO_completed(cop, params)
+	managers.groupai:state():hide_investigate_icon(cop)
 	managers.voice_over:guard_back_to_patrol(cop)
 
 	if params.attention_info then
@@ -1207,14 +1209,18 @@ function CopLogicBase.on_search_SO_completed(cop, params)
 		params.attention_info.flagged_search = false
 	end
 
-	managers.groupai:state():hide_investigate_icon(cop)
-
 	cop:brain()._SO_id = nil
 end
 
+function CopLogicBase.on_search_SO_action_start(cop, params)
+	if params.search_data and alive(params.search_data.unit) and params.search_data.activated_clbk then
+		params.search_data.activated_clbk(cop)
+	end
+end
+
 function CopLogicBase.on_search_SO_started(cop, params)
-	managers.voice_over:guard_investigate(cop)
 	managers.groupai:state():show_investigate_icon(cop)
+	managers.voice_over:guard_investigate(cop)
 
 	if params.custom_stance then
 		cop:movement():set_stance(params.custom_stance, false, false)
@@ -1247,24 +1253,24 @@ function CopLogicBase._create_return_from_search_SO(cop, old_objective)
 	mrotation.multiply(rot, cop:movement():m_rot())
 
 	local objective = {
+		area = area,
 		attitude = "engage",
+		followup_objective = old_objective,
 		haste = "walk",
 		interrupt_dis = -1,
+		nav_seg = nav_seg,
 		path_style = "coarse_complete",
+		pos = pos,
+		rot = rot,
 		scan = true,
 		stance = "ntl",
 		type = "free",
-		area = area,
-		followup_objective = old_objective,
-		nav_seg = nav_seg,
-		pos = pos,
-		rot = rot,
 	}
 
 	return objective
 end
 
-function CopLogicBase.register_search_SO(cop, attention_info, position)
+function CopLogicBase.register_search_SO(cop, attention_info, position, search_data)
 	Application:debug("CopLogicBase.register_search_SO", attention_info, position)
 
 	if not cop:brain():stealth_action_allowed() or not managers.navigation:is_data_ready() then
@@ -1291,34 +1297,9 @@ function CopLogicBase.register_search_SO(cop, attention_info, position)
 		old_objective = CopLogicBase._create_return_from_search_SO(cop, old_objective)
 	end
 
-	local go_to_search_pos = {
-		action_duration = 5,
-		attitude = "engage",
-		haste = "walk",
-		interrupt_dis = -1,
-		scan = true,
-		stance = "ntl",
-		type = "free",
-		area = area,
-		complete_clbk = callback(cop, CopLogicBase, "on_search_SO_completed", {
-			attention_info = attention_info,
-			position = pos,
-		}),
-		followup_objective = old_objective,
-		nav_seg = nav_seg,
-		pos = pos,
-	}
 	local so_investigate = {
-		attitude = "engage",
-		haste = "walk",
-		interrupt_dis = -1,
-		stance = "ntl",
-		type = "act",
 		action = {
 			align_sync = true,
-			body_part = 1,
-			needs_full_blend = true,
-			type = "act",
 			blocks = {
 				action = -1,
 				aim = -1,
@@ -1327,9 +1308,18 @@ function CopLogicBase.register_search_SO(cop, attention_info, position)
 				light_hurt = -1,
 				walk = -1,
 			},
+			body_part = 1,
+			needs_full_blend = true,
+			type = "act",
 			variant = table.random(CopLogicBase._INVESTIGATE_SO_ANIMS),
 		},
+		action_start_clbk = callback(cop, CopLogicBase, "on_search_SO_action_start", {
+			attention_info = attention_info,
+			position = pos,
+			search_data = search_data,
+		}),
 		area = area,
+		attitude = "engage",
 		complete_clbk = callback(cop, CopLogicBase, "on_search_SO_completed", {
 			attention_info = attention_info,
 			position = pos,
@@ -1339,21 +1329,25 @@ function CopLogicBase.register_search_SO(cop, attention_info, position)
 			position = pos,
 		}),
 		followup_objective = old_objective,
+		haste = "walk",
+		interrupt_dis = -1,
 		nav_seg = nav_seg,
 		pos = pos,
-	}
-	local stop_current_action = {
-		action_duration = 1,
 		stance = "ntl",
 		type = "act",
+	}
+	local stop_current_action = {
 		action = {
 			body_part = 1,
 			type = "idle",
 		},
+		action_duration = 1,
 		complete_clbk = callback(cop, CopLogicBase, "on_search_SO_started", {
 			attention_info = attention_info,
 		}),
 		followup_objective = so_investigate,
+		stance = "ntl",
+		type = "act",
 	}
 	local so_id = "search" .. tostring(cop:key())
 
@@ -1378,13 +1372,13 @@ function CopLogicBase.register_stop_and_look_SO(data, attention_info)
 
 	if old_objective and old_objective.pos then
 		local stop_current_action = {
-			action_duration = 1,
-			stance = "ntl",
-			type = "act",
 			action = {
 				body_part = 1,
 				type = "idle",
 			},
+			action_duration = 1,
+			stance = "ntl",
+			type = "act",
 		}
 
 		cop:brain():set_objective(stop_current_action)
@@ -1527,9 +1521,6 @@ function CopLogicBase._create_detected_attention_object_data(time, my_unit, u_ke
 
 	local dis = mvector3.distance(my_unit:movement():m_head_pos(), m_head_pos)
 	local new_entry = {
-		notice_progress = 0,
-		verified = false,
-		verified_t = false,
 		char_tweak = char_tweak,
 		criminal_record = managers.groupai:state():criminal_record(u_key),
 		detected_pos = mvector3.copy(m_pos),
@@ -1546,13 +1537,16 @@ function CopLogicBase._create_detected_attention_object_data(time, my_unit, u_ke
 		m_pos = m_pos,
 		nav_tracker = attention_info.nav_tracker,
 		next_verify_t = time + (settings.notice_interval or settings.verification_interval),
+		notice_progress = 0,
 		prev_notice_chk_t = time,
 		reaction = settings.reaction,
 		settings = settings,
 		u_key = u_key,
 		unit = attention_info.unit,
+		verified = false,
 		verified_dis = dis,
 		verified_pos = mvector3.copy(m_head_pos),
+		verified_t = false,
 	}
 
 	return new_entry
@@ -2514,8 +2508,8 @@ function CopLogicBase._surrender(data, amount, aggressor_unit)
 	}
 
 	data.brain:set_objective({
-		type = "surrender",
 		params = params,
+		type = "surrender",
 	})
 end
 
@@ -2637,8 +2631,8 @@ function CopLogicBase.chk_start_action_dodge(data, reason)
 	mvector3.add(ray_to_pos, data.m_pos)
 
 	local ray_params = {
-		trace = true,
 		pos_to = ray_to_pos,
+		trace = true,
 		tracker_from = data.unit:movement():nav_tracker(),
 	}
 	local ray_hit1 = managers.navigation:raycast(ray_params)
@@ -2710,15 +2704,14 @@ function CopLogicBase.chk_start_action_dodge(data, reason)
 	end
 
 	local action_data = {
-		type = "dodge",
 		blocks = {
 			act = -1,
+			action = body_part == 1 and -1 or nil,
+			aim = body_part == 1 and -1 or nil,
 			bleedout = -1,
 			dodge = -1,
 			tase = -1,
 			walk = -1,
-			action = body_part == 1 and -1 or nil,
-			aim = body_part == 1 and -1 or nil,
 		},
 		body_part = body_part,
 		direction = dodge_dir,
@@ -2726,6 +2719,7 @@ function CopLogicBase.chk_start_action_dodge(data, reason)
 		side = dodge_side,
 		speed = data.char_tweak.dodge.speed,
 		timeout = variation_data.timeout,
+		type = "dodge",
 		variation = variation,
 	}
 
@@ -2924,9 +2918,9 @@ end
 
 function CopLogicBase._turn_by_spin(data, my_data, spin)
 	local new_action_data = {
+		angle = spin,
 		body_part = 2,
 		type = "turn",
-		angle = spin,
 	}
 
 	my_data.turning = data.unit:brain():action_request(new_action_data)
@@ -2938,9 +2932,6 @@ end
 
 function CopLogicBase._start_idle_action_from_act(data)
 	data.unit:brain():action_request({
-		body_part = 1,
-		type = "act",
-		variant = "idle",
 		blocks = {
 			action = -1,
 			expl_hurt = -1,
@@ -2951,6 +2942,9 @@ function CopLogicBase._start_idle_action_from_act(data)
 			light_hurt = -1,
 			walk = -1,
 		},
+		body_part = 1,
+		type = "act",
+		variant = "idle",
 	})
 end
 

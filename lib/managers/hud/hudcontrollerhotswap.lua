@@ -28,11 +28,11 @@ end
 
 function HUDControllerHotswap:_create_panel(hud)
 	self._object = hud.panel:panel({
+		h = HUDControllerHotswap.H,
 		halign = "center",
+		name = HUDControllerHotswap.HOTSWAP_HUD_ID,
 		valign = "center",
 		visible = false,
-		h = HUDControllerHotswap.H,
-		name = HUDControllerHotswap.HOTSWAP_HUD_ID,
 		w = HUDControllerHotswap.W,
 	})
 
@@ -64,13 +64,13 @@ function HUDControllerHotswap:update_input_device()
 		self._icon:set_texture_rect(unpack(gui.texture_rect))
 	else
 		self._icon = self._object:bitmap({
-			x = 4,
-			y = 4,
 			h = HUDControllerHotswap.H - 8,
 			layer = self._background:layer() + 1,
 			texture = gui.texture,
 			texture_rect = gui.texture_rect,
 			w = HUDControllerHotswap.H - 8,
+			x = 4,
+			y = 4,
 		})
 	end
 
@@ -79,10 +79,10 @@ function HUDControllerHotswap:update_input_device()
 	if not self._text then
 		self._text = self._object:text({
 			align = "center",
-			vertical = "center",
 			font = self.TEXT_FONT,
 			font_size = self.TEXT_FONT_SIZE,
 			layer = self._background:layer() + 1,
+			vertical = "center",
 			x = self._icon:w() / 2,
 		})
 	end

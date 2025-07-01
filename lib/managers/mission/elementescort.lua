@@ -66,15 +66,15 @@ function ElementEscort:start_escort_path(unit)
 			end
 
 			unit:brain():set_objective({
-				haste = "walk",
-				path_style = "coarse",
-				type = "escort",
 				break_so = break_so,
 				end_rot = (next_element or last_element) and (next_element or last_element):value("rotation"),
+				haste = "walk",
 				next_escort_point = next_element or last_element,
 				path_data = {
 					points = points,
 				},
+				path_style = "coarse",
+				type = "escort",
 			})
 
 			if unit:escort() then

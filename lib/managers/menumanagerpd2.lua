@@ -176,12 +176,11 @@ end
 
 function MenuInitiatorBase:create_slider(node, params)
 	local data_node = {
-		type = "CoreMenuItemSlider.ItemSlider",
 		max = params.max,
 		min = params.min,
 		show_value = params.show_value,
-		show_value = params.show_value,
 		step = params.step,
+		type = "CoreMenuItemSlider.ItemSlider",
 	}
 	local new_item = node:create_item(data_node, params)
 

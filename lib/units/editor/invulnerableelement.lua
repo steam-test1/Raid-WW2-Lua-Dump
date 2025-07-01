@@ -27,9 +27,9 @@ function InvulnerableUnitElement:draw_links(t, dt, selected_unit, all_units)
 		if draw then
 			self:_draw_link({
 				b = 0,
+				from_unit = unit,
 				g = 0.85,
 				r = 0,
-				from_unit = unit,
 				to_unit = self._unit,
 			})
 		end
@@ -94,8 +94,8 @@ function InvulnerableUnitElement:_build_panel(panel, panel_sizer)
 
 	invulnerable:set_value(self._hed.invulnerable)
 	invulnerable:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		value = "invulnerable",
 		ctrlr = invulnerable,
+		value = "invulnerable",
 	})
 	panel_sizer:add(invulnerable, 0, 0, "EXPAND")
 
@@ -103,8 +103,8 @@ function InvulnerableUnitElement:_build_panel(panel, panel_sizer)
 
 	immortal:set_value(self._hed.immortal)
 	immortal:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		value = "immortal",
 		ctrlr = immortal,
+		value = "immortal",
 	})
 	panel_sizer:add(immortal, 0, 0, "EXPAND")
 
@@ -112,8 +112,8 @@ function InvulnerableUnitElement:_build_panel(panel, panel_sizer)
 
 	apply_instigator:set_value(self._hed.apply_instigator)
 	apply_instigator:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		value = "apply_instigator",
 		ctrlr = apply_instigator,
+		value = "apply_instigator",
 	})
 	panel_sizer:add(apply_instigator, 0, 0, "EXPAND")
 

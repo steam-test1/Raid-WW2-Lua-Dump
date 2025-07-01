@@ -30,20 +30,20 @@ end
 function RaidGUIControlIntelImageDetails:_create_details()
 	local intel_image_panel_params = {
 		h = 309,
+		layer = self._object:layer() + 1,
 		name = "intel_image_panel",
+		w = self._object:w(),
 		x = 0,
 		y = 0,
-		layer = self._object:layer() + 1,
-		w = self._object:w(),
 	}
 
 	self._image_panel = self._object:panel(intel_image_panel_params)
 
 	local intel_image_background_params = {
-		name = "intel_image_background",
-		texture = "ui/main_menu/textures/mission_paper_background",
 		h = self._image_panel:h(),
 		layer = self._image_panel:layer() + 1,
+		name = "intel_image_background",
+		texture = "ui/main_menu/textures/mission_paper_background",
 		texture_rect = {
 			1063,
 			5,
@@ -58,9 +58,9 @@ function RaidGUIControlIntelImageDetails:_create_details()
 	self._intel_image_background:set_center(self._image_panel:w() / 2, self._image_panel:h() / 2)
 
 	local intel_image_params = {
+		layer = self._image_panel:layer() + 2,
 		name = "intel_image",
 		texture = "ui/loading_screens/loading_trainyard",
-		layer = self._image_panel:layer() + 2,
 		texture_rect = {
 			256,
 			0,
@@ -76,13 +76,13 @@ function RaidGUIControlIntelImageDetails:_create_details()
 	self._intel_image:set_center(self._image_panel:w() / 2, self._image_panel:h() / 2)
 
 	local intel_title_params = {
+		color = tweak_data.gui.colors.raid_black,
+		font = tweak_data.gui.fonts.din_compressed,
+		font_size = tweak_data.gui.font_sizes.large,
 		name = "intel_title",
 		text = "",
 		wrap = true,
 		x = 20,
-		color = tweak_data.gui.colors.raid_black,
-		font = tweak_data.gui.fonts.din_compressed,
-		font_size = tweak_data.gui.font_sizes.large,
 		y = self._image_panel:y() + self._image_panel:h() + 32,
 	}
 
@@ -94,12 +94,12 @@ function RaidGUIControlIntelImageDetails:_create_details()
 	self._intel_title:set_h(h)
 
 	local intel_subtitle_params = {
-		name = "intel_subtitle",
-		text = "",
-		wrap = true,
 		color = tweak_data.gui.colors.raid_black,
 		font = tweak_data.gui.fonts.lato,
 		font_size = tweak_data.gui.font_sizes.paragraph,
+		name = "intel_subtitle",
+		text = "",
+		wrap = true,
 		x = self._intel_title:x(),
 		y = self._intel_title:y() + self._intel_title:h() + 12,
 	}

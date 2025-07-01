@@ -2,13 +2,41 @@ ProjectilesTweakData = ProjectilesTweakData or class()
 
 function ProjectilesTweakData:init(tweak_data)
 	self.GRENADE_QUANTITY_UPGARDE = {
-		category = "player",
-		upgrade = "grenadier_grenade_quantity",
+		{
+			category = "player",
+			upgrade = "grenadier_grenade_quantity",
+		},
+		{
+			category = "player",
+			upgrade = "pack_mule_equipment_quantity",
+		},
 	}
 	self.MINE_QUANTITY_UPGARDE = {
-		category = "player",
-		upgrade = "sapper_mine_quantity",
+		{
+			category = "player",
+			upgrade = "sapper_mine_quantity",
+		},
+		{
+			category = "player",
+			upgrade = "pack_mule_equipment_quantity",
+		},
 	}
+	self._projectiles_index = {}
+
+	self:_init_m24(tweak_data)
+	self:_init_cluster(tweak_data)
+	self:_init_molotov(tweak_data)
+	self:_init_mortar_shell(tweak_data)
+	self:_init_flamer_death_fake(tweak_data)
+	self:_init_concrete(tweak_data)
+	self:_init_d343(tweak_data)
+	self:_init_mills(tweak_data)
+	self:_init_decoy_coin(tweak_data)
+	self:_init_betty(tweak_data)
+	self:_add_desc_from_name_macro(self)
+end
+
+function ProjectilesTweakData:_init_m24(tweak_data)
 	self.m24 = {}
 	self.m24.name_id = "bm_grenade_frag"
 	self.m24.weapon_id = "m24_grenade"
@@ -19,7 +47,8 @@ function ProjectilesTweakData:init(tweak_data)
 	self.m24.anim_global_param = "projectile_frag"
 	self.m24.throwable = true
 	self.m24.max_amount = 3
-	self.m24.upgrade_amount = self.GRENADE_QUANTITY_UPGARDE
+	self.m24.pickup_filter = "grenades"
+	self.m24.upgrade_amounts = self.GRENADE_QUANTITY_UPGARDE
 	self.m24.throw_allowed_expire_t = 0.662
 	self.m24.expire_t = 0.455
 	self.m24.repeat_expire_t = 1
@@ -44,6 +73,11 @@ function ProjectilesTweakData:init(tweak_data)
 	self.m24.gui.initial_rotation.yaw = -90
 	self.m24.gui.initial_rotation.pitch = 60
 	self.m24.gui.initial_rotation.roll = 0
+
+	table.insert(self._projectiles_index, "m24")
+end
+
+function ProjectilesTweakData:_init_concrete(tweak_data)
 	self.concrete = {}
 	self.concrete.name_id = "bm_grenade_concrete"
 	self.concrete.unit = "units/upd_001/weapons/wpn_fps_gre_concrete/wpn_fps_gre_concrete"
@@ -52,7 +86,8 @@ function ProjectilesTweakData:init(tweak_data)
 	self.concrete.icon = "frag_grenade"
 	self.concrete.throwable = true
 	self.concrete.max_amount = 3
-	self.concrete.upgrade_amount = self.GRENADE_QUANTITY_UPGARDE
+	self.concrete.pickup_filter = "grenades"
+	self.concrete.upgrade_amounts = self.GRENADE_QUANTITY_UPGARDE
 	self.concrete.anim_global_param = "projectile_frag"
 	self.concrete.throw_allowed_expire_t = 0.662
 	self.concrete.expire_t = 0.455
@@ -78,6 +113,11 @@ function ProjectilesTweakData:init(tweak_data)
 	self.concrete.gui.initial_rotation.yaw = -90
 	self.concrete.gui.initial_rotation.pitch = 60
 	self.concrete.gui.initial_rotation.roll = 0
+
+	table.insert(self._projectiles_index, "concrete")
+end
+
+function ProjectilesTweakData:_init_d343(tweak_data)
 	self.d343 = {}
 	self.d343.name_id = "bm_grenade_d343"
 	self.d343.unit = "units/upd_003/weapons/wpn_fps_gre_d343/wpn_fps_gre_d343"
@@ -85,8 +125,9 @@ function ProjectilesTweakData:init(tweak_data)
 	self.d343.unit_dummy = "units/upd_003/weapons/wpn_fps_gre_d343/wpn_fps_gre_d343_husk"
 	self.d343.icon = "frag_grenade"
 	self.d343.throwable = true
+	self.d343.pickup_filter = "grenades"
 	self.d343.max_amount = 4
-	self.d343.upgrade_amount = self.GRENADE_QUANTITY_UPGARDE
+	self.d343.upgrade_amounts = self.GRENADE_QUANTITY_UPGARDE
 	self.d343.anim_global_param = "projectile_frag"
 	self.d343.throw_allowed_expire_t = 0.662
 	self.d343.expire_t = 0.455
@@ -112,6 +153,11 @@ function ProjectilesTweakData:init(tweak_data)
 	self.d343.gui.initial_rotation.yaw = 0
 	self.d343.gui.initial_rotation.pitch = 90
 	self.d343.gui.initial_rotation.roll = 30
+
+	table.insert(self._projectiles_index, "d343")
+end
+
+function ProjectilesTweakData:_init_mills(tweak_data)
 	self.mills = {}
 	self.mills.name_id = "bm_grenade_mills"
 	self.mills.unit = "units/upd_015/weapons/wpn_fps_gre_mills/wpn_fps_gre_mills"
@@ -120,7 +166,8 @@ function ProjectilesTweakData:init(tweak_data)
 	self.mills.icon = "frag_grenade"
 	self.mills.throwable = true
 	self.mills.max_amount = 3
-	self.mills.upgrade_amount = self.GRENADE_QUANTITY_UPGARDE
+	self.mills.pickup_filter = "grenades"
+	self.mills.upgrade_amounts = self.GRENADE_QUANTITY_UPGARDE
 	self.mills.anim_global_param = "projectile_frag"
 	self.mills.throw_allowed_expire_t = 0.662
 	self.mills.expire_t = 0.455
@@ -146,6 +193,11 @@ function ProjectilesTweakData:init(tweak_data)
 	self.mills.gui.initial_rotation.yaw = -90
 	self.mills.gui.initial_rotation.pitch = 60
 	self.mills.gui.initial_rotation.roll = 0
+
+	table.insert(self._projectiles_index, "mills")
+end
+
+function ProjectilesTweakData:_init_betty(tweak_data)
 	self.betty = {}
 	self.betty.name_id = "bm_grenade_betty"
 	self.betty.unit = "units/upd_021/weapons/wpn_fps_gre_betty/wpn_fps_gre_betty"
@@ -155,7 +207,8 @@ function ProjectilesTweakData:init(tweak_data)
 	self.betty.throwable = true
 	self.betty.instant_throw = true
 	self.betty.max_amount = 2
-	self.betty.upgrade_amount = self.MINE_QUANTITY_UPGARDE
+	self.betty.pickup_filter = "grenades"
+	self.betty.upgrade_amounts = self.MINE_QUANTITY_UPGARDE
 	self.betty.anim_global_param = "projectile_frag"
 	self.betty.throw_allowed_expire_t = 0
 	self.betty.expire_t = 0.46
@@ -182,6 +235,11 @@ function ProjectilesTweakData:init(tweak_data)
 	self.betty.gui.initial_rotation.yaw = -90
 	self.betty.gui.initial_rotation.pitch = 60
 	self.betty.gui.initial_rotation.roll = 0
+
+	table.insert(self._projectiles_index, "betty")
+end
+
+function ProjectilesTweakData:_init_cluster(tweak_data)
 	self.cluster = {}
 	self.cluster.name_id = "bm_grenade_frag"
 	self.cluster.unit = "units/vanilla/dev/dev_shrapnel/dev_shrapnel"
@@ -202,6 +260,11 @@ function ProjectilesTweakData:init(tweak_data)
 	}
 	self.cluster.animations = {}
 	self.cluster.animations.equip_id = "equip_welrod"
+
+	table.insert(self._projectiles_index, "cluster")
+end
+
+function ProjectilesTweakData:_init_ammo_bag(tweak_data)
 	self.ammo_bag = {}
 	self.ammo_bag.name_id = "bm_grenade_frag"
 	self.ammo_bag.unit = "units/vanilla/weapons/wpn_gre_m24/wpn_gre_m24"
@@ -222,6 +285,11 @@ function ProjectilesTweakData:init(tweak_data)
 	self.ammo_bag.push_at_body_index = 0
 	self.ammo_bag.animations = {}
 	self.ammo_bag.animations.equip_id = "equip_welrod"
+
+	table.insert(self._projectiles_index, "ammo_bag")
+end
+
+function ProjectilesTweakData:_init_molotov(tweak_data)
 	self.molotov = {}
 	self.molotov.name_id = "bm_grenade_molotov"
 	self.molotov.icon = "molotov_grenade"
@@ -230,7 +298,7 @@ function ProjectilesTweakData:init(tweak_data)
 	self.molotov.time_cheat = 1
 	self.molotov.throwable = false
 	self.molotov.max_amount = 3
-	self.molotov.upgrade_amount = self.GRENADE_QUANTITY_UPGARDE
+	self.molotov.upgrade_amounts = self.GRENADE_QUANTITY_UPGARDE
 	self.molotov.texture_bundle_folder = "bbq"
 	self.molotov.physic_effect = tweak_data.physics_effects.molotov_throw
 	self.molotov.anim_global_param = "projectile_molotov"
@@ -257,34 +325,53 @@ function ProjectilesTweakData:init(tweak_data)
 	self.molotov.fire_alert_radius = 1500
 	self.molotov.animations = {}
 	self.molotov.animations.equip_id = "equip_welrod"
+
+	table.insert(self._projectiles_index, "molotov")
+end
+
+function ProjectilesTweakData:_init_decoy_coin(tweak_data)
 	self.decoy_coin = {}
 	self.decoy_coin.name_id = "bm_coin"
 	self.decoy_coin.unit = "units/vanilla/weapons/wpn_fps_decoy_coin_peace/wpn_decoy_coin_peace"
 	self.decoy_coin.unit_hand = "units/vanilla/weapons/wpn_fps_decoy_coin_peace/wpn_decoy_coin_peace_hand"
 	self.decoy_coin.unit_dummy = "units/vanilla/weapons/wpn_fps_decoy_coin_peace/wpn_decoy_coin_peace_husk"
 	self.decoy_coin.icon = "frag_grenade"
-	self.decoy_coin.max_amount = 9
-	self.decoy_coin.per_pickup = math.ceil(self.decoy_coin.max_amount / 3)
+	self.decoy_coin.max_amount = 5
+	self.decoy_coin.upgrade_amount = {
+		category = "player",
+		upgrade = "pack_mule_equipment_quantity",
+	}
+	self.decoy_coin.pickup_filter = "coins"
+	self.decoy_coin.is_a_grenade = true
 	self.decoy_coin.throwable = true
 	self.decoy_coin.instant_throw = true
+	self.decoy_coin.impact_detonation = true
+	self.decoy_coin.remove_on_impact = false
+	self.decoy_coin.attach_on_collision = false
 	self.decoy_coin.anim_global_param = "projectile_molotov"
 	self.decoy_coin.throw_allowed_expire_t = 0
 	self.decoy_coin.expire_t = 0.46
 	self.decoy_coin.repeat_expire_t = 1
-	self.decoy_coin.is_a_grenade = true
 	self.decoy_coin.range = 1000
 	self.decoy_coin.launch_speed = 200
+	self.decoy_coin.damage = 15
+	self.decoy_coin.headshot_multiplier = 3
 	self.decoy_coin.animations = {}
 	self.decoy_coin.animations.equip_id = "equip_welrod"
 	self.decoy_coin.gui = {}
 	self.decoy_coin.gui.rotation_offset = 0
 	self.decoy_coin.gui.distance_offset = -160
 	self.decoy_coin.gui.height_offset = -14
-	self.decoy_coin.gui.display_offset = 19.5
+	self.decoy_coin.gui.display_offset = 22
 	self.decoy_coin.gui.initial_rotation = {}
 	self.decoy_coin.gui.initial_rotation.yaw = 150
 	self.decoy_coin.gui.initial_rotation.pitch = 8
 	self.decoy_coin.gui.initial_rotation.roll = 0
+
+	table.insert(self._projectiles_index, "decoy_coin")
+end
+
+function ProjectilesTweakData:_init_mortar_shell(tweak_data)
 	self.mortar_shell = {}
 	self.mortar_shell.name_id = "bm_mortar_shell"
 	self.mortar_shell.unit = "units/vanilla/weapons/wpn_npc_proj_mortar_shell/wpn_npc_proj_mortar_shell"
@@ -304,6 +391,11 @@ function ProjectilesTweakData:init(tweak_data)
 	self.mortar_shell.effect_name = "effects/vanilla/explosions/exp_artillery_explosion_001"
 	self.mortar_shell.sound_event = "grenade_launcher_explosion"
 	self.mortar_shell.sound_event_impact_duration = 4
+
+	table.insert(self._projectiles_index, "mortar_shell")
+end
+
+function ProjectilesTweakData:_init_flamer_death_fake(tweak_data)
 	self.flamer_death_fake = clone(self.molotov)
 	self.flamer_death_fake.init_timer = 0.01
 	self.flamer_death_fake.adjust_z = 0
@@ -312,20 +404,8 @@ function ProjectilesTweakData:init(tweak_data)
 	self.flamer_death_fake.unit_dummy = "units/vanilla/dev/flamer_death_fake/flamer_death_fake_husk"
 	self.flamer_death_fake.burn_duration = 10
 	self.flamer_death_fake.sound_event_impact_duration = 1
-	self._projectiles_index = {
-		"m24",
-		"cluster",
-		"molotov",
-		"mortar_shell",
-		"flamer_death_fake",
-		"concrete",
-		"d343",
-		"mills",
-		"decoy_coin",
-		"betty",
-	}
 
-	self:_add_desc_from_name_macro(self)
+	table.insert(self._projectiles_index, "flamer_death_fake")
 end
 
 function BlackMarketTweakData:get_projectiles_index()

@@ -16,8 +16,8 @@ function ElementAIRemove:on_executed(instigator)
 			if self._values.true_death then
 				if instigator:character_damage() and instigator:character_damage().damage_mission then
 					instigator:character_damage():damage_mission({
-						damage = 9001,
 						col_ray = {},
+						damage = 9001,
 						drop_loot = self._values.drop_loot,
 					})
 				else

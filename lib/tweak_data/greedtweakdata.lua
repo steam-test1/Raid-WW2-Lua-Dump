@@ -129,7 +129,6 @@ function GreedTweakData:_init_cache_items()
 	}
 	self.cache_items.regular_cache_box.interaction_timer = 0.6
 	self.cache_items.regular_cache_box.lockpick = {
-		number_of_circles = 3,
 		circle_difficulty = {
 			0.9,
 			0.92,
@@ -145,12 +144,8 @@ function GreedTweakData:_init_cache_items()
 			260,
 			280,
 		},
+		number_of_circles = 3,
 		sounds = {
-			dialog_enter = "player_gen_picking_lock",
-			dialog_fail = "player_gen_lockpick_fail",
-			dialog_success = "player_gen_lock_picked",
-			failed = "lock_fail",
-			success = "success",
 			circles = {
 				{
 					lock = "lock_a",
@@ -165,6 +160,11 @@ function GreedTweakData:_init_cache_items()
 					mechanics = "lock_mechanics_c",
 				},
 			},
+			dialog_enter = "player_gen_picking_lock",
+			dialog_fail = "player_gen_lockpick_fail",
+			dialog_success = "player_gen_lock_picked",
+			failed = "lock_fail",
+			success = "success",
 		},
 	}
 	self.cache_items.regular_cache_box.sequences = {

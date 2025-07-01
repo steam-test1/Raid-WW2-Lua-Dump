@@ -48,10 +48,10 @@ end
 
 function HUDTurret:_create_heat_indicator()
 	local heat_indicator_panel_params = {
+		h = HUDTurret.HEAT_INDICATOR_H,
 		halign = "center",
 		name = "heat_indicator_panel",
 		valign = "bottom",
-		h = HUDTurret.HEAT_INDICATOR_H,
 		w = HUDTurret.HEAT_INDICATOR_W,
 	}
 
@@ -69,14 +69,14 @@ function HUDTurret:_create_heat_indicator()
 	self._heat_indicator_background = self._heat_indicator_panel:bitmap(heat_indicator_background_params)
 
 	local heat_indicator_foreground_panel_params = {
+		h = self._heat_indicator_panel:h(),
 		halign = "scale",
+		layer = self._heat_indicator_background:layer() + 1,
 		name = "heat_indicator_foreground_panel",
 		valign = "scale",
+		w = self._heat_indicator_panel:w(),
 		x = 0,
 		y = 0,
-		h = self._heat_indicator_panel:h(),
-		layer = self._heat_indicator_background:layer() + 1,
-		w = self._heat_indicator_panel:w(),
 	}
 
 	self._heat_indicator_foreground_panel = self._heat_indicator_panel:panel(heat_indicator_foreground_panel_params)
@@ -93,10 +93,10 @@ end
 function HUDTurret:_create_dismount_prompt()
 	local dismount_prompt_panel_params = {
 		alpha = 0,
+		h = HUDTurret.DISMOUNT_PROMPT_H,
 		halign = "scale",
 		name = "dismount_prompt_panel",
 		valign = "top",
-		h = HUDTurret.DISMOUNT_PROMPT_H,
 		w = self._object:w(),
 	}
 
@@ -106,16 +106,16 @@ function HUDTurret:_create_dismount_prompt()
 
 	local dismount_prompt_text_params = {
 		align = "center",
+		font = HUDTurret.DISMOUNT_PROMPT_TEXT_FONT,
+		font_size = HUDTurret.DISMOUNT_PROMPT_TEXT_FONT_SIZE,
 		halign = "center",
 		layer = 5,
 		name = "text",
-		valign = "center",
-		vertical = "center",
-		font = HUDTurret.DISMOUNT_PROMPT_TEXT_FONT,
-		font_size = HUDTurret.DISMOUNT_PROMPT_TEXT_FONT_SIZE,
 		text = utf8.to_upper(managers.localization:text(HUDTurret.DISMOUNT_PROMPT_TEXT, {
 			BTN_INTERACT = managers.localization:btn_macro("interact"),
 		})),
+		valign = "center",
+		vertical = "center",
 	}
 
 	self._dismount_prompt_text = self._dismount_prompt_panel:text(dismount_prompt_text_params)
@@ -133,9 +133,9 @@ function HUDTurret:_create_reticle()
 		alpha = 0,
 		halign = "center",
 		name = "turret_reticle",
-		valign = "center",
 		texture = tweak_data.gui.icons[HUDTurret.DEFAULT_RETICLE].texture,
 		texture_rect = tweak_data.gui.icons[HUDTurret.DEFAULT_RETICLE].texture_rect,
+		valign = "center",
 	})
 
 	self._reticle:set_center_x(self._object:w() / 2)
@@ -145,9 +145,9 @@ function HUDTurret:_create_reticle()
 		alpha = 0,
 		halign = "center",
 		name = "turret_reticle_static",
-		valign = "center",
 		texture = tweak_data.gui.icons[HUDTurret.DEFAULT_RETICLE_STATIC].texture,
 		texture_rect = tweak_data.gui.icons[HUDTurret.DEFAULT_RETICLE_STATIC].texture_rect,
+		valign = "center",
 	})
 
 	self._reticle_static:set_center_x(self._object:w() / 2)
@@ -160,9 +160,9 @@ function HUDTurret:_create_shell()
 		halign = "center",
 		layer = 1,
 		name = "shell_bg",
-		valign = "center",
 		texture = tweak_data.gui.icons.aa_gun_bg.texture,
 		texture_rect = tweak_data.gui.icons.aa_gun_bg.texture_rect,
+		valign = "center",
 	}
 
 	self._shell_bg = self._object:bitmap(params_bg)
@@ -175,9 +175,9 @@ function HUDTurret:_create_shell()
 		halign = "center",
 		layer = 2,
 		name = "shell_fade",
-		valign = "center",
 		texture = tweak_data.gui.icons.aa_gun_flak.texture,
 		texture_rect = tweak_data.gui.icons.aa_gun_flak.texture_rect,
+		valign = "center",
 	}
 
 	self._shell_fade = self._object:bitmap(params_fade)
@@ -190,9 +190,9 @@ function HUDTurret:_create_shell()
 		halign = "center",
 		layer = 3,
 		name = "shell",
-		valign = "center",
 		texture = tweak_data.gui.icons.aa_gun_flak.texture,
 		texture_rect = tweak_data.gui.icons.aa_gun_flak.texture_rect,
+		valign = "center",
 	}
 
 	self._shell = self._object:bitmap(params_shell)

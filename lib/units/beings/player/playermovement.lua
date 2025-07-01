@@ -61,6 +61,7 @@ function PlayerMovement:init(unit)
 	self._state_data = {
 		ducking = false,
 		in_air = false,
+		m_stand_pos = nil,
 	}
 	self._synced_suspicion = false
 	self._suspicion_ratio = false
@@ -75,18 +76,18 @@ function PlayerMovement:init(unit)
 		chk_interval_active = 6,
 		chk_interval_inactive = 1,
 		chk_t = 6,
-		max_dis_sq = 3240000,
-		nr_enemies = 2,
 		has_dmg_dampener = managers.player:has_category_upgrade("temporary", "dmg_dampener_outnumbered") or managers.player:has_category_upgrade("temporary", "dmg_dampener_outnumbered_strong"),
 		has_dmg_mul = managers.player:has_category_upgrade("temporary", "dmg_multiplier_outnumbered"),
+		max_dis_sq = 3240000,
+		nr_enemies = 2,
 	}
 
 	if managers.player:has_category_upgrade("player", "morale_boost") or managers.player:has_category_upgrade("player", "long_dis_revive") then
 		self._rally_skill_data = {
-			range_sq = 490000,
 			long_dis_revive = managers.player:has_category_upgrade("player", "long_dis_revive"),
 			morale_boost_cooldown_t = tweak_data.upgrades.morale_boost_base_cooldown,
 			morale_boost_delay_t = managers.player:has_category_upgrade("player", "morale_boost") and 0 or nil,
+			range_sq = 490000,
 			revive_chance = managers.player:upgrade_value("player", "long_dis_revive", 0),
 		}
 	end

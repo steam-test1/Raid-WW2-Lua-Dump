@@ -42,8 +42,8 @@ function RaidGUIControlPlayerStats:_create_background()
 	local backgrounds_chat_bg = tweak_data.gui.icons[RaidGUIControlPlayerStats.BACKGROUND_IMAGE]
 
 	self._player_stats_background = self._object:bitmap({
-		name = "_player_stats_background",
 		h = self._object:h(),
+		name = "_player_stats_background",
 		texture = backgrounds_chat_bg.texture,
 		texture_rect = backgrounds_chat_bg.texture_rect,
 		w = self._object:w(),

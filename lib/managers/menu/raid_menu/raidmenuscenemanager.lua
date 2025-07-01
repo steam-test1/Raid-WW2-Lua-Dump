@@ -205,7 +205,7 @@ function RaidMenuSceneManager:open_menu(name, dont_add_on_stack)
 		else
 			managers.menu_component:post_event("open_pause_menu")
 
-			if Global.game_settings.single_player then
+			if Global.game_settings.single_player or managers.network:session():count_all_peers() == 1 then
 				managers.menu_component:post_event("pause_all_gameplay_sounds")
 			end
 		end

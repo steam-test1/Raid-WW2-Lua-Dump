@@ -47,64 +47,64 @@ function RaidMenuOptionsControls:_layout_controls()
 	}
 	self._btn_keybinding = self._root_panel:long_tertiary_button(previous_params)
 	previous_params = {
-		name = "slider_look_sensitivity_horizontal",
-		value_format = "%02d%%",
-		value_step = 1,
 		description = utf8.to_upper(managers.localization:text("menu_options_controls_look_sensitivity_horizontal")),
+		name = "slider_look_sensitivity_horizontal",
 		on_menu_move = {
 			down = "slider_look_sensitivity_vertical",
 			up = previous_params.name,
 		},
 		on_value_change_callback = callback(self, self, "on_value_change_camera_sensitivity_horizontal"),
+		value_format = "%02d%%",
+		value_step = 1,
 		x = start_x,
 		y = start_y,
 	}
 	self._progress_bar_menu_camera_sensitivity_horizontal = self._root_panel:slider(previous_params)
 	previous_params = {
-		name = "slider_look_sensitivity_vertical",
-		value_format = "%02d%%",
-		value_step = 1,
 		description = utf8.to_upper(managers.localization:text("menu_options_controls_look_sensitivity_vertical")),
+		name = "slider_look_sensitivity_vertical",
 		on_menu_move = {
 			down = "slider_aiming_sensitivity_horizontal",
 			up = previous_params.name,
 		},
 		on_value_change_callback = callback(self, self, "on_value_change_camera_sensitivity_vertical"),
+		value_format = "%02d%%",
+		value_step = 1,
 		x = start_x,
 		y = previous_params.y + (self._progress_bar_menu_camera_sensitivity_horizontal._double_height and RaidMenuOptionsControls.SLIDER_PADDING or RaidGuiBase.PADDING),
 	}
 	self._progress_bar_menu_camera_sensitivity_vertical = self._root_panel:slider(previous_params)
 	previous_params = {
-		name = "slider_aiming_sensitivity_horizontal",
-		value_format = "%02d%%",
-		value_step = 1,
 		description = utf8.to_upper(managers.localization:text("menu_options_controls_aiming_sensitivity_horizontal")),
+		name = "slider_aiming_sensitivity_horizontal",
 		on_menu_move = {
 			down = "slider_aiming_sensitivity_vertical",
 			up = previous_params.name,
 		},
 		on_value_change_callback = callback(self, self, "on_value_change_camera_zoom_sensitivity_horizontal"),
+		value_format = "%02d%%",
+		value_step = 1,
 		x = start_x,
 		y = previous_params.y + (self._progress_bar_menu_camera_sensitivity_vertical._double_height and RaidMenuOptionsControls.SLIDER_PADDING or RaidGuiBase.PADDING),
 	}
 	self._progress_bar_menu_camera_zoom_sensitivity_horizontal = self._root_panel:slider(previous_params)
 	previous_params = {
-		name = "slider_aiming_sensitivity_vertical",
-		value_format = "%02d%%",
-		value_step = 1,
 		description = utf8.to_upper(managers.localization:text("menu_options_controls_aiming_sensitivity_vertical")),
+		name = "slider_aiming_sensitivity_vertical",
 		on_menu_move = {
 			down = "separate_aiming_settings",
 			up = previous_params.name,
 		},
 		on_value_change_callback = callback(self, self, "on_value_change_camera_zoom_sensitivity_vertical"),
+		value_format = "%02d%%",
+		value_step = 1,
 		x = start_x,
 		y = previous_params.y + (self._progress_bar_menu_camera_zoom_sensitivity_horizontal._double_height and RaidMenuOptionsControls.SLIDER_PADDING or RaidGuiBase.PADDING),
 	}
 	self._progress_bar_menu_camera_zoom_sensitivity_vertical = self._root_panel:slider(previous_params)
 	previous_params = {
-		name = "separate_aiming_settings",
 		description = utf8.to_upper(managers.localization:text("menu_options_separate_aiming_settings")),
+		name = "separate_aiming_settings",
 		on_click_callback = callback(self, self, "on_click_toggle_zoom_sensitivity"),
 		on_menu_move = {
 			down = "inverted_y_axis",
@@ -116,8 +116,8 @@ function RaidMenuOptionsControls:_layout_controls()
 	}
 	self._toggle_menu_toggle_zoom_sensitivity = self._root_panel:toggle_button(previous_params)
 	previous_params = {
-		name = "inverted_y_axis",
 		description = utf8.to_upper(managers.localization:text("menu_options_inverted_y_axis")),
+		name = "inverted_y_axis",
 		on_click_callback = callback(self, self, "on_click_toggle_invert_camera_vertically"),
 		on_menu_move = {
 			down = "hold_to_aim",
@@ -129,8 +129,8 @@ function RaidMenuOptionsControls:_layout_controls()
 	}
 	self._toggle_menu_invert_camera_vertically = self._root_panel:toggle_button(previous_params)
 	previous_params = {
-		name = "hold_to_aim",
 		description = utf8.to_upper(managers.localization:text("menu_options_hold_to_aim")),
+		name = "hold_to_aim",
 		on_click_callback = callback(self, self, "on_click_toggle_hold_to_steelsight"),
 		on_menu_move = {
 			down = "hold_to_run",
@@ -142,8 +142,8 @@ function RaidMenuOptionsControls:_layout_controls()
 	}
 	self._toggle_menu_hold_to_steelsight = self._root_panel:toggle_button(previous_params)
 	previous_params = {
-		name = "hold_to_run",
 		description = utf8.to_upper(managers.localization:text("menu_options_hold_to_run")),
+		name = "hold_to_run",
 		on_click_callback = callback(self, self, "on_click_toggle_hold_to_run"),
 		on_menu_move = {
 			down = "hold_to_crouch",
@@ -155,8 +155,8 @@ function RaidMenuOptionsControls:_layout_controls()
 	}
 	self._toggle_menu_hold_to_run = self._root_panel:toggle_button(previous_params)
 	previous_params = {
-		name = "hold_to_crouch",
 		description = utf8.to_upper(managers.localization:text("menu_options_hold_to_crouch")),
+		name = "hold_to_crouch",
 		on_click_callback = callback(self, self, "on_click_toggle_hold_to_duck"),
 		on_menu_move = {
 			down = "controller_sticky_aim",
@@ -168,8 +168,8 @@ function RaidMenuOptionsControls:_layout_controls()
 	}
 	self._toggle_menu_hold_to_duck = self._root_panel:toggle_button(previous_params)
 	previous_params = {
-		name = "controller_sticky_aim",
 		description = utf8.to_upper(managers.localization:text("menu_options_controller_sticky_aim")),
+		name = "controller_sticky_aim",
 		on_click_callback = callback(self, self, "on_click_toggle_controller_sticky_aim"),
 		on_menu_move = {
 			down = "controller_vibration",
@@ -181,8 +181,8 @@ function RaidMenuOptionsControls:_layout_controls()
 	}
 	self._toggle_menu_controller_sticky_aim = self._root_panel:toggle_button(previous_params)
 	previous_params = {
-		name = "controller_vibration",
 		description = utf8.to_upper(managers.localization:text("menu_options_controller_vibration")),
+		name = "controller_vibration",
 		on_click_callback = callback(self, self, "on_click_toggle_controller_vibration"),
 		on_menu_move = {
 			down = "controller_aim_assist",
@@ -194,8 +194,8 @@ function RaidMenuOptionsControls:_layout_controls()
 	}
 	self._toggle_menu_controller_vibration = self._root_panel:toggle_button(previous_params)
 	previous_params = {
-		name = "controller_aim_assist",
 		description = utf8.to_upper(managers.localization:text("menu_options_controller_aim_assist")),
+		name = "controller_aim_assist",
 		on_click_callback = callback(self, self, "on_click_toggle_controller_aim_assist"),
 		on_menu_move = {
 			down = "controller_southpaw",
@@ -207,8 +207,8 @@ function RaidMenuOptionsControls:_layout_controls()
 	}
 	self._toggle_menu_controller_aim_assist = self._root_panel:toggle_button(previous_params)
 	previous_params = {
-		name = "controller_southpaw",
 		description = utf8.to_upper(managers.localization:text("menu_options_controller_southpaw")),
+		name = "controller_southpaw",
 		on_click_callback = callback(self, self, "on_click_toggle_controller_southpaw"),
 		on_menu_move = {
 			up = previous_params.name,
@@ -220,12 +220,12 @@ function RaidMenuOptionsControls:_layout_controls()
 	self._toggle_menu_controller_southpaw = self._root_panel:toggle_button(previous_params)
 
 	local default_controls_params = {
-		name = "default_controls",
-		x = 1472,
-		y = 832,
 		layer = RaidGuiBase.FOREGROUND_LAYER,
+		name = "default_controls",
 		on_click_callback = callback(self, self, "on_click_default_controls"),
 		text = utf8.to_upper(managers.localization:text("menu_options_controls_default")),
+		x = 1472,
+		y = 832,
 	}
 
 	self._default_controls_button = self._root_panel:long_secondary_button(default_controls_params)
@@ -450,8 +450,8 @@ function RaidMenuOptionsControls:bind_controller_inputs()
 		},
 		keyboard = {
 			{
-				key = "footer_back",
 				callback = callback(self, self, "_on_legend_pc_back", nil),
+				key = "footer_back",
 			},
 		},
 	}

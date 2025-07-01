@@ -75,8 +75,8 @@ function PlayerCharging:exit(state_data, new_state_name)
 	self:animate_fov_multiplier(1, PlayerCharging.TRANSITION_T)
 
 	local exit_data = {
-		skip_equip = true,
 		equip_weapon = self._old_selection,
+		skip_equip = true,
 	}
 
 	return exit_data
@@ -226,6 +226,10 @@ end
 
 function PlayerCharging:interaction_blocked()
 	return true
+end
+
+function PlayerCharging:_start_action_ducking(t)
+	return
 end
 
 function PlayerCharging:_get_max_walk_speed(t)

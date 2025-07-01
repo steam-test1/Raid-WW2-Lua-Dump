@@ -331,12 +331,7 @@ function PlayerBleedOut._register_revive_SO(revive_SO_data, variant)
 	end
 
 	local followup_objective = {
-		scan = true,
-		type = "act",
 		action = {
-			body_part = 1,
-			type = "act",
-			variant = "crouch",
 			blocks = {
 				action = -1,
 				aim = -1,
@@ -344,20 +339,16 @@ function PlayerBleedOut._register_revive_SO(revive_SO_data, variant)
 				hurt = -1,
 				walk = -1,
 			},
-		},
-	}
-	local objective = {
-		called = true,
-		destroy_clbk_key = false,
-		haste = "run",
-		pose = "stand",
-		scan = true,
-		type = "revive",
-		action = {
-			align_sync = true,
 			body_part = 1,
 			type = "act",
-			variant = "revive",
+			variant = "crouch",
+		},
+		scan = true,
+		type = "act",
+	}
+	local objective = {
+		action = {
+			align_sync = true,
 			blocks = {
 				action = -1,
 				aim = -1,
@@ -366,24 +357,33 @@ function PlayerBleedOut._register_revive_SO(revive_SO_data, variant)
 				light_hurt = -1,
 				walk = -1,
 			},
+			body_part = 1,
+			type = "act",
+			variant = "revive",
 		},
 		action_duration = tweak_data.interaction[variant].timer,
 		action_start_clbk = callback(PlayerBleedOut, PlayerBleedOut, "on_rescue_SO_started", revive_SO_data),
+		called = true,
 		complete_clbk = callback(PlayerBleedOut, PlayerBleedOut, "on_rescue_SO_completed", revive_SO_data),
+		destroy_clbk_key = false,
 		fail_clbk = callback(PlayerBleedOut, PlayerBleedOut, "on_rescue_SO_failed", revive_SO_data),
 		follow_unit = revive_SO_data.unit,
 		followup_objective = followup_objective,
+		haste = "run",
 		nav_seg = revive_SO_data.unit:movement():nav_tracker():nav_segment(),
+		pose = "stand",
+		scan = true,
+		type = "revive",
 	}
 	local so_descriptor = {
 		AI_group = "friendlies",
+		admin_clbk = callback(PlayerBleedOut, PlayerBleedOut, "on_rescue_SO_administered", revive_SO_data),
 		base_chance = 1,
 		chance_inc = 0,
 		interval = 0,
-		usage_amount = 1,
-		admin_clbk = callback(PlayerBleedOut, PlayerBleedOut, "on_rescue_SO_administered", revive_SO_data),
 		objective = objective,
 		search_pos = revive_SO_data.unit:position(),
+		usage_amount = 1,
 		verification_clbk = callback(PlayerBleedOut, PlayerBleedOut, "rescue_SO_verification", revive_SO_data.unit),
 	}
 

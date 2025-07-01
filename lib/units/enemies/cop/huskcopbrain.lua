@@ -29,7 +29,7 @@ function HuskCopBrain:post_init()
 		"death",
 	}, callback(self, self, "clbk_death"))
 
-	if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_ATTACK_ONLY_IN_AIR) and self._unit:damage() then
+	if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_PUMKIN_HEADS) and self._unit:damage() then
 		self._unit:damage():has_then_run_sequence_simple("halloween_2017")
 	end
 end

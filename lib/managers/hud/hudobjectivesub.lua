@@ -36,10 +36,10 @@ end
 
 function HUDObjectiveSub:_create_panel(objectives_panel)
 	local panel_params = {
+		h = HUDObjectiveSub.H,
 		halign = "scale",
 		name = "sub_objective",
 		valign = "top",
-		h = HUDObjectiveSub.H,
 		w = objectives_panel:w(),
 	}
 
@@ -49,15 +49,15 @@ end
 function HUDObjectiveSub:_create_objective_text()
 	local objective_text_params = {
 		align = "right",
+		font = HUDObjectiveSub.OBJECTIVE_TEXT_FONT,
+		font_size = HUDObjectiveSub.OBJECTIVE_TEXT_FONT_SIZE,
 		halign = "right",
 		name = "objective_text",
+		text = utf8.to_upper(self._objective.text),
 		valign = "center",
 		vertical = "center",
 		x = 0,
 		y = 0,
-		font = HUDObjectiveSub.OBJECTIVE_TEXT_FONT,
-		font_size = HUDObjectiveSub.OBJECTIVE_TEXT_FONT_SIZE,
-		text = utf8.to_upper(self._objective.text),
 	}
 
 	self._objective_text = self._object:text(objective_text_params)
@@ -67,10 +67,10 @@ end
 
 function HUDObjectiveSub:_create_amount()
 	local amount_panel_params = {
+		h = self._object:h(),
 		halign = "right",
 		name = "amount_panel",
 		valign = "center",
-		h = self._object:h(),
 		w = self._object:h(),
 	}
 
@@ -90,10 +90,10 @@ function HUDObjectiveSub:_create_amount()
 	amount_progress_background:set_center_y(self._amount_panel:h() / 2)
 
 	local amount_progress_fill_params = {
-		name = "amount_progress_fill",
-		render_template = "VertexColorTexturedRadial",
 		h = tweak_data.gui:icon_h(HUDObjectiveSub.AMOUNT_FILL_ICON),
 		layer = amount_progress_background:layer() + 1,
+		name = "amount_progress_fill",
+		render_template = "VertexColorTexturedRadial",
 		texture = tweak_data.gui.icons[HUDObjectiveSub.AMOUNT_FILL_ICON].texture,
 		texture_rect = {
 			tweak_data.gui:icon_w(HUDObjectiveSub.AMOUNT_FILL_ICON),
@@ -111,11 +111,11 @@ function HUDObjectiveSub:_create_amount()
 
 	local current_amount_text_params = {
 		align = "center",
+		font = HUDObjectiveSub.AMOUNT_TEXT_FONT,
+		font_size = HUDObjectiveSub.AMOUNT_TEXT_FONT_SIZE,
 		name = "current_amount_text",
 		text = "00",
 		vertical = "center",
-		font = HUDObjectiveSub.AMOUNT_TEXT_FONT,
-		font_size = HUDObjectiveSub.AMOUNT_TEXT_FONT_SIZE,
 	}
 
 	self._current_amount_text = self._amount_panel:text(current_amount_text_params)
@@ -129,11 +129,11 @@ function HUDObjectiveSub:_create_amount()
 
 	local slash_params = {
 		align = "center",
+		font = HUDObjectiveSub.AMOUNT_TEXT_FONT,
+		font_size = HUDObjectiveSub.AMOUNT_TEXT_FONT_SIZE,
 		name = "slash",
 		text = "/",
 		vertical = "center",
-		font = HUDObjectiveSub.AMOUNT_TEXT_FONT,
-		font_size = HUDObjectiveSub.AMOUNT_TEXT_FONT_SIZE,
 	}
 	local slash = self._amount_panel:text(slash_params)
 	local _, _, w, h = slash:text_rect()
@@ -145,11 +145,11 @@ function HUDObjectiveSub:_create_amount()
 
 	local total_amount_text_params = {
 		align = "center",
+		font = HUDObjectiveSub.AMOUNT_TEXT_FONT,
+		font_size = HUDObjectiveSub.AMOUNT_TEXT_FONT_SIZE,
 		name = "total_amount_text",
 		text = "00",
 		vertical = "center",
-		font = HUDObjectiveSub.AMOUNT_TEXT_FONT,
-		font_size = HUDObjectiveSub.AMOUNT_TEXT_FONT_SIZE,
 	}
 
 	self._total_amount_text = self._amount_panel:text(total_amount_text_params)
@@ -163,12 +163,12 @@ function HUDObjectiveSub:_create_amount()
 
 	local percentage_amount_text_params = {
 		align = "center",
-		name = "percentage_amount_text",
-		text = "00%",
-		vertical = "center",
 		font = HUDObjectiveSub.AMOUNT_TEXT_FONT,
 		font_size = HUDObjectiveSub.AMOUNT_TEXT_FONT_SIZE,
 		h = self._amount_panel:h(),
+		name = "percentage_amount_text",
+		text = "00%",
+		vertical = "center",
 		w = self._amount_panel:w(),
 	}
 
@@ -177,10 +177,10 @@ end
 
 function HUDObjectiveSub:_create_checkbox()
 	local checkbox_panel_params = {
+		h = self._object:h(),
 		halign = "right",
 		name = "checkbox_panel",
 		valign = "center",
-		h = self._object:h(),
 		w = self._object:h(),
 	}
 
@@ -201,9 +201,9 @@ function HUDObjectiveSub:_create_checkbox()
 
 	local checkbox_checked_params = {
 		name = "checkbox_checked",
-		visible = false,
 		texture = tweak_data.gui.icons[HUDObjectiveSub.CHECKBOX_CHECKED_ICON].texture,
 		texture_rect = tweak_data.gui.icons[HUDObjectiveSub.CHECKBOX_CHECKED_ICON].texture_rect,
+		visible = false,
 	}
 	local checkbox_checked = self._checkbox_panel:bitmap(checkbox_checked_params)
 

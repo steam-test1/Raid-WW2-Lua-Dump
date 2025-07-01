@@ -104,18 +104,12 @@ function OperationsTweakData:_init_loading_screens()
 	self._loading_screens.train_yard = {}
 	self._loading_screens.train_yard.image = "loading_raid_ww2"
 	self._loading_screens.train_yard.text = "loading_trainyard"
-	self._loading_screens.train_yard_expo = {}
-	self._loading_screens.train_yard_expo.image = "loading_raid_ww2"
-	self._loading_screens.train_yard_expo.text = "loading_trainyard_expo"
 	self._loading_screens.gold_rush = {}
 	self._loading_screens.gold_rush.image = "loading_raid_ww2"
 	self._loading_screens.gold_rush.text = "loading_treasury"
 	self._loading_screens.bridge = {}
 	self._loading_screens.bridge.image = "loading_raid_ww2"
 	self._loading_screens.bridge.text = "loading_bridge"
-	self._loading_screens.bridge_expo = {}
-	self._loading_screens.bridge_expo.image = "loading_raid_ww2"
-	self._loading_screens.bridge_expo.text = "loading_bridge"
 	self._loading_screens.castle = {}
 	self._loading_screens.castle.image = "loading_raid_ww2"
 	self._loading_screens.castle.text = "loading_castle"
@@ -158,9 +152,6 @@ function OperationsTweakData:_init_loading_screens()
 	self._loading_screens.spies_test = {}
 	self._loading_screens.spies_test.image = "loading_screens_07"
 	self._loading_screens.spies_test.text = "loading_bridge"
-	self._loading_screens.spies_crash_test = {}
-	self._loading_screens.spies_crash_test.image = "loading_screens_07"
-	self._loading_screens.spies_crash_test.text = "loading_bridge"
 	self._loading_screens.sto = {}
 	self._loading_screens.sto.image = "loading_screens_07"
 	self._loading_screens.sto.text = "loading_bridge"
@@ -210,6 +201,23 @@ function OperationsTweakData:_init_raids()
 		"gold_rush",
 		"silo",
 		"kelly",
+	}
+	self.dogtag_types = {
+		large = {
+			diff_bonus = 3,
+			max = 22,
+			min = 16,
+		},
+		medium = {
+			diff_bonus = 2,
+			max = 20,
+			min = 15,
+		},
+		small = {
+			diff_bonus = 1,
+			max = 18,
+			min = 14,
+		},
 	}
 	self.missions.streaming_level = {}
 	self.missions.streaming_level.name_id = "menu_stream"
@@ -296,8 +304,7 @@ function OperationsTweakData:_init_raids()
 	self.missions.flakturm.xp = 5800
 	self.missions.flakturm.start_in_stealth = true
 	self.missions.flakturm.stealth_description = OperationsTweakData.RAID_MOSTLY_STEALTHABLE
-	self.missions.flakturm.dogtags_min = 23
-	self.missions.flakturm.dogtags_max = 26
+	self.missions.flakturm.dogtags = self.dogtag_types.medium
 	self.missions.flakturm.trophy = {
 		position = "snap_01",
 		unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_flaktower",
@@ -369,8 +376,7 @@ function OperationsTweakData:_init_raids()
 	self.missions.gold_rush.music_id = "reichsbank"
 	self.missions.gold_rush.stealth_description = OperationsTweakData.RAID_NOT_STEALTHABLE
 	self.missions.gold_rush.xp = 4000
-	self.missions.gold_rush.dogtags_min = 12
-	self.missions.gold_rush.dogtags_max = 16
+	self.missions.gold_rush.dogtags = self.dogtag_types.small
 	self.missions.gold_rush.trophy = {
 		position = "snap_02",
 		unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_bank",
@@ -432,8 +438,7 @@ function OperationsTweakData:_init_raids()
 	self.missions.train_yard.start_in_stealth = true
 	self.missions.train_yard.stealth_description = OperationsTweakData.RAID_MOSTLY_STEALTHABLE
 	self.missions.train_yard.xp = 5000
-	self.missions.train_yard.dogtags_min = 18
-	self.missions.train_yard.dogtags_max = 25
+	self.missions.train_yard.dogtags = self.dogtag_types.large
 	self.missions.train_yard.trophy = {
 		position = "snap_03",
 		unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_railyard",
@@ -494,8 +499,7 @@ function OperationsTweakData:_init_raids()
 	self.missions.radio_defense.xp = 4500
 	self.missions.radio_defense.start_in_stealth = true
 	self.missions.radio_defense.stealth_description = OperationsTweakData.RAID_MOSTLY_STEALTHABLE
-	self.missions.radio_defense.dogtags_min = 20
-	self.missions.radio_defense.dogtags_max = 25
+	self.missions.radio_defense.dogtags = self.dogtag_types.medium
 	self.missions.radio_defense.trophy = {
 		position = "snap_24",
 		unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_radio",
@@ -564,8 +568,7 @@ function OperationsTweakData:_init_raids()
 		OperationsTweakData.PROGRESSION_GROUP_STANDARD,
 	}
 	self.missions.ger_bridge.xp = 3600
-	self.missions.ger_bridge.dogtags_min = 8
-	self.missions.ger_bridge.dogtags_max = 12
+	self.missions.ger_bridge.dogtags = self.dogtag_types.small
 	self.missions.ger_bridge.trophy = {
 		position = "snap_23",
 		unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_bridge",
@@ -624,8 +627,7 @@ function OperationsTweakData:_init_raids()
 	self.missions.settlement.music_id = "castle"
 	self.missions.settlement.stealth_description = OperationsTweakData.RAID_NOT_STEALTHABLE
 	self.missions.settlement.xp = 5000
-	self.missions.settlement.dogtags_min = 22
-	self.missions.settlement.dogtags_max = 25
+	self.missions.settlement.dogtags = self.dogtag_types.large
 	self.missions.settlement.trophy = {
 		position = "snap_22",
 		unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_castle",
@@ -735,8 +737,7 @@ function OperationsTweakData:_init_raids()
 	self.missions.bunker_test.music_id = "random"
 	self.missions.bunker_test.region = "germany"
 	self.missions.bunker_test.xp = 3000
-	self.missions.bunker_test.dogtags_min = 18
-	self.missions.bunker_test.dogtags_max = 22
+	self.missions.bunker_test.dogtags = self.dogtag_types.small
 	self.missions.bunker_test.trophy = {
 		position = "snap_08",
 		unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_bunker",
@@ -798,8 +799,7 @@ function OperationsTweakData:_init_raids()
 	self.missions.tnd.region = "germany"
 	self.missions.tnd.stealth_description = OperationsTweakData.RAID_MOSTLY_STEALTHABLE
 	self.missions.tnd.xp = 2500
-	self.missions.tnd.dogtags_min = 18
-	self.missions.tnd.dogtags_max = 22
+	self.missions.tnd.dogtags = self.dogtag_types.small
 	self.missions.tnd.trophy = {
 		position = "snap_13",
 		unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_tank",
@@ -859,8 +859,7 @@ function OperationsTweakData:_init_raids()
 	self.missions.hunters.region = "germany"
 	self.missions.hunters.stealth_description = OperationsTweakData.RAID_COMPLETELY_STEALTHABLE
 	self.missions.hunters.xp = 2500
-	self.missions.hunters.dogtags_min = 18
-	self.missions.hunters.dogtags_max = 22
+	self.missions.hunters.dogtags = self.dogtag_types.medium
 	self.missions.hunters.trophy = {
 		position = "snap_06",
 		unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_hunters",
@@ -916,8 +915,7 @@ function OperationsTweakData:_init_raids()
 	self.missions.convoy.region = "germany"
 	self.missions.convoy.stealth_description = OperationsTweakData.RAID_MOSTLY_STEALTHABLE
 	self.missions.convoy.xp = 2500
-	self.missions.convoy.dogtags_min = 18
-	self.missions.convoy.dogtags_max = 22
+	self.missions.convoy.dogtags = self.dogtag_types.small
 	self.missions.convoy.trophy = {
 		position = "snap_09",
 		unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_convoy",
@@ -975,8 +973,7 @@ function OperationsTweakData:_init_raids()
 	self.missions.spies_test.region = "germany"
 	self.missions.spies_test.stealth_description = OperationsTweakData.RAID_MOSTLY_STEALTHABLE
 	self.missions.spies_test.xp = 3000
-	self.missions.spies_test.dogtags_min = 22
-	self.missions.spies_test.dogtags_max = 28
+	self.missions.spies_test.dogtags = self.dogtag_types.medium
 	self.missions.spies_test.trophy = {
 		position = "snap_19",
 		unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_spies",
@@ -1079,8 +1076,7 @@ function OperationsTweakData:_init_raids()
 	self.missions.silo.music_id = "random"
 	self.missions.silo.region = "germany"
 	self.missions.silo.stealth_description = OperationsTweakData.RAID_STARTS_STEALTHABLE
-	self.missions.silo.dogtags_min = 23
-	self.missions.silo.dogtags_max = 28
+	self.missions.silo.dogtags = self.dogtag_types.medium
 	self.missions.silo.trophy = {
 		position = "snap_17",
 		unit = "units/vanilla/props/props_camp_upgrades/props_camp_trophy_case/props_trophy_silo",
@@ -1139,8 +1135,7 @@ function OperationsTweakData:_init_raids()
 	self.missions.kelly.music_id = "random"
 	self.missions.kelly.region = "germany"
 	self.missions.kelly.stealth_description = OperationsTweakData.RAID_COMPLETELY_STEALTHABLE
-	self.missions.kelly.dogtags_min = 14
-	self.missions.kelly.dogtags_max = 16
+	self.missions.kelly.dogtags = self.dogtag_types.medium
 	self.missions.kelly.xp = 3200
 	self.missions.kelly.greed_items = {
 		max = 400,
@@ -1739,8 +1734,11 @@ function OperationsTweakData:_init_operations()
 	self.missions.oper_flamable.events.bridge.camp_objective_id = "obj_camp_goto_oper_rhinegold_03"
 	self.missions.oper_flamable.events.bridge.music_id = "ger_bridge"
 	self.missions.oper_flamable.events.bridge.xp = 2400
-	self.missions.oper_flamable.events.bridge.dogtags_min = 20
-	self.missions.oper_flamable.events.bridge.dogtags_max = 25
+	self.missions.oper_flamable.events.dogtags = {
+		diff_bonus = 3,
+		max = 8,
+		min = 5,
+	}
 	self.missions.oper_flamable.events.bridge.mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED
 	self.missions.oper_flamable.events.bridge.checkpoint = true
 	self.missions.oper_flamable.events.bridge.icon_menu = "missions_raid_bridge_menu"

@@ -79,13 +79,13 @@ end
 function RaidGUIControlXPProgressBar:_create_progress_bar()
 	local progress_bar_params = {
 		center = "slider_large_center",
+		h = self._params.progress_bar_h or RaidGUIControlXPProgressBar.PROGRESS_BAR_H,
 		left = "slider_large_left",
 		name = "progress_bar",
 		right = "slider_large_right",
+		w = self._bar_w + self._horizontal_padding * 2,
 		x = 0,
 		y = 0,
-		h = self._params.progress_bar_h or RaidGUIControlXPProgressBar.PROGRESS_BAR_H,
-		w = self._bar_w + self._horizontal_padding * 2,
 	}
 
 	self._progress_bar = self._inner_panel:progress_bar_simple(progress_bar_params)
@@ -102,11 +102,11 @@ function RaidGUIControlXPProgressBar:_create_slider_pimples()
 	local icon_h = tweak_data.gui:icon_h(icon)
 	local pin_icon = RaidGUIControlXPProgressBar.SLIDER_PIN_ICON
 	local slider_pimples_panel_params = {
-		name = "slider_pimples_panel",
-		x = 0,
 		h = icon_h,
 		layer = self._progress_bar:layer() + 5,
+		name = "slider_pimples_panel",
 		w = self._inner_panel:w(),
+		x = 0,
 		y = self._progress_bar:y() - icon_h,
 	}
 
@@ -121,7 +121,6 @@ function RaidGUIControlXPProgressBar:_create_slider_pimples()
 
 	while current_level <= level_cap do
 		local level_mark_params = {
-			y = 0,
 			color = RaidGUIControlXPProgressBar.SLIDER_PIMPLE_COLOR,
 			h = icon_h,
 			name = "slider_pimple_" .. current_level,
@@ -129,11 +128,12 @@ function RaidGUIControlXPProgressBar:_create_slider_pimples()
 			texture_rect = tweak_data.gui.icons[icon].texture_rect,
 			w = icon_w,
 			x = self._params.horizontal_padding + (current_level - 1) * self._bar_w / (level_cap - 1) - icon_w / 2,
+			y = 0,
 		}
 		local level_mark = self._slider_pimples_panel:image(level_mark_params)
 		local level_pin_params = {
-			layer = 200,
 			color = current_level == 1 and RaidGUIControlXPProgressBar.SLIDER_PIN_COLOR_ACTIVE or RaidGUIControlXPProgressBar.SLIDER_PIN_COLOR_INACTIVE,
+			layer = 200,
 			name = "slider_pin_" .. current_level,
 			texture = tweak_data.gui.icons[pin_icon].texture,
 			texture_rect = tweak_data.gui.icons[pin_icon].texture_rect,
@@ -150,11 +150,11 @@ end
 
 function RaidGUIControlXPProgressBar:_create_level_marks_on_progress_bar()
 	local level_marks_panel_params = {
+		h = self._progress_bar:h(),
 		name = "level_marks_panel",
+		w = self._inner_panel:w(),
 		x = 0,
 		y = 0,
-		h = self._progress_bar:h(),
-		w = self._inner_panel:w(),
 	}
 
 	self._level_marks_panel = self._inner_panel:panel(level_marks_panel_params)
@@ -192,11 +192,11 @@ end
 
 function RaidGUIControlXPProgressBar:_create_level_and_weapons_info()
 	local level_labels_panel_params = {
+		h = RaidGUIControlXPProgressBar.LEVEL_LABELS_PANEL_H - self._slider_pimples_panel:h(),
 		name = "level_labels_panel",
+		w = self._inner_panel:w(),
 		x = 0,
 		y = 0,
-		h = RaidGUIControlXPProgressBar.LEVEL_LABELS_PANEL_H - self._slider_pimples_panel:h(),
-		w = self._inner_panel:w(),
 	}
 
 	self._level_labels_panel = self._inner_panel:panel(level_labels_panel_params)
@@ -230,13 +230,13 @@ function RaidGUIControlXPProgressBar:_create_new_xp_label()
 	local new_xp_params = {
 		align = "center",
 		alpha = 0,
-		name = "new_xp_text",
-		text = "",
-		vertical = "center",
 		color = RaidGUIControlXPProgressBar.NEW_XP_TEXT_COLOR,
 		font = RaidGUIControlXPProgressBar.NEW_XP_TEXT_FONT,
 		font_size = RaidGUIControlXPProgressBar.NEW_XP_TEXT_FONT_SIZE,
 		h = RaidGUIControlXPProgressBar.NEW_XP_H,
+		name = "new_xp_text",
+		text = "",
+		vertical = "center",
 		w = RaidGUIControlXPProgressBar.NEW_XP_W,
 	}
 
@@ -247,11 +247,11 @@ end
 
 function RaidGUIControlXPProgressBar:_create_label_for_level(level, draw_level_label, number_of_weapon_unlocks)
 	local level_label_panel_params = {
-		x = 0,
-		y = 0,
 		h = self._level_labels_panel:h(),
 		name = "level_" .. tostring(level) .. "_label_panel",
 		w = RaidGUIControlXPProgressBar.LEVEL_LABELS_W,
+		x = 0,
+		y = 0,
 	}
 	local level_label_panel = self._level_labels_panel:panel(level_label_panel_params)
 	local level_label
@@ -259,16 +259,16 @@ function RaidGUIControlXPProgressBar:_create_label_for_level(level, draw_level_l
 	if draw_level_label then
 		local level_label_text_params = {
 			align = "center",
-			name = "level_label_text",
-			vertical = "center",
-			x = 0,
-			y = 0,
 			color = RaidGUIControlXPProgressBar.LEVEL_LABELS_COLOR,
 			font = RaidGUIControlXPProgressBar.LEVEL_LABELS_FONT,
 			font_size = RaidGUIControlXPProgressBar.LEVEL_LABELS_FONT_SIZE,
 			h = level_label_panel:h(),
+			name = "level_label_text",
 			text = tostring(level),
+			vertical = "center",
 			w = level_label_panel:w(),
+			x = 0,
+			y = 0,
 		}
 
 		level_label = level_label_panel:text(level_label_text_params)
@@ -283,11 +283,11 @@ function RaidGUIControlXPProgressBar:_create_label_for_level(level, draw_level_l
 
 	if number_of_weapon_unlocks > 0 then
 		local weapon_unlock_panel_params = {
+			h = level_label_panel:h(),
 			name = "weapon_unlock_panel",
+			w = level_label_panel:w(),
 			x = 0,
 			y = 0,
-			h = level_label_panel:h(),
-			w = level_label_panel:w(),
 		}
 
 		weapon_unlock = level_label_panel:panel(weapon_unlock_panel_params)
@@ -296,14 +296,14 @@ function RaidGUIControlXPProgressBar:_create_label_for_level(level, draw_level_l
 		local icon_w = tweak_data.gui:icon_w(weapon_icon)
 		local icon_h = tweak_data.gui:icon_h(weapon_icon)
 		local icon_params = {
-			x = 0,
-			y = 0,
 			color = RaidGUIControlXPProgressBar.WEAPON_UNLOCK_ICON_COLOR,
 			h = icon_h,
 			name = "weapon_unlock_icon_" .. tostring(level),
 			texture = tweak_data.gui.icons[weapon_icon].texture,
 			texture_rect = tweak_data.gui.icons[weapon_icon].texture_rect,
 			w = icon_w,
+			x = 0,
+			y = 0,
 		}
 		local icon = weapon_unlock:bitmap(icon_params)
 		local panel_w = icon_w
@@ -311,13 +311,13 @@ function RaidGUIControlXPProgressBar:_create_label_for_level(level, draw_level_l
 
 		if number_of_weapon_unlocks > 1 then
 			local weapon_unlock_amount_text_params = {
-				name = "weapon_unlock_number_text",
-				x = 0,
-				y = 0,
 				color = RaidGUIControlXPProgressBar.WEAPON_UNLOCK_ICON_COLOR,
 				font = RaidGUIControlXPProgressBar.WEAPON_UNLOCK_TEXT_FONT,
 				font_size = RaidGUIControlXPProgressBar.WEAPON_UNLOCK_TEXT_FONT_SIZE,
+				name = "weapon_unlock_number_text",
 				text = tostring(number_of_weapon_unlocks) .. "X",
+				x = 0,
+				y = 0,
 			}
 			local weapon_unlock_amount = weapon_unlock:text(weapon_unlock_amount_text_params)
 			local _, _, w, h = weapon_unlock_amount:text_rect()

@@ -110,9 +110,9 @@ function ElementSpawnEnemyDummy:produce(params)
 
 		if action.type == "act" then
 			objective = {
-				type = "act",
 				action = action,
 				stance = stance,
+				type = "act",
 			}
 		end
 
@@ -191,9 +191,9 @@ function ElementSpawnEnemyDummy:_create_spawn_AI_parametric(stance, objective, s
 		local followup_objective = objective
 
 		objective = {
-			type = "act",
 			action = entry_action,
 			followup_objective = followup_objective,
+			type = "act",
 		}
 	end
 
@@ -217,14 +217,14 @@ function ElementSpawnEnemyDummy._create_action_data(anim_name)
 	else
 		return {
 			align_sync = true,
-			body_part = 1,
-			type = "act",
 			blocks = {
 				action = -1,
 				heavy_hurt = -1,
 				hurt = -1,
 				walk = -1,
 			},
+			body_part = 1,
+			type = "act",
 			variant = anim_name,
 		}
 	end

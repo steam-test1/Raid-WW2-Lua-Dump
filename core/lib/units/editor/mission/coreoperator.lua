@@ -31,9 +31,9 @@ function CoreOperatorUnitElement:draw_links(t, dt, selected_unit, all_units)
 			if draw then
 				self:_draw_link({
 					b = 0.25,
+					from_unit = self._unit,
 					g = 0.75,
 					r = 0.75,
-					from_unit = self._unit,
 					to_unit = unit,
 				})
 			end

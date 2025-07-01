@@ -19,11 +19,11 @@ function DLCTweakData:_init_descriptions()
 	self.descriptions[DLCTweakData.DLC_NAME_STARTER_KIT] = {}
 	self.descriptions[DLCTweakData.DLC_NAME_STARTER_KIT].free = true
 	self.descriptions[DLCTweakData.DLC_NAME_STARTER_KIT].content = {
-		loot_global_value = "normal",
 		gold_award = {
 			amount = 50,
 			item = "starter_kit_army_crate",
 		},
+		loot_global_value = "normal",
 	}
 	self.descriptions[DLCTweakData.DLC_NAME_PREORDER] = {}
 	self.descriptions[DLCTweakData.DLC_NAME_PREORDER].content = {

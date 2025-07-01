@@ -28,9 +28,9 @@ function HUDSpecialInteractionRewiring:init(hud, params)
 	local size_inside_y = HUDSpecialInteractionRewiring.GAME_HEIGHT - HUDSpecialInteractionRewiring.PADDING_Y * 2
 
 	self._interact_rewire_inside_panel = self._object:panel({
+		h = size_inside_y,
 		layer = 5,
 		name = "_interact_rewire_inside_panel",
-		h = size_inside_y,
 		w = size_inside_x,
 	})
 
@@ -83,6 +83,9 @@ function HUDSpecialInteractionRewiring:_setup_slot_queue()
 
 	if HUDSpecialInteractionRewiring._DEBUGGERY then
 		self._debuggery_queue = self._object:text({
+			color = Color(0.937, 0.4, 0.1),
+			font = HUDSpecialInteraction.LEGEND_FONT,
+			font_size = HUDSpecialInteraction.LEGEND_FONT_SIZE,
 			h = 75,
 			layer = 99,
 			name = "_debuggery_queue",
@@ -90,9 +93,6 @@ function HUDSpecialInteractionRewiring:_setup_slot_queue()
 			w = 2000,
 			x = 160,
 			y = 100,
-			color = Color(0.937, 0.4, 0.1),
-			font = HUDSpecialInteraction.LEGEND_FONT,
-			font_size = HUDSpecialInteraction.LEGEND_FONT_SIZE,
 		})
 
 		local txt = ""
@@ -140,11 +140,11 @@ function HUDSpecialInteractionRewiring:_layout_nodes()
 		}
 
 		local node_panel = self._interact_rewire_inside_panel:panel({
-			visible = true,
-			x = 0,
 			h = size_y,
 			name = "_interact_node_panel_" .. tostring(y),
+			visible = true,
 			w = (node_count_x + 1) * size_x,
+			x = 0,
 			y = (y - 1) * size_y,
 		})
 
@@ -152,15 +152,15 @@ function HUDSpecialInteractionRewiring:_layout_nodes()
 
 		if HUDSpecialInteractionRewiring._DEBUGGERY then
 			local node_panel_debuggery = self._object:text({
-				h = 80,
-				layer = 99,
-				text = "WABBUBUBU",
-				w = 600,
-				x = 100,
 				color = Color(0.937, 0.6, 0.2),
 				font = HUDSpecialInteraction.LEGEND_FONT,
 				font_size = HUDSpecialInteraction.LEGEND_FONT_SIZE * 0.7,
+				h = 80,
+				layer = 99,
 				name = "_debuggery_" .. tostring(y),
+				text = "WABBUBUBU",
+				w = 600,
+				x = 100,
 				y = 200 + y * 80,
 			})
 
@@ -209,16 +209,16 @@ function HUDSpecialInteractionRewiring:_layout_nodes()
 
 			if HUDSpecialInteractionRewiring._DEBUGGERY then
 				local txt = node_panel:text({
-					h = 80,
-					layer = 99,
-					w = 80,
-					y = 4,
 					color = Color(1, 0.1, 1),
 					font = HUDSpecialInteraction.LEGEND_FONT,
 					font_size = HUDSpecialInteraction.LEGEND_FONT_SIZE,
+					h = 80,
+					layer = 99,
 					name = "_debuggery_txtid_" .. tostring(y),
 					text = "X" .. tostring(x) .. "\nY" .. tostring(y),
+					w = 80,
 					x = bitmap_data.x + 8,
+					y = 4,
 				})
 			end
 		end

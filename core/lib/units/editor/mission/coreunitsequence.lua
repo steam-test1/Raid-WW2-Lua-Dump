@@ -133,12 +133,12 @@ end
 function CoreUnitSequenceUnitElement:add_to_mission_package()
 	managers.editor:add_to_world_package({
 		category = "units",
-		name = "core/units/run_sequence_dummy/run_sequence_dummy",
 		continent = self._unit:unit_data().continent,
+		name = "core/units/run_sequence_dummy/run_sequence_dummy",
 	})
 	managers.editor:add_to_world_package({
 		category = "script_data",
-		name = "core/units/run_sequence_dummy/run_sequence_dummy.sequence_manager",
 		continent = self._unit:unit_data().continent,
+		name = "core/units/run_sequence_dummy/run_sequence_dummy.sequence_manager",
 	})
 end

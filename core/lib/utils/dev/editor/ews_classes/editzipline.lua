@@ -5,8 +5,8 @@ EditZipLine = EditZipLine or class(EditUnitBase)
 
 function EditZipLine:init(editor)
 	local panel, sizer = (editor or managers.editor):add_unit_edit_page({
-		name = "ZipLine",
 		class = self,
+		name = "ZipLine",
 	})
 
 	self._panel = panel
@@ -31,48 +31,48 @@ function EditZipLine:init(editor)
 
 	self._speed_params = {
 		ctrlr_proportions = 1,
+		events = {
+			{
+				callback = callback(self, self, "_update_speed"),
+				event = "EVT_COMMAND_TEXT_ENTER",
+			},
+			{
+				callback = callback(self, self, "_update_speed"),
+				event = "EVT_KILL_FOCUS",
+			},
+		},
 		floats = 0,
 		min = 0,
 		name = "Speed [cm/s]:",
 		name_proportions = 1,
-		tooltip = "Sets the speed of the zipline in cm/s",
-		value = 0,
-		events = {
-			{
-				event = "EVT_COMMAND_TEXT_ENTER",
-				callback = callback(self, self, "_update_speed"),
-			},
-			{
-				event = "EVT_KILL_FOCUS",
-				callback = callback(self, self, "_update_speed"),
-			},
-		},
 		panel = panel,
 		sizer = sizer,
+		tooltip = "Sets the speed of the zipline in cm/s",
+		value = 0,
 	}
 
 	CoreEws.number_controller(self._speed_params)
 
 	self._slack_params = {
 		ctrlr_proportions = 1,
+		events = {
+			{
+				callback = callback(self, self, "_update_slack"),
+				event = "EVT_COMMAND_TEXT_ENTER",
+			},
+			{
+				callback = callback(self, self, "_update_slack"),
+				event = "EVT_KILL_FOCUS",
+			},
+		},
 		floats = 0,
 		min = 0,
 		name = "Slack [cm]:",
 		name_proportions = 1,
-		tooltip = "Value to define slack of the zipline in cm",
-		value = 0,
-		events = {
-			{
-				event = "EVT_COMMAND_TEXT_ENTER",
-				callback = callback(self, self, "_update_slack"),
-			},
-			{
-				event = "EVT_KILL_FOCUS",
-				callback = callback(self, self, "_update_slack"),
-			},
-		},
 		panel = panel,
 		sizer = sizer,
+		tooltip = "Value to define slack of the zipline in cm",
+		value = 0,
 	}
 
 	CoreEws.number_controller(self._slack_params)
@@ -81,11 +81,11 @@ function EditZipLine:init(editor)
 		ctrlr_proportions = 1,
 		name = "Type:",
 		name_proportions = 1,
-		sorted = true,
-		tooltip = "Select a type from the combobox",
 		options = ZipLine.TYPES,
 		panel = panel,
 		sizer = sizer,
+		sorted = true,
+		tooltip = "Select a type from the combobox",
 	}
 
 	CoreEws.combobox(self._type_params)

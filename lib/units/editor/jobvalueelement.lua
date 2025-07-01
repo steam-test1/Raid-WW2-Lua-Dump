@@ -32,12 +32,12 @@ function JobValueUnitElement:_build_panel(panel, panel_sizer)
 
 	key_sizer:add(key, 2, 0, "ALIGN_CENTER_VERTICAL")
 	key:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
-		value = "key",
 		ctrlr = key,
+		value = "key",
 	})
 	key:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
-		value = "key",
 		ctrlr = key,
+		value = "key",
 	})
 
 	local value_sizer = EWS:BoxSizer("HORIZONTAL")
@@ -52,12 +52,12 @@ function JobValueUnitElement:_build_panel(panel, panel_sizer)
 
 	value_sizer:add(value, 2, 0, "ALIGN_CENTER_VERTICAL")
 	value:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
-		value = "value",
 		ctrlr = value,
+		value = "value",
 	})
 	value:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
-		value = "value",
 		ctrlr = value,
+		value = "value",
 	})
 	self:_build_value_checkbox(panel, panel_sizer, "save")
 end
@@ -136,9 +136,9 @@ function ApplyJobValueUnitElement:draw_links(t, dt, selected_unit, all_units)
 		if draw then
 			self:_draw_link({
 				b = 0.25,
+				from_unit = self._unit,
 				g = 0.85,
 				r = 0.85,
-				from_unit = self._unit,
 				to_unit = unit,
 			})
 		end
@@ -196,20 +196,20 @@ function ApplyJobValueUnitElement:_build_panel(panel, panel_sizer)
 
 	key_sizer:add(key, 2, 0, "ALIGN_CENTER_VERTICAL")
 	key:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "set_element_data"), {
-		value = "key",
 		ctrlr = key,
+		value = "key",
 	})
 	key:connect("EVT_KILL_FOCUS", callback(self, self, "set_element_data"), {
-		value = "key",
 		ctrlr = key,
+		value = "key",
 	})
 
 	local save = EWS:CheckBox(panel, "Save", "")
 
 	save:set_value(self._hed.save)
 	save:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
-		value = "save",
 		ctrlr = save,
+		value = "save",
 	})
 	panel_sizer:add(save, 0, 0, "EXPAND")
 end

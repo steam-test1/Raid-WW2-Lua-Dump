@@ -28,8 +28,8 @@ end
 
 function RaidGUIControlListItemSkillProfile:_layout_panel(params)
 	self._object = self._panel:panel({
-		name = "skill_profile_list_item",
 		h = self.HEIGHT,
+		name = "skill_profile_list_item",
 		w = params.w,
 		x = params.x,
 		y = params.y,
@@ -39,20 +39,20 @@ end
 function RaidGUIControlListItemSkillProfile:_layout(params, item_data)
 	self._background = self._object:gradient({
 		alpha = 0,
-		visible = false,
 		gradient_points = self.BACKGROUND_COLOR,
 		h = self._object:h(),
+		visible = false,
 		w = self._object:w(),
 	})
 	self._name_panel = self._object:panel({
-		name = "profile_name_panel",
 		layer = self._background:layer() + 1,
+		name = "profile_name_panel",
 		x = self.NAME_X,
 	})
 	self._context_info_panel = self._object:panel({
+		layer = self._background:layer() + 1,
 		name = "context_info_panel",
 		visible = false,
-		layer = self._background:layer() + 1,
 	})
 
 	if item_data.unlocked then
@@ -65,22 +65,22 @@ end
 function RaidGUIControlListItemSkillProfile:_layout_equipable(item_data)
 	item_data.separator_highlight_color = nil
 	self._profile_name_label = self._name_panel:label({
-		name = "profile_name_label",
-		vertical = "center",
 		color = self.TEXT_COLOR,
 		font = self.NAME_FONT,
 		font_size = self.NAME_FONT_SIZE,
 		layer = self._background:layer() + 1,
+		name = "profile_name_label",
 		text = item_data.value,
+		vertical = "center",
 	})
 
 	local gui_data = tweak_data.gui:get_full_gui_data(self.RENAME_BUTTON_ICON)
 
 	self._rename_profile_button = self._context_info_panel:create_custom_control(RaidGUIControlListItemContextButton, {
-		name = "rename_profile_button",
 		callback_value = self._data.key,
 		h = self.RENAME_BUTTON_SIZE,
 		layer = self._background:layer() + 1,
+		name = "rename_profile_button",
 		on_click_callback = self._special_action_callback,
 		texture = gui_data.texture,
 		texture_rect = gui_data.texture_rect,
@@ -95,24 +95,24 @@ end
 function RaidGUIControlListItemSkillProfile:_layout_purchasable(item_data)
 	item_data.separator_highlight_color = self.PURCHASE_COLOR
 	self._profile_name_label = self._name_panel:label({
-		name = "profile_name_label",
-		vertical = "center",
 		color = self.TEXT_DISABLED_COLOR,
 		font = self.NAME_FONT,
 		font_size = self.NAME_FONT_SIZE,
+		name = "profile_name_label",
 		text = item_data.value,
+		vertical = "center",
 	})
 
 	local purchase_cost = item_data.purchase_cost and tostring(item_data.purchase_cost)
 
 	self._gold_value_label = self._context_info_panel:label({
-		fit_text = true,
-		name = "profile_name_label",
-		vertical = "center",
 		color = self.PURCHASE_COLOR,
+		fit_text = true,
 		font = self.PURCHASE_VALUE_FONT,
 		font_size = self.PURCHASE_VALUE_FONT_SIZE,
+		name = "profile_name_label",
 		text = purchase_cost,
+		vertical = "center",
 	})
 
 	self._gold_value_label:set_center_y(self._context_info_panel:h() / 2)
@@ -121,12 +121,12 @@ function RaidGUIControlListItemSkillProfile:_layout_purchasable(item_data)
 	local gold_amount_footer = tweak_data.gui:get_full_gui_data("gold_amount_footer")
 
 	self._gold_icon = self._object:image({
+		color = self.PURCHASE_COLOR,
 		h = 25,
 		name = "profile_gold_icon",
-		w = 25,
-		color = self.PURCHASE_COLOR,
 		texture = gold_amount_footer.texture,
 		texture_rect = gold_amount_footer.texture_rect,
+		w = 25,
 	})
 
 	self._gold_icon:set_right(self._object:w() - self.NAME_X)

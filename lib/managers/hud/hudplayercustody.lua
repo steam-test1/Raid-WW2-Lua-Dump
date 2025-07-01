@@ -27,13 +27,13 @@ function HUDPlayerCustody:init(hud)
 	})
 	local timer_message_params = {
 		align = "center",
+		font = tweak_data.gui.fonts.din_compressed_outlined_24,
+		font_size = tweak_data.gui.font_sizes.size_24,
 		h = 40,
 		name = "timer_msg",
 		text = "custodddddy in",
 		vertical = "center",
 		w = 400,
-		font = tweak_data.gui.fonts.din_compressed_outlined_24,
-		font_size = tweak_data.gui.font_sizes.size_24,
 	}
 	local timer_msg = custody_panel:text(timer_message_params)
 
@@ -47,12 +47,12 @@ function HUDPlayerCustody:init(hud)
 
 	local timer_params = {
 		align = "center",
+		font = tweak_data.gui.fonts.din_compressed_outlined_42,
+		font_size = tweak_data.gui.font_sizes.menu_list,
 		h = 32,
 		name = "timer",
 		text = "00:00",
 		vertical = "bottom",
-		font = tweak_data.gui.fonts.din_compressed_outlined_42,
-		font_size = tweak_data.gui.font_sizes.menu_list,
 		w = custody_panel:w(),
 	}
 	local timer = custody_panel:text(timer_params)
@@ -85,10 +85,10 @@ end
 
 function HUDPlayerCustody:_create_spectator_info(parent)
 	self._spectator_panel = parent:panel({
+		h = HUDPlayerCustody.SPECTATOR_PANEL_H,
 		halign = "left",
 		name = "spectator_panel",
 		valign = "bottom",
-		h = HUDPlayerCustody.SPECTATOR_PANEL_H,
 		w = HUDPlayerCustody.SPECTATOR_PANEL_W,
 	})
 
@@ -96,8 +96,8 @@ function HUDPlayerCustody:_create_spectator_info(parent)
 	self._spectator_panel:set_bottom(parent:h() - 25)
 
 	local spectator_background = self._spectator_panel:bitmap({
-		name = "spectator_background",
 		h = HUDPlayerCustody.SPECTATOR_BACKGROUND_H,
+		name = "spectator_background",
 		texture = tweak_data.gui.icons[HUDPlayerCustody.SPECTATOR_BACKGROUND].texture,
 		texture_rect = tweak_data.gui.icons[HUDPlayerCustody.SPECTATOR_BACKGROUND].texture_rect,
 		w = HUDPlayerCustody.SPECTATOR_PANEL_W,
@@ -105,26 +105,26 @@ function HUDPlayerCustody:_create_spectator_info(parent)
 
 	self._spectator_text = self._spectator_panel:text({
 		align = "center",
+		font = HUDPlayerCustody.SPECTATOR_TEXT_FONT,
+		font_size = HUDPlayerCustody.SPECTATOR_TEXT_FONT_SIZE,
+		h = HUDPlayerCustody.SPECTATOR_BACKGROUND_H,
 		halign = "center",
+		layer = spectator_background:layer() + 1,
 		name = "spectator_text",
 		text = "SPECTATING",
 		valign = "center",
 		vertical = "center",
-		font = HUDPlayerCustody.SPECTATOR_TEXT_FONT,
-		font_size = HUDPlayerCustody.SPECTATOR_TEXT_FONT_SIZE,
-		h = HUDPlayerCustody.SPECTATOR_BACKGROUND_H,
-		layer = spectator_background:layer() + 1,
 	})
 	self._button_prompt = self._spectator_panel:text({
 		align = "center",
+		color = HUDPlayerCustody.BUTTON_PROMPT_TEXT_COLOR,
+		font = HUDPlayerCustody.BUTTON_PROMPT_TEXT_FONT,
+		font_size = HUDPlayerCustody.BUTTON_PROMPT_TEXT_FONT_SIZE,
 		halign = "center",
 		name = "prompt_previous",
 		text = "",
 		valign = "center",
 		vertical = "bottom",
-		color = HUDPlayerCustody.BUTTON_PROMPT_TEXT_COLOR,
-		font = HUDPlayerCustody.BUTTON_PROMPT_TEXT_FONT,
-		font_size = HUDPlayerCustody.BUTTON_PROMPT_TEXT_FONT_SIZE,
 	})
 
 	self:_refresh_button_prompt()

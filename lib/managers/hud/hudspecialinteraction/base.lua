@@ -28,10 +28,10 @@ function HUDSpecialInteraction:_create_panel(hud)
 
 	self._object = hud.panel:panel({
 		halign = "center",
+		layer = HUDSpecialInteraction.PANEL_LAYER,
 		name = "special_interaction_panel",
 		valign = "center",
 		visible = false,
-		layer = HUDSpecialInteraction.PANEL_LAYER,
 	})
 end
 
@@ -39,13 +39,13 @@ function HUDSpecialInteraction:_create_background()
 	self._workspace = managers.gui_data:create_fullscreen_workspace()
 	self._bg_panel = self._workspace:panel()
 	self._background = self._bg_panel:bitmap({
-		halign = "center",
-		name = "special_interaction_background",
-		valign = "center",
 		alpha = HUDSpecialInteraction.BACKGROUND_ALPHA,
+		halign = "center",
 		layer = HUDSpecialInteraction.PANEL_LAYER - 1,
+		name = "special_interaction_background",
 		texture = tweak_data.gui.backgrounds[HUDSpecialInteraction.BACKGROUND_IMAGE].texture,
 		texture_rext = tweak_data.gui.backgrounds[HUDSpecialInteraction.BACKGROUND_IMAGE].texture_rext,
+		valign = "center",
 	})
 
 	self._background:set_size(self._bg_panel:size())
@@ -54,13 +54,13 @@ end
 function HUDSpecialInteraction:_create_legend()
 	self._legend_interact_text = self._object:text({
 		align = "center",
+		color = HUDSpecialInteraction.LEGEND_FONT_COLOR,
+		font = HUDSpecialInteraction.LEGEND_FONT,
+		font_size = HUDSpecialInteraction.LEGEND_FONT_SIZE,
 		name = "legend_interact_text",
 		text = "[F] LOCKPICK",
 		valign = "bottom",
 		vertical = "center",
-		color = HUDSpecialInteraction.LEGEND_FONT_COLOR,
-		font = HUDSpecialInteraction.LEGEND_FONT,
-		font_size = HUDSpecialInteraction.LEGEND_FONT_SIZE,
 	})
 
 	self._legend_interact_text:set_center_x(self._object:center_x() - HUDSpecialInteraction.LEGEND_X_OFFSET)
@@ -68,13 +68,13 @@ function HUDSpecialInteraction:_create_legend()
 
 	self._legend_exit_text = self._object:text({
 		align = "center",
+		color = HUDSpecialInteraction.LEGEND_FONT_COLOR,
+		font = HUDSpecialInteraction.LEGEND_FONT,
+		font_size = HUDSpecialInteraction.LEGEND_FONT_SIZE,
 		name = "legend_exit_text",
 		text = "[SPACE] CANCEL",
 		valign = "bottom",
 		vertical = "center",
-		color = HUDSpecialInteraction.LEGEND_FONT_COLOR,
-		font = HUDSpecialInteraction.LEGEND_FONT,
-		font_size = HUDSpecialInteraction.LEGEND_FONT_SIZE,
 	})
 
 	self._legend_exit_text:set_center_x(self._object:center_x() + HUDSpecialInteraction.LEGEND_X_OFFSET)

@@ -70,9 +70,9 @@ function SpawnEnemyGroupUnitElement:update_selected(t, dt, selected_unit, all_un
 		if draw then
 			self:_draw_link({
 				b = 0,
+				from_unit = self._unit,
 				g = 0.75,
 				r = 0,
-				from_unit = self._unit,
 				to_unit = unit,
 			})
 		end

@@ -91,7 +91,6 @@ function CoreEditorGroups:save()
 			end
 
 			local t = {
-				entry = "editor_groups",
 				continent = group:continent() and group:continent_name(),
 				data = {
 					continent = group:continent() and group:continent_name(),
@@ -99,6 +98,7 @@ function CoreEditorGroups:save()
 					reference = group:reference():unit_data().unit_id,
 					units = units,
 				},
+				entry = "editor_groups",
 			}
 
 			managers.editor:add_save_data(t)

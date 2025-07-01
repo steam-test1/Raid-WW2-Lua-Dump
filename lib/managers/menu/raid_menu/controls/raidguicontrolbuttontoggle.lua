@@ -24,26 +24,26 @@ function RaidGUIControlButtonToggle:init(parent, params)
 
 	local sideline_params = {
 		alpha = 0,
-		x = 0,
-		y = 0,
 		color = RaidGUIControlButtonToggle.SIDELINE_COLOR,
 		h = self._object:h(),
 		w = RaidGUIControlButtonToggle.SIDELINE_W,
+		x = 0,
+		y = 0,
 	}
 
 	self._sideline = self._object:rect(sideline_params)
 	self._description = self._object:text({
 		align = "left",
-		vertical = "center",
-		y = 0,
 		color = RaidGUIControlButtonToggle.TEXT_COLOR,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.small,
 		h = self._object:h(),
 		layer = self._object:layer() + 1,
 		text = params.description,
+		vertical = "center",
 		w = self._object:w() - RaidGUIControlButtonToggle.SIDELINE_W - RaidGUIControlButtonToggle.TEXT_PADDING * 2,
 		x = RaidGUIControlButtonToggle.SIDELINE_W + RaidGUIControlButtonToggle.TEXT_PADDING,
+		y = 0,
 	})
 
 	local checkbox_panel_params = {
@@ -56,27 +56,27 @@ function RaidGUIControlButtonToggle:init(parent, params)
 	self._checkbox_panel = self._object:panel(checkbox_panel_params)
 
 	local checkbox_border_params = {
-		halign = "scale",
-		valign = "scale",
-		x = 0,
-		y = 0,
 		color = RaidGUIControlButtonToggle.BORDER_COLOR,
 		h = RaidGUIControlButtonToggle.H,
+		halign = "scale",
 		layer = self._object:layer(),
 		texture = tweak_data.gui.icons[RaidGUIControlButtonToggle.BORDER_ICON].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlButtonToggle.BORDER_ICON].texture_rect,
+		valign = "scale",
 		w = RaidGUIControlButtonToggle.W,
+		x = 0,
+		y = 0,
 	}
 
 	self._border = self._checkbox_panel:bitmap(checkbox_border_params)
 
 	local checkbox_params = {
-		halign = "scale",
-		valign = "scale",
 		h = RaidGUIControlButtonToggle.CHECK_H,
+		halign = "scale",
 		layer = self._object:layer() + 1,
 		texture = tweak_data.gui.icons[RaidGUIControlButtonToggle.CHECK_ICON].texture,
 		texture_rect = tweak_data.gui.icons[RaidGUIControlButtonToggle.CHECK_ICON].texture_rect,
+		valign = "scale",
 		w = RaidGUIControlButtonToggle.CHECK_W,
 		x = self._checkbox_panel:w() / 2 - RaidGUIControlButtonToggle.CHECK_W / 2,
 		y = self._checkbox_panel:h() / 2 - RaidGUIControlButtonToggle.CHECK_H / 2,

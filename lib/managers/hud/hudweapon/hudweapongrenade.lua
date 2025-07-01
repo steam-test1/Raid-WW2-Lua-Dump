@@ -19,10 +19,10 @@ end
 
 function HUDWeaponGrenade:_create_panel(weapons_panel)
 	local panel_params = {
-		halign = "right",
-		valign = "bottom",
 		h = HUDWeaponGrenade.H,
+		halign = "right",
 		name = "grenade_" .. tostring(self._index),
+		valign = "bottom",
 		w = HUDWeaponGrenade.W,
 	}
 
@@ -31,20 +31,20 @@ end
 
 function HUDWeaponGrenade:_create_icon(icon)
 	local icon_panel_params = {
+		h = self._object:h() / 2,
 		halign = "center",
 		name = "icon_panel",
 		valign = "top",
+		w = self._object:w(),
 		x = 0,
 		y = 0,
-		h = self._object:h() / 2,
-		w = self._object:w(),
 	}
 
 	self._icon_panel = self._object:panel(icon_panel_params)
 
 	local icon_params = {
-		name = "weapon_icon",
 		alpha = HUDWeaponBase.ALPHA_WHEN_UNSELECTED,
+		name = "weapon_icon",
 		texture = tweak_data.gui.icons[icon].texture,
 		texture_rect = tweak_data.gui.icons[icon].texture_rect,
 	}
@@ -57,12 +57,12 @@ end
 
 function HUDWeaponGrenade:_create_amount_text()
 	local amount_text_params = {
-		name = "amount_text",
-		text = "",
 		alpha = HUDWeaponGrenade.AMOUNT_TEXT_ALPHA_WHEN_UNSELECTED,
 		color = HUDWeaponGrenade.AMOUNT_TEXT_COLOR,
 		font = HUDWeaponGrenade.AMOUNT_FONT,
 		font_size = HUDWeaponGrenade.AMOUNT_FONT_SIZE,
+		name = "amount_text",
+		text = "",
 	}
 
 	self._amount_text = self._object:text(amount_text_params)

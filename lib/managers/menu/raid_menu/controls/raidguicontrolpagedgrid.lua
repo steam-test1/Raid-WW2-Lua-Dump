@@ -149,23 +149,22 @@ function RaidGUIControlPagedGrid:_create_paging_controls()
 	if self._total_pages >= 1 then
 		self._current_page = 1
 		self._paging_controls_panel_params = {
-			visible = true,
-			x = 0,
 			h = RaidGUIControlPagedGrid.PAGING_PANEL_HEIGHT,
 			name = self._params.name .. "_paging_controls_panel",
+			visible = true,
 			w = self._params.w,
+			x = 0,
 			y = self._grid_panel:h(),
 		}
 		self._paging_controls_panel = self._paged_grid_panel:panel(self._paging_controls_panel_params)
 		self._page_stepper_params = {
-			h = 25,
-			y = 0,
 			data_source_callback = callback(self, self, "data_source_grid_page_stepper"),
+			h = 25,
 			name = self._params.name .. "_page_stepper_stepper",
 			on_item_selected_callback = callback(self, self, "on_item_selected_grid_page"),
-			w = RaidGUIControlPagedGrid.PAGING_STEPPER_WIDTH,
 			w = self._paging_controls_panel:w() / 2 - 50,
 			x = self._params.w / 2 + 25,
+			y = 0,
 		}
 		self._page_stepper = self._paging_controls_panel:stepper(self._page_stepper_params)
 	end
@@ -174,11 +173,11 @@ end
 function RaidGUIControlPagedGrid:_create_filter_controls()
 	if not self._paging_controls_panel then
 		self._paging_controls_panel_params = {
-			visible = true,
-			x = 0,
 			h = RaidGUIControlPagedGrid.PAGING_PANEL_HEIGHT,
 			name = self._params.name .. "_paging_controls_panel",
+			visible = true,
 			w = self._params.w,
+			x = 0,
 			y = self._grid_panel:h(),
 		}
 		self._paging_controls_panel = self._paged_grid_panel:panel(self._paging_controls_panel_params)
@@ -186,14 +185,13 @@ function RaidGUIControlPagedGrid:_create_filter_controls()
 
 	if self._paging_controls_panel then
 		self._filter_stepper_params = {
-			h = 25,
-			x = 0,
-			y = 0,
 			data_source_callback = callback(self, self, "data_source_grid_filter_stepper"),
+			h = 25,
 			name = self._params.name .. "_filter_stepper_stepper",
 			on_item_selected_callback = callback(self, self, "on_item_selected_grid_filter"),
-			w = RaidGUIControlPagedGrid.PAGING_STEPPER_WIDTH,
 			w = self._paging_controls_panel:w() / 2 - 50,
+			x = 0,
+			y = 0,
 		}
 		self._filter_stepper = self._paging_controls_panel:stepper(self._filter_stepper_params)
 	end

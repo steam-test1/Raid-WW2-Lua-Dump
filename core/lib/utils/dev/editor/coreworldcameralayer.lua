@@ -31,11 +31,11 @@ end
 function WorldCameraLayer:save(save_params)
 	local file_name = "world_cameras"
 	local t = {
-		single_data_block = true,
 		data = {
 			file = file_name,
 		},
 		entry = self._save_name,
+		single_data_block = true,
 	}
 
 	self:_add_project_save_data(t.data)
@@ -186,71 +186,71 @@ function WorldCameraLayer:build_panel(notebook)
 
 	self._duration_params = {
 		ctrlr_proportions = 1,
+		events = {
+			{
+				callback = callback(self, self, "set_duration"),
+				event = "EVT_COMMAND_TEXT_ENTER",
+			},
+			{
+				callback = callback(self, self, "set_duration"),
+				event = "EVT_KILL_FOCUS",
+			},
+		},
 		floats = 2,
 		min = 0,
 		name = "Camera Duration [sec]:",
 		name_proportions = 1,
-		tooltip = "Specifies the camera lenght in seconds",
-		value = 2.5,
-		events = {
-			{
-				event = "EVT_COMMAND_TEXT_ENTER",
-				callback = callback(self, self, "set_duration"),
-			},
-			{
-				event = "EVT_KILL_FOCUS",
-				callback = callback(self, self, "set_duration"),
-			},
-		},
 		panel = self._ews_panel,
 		sizer = edit_sizer,
+		tooltip = "Specifies the camera lenght in seconds",
+		value = 2.5,
 	}
 
 	CoreEws.number_controller(self._duration_params)
 
 	self._delay_params = {
 		ctrlr_proportions = 1,
+		events = {
+			{
+				callback = callback(self, self, "set_delay"),
+				event = "EVT_COMMAND_TEXT_ENTER",
+			},
+			{
+				callback = callback(self, self, "set_delay"),
+				event = "EVT_KILL_FOCUS",
+			},
+		},
 		floats = 2,
 		min = 0,
 		name = "End Delay [sec]:",
 		name_proportions = 1,
-		tooltip = "Specifies the delay time after camera has reached the end position, in seconds",
-		value = 0,
-		events = {
-			{
-				event = "EVT_COMMAND_TEXT_ENTER",
-				callback = callback(self, self, "set_delay"),
-			},
-			{
-				event = "EVT_KILL_FOCUS",
-				callback = callback(self, self, "set_delay"),
-			},
-		},
 		panel = self._ews_panel,
 		sizer = edit_sizer,
+		tooltip = "Specifies the delay time after camera has reached the end position, in seconds",
+		value = 0,
 	}
 
 	CoreEws.number_controller(self._delay_params)
 
 	self._dof_paddding_params = {
 		ctrlr_proportions = 1,
+		events = {
+			{
+				callback = callback(self, self, "set_dof_padding"),
+				event = "EVT_COMMAND_TEXT_ENTER",
+			},
+			{
+				callback = callback(self, self, "set_dof_padding"),
+				event = "EVT_KILL_FOCUS",
+			},
+		},
 		floats = 0,
 		min = 0,
 		name = "Dof Padding [cm]:",
 		name_proportions = 1,
-		tooltip = "The fade distance from max dof to no dof",
-		events = {
-			{
-				event = "EVT_COMMAND_TEXT_ENTER",
-				callback = callback(self, self, "set_dof_padding"),
-			},
-			{
-				event = "EVT_KILL_FOCUS",
-				callback = callback(self, self, "set_dof_padding"),
-			},
-		},
 		panel = self._ews_panel,
 		sizer = edit_sizer,
+		tooltip = "The fade distance from max dof to no dof",
 		value = managers.worldcamera:default_dof_padding(),
 	}
 
@@ -258,24 +258,24 @@ function WorldCameraLayer:build_panel(notebook)
 
 	self._dof_clamp_params = {
 		ctrlr_proportions = 1,
+		events = {
+			{
+				callback = callback(self, self, "set_dof_clamp"),
+				event = "EVT_COMMAND_TEXT_ENTER",
+			},
+			{
+				callback = callback(self, self, "set_dof_clamp"),
+				event = "EVT_KILL_FOCUS",
+			},
+		},
 		floats = 2,
 		max = 1,
 		min = 0,
 		name = "Dof Amount [0-1]:",
 		name_proportions = 1,
-		tooltip = "A value to specify how much dof it should have",
-		events = {
-			{
-				event = "EVT_COMMAND_TEXT_ENTER",
-				callback = callback(self, self, "set_dof_clamp"),
-			},
-			{
-				event = "EVT_KILL_FOCUS",
-				callback = callback(self, self, "set_dof_clamp"),
-			},
-		},
 		panel = self._ews_panel,
 		sizer = edit_sizer,
+		tooltip = "A value to specify how much dof it should have",
 		value = managers.worldcamera:default_dof_clamp(),
 	}
 
@@ -420,23 +420,23 @@ function WorldCameraLayer:build_panel(notebook)
 
 	local roll_params = {
 		ctrlr_proportions = 3,
+		events = {
+			{
+				callback = callback(self, self, "on_set_roll"),
+				event = "EVT_COMMAND_TEXT_ENTER",
+			},
+			{
+				callback = callback(self, self, "on_set_roll"),
+				event = "EVT_KILL_FOCUS",
+			},
+		},
 		floats = 0,
 		name = "Roll:",
 		name_proportions = 1,
-		tooltip = "An angle value specifying the roll",
-		value = 0,
-		events = {
-			{
-				event = "EVT_COMMAND_TEXT_ENTER",
-				callback = callback(self, self, "on_set_roll"),
-			},
-			{
-				event = "EVT_KILL_FOCUS",
-				callback = callback(self, self, "on_set_roll"),
-			},
-		},
 		panel = self._ews_panel,
 		sizer = keys_sizer,
+		tooltip = "An angle value specifying the roll",
+		value = 0,
 	}
 
 	CoreEws.number_controller(roll_params)

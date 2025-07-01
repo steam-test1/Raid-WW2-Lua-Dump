@@ -5,56 +5,56 @@ function RaidGUIControlCard:init(parent, item_params, item_data, grid_params)
 
 	self._item_data = item_data
 	self._card_panel = self._panel:panel({
-		name = "panel_card",
 		h = item_params.h,
+		name = "panel_card",
 		w = item_params.w,
 		x = item_params.x,
 		y = item_params.y,
 	}, true)
 	self._object = self._card_panel
 	self._card_glow = self._card_panel:bitmap({
-		name = "glow_texture",
-		visible = false,
-		x = -2,
-		y = -2,
 		color = Color.green,
 		h = self._card_panel:h() + 5,
+		name = "glow_texture",
 		texture = tweak_data.challenge_cards.card_glow.texture,
 		texture_rect = tweak_data.challenge_cards.card_glow.texture_rect,
-		w = self._card_panel:w() + 6,
-	})
-	self._card_lock_glow = self._card_panel:bitmap({
-		name = "glow_lock_texture",
 		visible = false,
+		w = self._card_panel:w() + 6,
 		x = -2,
 		y = -2,
+	})
+	self._card_lock_glow = self._card_panel:bitmap({
 		color = tweak_data.menu.raid_red,
 		h = self._card_panel:h() + 5,
+		name = "glow_lock_texture",
 		texture = tweak_data.challenge_cards.card_glow.texture,
 		texture_rect = tweak_data.challenge_cards.card_glow.texture_rect,
+		visible = false,
 		w = self._card_panel:w() + 6,
+		x = -2,
+		y = -2,
 	})
 
 	if self._item_data then
 		self._bitmap_card = self._card_panel:bitmap({
-			name = "bitmap_card",
-			x = 0,
-			y = 0,
 			h = item_params.h,
+			name = "bitmap_card",
 			texture = tweak_data.challenge_cards.rarity_definition[item_data.rarity].texture_path_thumb,
 			texture_rect = tweak_data.challenge_cards.rarity_definition[item_data.rarity].texture_rect_thumb,
 			w = item_params.w,
+			x = 0,
+			y = 0,
 		})
 		self._xp_value = self._card_panel:label({
+			font = tweak_data.menu.pd2_medium_font,
 			font_size = 15,
 			h = 17,
 			name = "label_xp_value",
+			text = "+" .. self._item_data.bonus_xp .. "xp",
 			w = 33,
 			wrap = true,
 			x = 5,
 			y = 112,
-			font = tweak_data.menu.pd2_medium_font,
-			text = "+" .. self._item_data.bonus_xp .. "xp",
 		})
 	end
 
@@ -74,15 +74,15 @@ function RaidGUIControlCard:init(parent, item_params, item_data, grid_params)
 	end
 
 	self._label_card_description = self._card_panel:label({
+		font = tweak_data.menu.pd2_medium_font,
 		font_size = 15,
 		h = 30,
 		name = "label_card_info",
+		text = card_name,
 		w = 80,
 		wrap = true,
 		x = 5,
 		y = 52,
-		font = tweak_data.menu.pd2_medium_font,
-		text = card_name,
 	})
 	self._object = self._card_panel
 	self._name = "card_control"
@@ -92,13 +92,13 @@ function RaidGUIControlCard:_create_border()
 	local border_thickness = 1.6
 
 	self._border_left = self._card_panel:gradient({
+		h = self._card_panel:h(),
 		layer = 2,
 		name = "border_left",
 		orientation = "vertical",
+		w = border_thickness,
 		x = 0,
 		y = 0,
-		h = self._card_panel:h(),
-		w = border_thickness,
 	})
 
 	self._border_left:set_gradient_points({
@@ -109,13 +109,13 @@ function RaidGUIControlCard:_create_border()
 	})
 
 	self._border_right = self._card_panel:gradient({
+		h = self._card_panel:h(),
 		layer = 2,
 		name = "border_right",
 		orientation = "vertical",
-		y = 0,
-		h = self._card_panel:h(),
 		w = border_thickness,
 		x = self._card_panel:w() - border_thickness,
+		y = 0,
 	})
 
 	self._border_right:set_gradient_points({
@@ -126,13 +126,13 @@ function RaidGUIControlCard:_create_border()
 	})
 
 	self._border_up = self._card_panel:gradient({
+		h = border_thickness,
 		layer = 2,
 		name = "border_up",
 		orientation = "horizontal",
+		w = self._card_panel:w(),
 		x = 0,
 		y = 0,
-		h = border_thickness,
-		w = self._card_panel:w(),
 	})
 
 	self._border_up:set_gradient_points({
@@ -149,12 +149,12 @@ function RaidGUIControlCard:_create_border()
 	})
 
 	self._border_down = self._card_panel:gradient({
+		h = border_thickness,
 		layer = 2,
 		name = "border_down",
 		orientation = "horizontal",
-		x = 0,
-		h = border_thickness,
 		w = self._card_panel:w(),
+		x = 0,
 		y = self._card_panel:h() - border_thickness,
 	})
 

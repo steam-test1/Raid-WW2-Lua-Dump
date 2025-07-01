@@ -98,6 +98,22 @@ function StatisticsManager:_setup(reset)
 			melee = 0,
 			tied = 0,
 		},
+		german_gasmask_commander_backup = {
+			count = 0,
+			dismembered = 0,
+			explosion = 0,
+			head_shots = 0,
+			melee = 0,
+			tied = 0,
+		},
+		german_gasmask_commander_backup_shotgun = {
+			count = 0,
+			dismembered = 0,
+			explosion = 0,
+			head_shots = 0,
+			melee = 0,
+			tied = 0,
+		},
 		german_gasmask_shotgun = {
 			count = 0,
 			dismembered = 0,
@@ -274,7 +290,7 @@ function StatisticsManager:_setup(reset)
 			melee = 0,
 			tied = 0,
 		},
-		german_heavy_kar98 = {
+		german_heavy_commander_backup = {
 			count = 0,
 			dismembered = 0,
 			explosion = 0,
@@ -282,7 +298,23 @@ function StatisticsManager:_setup(reset)
 			melee = 0,
 			tied = 0,
 		},
-		german_heavy_mp38 = {
+		german_heavy_commander_backup_kar98 = {
+			count = 0,
+			dismembered = 0,
+			explosion = 0,
+			head_shots = 0,
+			melee = 0,
+			tied = 0,
+		},
+		german_heavy_commander_backup_shotgun = {
+			count = 0,
+			dismembered = 0,
+			explosion = 0,
+			head_shots = 0,
+			melee = 0,
+			tied = 0,
+		},
+		german_heavy_kar98 = {
 			count = 0,
 			dismembered = 0,
 			explosion = 0,
@@ -299,6 +331,30 @@ function StatisticsManager:_setup(reset)
 			tied = 0,
 		},
 		german_light = {
+			count = 0,
+			dismembered = 0,
+			explosion = 0,
+			head_shots = 0,
+			melee = 0,
+			tied = 0,
+		},
+		german_light_commander_backup = {
+			count = 0,
+			dismembered = 0,
+			explosion = 0,
+			head_shots = 0,
+			melee = 0,
+			tied = 0,
+		},
+		german_light_commander_backup_kar98 = {
+			count = 0,
+			dismembered = 0,
+			explosion = 0,
+			head_shots = 0,
+			melee = 0,
+			tied = 0,
+		},
+		german_light_commander_backup_shotgun = {
 			count = 0,
 			dismembered = 0,
 			explosion = 0,
@@ -363,14 +419,6 @@ function StatisticsManager:_setup(reset)
 			tied = 0,
 		},
 		german_waffen_ss_kar98 = {
-			count = 0,
-			dismembered = 0,
-			explosion = 0,
-			head_shots = 0,
-			melee = 0,
-			tied = 0,
-		},
-		german_waffen_ss_mp38 = {
 			count = 0,
 			dismembered = 0,
 			explosion = 0,
@@ -1254,26 +1302,32 @@ function StatisticsManager:publish_to_steam(session, success, completion)
 	if table.contains(level_list, level_id) then
 		for level_name, level_data in pairs(self._global.sessions.levels) do
 			stats["level_" .. level_name .. "_completed"] = {
+				method = "set",
 				type = "int",
 				value = level_data.completed,
 			}
 			stats["level_" .. level_name .. "_started"] = {
+				method = "set",
 				type = "int",
 				value = level_data.started,
 			}
 			stats["level_" .. level_name .. "_drop_in"] = {
+				method = "set",
 				type = "int",
 				value = level_data.drop_in,
 			}
 			stats["level_" .. level_name .. "_quit"] = {
+				method = "set",
 				type = "int",
 				value = level_data.quited,
 			}
 			stats["level_" .. level_name .. "_from_beginning"] = {
+				method = "set",
 				type = "int",
 				value = level_data.from_beginning,
 			}
 			stats["level_" .. level_name .. "_time"] = {
+				method = "set",
 				type = "int",
 				value = level_data.time,
 			}
@@ -1591,7 +1645,7 @@ function StatisticsManager:killed(data)
 	data.type = tweak_data.character[data.name] and tweak_data.character[data.name].challenges.type
 
 	if not self._global.killed[stats_name] or not self._global.session.killed[stats_name] then
-		Application:error("Bad name id applied to killed, " .. tostring(stats_name) .. ". Defaulting to 'other'")
+		Application:error("[StatisticsManager:killed] Bad name id applied to killed, " .. tostring(stats_name) .. ". Defaulting to 'other'")
 
 		stats_name = "other"
 	end
@@ -1913,8 +1967,8 @@ end
 
 function StatisticsManager:recieved_experience(data)
 	self._global.experience[data.size] = self._global.experience[data.size] or {
-		count = 0,
 		actions = {},
+		count = 0,
 	}
 	self._global.experience[data.size].count = self._global.experience[data.size].count + 1
 	self._global.experience[data.size].actions[data.action] = self._global.experience[data.size].actions[data.action] or 0
@@ -1922,8 +1976,8 @@ function StatisticsManager:recieved_experience(data)
 
 	if self._session_started then
 		self._global.session.experience[data.size] = self._global.session.experience[data.size] or {
-			count = 0,
 			actions = {},
+			count = 0,
 		}
 		self._global.session.experience[data.size].count = self._global.session.experience[data.size].count + 1
 		self._global.session.experience[data.size].actions[data.action] = self._global.session.experience[data.size].actions[data.action] or 0
@@ -2357,10 +2411,10 @@ function StatisticsManager:calculate_top_stats()
 
 	for index, stat_id in pairs(tweak_data.statistics.top_stats_calculated) do
 		stats[stat_id] = {
+			id = stat_id,
 			score = 0,
 			score_difference = 0,
 			weight = 0,
-			id = stat_id,
 		}
 	end
 
@@ -2439,9 +2493,9 @@ function StatisticsManager:calculate_bottom_stats()
 
 	for index, bottom_stat in pairs(tweak_data.statistics.bottom_stats_calculated) do
 		stats[bottom_stat] = {
+			id = bottom_stat,
 			score_difference = 0,
 			weight = 0,
-			id = bottom_stat,
 		}
 	end
 

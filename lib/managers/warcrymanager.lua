@@ -180,10 +180,10 @@ function WarcryManager:activate_warcry()
 		blocked_text_id = blocked_text_id or self.WARCRY_BLOCKED_TEXT
 
 		local notification_data = {
-			shelf_life = 5,
-			sound_effect = "generic_fail_sound",
 			duration = self.WARCRY_BLOCKED_MESSAGE_DURATION,
 			id = self.WARCRY_BLOCKED_TEXT,
+			shelf_life = 5,
+			sound_effect = "generic_fail_sound",
 			text = managers.localization:text(blocked_text_id),
 		}
 
@@ -215,8 +215,8 @@ function WarcryManager:activate_warcry()
 	end
 
 	managers.dialog:queue_dialog(self._active_warcry:get_activation_callout(), {
-		skip_idle_check = true,
 		instigator = managers.player:local_player(),
+		skip_idle_check = true,
 	})
 
 	if Network:is_server() then
@@ -328,11 +328,11 @@ end
 
 function WarcryManager:add_warcry_comm_wheel_option(index)
 	local warcry_comm_wheel_option = {
-		id = "warcry",
-		text_id = "com_wheel_warcry",
 		clbk = callback(self, self, "activate_warcry"),
 		color = Color.white,
 		icon = tweak_data.warcry[self._active_warcry:get_type()].hud_icon,
+		id = "warcry",
+		text_id = "com_wheel_warcry",
 	}
 
 	managers.hud:add_comm_wheel_option(warcry_comm_wheel_option, index)
@@ -351,35 +351,37 @@ function WarcryManager:_on_meter_full(skip_notification)
 	if self._active_warcry and not skip_notification then
 		managers.hud:post_event("warcry_available")
 
-		local warcry = self._active_warcry:get_type()
-		local name_id = tweak_data.warcry[warcry].name_id
-		local icon = tweak_data.warcry[warcry].hud_icon
-		local prompt_title = utf8.to_upper(managers.localization:text("hud_hint_warcry_ready_title", {
-			WARCRY = managers.localization:text(name_id),
-		}))
-		local prompt_desc
+		if managers.user:get_setting("warcry_ready_indicator") then
+			local warcry = self._active_warcry:get_type()
+			local name_id = tweak_data.warcry[warcry].name_id
+			local icon = tweak_data.warcry[warcry].hud_icon
+			local prompt_title = utf8.to_upper(managers.localization:text("hud_hint_warcry_ready_title", {
+				WARCRY = managers.localization:text(name_id),
+			}))
+			local prompt_desc
 
-		if managers.controller:is_using_controller() then
-			prompt_desc = utf8.to_upper(managers.localization:text("hud_interact_warcry_ready", {
-				BTN_USE_ITEM = managers.localization:get_default_macros().BTN_TOP_L .. " + " .. managers.localization:get_default_macros().BTN_TOP_R,
-			}))
-		else
-			prompt_desc = utf8.to_upper(managers.localization:text("hud_interact_warcry_ready", {
-				BTN_USE_ITEM = managers.localization:btn_macro("activate_warcry"),
-			}))
+			if managers.controller:is_using_controller() then
+				prompt_desc = utf8.to_upper(managers.localization:text("hud_interact_warcry_ready", {
+					BTN_USE_ITEM = managers.localization:get_default_macros().BTN_TOP_L .. " + " .. managers.localization:get_default_macros().BTN_TOP_R,
+				}))
+			else
+				prompt_desc = utf8.to_upper(managers.localization:text("hud_interact_warcry_ready", {
+					BTN_USE_ITEM = managers.localization:btn_macro("activate_warcry"),
+				}))
+			end
+
+			managers.hud:set_big_prompt({
+				background = "backgrounds_warcry_msg",
+				description = prompt_desc,
+				duration = WarcryManager.WARCRY_READY_MESSAGE_DURATION,
+				flares = true,
+				icon = icon,
+				id = "warcry_ready",
+				priority = true,
+				text_color = tweak_data.gui.colors.raid_gold,
+				title = prompt_title,
+			})
 		end
-
-		managers.hud:set_big_prompt({
-			background = "backgrounds_warcry_msg",
-			flares = true,
-			id = "warcry_ready",
-			priority = true,
-			description = prompt_desc,
-			duration = WarcryManager.WARCRY_READY_MESSAGE_DURATION,
-			icon = icon,
-			text_color = tweak_data.gui.colors.raid_gold,
-			title = prompt_title,
-		})
 	end
 end
 
