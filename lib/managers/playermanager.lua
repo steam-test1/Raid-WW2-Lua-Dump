@@ -190,7 +190,7 @@ end
 function PlayerManager:soft_reset()
 	self._listener_holder = EventListenerHolder:new()
 	self._equipment = {
-		add_coroutine = nil,
+		PART_TYPE_HEAD = nil,
 		selections = {},
 		specials = {},
 	}
@@ -206,7 +206,7 @@ end
 
 function PlayerManager:_setup()
 	self._equipment = {
-		add_coroutine = nil,
+		PART_TYPE_HEAD = nil,
 		selections = {},
 		specials = {},
 	}
@@ -1044,6 +1044,8 @@ function PlayerManager:on_upgrades_changed()
 		self:replenish_player()
 		self:sync_upgrades()
 	end
+
+	MenuCallbackHandler:_update_outfit_information()
 end
 
 function PlayerManager:unaquire_equipment(upgrade, id)
@@ -2722,7 +2724,7 @@ function PlayerManager:_add_equipment(params)
 
 	table.insert(self._equipment.selections, {
 		action_timer = tweak_data.action_timer,
-		amount = Application:digest_value(0, true),
+		amount = 0,
 		equipment = equipment,
 		use_function = use_function,
 	})
@@ -3297,8 +3299,8 @@ function PlayerManager:add_grenade_amount(amount)
 	if self._global.synced_grenades[peer_id] then
 		local icon = tweak_data.projectiles[grenade].icon
 
-		gained_grenades = Application:digest_value(self._global.synced_grenades[peer_id].amount, false)
-		amount = math.clamp(Application:digest_value(self._global.synced_grenades[peer_id].amount, false) + amount, 0, self:get_max_grenades_by_peer_id(peer_id))
+		gained_grenades = self._global.synced_grenades[peer_id].amount
+		amount = math.clamp(self._global.synced_grenades[peer_id].amount + amount, 0, self:get_max_grenades_by_peer_id(peer_id))
 		gained_grenades = amount - gained_grenades
 
 		managers.hud:set_teammate_grenades_amount(HUDManager.PLAYER_PANEL, {
@@ -3325,7 +3327,7 @@ function PlayerManager:update_grenades_to_peer(peer)
 		local grenade = self._global.synced_grenades[peer_id].grenade
 		local amount = self._global.synced_grenades[peer_id].amount
 
-		peer:send_queued_sync("sync_grenades", grenade, Application:digest_value(amount, false))
+		peer:send_queued_sync("sync_grenades", grenade, amount)
 	end
 end
 
@@ -3340,10 +3342,9 @@ function PlayerManager:set_synced_grenades(peer_id, grenade, amount)
 	Application:debug("[PlayerManager:set_synced_grenades]", peer_id, grenade, amount)
 
 	local only_update_amount = self._global.synced_grenades[peer_id] and self._global.synced_grenades[peer_id].grenade == grenade
-	local digested_amount = Application:digest_value(amount, true)
 
 	self._global.synced_grenades[peer_id] = {
-		amount = digested_amount,
+		amount = amount,
 		grenade = grenade,
 	}
 
@@ -3362,7 +3363,7 @@ end
 
 function PlayerManager:get_grenade_amount(peer_id)
 	if self._global.synced_grenades[peer_id] then
-		return Application:digest_value(self._global.synced_grenades[peer_id].amount, false)
+		return self._global.synced_grenades[peer_id].amount
 	end
 
 	return 0
@@ -3377,6 +3378,20 @@ end
 
 function PlayerManager:get_synced_grenades(peer_id)
 	return self._global.synced_grenades[peer_id]
+end
+
+function PlayerManager:get_grenade_type(peer_id)
+	peer_id = peer_id or managers.network:session():local_peer():id()
+
+	local synced_grenade = self:get_synced_grenades(peer_id)
+
+	if not synced_grenade and synced_grenade.grenade then
+		return
+	end
+
+	local projectile_tweak = tweak_data.projectiles[synced_grenade.grenade]
+
+	return projectile_tweak
 end
 
 function PlayerManager:can_throw_grenade()

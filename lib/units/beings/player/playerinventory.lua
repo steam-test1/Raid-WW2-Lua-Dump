@@ -438,22 +438,9 @@ function PlayerInventory:_send_equipped_weapon(send_equipped_weapon_type)
 	end
 
 	local blueprint_string = self:equipped_unit():base().blueprint_to_string and self:equipped_unit():base():blueprint_to_string() or ""
-	local cosmetics_string = ""
-	local cosmetics_id = self:equipped_unit():base().get_cosmetics_id and self:equipped_unit():base():get_cosmetics_id() or nil
+	local cosmetics_id = self:equipped_unit():base().get_cosmetics_id and self:equipped_unit():base():get_cosmetics_id()
 
-	if cosmetics_id then
-		local cosmetics_quality = self:equipped_unit():base().get_cosmetics_quality and self:equipped_unit():base():get_cosmetics_quality() or nil
-		local cosmetics_bonus = self:equipped_unit():base().get_cosmetics_bonus and self:equipped_unit():base():get_cosmetics_bonus() or nil
-		local entry = tostring(cosmetics_id)
-		local quality = "1"
-		local bonus = cosmetics_bonus and "1" or "0"
-
-		cosmetics_string = entry .. "-" .. quality .. "-" .. bonus
-	else
-		cosmetics_string = "nil-1-0"
-	end
-
-	self._unit:network():send("set_equipped_weapon", send_equipped_weapon_type, equipped_weapon_category_id, equipped_weapon_identifier, blueprint_string, cosmetics_string)
+	self._unit:network():send("set_equipped_weapon", send_equipped_weapon_type, equipped_weapon_category_id, equipped_weapon_identifier, blueprint_string, cosmetics_id)
 end
 
 function PlayerInventory:unequip_selection(selection_index, instant)
@@ -732,7 +719,14 @@ function PlayerInventory:set_melee_weapon(melee_weapon_id, is_npc)
 end
 
 function PlayerInventory:set_grenade(grenade)
-	local unit_name = tweak_data.projectiles[grenade].unit_hand
+	local unit_name
+	local skin_id, skin_data = managers.weapon_inventory:get_weapons_skin(grenade)
+
+	if skin_data and skin_data.replaces_units then
+		unit_name = skin_data.replaces_units.unit_hand
+	else
+		unit_name = tweak_data.projectiles[grenade].unit_hand
+	end
 
 	Application:debug("[PlayerInventory:set_grenade ] spawning grenade", grenade, unit_name)
 
@@ -747,6 +741,7 @@ function PlayerInventory:set_grenade(grenade)
 	unit:base():set_thrower_unit(self._unit)
 	unit:base():set_thrower_peer_id(managers.network:session():local_peer():id())
 	unit:base():set_hand_held(true)
+	unit:base():set_cosmetics_data(skin_id)
 	self:add_unit(unit)
 
 	self.equipped_grenade = grenade

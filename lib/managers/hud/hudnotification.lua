@@ -2158,6 +2158,7 @@ function HUDNotificationCandyProgression:_create_sugar_high_panel(data)
 				font_size = self.DEBUFF_TITLE_FONT_SIZE,
 				name = "sugar_high_debuff_" .. effect.name,
 				text = managers.localization:text(effect.desc_id, effect.desc_params),
+				w = self._sugar_high_buffs_panel:w() - 30,
 				word_wrap = true,
 				wrap = true,
 				x = 28,

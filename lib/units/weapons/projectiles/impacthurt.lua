@@ -40,7 +40,7 @@ function ImpactHurt:set_owner_peer_id(peer_id)
 	ImpactHurt._impact_units[peer_id] = ImpactHurt._impact_units[peer_id] or {}
 	ImpactHurt._impact_units[peer_id][self._unit:key()] = self._unit
 
-	if not self._tweak_data.client_authorative or peer_id == managers.network:session():local_peer():id() then
+	if not self._tweak_data.client_authoritative or self._tweak_data.client_authoritative and peer_id == managers.network:session():local_peer():id() then
 		self._unit:add_body_activation_callback(callback(self, self, "clbk_body_activation"))
 		self._unit:body("dynamic_body"):set_deactivate_tag(ids_pickup)
 	end
@@ -69,6 +69,15 @@ function ImpactHurt:throw(...)
 	self._requires_stop_flyby_sound = true
 
 	ImpactHurt.super.throw(self, ...)
+
+	local weapon_id = self:weapon_tweak_data().weapon_id
+
+	if weapon_id then
+		managers.statistics:shot_fired({
+			hit = false,
+			name_id = weapon_id,
+		})
+	end
 end
 
 function ImpactHurt:sync_throw_projectile(dir, projectile_type)
@@ -166,7 +175,19 @@ function ImpactHurt:_on_collision(col_ray)
 end
 
 function ImpactHurt:add_damage_result(unit, attacker, is_dead, damage_percent)
-	return
+	Application:info("[ImpactHurt:add_damage_result]", unit, attacker, is_dead, damage_percent)
+
+	local weapon_id = self:weapon_tweak_data().weapon_id
+
+	if weapon_id and not self._recorded_hit then
+		managers.statistics:shot_fired({
+			hit = true,
+			name_id = weapon_id,
+			skip_bullet_count = true,
+		})
+
+		self._recorded_hit = true
+	end
 end
 
 function ImpactHurt:update(unit, t, dt)
@@ -225,23 +246,35 @@ function ImpactHurt:_calculate_autohit_direction()
 	end
 end
 
-function ImpactHurt:_switch_to_pickup_delayed(dynamic)
-	Application:debug("[ImpactHurt:_switch_to_pickup_delayed] dynamic", dynamic)
+function ImpactHurt:switch_to_pickup_delayed(dynamic, delay, velocity)
+	Application:debug("[ImpactHurt:switch_to_pickup_delayed] dynamic", dynamic)
 
 	self._is_pickup = true
 	self._is_pickup_dynamic = dynamic
+	delay = delay or 1
 
 	self:_remove_switch_to_pickup_clbk()
 
+	local params = {
+		dynamic = dynamic,
+		velocity = velocity,
+	}
+
 	self._switch_to_pickup_clbk = "_switch_to_pickup " .. tostring(self._unit:key())
 
-	managers.queued_tasks:queue(self._switch_to_pickup_clbk, self._switch_to_pickup_delay_cbk, self, dynamic, 1)
+	managers.queued_tasks:queue(self._switch_to_pickup_clbk, self._switch_to_pickup_delay_cbk, self, params, delay)
 end
 
-function ImpactHurt:_switch_to_pickup_delay_cbk(dynamic)
+function ImpactHurt:_switch_to_pickup_delay_cbk(params)
 	self._switch_to_pickup_clbk = nil
 
-	self:_switch_to_pickup(dynamic)
+	self:_switch_to_pickup(params.dynamic)
+
+	if params.velocity then
+		local dynamic_body = self._unit:body("dynamic_body")
+
+		dynamic_body:set_velocity(params.velocity)
+	end
 end
 
 function ImpactHurt:_switch_to_pickup(dynamic)
@@ -272,19 +305,17 @@ function ImpactHurt:_check_stop_flyby_sound(skip_impact)
 end
 
 function ImpactHurt:_attach_to_hit_unit(is_remote, dynamic_pickup_wanted)
-	local instant_dynamic_pickup = dynamic_pickup_wanted and (is_remote or Network:is_server())
-
 	self._attached_to_unit = true
 
 	self._unit:set_enabled(true)
-	self:_set_body_enabled(instant_dynamic_pickup)
+	self:_set_body_enabled(dynamic_pickup_wanted)
 	self:_check_stop_flyby_sound(dynamic_pickup_wanted)
 	mrotation.set_look_at(mrot1, self._col_ray.velocity, math.UP)
 	self._unit:set_rotation(mrot1)
 
 	local hit_unit = self._col_ray.unit
 	local switch_to_pickup = true
-	local switch_to_dynamic_pickup = instant_dynamic_pickup or not alive(hit_unit)
+	local switch_to_dynamic_pickup = dynamic_pickup_wanted or not alive(hit_unit)
 	local local_pos
 	local global_pos = self._col_ray.position
 	local parent_obj, child_obj, parent_body
@@ -400,7 +431,7 @@ function ImpactHurt:_attach_to_hit_unit(is_remote, dynamic_pickup_wanted)
 			self:_set_body_enabled(true)
 		end
 
-		self:_switch_to_pickup_delayed(switch_to_dynamic_pickup)
+		self:switch_to_pickup_delayed(switch_to_dynamic_pickup)
 	end
 
 	if alive(hit_unit) and parent_body then
@@ -420,8 +451,20 @@ function ImpactHurt:_attach_to_hit_unit(is_remote, dynamic_pickup_wanted)
 
 		if managers.network:session() then
 			local unit = alive(hit_unit) and hit_unit:id() ~= -1 and hit_unit
+			local params = {
+				cosmetic_id = self._cosmetics_id,
+				dir = dir,
+				instant_dynamic_pickup = dynamic_pickup_wanted or false,
+				local_pos = unit and local_pos or self._unit:position(),
+				parent_body = unit and parent_body or nil,
+				parent_object = unit and parent_obj or nil,
+				parent_unit = unit or nil,
+				peer_id = managers.network:session():local_peer():id(),
+				projectile_type_index = tweak_data.blackmarket:get_index_from_projectile_id(self.name_id),
+				unit = self._unit:id() ~= -1 and self._unit or nil,
+			}
 
-			managers.network:session():send_to_peers_synched("sync_attach_projectile", self._unit:id() ~= -1 and self._unit or nil, dynamic_pickup_wanted or false, unit or nil, unit and parent_body or nil, unit and parent_obj or nil, unit and local_pos or self._unit:position(), dir, tweak_data.blackmarket:get_index_from_projectile_id(self.name_id), managers.network:session():local_peer():id())
+			managers.queued_tasks:queue("delay_sync_attach" .. tostring(self._unit:key()), self._delay_sync_attach, self, params, 0.35)
 		end
 	end
 
@@ -446,19 +489,21 @@ function ImpactHurt:_attach_to_hit_unit(is_remote, dynamic_pickup_wanted)
 			local id = hit_unit:id()
 
 			if id ~= -1 then
+				local unit_alive = hit_unit:id() ~= -1
+
 				self._sync_attach_data = {
 					character = true,
 					dir = dir,
-					local_pos = hit_unit:id() ~= -1 and local_pos or self._unit:position(),
-					parent_body = hit_unit:id() ~= -1 and parent_body or nil,
-					parent_obj = hit_unit:id() ~= -1 and parent_obj or nil,
-					parent_unit = hit_unit:id() ~= -1 and hit_unit or nil,
+					local_pos = unit_alive and local_pos or self._unit:position(),
+					parent_body = unit_alive and parent_body or nil,
+					parent_obj = unit_alive and parent_obj or nil,
+					parent_unit = unit_alive and hit_unit or nil,
 				}
 			end
 		end
 	end
 
-	if self._unit:damage() then
+	if self._unit:damage() and (is_remote or Network:is_server()) then
 		self._unit:damage():has_then_run_sequence_simple("show_pickup")
 	end
 end
@@ -578,8 +623,8 @@ function ImpactHurt:outside_worlds_bounding_box()
 	end
 end
 
-function ImpactHurt:_delay_sync_attach(peer)
-	Application:debug("[ImpactHurt:_delay_sync_attach] peer", peer)
+function ImpactHurt:_delay_load_attach(peer)
+	Application:debug("[ImpactHurt:_delay_load_attach] peer", peer)
 
 	if not managers.network:session() then
 		return
@@ -593,7 +638,16 @@ function ImpactHurt:_delay_sync_attach(peer)
 		return
 	end
 
-	peer:send_queued_sync("sync_attach_projectile", self._unit:id() ~= -1 and self._unit or nil, false, self._sync_attach_data.parent_unit, nil, self._sync_attach_data.parent_obj, self._sync_attach_data.local_pos, self._sync_attach_data.dir, tweak_data.blackmarket:get_index_from_projectile_id(self.name_id), managers.network:session():local_peer():id())
+	peer:send_queued_sync("sync_attach_projectile", self._unit:id() ~= -1 and self._unit or nil, false, self._sync_attach_data.parent_unit, nil, self._sync_attach_data.parent_obj, self._sync_attach_data.local_pos, self._sync_attach_data.dir, tweak_data.blackmarket:get_index_from_projectile_id(self.name_id), managers.network:session():local_peer():id(), self._cosmetics_id)
+end
+
+function ImpactHurt:_delay_sync_attach(params)
+	if not managers.network:session() then
+		return
+	end
+
+	Application:debug("[ImpactHurt:_delay_sync_attach] peer", params)
+	managers.network:session():send_to_peers_synched("sync_attach_projectile", params.unit, params.instant_dynamic_pickup, params.parent_unit, params.parent_body, params.parent_object, params.local_pos, params.dir, params.projectile_type_index, params.peer_id, params.cosmetic_id)
 end
 
 function ImpactHurt:_remove_switch_to_pickup_clbk()
@@ -648,7 +702,7 @@ function ImpactHurt:save(data)
 		if self._sync_attach_data.character then
 			local peer = managers.network:session():dropin_peer()
 
-			managers.queued_tasks:queue("delay_sync_attach" .. tostring(self._unit:key()), self._delay_sync_attach, self, peer, 0.1)
+			managers.queued_tasks:queue("delay_load_attach" .. tostring(self._unit:key()), self._delay_load_attach, self, peer, 0.1)
 		else
 			state.sync_attach_data = {
 				parent_unit_id = self._sync_attach_data.parent_unit_id,

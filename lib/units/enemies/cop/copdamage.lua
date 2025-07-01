@@ -619,7 +619,10 @@ function CopDamage:damage_bullet(attack_data)
 	end
 
 	if alive(attack_data.weapon_unit) and attack_data.weapon_unit:base() and attack_data.weapon_unit:base().add_damage_result then
+		Application:debug("[CopDamage:damage_bullet] add_damage_result", self._unit, attacker, result.type == "death", damage_percent)
 		attack_data.weapon_unit:base():add_damage_result(self._unit, attacker, result.type == "death", damage_percent)
+	else
+		Application:debug("[CopDamage:damage_bullet] cant add_damage_result")
 	end
 
 	self:_send_bullet_attack_result(attack_data, attacker, damage_percent, body_index, hit_offset_height)

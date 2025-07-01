@@ -88,7 +88,7 @@ function NetworkMatchMakingXBL:invite_accepted_callback(invitee_xuid)
 		Global.boot_invite[invitee_xuid_str] = nil
 
 		managers.menu:show_inactive_user_accepted_invite({
-			comparision_type = nil,
+			restart_the_game = nil,
 		})
 		managers.user:invite_accepted_by_inactive_user()
 
@@ -1407,7 +1407,7 @@ function NetworkMatchMakingXBL:get_all_players_info()
 
 			if peer_data then
 				local peer_level = peer_data:level() or "-"
-				local peer_class = managers.network:session():all_peers()[peer_id]:blackmarket_outfit().skills or "-"
+				local peer_class = managers.network:session():all_peers()[peer_id]:class() or "-"
 				local peer_name = peer_data:name() or ""
 				local peer_nationality = peer_data:nationality() or ""
 				local peer_xuid = peer_data:xuid()
@@ -1458,7 +1458,7 @@ function NetworkMatchMakingXBL:add_player_info(peer_id)
 			if index == peer_id then
 				if managers.network and managers.network:session() and managers.network:session():all_peers() then
 					local peer_data = managers.network:session():all_peers()[peer_id]
-					local peer_level = managers.network:session():all_peers()[peer_id]:level()
+					local peer_level = peer_data:level()
 					local peer_class = "-"
 
 					players_info = players_info .. peer_class .. "," .. peer_level .. ";"

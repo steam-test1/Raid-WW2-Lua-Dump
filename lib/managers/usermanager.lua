@@ -6,9 +6,11 @@ UserManager = UserManager or class()
 UserManager.PLATFORM_CLASS_MAP = {}
 
 function UserManager:new(...)
-	local platform = SystemInfo:platform()
+	local key = PLATFORM:key()
+	local manager_class = self.PLATFORM_CLASS_MAP[key] or GenericUserManager
+	local manager = manager_class:new(...)
 
-	return (self.PLATFORM_CLASS_MAP[platform:key()] or GenericUserManager):new(...)
+	return manager
 end
 
 GenericUserManager = GenericUserManager or class()
@@ -26,14 +28,14 @@ function GenericUserManager:init()
 
 	if not self:is_global_initialized() then
 		Global.user_manager = {
+			SoundDevice = nil,
 			has_setting_changed = nil,
 			initializing = true,
-			setting_changed = nil,
+			is_online_menu = nil,
 			setting_data_id_to_name_map = {},
 			setting_data_map = {},
 			setting_map = {},
 			user_map = {},
-			value = nil,
 		}
 
 		self:setup_setting_map()

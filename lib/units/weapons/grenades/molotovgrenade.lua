@@ -332,22 +332,6 @@ function MolotovGrenade:_detonate_on_client(normal)
 	end
 end
 
-function MolotovGrenade:_detonate_on_client_OLD(normal)
-	if self._detonated == false then
-		self._detonated_position = self._unit:position()
-
-		local pos = self._detonated_position
-		local range = self._range
-		local slot_mask = managers.slot:get_mask("explosion_targets")
-
-		managers.fire:play_sound_and_effects(pos, normal, range, self._custom_params)
-
-		self._detonated = true
-
-		self._unit:set_visible(false)
-	end
-end
-
 function MolotovGrenade:bullet_hit()
 	if not Network:is_server() then
 		return
@@ -370,9 +354,5 @@ function MolotovGrenade:add_damage_result(unit, is_dead, damage_percent)
 
 	if is_civlian then
 		return
-	end
-
-	if is_dead then
-		self:_check_achievements(unit, is_dead, damage_percent, 1, 1)
 	end
 end

@@ -489,7 +489,7 @@ function GroupAIStateBesiege:_begin_assault_task(assault_areas)
 	end
 
 	managers.dialog:queue_dialog("player_gen_incoming_wave", {
-		[""] = nil,
+		_get_special_unit_type_count = nil,
 		skip_idle_check = true,
 	})
 

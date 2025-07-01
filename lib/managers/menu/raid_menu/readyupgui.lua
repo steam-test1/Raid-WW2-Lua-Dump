@@ -252,10 +252,9 @@ function ReadyUpGui:_layout_player_list()
 			x = (list_index - 1) * width,
 			y = 96,
 		})
-		local outfit = peer:blackmarket_outfit()
 		local player_data = {
 			is_host = peer:is_host(),
-			player_class = outfit.skills,
+			player_class = peer:class(),
 			player_level = peer:level() or managers.experience:current_level(),
 			player_name = peer:name(),
 		}

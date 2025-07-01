@@ -108,7 +108,7 @@ function CharacterSelectionGui:_layout()
 		x = 1308,
 		y = 0,
 	}, {
-		Vector3 = nil,
+		["(\x00\x00\x00\x00"] = nil,
 		class = nil,
 	})
 

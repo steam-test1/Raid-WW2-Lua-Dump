@@ -19,29 +19,21 @@ Warcry.SILVER_BULLET = "silver_bullet"
 Warcry.SENTRY = "sentry"
 Warcry.PAIN_TRAIN = "pain_train"
 Warcry.HOLD_THE_LINE = "hold_the_line"
+Warcry.TYPES = {
+	[Warcry.BERSERK] = WarcryBerserk,
+	[Warcry.CLUSTERTRUCK] = WarcryClustertruck,
+	[Warcry.GHOST] = WarcryGhost,
+	[Warcry.SHARPSHOOTER] = WarcrySharpshooter,
+	[Warcry.SILVER_BULLET] = WarcrySilverBullet,
+	[Warcry.SENTRY] = WarcrySentry,
+	[Warcry.PAIN_TRAIN] = WarcryPainTrain,
+	[Warcry.HOLD_THE_LINE] = WarcryHoldTheLine,
+}
 
 function Warcry.get_metatable(warcry_name)
-	if warcry_name == Warcry.BERSERK then
-		return WarcryBerserk
-	elseif warcry_name == Warcry.CLUSTERTRUCK then
-		return WarcryClustertruck
-	elseif warcry_name == Warcry.GHOST then
-		return WarcryGhost
-	elseif warcry_name == Warcry.SHARPSHOOTER then
-		return WarcrySharpshooter
-	elseif warcry_name == Warcry.SILVER_BULLET then
-		return WarcrySilverBullet
-	elseif warcry_name == Warcry.SENTRY then
-		return WarcrySentry
-	elseif warcry_name == Warcry.PAIN_TRAIN then
-		return WarcryPainTrain
-	elseif warcry_name == Warcry.HOLD_THE_LINE then
-		return WarcryHoldTheLine
-	else
-		Application:error("[Warcry] get_metatable could not get a warcry from '" .. tostring(warcry_name) .. "' using fallback: WarcryBerserk")
+	local class = Warcry.TYPES[warcry_name] or WarcryBerserk
 
-		return WarcryBerserk
-	end
+	return class
 end
 
 Warcry.team_buffs = {}
@@ -49,7 +41,9 @@ Warcry.team_buffs = {}
 function Warcry.create(warcry_name)
 	Application:debug("[Warcry] create " .. (warcry_name or "NIL 'warcry_name'!"))
 
-	return (Warcry.get_metatable(warcry_name):new())
+	local warcry = Warcry.get_metatable(warcry_name):new(warcry_name)
+
+	return warcry
 end
 
 function Warcry:init()
@@ -252,6 +246,10 @@ end
 
 function Warcry:get_sound_switch()
 	return self._tweak_data.sound_switch
+end
+
+function Warcry:special_unit()
+	return self._tweak_data.activation_equip_weapon or self._tweak_data.activation_spawn_unit
 end
 
 function Warcry:_on_enemy_killed(params)

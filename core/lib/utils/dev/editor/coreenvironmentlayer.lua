@@ -419,11 +419,11 @@ function EnvironmentLayer:on_environment_list_changed()
 end
 
 function EnvironmentLayer:build_panel(notebook)
+	cat_print("editor", "EnvironmentLayer:build_panel")
 	EnvironmentLayer.super.build_panel(self, notebook, {
-		units_notebook_min_size = Vector3(1, 165, 0),
+		units_notebook_min_size = Vector3(32, 200, 0),
 		units_noteboook_proportion = 0,
 	})
-	cat_print("editor", "EnvironmentLayer:build_panel")
 
 	self._env_panel = EWS:Panel(self._ews_panel, "", "TAB_TRAVERSAL")
 	self._env_sizer = EWS:BoxSizer("VERTICAL")
@@ -984,6 +984,10 @@ function EnvironmentLayer:set_environment_area_parameters()
 			self._current_shape_panel:set_visible(true)
 		end
 	end
+
+	self._env_panel:layout()
+	self._ews_panel:fit_inside()
+	self._ews_panel:refresh()
 end
 
 function EnvironmentLayer:wind_description(speed)

@@ -336,6 +336,8 @@ function CharacterTweakData:_init_char_buff_gear()
 		german_fallschirmjager_light_mp38 = pumpkin_heads,
 		german_fallschirmjager_light_shotgun = pumpkin_heads,
 		german_gasmask = pumpkin_heads,
+		german_gasmask_commander_backup = pumpkin_heads,
+		german_gasmask_commander_backup_shotgun = pumpkin_heads,
 		german_gasmask_shotgun = pumpkin_heads,
 		german_gebirgsjager_heavy = pumpkin_heads,
 		german_gebirgsjager_heavy_kar98 = pumpkin_heads,
@@ -358,6 +360,9 @@ function CharacterTweakData:_init_char_buff_gear()
 		german_grunt_mid_mp38 = pumpkin_heads,
 		german_grunt_mid_shotgun = pumpkin_heads,
 		german_heavy = pumpkin_heads,
+		german_heavy_commander_backup = pumpkin_heads,
+		german_heavy_commander_backup_kar98 = pumpkin_heads,
+		german_heavy_commander_backup_shotgun = pumpkin_heads,
 		german_heavy_kar98 = pumpkin_heads,
 		german_heavy_mp38 = pumpkin_heads,
 		german_heavy_shotgun = pumpkin_heads,
@@ -992,7 +997,7 @@ function CharacterTweakData:_init_german_commander(presets)
 	self.german_commander.chatter = presets.enemy_chatter.cop
 	self.german_commander.steal_loot = false
 	self.german_commander.surrender = nil
-	self.german_commander.loot_table = "elite_enemy"
+	self.german_commander.loot_table = "special_enemy"
 	self.german_commander.type = CharacterTweakData.ENEMY_TYPE_OFFICER
 	self.german_commander.is_special = true
 	self.german_commander.special_type = CharacterTweakData.SPECIAL_UNIT_TYPE_COMMANDER
@@ -1096,7 +1101,7 @@ function CharacterTweakData:_init_german_officer(presets)
 	self.german_officer.deathguard = true
 	self.german_officer.chatter = presets.enemy_chatter.cop
 	self.german_officer.steal_loot = false
-	self.german_officer.loot_table = "elite_enemy"
+	self.german_officer.loot_table = "special_enemy"
 	self.german_officer.type = CharacterTweakData.ENEMY_TYPE_OFFICER
 	self.german_officer.carry_tweak_corpse = "german_commander_body"
 

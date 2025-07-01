@@ -1030,7 +1030,7 @@ function VehicleDrivingExt:place_player_on_seat(player, seat_name, move, previou
 		self._interaction_enter_vehicle = false
 
 		managers.dialog:queue_dialog("gen_vehicle_good_to_go", {
-			[""] = nil,
+			position = nil,
 			skip_idle_check = true,
 		})
 	end

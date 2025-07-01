@@ -116,7 +116,7 @@ function CoreEditor:_create_dome_occlusion(params)
 	local folder_name = "cube_lights"
 	local path = self._lastdir .. "\\" .. folder_name
 
-	print(path)
+	Application:info("[CoreEditor:_create_dome_occlusion] Created", path)
 
 	self._dome_occlusion_params.file_name = "dome_occlusion"
 	self._dome_occlusion_params.output_path = path

@@ -249,7 +249,7 @@ function PlayerTurret:set_tweak_data(name)
 end
 
 function PlayerTurret:_update_check_actions(t, dt)
-	local input = self:_get_input()
+	local input = self:_get_input(t, dt)
 
 	self:_check_stats_screen(t, dt, input)
 	self:_check_action_steelsight(t, input)

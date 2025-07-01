@@ -145,7 +145,7 @@ function DynamicResourceManager:load(resource_type, resource_name, package_name,
 		self:clbk_resource_loaded(true, resource_type, resource_name, package_name)
 	else
 		if not complete_clbk then
-			Application:error("[DynamicResourceManager:load]", resource_type, resource_name, package_name, complete_clbk)
+			Application:debug("[DynamicResourceManager:load]", resource_type, resource_name, package_name, complete_clbk)
 		end
 
 		PackageManager:package(package_name):load_temp_resource(resource_type, resource_name, complete_clbk and callback(self, DynamicResourceManager, "clbk_resource_loaded") or nil, true)

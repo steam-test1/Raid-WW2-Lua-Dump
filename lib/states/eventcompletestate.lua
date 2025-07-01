@@ -1087,7 +1087,7 @@ end
 function EventCompleteState:set_statistics_values()
 	Application:info("[EventCompleteState:set_statistics_values] complete job with challenge card", self._active_challenge_card and inspect(self._active_challenge_card))
 
-	if self._active_challenge_card and self._active_challenge_card.event then
+	if self._active_challenge_card and self._active_challenge_card.event and managers.event_system:is_event_active() then
 		Application:info("[EventCompleteState:set_statistics_values] event", self._active_challenge_card and self._active_challenge_card.event)
 
 		return

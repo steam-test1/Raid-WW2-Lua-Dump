@@ -2265,24 +2265,6 @@ function SkillTreeTweakData:_init_skill_list_weapons()
 		},
 		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
 	}
-	self.skills.weapon_unlock_grenade_thermite = {
-		acquires = {},
-		desc_id = "skill_weapon_unlock_grenade_thermite_desc",
-		name_id = "skill_weapon_unlock_grenade_thermite_name",
-		upgrades = {
-			"thermite",
-		},
-		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
-	}
-	self.skills.weapon_unlock_grenade_anti_tank = {
-		acquires = {},
-		desc_id = "skill_weapon_unlock_grenade_anti_tank_desc",
-		name_id = "skill_weapon_unlock_grenade_anti_tank_name",
-		upgrades = {
-			"anti_tank",
-		},
-		upgrades_type = SkillTreeTweakData.TYPE_WEAPON,
-	}
 	self.skills.weapon_unlock_dp28 = {
 		acquires = {},
 		desc_id = "skill_weapon_unlock_dp28_desc",
@@ -2411,9 +2393,6 @@ function SkillTreeTweakData:_init_recon_unlock_progression()
 				"weapon_unlock_springfield",
 				"weapon_unlock_carbine",
 				"weapon_unlock_c96",
-				"weapon_unlock_grenade_gold_bar",
-				"weapon_unlock_grenade_thermite",
-				"weapon_unlock_grenade_anti_tank",
 			},
 		},
 		[3] = {
@@ -2467,6 +2446,7 @@ function SkillTreeTweakData:_init_recon_unlock_progression()
 			},
 			weapons = {
 				"weapon_unlock_thompson",
+				"weapon_unlock_grenade_gold_bar",
 			},
 		},
 		[18] = {
@@ -2538,9 +2518,6 @@ function SkillTreeTweakData:_init_assault_unlock_progression()
 				"weapon_unlock_carbine",
 				"weapon_unlock_sten",
 				"weapon_unlock_c96",
-				"weapon_unlock_grenade_gold_bar",
-				"weapon_unlock_grenade_thermite",
-				"weapon_unlock_grenade_anti_tank",
 			},
 		},
 		[3] = {
@@ -2561,6 +2538,7 @@ function SkillTreeTweakData:_init_assault_unlock_progression()
 		[10] = {
 			weapons = {
 				"weapon_unlock_garand",
+				"weapon_unlock_grenade_gold_bar",
 			},
 		},
 		[11] = {
@@ -2661,9 +2639,6 @@ function SkillTreeTweakData:_init_infiltrator_unlock_progression()
 				"weapon_unlock_sten",
 				"weapon_unlock_winchester",
 				"weapon_unlock_c96",
-				"weapon_unlock_grenade_gold_bar",
-				"weapon_unlock_grenade_thermite",
-				"weapon_unlock_grenade_anti_tank",
 			},
 		},
 		[3] = {
@@ -2703,6 +2678,7 @@ function SkillTreeTweakData:_init_infiltrator_unlock_progression()
 			},
 			weapons = {
 				"weapon_unlock_garand",
+				"weapon_unlock_grenade_gold_bar",
 			},
 		},
 		[16] = {
@@ -2782,9 +2758,6 @@ function SkillTreeTweakData:_init_demolitions_unlock_progression()
 				"weapon_unlock_winchester",
 				"weapon_unlock_bar",
 				"weapon_unlock_c96",
-				"weapon_unlock_grenade_gold_bar",
-				"weapon_unlock_grenade_thermite",
-				"weapon_unlock_grenade_anti_tank",
 			},
 		},
 		[3] = {
@@ -2811,6 +2784,11 @@ function SkillTreeTweakData:_init_demolitions_unlock_progression()
 			weapons = {
 				"weapon_unlock_geco",
 				"weapon_unlock_grenade_betty",
+			},
+		},
+		[12] = {
+			weapons = {
+				"weapon_unlock_grenade_gold_bar",
 			},
 		},
 		[13] = {

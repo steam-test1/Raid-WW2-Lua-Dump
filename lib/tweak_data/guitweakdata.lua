@@ -4715,14 +4715,6 @@ function GuiTweakData:_setup_hud_icons()
 		102,
 		42,
 	}
-	self.icons.weapons_panel_gre_thermite = {}
-	self.icons.weapons_panel_gre_thermite.texture = "ui/updates/upd_blaze/atlas_weapon_icons"
-	self.icons.weapons_panel_gre_thermite.texture_rect = {
-		96,
-		128,
-		42,
-		42,
-	}
 	self.icons.missions_consumable_fury_railway = {}
 	self.icons.missions_consumable_fury_railway.texture = "ui/atlas/raid_atlas_hud_raids_mini"
 	self.icons.missions_consumable_fury_railway.texture_rect = {
@@ -6247,14 +6239,6 @@ function GuiTweakData:_setup_skill_big_icons()
 	self.icons.weapon_gre_anti_tank_large.texture_rect = {
 		0,
 		0,
-		96,
-		128,
-	}
-	self.icons.weapon_gre_thermite_large = {}
-	self.icons.weapon_gre_thermite_large.texture = "ui/updates/upd_blaze/atlas_weapon_icons"
-	self.icons.weapon_gre_thermite_large.texture_rect = {
-		0,
-		128,
 		96,
 		128,
 	}

@@ -631,7 +631,9 @@ function HUDManager:start_player_timer(time)
 end
 
 function HUDManager:start_teammate_timer(i, name_label_id, time, current)
-	self._teammate_panels[i]:start_timer(time, current)
+	if self._teammate_panels[i] then
+		self._teammate_panels[i]:start_timer(time, current)
+	end
 
 	local name_label = self:_get_name_label(name_label_id)
 
@@ -641,7 +643,11 @@ function HUDManager:start_teammate_timer(i, name_label_id, time, current)
 end
 
 function HUDManager:is_teammate_timer_running(i)
-	return self._teammate_panels[i]:is_timer_running()
+	if self._teammate_panels[i] then
+		return self._teammate_panels[i]:is_timer_running()
+	end
+
+	return false
 end
 
 function HUDManager:pause_player_timer(pause)
@@ -649,7 +655,9 @@ function HUDManager:pause_player_timer(pause)
 end
 
 function HUDManager:pause_teammate_timer(i, name_label_id, pause)
-	self._teammate_panels[i]:set_pause_timer(pause)
+	if self._teammate_panels[i] then
+		self._teammate_panels[i]:set_pause_timer(pause)
+	end
 
 	local name_label = self:_get_name_label(name_label_id)
 

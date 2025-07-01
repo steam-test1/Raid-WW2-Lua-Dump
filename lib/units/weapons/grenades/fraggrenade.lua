@@ -172,7 +172,9 @@ function FragGrenade:_award_achievement_multi_kill(thrower_peer_id)
 	else
 		local thrower_peer = managers.network:session():peer(thrower_peer_id)
 
-		managers.network:session():send_to_peer(thrower_peer, "sync_award_achievement", achievement_id)
+		if thrower_peer then
+			managers.network:session():send_to_peer(thrower_peer, "sync_award_achievement", achievement_id)
+		end
 	end
 end
 

@@ -451,10 +451,10 @@ end
 
 function WeaponFactoryManager:modify_skin_blueprint(factory_id, blueprint)
 	local modified_blueprint = {}
-	local skin_id = managers.weapon_inventory:get_weapons_skin(factory_id)
+	local skin_id, skin_data = managers.weapon_inventory:get_weapons_skin(factory_id)
 
-	for i, v in ipairs(blueprint) do
-		local replacement = tweak_data.weapon.weapon_skins[skin_id] and tweak_data.weapon.weapon_skins[skin_id].replaces_parts and tweak_data.weapon.weapon_skins[skin_id].replaces_parts[v]
+	for _, v in ipairs(blueprint) do
+		local replacement = skin_data and skin_data.replaces_parts and skin_data.replaces_parts[v]
 
 		if replacement then
 			table.insert(modified_blueprint, replacement)

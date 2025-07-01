@@ -1150,6 +1150,10 @@ function PlayerDamage:_check_activate_perseverance(params)
 		return
 	end
 
+	if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_WARCRIES_DISABLED) then
+		return
+	end
+
 	local max_duration = managers.player:upgrade_value("player", "perseverance_prolong_life", 0)
 	local multiplier = managers.warcry:current_meter_value()
 

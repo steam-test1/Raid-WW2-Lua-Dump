@@ -145,11 +145,15 @@ function DropLootManager:enemy_drop_item(tweak_table, killer_unit, position, rot
 				multipliers.health = tweak_data.drop_loot:get_drop_rate_multiplier("health", health_ratio)
 			end
 
-			local current_grenades = managers.player:get_grenade_amount(peer_id)
-			local max_grenades = managers.player:get_max_grenades_by_peer_id(peer_id)
-			local grenades_ratio = current_grenades / max_grenades
+			local grenade_type = managers.player:get_grenade_type(peer_id)
 
-			multipliers.grenade = tweak_data.drop_loot:get_drop_rate_multiplier("grenade", grenades_ratio)
+			if grenade_type and grenade_type.pickup_filter and grenade_type.pickup_filter == "grenades" then
+				local current_grenades = managers.player:get_grenade_amount(peer_id)
+				local max_grenades = managers.player:get_max_grenades_by_peer_id(peer_id)
+				local grenades_ratio = current_grenades / max_grenades
+
+				multipliers.grenade = tweak_data.drop_loot:get_drop_rate_multiplier("grenade", grenades_ratio)
+			end
 		end
 	end
 

@@ -499,6 +499,8 @@ function UpgradesManager:get_value(upgrade_id, ...)
 
 	if not upgrade then
 		Application:error("[UpgradesManager:get_value] Missing Upgrade ID: ", upgrade_id)
+
+		return
 	end
 
 	local u = upgrade.upgrade
@@ -585,6 +587,10 @@ function UpgradesManager:get_value(upgrade_id, ...)
 	end
 
 	print("no value for", upgrade_id, upgrade.category)
+end
+
+function UpgradesManager:upgrade_exists(upgrade_id)
+	return not not tweak_data.upgrades.definitions[upgrade_id]
 end
 
 function UpgradesManager:get_category(upgrade_id)

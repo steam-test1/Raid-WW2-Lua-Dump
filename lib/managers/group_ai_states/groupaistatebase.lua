@@ -3739,7 +3739,7 @@ function GroupAIStateBase:chk_say_teamAI_combat_chatter(unit)
 	end
 
 	managers.dialog:queue_dialog("player_gen_battle_celebration", {
-		position = nil,
+		attention_info = nil,
 		skip_idle_check = true,
 	})
 end

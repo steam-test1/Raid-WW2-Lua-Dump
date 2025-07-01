@@ -2087,12 +2087,6 @@ function UpgradesTweakData:_create_grenades_definitions()
 	self.definitions.gold_bar = {
 		category = "grenade",
 	}
-	self.definitions.thermite = {
-		category = "grenade",
-	}
-	self.definitions.anti_tank = {
-		category = "grenade",
-	}
 end
 
 function UpgradesTweakData:_primary_weapon_definitions()

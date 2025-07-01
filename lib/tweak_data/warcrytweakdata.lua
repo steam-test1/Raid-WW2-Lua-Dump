@@ -163,7 +163,7 @@ end
 
 function WarcryTweakData:_init_ghost()
 	self.ghost = {
-		base_duration = 10,
+		base_duration = 8,
 		base_kill_fill_amount = 0.06666666666666667,
 		buffs = {
 			{

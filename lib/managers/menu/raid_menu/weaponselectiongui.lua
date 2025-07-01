@@ -277,6 +277,7 @@ end
 
 function WeaponSelectionGui:_layout_weapon_stats()
 	local weapon_stats_params = {
+		data_source_callback = nil,
 		label_class = RaidGUIControlLabelNamedValueWithDelta,
 		name = "weapon_stats",
 		selection_enabled = false,
@@ -289,6 +290,7 @@ function WeaponSelectionGui:_layout_weapon_stats()
 	self._weapon_stats = self._root_panel:create_custom_control(RaidGUIControlWeaponStats, weapon_stats_params)
 
 	local melee_weapon_stats_params = {
+		data_source_callback = nil,
 		label_class = RaidGUIControlLabelNamedValue,
 		name = "melee_weapon_stats",
 		selection_enabled = false,
@@ -301,6 +303,7 @@ function WeaponSelectionGui:_layout_weapon_stats()
 	self._melee_weapon_stats = self._root_panel:create_custom_control(RaidGUIControlMeleeWeaponStats, melee_weapon_stats_params)
 
 	local grenade_weapon_stats_params = {
+		data_source_callback = nil,
 		label_class = RaidGUIControlLabelNamedValue,
 		name = "grenade_weapon_stats",
 		selection_enabled = false,
@@ -516,6 +519,9 @@ function WeaponSelectionGui:_layout_skins_button()
 	self._skins_button = self._root_panel:stepper_simple(skins_button_params)
 
 	local weapon_factory_id = managers.weapon_factory:get_factory_id_by_weapon_id(self._selected_weapon_id)
+
+	weapon_factory_id = weapon_factory_id or self._selected_weapon_id
+
 	local wep_skin = managers.weapon_inventory:get_weapons_skin(weapon_factory_id)
 
 	Application:debug("[WeaponSelectionGui] ----------------------------------------------------------------------- ")
@@ -572,8 +578,11 @@ end
 function WeaponSelectionGui:on_skins_button_click(item)
 	local weapon_factory_id = managers.weapon_factory:get_factory_id_by_weapon_id(self._selected_weapon_id)
 
+	weapon_factory_id = weapon_factory_id or self._selected_weapon_id
+
 	managers.weapon_inventory:set_weapons_skin(weapon_factory_id, item.value)
 	Application:debug("[WeaponSelectionGui] on_skins_button_click", weapon_factory_id, item.value)
+	self._weapon_list:refresh_data()
 	self:_recreate_and_show_weapon_parts()
 	self:_update_weapon_stats(false)
 	managers.menu_component:post_event("weapon_click")
@@ -671,18 +680,12 @@ end
 function WeaponSelectionGui:on_weapon_category_selected(selected_category)
 	if selected_category == WeaponInventoryManager.BM_CATEGORY_PRIMARY_ID or selected_category == WeaponInventoryManager.BM_CATEGORY_SECONDARY_ID then
 		self._upgrade_button:show()
-		self:show_skins_button_if_skins()
 	else
 		self._upgrade_button:hide()
 		self._available_points_label:hide()
 	end
 
-	if selected_category == WeaponInventoryManager.BM_CATEGORY_PRIMARY_ID or selected_category == WeaponInventoryManager.BM_CATEGORY_SECONDARY_ID then
-		self:show_skins_button_if_skins()
-	else
-		self._skins_button:hide()
-	end
-
+	self:show_skins_button_if_skins()
 	self:destroy_weapon_parts()
 	self:destroy_weapon()
 
@@ -766,6 +769,16 @@ function WeaponSelectionGui:data_source_weapon_list()
 		for _, weapon_data in pairs(owned_weapons) do
 			if self._selected_filter == "all" or self._selected_filter == "equippable" and weapon_data.unlocked then
 				if self._selected_weapon_category_id == WeaponInventoryManager.BM_CATEGORY_PRIMARY_ID or self._selected_weapon_category_id == WeaponInventoryManager.BM_CATEGORY_SECONDARY_ID then
+					local name_id
+					local weapon_factory_id = managers.weapon_factory:get_factory_id_by_weapon_id(weapon_data.weapon_id)
+					local _, skin_data = managers.weapon_inventory:get_weapons_skin(weapon_factory_id)
+
+					if skin_data then
+						name_id = skin_data.name_id
+					else
+						name_id = tweak_data.weapon[weapon_data.weapon_id].name_id
+					end
+
 					local breadcrumb_category
 
 					if self._selected_weapon_category_id == WeaponInventoryManager.BM_CATEGORY_PRIMARY_ID then
@@ -792,20 +805,14 @@ function WeaponSelectionGui:data_source_weapon_list()
 						}
 					end
 
-					if self._selected_weapon_id == weapon_data.weapon_id or equipped_weapon_id == weapon_data.weapon_id then
-						table.insert(result, {
-							breadcrumb = breadcrumb,
-							selected = true,
-							text = self:translate(tweak_data.weapon[weapon_data.weapon_id].name_id, false),
-							value = weapon_data,
-						})
-					else
-						table.insert(result, {
-							breadcrumb = breadcrumb,
-							text = self:translate(tweak_data.weapon[weapon_data.weapon_id].name_id, false),
-							value = weapon_data,
-						})
-					end
+					local selected = self._selected_weapon_id == weapon_data.weapon_id or equipped_weapon_id == weapon_data.weapon_id
+
+					table.insert(result, {
+						breadcrumb = breadcrumb,
+						selected = selected,
+						text = self:translate(name_id, false),
+						value = weapon_data,
+					})
 				elseif self._selected_weapon_category_id == WeaponInventoryManager.BM_CATEGORY_MELEE_ID then
 					equipped_weapon_id = managers.weapon_inventory:get_equipped_melee_weapon_id()
 
@@ -831,20 +838,24 @@ function WeaponSelectionGui:data_source_weapon_list()
 						})
 					end
 				elseif self._selected_weapon_category_id == WeaponInventoryManager.BM_CATEGORY_GRENADES_ID then
+					local name_id
+					local _, skin_data = managers.weapon_inventory:get_weapons_skin(weapon_data.weapon_id)
+
+					if skin_data then
+						name_id = skin_data.name_id
+					else
+						name_id = tweak_data.weapon[weapon_data.weapon_id].name_id
+					end
+
 					equipped_weapon_id = managers.weapon_inventory:get_equipped_grenade_id()
 
-					if self._selected_weapon_id == weapon_data.weapon_id or equipped_weapon_id == weapon_data.weapon_id then
-						table.insert(result, {
-							selected = true,
-							text = self:translate(tweak_data.projectiles[weapon_data.weapon_id].name_id, false),
-							value = weapon_data,
-						})
-					else
-						table.insert(result, {
-							text = self:translate(tweak_data.projectiles[weapon_data.weapon_id].name_id, false),
-							value = weapon_data,
-						})
-					end
+					local selected = self._selected_weapon_id == weapon_data.weapon_id or equipped_weapon_id == weapon_data.weapon_id
+
+					table.insert(result, {
+						selected = selected,
+						text = self:translate(name_id, false),
+						value = weapon_data,
+					})
 				end
 			end
 		end
@@ -927,7 +938,6 @@ function WeaponSelectionGui:on_apply_button_click()
 	local weapon_points_to_apply = self._weapon_skills:get_temp_points()
 
 	self._weapon_skills:apply_selected_skills()
-	managers.statistics:spend_weapon_points(weapon_points_to_apply)
 	managers.statistics:publish_camp_stats_to_steam()
 end
 
@@ -1124,10 +1134,10 @@ function WeaponSelectionGui:_update_weapon_stats(reset_applied_stats)
 		})
 
 		local weapon_factory_id = managers.weapon_factory:get_factory_id_by_weapon_id(selected_weapon_data.weapon_id)
-		local weapon_skin = managers.weapon_inventory:get_weapons_skin(weapon_factory_id)
+		local _, skin_data = managers.weapon_inventory:get_weapons_skin(weapon_factory_id)
 
-		if weapon_skin and weapon_skin ~= "default" then
-			weapon_name = tweak_data.weapon.weapon_skins[weapon_skin].name_id
+		if skin_data then
+			weapon_name = skin_data.name_id
 		else
 			weapon_name = tweak_data.weapon[selected_weapon_data.weapon_id].name_id
 		end
@@ -1151,8 +1161,13 @@ function WeaponSelectionGui:_update_weapon_stats(reset_applied_stats)
 		local range = f2s(proj_tweak_data.range or 0)
 		local distance = f2s(proj_tweak_data.launch_speed or 250)
 		local capacity = f2s(managers.player:get_max_grenades(weapon_id))
+		local _, skin_data = managers.weapon_inventory:get_weapons_skin(weapon_id)
 
-		weapon_name = proj_tweak_data.name_id
+		if skin_data then
+			weapon_name = skin_data.name_id
+		else
+			weapon_name = proj_tweak_data.name_id
+		end
 
 		self._grenade_weapon_stats:set_stats(damage, range, distance, capacity)
 	end
@@ -1173,9 +1188,17 @@ function WeaponSelectionGui:_recreate_and_show_weapon_parts(temp_skills)
 	if self._rotate_weapon then
 		local position = self._rotate_weapon:current_position()
 		local rotation = self._rotate_weapon:current_rotation()
-		local blueprint = managers.weapon_skills:recreate_weapon_blueprint(self._selected_weapon_id, self._weapon_category_id, temp_skills, false)
+		local selected_weapon_data = self._weapon_list:selected_item():data()
+		local active_weapon_data = self._weapon_list:get_active_item():data()
 
-		self:_show_weapon(self._selected_weapon_id, blueprint)
+		if self._selected_weapon_category_id == WeaponInventoryManager.BM_CATEGORY_PRIMARY_ID or self._selected_weapon_category_id == WeaponInventoryManager.BM_CATEGORY_SECONDARY_ID then
+			local blueprint = managers.weapon_skills:recreate_weapon_blueprint(self._selected_weapon_id, self._weapon_category_id, temp_skills, false)
+
+			self:_show_weapon(self._selected_weapon_id, blueprint)
+		else
+			self:_show_unit(self._selected_weapon_id)
+		end
+
 		self._rotate_weapon:set_position(position)
 		self._rotate_weapon:set_rotation(rotation)
 	else
@@ -1276,8 +1299,9 @@ function WeaponSelectionGui:_select_weapon(weapon_id, weapon_category_switched)
 
 		if self._selected_weapon_category_id == WeaponInventoryManager.BM_CATEGORY_PRIMARY_ID or self._selected_weapon_category_id == WeaponInventoryManager.BM_CATEGORY_SECONDARY_ID then
 			self._upgrade_button:show()
-			self:show_skins_button_if_skins()
 		end
+
+		self:show_skins_button_if_skins()
 	elseif selected_weapon:data().value.unlocked then
 		self._equip_button:show()
 		self._equip_disabled_button:hide()
@@ -1285,8 +1309,9 @@ function WeaponSelectionGui:_select_weapon(weapon_id, weapon_category_switched)
 
 		if self._selected_weapon_category_id == WeaponInventoryManager.BM_CATEGORY_PRIMARY_ID or self._selected_weapon_category_id == WeaponInventoryManager.BM_CATEGORY_SECONDARY_ID then
 			self._upgrade_button:show()
-			self:show_skins_button_if_skins()
 		end
+
+		self:show_skins_button_if_skins()
 	else
 		self._equip_button:hide()
 		self._equip_disabled_button:hide()
@@ -1494,32 +1519,38 @@ function WeaponSelectionGui:_show_unit(weapon_id)
 	self:destroy_weapon()
 
 	local unit_path, weapon_tweak_data
+	local skin_id, skin_data = managers.weapon_inventory:get_weapons_skin(weapon_id)
 
 	if self._selected_weapon_category_id == WeaponInventoryManager.BM_CATEGORY_MELEE_ID then
 		weapon_tweak_data = tweak_data.blackmarket.melee_weapons[weapon_id] or managers.blackmarket._defaults.melee_weapon
 		unit_path = weapon_tweak_data.unit
 	elseif self._selected_weapon_category_id == WeaponInventoryManager.BM_CATEGORY_GRENADES_ID then
 		weapon_tweak_data = tweak_data.projectiles[weapon_id]
-		unit_path = weapon_tweak_data.unit_hand
+
+		if skin_data and skin_data.replaces_units then
+			unit_path = skin_data.replaces_units.unit_hand
+		else
+			unit_path = weapon_tweak_data.unit_hand
+		end
 	end
 
 	if not unit_path then
 		return
 	end
 
-	unit_path = Idstring(unit_path)
+	local ids_unit_path = Idstring(unit_path)
 
-	managers.dyn_resource:load(IDS_UNIT, unit_path, DynamicResourceManager.DYN_RESOURCES_PACKAGE, false)
+	managers.dyn_resource:load(IDS_UNIT, ids_unit_path, DynamicResourceManager.DYN_RESOURCES_PACKAGE, false)
 
 	local rotation_offset = weapon_tweak_data.gui and weapon_tweak_data.gui.rotation_offset or 0
 	local distance_offset = weapon_tweak_data.gui and weapon_tweak_data.gui.distance_offset or 0
 	local height_offset = weapon_tweak_data.gui and weapon_tweak_data.gui.height_offset or 0
 	local display_offset = weapon_tweak_data.gui and weapon_tweak_data.gui.display_offset or 0
 	local camera = managers.viewport:get_current_camera()
-	local position = camera:position()
-	local direction_left = -camera:rotation():x()
-	local direction_forward = camera:rotation():y()
-	local direction_up = camera:rotation():z()
+	local rotation = camera:rotation()
+	local direction_left = -rotation:x()
+	local direction_forward = rotation:y()
+	local direction_up = rotation:z()
 	local sx, sy = self:pix_to_screen(self._rotate_weapon:x() + self._rotate_weapon:w() / 2, self._rotate_weapon:y() + self._rotate_weapon:h() / 2)
 
 	self._spawned_unit_position = camera:screen_to_world(Vector3(sx, sy, 200)) + direction_left * display_offset
@@ -1531,7 +1562,7 @@ function WeaponSelectionGui:_show_unit(weapon_id)
 		start_rot = Rotation(weapon_tweak_data.gui.initial_rotation.yaw or WeaponTweakData.INIT_ROTATION_YAW, weapon_tweak_data.gui.initial_rotation.pitch or 0, weapon_tweak_data.gui.initial_rotation.roll or 0)
 	end
 
-	self._spawned_unit = World:spawn_unit(unit_path, self._spawned_unit_position_temp, start_rot or Rotation(-90, 0, 0))
+	self._spawned_unit = World:spawn_unit(ids_unit_path, self._spawned_unit_position_temp, start_rot or Rotation(-90, 0, 0))
 	self._spawned_unit_offset = direction_forward * rotation_offset
 
 	self._spawned_unit:set_position(self._spawned_unit_position)
@@ -1620,6 +1651,14 @@ function WeaponSelectionGui:bind_controller_inputs_choose_weapon_no_upgrade()
 		{
 			callback = callback(self, self, "_on_equipable_tab_right"),
 			key = Idstring("menu_controller_trigger_right"),
+		},
+		{
+			callback = callback(self, self, "_on_weapon_skin_left"),
+			key = Idstring("menu_controller_dpad_left"),
+		},
+		{
+			callback = callback(self, self, "_on_weapon_skin_right"),
+			key = Idstring("menu_controller_dpad_right"),
 		},
 	}
 	local controller_legend = {

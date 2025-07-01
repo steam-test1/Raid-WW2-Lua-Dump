@@ -847,10 +847,6 @@ function StatisticsManager:_increment_camp_stat(name, amount)
 	self._global.camp[name] = (self._global.camp[name] or 0) + amount
 end
 
-function StatisticsManager:spend_weapon_points(value)
-	self:_increment_camp_stat("ach_weap_points_spend", value)
-end
-
 function StatisticsManager:create_character()
 	self:_increment_camp_stat("ach_create_character", 1)
 end
@@ -1067,35 +1063,6 @@ end
 function StatisticsManager:mission_stats(name)
 	self._global.session.mission_stats = self._global.session.mission_stats or {}
 	self._global.session.mission_stats[name] = (self._global.session.mission_stats[name] or 0) + 1
-end
-
-function StatisticsManager:write_level_stats(session, stats)
-	for level_name, level_data in pairs(sessions.levels) do
-		stats["level_" .. level_name .. "_completed"] = {
-			type = "int",
-			value = level_data.completed,
-		}
-		stats["level_" .. level_name .. "_started"] = {
-			type = "int",
-			value = level_data.started,
-		}
-		stats["level_" .. level_name .. "_drop_in"] = {
-			type = "int",
-			value = level_data.drop_in,
-		}
-		stats["level_" .. level_name .. "_quit"] = {
-			type = "int",
-			value = level_data.quited,
-		}
-		stats["level_" .. level_name .. "_from_beginning"] = {
-			type = "int",
-			value = level_data.from_beginning,
-		}
-		stats["level_" .. level_name .. "_time"] = {
-			type = "int",
-			value = level_data.time,
-		}
-	end
 end
 
 function StatisticsManager:publish_to_steam(session, success, completion)
@@ -1539,6 +1506,7 @@ function StatisticsManager:publish_to_steam(session, success, completion)
 	if table.contains(job_list, job_id) then
 		for job_name, job_data in pairs(self._global.sessions.jobs) do
 			stats["jobs_" .. job_name] = {
+				method = "set",
 				type = "int",
 				value = job_data,
 			}

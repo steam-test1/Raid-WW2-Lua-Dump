@@ -132,7 +132,6 @@ function WeaponInventoryTweakData:init()
 			weapon_id = "betty",
 		},
 		{
-			challenge = "candy_gold_bar",
 			slot = 7,
 			weapon_id = "gold_bar",
 		},

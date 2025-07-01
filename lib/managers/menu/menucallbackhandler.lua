@@ -1576,9 +1576,10 @@ function MenuCallbackHandler:_update_outfit_information()
 
 	if managers.network:session() then
 		local local_peer = managers.network:session():local_peer()
-		local in_lobby = local_peer:in_lobby() and game_state_machine:current_state_name() ~= "ingame_lobby_menu"
+		local player_class = managers.skilltree:get_character_profile_class()
 
 		local_peer:set_outfit_string(outfit_string)
+		local_peer:set_class(player_class)
 		managers.network:session():check_send_outfit()
 	end
 end

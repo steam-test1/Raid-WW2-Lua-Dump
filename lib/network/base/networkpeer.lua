@@ -86,7 +86,7 @@ function NetworkPeer:init(name, rpc, id, loading, synced, in_lobby, character, u
 
 	self._profile = {
 		outfit_string = "",
-		size = nil,
+		unpack = nil,
 	}
 	self._handshakes = {}
 	self._streaming_status = 0
@@ -109,24 +109,6 @@ end
 
 function NetworkPeer:set_active_warcry(warcry)
 	self._active_warcry = warcry
-
-	local warcry_tweak = tweak_data.warcry[self._active_warcry]
-
-	if not warcry_tweak or not warcry_tweak.activation_equip_weapon then
-		return
-	end
-
-	local projectile_tweak = tweak_data.projectiles[warcry_tweak.activation_equip_weapon]
-
-	if not projectile_tweak or not projectile_tweak.unit then
-		return
-	end
-
-	local ids_projectile = Idstring(projectile_tweak.unit)
-
-	if not managers.dyn_resource:is_resource_ready(IDS_UNIT, ids_projectile, managers.dyn_resource.DYN_RESOURCES_PACKAGE) then
-		managers.dyn_resource:load(IDS_UNIT, ids_projectile, managers.dyn_resource.DYN_RESOURCES_PACKAGE)
-	end
 end
 
 function NetworkPeer:active_warcry()
@@ -319,32 +301,9 @@ function NetworkPeer:_verify_outfit_data()
 	end
 
 	local outfit = self:blackmarket_outfit()
-	local mask_blueprint_lookup = {
-		color = "colors",
-		material = "materials",
-		pattern = "textures",
-	}
 
 	for item_type, item in pairs(outfit) do
-		if item_type == "mask" then
-			if not self:_verify_content("masks", item.mask_id) then
-				return self:_verify_cheated_outfit("masks", item.mask_id, 1)
-			end
-
-			for mask_type, mask_item in pairs(item.blueprint) do
-				local mask_type_lookup = mask_blueprint_lookup[mask_type]
-				local skip_default = false
-				local mask_tweak = tweak_data.blackmarket.masks[item.mask_id]
-
-				if mask_tweak and mask_tweak.default_blueprint and mask_tweak.default_blueprint[mask_type_lookup] == mask_item.id then
-					skip_default = true
-				end
-
-				if not skip_default and not self:_verify_content(mask_type_lookup, mask_item.id) then
-					return self:_verify_cheated_outfit(mask_type_lookup, mask_item.id, 1)
-				end
-			end
-		elseif item_type == "primary" or item_type == "secondary" then
+		if item_type == "primary" or item_type == "secondary" then
 			if not self:_verify_content("weapon", managers.weapon_factory:get_weapon_id_by_factory_id(item.factory_id)) then
 				return self:_verify_cheated_outfit("weapon", item.factory_id, 2)
 			end
@@ -1221,8 +1180,6 @@ function NetworkPeer:set_profile(level)
 end
 
 function NetworkPeer:set_outfit_string(outfit_string, outfit_version, outfit_signature)
-	Application:stack_dump()
-
 	local old_outfit_string = self._profile.outfit_string
 
 	self._profile.outfit_string = outfit_string
@@ -1264,13 +1221,6 @@ function NetworkPeer:character_id()
 	return managers.blackmarket:get_character_id_by_character_name(self:character())
 end
 
-function NetworkPeer:mask_id()
-	local outfit_string = self:profile("outfit_string")
-	local data = string.split(outfit_string, " ")
-
-	return data[managers.blackmarket:outfit_string_index("mask")]
-end
-
 function NetworkPeer:armor_id(get_current)
 	local outfit_string = self:profile("outfit_string")
 	local data = string.split(outfit_string, " ")
@@ -1294,11 +1244,18 @@ function NetworkPeer:grenade_id()
 	return data[managers.blackmarket:outfit_string_index("grenade")]
 end
 
-function NetworkPeer:skills()
+function NetworkPeer:grenade_cosmetic_id()
 	local outfit_string = self:profile("outfit_string")
 	local data = string.split(outfit_string, " ")
 
-	return data[managers.blackmarket:outfit_string_index("skills")]
+	return data[managers.blackmarket:outfit_string_index("grenade_cosmetic")]
+end
+
+function NetworkPeer:warcry_weapon()
+	local outfit_string = self:profile("outfit_string")
+	local data = string.split(outfit_string, " ")
+
+	return data[managers.blackmarket:outfit_string_index("warcry_weapon")]
 end
 
 function NetworkPeer:has_blackmarket_outfit()
@@ -1426,19 +1383,23 @@ function NetworkPeer:is_loading_outfit_assets()
 	return self._loading_outfit_assets
 end
 
-function NetworkPeer:_unload_outfit()
-	for asset_id, asset_data in pairs(self._outfit_assets.unit) do
+function NetworkPeer:_unload_outfit(forced_outfit)
+	local outfit = forced_outfit or self._outfit_assets
+
+	for asset_id, asset_data in pairs(outfit.unit) do
 		managers.dyn_resource:unload(IDS_UNIT, asset_data.name, DynamicResourceManager.DYN_RESOURCES_PACKAGE, false)
 	end
 
-	for asset_id, asset_data in pairs(self._outfit_assets.texture) do
+	for asset_id, asset_data in pairs(outfit.texture) do
 		TextureCache:unretrieve(asset_data.name)
 	end
 
-	self._outfit_assets = {
-		texture = {},
-		unit = {},
-	}
+	if not forced_outfit then
+		self._outfit_assets = {
+			texture = {},
+			unit = {},
+		}
+	end
 end
 
 function NetworkPeer:force_reload_outfit()
@@ -1461,104 +1422,149 @@ function NetworkPeer:_reload_outfit()
 
 	print("[NetworkPeer:_reload_outfit]", is_local_peer and "local_peer" or self._id, self._profile.outfit_string)
 
-	local asset_load_result_clbk = callback(self, self, "clbk_outfit_asset_loaded", new_outfit_assets)
-	local texture_load_result_clbk = callback(self, self, "clbk_outfit_texture_loaded", new_outfit_assets)
 	local complete_outfit = self:blackmarket_outfit()
-	local factory_id = complete_outfit.primary.factory_id .. (is_local_peer and "" or "_npc")
-	local ids_primary_u_name = Idstring(tweak_data.weapon.factory[factory_id].unit)
 
-	new_outfit_assets.unit.primary_w = {
-		name = ids_primary_u_name,
-	}
+	do
+		local factory_id = complete_outfit.primary.factory_id .. (is_local_peer and "" or "_npc")
+		local ids_primary_u_name = Idstring(tweak_data.weapon.factory[factory_id].unit)
 
-	local use_fps_parts = is_local_peer or managers.weapon_factory:use_thq_weapon_parts() and not tweak_data.weapon.factory[factory_id].skip_thq_parts
-	local primary_w_parts = managers.weapon_factory:preload_blueprint(complete_outfit.primary.factory_id, complete_outfit.primary.blueprint, not use_fps_parts, function()
-		return
-	end, true)
-
-	for part_id, part in pairs(primary_w_parts) do
-		new_outfit_assets.unit["prim_w_part_" .. tostring(part_id)] = {
-			name = part.name,
+		new_outfit_assets.unit.primary_w = {
+			name = ids_primary_u_name,
 		}
-	end
 
-	local factory_id = complete_outfit.secondary.factory_id .. (is_local_peer and "" or "_npc")
-	local ids_secondary_u_name = Idstring(tweak_data.weapon.factory[factory_id].unit)
+		local use_fps_parts = is_local_peer or managers.weapon_factory:use_thq_weapon_parts() and not tweak_data.weapon.factory[factory_id].skip_thq_parts
+		local primary_w_parts = managers.weapon_factory:preload_blueprint(complete_outfit.primary.factory_id, complete_outfit.primary.blueprint, not use_fps_parts, function()
+			return
+		end, true)
 
-	new_outfit_assets.unit.secondary_w = {
-		name = ids_secondary_u_name,
-	}
-
-	local use_fps_parts = is_local_peer or managers.weapon_factory:use_thq_weapon_parts() and not tweak_data.weapon.factory[factory_id].skip_thq_parts
-	local secondary_w_parts = managers.weapon_factory:preload_blueprint(complete_outfit.secondary.factory_id, complete_outfit.secondary.blueprint, not use_fps_parts, function()
-		return
-	end, true)
-
-	for part_id, part in pairs(secondary_w_parts) do
-		new_outfit_assets.unit["sec_w_part_" .. tostring(part_id)] = {
-			name = part.name,
-		}
-	end
-
-	local melee_tweak_data = tweak_data.blackmarket.melee_weapons[complete_outfit.melee_weapon]
-	local melee_u_name = is_local_peer and melee_tweak_data.unit or melee_tweak_data.third_unit
-
-	if melee_u_name then
-		new_outfit_assets.unit.melee_w = {
-			name = Idstring(melee_u_name),
-		}
-	end
-
-	local grenade_tweak_data = tweak_data.projectiles[complete_outfit.grenade]
-	local grenade_u_name = grenade_tweak_data.unit
-
-	if grenade_u_name then
-		new_outfit_assets.unit.grenade_w = {
-			name = Idstring(grenade_u_name),
-		}
-	end
-
-	local grenade_sprint_u_name = grenade_tweak_data.sprint_unit
-
-	if grenade_sprint_u_name then
-		new_outfit_assets.unit.grenade_sprint_w = {
-			name = Idstring(grenade_sprint_u_name),
-		}
-	end
-
-	if is_local_peer then
-		local grenade_dummy_u_name = grenade_tweak_data.unit_dummy
-
-		if grenade_dummy_u_name then
-			new_outfit_assets.unit.grenade_dummy_w = {
-				name = Idstring(grenade_dummy_u_name),
+		for part_id, part in pairs(primary_w_parts) do
+			new_outfit_assets.unit["prim_w_part_" .. tostring(part_id)] = {
+				name = part.name,
 			}
 		end
 	end
 
+	do
+		local factory_id = complete_outfit.secondary.factory_id .. (is_local_peer and "" or "_npc")
+		local ids_secondary_u_name = Idstring(tweak_data.weapon.factory[factory_id].unit)
+
+		new_outfit_assets.unit.secondary_w = {
+			name = ids_secondary_u_name,
+		}
+
+		local use_fps_parts = is_local_peer or managers.weapon_factory:use_thq_weapon_parts() and not tweak_data.weapon.factory[factory_id].skip_thq_parts
+		local secondary_w_parts = managers.weapon_factory:preload_blueprint(complete_outfit.secondary.factory_id, complete_outfit.secondary.blueprint, not use_fps_parts, function()
+			return
+		end, true)
+
+		for part_id, part in pairs(secondary_w_parts) do
+			new_outfit_assets.unit["sec_w_part_" .. tostring(part_id)] = {
+				name = part.name,
+			}
+		end
+	end
+
+	do
+		local melee_tweak_data = tweak_data.blackmarket.melee_weapons[complete_outfit.melee_weapon]
+		local melee_u_name = is_local_peer and melee_tweak_data.unit or melee_tweak_data.third_unit
+
+		if melee_u_name then
+			new_outfit_assets.unit.melee_w = {
+				name = Idstring(melee_u_name),
+			}
+		end
+	end
+
+	do
+		local grenade_data = tweak_data.projectiles[complete_outfit.grenade]
+
+		if complete_outfit.grenade_cosmetic then
+			local cosmetic = tweak_data.weapon.weapon_skins[complete_outfit.grenade_cosmetic]
+
+			grenade_data = cosmetic and cosmetic.replaces_units or grenade_data
+		end
+
+		local grenade_u_name = grenade_data and grenade_data.unit
+
+		if grenade_u_name then
+			new_outfit_assets.unit.grenade_w = {
+				name = Idstring(grenade_u_name),
+			}
+		end
+
+		local grenade_sprint_u_name = grenade_data and grenade_data.sprint_unit
+
+		if grenade_sprint_u_name then
+			new_outfit_assets.unit.grenade_sprint_w = {
+				name = Idstring(grenade_sprint_u_name),
+			}
+		end
+
+		local grenade_local_u_name = grenade_data and grenade_data.unit_local
+
+		if grenade_local_u_name then
+			new_outfit_assets.unit.grenade_local_w = {
+				name = Idstring(grenade_local_u_name),
+			}
+		end
+
+		if is_local_peer then
+			local grenade_dummy_u_name = grenade_data and grenade_data.unit_dummy
+
+			if grenade_dummy_u_name then
+				new_outfit_assets.unit.grenade_dummy_w = {
+					name = Idstring(grenade_dummy_u_name),
+				}
+			end
+		end
+	end
+
+	do
+		local weapon_data = tweak_data.weapon[complete_outfit.warcry_weapon]
+
+		if weapon_data and weapon_data.category and weapon_data.category == WeaponTweakData.WEAPON_CATEGORY_GRENADE then
+			local projectile_data = tweak_data.projectiles[complete_outfit.warcry_weapon]
+			local grenade_u_name = projectile_data and projectile_data.unit
+
+			if grenade_u_name then
+				new_outfit_assets.unit.warcry_w = {
+					name = Idstring(grenade_u_name),
+				}
+			end
+
+			if is_local_peer then
+				local grenade_dummy_u_name = projectile_data and projectile_data.unit_dummy
+
+				if grenade_dummy_u_name then
+					new_outfit_assets.unit.warcry_dummy_w = {
+						name = Idstring(grenade_dummy_u_name),
+					}
+				end
+			end
+		end
+	end
+
+	local asset_load_result_clbk = callback(self, self, "clbk_outfit_asset_loaded", new_outfit_assets)
+	local texture_load_result_clbk = callback(self, self, "clbk_outfit_texture_loaded", new_outfit_assets)
+
 	self._outfit_assets = new_outfit_assets
 
-	for asset_id, asset_data in pairs(new_outfit_assets.unit) do
+	for _, asset_data in pairs(new_outfit_assets.unit) do
 		asset_data.is_streaming = true
 
 		managers.dyn_resource:load(IDS_UNIT, asset_data.name, DynamicResourceManager.DYN_RESOURCES_PACKAGE, asset_load_result_clbk)
 	end
 
-	for asset_id, asset_data in pairs(new_outfit_assets.texture) do
+	for _, asset_data in pairs(new_outfit_assets.texture) do
 		asset_data.is_streaming = true
 
 		TextureCache:request(asset_data.name, ids_NORMAL, texture_load_result_clbk, 90)
 	end
 
 	self._all_outfit_load_requests_sent = true
-	self._outfit_assets = old_outfit_assets
 
-	self:_unload_outfit()
-
-	self._outfit_assets = new_outfit_assets
-
+	self:_unload_outfit(old_outfit_assets)
 	self:_chk_outfit_loading_complete()
-	self:set_class(managers.skilltree:get_character_profile_class())
 end
 
 function NetworkPeer:clbk_outfit_asset_loaded(outfit_assets, status, asset_type, asset_name)

@@ -39,10 +39,6 @@ function WarcryManager:_setup()
 	end
 end
 
-function WarcryManager:get_active_warcry()
-	return self._active_warcry
-end
-
 function WarcryManager:set_warcry_post_effect(ids_effect)
 	local vp = managers.viewport:first_active_viewport()
 

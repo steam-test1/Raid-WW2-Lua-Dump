@@ -217,7 +217,6 @@ function StatisticsTweakData:statistics_table()
 		"decoy_coin",
 		"betty",
 		"gold_bar",
-		"thermite",
 		"anti_tank",
 	}
 	local enemy_list = {

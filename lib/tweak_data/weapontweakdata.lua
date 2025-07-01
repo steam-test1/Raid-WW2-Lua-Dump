@@ -80,7 +80,6 @@ function WeaponTweakData:init(tweak_data)
 	self:_init_data_molotov(tweak_data)
 	self:_init_data_betty(tweak_data)
 	self:_init_data_gold_bar(tweak_data)
-	self:_init_data_thermite(tweak_data)
 	self:_init_data_anti_tank(tweak_data)
 	self:_init_data_kar98_npc(tweak_data)
 	self:_init_data_sniper_kar98_npc(tweak_data)
@@ -256,35 +255,57 @@ end
 
 function WeaponTweakData:_init_data_weapon_skins()
 	self.weapon_skins = {}
-	self.weapon_skins.garand_special_edition = {}
-	self.weapon_skins.garand_special_edition.weapon_id = "garand"
-	self.weapon_skins.garand_special_edition.name_id = "bm_w_garand_se"
-	self.weapon_skins.garand_special_edition.dlc = DLCTweakData.DLC_NAME_SPECIAL_EDITION
-	self.weapon_skins.garand_special_edition.replaces_parts = {
-		wpn_fps_ass_garand_b_standard = "wpn_fps_ass_garand_golden_b_standard",
-		wpn_fps_ass_garand_b_tanker = "wpn_fps_ass_garand_golden_b_tanker",
-		wpn_fps_ass_garand_body_standard = "wpn_fps_ass_garand_golden_body_standard",
-		wpn_fps_ass_garand_bolt_standard = "wpn_fps_ass_garand_golden_bolt_standard",
-		wpn_fps_ass_garand_dh_standard = "wpn_fps_ass_garand_golden_dh_standard",
-		wpn_fps_ass_garand_extra1_swiwel = "wpn_fps_ass_garand_golden_extra1_swiwel",
-		wpn_fps_ass_garand_extra_swiwel = "wpn_fps_ass_garand_golden_extra_swiwel",
-		wpn_fps_ass_garand_m_bar_extended = "wpn_fps_ass_garand_golden_m_bar_extended",
-		wpn_fps_ass_garand_m_bar_standard = "wpn_fps_ass_garand_golden_m_bar_standard",
-		wpn_fps_ass_garand_ns_conical = "wpn_fps_ass_garand_golden_ns_conical",
-		wpn_fps_ass_garand_s_folding = "wpn_fps_ass_garand_golden_s_folding",
-		wpn_fps_ass_garand_s_standard = "wpn_fps_ass_garand_golden_s_standard",
-		wpn_fps_ass_garand_strip_standard = "wpn_fps_ass_garand_golden_strip_standard",
+	self.weapon_skins.garand_special_edition = {
+		dlc = DLCTweakData.DLC_NAME_SPECIAL_EDITION,
+		name_id = "bm_w_garand_se",
+		replaces_parts = {
+			wpn_fps_ass_garand_b_standard = "wpn_fps_ass_garand_golden_b_standard",
+			wpn_fps_ass_garand_b_tanker = "wpn_fps_ass_garand_golden_b_tanker",
+			wpn_fps_ass_garand_body_standard = "wpn_fps_ass_garand_golden_body_standard",
+			wpn_fps_ass_garand_bolt_standard = "wpn_fps_ass_garand_golden_bolt_standard",
+			wpn_fps_ass_garand_dh_standard = "wpn_fps_ass_garand_golden_dh_standard",
+			wpn_fps_ass_garand_extra1_swiwel = "wpn_fps_ass_garand_golden_extra1_swiwel",
+			wpn_fps_ass_garand_extra_swiwel = "wpn_fps_ass_garand_golden_extra_swiwel",
+			wpn_fps_ass_garand_m_bar_extended = "wpn_fps_ass_garand_golden_m_bar_extended",
+			wpn_fps_ass_garand_m_bar_standard = "wpn_fps_ass_garand_golden_m_bar_standard",
+			wpn_fps_ass_garand_ns_conical = "wpn_fps_ass_garand_golden_ns_conical",
+			wpn_fps_ass_garand_s_folding = "wpn_fps_ass_garand_golden_s_folding",
+			wpn_fps_ass_garand_s_standard = "wpn_fps_ass_garand_golden_s_standard",
+			wpn_fps_ass_garand_strip_standard = "wpn_fps_ass_garand_golden_strip_standard",
+		},
+		weapon_id = "garand",
+	}
+	self.weapon_skins.lead_bar_gold = {
+		challenge = "candy_gold_bar",
+		name_id = "bm_lead_bar_gold",
+		replaces_units = {
+			unit = "units/upd_candy/weapons/wpn_gre_gold_bar/gold/wpn_gre_gold_bar",
+			unit_dummy = "units/upd_candy/weapons/wpn_gre_gold_bar/gold/wpn_gre_gold_bar_husk",
+			unit_hand = "units/upd_candy/weapons/wpn_gre_gold_bar/gold/wpn_gre_gold_bar_hand",
+			unit_local = "units/upd_candy/weapons/wpn_gre_gold_bar/gold/wpn_gre_gold_bar_local",
+		},
+		weapon_id = "gold_bar",
 	}
 end
 
 function WeaponTweakData:get_weapon_skins(weapon_id)
 	local skins = {}
 
-	for k, v in pairs(self.weapon_skins) do
-		print(v.dlc or "false")
+	for id, skin_data in pairs(self.weapon_skins) do
+		if skin_data.weapon_id == weapon_id then
+			local owned = true
 
-		if v.weapon_id == weapon_id and (not v.dlc or tweak_data.dlc:is_weapon_skin_unlocked(k)) then
-			table.insert(skins, k)
+			if skin_data.dlc then
+				owned = tweak_data.dlc:is_weapon_skin_unlocked(id)
+			elseif skin_data.challenge then
+				local challenge = managers.challenge:get_challenge(ChallengeManager.CATEGORY_GENERIC, skin_data.challenge)
+
+				owned = challenge:completed()
+			end
+
+			if owned then
+				table.insert(skins, id)
+			end
 		end
 	end
 
@@ -809,7 +830,7 @@ function WeaponTweakData:_init_data_gold_bar(tweak_data)
 			icon = "weapons_panel_gre_gold_bar",
 			panel_class = "grenade",
 		},
-		name_id = "bm_gold_bar",
+		name_id = "bm_lead_bar",
 		sound_event = "new_grenade_explode",
 		sounds = {
 			autofire_start = nil,
@@ -840,58 +861,6 @@ function WeaponTweakData:_init_data_gold_bar(tweak_data)
 			},
 		},
 		weapon_hold = "mills",
-		weapon_movement_penalty = 1,
-	}
-end
-
-function WeaponTweakData:_init_data_thermite(tweak_data)
-	self.thermite = {
-		alert_size = 0,
-		auto = {
-			fire_rate = 0.4,
-		},
-		crosshair = self._crosshairs.grenade,
-		damage_melee = 86,
-		damage_melee_effect_mul = 1,
-		exit_run_speed_multiplier = 1,
-		gui = {
-			icon_large = "weapon_gre_thermite_large",
-		},
-		hold = "grenade",
-		hud = {
-			icon = "weapons_panel_gre_thermite",
-			panel_class = "grenade",
-		},
-		name_id = "bm_grenade_thermite",
-		sound_event = "new_grenade_explode",
-		sounds = {
-			autofire_start = nil,
-			autofire_stop = nil,
-			prefix = "",
-			single = "new_grenade_explode",
-		},
-		stance = "d343",
-		stat_group = "thermite",
-		suppression = 1,
-		timers = {
-			equip = 0.3,
-			reload_empty = 1.65,
-			reload_not_empty = 1.25,
-			unequip = 0.25,
-		},
-		transition_duration = 0,
-		usage = "c45",
-		usage_anim = "c45",
-		use_data = {
-			equip = {
-				align_place = "right_hand",
-			},
-			selection_index = tweak_data.WEAPON_SLOT_GRENADE,
-			unequip = {
-				align_place = "back",
-			},
-		},
-		weapon_hold = "d343",
 		weapon_movement_penalty = 1,
 	}
 end
@@ -1583,7 +1552,7 @@ function WeaponTweakData:_init_data_tiger_main_gun_module_npc(difficulty_index)
 		main_cannon_lock_on = "tiger_npc_canon_reload",
 	}
 	self.tiger_main_gun_module.effect = {
-		_all_fps_animation_weights = nil,
+		DEFAULT_OFFSET = nil,
 		hidden = nil,
 		main_cannon_fire = "effects/vanilla/explosions/tank_turret_fire",
 		main_cannon_fire_hit = "effects/vanilla/explosions/exp_airbomb_explosion_002",

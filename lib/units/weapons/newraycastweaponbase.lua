@@ -1473,7 +1473,7 @@ function NewRaycastWeaponBase:start_reload(...)
 
 	self._started_reload_empty = self:clip_empty()
 
-	if self:use_shotgun_reload() then
+	if self._use_shotgun_reload then
 		self:update_next_shell_reload_t(true)
 	end
 end
@@ -1483,7 +1483,7 @@ function NewRaycastWeaponBase:started_reload_empty()
 end
 
 function NewRaycastWeaponBase:update_reloading(t, dt, time_left)
-	if self:use_shotgun_reload() and self._next_shell_reloded_t and t >= self._next_shell_reloded_t then
+	if self._use_shotgun_reload and self._next_shell_reloded_t and t >= self._next_shell_reloded_t then
 		local reload_clip_single = self:get_ammo_reload_clip_single()
 		local ammo_in_clip = self:get_ammo_remaining_in_clip()
 		local ammo_max_per_clip = self:get_ammo_max_per_clip()

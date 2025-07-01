@@ -1,4 +1,5 @@
 require("lib/managers/buff_effect/BuffEffect")
+require("lib/managers/buff_effect/BuffEffectCandy")
 
 BuffEffectManager = BuffEffectManager or class()
 BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_REWARD_INCREASE = "enemy_loot_drop_reward_increase"

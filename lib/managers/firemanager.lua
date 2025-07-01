@@ -9,8 +9,6 @@ local molotov_effect = "effects/vanilla/fire/fire_molotov_grenade_001"
 local tmp_vec3 = Vector3()
 
 function FireManager:init()
-	self._enemies_on_fire = {}
-	self._dozers_on_fire = {}
 	self._flamethrower_fire_patches = {}
 	self._flamethrower_chance = FireManager.FLAMETHROWER_FIRE_CHANCE
 	self._doted_enemies = {}
@@ -38,10 +36,6 @@ function FireManager:update(t, dt)
 			self:_remove_flame_effects_from_doted_unit(dot_info.enemy_unit)
 			self:_stop_burn_body_sound(dot_info.sound_source)
 			table.remove(self._doted_enemies, index)
-
-			if dot_info.enemy_unit and alive(dot_info.enemy_unit) then
-				self._dozers_on_fire[dot_info.enemy_unit:id()] = nil
-			end
 		else
 			dot_info.fire_dot_counter = dot_info.fire_dot_counter + dt
 		end
@@ -102,47 +96,6 @@ function FireManager:_patches_intersect(pos1, pos2)
 	return result
 end
 
-function FireManager:check_achievemnts(unit, t)
-	if not unit and not alive(unit) then
-		return
-	end
-
-	if not unit:base() or not unit:base()._tweak_table then
-		return
-	end
-
-	if CopDamage.is_civilian(unit:base()._tweak_table) then
-		return
-	end
-
-	for i = #self._enemies_on_fire, 1, -1 do
-		local data = self._enemies_on_fire[i]
-
-		if t - data.t > 5 or data.unit == unit then
-			table.remove(self._enemies_on_fire, i)
-		end
-	end
-
-	table.insert(self._enemies_on_fire, {
-		t = t,
-		unit = unit,
-	})
-
-	local unit_type = unit:base()._tweak_table
-	local unit_id = unit:id()
-
-	if unit_type == "tank" or unit_type == "tank_hw" then
-		self._dozers_on_fire[unit_id] = self._dozers_on_fire[unit_id] or {
-			t = t,
-			unit = unit,
-		}
-	end
-end
-
-function FireManager:remove_dead_dozer_from_overgrill(dozer_id)
-	self._dozers_on_fire[dozer_id] = nil
-end
-
 function FireManager:is_set_on_fire(unit)
 	for key, dot_info in ipairs(self._doted_enemies) do
 		if dot_info.enemy_unit == unit then
@@ -178,8 +131,6 @@ function FireManager:_add_doted_enemy(enemy_unit, fire_damage_received_time, wea
 			self:_start_enemy_fire_effect(dot_info)
 			self:start_burn_body_sound(dot_info)
 		end
-
-		self:check_achievemnts(enemy_unit, fire_damage_received_time)
 	end
 end
 
@@ -600,7 +551,7 @@ end
 
 function FireManager:play_sound_and_effects(position, normal, range, custom_params, molotov_damage_effect_table)
 	self:player_feedback(position, normal, range, custom_params)
-	self:spawn_sound_and_effects(position, normal, range, custom_params and custom_params.effect, custom_params and custom_params.sound_event, custom_params and custom_params.on_unit, custom_params and custom_params.idstr_decal, custom_params and custom_params.idstr_effect, molotov_damage_effect_table, custom_params.sound_event_burning, custom_params.sound_event_impact_duration)
+	self:spawn_sound_and_effects(position, normal, custom_params, molotov_damage_effect_table)
 end
 
 function FireManager:player_feedback(position, normal, range, custom_params)
@@ -610,24 +561,37 @@ end
 local decal_ray_from = Vector3()
 local decal_ray_to = Vector3()
 
-function FireManager:spawn_sound_and_effects(position, normal, range, effect_name, sound_event, on_unit, idstr_decal, idstr_effect, molotov_damage_effect_table, sound_event_burning, sound_event_impact_duration)
-	effect_name = effect_name or molotov_effect
-
+function FireManager:spawn_sound_and_effects(position, normal, params, damage_effect_table)
+	local effect_name = params and params.effect_name or molotov_effect
+	local parent = params and params.parent
+	local sound_event = params and params.sound_event
+	local on_unit = params and params.on_unit
+	local idstr_decal = params and params.idstr_decal
+	local sound_event_burning = params and params.sound_event_burning
+	local sound_event_impact_duration = params and params.sound_event_impact_duration
 	local effect_id
 
-	if molotov_damage_effect_table ~= nil then
+	if damage_effect_table then
 		if effect_name ~= "none" then
-			effect_id = World:effect_manager():spawn({
+			local spawn_params = {
 				effect = Idstring(effect_name),
 				normal = normal,
-				position = position,
-			})
+			}
+
+			if parent then
+				spawn_params.parent = parent
+			else
+				spawn_params.position = position
+			end
+
+			effect_id = World:effect_manager():spawn(spawn_params)
 		end
 
-		table.insert(molotov_damage_effect_table, {
+		table.insert(damage_effect_table, {
 			detonation_normal = normal,
 			detonation_position = position,
 			effect_id = effect_id,
+			effect_parent = parent,
 		})
 	end
 
@@ -656,7 +620,7 @@ function FireManager:spawn_sound_and_effects(position, normal, range, effect_nam
 		sound_switch_name = material_name ~= empty_idstr and material_name
 	end
 
-	if (effect_name == molotov_effect and molotov_damage_effect_table ~= nil and #molotov_damage_effect_table <= 1 or effect_name ~= molotov_effect) and sound_event ~= "no_sound" then
+	if (effect_name == molotov_effect and damage_effect_table and #damage_effect_table <= 1 or effect_name ~= molotov_effect) and sound_event ~= "no_sound" then
 		local sound_source = SoundDevice:create_source("MolotovImpact")
 
 		sound_source:set_position(position)
@@ -674,8 +638,6 @@ function FireManager:spawn_sound_and_effects(position, normal, range, effect_nam
 			sound_source = sound_source,
 		}), TimerManager:game():time() + sound_event_impact_duration)
 	end
-
-	self:project_decal(ray, decal_ray_from, decal_ray_to, on_unit and ray and ray.unit, idstr_decal, idstr_effect)
 end
 
 function FireManager:project_decal(ray, from, to, on_unit, idstr_decal, idstr_effect)
@@ -696,7 +658,5 @@ function FireManager:_dispose_of_impact_sound(custom_params)
 end
 
 function FireManager:on_simulation_ended()
-	self._enemies_on_fire = {}
-	self._dozers_on_fire = {}
 	self._flamethrower_fire_patches = {}
 end

@@ -151,7 +151,7 @@ function SkillTreeManager:load_character_slot(data, version)
 		self:_activate_skill_tree(self._global.base_class_skill_tree, true)
 	end
 
-	if managers.player:local_player() then
+	if managers.player then
 		self:apply_automatic_unlocks_for_levels_up_to(managers.experience:current_level(), nil, true)
 	end
 end
@@ -885,18 +885,6 @@ function SkillTreeManager:_apply_upgrades(upgrades, apply_acquires, activate)
 			managers.upgrades:unaquire(upgrade, UpgradesManager.AQUIRE_STRINGS[2])
 		end
 	end
-end
-
-function SkillTreeManager:pack_to_string()
-	local packed_string = managers.skilltree:has_character_profile_class() and managers.skilltree:get_character_profile_class()
-
-	return packed_string
-end
-
-function SkillTreeManager:pack_to_string_from_list(list)
-	local packed_string = managers.skilltree:get_character_profile_class()
-
-	return packed_string
 end
 
 function SkillTreeManager:_activate_skill_tree(skill_tree, activate)

@@ -20,7 +20,7 @@ end
 function ImpactDecoy:_on_collision(col_ray)
 	ImpactDecoy.super._on_collision(self, col_ray)
 
-	if not managers.groupai:state():whisper_mode() then
+	if Network:is_client() or not managers.groupai:state():whisper_mode() then
 		return
 	end
 
@@ -102,6 +102,8 @@ function ImpactDecoy:_on_collision(col_ray)
 end
 
 function ImpactDecoy:add_damage_result(unit, attacker, is_dead, damage_percent)
+	ImpactDecoy.super.add_damage_result(self, unit, attacker, is_dead, damage_percent)
+
 	local thrower_peer_id = self:get_thrower_peer_id()
 
 	if is_dead and not unit:movement():cool() then

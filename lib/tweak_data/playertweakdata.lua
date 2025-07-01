@@ -136,6 +136,7 @@ function PlayerTweakData:init()
 	self.max_nr_following_hostages = 1
 	self.max_floor_jump_angle = 58
 	self.reload_interupt_buffer = 0.58
+	self.primary_attack_buffer = 0.25
 	self.TRANSITION_DURATION = 0.26
 	self.STANCE_FOV_OFFSET_MAX = Vector3(0, -9, -4.5)
 	self.PLAYER_EYE_HEIGHT = 155

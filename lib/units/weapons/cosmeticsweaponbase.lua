@@ -77,15 +77,13 @@ function NewRaycastWeaponBase:_update_materials()
 
 	if is_thq or use_cc_material_config then
 		if not self._materials then
-			local material_config_ids = Idstring("material_config")
-
 			for part_id, part in pairs(self._parts) do
 				local part_data = managers.weapon_factory:get_part_data_by_part_id_from_weapon(part_id, self._factory_id, self._blueprint)
 
 				if part_data then
 					local new_material_config_ids = self:_material_config_name(part_id, part_data.unit, use_cc_material_config)
 
-					if part.unit:material_config() ~= new_material_config_ids and DB:has(material_config_ids, new_material_config_ids) then
+					if part.unit:material_config() ~= new_material_config_ids and DB:has(IDS_MATERIAL_CONFIG, new_material_config_ids) then
 						part.unit:set_material_config(new_material_config_ids, true)
 					end
 				end
@@ -108,13 +106,11 @@ function NewRaycastWeaponBase:_update_materials()
 			end
 		end
 	elseif self._materials then
-		local material_config_ids = Idstring("material_config")
-
 		for part_id, part in pairs(self._parts) do
 			if tweak_data.weapon.factory.parts[part_id] then
 				local new_material_config_ids = tweak_data.weapon.factory.parts[part_id].material_config or Idstring(self:is_npc() and tweak_data.weapon.factory.parts[part_id].third_unit or tweak_data.weapon.factory.parts[part_id].unit)
 
-				if part.unit:material_config() ~= new_material_config_ids and DB:has(material_config_ids, new_material_config_ids) then
+				if part.unit:material_config() ~= new_material_config_ids and DB:has(IDS_MATERIAL_CONFIG, new_material_config_ids) then
 					part.unit:set_material_config(new_material_config_ids, true)
 				end
 			end

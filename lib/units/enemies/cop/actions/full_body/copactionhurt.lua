@@ -300,39 +300,33 @@ function CopActionHurt:init(action_desc, common_data)
 
 		use_animation_on_fire_damage = char_tweak.use_animation_on_fire_damage == nil and true or char_tweak.use_animation_on_fire_damage
 
-		if start_dot_dance_antimation then
-			if ignite_character == "dragonsbreath" then
-				self:_dragons_breath_sparks()
-			end
+		if start_dot_dance_antimation and self._unit:character_damage() and self._unit:character_damage().get_last_time_unit_got_fire_damage then
+			local last_fire_recieved = self._unit:character_damage():get_last_time_unit_got_fire_damage()
 
-			if self._unit:character_damage() ~= nil and self._unit:character_damage().get_last_time_unit_got_fire_damage ~= nil then
-				local last_fire_recieved = self._unit:character_damage():get_last_time_unit_got_fire_damage()
+			if last_fire_recieved == nil or t - last_fire_recieved > 1 then
+				if use_animation_on_fire_damage then
+					redir_res = self._ext_movement:play_redirect("fire_hurt")
 
-				if last_fire_recieved == nil or t - last_fire_recieved > 1 then
-					if use_animation_on_fire_damage then
-						redir_res = self._ext_movement:play_redirect("fire_hurt")
+					local dir_str
+					local fwd_dot = action_desc.direction_vec:dot(common_data.fwd)
 
-						local dir_str
-						local fwd_dot = action_desc.direction_vec:dot(common_data.fwd)
+					if fwd_dot < 0 then
+						local hit_pos = action_desc.hit_pos
+						local hit_vec = (hit_pos - common_data.pos):with_z(0):normalized()
 
-						if fwd_dot < 0 then
-							local hit_pos = action_desc.hit_pos
-							local hit_vec = (hit_pos - common_data.pos):with_z(0):normalized()
-
-							if mvector3.dot(hit_vec, common_data.right) > 0 then
-								dir_str = "r"
-							else
-								dir_str = "l"
-							end
+						if mvector3.dot(hit_vec, common_data.right) > 0 then
+							dir_str = "r"
 						else
-							dir_str = "bwd"
+							dir_str = "l"
 						end
-
-						self._machine:set_parameter(redir_res, dir_str, 1)
+					else
+						dir_str = "bwd"
 					end
 
-					self._unit:character_damage():set_last_time_unit_got_fire_damage(t)
+					self._machine:set_parameter(redir_res, dir_str, 1)
 				end
+
+				self._unit:character_damage():set_last_time_unit_got_fire_damage(t)
 			end
 		end
 	elseif action_type == "taser_tased" then
@@ -466,7 +460,6 @@ function CopActionHurt:init(action_desc, common_data)
 		end
 
 		self:_start_enemy_fire_effect_on_death(variant)
-		managers.fire:check_achievemnts(self._unit, t)
 	elseif action_type == "death" and action_desc.variant == "poison" then
 		self:force_ragdoll()
 	elseif action_type == "death" and (self._ext_anim.run and self._ext_anim.move_fwd or self._ext_anim.sprint) and not common_data.char_tweak.no_run_death_anim then
@@ -731,12 +724,6 @@ function CopActionHurt:init(action_desc, common_data)
 			self._unit:sound():say("hurt")
 		end
 
-		if (tweak_table == "tank" or tweak_table == "tank_hw") and action_type == "death" then
-			local unit_id = self._unit:id()
-
-			managers.fire:remove_dead_dozer_from_overgrill(unit_id)
-		end
-
 		if Network:is_server() then
 			managers.groupai:state():propagate_alert({
 				"vo_distress",
@@ -841,18 +828,6 @@ function CopActionHurt:_start_enemy_fire_effect_on_death(death_variant)
 		World:effect_manager():spawn({
 			effect = enemy_effect_name,
 			parent = bone_right_leg,
-		})
-	end
-end
-
-function CopActionHurt:_dragons_breath_sparks()
-	local enemy_effect_name = Idstring("removed during cleanup")
-	local bone_spine = self._unit:get_object(Idstring("Spine"))
-
-	if bone_spine then
-		World:effect_manager():spawn({
-			effect = enemy_effect_name,
-			parent = bone_spine,
 		})
 	end
 end

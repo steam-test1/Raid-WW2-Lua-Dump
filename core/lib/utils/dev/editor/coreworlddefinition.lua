@@ -1304,6 +1304,10 @@ function WorldDefinition:_create_environment(data, offset, world_in_world)
 	end
 
 	if data.dome_occ_shapes then
+		if #data.dome_occ_shapes > 1 then
+			Application:warn("[WorldDefinition:_create_environment] Only one instance of dome occluder shapes will be used. This world has multiple.", #data.dome_occ_shapes)
+		end
+
 		local shape_data = data.dome_occ_shapes[1]
 
 		if shape_data then

@@ -102,16 +102,27 @@ function WeaponInventoryManager:_setup_initial_weapon_skins()
 end
 
 function WeaponInventoryManager:_setup_weapon_challenges()
-	for _, weapon_data in pairs(tweak_data.weapon_inventory.weapon_grenades_index) do
-		if weapon_data.challenge and not managers.challenge:challenge_exists(ChallengeManager.CATEGORY_GENERIC, weapon_data.challenge) then
+	for _, skin_data in pairs(tweak_data.weapon.weapon_skins) do
+		if skin_data.challenge then
 			local challenge_tasks = {
-				tweak_data.challenge[weapon_data.challenge],
+				tweak_data.challenge[skin_data.challenge],
 			}
 			local challenge_data = {
-				weapon = weapon_data.weapon_id,
+				unlock = skin_data.name_id,
 			}
 
-			managers.challenge:create_challenge(ChallengeManager.CATEGORY_GENERIC, weapon_data.challenge, challenge_tasks, nil, challenge_data)
+			if managers.challenge:challenge_exists(ChallengeManager.CATEGORY_GENERIC, skin_data.challenge) then
+				local challenge = managers.challenge:get_challenge(ChallengeManager.CATEGORY_GENERIC, skin_data.challenge)
+				local tasks = challenge:tasks()
+
+				challenge:set_data(challenge_data)
+
+				if not tasks or #tasks == 0 then
+					challenge:set_tasks(challenge_tasks)
+				end
+			else
+				managers.challenge:create_challenge(ChallengeManager.CATEGORY_GENERIC, skin_data.challenge, challenge_tasks, nil, challenge_data)
+			end
 		end
 	end
 end
@@ -233,7 +244,7 @@ function WeaponInventoryManager:save_account_wide_info(data)
 end
 
 function WeaponInventoryManager:load_account_wide_info(data, version_account_wide)
-	self:setup(true)
+	self:setup()
 
 	local state = data.WeaponInventoryManager
 
@@ -408,33 +419,35 @@ end
 function WeaponInventoryManager:is_weapon_skin_owned(skin_id)
 	Application:trace("[WeaponInventoryManager:is_weapon_skin_owned]")
 
-	local item_data = managers.weapon_inventory._weapon_skins[skin_id]
+	local item_data = self._weapon_skins[skin_id]
 
 	return item_data and item_data.unlocked or false
 end
 
-function WeaponInventoryManager:set_weapons_skin(weapon_factory_id, skin_id)
-	Application:trace("[WeaponInventoryManager:set_weapons_skin]", weapon_factory_id, skin_id)
+function WeaponInventoryManager:set_weapons_skin(weapon_id, skin_id)
+	Application:trace("[WeaponInventoryManager:set_weapons_skin]", weapon_id, skin_id)
 
-	if not managers.weapon_inventory._weapon_skins or not managers.weapon_inventory._weapon_skins._applied then
-		managers.weapon_inventory._weapon_skins = {
-			_applied = {},
-		}
-	end
-
-	managers.weapon_inventory._weapon_skins._applied[weapon_factory_id] = skin_id
+	self._weapon_skins = self._weapon_skins or {}
+	self._weapon_skins._applied = self._weapon_skins._applied or {}
+	self._weapon_skins._applied[weapon_id] = skin_id
 end
 
-function WeaponInventoryManager:get_weapons_skin(factory_id)
-	if not managers.weapon_inventory._weapon_skins or not managers.weapon_inventory._weapon_skins._applied then
+function WeaponInventoryManager:get_weapons_skin(weapon_id)
+	if not self._weapon_skins or not self._weapon_skins._applied then
 		Application:trace("[WeaponInventoryManager:get_weapons_skin] FAILED")
 
 		return nil
 	end
 
-	local skin = managers.weapon_inventory._weapon_skins._applied[factory_id]
+	local skin_id = self._weapon_skins._applied[weapon_id]
 
-	return skin
+	if not skin_id then
+		return
+	end
+
+	local skin_data = tweak_data.weapon.weapon_skins[skin_id]
+
+	return skin_id, skin_data
 end
 
 function WeaponInventoryManager:get_owned_grenades()

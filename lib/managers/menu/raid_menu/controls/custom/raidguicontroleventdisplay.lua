@@ -213,7 +213,6 @@ function RaidGUIControlEventDisplay:set_event(event_name)
 		local min_range = math.round(tasks[1]:min_range() / 100)
 		local max_range = math.round(tasks[1]:max_range() / 100)
 
-		self._description:set_text(self:translate(challenge_tweak.challenge_briefing_id))
 		self._progress_bar:set_color(accent_color)
 
 		local range = max_range > 0 and max_range or min_range
@@ -221,7 +220,7 @@ function RaidGUIControlEventDisplay:set_event(event_name)
 		self._description:set_text(managers.localization:text(briefing_id, {
 			AMOUNT = target,
 			RANGE = range,
-			WEAPON = managers.localization:text(tweak_data.weapon[data.weapon].name_id),
+			WEAPON = managers.localization:text(data.unlock),
 		}))
 		self._progress_bar_foreground_panel:set_w(self._progress_bar_panel:w() * (count / target))
 
