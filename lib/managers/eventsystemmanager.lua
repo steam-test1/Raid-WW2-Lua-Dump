@@ -22,6 +22,8 @@ function EventSystemManager:reset()
 	self._last_login_year = 0
 	self._consecutive_logins = 0
 	self._daily_event_id = "active_duty"
+
+	self:_check_special_event()
 end
 
 function EventSystemManager:save_profile_slot(data)

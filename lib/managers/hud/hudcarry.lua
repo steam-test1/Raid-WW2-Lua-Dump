@@ -124,10 +124,9 @@ function HUDCarry:show_carry_item(carry_id)
 	local prompt_text_id = carry_data.prompt_text or HUDCarry.PROMPT_TEXT_ID
 	local carry_item_id = carry_data.carry_item_id or HUDCarry.GENERIC_THROW_ID
 
-	self._prompt:set_text(utf8.to_upper(managers.localization:text(prompt_text_id, {
-		BTN_USE_ITEM = managers.localization:btn_macro("use_item"),
+	self._prompt:set_text(managers.localization:to_upper_text(prompt_text_id, {
 		CARRY_ITEM = managers.localization:text(carry_item_id),
-	})))
+	}))
 	self:_size_panel()
 	self._object:stop()
 	self._object:animate(callback(self, self, "_animate_show_carry"))

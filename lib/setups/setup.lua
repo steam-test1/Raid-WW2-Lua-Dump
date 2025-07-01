@@ -123,6 +123,10 @@ require("lib/managers/menu/raid_menu/controls/RaidGUIControlNineCutBitmap")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlImageButton")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlNavigationButton")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlAnimatedBitmap")
+require("lib/managers/menu/raid_menu/controls/RaidGUIControlListItem")
+require("lib/managers/menu/raid_menu/controls/RaidGUIControlList")
+require("lib/managers/menu/raid_menu/controls/RaidGUIControlListActive")
+require("lib/managers/menu/raid_menu/controls/RaidGUIControlListSeparated")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlListItemCharacterSelect")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlListItemCharacterSelectButton")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlListItemCharacterCreateClass")
@@ -140,10 +144,6 @@ require("lib/managers/menu/raid_menu/controls/RaidGUIControlListItemWeapons")
 require("lib/managers/menu/raid_menu/controls/custom/RaidGUIControlButtonSkillProfiles")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlListItemSkillProfile")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlListItemContextButton")
-require("lib/managers/menu/raid_menu/controls/RaidGUIControlListItem")
-require("lib/managers/menu/raid_menu/controls/RaidGUIControlList")
-require("lib/managers/menu/raid_menu/controls/RaidGUIControlListActive")
-require("lib/managers/menu/raid_menu/controls/RaidGUIControlListSeparated")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlStepper")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlStepperSimple")
 require("lib/managers/menu/raid_menu/controls/RaidGUIControlSlider")
@@ -594,6 +594,7 @@ function Setup:init_finalize()
 	managers.achievment:init_finalize()
 	managers.system_menu:init_finalize()
 	managers.controller:init_finalize()
+	managers.localization:init_finalize()
 
 	if Application:editor() then
 		managers.user:init_finalize()
@@ -680,6 +681,7 @@ end
 function Setup:on_tweak_data_reloaded()
 	managers.dlc:on_tweak_data_reloaded()
 	managers.voice_over:on_tweak_data_reloaded()
+	managers.fire:on_tweak_data_reloaded()
 end
 
 function Setup:destroy()
@@ -965,14 +967,6 @@ function Setup:_upd_unload_packages()
 
 		if Global.unload_all_level_packages then
 			Global.unload_all_level_packages = false
-		end
-	end
-
-	if self._unload_async_camp then
-		self._unload_async_camp = false
-
-		if Global.STREAM_ALL_PACKAGES then
-			self:unload_camp_packages()
 		end
 	end
 end

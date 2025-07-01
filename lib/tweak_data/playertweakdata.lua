@@ -72,20 +72,6 @@ function PlayerTweakData:init()
 	self.damage = {}
 	self.damage.DODGE_INIT = 0
 	self.damage.HEALTH_REGEN = 0
-	self.damage.ARMOR_STEPS = 1
-	self.damage.ARMOR_DAMAGE_REDUCTION = 1
-	self.damage.ARMOR_DAMAGE_REDUCTION_STEPS = {
-		1,
-		0.6,
-		0.7,
-		0.8,
-		0.9,
-		0.95,
-		0.96,
-		0.97,
-		0.98,
-		0.99,
-	}
 	self.damage.REGENERATE_TIME = 3
 
 	if IS_CONSOLE then
@@ -134,7 +120,10 @@ function PlayerTweakData:init()
 		range_mul = 1,
 	}
 	self.max_nr_following_hostages = 1
-	self.max_floor_jump_angle = 58
+	self.max_floor_jump_angle = {
+		max = 72,
+		min = 58,
+	}
 	self.reload_interupt_buffer = 0.58
 	self.primary_attack_buffer = 0.25
 	self.TRANSITION_DURATION = 0.26

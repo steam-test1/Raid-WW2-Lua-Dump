@@ -14,7 +14,6 @@ require("lib/managers/hud/HUDInteraction")
 require("lib/managers/hud/HUDCardDetails")
 require("lib/managers/hud/HUDMapWaypoint")
 require("lib/managers/hud/HUDMapPlayerPin")
-require("lib/managers/hud/HUDMapBase")
 require("lib/managers/hud/HUDMapTab")
 require("lib/managers/hud/HUDTabGreedBar")
 require("lib/managers/hud/HUDTabCandyProgression")
@@ -1202,6 +1201,61 @@ function HUDManager:_destroy_carry_wheel()
 	end
 end
 
+function HUDManager:_create_airdrop_wheel(hud, params)
+	hud = hud or managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT)
+
+	local params = tweak_data.interaction:get_interaction("airdrop_wheel")
+	local pm = managers.player
+
+	params.show_clbks = {
+		callback(pm, pm, "disable_view_movement"),
+	}
+	params.hide_clbks = {
+		callback(pm, pm, "enable_view_movement"),
+	}
+	self._hud_airdrop_wheel = HUDMultipleChoiceWheel:new(self._saferect, hud, params)
+
+	self._hud_airdrop_wheel:hide()
+end
+
+function HUDManager:show_airdrop_wheel()
+	if not self._hud_airdrop_wheel then
+		self:_create_airdrop_wheel()
+	end
+
+	self._hud_airdrop_wheel:show()
+end
+
+function HUDManager:hide_airdrop_wheel(quiet)
+	if self._hud_airdrop_wheel then
+		self._hud_airdrop_wheel:hide(quiet)
+	end
+end
+
+function HUDManager:set_airdrop_wheel_options(options)
+	if not self._hud_airdrop_wheel then
+		self:_create_airdrop_wheel()
+	end
+
+	self._hud_airdrop_wheel:set_options(options)
+end
+
+function HUDManager:is_airdrop_wheel_visible()
+	if self._hud_airdrop_wheel ~= nil then
+		return self._hud_airdrop_wheel:is_visible()
+	end
+
+	return false
+end
+
+function HUDManager:_destroy_airdrop_wheel()
+	if self._hud_airdrop_wheel then
+		self._hud_airdrop_wheel:destroy()
+
+		self._hud_airdrop_wheel = nil
+	end
+end
+
 function HUDManager:create_special_interaction(hud, params)
 	Application:debug("[HUDManager:create_special_interaction] TYPE", params.minigame_type)
 
@@ -1520,6 +1574,12 @@ function HUDManager:remove_tab_event_panel()
 	end
 end
 
+function HUDManager:set_map_location(location_id)
+	if self._tab_screen then
+		self._tab_screen:set_map_location(location_id)
+	end
+end
+
 function HUDManager:feed_point_of_no_return_timer(time, is_inside)
 	return
 end
@@ -1656,7 +1716,7 @@ end
 
 function HUDManager:reset_session_time()
 	self._tab_screen:reset_time()
-	managers.game_play_central:start_heist_timer()
+	managers.game_play_central:start_job_timer()
 end
 
 function HUDManager:set_stamina_value(value)

@@ -161,6 +161,9 @@ function OperationsTweakData:_init_loading_screens()
 	self._loading_screens.kelly = {}
 	self._loading_screens.kelly.image = "loading_screens_07"
 	self._loading_screens.kelly.text = "menu_kelly_loading_desc"
+	self._loading_screens.forest_bunker = {}
+	self._loading_screens.forest_bunker.image = "loading_screens_07"
+	self._loading_screens.forest_bunker.text = "forest_bunker_loading"
 end
 
 function OperationsTweakData:get_camp_goto_objective_id(level_id)
@@ -199,6 +202,7 @@ function OperationsTweakData:_init_raids()
 		"gold_rush",
 		"silo",
 		"kelly",
+		"forest_bunker",
 	}
 	self.dogtag_types = {
 		large = {
@@ -1142,8 +1146,6 @@ function OperationsTweakData:_init_raids()
 	}
 	self.missions.kelly.icon_menu_big = "xp_events_missions_kelly"
 	self.missions.kelly.icon_menu = "missions_kelly"
-	self.missions.kelly.icon_menu_big = "xp_events_missions_kelly"
-	self.missions.kelly.icon_menu = "missions_kelly"
 	self.missions.kelly.icon_hud = "missions_raid_flaktower"
 	self.missions.kelly.control_brief_video = {
 		"movies/vanilla/mission_briefings/02_mission_brief_a2_cause-carnage_v005",
@@ -1218,6 +1220,57 @@ function OperationsTweakData:_init_raids()
 			description_id = "fury_railway_mission_photo_4_description",
 			photo = "intel_fury_railway_04",
 			title_id = "fury_railway_mission_photo_4_title",
+		},
+	}
+	self.missions.forest_bunker = {}
+	self.missions.forest_bunker.level_id = "forest_bunker"
+	self.missions.forest_bunker.name_id = "forest_bunker"
+	self.missions.forest_bunker.briefing_id = "forest_bunker_briefing"
+	self.missions.forest_bunker.audio_briefing_id = "mrs_white_fb_briefing_long"
+	self.missions.forest_bunker.short_audio_briefing_id = "mrs_white_fb_briefing_short"
+	self.missions.forest_bunker.music_id = "random"
+	self.missions.forest_bunker.region = "germany"
+	self.missions.forest_bunker.xp = 4400
+	self.missions.forest_bunker.dogtags = self.dogtag_types.medium
+	self.missions.forest_bunker.greed_items = {
+		max = 1500,
+		min = 1200,
+	}
+	self.missions.forest_bunker.progression_groups = {
+		self.PROGRESSION_GROUP_STANDARD,
+	}
+	self.missions.forest_bunker.mission_state = self.STATE_LOCATION_MISSION_SELECTED
+	self.missions.forest_bunker.mission_flag = "level_raid_forest_bunker"
+	self.missions.forest_bunker.job_type = self.JOB_TYPE_RAID
+	self.missions.forest_bunker.icon_menu = "missions_forest_bunker"
+	self.missions.forest_bunker.icon_menu_big = "xp_events_missions_forest_bunker"
+	self.missions.forest_bunker.icon_hud = "missions_forest_bunker"
+	self.missions.forest_bunker.loading = {
+		image = "forest_bunker_loading_screen",
+		text = "forest_bunker_loading",
+	}
+	self.missions.forest_bunker.start_in_stealth = true
+	self.missions.forest_bunker.stealth_description = self.RAID_STARTS_STEALTHABLE
+	self.missions.forest_bunker.photos = {
+		{
+			description_id = "forest_bunker_mission_photo_1_description",
+			photo = "intel_forest_bunker_01",
+			title_id = "forest_bunker_mission_photo_1_title",
+		},
+		{
+			description_id = "forest_bunker_mission_photo_2_description",
+			photo = "intel_forest_bunker_02",
+			title_id = "forest_bunker_mission_photo_2_title",
+		},
+		{
+			description_id = "forest_bunker_mission_photo_3_description",
+			photo = "intel_forest_bunker_03",
+			title_id = "forest_bunker_mission_photo_3_title",
+		},
+		{
+			description_id = "forest_bunker_mission_photo_4_description",
+			photo = "intel_forest_bunker_04",
+			title_id = "forest_bunker_mission_photo_4_title",
 		},
 	}
 end

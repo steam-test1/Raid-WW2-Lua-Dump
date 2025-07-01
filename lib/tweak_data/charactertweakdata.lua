@@ -51,6 +51,7 @@ function CharacterTweakData:init(tweak_data)
 	self:_init_british(presets)
 	self:_init_civilian(presets)
 	self:_init_escort(presets)
+	self:_init_upd_fb(presets)
 end
 
 function CharacterTweakData:set_difficulty(diff_index)
@@ -1310,6 +1311,10 @@ function CharacterTweakData:_init_german_flamer(presets)
 
 	self:_process_weapon_usage_table(self.german_flamer.weapon)
 
+	self.german_flamer.throwable = {
+		projectile_id = "flamer_incendiary",
+		throw_chance = 0.18,
+	}
 	self.german_flamer.weapon_voice = "3"
 	self.german_flamer.speech_prefix_p1 = "ger"
 	self.german_flamer.speech_prefix_p2 = "flamer"
@@ -1516,6 +1521,50 @@ function CharacterTweakData:_init_escort(presets)
 	self.escort.escort_scared_dist = 220
 	self.escort.intimidateable = false
 	self.escort.damage = presets.base.damage
+end
+
+function CharacterTweakData:_init_upd_fb(presets)
+	self.fb_german_commander = deep_clone(self.german_commander)
+	self.fb_german_commander.move_speed = presets.move_speed.very_fast
+	self.fb_german_commander.dodge = presets.dodge.poor
+	self.fb_german_commander.allowed_poses = {
+		stand = true,
+	}
+	self.fb_german_commander.speech_prefix_p1 = "ger"
+	self.fb_german_commander.speech_prefix_p2 = "fb_commander"
+	self.fb_german_commander.speech_prefix_count = 1
+	self.fb_german_commander.chatter = presets.enemy_chatter.no_chatter
+	self.fb_german_commander.crouch_move = false
+	self.fb_german_commander.gear = nil
+	self.fb_german_commander.silent_priority_shout = nil
+	self.fb_german_commander.priority_shout = nil
+	self.fb_german_commander_boss = deep_clone(self.fb_german_commander)
+	self.fb_german_commander_boss.HEALTH_INIT = 2500
+	self.fb_german_commander_boss.BASE_HEALTH_INIT = 2500
+	self.fb_german_commander_boss.headshot_dmg_mul = 0.8
+	self.fb_german_commander_boss.headshot_helmet = true
+	self.fb_german_commander_boss.damage.hurt_severity = deep_clone(presets.hurt_severities.no_hurts)
+	self.fb_german_commander_boss.damage.hurt_severity.explosion = {
+		health_reference = "current",
+		zones = {
+			{
+				health_limit = 0.3,
+				none = 1,
+			},
+			{
+				explode = 0.1,
+				health_limit = 0.7,
+				none = 0.7,
+			},
+			{
+				explode = 0.5,
+				none = 0.5,
+			},
+		},
+	}
+	self.fb_german_commander_boss.gear = self.german_commander.gear
+
+	table.insert(self._enemies_list, "fb_german_commander_boss")
 end
 
 function CharacterTweakData:_presets(tweak_data)
@@ -7449,6 +7498,13 @@ function CharacterTweakData:character_map()
 				"german_sommilier",
 			},
 			path = "units/vanilla/characters/enemies/models/",
+		},
+		upd_fb = {
+			list = {
+				"fb_german_commander_boss",
+				"fb_german_commander",
+			},
+			path = "units/upd_fb/characters/enemies/models/",
 		},
 	}
 

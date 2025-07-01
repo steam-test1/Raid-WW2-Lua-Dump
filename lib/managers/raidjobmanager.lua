@@ -75,10 +75,15 @@ end
 function RaidJobManager:_select_raid()
 	if not self._selected_job.no_dynamic_objective then
 		local job_jective_id = tweak_data.operations:get_camp_goto_objective_id(self._selected_job.level_id)
-
-		self:_select_job_dynamic_objectives(job_jective_id, {
+		local sub_objs = {
 			"obj_camp_goto",
-		})
+		}
+
+		if not Global.game_settings.single_player then
+			table.insert(sub_objs, "obj_pick_a_card")
+		end
+
+		self:_select_job_dynamic_objectives(job_jective_id, sub_objs)
 	end
 
 	self._current_save_slot = nil
@@ -125,9 +130,16 @@ function RaidJobManager:_goto_operation_objective()
 	end
 
 	Application:debug("[RaidJobManager:_goto_operation_objective] ID:", id)
-	self:_select_job_dynamic_objectives(id, {
+
+	local sub_objs = {
 		"obj_camp_goto",
-	})
+	}
+
+	if not Global.game_settings.single_player then
+		table.insert(sub_objs, "obj_pick_a_card")
+	end
+
+	self:_select_job_dynamic_objectives(id, sub_objs)
 
 	if Network:is_server() then
 		managers.network:session():send_to_peers_synched("sync_selected_raid_objective", id)
@@ -136,27 +148,36 @@ end
 
 function RaidJobManager:sync_goto_job_objective(obj_id)
 	Application:debug("[RaidJobManager:sync_goto_job_objective]", obj_id)
-	self:_select_job_dynamic_objectives(obj_id, {
+
+	local sub_objs = {
 		"obj_camp_goto",
-	})
+	}
+
+	if not Global.game_settings.single_player then
+		table.insert(sub_objs, "obj_pick_a_card")
+	end
+
+	self:_select_job_dynamic_objectives(obj_id, sub_objs)
 end
 
 function RaidJobManager:_select_job_dynamic_objectives(obj_id, sub_id_list, sub_completed_list)
+	Application:debug("[RaidJobManager:_select_job_dynamic_objectives] JOBJECTIVE ID", obj_id, inspect(sub_id_list), inspect(sub_completed_list))
+
 	local obj_data = {
 		description = obj_id .. "_desc",
 		id = "dyn_" .. obj_id,
 		prio = 1,
 		text = obj_id .. "_hl",
-		xp_weight = 1,
 	}
 	local i = 1
 
 	for _, t in ipairs(sub_id_list or {}) do
 		local subid = "dyn_" .. t .. "_sub"
 
+		print("[OBJ]", subid)
+
 		obj_data[i] = {
 			id = subid,
-			prio = i,
 			start_completed = sub_completed_list and sub_completed_list[i],
 			text = t .. "_sub_hl",
 		}
@@ -239,6 +260,8 @@ function RaidJobManager:_on_restart_to_camp()
 		success = false,
 	})
 	managers.lootdrop:reset_loot_value_counters()
+	Application:debug("[AirdropManager] cleanup from RaidJobManager:_on_restart_to_camp")
+	managers.airdrop:cleanup()
 	managers.hud:reset_session_time()
 	managers.global_state:reset_all_flags()
 
@@ -299,13 +322,7 @@ function RaidJobManager:current_level_id()
 end
 
 function RaidJobManager:current_job_type()
-	if self._selected_job then
-		return self._selected_job.job_type
-	elseif self._current_job then
-		return self._current_job.job_type
-	else
-		return nil
-	end
+	return self._selected_job and self._selected_job.job_type or self._current_job and self._current_job.job_type
 end
 
 function RaidJobManager:on_mission_restart()
@@ -314,6 +331,7 @@ function RaidJobManager:on_mission_restart()
 	managers.consumable_missions:on_level_exited(false)
 	managers.statistics:reset_session()
 	managers.lootdrop:reset_loot_value_counters()
+	managers.airdrop:cleanup()
 	self:on_mission_ended()
 	self:on_mission_started()
 
@@ -354,11 +372,12 @@ function RaidJobManager:do_external_start_mission(mission, event_index)
 	managers.global_state:reset_flags_for_job("level_flag")
 
 	if mission.job_type == OperationsTweakData.JOB_TYPE_RAID then
+		self:start_selected_raid()
+
 		data.background = mission.loading.image
 		data.loading_text = mission.loading.text
 		data.mission = mission
 
-		self:start_selected_raid()
 		managers.global_state:set_flag(mission.mission_flag)
 	elseif mission.job_type == OperationsTweakData.JOB_TYPE_OPERATION then
 		if event_index <= 1 and self._selected_job then
@@ -376,7 +395,7 @@ function RaidJobManager:do_external_start_mission(mission, event_index)
 
 		managers.global_state:set_flag(mission.current_event_data.mission_flag)
 	else
-		Application:error("[RaidJobManager:external_start_mission()] Missing job_type in twek data for", mission.level_id)
+		Application:error("[RaidJobManager:external_start_mission()] Missing job_type in tweak data for", mission.level_id)
 
 		return
 	end
@@ -396,7 +415,7 @@ function RaidJobManager:external_start_mission_clbk()
 		managers.worldcollection:set_world_counter(self._current_job.sub_worlds_spawned or 0)
 	end
 
-	managers.queued_tasks:queue(nil, managers.worldcollection.level_transition_started, managers.worldcollection, nil, 0.1, nil)
+	managers.queued_tasks:queue(nil, managers.worldcollection.level_transition_started, managers.worldcollection, nil, 0.1)
 
 	local mission_wp = managers.mission:get_element_by_name(RaidJobManager.WORLD_POINT_MISSION)
 	local camp_wp = managers.mission:get_element_by_name(RaidJobManager.WORLD_POINT_CAMP)
@@ -709,17 +728,12 @@ end
 
 function RaidJobManager:is_camp_loaded()
 	local camp_wp = managers.mission:get_element_by_name(RaidJobManager.WORLD_POINT_CAMP)
-	local result = false
 
-	if camp_wp then
-		result = camp_wp._has_created
-	end
-
-	return result
+	return camp_wp and camp_wp._has_created or false
 end
 
 function RaidJobManager:has_active_job()
-	return self._current_job and true or false
+	return not not self._current_job
 end
 
 function RaidJobManager:get_available_save_slot()
@@ -1276,10 +1290,10 @@ end
 
 function RaidJobManager:cleanup()
 	self._current_save_slot = {}
+	self._loot_data = {}
 	self._selected_job = nil
 	self._current_job = nil
 	self._stage_success = nil
-	self._loot_data = {}
 	self._tutorial_spawned = nil
 end
 
@@ -1335,12 +1349,8 @@ function RaidJobManager:camp()
 	return self._camp
 end
 
-function RaidJobManager:has_active_job()
-	return self._current_job ~= nil
-end
-
 function RaidJobManager:exclude_camp_continent(continent_id)
-	if self._camp then
+	if self._camp and not table.contains(self._camp.excluded_continents, continent_id) then
 		table.insert(self._camp.excluded_continents, continent_id)
 	end
 end

@@ -13,7 +13,6 @@ require("lib/units/enemies/cop/actions/full_body/CopActionWarp")
 require("lib/units/civilians/actions/lower_body/CivilianActionWalk")
 require("lib/units/civilians/actions/lower_body/EscortWithSuitcaseActionWalk")
 require("lib/units/enemies/tank/actions/lower_body/TankCopActionWalk")
-require("lib/units/enemies/flamer/actions/lower_body/FlamerActionWalk")
 require("lib/units/player_team/actions/lower_body/CriminalActionWalk")
 
 local ids_movement = Idstring("movement")
@@ -114,8 +113,7 @@ action_variants.german_gebirgsjager_heavy = security_variant
 action_variants.german_gebirgsjager_heavy_kar98 = security_variant
 action_variants.german_gebirgsjager_heavy_shotgun = security_variant
 action_variants.german_gebirgsjager_heavy_mp38 = security_variant
-action_variants.german_flamer = clone(security_variant)
-action_variants.german_flamer.walk = FlamerActionWalk
+action_variants.german_flamer = security_variant
 action_variants.german_sniper = security_variant
 action_variants.german_spotter = security_variant
 action_variants.soviet_nkvd_int_security_captain = security_variant
@@ -150,6 +148,8 @@ action_variants.tank.walk = TankCopActionWalk
 action_variants.tank_hw = action_variants.tank
 action_variants.taser = security_variant
 action_variants.inside_man = security_variant
+action_variants.fb_german_commander_boss = security_variant
+action_variants.fb_german_commander = security_variant
 action_variants.civilian = {
 	act = CopActionAct,
 	hurt = CopActionHurt,

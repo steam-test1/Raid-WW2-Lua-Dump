@@ -95,6 +95,7 @@ function SkillTreeTweakData:init(tweak_data)
 		},
 		[SkillTreeTweakData.CLASS_DEMOLITIONS] = {
 			"clustertruck",
+			"scorched_earth",
 		},
 	}
 	self.automatic_unlock_progressions = {}
@@ -304,7 +305,7 @@ function SkillTreeTweakData:_init_skill_list_warcries()
 			"skill_warcry_silver_bullet_stat_line_4",
 		},
 		upgrades_type = SkillTreeTweakData.TYPE_WARCRY,
-		value_multiplier = 2.25,
+		value_multiplier = 2,
 		warcry_id = "silver_bullet",
 	}
 	self.skills.warcry_berserk = {
@@ -353,7 +354,7 @@ function SkillTreeTweakData:_init_skill_list_warcries()
 			"skill_warcry_sentry_stat_line_4",
 		},
 		upgrades_type = SkillTreeTweakData.TYPE_WARCRY,
-		value_multiplier = 2.25,
+		value_multiplier = 2,
 		warcry_id = "sentry",
 	}
 	self.skills.warcry_ghost = {
@@ -391,10 +392,10 @@ function SkillTreeTweakData:_init_skill_list_warcries()
 		name_id = "skill_warcry_pain_train_name",
 		upgrades = {
 			{},
-			{},
 			{
 				"warcry_player_charge_activation_threshold",
 			},
+			{},
 			{},
 		},
 		upgrades_desc = {
@@ -404,7 +405,7 @@ function SkillTreeTweakData:_init_skill_list_warcries()
 			"skill_warcry_pain_train_stat_line_4",
 		},
 		upgrades_type = SkillTreeTweakData.TYPE_WARCRY,
-		value_multiplier = 2.25,
+		value_multiplier = 2,
 		warcry_id = "pain_train",
 	}
 	self.skills.warcry_clustertruck = {
@@ -417,9 +418,13 @@ function SkillTreeTweakData:_init_skill_list_warcries()
 		name_id = "skill_warcry_clustertruck_name",
 		upgrades = {
 			{},
+			{
+				"warcry_player_grenade_refill_amounts_1",
+			},
 			{},
-			{},
-			{},
+			{
+				"warcry_player_grenade_refill_amounts_2",
+			},
 		},
 		upgrades_desc = {
 			"skill_warcry_clustertruck_stat_line_1",
@@ -430,6 +435,33 @@ function SkillTreeTweakData:_init_skill_list_warcries()
 		upgrades_type = SkillTreeTweakData.TYPE_WARCRY,
 		value_multiplier = 2,
 		warcry_id = "clustertruck",
+	}
+	self.skills.scorched_earth = {
+		class_lock = {
+			SkillTreeTweakData.CLASS_DEMOLITIONS,
+		},
+		desc_id = "skill_warcry_scorched_earth_desc",
+		icon = "skills_warcry_scorched_earth",
+		level_required = 10,
+		name_id = "skill_warcry_scorched_earth_name",
+		upgrades = {
+			{},
+			{},
+			{
+				"warcry_player_grenade_refill_amounts_2",
+				"warcry_player_grenade_refill_amounts_1",
+			},
+			{},
+		},
+		upgrades_desc = {
+			"skill_warcry_scorched_earth_stat_line_1",
+			"skill_warcry_scorched_earth_stat_line_2",
+			"skill_warcry_scorched_earth_stat_line_3",
+			"skill_warcry_scorched_earth_stat_line_4",
+		},
+		upgrades_type = SkillTreeTweakData.TYPE_WARCRY,
+		value_multiplier = 2,
+		warcry_id = "scorched_earth",
 	}
 end
 

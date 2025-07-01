@@ -87,9 +87,7 @@ function HUDSpecialInteraction:show()
 
 	local interact_text_id = self._tweak_data.legend_interact_text_id or HUDSpecialInteraction.INTERACT_TEXT_ID
 
-	self._legend_interact_text:set_text(managers.localization:to_upper_text(interact_text_id, {
-		BTN_INTERACT = managers.localization:btn_macro("interact"),
-	}))
+	self._legend_interact_text:set_text(managers.localization:to_upper_text(interact_text_id))
 
 	local exit_text_id = self._tweak_data.legend_exit_text_id or HUDSpecialInteraction.EXIT_TEXT_ID
 

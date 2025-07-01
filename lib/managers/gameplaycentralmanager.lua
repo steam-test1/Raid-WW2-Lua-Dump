@@ -51,7 +51,8 @@ function GamePlayCentralManager:init()
 	end
 
 	self._mission_disabled_units = {}
-	self._heist_timer = {
+	self._mission_destroyed_units = {}
+	self._job_timer = {
 		running = false,
 		start_time = 0,
 	}
@@ -193,18 +194,18 @@ function GamePlayCentralManager:update(t, dt)
 		self._dropped_weapons.index = self._dropped_weapons.index <= #self._dropped_weapons.units and self._dropped_weapons.index or 1
 	end
 
-	if self._heist_timer.running then
-		managers.hud:feed_session_time(Application:time() - self._heist_timer.start_time + self._heist_timer.offset_time)
+	if self._job_timer.running then
+		managers.hud:feed_session_time(Application:time() - self._job_timer.start_time + self._job_timer.offset_time)
 
-		if Network:is_server() and self._heist_timer.next_sync < Application:time() then
-			self._heist_timer.next_sync = Application:time() + 9
+		if Network:is_server() and self._job_timer.next_sync < Application:time() then
+			self._job_timer.next_sync = Application:time() + 9
 
-			local heist_time = Application:time() - self._heist_timer.start_time
+			local heist_time = Application:time() - self._job_timer.start_time
 
 			for peer_id, peer in pairs(managers.network:session():peers()) do
 				local sync_time = math.min(100000, heist_time + Network:qos(peer:rpc()).ping / 1000)
 
-				peer:send_queued_sync("sync_heist_time", sync_time)
+				peer:send_queued_sync("sync_job_time", sync_time)
 			end
 		end
 	end
@@ -697,7 +698,12 @@ end
 function GamePlayCentralManager:on_simulation_ended()
 	self:set_flashlights_on(false)
 	self:set_flashlights_on_player_on(false)
-	self:stop_heist_timer()
+	self:stop_job_timer()
+
+	self._mission_disabled_units = {}
+	self._mission_destroyed_units = {}
+	self._bullet_hits = {}
+	self._queue_fire_raycast = {}
 
 	local function _clean_me(tbl)
 		for i = #tbl, 1, -1 do
@@ -716,62 +722,69 @@ end
 
 function GamePlayCentralManager:mission_disable_unit(unit, destroy)
 	if alive(unit) then
-		self._mission_disabled_units[unit:unit_data().unit_id] = true
-
-		unit:set_enabled(false)
-
-		if unit:base() and unit:base().on_unit_set_enabled then
-			unit:base():on_unit_set_enabled(false)
-		end
-
-		if unit:editable_gui() then
-			unit:editable_gui():on_unit_set_enabled(false)
+		if self._mission_destroyed_units[unit:unit_data().unit_id] then
+			return
 		end
 
 		if destroy then
+			self._mission_disabled_units[unit:unit_data().unit_id] = nil
+			self._mission_destroyed_units[unit:unit_data().unit_id] = true
+
 			unit:set_slot(0)
+		else
+			self._mission_disabled_units[unit:unit_data().unit_id] = true
+
+			self:_set_unit_mission_enabled(unit, false)
 		end
 	else
-		Application:warn("[GamePlayCentralManager:mission_disable_unit] Cannot disable unit, unit is not alive!", unit)
+		Application:warn("[GamePlayCentralManager:mission_disable_unit] Cannot disable unit, unit is not alive! (This may be fine if multiple disables destroy this unit)", unit)
 	end
 end
 
 function GamePlayCentralManager:mission_enable_unit(unit)
 	if alive(unit) then
+		if self._mission_destroyed_units[unit:unit_data().unit_id] then
+			return
+		end
+
 		self._mission_disabled_units[unit:unit_data().unit_id] = nil
 
-		unit:set_enabled(true)
-
-		if unit:base() and unit:base().on_unit_set_enabled then
-			unit:base():on_unit_set_enabled(true)
-		end
-
-		if unit:editable_gui() then
-			unit:editable_gui():on_unit_set_enabled(true)
-		end
+		self:_set_unit_mission_enabled(unit, true)
 	else
 		Application:warn("[GamePlayCentralManager:mission_enable_unit] Cannot enable unit, unit is not alive!", unit)
 	end
 end
 
-function GamePlayCentralManager:get_heist_timer()
-	return self._heist_timer and Application:time() - (self._heist_timer.start_time or 0) + (self._heist_timer.offset_time or 0) or 0
+function GamePlayCentralManager:_set_unit_mission_enabled(unit, state)
+	unit:set_enabled(state)
+
+	for _, ext_name in ipairs(unit:extensions()) do
+		local extension = unit[ext_name](unit)
+
+		if extension.on_unit_set_enabled then
+			extension:on_unit_set_enabled(state)
+		end
+	end
 end
 
-function GamePlayCentralManager:start_heist_timer()
-	self._heist_timer.running = true
-	self._heist_timer.start_time = Application:time()
-	self._heist_timer.offset_time = 0
-	self._heist_timer.next_sync = Application:time() + 10
+function GamePlayCentralManager:get_job_timer()
+	return self._job_timer and Application:time() - (self._job_timer.start_time or 0) + (self._job_timer.offset_time or 0) or 0
 end
 
-function GamePlayCentralManager:stop_heist_timer()
-	self._heist_timer.running = false
+function GamePlayCentralManager:start_job_timer()
+	self._job_timer.running = true
+	self._job_timer.start_time = Application:time()
+	self._job_timer.offset_time = 0
+	self._job_timer.next_sync = Application:time() + 10
 end
 
-function GamePlayCentralManager:sync_heist_time(heist_time)
-	self._heist_timer.offset_time = heist_time
-	self._heist_timer.start_time = Application:time()
+function GamePlayCentralManager:stop_job_timer()
+	self._job_timer.running = false
+end
+
+function GamePlayCentralManager:sync_job_time(job_time)
+	self._job_timer.offset_time = job_time
+	self._job_timer.start_time = Application:time()
 end
 
 function GamePlayCentralManager:restart_the_game()
@@ -783,6 +796,7 @@ function GamePlayCentralManager:restart_the_game()
 	managers.mission:on_restart_to_camp()
 	managers.criminals:on_mission_end_callback()
 	managers.vehicle:on_restart_to_camp()
+	managers.airdrop:cleanup()
 	managers.enemy:remove_delayed_clbk("_gameover_clbk")
 
 	local restart_camp = managers.raid_job:is_camp_loaded()
@@ -799,6 +813,8 @@ function GamePlayCentralManager:restart_the_mission()
 
 	managers.raid_job:on_mission_restart()
 	managers.raid_job:stop_sounds()
+	Application:debug("[AirdropManager] cleanup from GamePlayCentralManager:restart_the_mission")
+	managers.airdrop:cleanup()
 	managers.loot:reset()
 	managers.enemy:remove_delayed_clbk("_gameover_clbk")
 	managers.global_state:fire_event("system_start_raid")
@@ -822,6 +838,8 @@ function GamePlayCentralManager:stop_the_game()
 	managers.savefile:save_setting(true)
 	managers.savefile:save_progress()
 	managers.worldcollection:on_simulation_ended()
+	Application:debug("[AirdropManager] cleanup from GamePlayCentralManager:stop_the_game")
+	managers.airdrop:cleanup()
 	managers.groupai:state():set_AI_enabled(false)
 	managers.menu:destroy()
 	managers.video:init()
@@ -948,8 +966,9 @@ function GamePlayCentralManager:save(data)
 	local state = {
 		flashlights_on = self._flashlights_on,
 		flashlights_on_player_on = self._flashlights_on_player_on,
-		heist_timer = Application:time() - self._heist_timer.start_time,
-		heist_timer_running = self._heist_timer.running,
+		job_timer = Application:time() - self._job_timer.start_time,
+		job_timer_running = self._job_timer.running,
+		mission_destroyed_units = self._mission_destroyed_units,
 		mission_disabled_units = self._mission_disabled_units,
 	}
 
@@ -963,15 +982,16 @@ function GamePlayCentralManager:load(data)
 	self:set_flashlights_on_player_on(state.flashlights_on_player_on)
 
 	if state.mission_disabled_units then
-		managers.worldcollection:add_world_loaded_callback(self)
-
 		self._mission_disabled_units = state.mission_disabled_units
+		self._mission_destroyed_units = state.mission_destroyed_units
+
+		managers.worldcollection:add_world_loaded_callback(self)
 	end
 
-	if state.heist_timer then
-		self._heist_timer.offset_time = state.heist_timer
-		self._heist_timer.start_time = Application:time()
-		self._heist_timer.running = state.heist_timer_running
+	if state.job_timer then
+		self._job_timer.start_time = Application:time()
+		self._job_timer.offset_time = state.job_timer
+		self._job_timer.running = state.job_timer_running
 	end
 end
 
@@ -984,10 +1004,18 @@ function GamePlayCentralManager:on_world_loaded()
 
 		self:mission_disable_unit(worlddefinition:get_unit_on_load(original_unit_id, callback(self, self, "mission_disable_unit")))
 	end
+
+	for id, _ in pairs(self._mission_destroyed_units) do
+		local worlddefinition = managers.worldcollection and managers.worldcollection:get_worlddefinition_by_unit_id(id) or managers.worlddefinition
+		local original_unit_id = worlddefinition:get_original_unit_id(id)
+
+		self:mission_disable_unit(worlddefinition:get_unit_on_load(original_unit_id, callback(self, self, "mission_disable_unit", true)))
+	end
 end
 
 function GamePlayCentralManager:on_level_transition()
 	self._mission_disabled_units = {}
+	self._mission_destroyed_units = {}
 	self._bullet_hits = {}
 	self._queue_fire_raycast = {}
 	self._projectile_trails = {}

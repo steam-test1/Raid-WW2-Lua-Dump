@@ -44,6 +44,7 @@ function ElementSpawnEnemyDummy:_finalize_values()
 	_index_or_nil(CopActionAct._act_redirects.enemy_spawn, "spawn_action")
 	_index_or_nil(CopActionAct._act_redirects.civilian_spawn, "state")
 	_save_boolean("participate_to_group_ai")
+	_save_boolean("forbid_seen")
 	_index_or_nil(self.ACCESSIBILITIES, "accessibility")
 
 	values.voice = values.voice and values.voice ~= 0 and values.voice or nil

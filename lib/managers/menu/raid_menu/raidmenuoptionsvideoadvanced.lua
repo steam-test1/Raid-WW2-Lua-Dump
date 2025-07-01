@@ -42,6 +42,8 @@ function RaidMenuOptionsVideoAdvanced:_load_advanced_video_values()
 
 	vsync_value = not vsync and "OFF" or buffer_count == 1 and "DOUBLE_BUFFER" or "TRIPLE_BUFFER"
 
+	local corpse_limit = managers.user:get_setting("corpse_limit")
+	local corpse_limit_value = math.remap(corpse_limit, tweak_data.corpse_limit.min, tweak_data.corpse_limit.max, 0, 100)
 	local detail_distance = managers.user:get_setting("detail_distance")
 	local AA_setting = managers.user:get_setting("AA_setting")
 	local texture_quality_default = RenderSettings.texture_quality_default
@@ -58,6 +60,7 @@ function RaidMenuOptionsVideoAdvanced:_load_advanced_video_values()
 	self._toggle_menu_toggle_motion_blur:set_value_and_render(motion_blur_setting, true)
 	self._toggle_menu_toggle_volumetric_light_scattering:set_value_and_render(vls_setting, true)
 	self._progress_bar_menu_detail_distance:set_value(detail_distance * 100, true)
+	self._progress_bar_menu_corpse_limit:set_value(corpse_limit_value, true)
 	self._stepper_menu_antialias:set_value_and_render(AA_setting, true)
 	self._stepper_menu_texture_quality:set_value_and_render(texture_quality_default, true)
 	self._stepper_menu_shadow_quality:set_value_and_render(shadow_quality_default, true)
@@ -158,7 +161,7 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 		description = utf8.to_upper(managers.localization:text("menu_detail_distance")),
 		name = "progress_bar_menu_detail_distance",
 		on_menu_move = {
-			down = "stepper_menu_antialias",
+			down = "progress_bar_menu_corpse_limit",
 			up = "toggle_menu_toggle_volumetric_light_scattering",
 		},
 		on_value_change_callback = callback(self, self, "on_value_change_detail_distance"),
@@ -168,6 +171,22 @@ function RaidMenuOptionsVideoAdvanced:_layout_video_advanced()
 	}
 
 	self._progress_bar_menu_detail_distance = self._root_panel:slider(progress_bar_menu_detail_distance_params)
+
+	local progress_bar_menu_corpse_limit_params = {
+		description = managers.localization:to_upper_text("menu_corpse_limit"),
+		max_display_value = tweak_data.corpse_limit.max,
+		min_display_value = tweak_data.corpse_limit.min,
+		name = "progress_bar_menu_corpse_limit",
+		on_menu_move = {
+			down = "stepper_menu_antialias",
+			up = "progress_bar_menu_detail_distance",
+		},
+		on_value_change_callback = callback(self, self, "on_value_change_corpse_limit"),
+		x = start_x,
+		y = progress_bar_menu_detail_distance_params.y + RaidGuiBase.PADDING,
+	}
+
+	self._progress_bar_menu_corpse_limit = self._root_panel:slider(progress_bar_menu_corpse_limit_params)
 	start_x = 704
 
 	local stepper_menu_antialias_params = {
@@ -349,6 +368,13 @@ function RaidMenuOptionsVideoAdvanced:on_value_change_detail_distance()
 	local detail_distance = self._progress_bar_menu_detail_distance:get_value() / 100
 
 	managers.menu:active_menu().callback_handler:set_detail_distance_raid(detail_distance)
+end
+
+function RaidMenuOptionsVideoAdvanced:on_value_change_corpse_limit()
+	local corpse_limit = self._progress_bar_menu_corpse_limit:get_value()
+	local corpse_limit_value = math.remap(corpse_limit, 0, 100, tweak_data.corpse_limit.min, tweak_data.corpse_limit.max)
+
+	managers.menu:active_menu().callback_handler:set_corpse_limit_raid(corpse_limit_value)
 end
 
 function RaidMenuOptionsVideoAdvanced:on_item_selected_vsync()

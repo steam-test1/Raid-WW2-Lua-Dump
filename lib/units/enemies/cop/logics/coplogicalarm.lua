@@ -554,7 +554,7 @@ function CopLogicAlarm._mark_call_in_event(data, my_data, attention_obj)
 		local unit_brain = attention_obj.unit:brain()
 
 		if attention_obj.unit:in_slot(17) then
-			my_data.call_in_event = managers.enemy:get_corpse_unit_data_from_key(attention_obj.unit:id()).is_civilian and "dead_civ" or "dead_cop"
+			my_data.call_in_event = managers.enemy:get_corpse_unit_data_from_key(attention_obj.unit:key()).is_civilian and "dead_civ" or "dead_cop"
 		elseif attention_obj.unit:in_slot(managers.slot:get_mask("enemies")) then
 			my_data.call_in_event = "w_hot"
 		elseif unit_brain and unit_brain.is_hostage and unit_brain:is_hostage() then

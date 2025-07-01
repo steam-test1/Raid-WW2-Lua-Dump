@@ -274,10 +274,6 @@ function ConnectionNetworkHandler:sync_game_settings(job_index, level_id_index, 
 	tweak_data:set_difficulty(difficulty)
 	peer:verify_job(job_id)
 	managers.raid_job:on_mission_started()
-
-	if managers.menu_component then
-		managers.menu_component:on_job_updated()
-	end
 end
 
 function ConnectionNetworkHandler:sync_stage_settings(level_id_index, stage_num, alternative_stage, interupt_stage_level_id, sender)
@@ -829,6 +825,22 @@ function ConnectionNetworkHandler:sync_secured_bounty(bars, sender)
 	end
 
 	managers.greed:sync_secured_bounty(bars)
+end
+
+function ConnectionNetworkHandler:call_airdrop(unit, sender)
+	if not self._verify_sender(sender) then
+		return
+	end
+
+	managers.airdrop:call_drop(unit)
+end
+
+function ConnectionNetworkHandler:airdrop_spawn_unit_in_pod(unit, position, yaw, pitch, roll, sender)
+	if not self._verify_sender(sender) then
+		return
+	end
+
+	managers.airdrop:spawn_unit_inside_pod(unit, position, yaw, pitch, roll)
 end
 
 function ConnectionNetworkHandler:spawn_loot(tweak_table, position, yaw, pitch, roll, sender)

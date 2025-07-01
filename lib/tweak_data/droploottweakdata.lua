@@ -37,7 +37,7 @@ function DropLootTweakData:_init_pickups_properties()
 	self.ammo_big = {}
 	self.ammo_big.ammo_multiplier = 6
 	self.ammo_medium = {}
-	self.ammo_medium.ammo_multiplier = 3
+	self.ammo_medium.ammo_multiplier = 2.6
 	self.ammo_small = {}
 	self.ammo_small.ammo_multiplier = 1
 	self.candy_simple = {

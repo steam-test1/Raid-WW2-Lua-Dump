@@ -35,8 +35,8 @@ function GuiTweakData:init()
 	self:_setup_old_tweak_data()
 end
 
-function GuiTweakData:get_full_gui_data(icon)
-	local gui = self.icons[icon] or {}
+function GuiTweakData:get_full_gui_data(icon, fallback)
+	local gui = self.icons[icon] or self.icons[fallback] or {}
 
 	return {
 		color = gui.color,
@@ -94,6 +94,10 @@ function GuiTweakData:_setup_colors()
 	self.colors.progress_bar_dot = Color("797f88")
 	self.colors.raid_grey_effects = Color("787878")
 	self.colors.raid_grey_skills = Color("a9a9ae")
+	self.colors.loot_rarity_common = Color("9e9e9e")
+	self.colors.loot_rarity_uncommon = Color("64bc4c")
+	self.colors.loot_rarity_rare = Color("b8392e")
+	self.colors.loot_rarity_halloween = Color("c78e38")
 end
 
 function GuiTweakData:_setup_hud_colors()
@@ -2102,6 +2106,202 @@ function GuiTweakData:_setup_icons()
 		25,
 		25,
 	}
+	self.icons.menu_item_resume = {}
+	self.icons.menu_item_resume.texture = "ui/atlas/menu/raid_atlas_menu_icons"
+	self.icons.menu_item_resume.texture_rect = {
+		0,
+		2,
+		28,
+		28,
+	}
+	self.icons.menu_item_restart = {}
+	self.icons.menu_item_restart.texture = "ui/atlas/menu/raid_atlas_menu_icons"
+	self.icons.menu_item_restart.texture_rect = {
+		30,
+		2,
+		28,
+		28,
+	}
+	self.icons.menu_item_options = {}
+	self.icons.menu_item_options.texture = "ui/atlas/menu/raid_atlas_menu_icons"
+	self.icons.menu_item_options.texture_rect = {
+		60,
+		2,
+		28,
+		28,
+	}
+	self.icons.menu_item_quit = {}
+	self.icons.menu_item_quit.texture = "ui/atlas/menu/raid_atlas_menu_icons"
+	self.icons.menu_item_quit.texture_rect = {
+		90,
+		2,
+		28,
+		28,
+	}
+	self.icons.menu_item_camp = {}
+	self.icons.menu_item_camp.texture = "ui/atlas/menu/raid_atlas_menu_icons"
+	self.icons.menu_item_camp.texture_rect = {
+		120,
+		2,
+		28,
+		28,
+	}
+	self.icons.menu_item_missions = {}
+	self.icons.menu_item_missions.texture = "ui/atlas/menu/raid_atlas_menu_icons"
+	self.icons.menu_item_missions.texture_rect = {
+		150,
+		2,
+		28,
+		28,
+	}
+	self.icons.menu_item_weapons = {}
+	self.icons.menu_item_weapons.texture = "ui/atlas/menu/raid_atlas_menu_icons"
+	self.icons.menu_item_weapons.texture_rect = {
+		180,
+		2,
+		28,
+		28,
+	}
+	self.icons.menu_item_skills = {}
+	self.icons.menu_item_skills.texture = "ui/atlas/menu/raid_atlas_menu_icons"
+	self.icons.menu_item_skills.texture_rect = {
+		210,
+		2,
+		28,
+		28,
+	}
+	self.icons.menu_item_cards = {}
+	self.icons.menu_item_cards.texture = "ui/atlas/menu/raid_atlas_menu_icons"
+	self.icons.menu_item_cards.texture_rect = {
+		0,
+		32,
+		28,
+		28,
+	}
+	self.icons.menu_item_characters = {}
+	self.icons.menu_item_characters.texture = "ui/atlas/menu/raid_atlas_menu_icons"
+	self.icons.menu_item_characters.texture_rect = {
+		30,
+		32,
+		28,
+		28,
+	}
+	self.icons.menu_item_servers = {}
+	self.icons.menu_item_servers.texture = "ui/atlas/menu/raid_atlas_menu_icons"
+	self.icons.menu_item_servers.texture_rect = {
+		60,
+		32,
+		28,
+		28,
+	}
+	self.icons.menu_item_controls = {}
+	self.icons.menu_item_controls.texture = "ui/atlas/menu/raid_atlas_menu_icons"
+	self.icons.menu_item_controls.texture_rect = {
+		90,
+		32,
+		28,
+		28,
+	}
+	self.icons.menu_item_video = {}
+	self.icons.menu_item_video.texture = "ui/atlas/menu/raid_atlas_menu_icons"
+	self.icons.menu_item_video.texture_rect = {
+		120,
+		32,
+		28,
+		28,
+	}
+	self.icons.menu_item_interface = {}
+	self.icons.menu_item_interface.texture = "ui/atlas/menu/raid_atlas_menu_icons"
+	self.icons.menu_item_interface.texture_rect = {
+		150,
+		32,
+		28,
+		28,
+	}
+	self.icons.menu_item_sound = {}
+	self.icons.menu_item_sound.texture = "ui/atlas/menu/raid_atlas_menu_icons"
+	self.icons.menu_item_sound.texture_rect = {
+		180,
+		32,
+		28,
+		28,
+	}
+	self.icons.menu_item_network = {}
+	self.icons.menu_item_network.texture = "ui/atlas/menu/raid_atlas_menu_icons"
+	self.icons.menu_item_network.texture_rect = {
+		210,
+		32,
+		28,
+		28,
+	}
+	self.icons.menu_item_credits = {}
+	self.icons.menu_item_credits.texture = "ui/atlas/menu/raid_atlas_menu_icons"
+	self.icons.menu_item_credits.texture_rect = {
+		0,
+		62,
+		28,
+		28,
+	}
+	self.icons.menu_item_online = {}
+	self.icons.menu_item_online.texture = "ui/atlas/menu/raid_atlas_menu_icons"
+	self.icons.menu_item_online.texture_rect = {
+		30,
+		62,
+		28,
+		28,
+	}
+	self.icons.menu_item_offline = {}
+	self.icons.menu_item_offline.texture = "ui/atlas/menu/raid_atlas_menu_icons"
+	self.icons.menu_item_offline.texture_rect = {
+		60,
+		62,
+		28,
+		28,
+	}
+	self.icons.menu_item_tutorial = {}
+	self.icons.menu_item_tutorial.texture = "ui/atlas/menu/raid_atlas_menu_icons"
+	self.icons.menu_item_tutorial.texture_rect = {
+		120,
+		62,
+		28,
+		28,
+	}
+	self.icons.menu_item_background = {
+		texture = "ui/atlas/menu/raid_atlas_buttons",
+		texture_rect = {
+			0,
+			0,
+			480,
+			64,
+		},
+	}
+	self.icons.list_item_background_left = {
+		texture = "ui/atlas/menu/raid_atlas_buttons",
+		texture_rect = {
+			0,
+			68,
+			96,
+			64,
+		},
+	}
+	self.icons.list_item_background_center = {
+		texture = "ui/atlas/menu/raid_atlas_buttons",
+		texture_rect = {
+			96,
+			68,
+			96,
+			64,
+		},
+	}
+	self.icons.list_item_background_right = {
+		texture = "ui/atlas/menu/raid_atlas_buttons",
+		texture_rect = {
+			384,
+			68,
+			96,
+			64,
+		},
+	}
 
 	local wpnskl_x = 40
 
@@ -2471,6 +2671,14 @@ function GuiTweakData:_setup_icons()
 	self.icons.missions_fury_railway.texture = "ui/atlas/raid_atlas_missions"
 	self.icons.missions_fury_railway.texture_rect = {
 		368,
+		126,
+		56,
+		56,
+	}
+	self.icons.missions_forest_bunker = {}
+	self.icons.missions_forest_bunker.texture = "ui/atlas/raid_atlas_missions"
+	self.icons.missions_forest_bunker.texture_rect = {
+		424,
 		126,
 		56,
 		56,
@@ -3461,6 +3669,14 @@ function GuiTweakData:_setup_hud_icons()
 		72,
 		72,
 	}
+	self.icons.carry_explosive = {}
+	self.icons.carry_explosive.texture = "ui/atlas/raid_atlas_carry"
+	self.icons.carry_explosive.texture_rect = {
+		288,
+		72,
+		72,
+		72,
+	}
 	self.icons.carry_weight_indicator_bg = {}
 	self.icons.carry_weight_indicator_bg.texture = "ui/atlas/raid_atlas_hud"
 	self.icons.carry_weight_indicator_bg.texture_rect = {
@@ -3682,6 +3898,14 @@ function GuiTweakData:_setup_hud_icons()
 	self.icons.equipment_panel_sps_briefcase.texture_rect = {
 		977,
 		1757,
+		32,
+		32,
+	}
+	self.icons.equipment_panel_power_cable = {}
+	self.icons.equipment_panel_power_cable.texture = "ui/atlas/raid_atlas_hud"
+	self.icons.equipment_panel_power_cable.texture_rect = {
+		992,
+		1984,
 		32,
 		32,
 	}
@@ -4715,6 +4939,14 @@ function GuiTweakData:_setup_hud_icons()
 		102,
 		42,
 	}
+	self.icons.weapons_panel_gre_thermite = {}
+	self.icons.weapons_panel_gre_thermite.texture = "ui/updates/upd_blaze/atlas_weapon_icons"
+	self.icons.weapons_panel_gre_thermite.texture_rect = {
+		96,
+		128,
+		102,
+		42,
+	}
 	self.icons.missions_consumable_fury_railway = {}
 	self.icons.missions_consumable_fury_railway.texture = "ui/atlas/raid_atlas_hud_raids_mini"
 	self.icons.missions_consumable_fury_railway.texture_rect = {
@@ -5419,6 +5651,14 @@ function GuiTweakData:_setup_hud_waypoint_icons()
 		32,
 		32,
 	}
+	self.icons.waypoint_special_plug_cable = {}
+	self.icons.waypoint_special_plug_cable.texture = "ui/atlas/raid_atlas_waypoints"
+	self.icons.waypoint_special_plug_cable.texture_rect = {
+		1,
+		523,
+		38,
+		38,
+	}
 end
 
 function GuiTweakData:_setup_hud_reticles()
@@ -5645,17 +5885,17 @@ function GuiTweakData:_setup_hud_status_effects()
 end
 
 function GuiTweakData:_setup_map_icons()
-	self.icons.map = {}
-	self.icons.map.texture = "ui/atlas/raid_atlas_map"
-	self.icons.map.texture_rect = {
+	self.icons.map_zone_germany = {}
+	self.icons.map_zone_germany.texture = "ui/atlas/raid_atlas_map"
+	self.icons.map_zone_germany.texture_rect = {
 		1,
 		1,
 		1098,
 		1080,
 	}
-	self.icons.map_camp = {}
-	self.icons.map_camp.texture = "ui/atlas/raid_atlas_map"
-	self.icons.map_camp.texture_rect = {
+	self.icons.map_ico_camp = {}
+	self.icons.map_ico_camp.texture = "ui/atlas/raid_atlas_map"
+	self.icons.map_ico_camp.texture_rect = {
 		1507,
 		1,
 		52,
@@ -5692,6 +5932,30 @@ function GuiTweakData:_setup_map_icons()
 		1,
 		72,
 		72,
+	}
+	self.icons.map_forest_bunker = {}
+	self.icons.map_forest_bunker.texture = "ui/missions/forest_bunker/map_forest_bunker"
+	self.icons.map_forest_bunker.texture_rect = {
+		0,
+		0,
+		1024,
+		1024,
+	}
+	self.icons.map_forest_bunker_int = {}
+	self.icons.map_forest_bunker_int.texture = "ui/missions/forest_bunker/map_forest_bunker_int"
+	self.icons.map_forest_bunker_int.texture_rect = {
+		0,
+		0,
+		1024,
+		1024,
+	}
+	self.icons.map_ico_bunker = {}
+	self.icons.map_ico_bunker.texture = "ui/atlas/raid_atlas_map"
+	self.icons.map_ico_bunker.texture_rect = {
+		1507,
+		54,
+		52,
+		52,
 	}
 end
 
@@ -5766,6 +6030,7 @@ function GuiTweakData:_setup_skill_icons()
 	_make_icon("skills_big_game", 1, 7)
 	_make_icon("skills_sapper", 2, 7)
 	_make_icon("skills_cache_basket", 3, 7)
+	_make_icon("skills_warcry_scorched_earth", 4, 7)
 
 	self.icons.player_panel_warcry_berserk = {}
 	self.icons.player_panel_warcry_berserk.texture = "ui/atlas/skilltree/raid_atlas_wc_hud_small"
@@ -5779,6 +6044,14 @@ function GuiTweakData:_setup_skill_icons()
 	self.icons.player_panel_warcry_cluster_truck.texture = "ui/atlas/skilltree/raid_atlas_wc_hud_small"
 	self.icons.player_panel_warcry_cluster_truck.texture_rect = {
 		0,
+		0,
+		52,
+		52,
+	}
+	self.icons.player_panel_warcry_scorched_earth = {}
+	self.icons.player_panel_warcry_scorched_earth.texture = "ui/atlas/skilltree/raid_atlas_wc_hud_small"
+	self.icons.player_panel_warcry_scorched_earth.texture_rect = {
+		208,
 		0,
 		52,
 		52,
@@ -6239,6 +6512,14 @@ function GuiTweakData:_setup_skill_big_icons()
 	self.icons.weapon_gre_anti_tank_large.texture_rect = {
 		0,
 		0,
+		96,
+		128,
+	}
+	self.icons.weapon_gre_thermite_large = {}
+	self.icons.weapon_gre_thermite_large.texture = "ui/updates/upd_blaze/atlas_weapon_icons"
+	self.icons.weapon_gre_thermite_large.texture_rect = {
+		0,
+		128,
 		96,
 		128,
 	}
@@ -7206,6 +7487,38 @@ function GuiTweakData:_setup_mission_photos()
 		416,
 		288,
 	}
+	self.mission_photos.intel_forest_bunker_01 = {}
+	self.mission_photos.intel_forest_bunker_01.texture = "ui/missions/forest_bunker/raid_atlas_photos_forest_bunker"
+	self.mission_photos.intel_forest_bunker_01.texture_rect = {
+		2,
+		2,
+		416,
+		288,
+	}
+	self.mission_photos.intel_forest_bunker_02 = {}
+	self.mission_photos.intel_forest_bunker_02.texture = "ui/missions/forest_bunker/raid_atlas_photos_forest_bunker"
+	self.mission_photos.intel_forest_bunker_02.texture_rect = {
+		2,
+		290,
+		416,
+		288,
+	}
+	self.mission_photos.intel_forest_bunker_03 = {}
+	self.mission_photos.intel_forest_bunker_03.texture = "ui/missions/forest_bunker/raid_atlas_photos_forest_bunker"
+	self.mission_photos.intel_forest_bunker_03.texture_rect = {
+		2,
+		578,
+		416,
+		288,
+	}
+	self.mission_photos.intel_forest_bunker_04 = {}
+	self.mission_photos.intel_forest_bunker_04.texture = "ui/missions/forest_bunker/raid_atlas_photos_forest_bunker"
+	self.mission_photos.intel_forest_bunker_04.texture_rect = {
+		418,
+		2,
+		416,
+		288,
+	}
 end
 
 function GuiTweakData:_setup_optical_flares()
@@ -7408,6 +7721,14 @@ function GuiTweakData:_setup_xp_icons()
 	self.icons.xp_events_missions_fury_railway.texture = "ui/atlas/raid_atlas_xp"
 	self.icons.xp_events_missions_fury_railway.texture_rect = {
 		1182,
+		790,
+		392,
+		392,
+	}
+	self.icons.xp_events_missions_forest_bunker = {}
+	self.icons.xp_events_missions_forest_bunker.texture = "ui/atlas/raid_atlas_xp"
+	self.icons.xp_events_missions_forest_bunker.texture_rect = {
+		1574,
 		790,
 		392,
 		392,
@@ -7629,47 +7950,6 @@ function GuiTweakData:_setup_nine_rect_icons()
 end
 
 function GuiTweakData:_setup_old_tweak_data()
-	self.content_updates = {
-		choice_id = "menu_content_updates_previous",
-		num_items = 6,
-		title_id = "menu_content_updates",
-	}
-
-	if IS_PC then
-		self.content_updates.item_list = {}
-	elseif IS_PS4 then
-		self.content_updates.item_list = {}
-	elseif IS_XB1 then
-		self.content_updates.item_list = {}
-	end
-
-	self.fav_videos = {
-		button = {
-			text_id = "menu_fav_video_homepage",
-			url = "http://www.overkillsoftware.com/?page_id=1263",
-		},
-		db_url = "http://www.overkillsoftware.com/?page_id=1263",
-		item_list = {
-			{
-				id = "fav3",
-				image = "guis/textures/pd2/fav_video3",
-				use_db = true,
-			},
-			{
-				id = "fav2",
-				image = "guis/textures/pd2/fav_video2",
-				use_db = true,
-			},
-			{
-				id = "fav1",
-				image = "guis/textures/pd2/fav_video1",
-				use_db = true,
-			},
-		},
-		num_items = 3,
-		title_id = "menu_fav_videos",
-	}
-	self.masks_sort_order = {}
 	self.suspicion_to_visibility = {}
 	self.suspicion_to_visibility[1] = {}
 	self.suspicion_to_visibility[1].name_id = "bm_menu_concealment_low"
@@ -7686,13 +7966,6 @@ function GuiTweakData:_setup_old_tweak_data()
 	self.mouse_pointer.controller.max_acceleration = 3
 	self.mouse_pointer.controller.mouse_pointer_speed = 125
 
-	local min_amount_masks = 72
-
-	self.MASK_ROWS_PER_PAGE = 4
-	self.MASK_COLUMNS_PER_PAGE = 4
-	self.MAX_MASK_PAGES = math.ceil(min_amount_masks / (self.MASK_ROWS_PER_PAGE * self.MASK_COLUMNS_PER_PAGE))
-	self.MAX_MASK_SLOTS = self.MAX_MASK_PAGES * self.MASK_ROWS_PER_PAGE * self.MASK_COLUMNS_PER_PAGE
-
 	local min_amount_weapons = 72
 
 	self.WEAPON_ROWS_PER_PAGE = 4
@@ -7707,19 +7980,5 @@ function GuiTweakData:_setup_old_tweak_data()
 	self.server_browser.refresh_servers_time = 5
 	self.server_browser.total_active_jobs = 50
 	self.server_browser.max_active_server_jobs = 100
-	self.rename_max_letters = 20
-	self.rename_skill_set_max_letters = 15
-	self.mod_preview_min_fov = -20
-	self.mod_preview_max_fov = 3
 	self.stats_present_multiplier = 10
-	self.armor_damage_shake_base = 1.1
-	self.buy_weapon_category_groups = {
-		bow = "wpn_special",
-		crossbow = "wpn_special",
-		flamethrower = "wpn_special",
-		grenade_launcher = "wpn_special",
-		minigun = "wpn_special",
-		saw = "wpn_special",
-	}
-	self.weapon_texture_switches = {}
 end

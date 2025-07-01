@@ -73,9 +73,7 @@ function HUDInteraction:show_interact(data)
 
 	self:remove_interact()
 
-	local text = utf8.to_upper(self._saved_text or managers.localization:text("interact_button_press", {
-		BTN_INTERACT = managers.localization:btn_macro("interact"),
-	}))
+	local text = utf8.to_upper(self._saved_text or managers.localization:text("interact_button_press"))
 
 	self._hud_panel:child(self._child_name_text):set_text(text)
 	self._hud_panel:child(self._child_name_text):set_visible(true)

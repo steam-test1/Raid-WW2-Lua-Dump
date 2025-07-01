@@ -8,6 +8,7 @@ function NetworkTweakData:init(tweak_data)
 	}
 	self.driving = {
 		network_wait_delta_t = 0.05,
+		network_wait_distance = 1,
 	}
 	self.stealth_speed_boost = 1.025
 end

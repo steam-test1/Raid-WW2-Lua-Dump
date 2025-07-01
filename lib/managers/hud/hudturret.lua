@@ -111,9 +111,7 @@ function HUDTurret:_create_dismount_prompt()
 		halign = "center",
 		layer = 5,
 		name = "text",
-		text = utf8.to_upper(managers.localization:text(HUDTurret.DISMOUNT_PROMPT_TEXT, {
-			BTN_INTERACT = managers.localization:btn_macro("interact"),
-		})),
+		text = utf8.to_upper(managers.localization:text(HUDTurret.DISMOUNT_PROMPT_TEXT)),
 		valign = "center",
 		vertical = "center",
 	}
@@ -291,9 +289,7 @@ end
 
 function HUDTurret:show_prompt()
 	self._dismount_prompt_panel:stop()
-	self._dismount_prompt_text:set_text(utf8.to_upper(managers.localization:text(HUDTurret.DISMOUNT_PROMPT_TEXT, {
-		BTN_INTERACT = managers.localization:btn_macro("interact"),
-	})))
+	self._dismount_prompt_text:set_text(managers.localization:to_upper_text(HUDTurret.DISMOUNT_PROMPT_TEXT))
 	self._dismount_prompt_panel:animate(callback(self, self, "_animate_show"))
 	managers.queued_tasks:queue("hud_turret_prompt", self.hide_prompt, self, nil, HUDTurret.DISMOUNT_PROMPT_HOLD_TIME, nil)
 end

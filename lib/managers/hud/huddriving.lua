@@ -244,10 +244,6 @@ function HUDDriving:refresh_button_prompts(force)
 end
 
 function HUDDriving:_create_button_prompt(prompt_name, prompt, buttons)
-	if managers.controller:is_controller_present() and not managers.menu:is_pc_controller() then
-		buttons = managers.localization:get_default_macros()
-	end
-
 	local button_prompt_params = {
 		align = "center",
 		font = HUDDriving.BUTTON_PROMPT_TEXT_FONT,
@@ -305,7 +301,7 @@ function HUDDriving:_get_prompts_needed_for_current_seat()
 				STICK_R = managers.localization:btn_macro("vehicle_rear_camera"),
 			},
 			name = "look_behind",
-			prompt = HUDDriving.BUTTON_PROMPT_LOOK_BEHIND,
+			prompt = self.BUTTON_PROMPT_LOOK_BEHIND,
 		})
 	end
 
@@ -315,7 +311,7 @@ function HUDDriving:_get_prompts_needed_for_current_seat()
 				BTN_B = managers.localization:btn_macro("vehicle_shooting_stance"),
 			},
 			name = "switch_pose",
-			prompt = HUDDriving.BUTTON_PROMPT_SWITCH_POSE,
+			prompt = self.BUTTON_PROMPT_SWITCH_POSE,
 		})
 	end
 
@@ -324,14 +320,14 @@ function HUDDriving:_get_prompts_needed_for_current_seat()
 			BTN_TOP_R = managers.localization:btn_macro("vehicle_exit"),
 		},
 		name = "exit_vehicle",
-		prompt = HUDDriving.BUTTON_PROMPT_EXIT_VEHICLE,
+		prompt = self.BUTTON_PROMPT_EXIT_VEHICLE,
 	})
 	table.insert(seat_prompts, {
 		buttons = {
 			BTN_TOP_L = managers.localization:btn_macro("vehicle_change_seat"),
 		},
 		name = "change_seat",
-		prompt = HUDDriving.BUTTON_PROMPT_CHANGE_SEAT,
+		prompt = self.BUTTON_PROMPT_CHANGE_SEAT,
 	})
 
 	return seat_prompts

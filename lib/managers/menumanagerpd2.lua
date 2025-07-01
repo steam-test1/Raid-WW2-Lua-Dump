@@ -10,18 +10,6 @@ function MenuManager:update(t, dt, ...)
 	managers.menu_component:update(t, dt)
 end
 
-function MenuManager:on_view_character(user)
-	local outfit = user:rich_presence("outfit")
-
-	if outfit ~= "" then
-		if managers.menu:active_menu().logic:selected_node_name() ~= "view_character" then
-			managers.menu:active_menu().logic:select_node("view_character", true, {})
-		end
-
-		managers.menu_component:create_view_character_profile_gui(user, 0, 300)
-	end
-end
-
 function MenuManager:on_enter_lobby()
 	Application:debug("[MenuManager:on_enter_lobby]")
 

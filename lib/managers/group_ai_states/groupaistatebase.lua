@@ -39,6 +39,7 @@ function GroupAIStateBase:update(t, dt)
 	end
 
 	self:_upd_debug_draw_attentions()
+	self:_upd_debug_draw_special_objectives()
 end
 
 function GroupAIStateBase:paused_update(t, dt)
@@ -152,9 +153,6 @@ end
 
 function GroupAIStateBase:_init_misc_data(clean_up)
 	self._t = TimerManager:game():time()
-
-	self:_parse_teammate_comments()
-
 	self._player_weapons_hot = nil
 	self._enemy_weapons_hot = nil
 	self._police_called = nil
@@ -206,6 +204,7 @@ function GroupAIStateBase:_init_misc_data(clean_up)
 	self._whisper_mode = false
 
 	self:set_bain_state(true)
+	managers.enemy:set_hot_state(false)
 
 	self._allow_dropin = true
 	self._police = managers.enemy:all_enemies()
@@ -244,8 +243,8 @@ function GroupAIStateBase:_init_misc_data(clean_up)
 	self:_init_team_tables()
 
 	self._phalanx_data = {
+		is_safe = nil,
 		minions = {},
-		stand = nil,
 	}
 end
 
@@ -764,99 +763,6 @@ end
 
 function GroupAIStateBase:has_room_for_police_hostage()
 	return false
-end
-
-GroupAIStateBase.PATH = "gamedata/comments"
-GroupAIStateBase.FILE_EXTENSION = "comment"
-GroupAIStateBase.FULL_PATH = GroupAIStateBase.PATH .. "." .. GroupAIStateBase.FILE_EXTENSION
-
-function GroupAIStateBase:_parse_teammate_comments()
-	local list = PackageManager:script_data(self.FILE_EXTENSION:id(), self.PATH:id())
-
-	self.teammate_comments = {}
-	self.teammate_comment_names = {}
-
-	for _, data in ipairs(list) do
-		if data._meta == "comment" then
-			self:_parse_teammate_comment(data)
-		else
-			Application:error("[GroupAIStateBase:_parse_teammate_comments] Unknown node \"" .. tostring(data._meta) .. "\" in \"" .. self.FULL_PATH .. "\". Expected \"comment\" node.")
-		end
-	end
-end
-
-function GroupAIStateBase:_parse_teammate_comment(data)
-	local event = data.event
-	local allow = data.allow_first_person or false
-
-	table.insert(self.teammate_comments, {
-		allow_first_person = allow,
-		event = event,
-	})
-	table.insert(self.teammate_comment_names, event)
-end
-
-function GroupAIStateBase:teammate_comment(trigger_unit, message, pos, pos_based, radius, sync)
-	if radius == 0 then
-		radius = nil
-	end
-
-	local message_id
-
-	for index, sound in ipairs(self.teammate_comment_names) do
-		if sound == message then
-			message_id = index
-
-			break
-		end
-	end
-
-	if not message_id then
-		Application:error("[GroupAIStateBase:teammate_comment] " .. message .. " cannot be found")
-
-		return
-	end
-
-	local allow_first_person = self.teammate_comments[message_id].allow_first_person
-	local close_pos = pos_based and pos or managers.player:player_unit() and managers.player:player_unit():position() or Vector3()
-	local close_criminal, close_criminal_d
-
-	if trigger_unit and alive(trigger_unit) then
-		radius = nil
-		close_criminal = trigger_unit
-	else
-		for u_key, u_data in pairs(self._criminals) do
-			if not u_data.is_deployable and (allow_first_person or not u_data.unit:base().is_local_player) and alive(u_data.unit) and not u_data.unit:movement():downed() and not u_data.unit:sound():speaking() then
-				local d = mvector3.distance_sq(close_pos, u_data.m_pos)
-				local ed = radius and (pos_based and d or mvector3.distance_sq(pos, u_data.m_pos))
-
-				if (not radius or ed < radius * radius) and (not close_criminal_d or d < close_criminal_d) then
-					close_criminal = u_data.unit
-					close_criminal_d = d
-				end
-			end
-		end
-	end
-
-	if close_criminal then
-		close_criminal:sound():say(message, false)
-	end
-
-	if sync then
-		if trigger_unit and alive(trigger_unit) then
-			managers.network:session():send_to_peers_synched("sync_teammate_comment_instigator", trigger_unit, message_id)
-		else
-			managers.network:session():send_to_peers_synched("sync_teammate_comment", message_id, pos or Vector3(0, 0, 0), pos_based, radius or 0)
-		end
-	end
-end
-
-function GroupAIStateBase:sync_teammate_comment(message, pos, pos_based, radius)
-	self:teammate_comment(nil, self.teammate_comment_names[message], pos, pos_based, radius, false)
-end
-
-function GroupAIStateBase:sync_teammate_comment_instigator(unit, message)
-	self:teammate_comment(unit, self.teammate_comment_names[message], nil, false, nil, false)
 end
 
 function GroupAIStateBase:on_hostage_state(state, key, police, skip_announcement)
@@ -3517,7 +3423,6 @@ function GroupAIStateBase:sync_smoke_grenade(detonate_pos, shooter_pos, duration
 		self._smoke_grenade = World:spawn_unit(Idstring("units/dev_tools/deleted_unit/deleted_unit"), detonate_pos, Rotation())
 
 		self._smoke_grenade:base():activate(shooter_pos or detonate_pos, smoke_duration)
-		managers.groupai:state():teammate_comment(nil, "g40x_any", detonate_pos, true, 2000, false)
 	end
 
 	self._smoke_end_t = Application:time() + smoke_duration
@@ -3739,7 +3644,7 @@ function GroupAIStateBase:chk_say_teamAI_combat_chatter(unit)
 	end
 
 	managers.dialog:queue_dialog("player_gen_battle_celebration", {
-		attention_info = nil,
+		[""] = nil,
 		skip_idle_check = true,
 	})
 end
@@ -5873,6 +5778,19 @@ function GroupAIStateBase:draw_attention_objects_by_preset_name(wanted_preset_na
 		}
 	else
 		self._attention_debug_draw_data = nil
+	end
+end
+
+function GroupAIStateBase:_upd_debug_draw_special_objectives()
+	if not self._special_objectives_debug_draw then
+		return
+	end
+
+	local brush_clear = Draw:brush(Color(0.5, 1, 0, 1), 0)
+	local brush_admin = Draw:brush(Color(1, 0.5, 0, 1), 0)
+
+	for k, so in pairs(self._special_objectives) do
+		(so.administered and brush_admin or brush_clear):sphere(so.data.objective.pos, 25)
 	end
 end
 

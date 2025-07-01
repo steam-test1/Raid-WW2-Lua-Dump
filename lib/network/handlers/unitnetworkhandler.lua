@@ -642,8 +642,11 @@ function UnitNetworkHandler:sync_body_damage_fire(body, attacker, normal, positi
 		return
 	end
 
-	body:extension().damage:damage_fire(attacker, normal, position, direction, damage / 163.84)
-	body:extension().damage:damage_damage(attacker, normal, position, direction, damage / 163.84)
+	local damage_multiplier = FireTweakData.NETWORK_DAMAGE_MULTIPLIER
+	local prop_damage = damage / damage_multiplier
+
+	body:extension().damage:damage_fire(attacker, normal, position, direction, prop_damage)
+	body:extension().damage:damage_damage(attacker, normal, position, direction, prop_damage)
 end
 
 function UnitNetworkHandler:sync_body_damage_fire_no_attacker(body, normal, position, direction, damage, sender)
@@ -992,12 +995,13 @@ function UnitNetworkHandler:hostage_trade(unit, enable, trade_success)
 	CopLogicTrade.hostage_trade(unit, enable, trade_success)
 end
 
-function UnitNetworkHandler:set_unit_invulnerable(unit, enable)
+function UnitNetworkHandler:set_unit_invulnerable(unit, invulnerable, immortal)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_character(unit) then
 		return
 	end
 
-	unit:character_damage():set_invulnerable(enable)
+	unit:character_damage():set_invulnerable(invulnerable)
+	unit:character_damage():set_immortal(immortal)
 end
 
 function UnitNetworkHandler:set_trade_countdown(enable)
@@ -2247,10 +2251,12 @@ function UnitNetworkHandler:sync_fall_position(unit, pos, rot)
 	end
 end
 
-function UnitNetworkHandler:sync_add_doted_enemy(enemy_unit, fire_damage_received_time, weapon_unit, dot_length, dot_damage, rpc)
-	local peer = self._verify_sender(rpc)
+function UnitNetworkHandler:sync_apply_enemy_dot(enemy_unit, tweak_id, weapon_unit, sender)
+	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_character_and_sender(enemy_unit, sender) then
+		return
+	end
 
-	managers.fire:sync_add_fire_dot(enemy_unit, fire_damage_received_time, weapon_unit, dot_length, dot_damage, peer)
+	enemy_unit:character_damage():apply_dot(tweak_id, weapon_unit)
 end
 
 function UnitNetworkHandler:server_secure_loot(carry_id, multiplier_level, silent, sender)
@@ -2279,12 +2285,12 @@ function UnitNetworkHandler:sync_small_loot_taken(unit, sender)
 	unit:base():taken()
 end
 
-function UnitNetworkHandler:sync_heist_time(time, sender)
+function UnitNetworkHandler:sync_job_time(job_time, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
 	end
 
-	managers.game_play_central:sync_heist_time(time)
+	managers.game_play_central:sync_job_time(job_time)
 end
 
 function UnitNetworkHandler:set_teammate_hud(unit, percent, id, sender)
@@ -2531,22 +2537,6 @@ function UnitNetworkHandler:set_interaction_voice(unit, voice, sender)
 	end
 
 	unit:brain():set_interaction_voice(voice ~= "" and voice or nil)
-end
-
-function UnitNetworkHandler:sync_teammate_comment(message, pos, pos_based, radius, sender)
-	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
-		return
-	end
-
-	managers.groupai:state():sync_teammate_comment(message, pos, pos_based, radius)
-end
-
-function UnitNetworkHandler:sync_teammate_comment_instigator(unit, message)
-	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
-		return
-	end
-
-	managers.groupai:state():sync_teammate_comment_instigator(unit, message)
 end
 
 function UnitNetworkHandler:begin_gameover_fadeout()
@@ -3206,6 +3196,30 @@ function UnitNetworkHandler:sync_vehicle_securing_loot(vehicle, enabled)
 	end
 end
 
+function UnitNetworkHandler:sync_vehicle_map_waypoint(vehicle, enabled)
+	if not vehicle or not vehicle:vehicle_driving() then
+		return
+	end
+
+	if enabled then
+		vehicle:vehicle_driving():enable_map_waypoint()
+	else
+		vehicle:vehicle_driving():disable_map_waypoint()
+	end
+end
+
+function UnitNetworkHandler:sync_vehicle_hud_waypoint(vehicle, enabled)
+	if not vehicle or not vehicle:vehicle_driving() then
+		return
+	end
+
+	if enabled then
+		vehicle:vehicle_driving():enable_hud_waypoint()
+	else
+		vehicle:vehicle_driving():disable_hud_waypoint()
+	end
+end
+
 function UnitNetworkHandler:sync_unit_data(unit, world_id, editor_id)
 	local world = managers.worldcollection:worlddefinition_by_id(world_id)
 
@@ -3686,14 +3700,6 @@ function UnitNetworkHandler:run_local_push_child_unit(parent_unit, parent_extens
 	end
 
 	parent_unit[parent_extension_name](parent_unit):local_push_child_unit(unit_id, mass, pow, vec3_a, vec3_b)
-end
-
-function UnitNetworkHandler:leave_flamethrower_patch(subject_unit, sender)
-	if not self._verify_character_and_sender(subject_unit, sender) or not self._verify_gamestate(self._gamestate_filter.any_ingame) then
-		return
-	end
-
-	managers.fire:leave_flamethrower_patch(subject_unit)
 end
 
 function UnitNetworkHandler:sync_camp_asset(unit, level, sender)

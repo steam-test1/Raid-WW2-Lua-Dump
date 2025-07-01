@@ -232,4 +232,14 @@ function AchievementTweakData:_init_mission_awards()
 			id = "ach_fury_railway_hardest",
 		},
 	}
+	self.missions.forest_bunker = {
+		{
+			difficulty = very_hard,
+			id = "ach_forest_bunker_hardest",
+		},
+		{
+			all_dogtags = true,
+			id = "ach_bring_them_home_forest_bunker",
+		},
+	}
 end

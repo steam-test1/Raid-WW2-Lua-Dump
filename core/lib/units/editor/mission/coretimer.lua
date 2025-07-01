@@ -380,6 +380,7 @@ function CoreTimerTriggerUnitElement:_build_panel(panel, panel_sizer)
 
 	local names = {
 		"logic_timer/logic_timer",
+		"logic_timer_hud/logic_timer_hud",
 	}
 
 	self:_build_add_remove_unit_from_list(panel, panel_sizer, self._hed.elements, names)

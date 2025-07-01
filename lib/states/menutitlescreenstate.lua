@@ -275,6 +275,7 @@ function MenuTitlescreenState:update(t, dt)
 				managers.user:set_index(self._controller_index)
 			end
 
+			managers.localization:setup_macros()
 			self._press_any_key_text:set_alpha(0)
 
 			if IS_XB1 then

@@ -1,12 +1,21 @@
 MissionJoinGui = MissionJoinGui or class(RaidGuiBase)
+MissionJoinGui.FILTER_WIDTH = 470
 MissionJoinGui.FILTER_HEIGHT = 20
-MissionJoinGui.FILTER_FONT_SIZE = 19
 MissionJoinGui.FILTER_BUTTON_W = 20
 MissionJoinGui.FILTER_BUTTON_H = 20
+MissionJoinGui.FILTER_STEPPER_W = 260
+MissionJoinGui.FILTER_FONT_SIZE = 19
 MissionJoinGui.SERVER_TABLE_ROW_HEIGHT = 42
 
 function MissionJoinGui:init(ws, fullscreen_ws, node, component_name)
 	MissionJoinGui.super.init(self, ws, fullscreen_ws, node, component_name)
+end
+
+function MissionJoinGui:close()
+	MissionJoinGui.super.close(self)
+	managers.network.matchmake:register_callback("search_lobby", nil)
+	managers.savefile:save_setting()
+	self:_remove_active_controls()
 end
 
 function MissionJoinGui:_set_initial_data()
@@ -67,114 +76,90 @@ function MissionJoinGui:_layout()
 end
 
 function MissionJoinGui:_layout_filters()
-	local filter_label_width = 256
-	local filter_control_width = 192
-	local filter_control_width_wide = 250
-	local filter_stepper_width = 470
-	local row_spacing = 5
-
 	self._friends_only_button = self._filters_panel:toggle_button({
-		button_h = MissionJoinGui.FILTER_BUTTON_H,
-		button_w = MissionJoinGui.FILTER_BUTTON_W,
-		description = utf8.to_upper(managers.localization:text("menu_mission_join_filters_friends_only")),
-		description_color = Color.white,
-		font_size = MissionJoinGui.FILTER_FONT_SIZE,
-		h = MissionJoinGui.FILTER_HEIGHT,
+		button_h = self.FILTER_BUTTON_H,
+		button_w = self.FILTER_BUTTON_W,
+		description = self:translate("menu_mission_join_filters_friends_only", true),
+		font_size = self.FILTER_FONT_SIZE,
+		h = self.FILTER_HEIGHT,
 		name = "friends_only_button",
-		no_highlight = true,
-		on_click_callback = callback(self, self, "friends_only_button_on_click"),
+		on_click_callback = callback(self, self, "on_click_friends_only_button"),
 		on_menu_move = {
 			down = "in_camp_servers_only",
 			up = "mission_filter_stepper",
 		},
-		text = "",
-		w = 470,
-		x = 0,
+		w = self.FILTER_WIDTH,
 		y = 32,
 	})
 	self._in_camp_servers_only = self._filters_panel:toggle_button({
-		button_h = MissionJoinGui.FILTER_BUTTON_H,
-		button_w = MissionJoinGui.FILTER_BUTTON_W,
-		description = utf8.to_upper(managers.localization:text("menu_mission_join_filters_in_camp_servers_only")),
-		description_color = Color.white,
-		font_size = MissionJoinGui.FILTER_FONT_SIZE,
-		h = MissionJoinGui.FILTER_HEIGHT,
+		button_h = self.FILTER_BUTTON_H,
+		button_w = self.FILTER_BUTTON_W,
+		description = self:translate("menu_mission_join_filters_in_camp_servers_only", true),
+		font_size = self.FILTER_FONT_SIZE,
+		h = self.FILTER_HEIGHT,
 		name = "in_camp_servers_only",
-		no_highlight = true,
-		on_click_callback = callback(self, self, "in_camp_servers_only_button_on_click"),
+		on_click_callback = callback(self, self, "on_click_camp_only_button"),
 		on_menu_move = {
 			down = "distance_filter_stepper",
 			up = "friends_only_button",
 		},
-		text = "",
-		w = 470,
-		x = self._friends_only_button:x(),
+		w = self.FILTER_WIDTH,
 		y = self._friends_only_button:y() + 50,
 	})
 	self._distance_filter_stepper = self._filters_panel:stepper({
 		arrow_color = tweak_data.menu.raid_red,
-		arrow_highlight_color = Color.white,
-		button_h = MissionJoinGui.FILTER_BUTTON_H,
-		button_w = MissionJoinGui.FILTER_BUTTON_W,
+		button_h = self.FILTER_BUTTON_H,
+		button_w = self.FILTER_BUTTON_W,
 		color = tweak_data.menu.raid_red,
 		data_source_callback = callback(self, self, "data_source_distance_filter_stepper"),
-		description = utf8.to_upper(managers.localization:text("menu_mission_join_filters_distance_filter")),
-		description_color = Color.white,
-		font_size = MissionJoinGui.FILTER_FONT_SIZE,
-		h = MissionJoinGui.FILTER_HEIGHT,
-		highlight_color = Color.white,
+		description = self:translate("menu_mission_join_filters_distance_filter", true),
+		font_size = self.FILTER_FONT_SIZE,
+		h = self.FILTER_HEIGHT,
 		name = "distance_filter_stepper",
+		on_item_selected_callback = callback(self, self, "on_click_distance_filter"),
 		on_menu_move = {
 			down = "difficulty_filter_stepper",
 			up = "in_camp_servers_only",
 		},
-		stepper_w = filter_control_width_wide + 30,
-		w = filter_stepper_width,
-		x = self._in_camp_servers_only:x(),
+		stepper_w = self.FILTER_STEPPER_W,
+		w = self.FILTER_WIDTH,
 		y = self._in_camp_servers_only:y() + 50,
 	})
 	self._difficulty_filter_stepper = self._filters_panel:stepper({
 		arrow_color = tweak_data.menu.raid_red,
-		arrow_highlight_color = Color.white,
-		button_h = MissionJoinGui.FILTER_BUTTON_H,
-		button_w = MissionJoinGui.FILTER_BUTTON_W,
+		button_h = self.FILTER_BUTTON_H,
+		button_w = self.FILTER_BUTTON_W,
 		color = tweak_data.menu.raid_red,
 		data_source_callback = callback(self, self, "data_source_difficulty_filter_stepper"),
-		description = utf8.to_upper(managers.localization:text("menu_mission_join_filters_difficulty_filter")),
-		description_color = Color.white,
-		font_size = MissionJoinGui.FILTER_FONT_SIZE,
-		h = MissionJoinGui.FILTER_HEIGHT,
-		highlight_color = Color.white,
+		description = self:translate("menu_mission_join_filters_difficulty_filter", true),
+		font_size = self.FILTER_FONT_SIZE,
+		h = self.FILTER_HEIGHT,
 		name = "difficulty_filter_stepper",
+		on_item_selected_callback = callback(self, self, "on_click_difficuty_filter"),
 		on_menu_move = {
 			down = "mission_filter_stepper",
 			up = "distance_filter_stepper",
 		},
-		stepper_w = filter_control_width_wide + 30,
-		w = filter_stepper_width,
-		x = self._distance_filter_stepper:x(),
+		stepper_w = self.FILTER_STEPPER_W,
+		w = self.FILTER_WIDTH,
 		y = self._distance_filter_stepper:y() + 50,
 	})
 	self._mission_filter_stepper = self._filters_panel:stepper({
 		arrow_color = tweak_data.menu.raid_red,
-		arrow_highlight_color = Color.white,
-		button_h = MissionJoinGui.FILTER_BUTTON_H,
-		button_w = MissionJoinGui.FILTER_BUTTON_W,
+		button_h = self.FILTER_BUTTON_H,
+		button_w = self.FILTER_BUTTON_W,
 		color = tweak_data.menu.raid_red,
 		data_source_callback = callback(self, self, "data_source_mission_filter_stepper"),
-		description = utf8.to_upper(managers.localization:text("menu_mission_join_filters_mission_filter")),
-		description_color = Color.white,
-		font_size = MissionJoinGui.FILTER_FONT_SIZE,
-		h = MissionJoinGui.FILTER_HEIGHT,
-		highlight_color = Color.white,
+		description = self:translate("menu_mission_join_filters_mission_filter", true),
+		font_size = self.FILTER_FONT_SIZE,
+		h = self.FILTER_HEIGHT,
 		name = "mission_filter_stepper",
 		on_menu_move = {
 			down = "friends_only_button",
 			up = "difficulty_filter_stepper",
 		},
-		stepper_w = filter_control_width_wide + 30,
-		w = filter_stepper_width,
-		x = self._difficulty_filter_stepper:x(),
+		stepper_w = self.FILTER_STEPPER_W,
+		w = self.FILTER_WIDTH,
 		y = self._difficulty_filter_stepper:y() + 50,
 	})
 end
@@ -536,7 +521,7 @@ function MissionJoinGui:_layout_footer_buttons()
 		},
 		text = self:translate("menu_mission_join_join", true),
 	})
-	self._apply_filters_button = self._footer_buttons_panel:short_tertiary_button({
+	self._apply_filters_button = self._footer_buttons_panel:short_secondary_button({
 		align = "center",
 		color = Color.black,
 		h = 28,
@@ -550,7 +535,7 @@ function MissionJoinGui:_layout_footer_buttons()
 		w = 128,
 		x = 1280,
 	})
-	self._show_filters_button = self._footer_buttons_panel:short_secondary_button({
+	self._show_filters_button = self._footer_buttons_panel:short_tertiary_button({
 		align = "center",
 		color = Color.black,
 		h = 28,
@@ -588,22 +573,31 @@ function MissionJoinGui:_set_additional_layout()
 	self._desc_xp_amount:set_center_y(self._server_difficulty_indicator:center_y())
 end
 
-function MissionJoinGui:close()
-	MissionJoinGui.super.close(self)
-	managers.network.matchmake:register_callback("search_lobby", nil)
-	self:_remove_active_controls()
-end
-
-function MissionJoinGui:friends_only_button_on_click()
+function MissionJoinGui:on_click_friends_only_button()
 	local friends_only = self._friends_only_button:get_value()
 
+	managers.user:set_setting("server_filter_friends_only", friends_only)
 	managers.network.matchmake:set_search_friends_only(friends_only)
 end
 
-function MissionJoinGui:in_camp_servers_only_button_on_click()
-	local state = self._in_camp_servers_only:get_value() and 1 or -1
+function MissionJoinGui:on_click_camp_only_button()
+	local camp_only = self._in_camp_servers_only:get_value()
+	local state = camp_only and 1 or -1
 
+	managers.user:set_setting("server_filter_camp_only", camp_only)
 	managers.network.matchmake:add_lobby_filter("state", state, "equal")
+end
+
+function MissionJoinGui:on_click_distance_filter()
+	local distance_filter = self._distance_filter_stepper:get_value()
+
+	managers.user:set_setting("server_filter_distance", distance_filter)
+end
+
+function MissionJoinGui:on_click_difficuty_filter()
+	local difficulty_filter = self._difficulty_filter_stepper:get_value()
+
+	managers.user:set_setting("server_filter_difficulty", difficulty_filter)
 end
 
 function MissionJoinGui:on_row_clicked_servers_table(row_data, row_index)
@@ -708,17 +702,17 @@ function MissionJoinGui:data_source_distance_filter_stepper()
 
 	table.insert(result, {
 		info = "Close",
-		text = utf8.to_upper(managers.localization:text("menu_dist_filter_close")),
+		text = self:translate("menu_dist_filter_close", true),
 		value = 0,
 	})
 	table.insert(result, {
 		info = "Far",
-		text = utf8.to_upper(managers.localization:text("menu_dist_filter_far")),
+		text = self:translate("menu_dist_filter_far", true),
 		value = 2,
 	})
 	table.insert(result, {
 		info = "Worldwide",
-		text = utf8.to_upper(managers.localization:text("menu_dist_filter_worldwide")),
+		text = self:translate("menu_dist_filter_worldwide", true),
 		value = 3,
 	})
 
@@ -731,14 +725,14 @@ function MissionJoinGui:data_source_difficulty_filter_stepper()
 	if tweak_data.difficulties then
 		table.insert(result, {
 			info = "Any",
-			text = utf8.to_upper(managers.localization:text("menu_any")),
+			text = self:translate("menu_any", true),
 			value = 0,
 		})
 
 		for diff_index, diff_name in pairs(tweak_data.difficulties) do
 			table.insert(result, {
 				info = diff_name,
-				text = self:translate("menu_" .. diff_name),
+				text = self:translate("menu_" .. diff_name, true),
 				value = diff_index,
 			})
 		end
@@ -752,7 +746,7 @@ function MissionJoinGui:data_source_mission_filter_stepper()
 
 	table.insert(result, {
 		info = "Any",
-		text = utf8.to_upper(managers.localization:text("menu_any")),
+		text = self:translate("menu_any", true),
 		value = -1,
 	})
 
@@ -799,21 +793,23 @@ end
 function MissionJoinGui:_refresh_server_list()
 	self._apply_filters_button:hide()
 
+	local user = managers.user
 	local maximum_servers = managers.network.matchmake:get_lobby_return_count()
-	local distance_filter = self._distance_filter_stepper:get_value()
-	local difficulty_filter = self._difficulty_filter_stepper:get_value()
+	local friends_only = user:get_setting("server_filter_friends_only")
+	local camp_only = user:get_setting("server_filter_camp_only") and 1 or -1
+	local distance_filter = user:get_setting("server_filter_distance")
+	local difficulty_filter = user:get_setting("server_filter_difficulty")
 	local mission_filter = self._mission_filter_stepper:get_value()
-	local state = self._in_camp_servers_only:get_value() and 1 or -1
 
 	managers.network.matchmake:set_lobby_return_count(maximum_servers)
 	managers.network.matchmake:set_distance_filter(distance_filter)
 	managers.network.matchmake:set_difficulty_filter(difficulty_filter)
 	managers.network.matchmake:add_lobby_filter("job_id", mission_filter, "equal")
-	managers.network.matchmake:add_lobby_filter("state", state, "equal")
+	managers.network.matchmake:add_lobby_filter("state", camp_only, "equal")
 
 	self._selected_row_data = nil
 
-	self:_find_online_games(managers.network.matchmake:search_friends_only())
+	self:_find_online_games(friends_only)
 end
 
 function MissionJoinGui:_select_server_list_item(data_value)
@@ -822,10 +818,12 @@ function MissionJoinGui:_select_server_list_item(data_value)
 end
 
 function MissionJoinGui:_render_filters()
-	self._friends_only_button:set_value_and_render(managers.network.matchmake:search_friends_only())
-	self._in_camp_servers_only:set_value_and_render(managers.network.matchmake:get_lobby_filter("state") == 1)
-	self._distance_filter_stepper:select_item_by_value(managers.network.matchmake:distance_filter())
-	self._difficulty_filter_stepper:select_item_by_value(managers.network.matchmake:difficulty_filter())
+	local user = managers.user
+
+	self._friends_only_button:set_value_and_render(user:get_setting("server_filter_friends_only"))
+	self._in_camp_servers_only:set_value_and_render(user:get_setting("server_filter_camp_only"))
+	self._distance_filter_stepper:select_item_by_value(user:get_setting("server_filter_distance"))
+	self._difficulty_filter_stepper:select_item_by_value(user:get_setting("server_filter_difficulty"))
 	self._mission_filter_stepper:select_item_by_value(managers.network.matchmake:get_lobby_filter("job_id"))
 end
 

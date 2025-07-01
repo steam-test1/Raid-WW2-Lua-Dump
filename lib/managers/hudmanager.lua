@@ -30,13 +30,27 @@ HUDManager.WP_STATE_PRESENT_ENDED = "present_ended"
 
 core:import("CoreEvent")
 
-function HUDManager:init()
-	self._component_map = {}
+local wp_pos = Vector3()
+local wp_dir = Vector3()
+local wp_dir_normalized = Vector3()
+local wp_cam_forward = Vector3()
+local wp_onscreen_direction = Vector3()
+local wp_onscreen_target_pos = Vector3()
+local nl_w_pos = Vector3()
+local nl_pos = Vector3()
+local nl_dir = Vector3()
+local nl_dir_normalized = Vector3()
+local nl_cam_forward = Vector3()
 
+function HUDManager:init()
 	local safe_rect_pixels = managers.viewport:get_safe_rect_pixels()
 	local safe_rect = managers.viewport:get_safe_rect()
 	local res = RenderSettings.resolution
 
+	self._component_map = {}
+	self._updators = {}
+	self._visible_huds_states = {}
+	self._progress_target = {}
 	self._workspace_size = {
 		h = res.y,
 		w = res.x,
@@ -66,9 +80,6 @@ function HUDManager:init()
 
 	self._workspace:set_timer(TimerManager:game())
 	managers.gui_data:layout_fullscreen_workspace(self._workspace)
-
-	self._updators = {}
-
 	managers.viewport:add_resolution_changed_func(callback(self, self, "resolution_changed"))
 
 	self._sound_source = SoundDevice:create_source("hud")
@@ -83,18 +94,15 @@ function HUDManager:init()
 	HUDManager.HIDEABLE_HUDS[PlayerBase.INGAME_HUD_FULLSCREEN:key()] = true
 	HUDManager.HIDEABLE_HUDS[IngameWaitingForRespawnState.GUI_SPECTATOR:key()] = true
 
+	managers.system_event_listener:add_listener("peer_changed_level", {
+		CoreSystemEventListenerManager.SystemEventListenerManager.PEER_LEVEL_UP,
+	}, callback(self, self, "_peer_changed_level"))
+
 	if Global.debug_show_coords then
 		self:debug_show_coordinates()
 	else
 		self:debug_hide_coordinates()
 	end
-
-	self._visible_huds_states = {}
-	self._progress_target = {}
-
-	managers.system_event_listener:add_listener("peer_changed_level", {
-		CoreSystemEventListenerManager.SystemEventListenerManager.PEER_LEVEL_UP,
-	}, callback(self, self, "_peer_changed_level"))
 end
 
 function HUDManager:_peer_changed_level(params)
@@ -299,6 +307,10 @@ function HUDManager:set_enabled()
 	end
 end
 
+function HUDManager:disabled()
+	return self._disabled
+end
+
 function HUDManager:set_freeflight_disabled()
 	self._saferect:hide()
 	self._workspace:hide()
@@ -320,10 +332,6 @@ function HUDManager:on_loading_screen_faded_to_black()
 	self._hud_chat:clear()
 	self._hud_chat:hide()
 	self:clear_vehicle_name_labels()
-end
-
-function HUDManager:disabled()
-	return self._disabled
 end
 
 function HUDManager:reload_player_hud()
@@ -716,14 +724,6 @@ function HUDManager:update(t, dt)
 	end
 end
 
-function HUDManager:change_map_floor(new_floor)
-	self.current_floor = new_floor
-
-	if self._tab_screen then
-		self._tab_screen:change_floor(new_floor)
-	end
-end
-
 function HUDManager:add_updator(id, cb)
 	self._updators[id] = cb
 end
@@ -731,12 +731,6 @@ end
 function HUDManager:remove_updator(id)
 	self._updators[id] = nil
 end
-
-local nl_w_pos = Vector3()
-local nl_pos = Vector3()
-local nl_dir = Vector3()
-local nl_dir_normalized = Vector3()
-local nl_cam_forward = Vector3()
 
 function HUDManager:_calculate_name_label_screen_position(name_label, cam)
 	if name_label:movement() == nil then
@@ -933,57 +927,6 @@ function HUDManager:_player_hud_layout()
 	end
 end
 
-function HUDManager:add_suspicion_indicator(id, data)
-	if self._hud.suspicion_indicators[id] then
-		self:remove_suspicion_indicator(id)
-	end
-
-	local hud = managers.hud:script(PlayerBase.INGAME_HUD_FULLSCREEN)
-
-	if not hud then
-		return
-	end
-
-	self:create_suspicion_indicator(id, data.position, data.state, data.suspect)
-
-	local suspicion = HUDSuspicionIndicator:new(hud, data)
-
-	self._hud.suspicion_indicators[id] = suspicion
-end
-
-function HUDManager:remove_suspicion_indicator(id)
-	if self._hud.suspicion_indicators[id] then
-		self._hud.suspicion_indicators[id]:destroy()
-
-		self._hud.suspicion_indicators[id] = nil
-	end
-
-	if self._progress_target then
-		self._progress_target[id] = nil
-	end
-
-	self._hud_suspicion_direction:remove_suspicion_indicator(id)
-end
-
-function HUDManager:set_suspicion_indicator_state(id, state)
-	if not self._hud.suspicion_indicators[id] then
-		return
-	end
-
-	local old_state = self._hud.suspicion_indicators[id]:state()
-
-	if old_state == "calling" then
-		return
-	end
-
-	if old_state == "alarmed" and state ~= "calling" then
-		return
-	end
-
-	self._hud.suspicion_indicators[id]:set_state(state)
-	self._hud_suspicion_direction:set_state(id, state)
-end
-
 function HUDManager:_get_raid_icon(icon)
 	Application:trace("[HUDManager] _get_raid_icon(): " .. tostring(icon))
 
@@ -1044,7 +987,7 @@ function HUDManager:add_waypoint(id, data)
 	}
 	self._hud.waypoints[id].init_data.position = data.position or data.unit:position()
 
-	if self._tab_screen ~= nil and data.position ~= nil and data.waypoint_type == "objective" then
+	if self._tab_screen ~= nil and data.position ~= nil and (data.waypoint_type == "objective" or data.waypoint_type == "unit_waypoint") then
 		self._tab_screen:add_waypoint(self._hud.waypoints[id])
 	end
 
@@ -1204,6 +1147,437 @@ function HUDManager:add_waypoint(id, data)
 	end
 end
 
+function HUDManager:remove_waypoint(id)
+	if not self._hud.waypoints[id] then
+		Application:error("[HUDManager][remove_waypoint] Trying to remove waypoint that hasn't been added! Id: " .. (id or "NULL") .. ".")
+
+		return
+	end
+
+	local hud = managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT)
+
+	if not hud then
+		return
+	end
+
+	if self._tab_screen ~= nil then
+		self._tab_screen:remove_waypoint(tostring(id))
+	end
+
+	local waypoint_panel = hud.panel
+	local show_on_screen = self._hud.waypoints[id].show_on_screen
+
+	if show_on_screen == true then
+		waypoint_panel:remove(self._hud.waypoints[id].bitmap)
+
+		if self._hud.waypoints[id].bitmap_over then
+			waypoint_panel:remove(self._hud.waypoints[id].bitmap_over)
+			waypoint_panel:remove(self._hud.waypoints[id].searching)
+			waypoint_panel:remove(self._hud.waypoints[id].aiming)
+		end
+
+		waypoint_panel:remove(self._hud.waypoints[id].arrow)
+	end
+
+	if self._hud.waypoints[id].timer_gui then
+		waypoint_panel:remove(self._hud.waypoints[id].timer_gui)
+	end
+
+	if self._hud.waypoints[id].distance then
+		waypoint_panel:remove(self._hud.waypoints[id].distance)
+	end
+
+	self._hud.stored_waypoints[id] = nil
+	self._hud.waypoints[id] = nil
+
+	self:_check_and_hide_suspicion()
+end
+
+function HUDManager:_update_waypoints(t, dt)
+	local cam = managers.viewport:get_current_camera()
+
+	if not cam then
+		return
+	end
+
+	local cam_pos = managers.viewport:get_current_camera_position()
+	local cam_rot = managers.viewport:get_current_camera_rotation()
+
+	mrotation.y(cam_rot, wp_cam_forward)
+
+	for id, data in pairs(self._hud.waypoints) do
+		local show_on_screen = data.show_on_screen
+
+		if data.lifetime then
+			if data.lifetime <= 0 then
+				self:remove_waypoint(id)
+				Application:debug("[HUDManager:_update_waypoints] remove_waypoint with 0 lifetime", id)
+
+				return
+			else
+				data.lifetime = data.lifetime - dt
+			end
+		end
+
+		if data.range_max or data.range_min then
+			mvector3.set(wp_pos, self._saferect:world_to_screen(cam, data.position))
+			mvector3.set(wp_dir, data.position)
+			mvector3.subtract(wp_dir, cam_pos)
+
+			local length = wp_dir:length()
+
+			show_on_screen = (not data.range_min or length >= data.range_min) and (not data.range_max or length <= data.range_max)
+		end
+
+		self:_upd_suspition_waypoint_state(data, show_on_screen)
+
+		if show_on_screen then
+			if not data.bitmap then
+				self._hud.waypoints[id] = nil
+
+				return
+			end
+
+			local panel = data.bitmap:parent()
+
+			if data.state == self.WP_STATE_SNEAK_PRESENT then
+				if data.suspect == "teammate" then
+					data.bitmap:set_color(data.bitmap:color():with_alpha(0))
+					self:_upd_suspition_waypoint_alpha(data, 0)
+				end
+
+				data.current_position = Vector3(panel:center_x(), panel:center_y())
+
+				data.bitmap:set_center_x(data.current_position.x)
+				data.bitmap:set_center_y(data.current_position.y)
+				mvector3.set(wp_pos, self._saferect:world_to_screen(cam, data.position))
+				data.bitmap:set_center(mvector3.x(wp_pos), mvector3.y(wp_pos) - self.OVERHEAD_Y_OFFSET)
+				self:_upd_suspition_waypoint_pos(data)
+
+				data.slot = nil
+				data.current_scale = 1
+				data.state = self.WP_STATE_PRESENT_ENDED
+				data.text_alpha = 0.5
+				data.in_timer = 1
+				data.target_scale = 1
+
+				if data.distance then
+					data.distance:set_visible(true)
+				end
+			elseif data.state == self.WP_STATE_PRESENT then
+				data.current_position = Vector3(panel:center_x(), panel:center_y() + 200)
+
+				data.bitmap:set_center_x(data.current_position.x)
+				data.bitmap:set_center_y(data.current_position.y)
+				self:_upd_suspition_waypoint_pos(data)
+
+				data.present_timer = data.present_timer - dt
+
+				if data.present_timer <= 0 then
+					data.slot = nil
+					data.current_scale = 1
+					data.state = self.WP_STATE_PRESENT_ENDED
+					data.text_alpha = 0.5
+					data.in_timer = 1
+					data.target_scale = 1
+
+					if data.distance then
+						data.distance:set_visible(true)
+					end
+				end
+			elseif data.state == "hidden" then
+				data.state = "offscreen"
+				data.current_position = data.current_position or Vector3(panel:center_x(), panel:center_y() + 200)
+				data.current_scale = data.current_scale or 1
+
+				if data.bitmap then
+					data.bitmap:set_visible(true)
+				end
+
+				if data.arrow then
+					data.arrow:set_visible(true)
+				end
+			else
+				local pos_has_external_update = data.waypoint_type == "spotter" or data.waypoint_type == "suspicion" or data.waypoint_type == "unit_waypoint"
+
+				if not pos_has_external_update and alive(data.unit) then
+					data.position = data.unit:position()
+
+					if data.position_offset_z then
+						data.position = data.position:with_z(data.position.z + data.position_offset_z)
+					end
+				end
+
+				mvector3.set(wp_pos, self._saferect:world_to_screen(cam, data.position))
+				mvector3.set(wp_dir, data.position)
+				mvector3.subtract(wp_dir, cam_pos)
+				mvector3.set(wp_dir_normalized, wp_dir)
+				mvector3.normalize(wp_dir_normalized)
+
+				local dot = mvector3.dot(wp_cam_forward, wp_dir_normalized)
+
+				if data.suspect == "teammate" then
+					if data.waypoint_type == "suspicion" and self:need_to_init_suspicion_indicator(data.unit:key()) then
+						self:initialize_suspicion_indicator(data.unit:key(), 0)
+					end
+
+					local alpha = HUDManager.DEFAULT_ALPHA
+
+					if dot > 0.985 then
+						alpha = math.clamp((1 - dot) / 0.01, HUDManager.WAYPOINT_MAX_FADE, alpha)
+					elseif dot < 0 then
+						alpha = HUDManager.WAYPOINT_MAX_FADE
+					end
+
+					if data.bitmap:color().alpha ~= alpha then
+						data.bitmap:set_color(data.bitmap:color():with_alpha(alpha))
+						self:_upd_suspition_waypoint_alpha(data, alpha)
+
+						if data.distance then
+							data.distance:set_color(data.distance:color():with_alpha(alpha))
+						end
+
+						if data.timer_gui then
+							data.timer_gui:set_color(data.bitmap:color():with_alpha(alpha))
+						end
+					end
+
+					data.bitmap:set_center(mvector3.x(wp_pos), mvector3.y(wp_pos) - HUDManager.OVERHEAD_Y_OFFSET)
+
+					if data.bitmap_over then
+						data.bitmap_over:set_texture_rect(unpack(data.stealth_over_rect))
+						data.bitmap_over:set_h(data.stealth_over_rect[4])
+						data.bitmap_over:set_size(data.size.x * data.current_scale, data.stealth_over_rect[4] * data.current_scale)
+						data.searching:set_size(data.size.x * data.current_scale, data.size.y / 2 * data.current_scale)
+						data.aiming:set_size(data.size.x * data.current_scale, data.size.y / 2 * data.current_scale)
+						self:_upd_suspition_waypoint_pos(data)
+					end
+				elseif dot < 0 or panel:outside(mvector3.x(wp_pos), mvector3.y(wp_pos)) then
+					if data.state ~= "offscreen" then
+						data.state = "offscreen"
+
+						data.arrow:set_visible(true)
+						data.bitmap:set_color(data.bitmap:color():with_alpha(HUDManager.DEFAULT_ALPHA))
+						self:_upd_suspition_waypoint_alpha(data, HUDManager.DEFAULT_ALPHA)
+
+						data.off_timer = 0 - (1 - data.in_timer)
+						data.target_scale = 0.7
+
+						if data.distance then
+							data.distance:set_visible(false)
+						end
+
+						if data.timer_gui then
+							data.timer_gui:set_visible(false)
+						end
+
+						if data.waypoint_type == "suspicion" then
+							managers.hud:show_suspicion_indicator(data.unit:key())
+							self:_animate_suspition_waypoint_alpha(data, callback(self, self, "_animate_alpha"), 0, 0.5, 0)
+						end
+					end
+
+					if data.waypoint_type == "suspicion" and self:need_to_init_suspicion_indicator(data.unit:key()) then
+						self:initialize_suspicion_indicator(data.unit:key(), 1)
+					end
+
+					local direction = wp_onscreen_direction
+					local panel_center_x, panel_center_y = panel:center()
+
+					mvector3.set_static(direction, wp_pos.x - panel_center_x, wp_pos.y - panel_center_y, 0)
+					mvector3.normalize(direction)
+
+					local distance = 364
+					local target_pos = wp_onscreen_target_pos
+
+					mvector3.set_static(target_pos, panel_center_x + mvector3.x(direction) * distance, panel_center_y + mvector3.y(direction) * distance, 0)
+
+					data.off_timer = math.clamp((data.off_timer or 0) + dt / data.move_speed, 0, 1)
+
+					if data.in_timer and data.off_timer ~= 1 then
+						mvector3.set(data.current_position, math.bezier({
+							data.current_position,
+							data.current_position,
+							target_pos,
+							target_pos,
+						}, data.off_timer))
+
+						data.current_scale = math.bezier({
+							data.current_scale,
+							data.current_scale,
+							data.target_scale,
+							data.target_scale,
+						}, data.off_timer)
+
+						data.bitmap:set_size(data.size.x * data.current_scale, data.size.y * data.current_scale)
+
+						local current_alpha = math.bezier({
+							data.bitmap:alpha(),
+							data.bitmap:alpha(),
+							HUDManager.WAYPOINT_MAX_FADE,
+							HUDManager.WAYPOINT_MAX_FADE,
+						}, data.off_timer)
+
+						data.bitmap:set_alpha(current_alpha)
+					else
+						mvector3.set(data.current_position, target_pos)
+						data.bitmap:set_alpha(HUDManager.WAYPOINT_MAX_FADE)
+					end
+
+					data.bitmap:set_center(mvector3.x(data.current_position), mvector3.y(data.current_position))
+
+					if data.bitmap_over then
+						data.bitmap_over:set_texture_rect(data.stealth_over_rect[1], data.stealth_over_rect[2], data.stealth_over_rect[3], data.stealth_over_rect[4])
+						data.bitmap_over:set_h(data.stealth_over_rect[4])
+						data.bitmap_over:set_size(data.size.x * data.current_scale, data.stealth_over_rect[4] * data.current_scale)
+						data.searching:set_size(data.size.x * data.current_scale, data.size.y / 2 * data.current_scale)
+						data.aiming:set_size(data.size.x * data.current_scale, data.size.y / 2 * data.current_scale)
+						self:_upd_suspition_waypoint_pos(data)
+					end
+
+					data.arrow:set_center(mvector3.x(data.current_position) + direction.x * 30, mvector3.y(data.current_position) + direction.y * 30)
+
+					local angle = math.X:angle(direction) * math.sign(direction.y)
+
+					data.arrow:set_rotation(angle + 90)
+				else
+					if data.state == "offscreen" then
+						data.state = "onscreen"
+
+						data.arrow:set_visible(false)
+						data.bitmap:set_color(data.bitmap:color():with_alpha(HUDManager.DEFAULT_ALPHA))
+						self:_upd_suspition_waypoint_alpha(data, HUDManager.DEFAULT_ALPHA)
+
+						data.in_timer = 0 - (1 - (data.off_timer or 0))
+						data.target_scale = 1
+
+						if data.distance then
+							data.distance:set_visible(true)
+						end
+
+						if data.timer_gui then
+							data.timer_gui:set_visible(true)
+						end
+
+						if data.waypoint_type == "suspicion" then
+							managers.hud:hide_suspicion_indicator(data.unit:key())
+							self:_animate_suspition_waypoint_alpha(data, callback(self, self, "_animate_alpha"), HUDManager.DEFAULT_ALPHA, 0.5, 1)
+						end
+					end
+
+					if data.waypoint_type == "suspicion" and self:need_to_init_suspicion_indicator(data.unit:key()) then
+						self:initialize_suspicion_indicator(data.unit:key(), 0)
+					end
+
+					local alpha = HUDManager.DEFAULT_ALPHA
+
+					if dot > 0.99 then
+						alpha = math.clamp((1 - dot) / 0.01, 0.4, alpha)
+						data.looking_directly = true
+					else
+						data.looking_directly = false
+					end
+
+					if data.bitmap:color().alpha ~= alpha then
+						data.bitmap:set_color(data.bitmap:color():with_alpha(alpha))
+						self:_upd_suspition_waypoint_alpha(data, alpha)
+
+						if data.distance then
+							data.distance:set_color(data.distance:color():with_alpha(alpha))
+						end
+
+						if data.timer_gui then
+							data.timer_gui:set_color(data.bitmap:color():with_alpha(alpha))
+						end
+					end
+
+					if data.in_timer and data.in_timer ~= 1 then
+						data.in_timer = math.clamp(data.in_timer + dt / data.move_speed, 0, 1)
+
+						mvector3.set(data.current_position, math.bezier({
+							data.current_position,
+							data.current_position,
+							wp_pos,
+							wp_pos,
+						}, data.in_timer))
+
+						data.current_scale = math.bezier({
+							data.current_scale,
+							data.current_scale,
+							data.target_scale,
+							data.target_scale,
+						}, data.in_timer)
+
+						data.bitmap:set_size(data.size.x * data.current_scale, data.size.y * data.current_scale)
+
+						local current_alpha = math.bezier({
+							data.bitmap:alpha(),
+							data.bitmap:alpha(),
+							1,
+							1,
+						}, data.in_timer)
+
+						data.bitmap:set_alpha(current_alpha)
+					else
+						mvector3.set(data.current_position, wp_pos)
+						data.bitmap:set_alpha(1)
+					end
+
+					data.bitmap:set_center(mvector3.x(data.current_position), mvector3.y(data.current_position) - HUDManager.OVERHEAD_Y_OFFSET)
+
+					if data.bitmap_over then
+						data.bitmap_over:set_texture_rect(data.stealth_over_rect[1], data.stealth_over_rect[2], data.stealth_over_rect[3], data.stealth_over_rect[4])
+						data.bitmap_over:set_h(data.stealth_over_rect[4])
+						data.bitmap_over:set_size(data.size.x * data.current_scale, data.stealth_over_rect[4] * data.current_scale)
+						data.searching:set_size(data.size.x * data.current_scale, data.size.y / 2 * data.current_scale)
+						data.aiming:set_size(data.size.x * data.current_scale, data.size.y / 2 * data.current_scale)
+						self:_upd_suspition_waypoint_pos(data)
+					end
+
+					if data.distance then
+						local length = wp_dir:length()
+
+						data.distance:set_text(string.format("%.0f", length / 100) .. "m")
+						data.distance:set_center_x(data.bitmap:center_x())
+						data.distance:set_top(data.bitmap:bottom())
+					end
+				end
+			end
+
+			if data.timer_gui then
+				data.timer_gui:set_center_x(data.bitmap:center_x())
+				data.timer_gui:set_bottom(data.bitmap:top())
+
+				if data.pause_timer == 0 then
+					data.timer = data.timer - dt
+
+					local text = data.timer < 0 and "00" or (math.round(data.timer) < 10 and "0" or "") .. math.round(data.timer)
+
+					data.timer_gui:set_text(text)
+				end
+			end
+		elseif data.state ~= "hidden" then
+			data.state = "hidden"
+
+			if data.bitmap then
+				data.bitmap:set_visible(false)
+			end
+
+			if data.arrow then
+				data.arrow:set_visible(false)
+			end
+
+			if data.distance then
+				data.distance:set_visible(false)
+			end
+
+			if data.timer_gui then
+				data.timer_gui:set_visible(false)
+			end
+		end
+	end
+end
+
 function HUDManager:change_waypoint_icon(id, icon)
 	if not self._hud.waypoints[id] then
 		Application:error("[HUDManager:change_waypoint_icon] no waypoint with id", id)
@@ -1227,7 +1601,7 @@ function HUDManager:change_waypoint_icon(id, icon)
 	local show_on_screen = wp_data.show_on_screen
 
 	if show_on_screen == true then
-		wp_data.bitmap:set_image(texture, rect[1], rect[2], rect[3], rect[4])
+		wp_data.bitmap:set_image(texture, unpack(rect))
 		wp_data.bitmap:set_size(rect[3], rect[4])
 
 		wp_data.size = Vector3(rect[3], rect[4])
@@ -1344,69 +1718,6 @@ function HUDManager:change_waypoint_distance_color(id, color)
 
 	if show_on_screen == true then
 		wp_data.distance:set_color(color:with_alpha(wp_data.distance:color().a))
-	end
-end
-
-function HUDManager:remove_waypoint(id)
-	self._hud.stored_waypoints[id] = nil
-
-	if not self._hud.waypoints[id] then
-		return
-	end
-
-	local hud = managers.hud:script(PlayerBase.INGAME_HUD_SAFERECT)
-
-	if not hud then
-		return
-	end
-
-	if self._tab_screen ~= nil then
-		self._tab_screen:remove_waypoint(tostring(id))
-	end
-
-	local waypoint_panel = hud.panel
-	local show_on_screen = self._hud.waypoints[id].show_on_screen
-
-	if show_on_screen == true then
-		waypoint_panel:remove(self._hud.waypoints[id].bitmap)
-
-		if self._hud.waypoints[id].bitmap_over then
-			waypoint_panel:remove(self._hud.waypoints[id].bitmap_over)
-			waypoint_panel:remove(self._hud.waypoints[id].searching)
-			waypoint_panel:remove(self._hud.waypoints[id].aiming)
-		end
-
-		waypoint_panel:remove(self._hud.waypoints[id].arrow)
-	end
-
-	if self._hud.waypoints[id].timer_gui then
-		waypoint_panel:remove(self._hud.waypoints[id].timer_gui)
-	end
-
-	if self._hud.waypoints[id].distance then
-		waypoint_panel:remove(self._hud.waypoints[id].distance)
-	end
-
-	self._hud.waypoints[id] = nil
-
-	self:_check_and_hide_suspicion()
-end
-
-function HUDManager:_check_and_hide_suspicion()
-	local found = false
-
-	for _, data in pairs(self._hud.waypoints) do
-		if data.waypoint_type == "suspicion" then
-			found = true
-		end
-	end
-
-	for _, suspicion_indicator in pairs(self._hud.suspicion_indicators) do
-		found = true
-	end
-
-	if not found then
-		self:hide_suspicion()
 	end
 end
 
@@ -1822,6 +2133,57 @@ function HUDManager:present_mid_text(params)
 	self:present(params)
 end
 
+function HUDManager:add_suspicion_indicator(id, data)
+	if self._hud.suspicion_indicators[id] then
+		self:remove_suspicion_indicator(id)
+	end
+
+	local hud = managers.hud:script(PlayerBase.INGAME_HUD_FULLSCREEN)
+
+	if not hud then
+		return
+	end
+
+	self:create_suspicion_indicator(id, data.position, data.state, data.suspect)
+
+	local suspicion = HUDSuspicionIndicator:new(hud, data)
+
+	self._hud.suspicion_indicators[id] = suspicion
+end
+
+function HUDManager:remove_suspicion_indicator(id)
+	if self._hud.suspicion_indicators[id] then
+		self._hud.suspicion_indicators[id]:destroy()
+
+		self._hud.suspicion_indicators[id] = nil
+	end
+
+	if self._progress_target then
+		self._progress_target[id] = nil
+	end
+
+	self._hud_suspicion_direction:remove_suspicion_indicator(id)
+end
+
+function HUDManager:set_suspicion_indicator_state(id, state)
+	if not self._hud.suspicion_indicators[id] then
+		return
+	end
+
+	local old_state = self._hud.suspicion_indicators[id]:state()
+
+	if old_state == "calling" then
+		return
+	end
+
+	if old_state == "alarmed" and state ~= "calling" then
+		return
+	end
+
+	self._hud.suspicion_indicators[id]:set_state(state)
+	self._hud_suspicion_direction:set_state(id, state)
+end
+
 function HUDManager:_upd_suspition_waypoint_pos(data)
 	if data.bitmap_over then
 		data.bitmap_over:set_bottom(data.bitmap:bottom())
@@ -1889,12 +2251,23 @@ function HUDManager:_upd_suspition_waypoint_state(data, show_on_screen)
 	end
 end
 
-local wp_pos = Vector3()
-local wp_dir = Vector3()
-local wp_dir_normalized = Vector3()
-local wp_cam_forward = Vector3()
-local wp_onscreen_direction = Vector3()
-local wp_onscreen_target_pos = Vector3()
+function HUDManager:_check_and_hide_suspicion()
+	local found = false
+
+	for _, data in pairs(self._hud.waypoints) do
+		if data.waypoint_type == "suspicion" then
+			found = true
+		end
+	end
+
+	for _, suspicion_indicator in pairs(self._hud.suspicion_indicators) do
+		found = true
+	end
+
+	if not found then
+		self:hide_suspicion()
+	end
+end
 
 function HUDManager:_update_suspicion_indicators(t, dt)
 	local cam = managers.viewport:get_current_camera()
@@ -2025,365 +2398,6 @@ function HUDManager:_update_suspicion_indicators(t, dt)
 			end
 		end
 	end
-end
-
-function HUDManager:_update_waypoints(t, dt)
-	local cam = managers.viewport:get_current_camera()
-
-	if not cam then
-		return
-	end
-
-	local cam_pos = managers.viewport:get_current_camera_position()
-	local cam_rot = managers.viewport:get_current_camera_rotation()
-
-	mrotation.y(cam_rot, wp_cam_forward)
-
-	for id, data in pairs(self._hud.waypoints) do
-		local show_on_screen = data.show_on_screen
-
-		if data.lifetime then
-			if data.lifetime <= 0 then
-				self:remove_waypoint(id)
-				Application:debug("[HUDManager:_update_waypoints] remove_waypoint with 0 lifetime", id)
-
-				return
-			else
-				data.lifetime = data.lifetime - dt
-			end
-		end
-
-		if data.range_max or data.range_min then
-			mvector3.set(wp_pos, self._saferect:world_to_screen(cam, data.position))
-			mvector3.set(wp_dir, data.position)
-			mvector3.subtract(wp_dir, cam_pos)
-
-			local length = wp_dir:length()
-
-			show_on_screen = (not data.range_min or not (length < data.range_min)) and (not data.range_max or not (length > data.range_max))
-		end
-
-		self:_upd_suspition_waypoint_state(data, show_on_screen)
-
-		if show_on_screen == true then
-			local panel = data.bitmap:parent()
-
-			if data.state == "dirty" then
-				-- block empty
-			end
-
-			if data.state == HUDManager.WP_STATE_SNEAK_PRESENT then
-				if data.suspect == "teammate" then
-					data.bitmap:set_color(data.bitmap:color():with_alpha(0))
-					self:_upd_suspition_waypoint_alpha(data, 0)
-				end
-
-				data.current_position = Vector3(panel:center_x(), panel:center_y())
-
-				data.bitmap:set_center_x(data.current_position.x)
-				data.bitmap:set_center_y(data.current_position.y)
-				mvector3.set(wp_pos, self._saferect:world_to_screen(cam, data.position))
-				data.bitmap:set_center(mvector3.x(wp_pos), mvector3.y(wp_pos) - HUDManager.OVERHEAD_Y_OFFSET)
-				self:_upd_suspition_waypoint_pos(data)
-
-				data.slot = nil
-				data.current_scale = 1
-				data.state = HUDManager.WP_STATE_PRESENT_ENDED
-				data.text_alpha = 0.5
-				data.in_timer = 1
-				data.target_scale = 1
-
-				if data.distance then
-					data.distance:set_visible(true)
-				end
-			elseif data.state == HUDManager.WP_STATE_PRESENT then
-				data.current_position = Vector3(panel:center_x(), panel:center_y() + 200)
-
-				data.bitmap:set_center_x(data.current_position.x)
-				data.bitmap:set_center_y(data.current_position.y)
-				self:_upd_suspition_waypoint_pos(data)
-
-				data.present_timer = data.present_timer - dt
-
-				if data.present_timer <= 0 then
-					data.slot = nil
-					data.current_scale = 1
-					data.state = HUDManager.WP_STATE_PRESENT_ENDED
-					data.text_alpha = 0.5
-					data.in_timer = 1
-					data.target_scale = 1
-
-					if data.distance then
-						data.distance:set_visible(true)
-					end
-				end
-			else
-				local pos_has_external_update = data.waypoint_type == "spotter" or data.waypoint_type == "suspicion" or data.waypoint_type == "unit_waypoint"
-
-				data.position = not pos_has_external_update and alive(data.unit) and data.unit.position and data.unit:position() or data.position
-
-				if data.position_offset_z then
-					data.position = data.position:with_z(data.position.z + data.position_offset_z)
-				end
-
-				mvector3.set(wp_pos, self._saferect:world_to_screen(cam, data.position))
-				mvector3.set(wp_dir, data.position)
-				mvector3.subtract(wp_dir, cam_pos)
-				mvector3.set(wp_dir_normalized, wp_dir)
-				mvector3.normalize(wp_dir_normalized)
-
-				local dot = mvector3.dot(wp_cam_forward, wp_dir_normalized)
-
-				if data.suspect == "teammate" then
-					if data.waypoint_type == "suspicion" and self:need_to_init_suspicion_indicator(data.unit:key()) then
-						self:initialize_suspicion_indicator(data.unit:key(), 0)
-					end
-
-					local alpha = HUDManager.DEFAULT_ALPHA
-
-					if dot > 0.985 then
-						alpha = math.clamp((1 - dot) / 0.01, HUDManager.WAYPOINT_MAX_FADE, alpha)
-					elseif dot < 0 then
-						alpha = HUDManager.WAYPOINT_MAX_FADE
-					end
-
-					if data.bitmap:color().alpha ~= alpha then
-						data.bitmap:set_color(data.bitmap:color():with_alpha(alpha))
-						self:_upd_suspition_waypoint_alpha(data, alpha)
-
-						if data.distance then
-							data.distance:set_color(data.distance:color():with_alpha(alpha))
-						end
-
-						if data.timer_gui then
-							data.timer_gui:set_color(data.bitmap:color():with_alpha(alpha))
-						end
-					end
-
-					data.bitmap:set_center(mvector3.x(wp_pos), mvector3.y(wp_pos) - HUDManager.OVERHEAD_Y_OFFSET)
-
-					if data.bitmap_over then
-						data.bitmap_over:set_texture_rect(data.stealth_over_rect[1], data.stealth_over_rect[2], data.stealth_over_rect[3], data.stealth_over_rect[4])
-						data.bitmap_over:set_h(data.stealth_over_rect[4])
-						data.bitmap_over:set_size(data.size.x * data.current_scale, data.stealth_over_rect[4] * data.current_scale)
-						data.searching:set_size(data.size.x * data.current_scale, data.size.y / 2 * data.current_scale)
-						data.aiming:set_size(data.size.x * data.current_scale, data.size.y / 2 * data.current_scale)
-						self:_upd_suspition_waypoint_pos(data)
-					end
-				elseif dot < 0 or panel:outside(mvector3.x(wp_pos), mvector3.y(wp_pos)) then
-					if data.state ~= "offscreen" then
-						data.state = "offscreen"
-
-						data.arrow:set_visible(true)
-						data.bitmap:set_color(data.bitmap:color():with_alpha(HUDManager.DEFAULT_ALPHA))
-						self:_upd_suspition_waypoint_alpha(data, HUDManager.DEFAULT_ALPHA)
-
-						data.off_timer = 0 - (1 - data.in_timer)
-						data.target_scale = 0.7
-
-						if data.distance then
-							data.distance:set_visible(false)
-						end
-
-						if data.timer_gui then
-							data.timer_gui:set_visible(false)
-						end
-
-						if data.waypoint_type == "suspicion" then
-							managers.hud:show_suspicion_indicator(data.unit:key())
-							self:_animate_suspition_waypoint_alpha(data, callback(self, self, "_animate_alpha"), 0, 0.5, 0)
-						end
-					end
-
-					if data.waypoint_type == "suspicion" and self:need_to_init_suspicion_indicator(data.unit:key()) then
-						self:initialize_suspicion_indicator(data.unit:key(), 1)
-					end
-
-					local direction = wp_onscreen_direction
-					local panel_center_x, panel_center_y = panel:center()
-
-					mvector3.set_static(direction, wp_pos.x - panel_center_x, wp_pos.y - panel_center_y, 0)
-					mvector3.normalize(direction)
-
-					local distance = 364
-					local target_pos = wp_onscreen_target_pos
-
-					mvector3.set_static(target_pos, panel_center_x + mvector3.x(direction) * distance, panel_center_y + mvector3.y(direction) * distance, 0)
-
-					data.off_timer = math.clamp(data.off_timer + dt / data.move_speed, 0, 1)
-
-					if data.off_timer ~= 1 then
-						mvector3.set(data.current_position, math.bezier({
-							data.current_position,
-							data.current_position,
-							target_pos,
-							target_pos,
-						}, data.off_timer))
-
-						data.current_scale = math.bezier({
-							data.current_scale,
-							data.current_scale,
-							data.target_scale,
-							data.target_scale,
-						}, data.off_timer)
-
-						data.bitmap:set_size(data.size.x * data.current_scale, data.size.y * data.current_scale)
-
-						local current_alpha = math.bezier({
-							data.bitmap:alpha(),
-							data.bitmap:alpha(),
-							HUDManager.WAYPOINT_MAX_FADE,
-							HUDManager.WAYPOINT_MAX_FADE,
-						}, data.off_timer)
-
-						data.bitmap:set_alpha(current_alpha)
-					else
-						mvector3.set(data.current_position, target_pos)
-						data.bitmap:set_alpha(HUDManager.WAYPOINT_MAX_FADE)
-					end
-
-					data.bitmap:set_center(mvector3.x(data.current_position), mvector3.y(data.current_position))
-
-					if data.bitmap_over then
-						data.bitmap_over:set_texture_rect(data.stealth_over_rect[1], data.stealth_over_rect[2], data.stealth_over_rect[3], data.stealth_over_rect[4])
-						data.bitmap_over:set_h(data.stealth_over_rect[4])
-						data.bitmap_over:set_size(data.size.x * data.current_scale, data.stealth_over_rect[4] * data.current_scale)
-						data.searching:set_size(data.size.x * data.current_scale, data.size.y / 2 * data.current_scale)
-						data.aiming:set_size(data.size.x * data.current_scale, data.size.y / 2 * data.current_scale)
-						self:_upd_suspition_waypoint_pos(data)
-					end
-
-					data.arrow:set_center(mvector3.x(data.current_position) + direction.x * 30, mvector3.y(data.current_position) + direction.y * 30)
-
-					local angle = math.X:angle(direction) * math.sign(direction.y)
-
-					data.arrow:set_rotation(angle + 90)
-				else
-					if data.state == "offscreen" then
-						data.state = "onscreen"
-
-						data.arrow:set_visible(false)
-						data.bitmap:set_color(data.bitmap:color():with_alpha(HUDManager.DEFAULT_ALPHA))
-						self:_upd_suspition_waypoint_alpha(data, HUDManager.DEFAULT_ALPHA)
-
-						data.in_timer = 0 - (1 - data.off_timer)
-						data.target_scale = 1
-
-						if data.distance then
-							data.distance:set_visible(true)
-						end
-
-						if data.timer_gui then
-							data.timer_gui:set_visible(true)
-						end
-
-						if data.waypoint_type == "suspicion" then
-							managers.hud:hide_suspicion_indicator(data.unit:key())
-							self:_animate_suspition_waypoint_alpha(data, callback(self, self, "_animate_alpha"), HUDManager.DEFAULT_ALPHA, 0.5, 1)
-						end
-					end
-
-					if data.waypoint_type == "suspicion" and self:need_to_init_suspicion_indicator(data.unit:key()) then
-						self:initialize_suspicion_indicator(data.unit:key(), 0)
-					end
-
-					local alpha = HUDManager.DEFAULT_ALPHA
-
-					if dot > 0.99 then
-						alpha = math.clamp((1 - dot) / 0.01, 0.4, alpha)
-						data.looking_directly = true
-					else
-						data.looking_directly = false
-					end
-
-					if data.bitmap:color().alpha ~= alpha then
-						data.bitmap:set_color(data.bitmap:color():with_alpha(alpha))
-						self:_upd_suspition_waypoint_alpha(data, alpha)
-
-						if data.distance then
-							data.distance:set_color(data.distance:color():with_alpha(alpha))
-						end
-
-						if data.timer_gui then
-							data.timer_gui:set_color(data.bitmap:color():with_alpha(alpha))
-						end
-					end
-
-					if data.in_timer ~= 1 then
-						data.in_timer = math.clamp(data.in_timer + dt / data.move_speed, 0, 1)
-
-						mvector3.set(data.current_position, math.bezier({
-							data.current_position,
-							data.current_position,
-							wp_pos,
-							wp_pos,
-						}, data.in_timer))
-
-						data.current_scale = math.bezier({
-							data.current_scale,
-							data.current_scale,
-							data.target_scale,
-							data.target_scale,
-						}, data.in_timer)
-
-						data.bitmap:set_size(data.size.x * data.current_scale, data.size.y * data.current_scale)
-
-						local current_alpha = math.bezier({
-							data.bitmap:alpha(),
-							data.bitmap:alpha(),
-							1,
-							1,
-						}, data.in_timer)
-
-						data.bitmap:set_alpha(current_alpha)
-					else
-						mvector3.set(data.current_position, wp_pos)
-						data.bitmap:set_alpha(1)
-					end
-
-					data.bitmap:set_center(mvector3.x(data.current_position), mvector3.y(data.current_position) - HUDManager.OVERHEAD_Y_OFFSET)
-
-					if data.bitmap_over then
-						data.bitmap_over:set_texture_rect(data.stealth_over_rect[1], data.stealth_over_rect[2], data.stealth_over_rect[3], data.stealth_over_rect[4])
-						data.bitmap_over:set_h(data.stealth_over_rect[4])
-						data.bitmap_over:set_size(data.size.x * data.current_scale, data.stealth_over_rect[4] * data.current_scale)
-						data.searching:set_size(data.size.x * data.current_scale, data.size.y / 2 * data.current_scale)
-						data.aiming:set_size(data.size.x * data.current_scale, data.size.y / 2 * data.current_scale)
-						self:_upd_suspition_waypoint_pos(data)
-					end
-
-					if data.distance then
-						local length = wp_dir:length()
-
-						data.distance:set_text(string.format("%.0f", length / 100) .. "m")
-						data.distance:set_center_x(data.bitmap:center_x())
-						data.distance:set_top(data.bitmap:bottom())
-					end
-				end
-			end
-
-			if data.timer_gui then
-				data.timer_gui:set_center_x(data.bitmap:center_x())
-				data.timer_gui:set_bottom(data.bitmap:top())
-
-				if data.pause_timer == 0 then
-					data.timer = data.timer - dt
-
-					local text = data.timer < 0 and "00" or (math.round(data.timer) < 10 and "0" or "") .. math.round(data.timer)
-
-					data.timer_gui:set_text(text)
-				end
-			end
-		end
-	end
-end
-
-function HUDManager:show_waypoint(icon, data, new_alpha, duration)
-	return
-end
-
-function HUDManager:hide_waypoint(icon, data, new_alpha, duration)
-	return
 end
 
 function HUDManager:_animate_alpha(icon, data, new_alpha, duration, delay)

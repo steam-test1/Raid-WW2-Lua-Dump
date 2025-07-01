@@ -433,6 +433,17 @@ function AiLayer:_build_ai_unit_settings()
 	detection_multiplier_ctrlr:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "_set_detection_mul"), nil)
 	detection_multiplier_ctrlr:connect("EVT_KILL_FOCUS", callback(self, self, "_set_detection_mul"), nil)
 
+	local location_sizer = EWS:BoxSizer("HORIZONTAL")
+
+	location_sizer:add(EWS:StaticText(self._ews_panel, "Map Location:", 0, ""), 1, 0, "ALIGN_CENTER_VERTICAL")
+
+	local location_id = EWS:TextCtrl(self._ews_panel, "")
+
+	location_id:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "_set_location"))
+	location_id:connect("EVT_KILL_FOCUS", callback(self, self, "_set_location"))
+	location_sizer:add(location_id, 4, 0, "EXPAND")
+	sizer:add(location_sizer, 1, 0, "EXPAND")
+
 	local tag_sizer = EWS:BoxSizer("HORIZONTAL")
 	local barrage_allowed = EWS:CheckBox(self._ews_panel, "Barrage Allowed", "", "ALIGN_LEFT")
 
@@ -445,6 +456,7 @@ function AiLayer:_build_ai_unit_settings()
 	self._ai_unit_settings_guis.text = text
 	self._ai_unit_settings_guis.suspicion_multiplier = suspicion_multiplier
 	self._ai_unit_settings_guis.detection_multiplier = detection_multiplier
+	self._ai_unit_settings_guis.location_id = location_id
 	self._ai_unit_settings_guis.barrage_allowed = barrage_allowed
 
 	return sizer
@@ -858,6 +870,7 @@ function AiLayer:set_select_unit(unit)
 
 			self:_set_selection_patrol_paths_listbox(name)
 		elseif unit:name() == self._nav_surface_unit then
+			self._ai_unit_settings_guis.location_id:set_value(unit:ai_editor_data().location_id or "")
 			CoreEws.change_entered_number(self._ai_unit_settings_guis.suspicion_multiplier, unit:ai_editor_data().suspicion_mul)
 			CoreEws.change_entered_number(self._ai_unit_settings_guis.detection_multiplier, unit:ai_editor_data().detection_mul)
 			self._ai_unit_settings_guis.barrage_allowed:set_value(unit:ai_editor_data().barrage_allowed)
@@ -1140,4 +1153,16 @@ function AiLayer:_set_barrage_allowed()
 	self._selected_unit:ai_editor_data().barrage_allowed = self._ai_unit_settings_guis.barrage_allowed:get_value()
 
 	managers.navigation:set_barrage_allowed(self._selected_unit:unit_data().unit_id, self._ai_unit_settings_guis.barrage_allowed:get_value())
+end
+
+function AiLayer:_set_location()
+	if not self._selected_unit or not self._selected_unit:ai_editor_data() then
+		return
+	end
+
+	local location_id = self._ai_unit_settings_guis.location_id:get_value()
+
+	self._selected_unit:ai_editor_data().location_id = location_id
+
+	managers.navigation:set_location_ID(self._selected_unit:unit_data().unit_id, location_id)
 end

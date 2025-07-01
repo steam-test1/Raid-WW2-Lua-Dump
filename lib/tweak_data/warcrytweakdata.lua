@@ -11,6 +11,7 @@ function WarcryTweakData:init(tweak_data)
 	self:_init_ghost()
 	self:_init_pain_train()
 	self:_init_clustertruck()
+	self:_init_scorched_earth()
 end
 
 function WarcryTweakData:_init_sharpshooter()
@@ -202,11 +203,11 @@ function WarcryTweakData:_init_pain_train()
 				"warcry_player_charge_damage_reduction_1",
 				"warcry_player_charge_knockdown_fov_1",
 			},
+			{},
 			{
 				"warcry_player_charge_knockdown_fov_2",
 				"warcry_player_charge_damage_reduction_2",
 			},
-			{},
 			{
 				"warcry_player_charge_damage_reduction_3",
 				"warcry_player_charge_knockdown_flamer",
@@ -236,18 +237,15 @@ function WarcryTweakData:_init_clustertruck()
 				"warcry_player_grenade_cluster_range_1",
 			},
 			{
-				"warcry_player_grenade_refill_amounts_1",
 				"warcry_player_grenade_cluster_damage_2",
 				"warcry_player_grenade_cluster_range_2",
 			},
 			{
-				"warcry_player_grenade_refill_amounts_2",
 				"warcry_player_grenade_clusters_2",
 				"warcry_player_grenade_cluster_damage_3",
 				"warcry_player_grenade_cluster_range_3",
 			},
 			{
-				"warcry_player_grenade_clusters_3",
 				"warcry_player_grenade_airburst",
 			},
 		},
@@ -260,6 +258,34 @@ function WarcryTweakData:_init_clustertruck()
 		interrupt_penalty_percentage = 0.2,
 		lerp_duration = 0.75,
 		name_id = "warcry_clustertruck_name",
+		sound_switch = "warcry_spiral",
+	}
+end
+
+function WarcryTweakData:_init_scorched_earth()
+	self.scorched_earth = {
+		activation_equip_weapon = "thermite",
+		base_duration = 10,
+		base_kill_fill_amount = 0.05555555555555555,
+		buffs = {
+			{},
+			{
+				"warcry_player_thermite_shot_detonation",
+			},
+			{},
+			{
+				"warcry_player_thermite_finale_detonation",
+			},
+		},
+		desc_id = "skill_warcry_scorched_earth_desc",
+		fire_intensity = 3,
+		fire_opacity = 0.4,
+		hud_icon = "player_panel_warcry_scorched_earth",
+		ids_effect_name = Idstring("warcry_clustertruck"),
+		interrupt_penalty_multiplier = 0.7,
+		interrupt_penalty_percentage = 0.2,
+		lerp_duration = 0.7,
+		name_id = "skill_warcry_scorched_earth_name",
 		sound_switch = "warcry_spiral",
 	}
 end

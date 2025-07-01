@@ -271,10 +271,12 @@ function InstancesLayer:select_instance(instance_name)
 		local continent_data = managers.editor:continents()[instance_data.continent]
 		local start_index = continent_data:base_id() + managers.world_instance:start_offset_index() + instance_data.start_index
 
+		self._instance_info_guis.index_size:set_label("" .. instance_data.index_size)
 		self._instance_info_guis.start_index:set_label("" .. start_index)
 		self._instance_info_guis.end_index:set_label("" .. start_index + instance_data.index_size)
 		self._mission_placed_ctrlr:set_value(instance_data.mission_placed)
 	else
+		self._instance_info_guis.index_size:set_label("N/A")
 		self._instance_info_guis.start_index:set_label("N/A")
 		self._instance_info_guis.end_index:set_label("N/A")
 	end
@@ -431,15 +433,16 @@ function InstancesLayer:update(t, dt)
 	InstancesLayer.super.super.update(self, t, dt)
 
 	for _, instance_data in ipairs(managers.world_instance:instances_data_by_continent(managers.editor:current_continent():name())) do
-		local instance_units = self:get_instance_units_by_name(instance_data.name)
+		if self._selected_instance and self._selected_instance:name() == instance_data.name then
+			self:_draw_instance(t, dt, self._selected_instance:name())
+		else
+			local instance_units = self:get_instance_units_by_name(instance_data.name)
 
-		if #instance_units == 0 then
-			Application:draw_sphere(instance_data.position, 50, 0.5, 0.5, 0.5)
+			if #instance_units == 0 then
+				Application:draw_sphere(instance_data.position, 50, 0, 0.5, 0)
+				Application:draw_rotation(instance_data.position, instance_data.rotation)
+			end
 		end
-	end
-
-	if self._selected_instance then
-		self:_draw_instance(t, dt, self._selected_instance:name())
 	end
 
 	if not self:condition() then
@@ -719,6 +722,7 @@ function InstancesLayer:build_panel(notebook, settings)
 		text_sizer:add(self._instance_info_guis[name], 2, 2, "RIGHT,TOP,EXPAND")
 	end
 
+	_info("index_size")
 	_info("start_index")
 	_info("end_index")
 
@@ -1145,6 +1149,12 @@ function InstancesLayer:_create_overlay_gui()
 
 	self._workspace:hide()
 
+	self._colors = {}
+
+	for i = 0, 100 do
+		table.insert(self._colors, math.rand_color(0.4, 0.6))
+	end
+
 	self._gui_panel = self._workspace:panel():panel({
 		h = 16,
 		halign = "scale",
@@ -1163,7 +1173,7 @@ function InstancesLayer:_update_overlay_gui()
 
 	local instance_data = self._selected_instance and self._selected_instance:data()
 	local tot_w = self._workspace:panel():w()
-	local tot_indices = 70000
+	local tot_indices = 25000
 	local start_indices, end_indices = managers.world_instance:get_used_indices(managers.editor:current_continent():name())
 
 	for i, start_index in ipairs(start_indices) do
@@ -1171,7 +1181,7 @@ function InstancesLayer:_update_overlay_gui()
 		local w = end_indices[i] * (tot_w / tot_indices) - x
 
 		self._gui_panel:rect({
-			color = Color.green,
+			color = self._colors[i % #self._colors],
 			layer = 2,
 			w = w,
 			x = x,
@@ -1183,7 +1193,7 @@ function InstancesLayer:_update_overlay_gui()
 		local w = instance_data.index_size * (tot_w / tot_indices)
 
 		self._gui_panel:rect({
-			color = Color.blue,
+			color = Color.white,
 			layer = 3,
 			w = w,
 			x = x,

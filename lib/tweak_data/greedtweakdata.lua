@@ -46,6 +46,10 @@ end
 
 function GreedTweakData:_init_greed_items()
 	self.greed_items = {}
+	self.greed_items.confidential_documents = {}
+	self.greed_items.confidential_documents.name_id = "hud_confidential_documents"
+	self.greed_items.confidential_documents.hud_icon = "carry_gold"
+	self.greed_items.confidential_documents.value = self.item_value.complete_gold_bar
 	self.greed_items.chocolate_box = {}
 	self.greed_items.chocolate_box.name_id = "hud_carry_chocolate_box"
 	self.greed_items.chocolate_box.hud_icon = "carry_gold"

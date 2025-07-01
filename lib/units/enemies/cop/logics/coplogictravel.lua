@@ -204,7 +204,7 @@ function CopLogicTravel.queued_update(data)
 	end
 
 	if not delay then
-		debug_pause_unit(data.unit, "crap!!!", inspect(data))
+		debug_pause_unit(data.unit, "[CopLogicTravel] No delay", inspect(data))
 
 		delay = 1
 	end

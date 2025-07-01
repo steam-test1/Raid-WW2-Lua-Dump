@@ -1764,10 +1764,6 @@ function NavFieldBuilder:_analyse_room(enter_dir_str, enter_pos)
 
 	self:_add_room(room)
 
-	if managers.navigation:get_debug_draw_state() and managers.navigation:get_debug_draw_state().quads then
-		-- block empty
-	end
-
 	return i_room
 end
 
@@ -2437,8 +2433,6 @@ function NavFieldBuilder:_expansion_check_obstacles(dir_str, dir_vec, exp_space,
 		local back_ground_ray = self:_sphere_ray(pos_along_border + self._up_vec, pos_along_border + self._down_vec, gnd_ray_rad)
 
 		if not back_ground_ray then
-			Application:draw_cylinder(pos_along_border + self._up_vec, pos_along_border + self._down_vec, gnd_ray_rad, 1, 0, 0)
-
 			return res_expansion
 		end
 

@@ -19,6 +19,8 @@ function EscortExt:init(unit)
 	if Network:is_server() then
 		managers.enemy:add_delayed_clbk("EscortExt_set_logic" .. tostring(self._unit:key()), callback(self, self, "set_logic"), TimerManager:game():time())
 	end
+
+	self._unit:set_extension_update_enabled(Idstring("escort"), false)
 end
 
 function EscortExt:set_logic()

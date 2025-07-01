@@ -553,7 +553,7 @@ function MissionLayer:build_panel(notebook)
 	self._element_toolbar:set_tool_state("EDIT_ELEMENT", self._editing_mission_element)
 	self._element_toolbar:connect("EDIT_ELEMENT", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "toolbar_toggle"), {
 		class = self,
-		to_unit = nil,
+		names = nil,
 		toolbar = "_element_toolbar",
 		value = "_editing_mission_element",
 	})
@@ -618,7 +618,7 @@ function MissionLayer:_build_scripts()
 	self._scripts_right_toolbar:set_tool_state("SIMULATE_WITH_CURRENT_SCRIPT", self._simulate_with_current_script)
 	self._scripts_right_toolbar:connect("SIMULATE_WITH_CURRENT_SCRIPT", "EVT_COMMAND_MENU_SELECTED", callback(nil, CoreEditorUtils, "toolbar_toggle"), {
 		class = self,
-		to_unit = nil,
+		names = nil,
 		toolbar = "_scripts_right_toolbar",
 		value = "_simulate_with_current_script",
 	})
@@ -634,7 +634,7 @@ function MissionLayer:add_btns_to_toolbar(...)
 	self._btn_toolbar:set_tool_state("DRAW_SELECTED_CONNECTIONS_ONLY", self._only_draw_selected_connections)
 	self._btn_toolbar:connect("DRAW_SELECTED_CONNECTIONS_ONLY", "EVT_COMMAND_MENU_SELECTED", callback(nil, CoreEditorUtils, "toolbar_toggle"), {
 		class = self,
-		to_unit = nil,
+		names = nil,
 		toolbar = "_btn_toolbar",
 		value = "_only_draw_selected_connections",
 	})
@@ -642,7 +642,7 @@ function MissionLayer:add_btns_to_toolbar(...)
 	self._btn_toolbar:set_tool_state("UPDATE_SELECTED_ALL", self._update_all)
 	self._btn_toolbar:connect("UPDATE_SELECTED_ALL", "EVT_COMMAND_MENU_SELECTED", callback(nil, CoreEditorUtils, "toolbar_toggle"), {
 		class = self,
-		to_unit = nil,
+		names = nil,
 		toolbar = "_btn_toolbar",
 		value = "_update_all",
 	})
@@ -655,7 +655,7 @@ function MissionLayer:add_btns_to_toolbar(...)
 	self._btn_toolbar:set_tool_state("VISUALIZE_FLOW", self._visualize_flow)
 	self._btn_toolbar:connect("VISUALIZE_FLOW", "EVT_COMMAND_MENU_SELECTED", callback(nil, CoreEditorUtils, "toolbar_toggle"), {
 		class = self,
-		to_unit = nil,
+		names = nil,
 		toolbar = "_btn_toolbar",
 		value = "_visualize_flow",
 	})
@@ -663,7 +663,7 @@ function MissionLayer:add_btns_to_toolbar(...)
 	self._btn_toolbar:set_tool_state("USE_COLORED_LINKS", self._use_colored_links)
 	self._btn_toolbar:connect("USE_COLORED_LINKS", "EVT_COMMAND_MENU_SELECTED", callback(nil, CoreEditorUtils, "toolbar_toggle"), {
 		class = self,
-		to_unit = nil,
+		names = nil,
 		toolbar = "_btn_toolbar",
 		value = "_use_colored_links",
 	})

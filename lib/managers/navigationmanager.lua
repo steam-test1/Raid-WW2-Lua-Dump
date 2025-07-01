@@ -317,6 +317,7 @@ function NavigationManager:_load_nav_data(data, world_id, translation, yaw)
 		local segment = {
 			barrage_allowed = nav_seg.barrage_allowed,
 			id = nav_seg.id,
+			location_id = nav_seg.location_id,
 			neighbours = {},
 			parent_world_id = data.parent_world_id,
 			pos = position + translate,
@@ -1325,11 +1326,6 @@ function NavigationManager:find_cover_in_cone_from_threat_pos(threat_pos, cone_b
 	local t2 = TimerManager:now()
 	local duration = (t2 - t) * 1000
 
-	if duration > 3 then
-		Application:debug("[NavigationManager:find_cover_in_cone_from_threat_pos] Duration(ms):", duration)
-		Application:debug("managers.navigation:find_cover_in_cone_from_threat_pos( ", threat_pos, ", ", cone_base, ", ", near_pos, ", ", cone_angle, ", ", nav_seg, ", ", rsrv_filter, ")")
-	end
-
 	return ret
 end
 
@@ -2241,6 +2237,13 @@ end
 
 function NavigationManager:add_obstacle(obstacle_unit, obstacle_obj_name, world_id)
 	local obstacle_obj = obstacle_unit:get_object(obstacle_obj_name)
+
+	if not obstacle_obj then
+		Application:error("[NavigationManager:add_obstacle] There was no obj to remove in this unit!", obstacle_unit, obstacle_obj_name, world_id)
+
+		return
+	end
+
 	local id = self._quad_field:add_obstacle(obstacle_obj)
 
 	table.insert(self._obstacles, {
@@ -2254,17 +2257,28 @@ end
 function NavigationManager:remove_obstacle(obstacle_unit, obstacle_obj_name)
 	local obstacle_obj = obstacle_unit:get_object(obstacle_obj_name)
 
+	if not obstacle_obj then
+		Application:error("[NavigationManager:remove_obstacle] There was no obj to remove in this unit!", obstacle_unit, obstacle_obj_name)
+
+		return
+	end
+
 	self._quad_field:remove_obstacle(obstacle_obj)
 
 	local temp_array = {}
 	local removed
 
 	for i, obs_data in ipairs(self._obstacles) do
+		Application:debug("[NavigationManager:remove_obstacle] Inspecting obstacles:", i, inspect(obs_data))
+
 		removed = false
 
 		if not alive(obs_data.unit) then
+			Application:debug("[NavigationManager:remove_obstacle] Found dead unit in obstalce list, removing it:", inspect(obs_data))
+
 			removed = true
 		elseif obs_data.unit:key() == obstacle_unit:key() and obs_data.obstacle_obj_name == obstacle_obj_name then
+			Application:debug("[NavigationManager:remove_obstacle] obstacle removed", obs_data.obstacle_obj_name, obs_data.id)
 			self._quad_field:remove_obstacle(obs_data.id)
 
 			removed = true
@@ -2286,7 +2300,10 @@ function NavigationManager:_remove_obstacles_for_world(world_id)
 			if alive(obs_data.unit) then
 				local obstacle_obj = obs_data.unit:get_object(obs_data.obstacle_obj_name)
 
-				self._quad_field:remove_obstacle(obstacle_obj)
+				if obstacle_obj then
+					Application:debug("[NavigationManager:_remove_obstacles_for_world] world obstacle removed", obs_data.world_id, obs_data.obstacle_obj_name)
+					self._quad_field:remove_obstacle(obstacle_obj)
+				end
 			end
 		else
 			table.insert(temp_array, self._obstacles[i])

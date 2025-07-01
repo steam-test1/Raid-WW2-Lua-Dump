@@ -273,8 +273,7 @@ function ExperienceGui:_layout_equipable_upgrades()
 	}
 
 	self._equippable_upgrades_scrollable_area = self._menu_left_side:scrollable_area(equippable_upgrades_scrollable_area_params)
-
-	local equippable_upgrades_params = {
+	self._equippable_upgrades = self._equippable_upgrades_scrollable_area:get_panel():categorized_grid({
 		grid_params = {
 			data_source_callback = callback(self, self, "data_source_upgrades"),
 			on_click_callback = callback(self, self, "on_item_clicked_upgrade"),
@@ -298,9 +297,7 @@ function ExperienceGui:_layout_equipable_upgrades()
 		name = "equippable_upgrades_grid",
 		scrollable_area_ref = self._equippable_upgrades_scrollable_area,
 		w = equippable_upgrades_scrollable_area_params.w,
-	}
-
-	self._equippable_upgrades = self._equippable_upgrades_scrollable_area:get_panel():categorized_grid(equippable_upgrades_params)
+	})
 
 	self._equippable_upgrades_scrollable_area:setup_scroll_area()
 	self._equippable_upgrades:set_selected(true)

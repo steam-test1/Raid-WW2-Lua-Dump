@@ -130,7 +130,7 @@ function MissionManager:_activate_mission(name)
 end
 
 function MissionManager:activate_script(name, ...)
-	Application:debug("[MissionManager:activate_script] Simulating:", Global.running_simulation, "| Name:", name, inspect(self))
+	Application:debug("[MissionManager:activate_script] IsSim:", not not Global.running_simulation, "| Name:", name)
 
 	if not self._scripts[name] then
 		if Global.running_simulation then
@@ -142,7 +142,7 @@ function MissionManager:activate_script(name, ...)
 		end
 	end
 
-	Application:debug("[MissionManager:activate_script] Good to activate " .. name)
+	Application:debug("[MissionManager:activate_script] Good to activate '" .. name .. "' script", inspect(self._scripts[name]))
 	self._scripts[name]:activate(...)
 end
 
@@ -381,7 +381,7 @@ end
 
 function MissionManager:get_element_by_name(name)
 	for _, data in pairs(self._scripts) do
-		for id, element in pairs(data:elements()) do
+		for _, element in pairs(data:elements()) do
 			if element:editor_name() == name then
 				return element
 			end
@@ -532,8 +532,8 @@ function MissionScript:_create_elements(elements)
 		local old_element = self._elements[element.id]
 
 		if old_element and not Application:editor() then
-			Application:debug("[MissionScript:_create_elements] Leaking mission element! old", inspect(old_element))
-			Application:debug("[MissionScript:_create_elements] Leaking mission element! new", inspect(new_element))
+			Application:error("[MissionScript:_create_elements] Leaking mission element! old", inspect(old_element))
+			Application:error("[MissionScript:_create_elements] Leaking mission element! new", inspect(new_element))
 			_G.debug_pause("[MissionScript:_create_elements] Leaking mission element! ID:", element.id)
 		end
 

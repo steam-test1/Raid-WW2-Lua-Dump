@@ -147,6 +147,10 @@ function NavLinkUnitElement:test_element()
 end
 
 function NavLinkUnitElement:loop_test_element()
+	if alive(self._test_unit) then
+		self._hed.search_position = self._test_unit:position()
+	end
+
 	self._test_unit:warp_to(self._unit:rotation(), self._unit:position())
 	self._so_class:on_executed(self._test_unit)
 end

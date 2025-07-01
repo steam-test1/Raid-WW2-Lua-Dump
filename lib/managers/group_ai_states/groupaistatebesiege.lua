@@ -489,7 +489,7 @@ function GroupAIStateBesiege:_begin_assault_task(assault_areas)
 	end
 
 	managers.dialog:queue_dialog("player_gen_incoming_wave", {
-		_get_special_unit_type_count = nil,
+		[""] = nil,
 		skip_idle_check = true,
 	})
 
@@ -1399,6 +1399,20 @@ function GroupAIStateBesiege:_try_spawn_unit(u_type_name, nationality, spawn_ent
 		return
 	end
 
+	local function _criminals_see_spawning(mission_element)
+		local elem_check_pos = mission_element:value("position") + math.UP * 100
+
+		for _, u_data in pairs(managers.groupai:state():all_player_criminals()) do
+			local obstructed = World:raycast("ray", u_data.unit:movement():m_head_pos(), elem_check_pos, "ray_type", "ai_vision", "slot_mask", managers.slot:get_mask("world_geometry"), "report")
+
+			if not obstructed then
+				return false
+			end
+		end
+
+		return true
+	end
+
 	local hopeless = true
 
 	for _, sp_data in ipairs(spawn_points) do
@@ -1406,6 +1420,12 @@ function GroupAIStateBesiege:_try_spawn_unit(u_type_name, nationality, spawn_ent
 
 		if (sp_data.accessibility == "any" or category.access[sp_data.accessibility]) and (not sp_data.amount or sp_data.amount > 0) and sp_data.mission_element:enabled() then
 			hopeless = false
+
+			if sp_data.mission_element.forbid_seen and not _criminals_see_spawning(sp_data.mission_element) then
+				Application:info("[GroupAi:Generic] _try_spawn_unit Will not spawn unit due to player visibility, Can try again later once the players move")
+
+				return true
+			end
 
 			if self._t > sp_data.delay_t then
 				produce_data.name = category.units[math.random(#category.units)]
@@ -1420,6 +1440,7 @@ function GroupAIStateBesiege:_try_spawn_unit(u_type_name, nationality, spawn_ent
 					objective = spawn_task.group.objective.element:get_random_SO(spawned_unit)
 
 					if not objective then
+						Application:warn("[GroupAIStateBesiege] Could not keep unit, no objective at pos", spawned_unit:position())
 						spawned_unit:set_slot(0)
 
 						return true

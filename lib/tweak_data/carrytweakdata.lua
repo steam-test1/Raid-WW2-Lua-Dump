@@ -72,7 +72,7 @@ function CarryTweakData:init(tweak_data)
 	}
 	self.painting_sto.hud_icon = "carry_painting"
 	self.painting_sto.throw_rotations = Rotation(0, 0, 66)
-	self.painting_sto.upgrade_throw_multiplier = self.TRHROW_MULTIPLIERS_GENERIC
+	self.painting_sto.upgrade_throw_multiplier = self.THROW_MULTIPLIERS_GENERIC
 	self.painting_sto.weight = 2
 	self.painting_sto.show_objects = {
 		g_sticker = true,
@@ -97,7 +97,7 @@ function CarryTweakData:init(tweak_data)
 	self.wine_crate.AI_carry = {
 		SO_category = "enemies",
 	}
-	self.wine_crate.upgrade_throw_multiplier = self.TRHROW_MULTIPLIERS_GENERIC
+	self.wine_crate.upgrade_throw_multiplier = self.THROW_MULTIPLIERS_GENERIC
 	self.wine_crate.weight = 3
 	self.wine_crate.hud_icon = "carry_artefact"
 	self.cigar_crate = deep_clone(self.wine_crate)
@@ -117,7 +117,7 @@ function CarryTweakData:init(tweak_data)
 	self.chocolate_box.AI_carry = {
 		SO_category = "enemies",
 	}
-	self.chocolate_box.upgrade_throw_multiplier = self.TRHROW_MULTIPLIERS_GENERIC
+	self.chocolate_box.upgrade_throw_multiplier = self.THROW_MULTIPLIERS_GENERIC
 	self.chocolate_box.weight = 2
 	self.chocolate_box.hud_icon = "carry_artefact"
 	self.crucifix = deep_clone(self.chocolate_box)
@@ -201,7 +201,7 @@ function CarryTweakData:init(tweak_data)
 		SO_category = "enemies",
 	}
 	self.gold_bar.throw_rotations = Rotation(2, 40, 8)
-	self.gold_bar.upgrade_throw_multiplier = self.TRHROW_MULTIPLIERS_GENERIC
+	self.gold_bar.upgrade_throw_multiplier = self.THROW_MULTIPLIERS_GENERIC
 	self.gold_bar.weight = 1
 	self.gold = {}
 	self.gold.type = "normal"
@@ -216,8 +216,21 @@ function CarryTweakData:init(tweak_data)
 		SO_category = "enemies",
 	}
 	self.gold.throw_rotations = Rotation(0, 20, 0)
-	self.gold.upgrade_throw_multiplier = self.TRHROW_MULTIPLIERS_GENERIC
+	self.gold.upgrade_throw_multiplier = self.THROW_MULTIPLIERS_GENERIC
 	self.gold.weight = self.gold_bar.weight * 3
+	self.crate_explosives = {
+		hud_icon = "carry_explosive",
+		name_id = "hud_carry_explosives",
+		skip_exit_secure = true,
+		type = "normal",
+		unit = "units/upd_fb/pickups/pku_crate_explosives/pku_crate_explosives_bag",
+		unit_static = "units/upd_fb/pickups/pku_crate_explosives/pku_crate_explosives_static",
+		upgrade_weight_multiplier = self.WEIGHT_MULTIPLIERS_SHELL,
+		weight = 2,
+	}
+	self.conspiracy_board = deep_clone(self.painting_sto)
+	self.conspiracy_board.unit = "units/upd_fb/props/wall_board_conspiracy/pku_conspiracy_board_bag"
+	self.conspiracy_board.name_id = "hud_carry_conspiracy_board"
 	self.cable_plug = {}
 	self.cable_plug.type = "normal"
 	self.cable_plug.hud_icon = "carry_planks"
@@ -351,7 +364,7 @@ function CarryTweakData:_init_shared_multipliers()
 		category = "carry",
 		upgrade = "predator_corpse_weight_multiplier",
 	}
-	self.TRHROW_MULTIPLIERS_GENERIC = {
+	self.THROW_MULTIPLIERS_GENERIC = {
 		category = "carry",
 		upgrade = "strongback_throw_distance_multiplier",
 	}

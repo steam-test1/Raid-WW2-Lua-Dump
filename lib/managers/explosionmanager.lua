@@ -146,11 +146,7 @@ function ExplosionManager:detect_and_give_dmg(params)
 	end
 
 	local count_cops = 0
-	local count_gangsters = 0
-	local count_civilians = 0
 	local count_cop_kills = 0
-	local count_gangster_kills = 0
-	local count_civilian_kills = 0
 	local characters_hit = {}
 	local units_to_push = {}
 	local hit_units = {}
@@ -211,16 +207,8 @@ function ExplosionManager:detect_and_give_dmg(params)
 			if ray_hit then
 				local hit_unit = hit_unit
 
-				if hit_unit:base() and hit_unit:base()._tweak_table and not hit_unit:character_damage():dead() then
-					type = hit_unit:base()._tweak_table
-
-					if CopDamage.is_civilian(type) then
-						count_civilians = count_civilians + 1
-					elseif CopDamage.is_gangster(type) then
-						count_gangsters = count_gangsters + 1
-					else
-						count_cops = count_cops + 1
-					end
+				if hit_unit:base() and not hit_unit:character_damage():dead() then
+					count_cops = count_cops + 1
 				end
 			end
 		elseif apply_dmg or hit_body:dynamic() then
@@ -270,16 +258,8 @@ function ExplosionManager:detect_and_give_dmg(params)
 
 				hit_unit:character_damage():damage_explosion(action_data)
 
-				if not dead_before and hit_unit:base() and hit_unit:base()._tweak_table and hit_unit:character_damage():dead() then
-					type = hit_unit:base()._tweak_table
-
-					if CopDamage.is_civilian(type) then
-						count_civilian_kills = count_civilian_kills + 1
-					elseif CopDamage.is_gangster(type) then
-						count_gangster_kills = count_gangster_kills + 1
-					else
-						count_cop_kills = count_cop_kills + 1
-					end
+				if not dead_before and hit_unit:character_damage():dead() then
+					count_cop_kills = count_cop_kills + 1
 				end
 			end
 		end
@@ -291,11 +271,7 @@ function ExplosionManager:detect_and_give_dmg(params)
 
 	if owner then
 		results.count_cops = count_cops
-		results.count_gangsters = count_gangsters
-		results.count_civilians = count_civilians
 		results.count_cop_kills = count_cop_kills
-		results.count_gangster_kills = count_gangster_kills
-		results.count_civilian_kills = count_civilian_kills
 	end
 
 	return hit_units, splinters, results

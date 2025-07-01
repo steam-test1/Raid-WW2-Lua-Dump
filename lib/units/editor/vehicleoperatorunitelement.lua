@@ -5,6 +5,7 @@ VehicleOperatorUnitElement.ACTIONS = {
 	"unlock",
 	"secure",
 	"break_down",
+	"destroy_explode",
 	"repair",
 	"damage",
 	"activate",
@@ -17,6 +18,10 @@ VehicleOperatorUnitElement.ACTIONS = {
 	"enable_accepting_loot",
 	"disable_securing_loot",
 	"enable_securing_loot",
+	"enable_map_waypoint",
+	"disable_map_waypoint",
+	"enable_hud_waypoint",
+	"disable_hud_waypoint",
 }
 
 function VehicleOperatorUnitElement:init(unit)
@@ -130,7 +135,7 @@ function VehicleOperatorUnitElement:add_unit_list_btn()
 			return false
 		end
 
-		return managers.editor:layer("Mission"):category_map()[unit:type():s()]
+		return managers.editor:layer("Mission"):category_map()[unit:type():s()] or managers.editor:unit_in_layer(unit) == managers.editor:layer("Statics")
 	end
 
 	local dialog = SelectUnitByNameModal:new("Add Unit", f)

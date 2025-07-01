@@ -42,15 +42,13 @@ function RaidGUIControlCard:init(parent, item_params, item_data, grid_params)
 			texture = tweak_data.challenge_cards.rarity_definition[item_data.rarity].texture_path_thumb,
 			texture_rect = tweak_data.challenge_cards.rarity_definition[item_data.rarity].texture_rect_thumb,
 			w = item_params.w,
-			x = 0,
-			y = 0,
 		})
 		self._xp_value = self._card_panel:label({
 			font = tweak_data.menu.pd2_medium_font,
 			font_size = 15,
 			h = 17,
 			name = "label_xp_value",
-			text = "+" .. self._item_data.bonus_xp .. "xp",
+			text = "$$$",
 			w = 33,
 			wrap = true,
 			x = 5,
@@ -67,23 +65,6 @@ function RaidGUIControlCard:init(parent, item_params, item_data, grid_params)
 		self._on_click_callback = grid_params.on_click_callback
 	end
 
-	local card_name = ""
-
-	if item_data then
-		card_name = item_data.name
-	end
-
-	self._label_card_description = self._card_panel:label({
-		font = tweak_data.menu.pd2_medium_font,
-		font_size = 15,
-		h = 30,
-		name = "label_card_info",
-		text = card_name,
-		w = 80,
-		wrap = true,
-		x = 5,
-		y = 52,
-	})
 	self._object = self._card_panel
 	self._name = "card_control"
 end
@@ -97,8 +78,6 @@ function RaidGUIControlCard:_create_border()
 		name = "border_left",
 		orientation = "vertical",
 		w = border_thickness,
-		x = 0,
-		y = 0,
 	})
 
 	self._border_left:set_gradient_points({

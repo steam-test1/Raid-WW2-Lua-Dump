@@ -938,7 +938,7 @@ function StatisticsManager:_increment_challenge_card_stat(start_complete_flag, j
 		card_rarity_name = "uncommon"
 	elseif challenge_card_data.rarity == LootDropTweakData.RARITY_RARE then
 		card_rarity_name = "rare"
-	elseif challenge_card_data.rarity == LootDropTweakData.RARITY_HALLOWEEN_2017 then
+	elseif challenge_card_data.rarity == LootDropTweakData.RARITY_HALLOWEEN then
 		card_rarity_name = "halloween"
 	end
 
@@ -982,7 +982,7 @@ function StatisticsManager:_increment_booster_card_stat(start_complete_flag, job
 		card_rarity_name = "uncommon"
 	elseif booster_card_data.rarity == LootDropTweakData.RARITY_RARE then
 		card_rarity_name = "rare"
-	elseif booster_card_data.rarity == LootDropTweakData.RARITY_HALLOWEEN_2017 then
+	elseif booster_card_data.rarity == LootDropTweakData.RARITY_HALLOWEEN then
 		card_rarity_name = "halloween"
 	end
 
@@ -1914,7 +1914,15 @@ function StatisticsManager:killed(data)
 	elseif by_other_variant then
 		local name_id, throwable_id = self:_get_name_id_and_throwable_id(data.weapon_unit)
 
-		self:_add_to_killed_by_weapon(name_id, data)
+		if throwable_id then
+			self._global.killed_by_grenade[throwable_id] = (self._global.killed_by_grenade[throwable_id] or 0) + 1
+
+			if self._session_started then
+				self._global.session.killed_by_grenade[throwable_id] = (self._global.session.killed_by_grenade[throwable_id] or 0) + 1
+			end
+		else
+			self:_add_to_killed_by_weapon(name_id, data)
+		end
 	end
 
 	if IS_CONSOLE then
@@ -2771,7 +2779,7 @@ function StatisticsManager:set_top_stats(top_stat_1_id, top_stat_1_peer_id, top_
 
 	local all_peers = managers.network:session():all_peers()
 
-	if #all_peers == 4 and managers.raid_job:stage_success() and peer_top_stats_count > 0 then
+	if #all_peers > 1 and managers.raid_job:stage_success() and peer_top_stats_count > 0 then
 		self:received_best_of_stat(peer_top_stats_count)
 	end
 end

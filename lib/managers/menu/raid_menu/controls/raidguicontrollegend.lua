@@ -2,18 +2,18 @@ RaidGUIControlLegend = RaidGUIControlLegend or class(RaidGUIControl)
 RaidGUIControlLegend.X = 0
 RaidGUIControlLegend.y = 0
 RaidGUIControlLegend.W = 1200
-RaidGUIControlLegend.H = 32
+RaidGUIControlLegend.H = 36
 RaidGUIControlLegend.FONT = tweak_data.gui.fonts.din_compressed
 RaidGUIControlLegend.FONT_SIZE = tweak_data.gui.font_sizes.large
 RaidGUIControlLegend.COLOR = tweak_data.gui.colors.raid_grey
 RaidGUIControlLegend.LABEL_PADDING = 15
 
 function RaidGUIControlLegend:init(parent, params)
-	params.x = params.x or RaidGUIControlLegend.X
-	params.y = params.y or RaidGUIControlLegend.Y
-	params.w = params.w or RaidGUIControlLegend.W
-	params.h = params.h or RaidGUIControlLegend.H
-	params.color = params.color or RaidGUIControlLegend.COLOR
+	params.x = params.x or self.X
+	params.y = params.y or self.Y
+	params.w = params.w or self.W
+	params.h = params.h or self.H
+	params.color = params.color or self.COLOR
 
 	RaidGUIControlLegend.super.init(self, parent, params)
 
@@ -49,13 +49,11 @@ function RaidGUIControlLegend:_create_legend()
 
 	if managers.controller:is_controller_present() then
 		self:_create_console_legend({
-			color = RaidGUIControlLegend.COLOR,
-			font = self._params.font or RaidGUIControlLegend.FONT,
-			font_size = self._params.font_size or RaidGUIControlLegend.FONT_SIZE,
-			h = RaidGUIControlLegend.H,
+			color = self.COLOR,
+			font = self._params.font or self.FONT,
+			font_size = self._params.font_size or self.FONT_SIZE,
+			h = self.H,
 			w = 200,
-			x = 0,
-			y = 0,
 		})
 	elseif managers.menu:is_pc_controller() then
 		self:_create_pc_legend()

@@ -464,7 +464,6 @@ function UpgradesTweakData:_create_warcry_definitions()
 
 	self.values.player.warcry_grenade_clusters = {
 		2,
-		3,
 		4,
 	}
 
@@ -507,6 +506,18 @@ function UpgradesTweakData:_create_warcry_definitions()
 	}
 
 	self:_create_definition_levels("warcry_player_killstreak_multiplier_bonus", UpgradesTweakData.DEF_CAT_FEATURE, "warcry_killstreak_multiplier_bonus", UpgradesTweakData.UPG_CAT_PLAYER, true, self.values.player.warcry_killstreak_multiplier_bonus)
+
+	self.values.player.warcry_thermite_shot_detonation = {
+		true,
+	}
+
+	self:_create_definition("warcry_player_thermite_shot_detonation", UpgradesTweakData.DEF_CAT_FEATURE, "warcry_thermite_shot_detonation", UpgradesTweakData.UPG_CAT_PLAYER, false, 1)
+
+	self.values.player.warcry_thermite_finale_detonation = {
+		true,
+	}
+
+	self:_create_definition("warcry_player_thermite_finale_detonation", UpgradesTweakData.DEF_CAT_FEATURE, "warcry_thermite_finale_detonation", UpgradesTweakData.UPG_CAT_PLAYER, false, 1)
 
 	self.values.player.warcry_silver_bullet_tint_distance = {
 		20,
@@ -553,15 +564,15 @@ function UpgradesTweakData:_create_warcry_definitions()
 	self:_create_definition("warcry_player_penetrate_damage_multiplier", UpgradesTweakData.DEF_CAT_FEATURE, "warcry_penetrate_damage_multiplier", UpgradesTweakData.UPG_CAT_PLAYER, false, 1, false, self.description_data_types.generic_multiplier)
 
 	self.values.player.warcry_charge_knockdown_fov = {
-		30,
-		50,
+		35,
+		60,
 	}
 
 	self:_create_definition_levels("warcry_player_charge_knockdown_fov", UpgradesTweakData.DEF_CAT_FEATURE, "warcry_charge_knockdown_fov", UpgradesTweakData.UPG_CAT_PLAYER, false, self.values.player.warcry_charge_knockdown_fov, self.description_data_types.raw_value_amount)
 
 	self.values.player.warcry_charge_damage_reduction = {
 		0.7,
-		0.58,
+		0.6,
 		0.45,
 	}
 
@@ -2872,70 +2883,6 @@ function UpgradesTweakData:_init_pd2_values()
 	self.values.player.hostage_trade = {
 		true,
 	}
-	self.values.player.body_armor = {}
-	self.values.player.body_armor.armor = {
-		0,
-		1,
-		2,
-		3,
-		5,
-		7,
-		15,
-	}
-	self.values.player.body_armor.movement = {
-		1.05,
-		1.025,
-		1,
-		0.95,
-		0.75,
-		0.65,
-		0.575,
-	}
-	self.values.player.body_armor.concealment = {
-		30,
-		26,
-		23,
-		21,
-		18,
-		12,
-		1,
-	}
-	self.values.player.body_armor.dodge = {
-		0.1,
-		-0.2,
-		-0.25,
-		-0.3,
-		-0.35,
-		-0.4,
-		-0.5,
-	}
-	self.values.player.body_armor.damage_shake = {
-		1,
-		0.96,
-		0.92,
-		0.85,
-		0.8,
-		0.7,
-		0.5,
-	}
-	self.values.player.body_armor.stamina = {
-		1.025,
-		1,
-		0.95,
-		0.9,
-		0.85,
-		0.8,
-		0.7,
-	}
-	self.values.player.body_armor.skill_ammo_mul = {
-		1,
-		1.02,
-		1.04,
-		1.06,
-		1.8,
-		1.1,
-		1.12,
-	}
 	self.ammo_bag_base = 3
 	self.sentry_gun_base_ammo = 150
 	self.sentry_gun_base_armor = 10
@@ -3559,36 +3506,6 @@ function UpgradesTweakData:_init_values()
 end
 
 function UpgradesTweakData:_player_definitions()
-	self.definitions.body_armor1 = {
-		armor_id = "level_2",
-		category = "armor",
-		name_id = "bm_armor_level_2",
-	}
-	self.definitions.body_armor2 = {
-		armor_id = "level_3",
-		category = "armor",
-		name_id = "bm_armor_level_3",
-	}
-	self.definitions.body_armor3 = {
-		armor_id = "level_4",
-		category = "armor",
-		name_id = "bm_armor_level_4",
-	}
-	self.definitions.body_armor4 = {
-		armor_id = "level_5",
-		category = "armor",
-		name_id = "bm_armor_level_5",
-	}
-	self.definitions.body_armor5 = {
-		armor_id = "level_6",
-		category = "armor",
-		name_id = "bm_armor_level_6",
-	}
-	self.definitions.body_armor6 = {
-		armor_id = "level_7",
-		category = "armor",
-		name_id = "bm_armor_level_7",
-	}
 	self.definitions.player_detection_risk_damage_multiplier = {
 		category = UpgradesTweakData.DEF_CAT_FEATURE,
 		name_id = "menu_player_detection_risk_damage_multiplier",

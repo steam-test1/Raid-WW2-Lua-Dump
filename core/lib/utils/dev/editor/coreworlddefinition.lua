@@ -11,7 +11,7 @@ WorldDefinition.LOAD_UNITS_PER_FRAME_LIGHT = 50
 WorldDefinition.TIME_PER_SECOND_FOR_PACKAGE_LOAD = 0.1667
 WorldDefinition.ASYNC_CALLBACKS = Global.STREAM_ALL_PACKAGES
 WorldDefinition.VEHICLES_CONTINENT_NAME = "NOT_USED_vehicles"
-WorldDefinition.MAX_WORLD_UNIT_ID = 15
+WorldDefinition.MAX_WORLD_UNIT_ID = 8
 WorldDefinition.UNIT_ID_BASE = 1000000
 
 local is_editor = Application:editor()
@@ -23,10 +23,10 @@ function WorldDefinition:init(params)
 	self:_add_loading_counter("on_world_package_loaded")
 
 	self._unique_id_counter = {}
-	self.is_prepared = false
 	self._queued_packages = {}
 	self._package_load_params = {}
 	self._loaded_packages = {}
+	self.is_prepared = false
 
 	self:_measure_lap_time("start init")
 
@@ -95,8 +95,12 @@ function WorldDefinition:init(params)
 			self:_load_world_package()
 		end)
 		self.load_statics = coroutine.create(function()
+			Application:debug("[CoreWorldDefinition: COROUTINE load_statics] STARTED")
+
 			if self._definition.statics then
 				for _, values in ipairs(self._definition.statics) do
+					Application:debug("[CoreWorldDefinition: COROUTINE load_statics] Loading unit...", inspect(values.unit_data))
+
 					values.unit_data.package = values.unit_data.package or self._definition.package
 
 					local unit = self:_create_statics_unit(values, self._offset, true)
@@ -108,7 +112,7 @@ function WorldDefinition:init(params)
 			for name, continent in pairs(self._continent_definitions) do
 				local skip = false
 
-				if name == WorldDefinition.VEHICLES_CONTINENT_NAME and self.spawn_counter > 1 then
+				if name == WorldDefinition.VEHICLES_CONTINENT_NAME and self.counted_continents > 1 then
 					skip = true
 				end
 
@@ -132,9 +136,13 @@ function WorldDefinition:init(params)
 				end
 			end
 
+			Application:debug("[CoreWorldDefinition: COROUTINE load_statics] END")
+
 			self.load_statics_done = true
 		end)
 		self.load_dynamics = coroutine.create(function()
+			Application:debug("[CoreWorldDefinition: COROUTINE load_dynamics] STARTED")
+
 			if self._definition.dynamics then
 				for _, values in ipairs(self._definition.dynamics) do
 					values.unit_data.package = values.unit_data.package or self._definition.package
@@ -164,6 +172,8 @@ function WorldDefinition:init(params)
 				end
 			end
 
+			Application:debug("[CoreWorldDefinition: COROUTINE load_dynamics] END")
+
 			self.load_dynamics_done = true
 		end)
 	end
@@ -171,14 +181,8 @@ function WorldDefinition:init(params)
 	self._offset = nil
 	self._return_data = nil
 
-	if self.is_streamed_world then
-		for _, package in ipairs(self._loaded_packages) do
-			-- block empty
-		end
-
-		if not WorldDefinition.ASYNC_CALLBACKS then
-			self.is_prepared = true
-		end
+	if self.is_streamed_world and not WorldDefinition.ASYNC_CALLBACKS then
+		self.is_prepared = true
 	end
 
 	if self._world_id == 0 then
@@ -300,7 +304,7 @@ function WorldDefinition:_add_translation()
 		return
 	end
 
-	Application:debug("[WorldDefinition:_add_translation()] Adding transaltion", inspect(self._translation))
+	Application:debug("[WorldDefinition:_add_translation()] Adding translation", inspect(self._translation))
 	self:_translate_unit_entries(self._definition.wires)
 	self:_translate_entries(self._definition.environment.effects)
 	self:_translate_entries(self._definition.environment.environment_areas)
@@ -624,8 +628,12 @@ function WorldDefinition:parse_continents(node, t)
 						Application:error("Continent file " .. path .. ".continent doesnt exist.")
 					end
 				end
+			else
+				Application:debug("[WorldDefinition:parse_continents] Added to excluded continents (Via excluded continent)", name)
 			end
 		else
+			Application:debug("[WorldDefinition:parse_continents] Added to excluded continents (Via editor only)", name)
+
 			self._excluded_continents[name] = true
 		end
 	end
@@ -692,7 +700,7 @@ function WorldDefinition:_insert_instances()
 			for i, instance in ipairs(data.instances) do
 				local skip = false
 
-				if instance.continent == WorldDefinition.VEHICLES_CONTINENT_NAME and self.spawn_counter > 1 then
+				if instance.continent == WorldDefinition.VEHICLES_CONTINENT_NAME and self.counted_continents > 1 then
 					skip = true
 				end
 
@@ -747,12 +755,6 @@ function WorldDefinition:_continent_editor_only(data)
 end
 
 function WorldDefinition:init_done()
-	if self._continent_init_packages then
-		for _, package in ipairs(self._continent_init_packages) do
-			-- block empty
-		end
-	end
-
 	self._continent_definitions = nil
 	self._definition = nil
 	self.is_created = true
@@ -846,7 +848,7 @@ function WorldDefinition:create(layer, offset, world_in_world, nav_graph_loaded)
 	Application:check_termination()
 
 	if layer == "ai_settings" or layer == "all" then
-		Application:debug("[WorldDefinition:create()] loading AI settengs")
+		Application:debug("[WorldDefinition:create] loading AI settengs")
 
 		if self._definition.ai_settings then
 			return_data = self:_load_ai_settings(self._definition.ai_settings, offset)
@@ -1214,6 +1216,10 @@ function WorldDefinition:_create_massunit(data, offset)
 				spawn_mass = false
 
 				Application:error("[WorldDefinition:_create_massunit] Cannot spawn massunit '" .. tostring(path) .. "'")
+
+				if not table.has(self._massunit_replace_names, name:s()) then
+					managers.editor:output("Mass Unit " .. name:s() .. " does not exist")
+				end
 			end
 		end
 	end
@@ -1303,7 +1309,11 @@ function WorldDefinition:_create_environment(data, offset, world_in_world)
 		data.units = units
 	end
 
+	local had_dome_occ_texture = false
+
 	if data.dome_occ_shapes then
+		Application:info("[WorldDefinition:_create_environment] Has dome occlusion on this world finding texture...")
+
 		if #data.dome_occ_shapes > 1 then
 			Application:warn("[WorldDefinition:_create_environment] Only one instance of dome occluder shapes will be used. This world has multiple.", #data.dome_occ_shapes)
 		end
@@ -1313,14 +1323,22 @@ function WorldDefinition:_create_environment(data, offset, world_in_world)
 		if shape_data then
 			local corner = shape_data.position
 			local size = Vector3(shape_data.depth, shape_data.width, shape_data.height)
-			local texture_name = self:world_dir() .. "cube_lights/" .. "dome_occlusion"
+			local texture_name = self:world_dir() .. "cube_lights/dome_occlusion"
 
 			if not DB:has(Idstring("texture"), Idstring(texture_name)) then
-				Application:error("Dome occlusion texture doesn't exists, probably needs to be generated", texture_name)
+				Application:error("[WorldDefinition:_create_environment] Dome occlusion texture doesn't exists, probably needs to be generated", texture_name)
 			else
+				Application:info("[WorldDefinition:_create_environment] Applying dome", texture_name)
 				managers.environment_controller:set_dome_occ_params(corner, size, texture_name)
+
+				had_dome_occ_texture = true
 			end
 		end
+	end
+
+	if not had_dome_occ_texture then
+		Application:warn("[WorldDefinition:_create_environment] No dome occlusion on this world, Either not generated or no dome occ shapes.")
+		managers.environment_controller:set_dome_occ_default()
 	end
 end
 
@@ -1452,25 +1470,21 @@ function WorldDefinition:make_unit(data, offset, world_in_world, continent_name)
 		need_sync = true
 
 		if not is_editor and Network:is_client() then
-			local found = false
+			if self._temp_units_synced[data.unit_id] then
+				local sync_data = self._temp_units_synced[data.unit_id]
 
-			for _, u in ipairs(self._temp_units_synced) do
-				if u.synced_editor_id == data.unit_id then
-					unit = managers.worldcollection:get_unit_with_real_id(u.unit_id)
+				unit = managers.worldcollection:get_unit_with_real_id(sync_data.unit_id)
 
-					if unit then
-						data.need_sync = true
+				if unit then
+					data.dropin = sync_data.dropin
 
-						self:assign_unit_data(unit, data, world_in_world)
+					self:assign_unit_data(unit, data, world_in_world)
 
-						found = true
-						u.found_unit = unit
-					end
+					self._temp_units_synced[data.unit_id] = nil
 				end
-			end
-
-			if not found then
-				table.insert(self._temp_units, data)
+			else
+				data.world_in_world = world_in_world
+				self._temp_units[data.unit_id] = data
 			end
 
 			return nil
@@ -1507,27 +1521,25 @@ function WorldDefinition:make_unit(data, offset, world_in_world, continent_name)
 		managers.network:session():send_to_peers_synched("sync_unit_data", unit, self._world_id, unit:editor_id())
 	end
 
+	if is_editor and Global.running_simulation and unit:unit_data().only_visible_in_editor then
+		managers.editor:set_unit_visible(unit, false)
+	end
+
 	return unit
 end
 
 function WorldDefinition:sync_unit_data(unit, editor_id)
-	local found = false
+	if self._temp_units[editor_id] then
+		local data = self._temp_units[editor_id]
 
-	for _, data in ipairs(self._temp_units) do
-		if data.unit_id == editor_id then
-			found = true
-			data.found_unit = unit
+		self:assign_unit_data(unit, data, data.world_in_world)
+		self:use_me(unit, Application:editor())
 
-			self:assign_unit_data(unit, data)
-			self:use_me(unit, Application:editor())
-		end
-	end
-
-	if not found then
-		table.insert(self._temp_units_synced, {
-			synced_editor_id = editor_id,
+		self._temp_units[editor_id] = nil
+	else
+		self._temp_units_synced[editor_id] = {
 			unit_id = unit:id(),
-		})
+		}
 	end
 end
 
@@ -1655,7 +1667,7 @@ function WorldDefinition:setup_lights(...)
 end
 
 function WorldDefinition:_setup_variations(unit, data)
-	if not data.found_unit and data.need_sync then
+	if data.dropin then
 		return
 	end
 
@@ -1974,15 +1986,15 @@ function WorldDefinition:register_spawned_unit(unit)
 end
 
 function WorldDefinition:cleanup_spawned_units(unit)
-	local new_spawend_units = {}
+	local new_spawned_units = {}
 
 	for _, unit in ipairs(self._spawned_units) do
 		if alive(unit) then
-			table.insert(new_spawend_units, unit)
+			table.insert(new_spawned_units, unit)
 		end
 	end
 
-	self._spawned_units = new_spawend_units
+	self._spawned_units = new_spawned_units
 	self._next_cleanup_t = Application:time() + 5
 end
 
@@ -2186,11 +2198,10 @@ function WorldDefinition:_load_package(package)
 end
 
 function WorldDefinition:sync_unit_reference_data(unit_id, editor_id)
-	table.insert(self._temp_units_synced, {
+	self._temp_units_synced[editor_id] = {
 		dropin = true,
-		synced_editor_id = editor_id,
 		unit_id = unit_id,
-	})
+	}
 end
 
 function WorldDefinition:next_key()

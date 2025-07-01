@@ -392,6 +392,10 @@ function SentryGunBrain:_select_focus_attention(t)
 			total_weight = total_weight * attention_info.settings.weight_mul
 		end
 
+		if self._tweak_data.shoot_ai_weight and attention_info.is_person and not attention_info.is_human_player then
+			total_weight = total_weight * self._tweak_data.shoot_ai_weight
+		end
+
 		local dis = mvec3_dir(tmp_vec1, current_pos, attention_info.m_head_pos)
 		local dis_weight = math_max(0, (max_dis - dis) / max_dis)
 
@@ -411,10 +415,6 @@ function SentryGunBrain:_select_focus_attention(t)
 	for u_key, attention_info in pairs(self._detected_attention_objects) do
 		local weight = _get_weight(attention_info)
 
-		if not self._tweak_data.can_shoot_at_AI and attention_info.is_person and not attention_info.is_human_player then
-			weight = nil
-		end
-
 		if weight and (best_focus_reaction < attention_info.reaction or best_focus_reaction == attention_info.reaction and (not best_focus_weight or best_focus_weight < weight)) then
 			best_focus_weight = weight
 			best_focus_attention = attention_info
@@ -424,14 +424,12 @@ function SentryGunBrain:_select_focus_attention(t)
 
 	if current_focus ~= best_focus_attention then
 		if best_focus_attention then
-			local attention_data = {
+			self._ext_movement:set_attention({
 				handler = best_focus_attention.handler,
 				reaction = best_focus_attention.reaction,
 				u_key = best_focus_attention.u_key,
 				unit = best_focus_attention.unit,
-			}
-
-			self._ext_movement:set_attention(attention_data)
+			})
 		else
 			self._ext_movement:set_attention()
 		end

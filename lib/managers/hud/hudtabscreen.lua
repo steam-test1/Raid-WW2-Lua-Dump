@@ -958,7 +958,7 @@ function HUDTabScreen:_refresh_card_info()
 	else
 		self._empty_card_panel:set_visible(false)
 		self._active_card_panel:set_visible(true)
-		self._active_card:set_card(active_card)
+		self._active_card:set_card_details(active_card)
 
 		local active_card_title = self._active_card_panel:child("active_card_title")
 
@@ -1060,8 +1060,6 @@ function HUDTabScreen:show()
 	self:_refresh_loot_info()
 	self:_refresh_card_info()
 	self:_refresh_weapon_challenge_info()
-
-	local current_level = self:_get_current_player_level()
 
 	if self:_current_level_has_map() then
 		self._map:show()
@@ -1169,6 +1167,8 @@ function HUDTabScreen:update()
 	if self._progression_timer_shown and not managers.progression:have_pending_missions_to_unlock() then
 		self:_set_progress_timer_value()
 	end
+
+	self._map:update()
 end
 
 function HUDTabScreen:hide()
@@ -1205,6 +1205,10 @@ end
 
 function HUDTabScreen:peer_exit_vehicle(peer_id)
 	self._map:peer_exit_vehicle(peer_id)
+end
+
+function HUDTabScreen:set_map_location(location_id)
+	self._map:set_location(location_id)
 end
 
 function HUDTabScreen:is_shown()

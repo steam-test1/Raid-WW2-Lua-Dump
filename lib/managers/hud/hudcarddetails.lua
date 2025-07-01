@@ -54,7 +54,7 @@ function HUDCardDetails:_create_card()
 		panel = self._card_panel,
 	}
 
-	self._card = self._card_panel:create_custom_control(RaidGUIControlCardBase, card_params)
+	self._preview_card = self._card_panel:create_custom_control(RaidGUIControlCardBase, card_params)
 end
 
 function HUDCardDetails:_create_bonus()
@@ -133,8 +133,8 @@ function HUDCardDetails:_create_malus()
 	self._malus_text = self._malus_panel:text(malus_text_params)
 end
 
-function HUDCardDetails:set_card(card)
-	self._card:set_card(card)
+function HUDCardDetails:set_card_details(card)
+	self._preview_card:set_card(card)
 
 	if card and card.effects then
 		local bonus_description, malus_description = managers.challenge_cards:get_card_description(card.key_name)

@@ -2,6 +2,7 @@ SubtitlesTweakData = SubtitlesTweakData or class()
 
 function SubtitlesTweakData:init()
 	self:_init_intro_video()
+	self:_init_credits_video()
 	self:_init_mission_brief_a1()
 	self:_init_mission_brief_a2()
 	self:_init_mission_brief_a3()
@@ -144,42 +145,42 @@ function SubtitlesTweakData:_init_intro_video()
 	}
 end
 
-function SubtitlesTweakData:_init_mission_brief_a3()
+function SubtitlesTweakData:_init_credits_video()
 	self["05_credits_v003"] = {
 		{
 			id = "01_credits_001",
-			length = 2,
+			length = 4.5,
 			time = 0,
 		},
 		{
 			id = "01_credits_002",
-			length = 4,
-			time = 2,
+			length = 3,
+			time = 4.5,
 		},
 		{
 			id = "01_credits_003",
-			length = 6,
-			time = 2,
+			length = 3,
+			time = 7.5,
 		},
 		{
 			id = "01_credits_004",
-			length = 8,
-			time = 2,
+			length = 2,
+			time = 10.5,
 		},
 		{
 			id = "01_credits_005",
-			length = 10,
-			time = 2,
+			length = 4,
+			time = 12.5,
 		},
 		{
 			id = "01_credits_006",
-			length = 12,
-			time = 2,
+			length = 4.5,
+			time = 16.5,
 		},
 		{
 			id = "01_credits_007",
-			length = 14,
-			time = 2,
+			length = 4.5,
+			time = 21,
 		},
 	}
 end

@@ -184,10 +184,10 @@ function RaidGuiControlKeyBind:_key_press(o, key, input_id, no_add)
 		end
 	end
 
-	local button_category = MenuCustomizeControllerCreator.CONTROLS_INFO[self._keybind_params.button].category
+	local button_category = RaidMenuOptionsControlsKeybinds.CONTROLS_INFO[self._keybind_params.button].category
 	local connections = managers.controller:get_settings(managers.controller:get_default_wrapper_type()):get_connection_map()
 
-	for _, name in ipairs(MenuCustomizeControllerCreator.controls_info_by_category(button_category)) do
+	for _, name in ipairs(RaidMenuOptionsControlsKeybinds.controls_info_by_category(button_category)) do
 		local connection = connections[name]
 
 		if connection._btn_connections then
@@ -195,7 +195,7 @@ function RaidGuiControlKeyBind:_key_press(o, key, input_id, no_add)
 				if btn_connection.name == key_name and self._keybind_params.binding ~= btn_connection.name then
 					managers.menu:show_key_binding_collision({
 						KEY = key_name,
-						MAPPED = managers.localization:text(MenuCustomizeControllerCreator.CONTROLS_INFO[name].text_id),
+						MAPPED = managers.localization:text(RaidMenuOptionsControlsKeybinds.CONTROLS_INFO[name].text_id),
 					})
 					self:_end_customize_controller(o, true)
 
@@ -207,7 +207,7 @@ function RaidGuiControlKeyBind:_key_press(o, key, input_id, no_add)
 				if tostring(b_name) == key_name and self._keybind_params.binding ~= b_name then
 					managers.menu:show_key_binding_collision({
 						KEY = key_name,
-						MAPPED = managers.localization:text(MenuCustomizeControllerCreator.CONTROLS_INFO[name].text_id),
+						MAPPED = managers.localization:text(RaidMenuOptionsControlsKeybinds.CONTROLS_INFO[name].text_id),
 					})
 					self:_end_customize_controller(o, true)
 

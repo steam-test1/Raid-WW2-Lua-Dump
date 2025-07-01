@@ -1326,7 +1326,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.british_ace_jacket_001_upper.path_icon_large = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_large_upper_hud"
 	self.customizations.british_ace_jacket_001_upper.path_fps_hands = "units/vanilla/characters/players/generic/ace_jacket/player_generic_ace_jacket_fp"
 	self.customizations.british_ace_jacket_001_upper.redeem_xp = 0
-	self.customizations.british_ace_jacket_001_upper.rarity = LootDropTweakData.RARITY_HALLOWEEN_2017
+	self.customizations.british_ace_jacket_001_upper.rarity = LootDropTweakData.RARITY_HALLOWEEN
 	self.customizations.british_ace_jacket_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
 	self.customizations.british_ace_jacket_001_upper.droppable = true
 	self.customizations.british_ace_jacket_001_upper.is_challenge_reward = true
@@ -1342,7 +1342,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.british_ace_jacket_001_lower.path_icon = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_lower_hud"
 	self.customizations.british_ace_jacket_001_lower.path_icon_large = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_large_lower_hud"
 	self.customizations.british_ace_jacket_001_lower.redeem_xp = 0
-	self.customizations.british_ace_jacket_001_lower.rarity = LootDropTweakData.RARITY_HALLOWEEN_2017
+	self.customizations.british_ace_jacket_001_lower.rarity = LootDropTweakData.RARITY_HALLOWEEN
 	self.customizations.british_ace_jacket_001_lower.droppable = true
 	self.customizations.british_ace_jacket_001_lower.is_challenge_reward = true
 	self.customizations.german_ace_jacket_001_upper = {}
@@ -1357,7 +1357,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.german_ace_jacket_001_upper.path_icon_large = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_large_upper_hud"
 	self.customizations.german_ace_jacket_001_upper.path_fps_hands = "units/vanilla/characters/players/generic/ace_jacket/player_generic_ace_jacket_fp"
 	self.customizations.german_ace_jacket_001_upper.redeem_xp = 0
-	self.customizations.german_ace_jacket_001_upper.rarity = LootDropTweakData.RARITY_HALLOWEEN_2017
+	self.customizations.german_ace_jacket_001_upper.rarity = LootDropTweakData.RARITY_HALLOWEEN
 	self.customizations.german_ace_jacket_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
 	self.customizations.german_ace_jacket_001_upper.droppable = true
 	self.customizations.german_ace_jacket_001_upper.is_challenge_reward = true
@@ -1373,7 +1373,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.german_ace_jacket_001_lower.path_icon = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_lower_hud"
 	self.customizations.german_ace_jacket_001_lower.path_icon_large = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_large_lower_hud"
 	self.customizations.german_ace_jacket_001_lower.redeem_xp = 0
-	self.customizations.german_ace_jacket_001_lower.rarity = LootDropTweakData.RARITY_HALLOWEEN_2017
+	self.customizations.german_ace_jacket_001_lower.rarity = LootDropTweakData.RARITY_HALLOWEEN
 	self.customizations.german_ace_jacket_001_lower.droppable = true
 	self.customizations.german_ace_jacket_001_lower.is_challenge_reward = true
 	self.customizations.russian_ace_jacket_001_upper = {}
@@ -1388,7 +1388,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.russian_ace_jacket_001_upper.path_icon_large = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_large_upper_hud"
 	self.customizations.russian_ace_jacket_001_upper.path_fps_hands = "units/vanilla/characters/players/generic/ace_jacket/player_generic_ace_jacket_fp"
 	self.customizations.russian_ace_jacket_001_upper.redeem_xp = 0
-	self.customizations.russian_ace_jacket_001_upper.rarity = LootDropTweakData.RARITY_HALLOWEEN_2017
+	self.customizations.russian_ace_jacket_001_upper.rarity = LootDropTweakData.RARITY_HALLOWEEN
 	self.customizations.russian_ace_jacket_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
 	self.customizations.russian_ace_jacket_001_upper.droppable = true
 	self.customizations.russian_ace_jacket_001_upper.is_challenge_reward = true
@@ -1404,7 +1404,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.russian_ace_jacket_001_lower.path_icon = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_lower_hud"
 	self.customizations.russian_ace_jacket_001_lower.path_icon_large = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_large_lower_hud"
 	self.customizations.russian_ace_jacket_001_lower.redeem_xp = 0
-	self.customizations.russian_ace_jacket_001_lower.rarity = LootDropTweakData.RARITY_HALLOWEEN_2017
+	self.customizations.russian_ace_jacket_001_lower.rarity = LootDropTweakData.RARITY_HALLOWEEN
 	self.customizations.russian_ace_jacket_001_lower.droppable = true
 	self.customizations.russian_ace_jacket_001_lower.is_challenge_reward = true
 	self.customizations.american_ace_jacket_001_upper = {}
@@ -1419,7 +1419,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.american_ace_jacket_001_upper.path_icon_large = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_large_upper_hud"
 	self.customizations.american_ace_jacket_001_upper.path_fps_hands = "units/vanilla/characters/players/generic/ace_jacket/player_generic_ace_jacket_fp"
 	self.customizations.american_ace_jacket_001_upper.redeem_xp = 0
-	self.customizations.american_ace_jacket_001_upper.rarity = LootDropTweakData.RARITY_HALLOWEEN_2017
+	self.customizations.american_ace_jacket_001_upper.rarity = LootDropTweakData.RARITY_HALLOWEEN
 	self.customizations.american_ace_jacket_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
 	self.customizations.american_ace_jacket_001_upper.droppable = true
 	self.customizations.american_ace_jacket_001_upper.is_challenge_reward = true
@@ -1435,7 +1435,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.american_ace_jacket_001_lower.path_icon = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_lower_hud"
 	self.customizations.american_ace_jacket_001_lower.path_icon_large = "units/vanilla/characters/players/generic/ace_jacket/player_ace_jacket_large_lower_hud"
 	self.customizations.american_ace_jacket_001_lower.redeem_xp = 0
-	self.customizations.american_ace_jacket_001_lower.rarity = LootDropTweakData.RARITY_HALLOWEEN_2017
+	self.customizations.american_ace_jacket_001_lower.rarity = LootDropTweakData.RARITY_HALLOWEEN
 	self.customizations.american_ace_jacket_001_lower.droppable = true
 	self.customizations.american_ace_jacket_001_lower.is_challenge_reward = true
 	self.customizations.british_bomber_jacket_001_upper = {}

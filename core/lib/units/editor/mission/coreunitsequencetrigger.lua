@@ -142,10 +142,20 @@ function CoreUnitSequenceTriggerUnitElement:_check_add_unit(unit)
 	local sequences = managers.sequence:get_sequence_list(unit:name())
 
 	if #sequences > 0 then
+		local default_sequence = "none"
+
+		for _, seqid in ipairs(sequences) do
+			if seqid == "interact" then
+				default_sequence = seqid
+
+				break
+			end
+		end
+
 		self._sequence_units[unit:unit_data().unit_id] = unit
 
 		local sequence_list_data = {
-			sequence = "none",
+			sequence = default_sequence,
 			unit_id = unit:unit_data().unit_id,
 		}
 

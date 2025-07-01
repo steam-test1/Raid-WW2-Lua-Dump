@@ -131,7 +131,6 @@ function GoldAssetStoreGui:_layout()
 		name = "info_label",
 		text = self:translate("grid_item_insuficient_gold_label", true),
 		visible = false,
-		x = 0,
 	})
 
 	local x1, y1, w1, h1 = self._info_label:text_rect()

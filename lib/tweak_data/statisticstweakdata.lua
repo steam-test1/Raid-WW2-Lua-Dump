@@ -218,6 +218,7 @@ function StatisticsTweakData:statistics_table()
 		"betty",
 		"gold_bar",
 		"anti_tank",
+		"thermite",
 	}
 	local enemy_list = {
 		"german_black_waffen_sentry_gasmask",

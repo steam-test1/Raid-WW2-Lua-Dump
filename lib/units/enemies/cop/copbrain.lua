@@ -136,6 +136,12 @@ logic_variants.phalanx_vip = clone(logic_variants.shield)
 logic_variants.phalanx_vip.phalanx = CopLogicPhalanxVip
 logic_variants.tank.attack = TankCopLogicAttack
 logic_variants.tank_hw = logic_variants.tank
+logic_variants.fb_german_commander_boss = security_variant
+logic_variants.fb_german_commander_boss.intimidated = nil
+logic_variants.fb_german_commander_boss.flee = nil
+logic_variants.fb_german_commander = security_variant
+logic_variants.fb_german_commander.intimidated = nil
+logic_variants.fb_german_commander.flee = nil
 security_variant = nil
 CopBrain._logic_variants = logic_variants
 logic_varaints = nil
@@ -944,7 +950,7 @@ function CopBrain:on_suppressed(state)
 	if self._current_logic.on_suppressed_state then
 		self._current_logic.on_suppressed_state(self._logic_data)
 
-		if state and self._logic_data.char_tweak.chatter.suppress then
+		if state and self._logic_data.char_tweak.chatter.suppress and not self._unit:sound():speaking() then
 			self._unit:sound():say("help", true)
 		end
 	end

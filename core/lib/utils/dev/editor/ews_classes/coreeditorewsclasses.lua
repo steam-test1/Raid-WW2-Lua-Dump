@@ -1748,14 +1748,14 @@ end
 MoveTransformTypeIn = MoveTransformTypeIn or class(CoreEditorEwsDialog)
 
 function MoveTransformTypeIn:init()
-	CoreEditorEwsDialog.init(self, nil, "Move transform type-in", "", Vector3(761, 67, 0), Vector3(320, 180, 0), managers.editor:format_dialog_styles("DEFAULT_DIALOG_STYLE,RESIZE_BORDER"))
-	self._dialog:set_min_size(Vector3(320, 180, 0))
+	CoreEditorEwsDialog.init(self, nil, "Move transform type-in", "", Vector3(761, 67, 0), Vector3(500, 180, 0), managers.editor:format_dialog_styles("DEFAULT_DIALOG_STYLE,RESIZE_BORDER"))
+	self._dialog:set_min_size(Vector3(480, 180, 0))
 	self:create_panel("HORIZONTAL")
 
 	self._min = -100000000
 	self._max = 100000000
 
-	local world_sizer = EWS:StaticBoxSizer(self._panel, "VERTICAL", "Absolut:World")
+	local world_sizer = EWS:StaticBoxSizer(self._panel, "VERTICAL", "World Position")
 
 	self._ax = self:_create_ctrl("X:", "x", 0, "absolut", world_sizer)
 	self._ay = self:_create_ctrl("Y:", "y", 0, "absolut", world_sizer)
@@ -1770,6 +1770,18 @@ function MoveTransformTypeIn:init()
 	self._oz = self:_create_ctrl("Z:", "z", 0, "offset", offset_sizer)
 
 	self._panel_sizer:add(offset_sizer, 1, 4, "EXPAND,LEFT")
+
+	local actions_sizer = EWS:StaticBoxSizer(self._panel, "VERTICAL", "Actions")
+	local copy_btn = EWS:Button(self._panel, "Copy", "", "")
+
+	copy_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_copy"), "")
+	actions_sizer:add(copy_btn, 0, 1, "EXPAND,LEFT")
+
+	local paste_btn = EWS:Button(self._panel, "Paste", "", "")
+
+	paste_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_paste"), "")
+	actions_sizer:add(paste_btn, 0, 1, "EXPAND,LEFT")
+	self._panel_sizer:add(actions_sizer, 1, 4, "EXPAND,LEFT")
 	self._dialog_sizer:add(self._panel, 1, 5, "EXPAND,ALL")
 	self._panel:set_enabled(false)
 end
@@ -1879,6 +1891,18 @@ function MoveTransformTypeIn:update_offset(data, event)
 	end
 end
 
+function MoveTransformTypeIn:on_copy()
+	if alive(self._unit) then
+		self._clipboard_position = self._unit:position()
+	end
+end
+
+function MoveTransformTypeIn:on_paste()
+	if alive(self._unit) and self._clipboard_position then
+		managers.editor:set_selected_units_position(self._clipboard_position)
+	end
+end
+
 function MoveTransformTypeIn:set_unit(unit)
 	self._unit = unit
 
@@ -1906,8 +1930,8 @@ end
 RotateTransformTypeIn = RotateTransformTypeIn or class(CoreEditorEwsDialog)
 
 function RotateTransformTypeIn:init()
-	CoreEditorEwsDialog.init(self, nil, "Rotate transform type-in", "", Vector3(761, 180, 0), Vector3(320, 180, 0), managers.editor:format_dialog_styles("DEFAULT_DIALOG_STYLE,RESIZE_BORDER"))
-	self._dialog:set_min_size(Vector3(320, 180, 0))
+	CoreEditorEwsDialog.init(self, nil, "Rotate transform type-in", "", Vector3(761, 180, 0), Vector3(500, 180, 0), managers.editor:format_dialog_styles("DEFAULT_DIALOG_STYLE,RESIZE_BORDER"))
+	self._dialog:set_min_size(Vector3(480, 180, 0))
 	self:create_panel("HORIZONTAL")
 
 	self._min = -100000000
@@ -1928,6 +1952,18 @@ function RotateTransformTypeIn:init()
 	self._oz = self:_create_ctrl("Z:", "z", 0, "offset", offset_sizer)
 
 	self._panel_sizer:add(offset_sizer, 1, 4, "EXPAND,LEFT")
+
+	local actions_sizer = EWS:StaticBoxSizer(self._panel, "VERTICAL", "Actions")
+	local copy_btn = EWS:Button(self._panel, "Copy", "", "")
+
+	copy_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_copy"), "")
+	actions_sizer:add(copy_btn, 0, 1, "EXPAND,LEFT")
+
+	local paste_btn = EWS:Button(self._panel, "Paste", "", "")
+
+	paste_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "on_paste"), "")
+	actions_sizer:add(paste_btn, 0, 1, "EXPAND,LEFT")
+	self._panel_sizer:add(actions_sizer, 1, 4, "EXPAND,LEFT")
 	self._dialog_sizer:add(self._panel, 1, 5, "EXPAND,ALL")
 	self._panel:set_enabled(false)
 end
@@ -2038,6 +2074,18 @@ function RotateTransformTypeIn:update_offset(data, event)
 		managers.editor:set_selected_units_rotation(rot)
 		data.ctrl:change_value(0)
 		data.ctrl:set_selection(-1, -1)
+	end
+end
+
+function RotateTransformTypeIn:on_copy()
+	if alive(self._unit) then
+		self._clipboard_rotation = self._unit:rotation()
+	end
+end
+
+function RotateTransformTypeIn:on_paste()
+	if alive(self._unit) and self._clipboard_rotation then
+		managers.editor:set_selected_units_rotation(self._clipboard_rotation * self._unit:rotation():inverse())
 	end
 end
 

@@ -1,4 +1,6 @@
 RaidGUIControlListItem = RaidGUIControlListItem or class(RaidGUIControl)
+RaidGUIControlListItem.LABEL_FONT = tweak_data.gui.fonts.din_compressed
+RaidGUIControlListItem.LABEL_FONT_SIZE = tweak_data.gui.font_sizes.menu_list
 
 function RaidGUIControlListItem:init(parent, params, data)
 	RaidGUIControlListItem.super.init(self, parent, params)
@@ -20,15 +22,14 @@ function RaidGUIControlListItem:init(parent, params, data)
 	})
 	self._item_label = self._object:label({
 		color = params.color or tweak_data.gui.colors.raid_white,
-		font = self._params.item_font or tweak_data.gui.fonts.din_compressed,
-		font_size = self._params.item_font_size or tweak_data.gui.font_sizes.menu_list,
+		font = self._params.item_font or self.LABEL_FONT,
+		font_size = self._params.item_font_size or self.LABEL_FONT_SIZE,
 		h = params.h,
 		name = "list_item_label_" .. self._name,
 		text = data.text,
 		vertical = "center",
 		w = params.w,
 		x = 32,
-		y = 0,
 	})
 	self._item_background = self._object:rect({
 		color = tweak_data.gui.colors.raid_list_background,

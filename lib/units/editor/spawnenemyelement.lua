@@ -23,6 +23,7 @@ function SpawnEnemyUnitElement:init(unit)
 	self._hed.participate_to_group_ai = true
 	self._hed.interval = 5
 	self._hed.amount = 0
+	self._hed.forbid_seen = false
 	self._hed.accessibility = "any"
 	self._hed.voice = 0
 	self._hed.team = "default"
@@ -34,6 +35,7 @@ function SpawnEnemyUnitElement:init(unit)
 	table.insert(self._save_values, "participate_to_group_ai")
 	table.insert(self._save_values, "interval")
 	table.insert(self._save_values, "amount")
+	table.insert(self._save_values, "forbid_seen")
 	table.insert(self._save_values, "accessibility")
 	table.insert(self._save_values, "voice")
 end
@@ -130,6 +132,15 @@ function SpawnEnemyUnitElement:_build_panel(panel, panel_sizer)
 	toolbar:connect("ADD_UNIT_LIST", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "_reload_unit_list_btn"), nil)
 	toolbar:realize()
 	enemy_sizer:add(toolbar, 0, 0, "EXPAND,LEFT")
+
+	local forbid_seen = EWS:CheckBox(panel, "Forbid Spawn if Visible", "")
+
+	forbid_seen:set_value(self._hed.forbid_seen)
+	forbid_seen:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
+		ctrlr = forbid_seen,
+		value = "forbid_seen",
+	})
+	panel_sizer:add(forbid_seen, 0, 0, "EXPAND")
 
 	local participate_to_group_ai = EWS:CheckBox(panel, "Participate to group ai", "")
 

@@ -120,7 +120,7 @@ function DialogManager:_create_dialogue_instance(id, instigator, test)
 
 	if test then
 		nr_criminals = 4
-		char_names = managers.criminals:character_names()
+		char_names = clone(managers.criminals:character_names())
 		default_char = "british"
 	end
 
@@ -374,7 +374,7 @@ function DialogManager:do_queue_dialog(id, params, test)
 
 		dialog.params = params
 
-		if self._current_dialog.priority == dialog.priority and dialog.priority < 4 or self._current_dialog.priority > dialog.priority then
+		if self._current_dialog.priority == dialog.priority and dialog.priority < 4 or self._current_dialog.priority > dialog.priority or not alive(self._current_dialog.unit) then
 			self:_stop_dialog()
 
 			self._current_dialog = dialog

@@ -14,7 +14,7 @@ LootDropTweakData.RARITY_NONE = "loot_rarity_none"
 LootDropTweakData.RARITY_COMMON = "loot_rarity_common"
 LootDropTweakData.RARITY_UNCOMMON = "loot_rarity_uncommon"
 LootDropTweakData.RARITY_RARE = "loot_rarity_rare"
-LootDropTweakData.RARITY_HALLOWEEN_2017 = "loot_rarity_halloween"
+LootDropTweakData.RARITY_HALLOWEEN = "loot_rarity_halloween"
 LootDropTweakData.RARITY_LIST = {
 	LootDropTweakData.RARITY_ALL,
 	LootDropTweakData.RARITY_DEFAULT,
@@ -22,7 +22,7 @@ LootDropTweakData.RARITY_LIST = {
 	LootDropTweakData.RARITY_UNCOMMON,
 	LootDropTweakData.RARITY_RARE,
 	LootDropTweakData.RARITY_NONE,
-	LootDropTweakData.RARITY_HALLOWEEN_2017,
+	LootDropTweakData.RARITY_HALLOWEEN,
 }
 LootDropTweakData.LOOT_VALUE_TYPE_SMALL_AMOUNT = 1
 LootDropTweakData.LOOT_VALUE_TYPE_MEDIUM_AMOUNT = 4
@@ -52,7 +52,7 @@ LootDropTweakData.RARITY_PRICES = {
 	[LootDropTweakData.RARITY_COMMON] = 150,
 	[LootDropTweakData.RARITY_UNCOMMON] = 200,
 	[LootDropTweakData.RARITY_RARE] = 250,
-	[LootDropTweakData.RARITY_HALLOWEEN_2017] = 666,
+	[LootDropTweakData.RARITY_HALLOWEEN] = 666,
 }
 
 function LootDropTweakData:init(tweak_data)
@@ -126,7 +126,7 @@ function LootDropTweakData:_init_customization_rewards()
 		reward_type = LootDropTweakData.REWARD_CUSTOMIZATION,
 	}
 	self.customization_rewards.halloween = {
-		rarity = LootDropTweakData.RARITY_HALLOWEEN_2017,
+		rarity = LootDropTweakData.RARITY_HALLOWEEN,
 		reward_type = LootDropTweakData.REWARD_CUSTOMIZATION,
 	}
 end

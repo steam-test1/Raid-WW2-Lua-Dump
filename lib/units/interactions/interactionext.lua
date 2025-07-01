@@ -293,9 +293,9 @@ function BaseInteractionExt:_show_interaction_text(custom_text_id)
 		self:set_contour("selected_color")
 	end
 
-	local details = self:_get_interaction_details()
-
 	if self._hide_interaction_prompt ~= true then
+		local details = self:_get_interaction_details()
+
 		managers.hud:show_interact({
 			details = details,
 			icon = icon,
@@ -634,9 +634,15 @@ function BaseInteractionExt:set_active(active, sync)
 		local u_id = self._unit:id()
 
 		if u_id == -1 then
-			debug_pause_unit(self._unit, "[BaseInteractionExt:set_active] could not sync interaction state.", self._unit)
+			local u_data = managers.enemy:get_corpse_unit_data_from_key(self._unit:key())
 
-			return
+			if u_data then
+				u_id = u_data.u_id
+			else
+				debug_pause_unit(self._unit, "[BaseInteractionExt:set_active] could not sync interaction state.", self._unit)
+
+				return
+			end
 		end
 
 		managers.network:session():send_to_peers_synched("interaction_set_active", self._unit, u_id, active, self.tweak_data, self._unit:contour() and self._unit:contour():is_flashing() or false)
@@ -1237,6 +1243,10 @@ function DropPodInteractionExt:interact(player)
 
 	DropPodInteractionExt.super.interact(self, player)
 
+	local spawn_location = self._unit:get_object(Idstring("spawn_location"))
+
+	managers.airdrop:spawn_unit_inside_pod(tostring(self._unit:id()), spawn_location:position(), spawn_location:rotation():yaw(), spawn_location:rotation():pitch(), spawn_location:rotation():roll())
+
 	return true
 end
 
@@ -1798,12 +1808,13 @@ function IntimitateInteractionExt:interact(player)
 			end
 		end
 
-		local u_id = self._unit:id()
+		local u_id = managers.enemy:get_corpse_unit_data_from_key(self._unit:key()).u_id
 
 		if Network:is_server() then
 			self:remove_interact()
 			self:set_active(false, true)
 			self._unit:set_slot(0)
+			managers.enemy:remove_corpse_by_id(u_id)
 			managers.network:session():send_to_peers_synched("remove_corpse_by_id", u_id, true, managers.network:session():local_peer():id())
 		else
 			managers.network:session():send_to_host("sync_interacted_by_id", u_id, self.tweak_data)
@@ -1847,9 +1858,10 @@ function IntimitateInteractionExt:sync_interacted(peer, player, status, skip_ali
 		self:remove_interact()
 		self:set_active(false, true)
 
-		local u_id = self._unit:id()
+		local u_id = managers.enemy:get_corpse_unit_data_from_key(self._unit:key()).u_id
 
 		self._unit:set_slot(0)
+		managers.enemy:remove_corpse_by_id(u_id)
 		managers.network:session():send_to_peers_synched("remove_corpse_by_id", u_id, true, peer:id())
 
 		if Network:is_server() and peer then
@@ -2001,6 +2013,8 @@ function CarryInteractionExt:sync_interacted(peer, player, status, skip_alive_ch
 
 	if Network:is_server() then
 		if self._remove_on_interact then
+			self._unit:carry_data():on_pickup()
+
 			if self._unit == managers.interaction:active_unit() then
 				self:interact_interupt(managers.player:player_unit(), false)
 			end
@@ -2463,18 +2477,17 @@ function DrivingInteractionExt:interact(player, locator)
 
 	local vehicle_ext = self._unit:vehicle_driving()
 	local success = false
-	local action = vehicle_ext:get_action_for_interaction(player:position(), locator)
 
-	Application:debug("[DrivingInteractionExt:interact] action ", action)
+	Application:debug("[DrivingInteractionExt:interact] action ", self._action)
 
-	if action == VehicleDrivingExt.INTERACT_ENTER or action == VehicleDrivingExt.INTERACT_DRIVE then
+	if self._action == VehicleDrivingExt.INTERACT_ENTER or self._action == VehicleDrivingExt.INTERACT_DRIVE then
 		success = managers.player:enter_vehicle(self._unit, locator)
-	elseif action == VehicleDrivingExt.INTERACT_LOOT then
+	elseif self._action == VehicleDrivingExt.INTERACT_LOOT then
 		success = vehicle_ext:give_vehicle_loot_to_player(managers.network:session():local_peer():id())
-	elseif action == VehicleDrivingExt.INTERACT_REPAIR then
+	elseif self._action == VehicleDrivingExt.INTERACT_REPAIR then
 		vehicle_ext:repair_vehicle(player)
 		managers.interaction:deactivate_unit()
-	elseif action == VehicleDrivingExt.INTERACT_TRUNK then
+	elseif self._action == VehicleDrivingExt.INTERACT_TRUNK then
 		vehicle_ext:interact_trunk()
 	end
 

@@ -71,7 +71,7 @@ function NpcVehicleDrivingExt:init(unit)
 end
 
 function NpcVehicleDrivingExt:activate()
-	if self._current_state:name() ~= NpcVehicleDrivingExt.STATE_BROKEN then
+	if self._current_state:name() ~= NpcVehicleDrivingExt.STATE_BROKEN and self._current_state:name() ~= NpcVehicleDrivingExt.STATE_DESTROYED then
 		self:set_state(NpcVehicleDrivingExt.STATE_PURSUIT)
 		self:start()
 	end
@@ -94,7 +94,7 @@ function NpcVehicleDrivingExt:is_chasing()
 end
 
 function NpcVehicleDrivingExt:on_vehicle_death()
-	if self._current_state:name() == NpcVehicleDrivingExt.STATE_BROKEN then
+	if self._current_state:name() ~= NpcVehicleDrivingExt.STATE_BROKEN and self._current_state:name() ~= NpcVehicleDrivingExt.STATE_DESTROYED then
 		return
 	end
 
@@ -198,7 +198,7 @@ function NpcVehicleDrivingExt:update(unit, t, dt)
 		self._debug.info:set_text("")
 	end
 
-	if self._current_state and self._current_state:name() ~= NpcBaseVehicleState.STATE_BROKEN then
+	if self._current_state and self._current_state:name() ~= NpcVehicleDrivingExt.STATE_BROKEN and self._current_state:name() ~= NpcVehicleDrivingExt.STATE_DESTROYED then
 		self._current_state:change_state(self)
 		self._current_state:handle_stuck_vehicle(self, t, dt)
 		self._current_state:update(self, t, dt)

@@ -79,7 +79,7 @@ function EventsTweakData:_init_trick_or_treat_event(tweak_data)
 		card_id = "ra_trick_or_treat",
 		challenge_id = "candy_gold_bar",
 		date = {
-			finish = 1109,
+			finish = 1110,
 			start = 1023,
 		},
 		game_logo = tweak_data.gui.icons.raid_hw_logo_small,

@@ -17,6 +17,7 @@ function PlayerSound:init(unit)
 	end
 
 	self._queue = {}
+	self._sound_callback = callback(self, self, "sound_callback")
 end
 
 function PlayerSound:destroy(unit)
@@ -160,7 +161,7 @@ function PlayerSound:say(sound_name, important_say, sync)
 
 	local ss = self._unit:sound_source()
 
-	self._last_speech = ss:post_event(sound_name or event_id, callback(self, self, "sound_callback"), self._unit, "end_of_event")
+	self._last_speech = ss:post_event(sound_name or event_id, self._sound_callback, self._unit, "end_of_event")
 	self._speaking = sound_name or event_id
 
 	return self._last_speech

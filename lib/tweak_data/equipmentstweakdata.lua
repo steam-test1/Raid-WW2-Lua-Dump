@@ -279,6 +279,16 @@ function EquipmentsTweakData:init()
 		sync_possession = true,
 		text_id = "hud_briefcase",
 	}
+	self.specials.fuel_hose = {
+		icon = "equipment_panel_fuel_full",
+		sync_possession = true,
+		text_id = "hud_fuel_hose",
+	}
+	self.specials.power_cable = {
+		icon = "equipment_panel_power_cable",
+		sync_possession = true,
+		text_id = "hud_power_cable",
+	}
 	self.max_amount = {
 		ammo_bag = 2,
 		asset_ammo_bag = 4,

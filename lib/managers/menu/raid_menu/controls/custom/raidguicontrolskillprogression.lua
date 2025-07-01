@@ -1,6 +1,6 @@
 RaidGUIControlSkillProgression = RaidGUIControlSkillProgression or class(RaidGUIControl)
 RaidGUIControlSkillProgression.DEFAULT_W = 150
-RaidGUIControlSkillProgression.DEFAULT_H = 225
+RaidGUIControlSkillProgression.DEFAULT_H = 245
 RaidGUIControlSkillProgression.FONT = tweak_data.gui.fonts.din_compressed
 RaidGUIControlSkillProgression.FONT_SIZE = tweak_data.gui.font_sizes.medium
 RaidGUIControlSkillProgression.COLOR = tweak_data.gui.colors.raid_dirty_white
@@ -229,9 +229,9 @@ end
 function RaidGUIControlSkillProgression:_init_skill_text()
 	self._progress_text = self._object:label({
 		align = "center",
-		color = RaidGUIControlSkillProgression.COLOR,
-		font = RaidGUIControlSkillProgression.FONT,
-		font_size = RaidGUIControlSkillProgression.FONT_SIZE,
+		color = self.COLOR,
+		font = self.FONT,
+		font_size = self.FONT_SIZE,
 		layer = self._object:layer() + 1,
 		name = "progress_text",
 		text = "???",
@@ -245,14 +245,16 @@ function RaidGUIControlSkillProgression:_init_skill_text()
 
 	self._progress_desc = self._object:label({
 		align = "center",
-		color = RaidGUIControlSkillProgression.DESCRIPTION_COLOR,
-		font = RaidGUIControlSkillProgression.FONT,
-		font_size = RaidGUIControlSkillProgression.DESCRIPTION_FONT_SIZE,
-		h = h,
+		color = self.DESCRIPTION_COLOR,
+		font = self.FONT,
+		font_size = self.DESCRIPTION_FONT_SIZE,
+		h = h * 2,
 		layer = self._object:layer() + 1,
 		name = "progress_desc",
 		text = "UNTIL NEXT TIER",
 		w = self._object:w(),
+		word_wrap = true,
+		wrap = true,
 	})
 
 	self._progress_desc:set_y(self._progress_text:bottom())

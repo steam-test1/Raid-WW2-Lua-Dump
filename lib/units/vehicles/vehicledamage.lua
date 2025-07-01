@@ -168,13 +168,15 @@ function VehicleDamage:damage_bullet(attack_data)
 
 	self:_health_recap(attack_data)
 
-	local occupant = self._unit:vehicle_driving():get_random_occupant(false)
+	if math.random() > 0.8 then
+		local occupant = self._unit:vehicle_driving():get_random_occupant(false)
 
-	if occupant then
-		managers.dialog:queue_dialog("gen_vehicle_taking_damage", {
-			instigator = occupant,
-			skip_idle_check = true,
-		})
+		if occupant then
+			managers.dialog:queue_dialog("gen_vehicle_taking_damage", {
+				instigator = occupant,
+				skip_idle_check = true,
+			})
+		end
 	end
 
 	local body_index = 1
@@ -670,7 +672,7 @@ end
 function VehicleDamage:_hit_direction(col_ray)
 	local local_player_vehicle = managers.player:get_vehicle()
 
-	if local_player_vehicle and self._unit == local_player_vehicle.vehicle_unit and col_ray then
+	if local_player_vehicle and local_player_vehicle.vehicle_unit == self._unit and col_ray then
 		local dir = col_ray.ray
 		local infront = math.dot(managers.player:local_player():camera():forward(), dir)
 
@@ -782,7 +784,7 @@ function VehicleDamage:_health_recap()
 		self._half_damaged_squence_played = true
 	end
 
-	if self:get_real_health() <= 0 and self._unit:vehicle_driving():get_state_name() ~= VehicleDrivingExt.STATE_BROKEN then
+	if self:get_real_health() <= 0 and self._unit:vehicle_driving():get_state_name() ~= VehicleDrivingExt.STATE_DESTROYED and self._unit:vehicle_driving():get_state_name() ~= VehicleDrivingExt.STATE_BROKEN then
 		self:die()
 	end
 end

@@ -1,6 +1,9 @@
 RaidGUIControlListItemSkillProfile = RaidGUIControlListItemSkillProfile or class(RaidGUIControl)
 RaidGUIControlListItemSkillProfile.HEIGHT = 64
-RaidGUIControlListItemSkillProfile.BACKGROUND_COLOR = tweak_data.gui.colors.list_item_background
+RaidGUIControlListItemSkillProfile.BACKGROUND_LEFT = "list_item_background_left"
+RaidGUIControlListItemSkillProfile.BACKGROUND_CENTER = "list_item_background_center"
+RaidGUIControlListItemSkillProfile.BACKGROUND_RIGHT = "list_item_background_right"
+RaidGUIControlListItemSkillProfile.BACKGROUND_COLOR = tweak_data.gui.colors.grid_item_grey
 RaidGUIControlListItemSkillProfile.PURCHASE_COLOR = tweak_data.gui.colors.raid_gold
 RaidGUIControlListItemSkillProfile.NAME_X = 16
 RaidGUIControlListItemSkillProfile.NAME_Y = 8
@@ -28,7 +31,7 @@ end
 
 function RaidGUIControlListItemSkillProfile:_layout_panel(params)
 	self._object = self._panel:panel({
-		h = self.HEIGHT,
+		h = params.h or self.HEIGHT,
 		name = "skill_profile_list_item",
 		w = params.w,
 		x = params.x,
@@ -37,10 +40,14 @@ function RaidGUIControlListItemSkillProfile:_layout_panel(params)
 end
 
 function RaidGUIControlListItemSkillProfile:_layout(params, item_data)
-	self._background = self._object:gradient({
+	self._background = self._object:three_cut_bitmap({
 		alpha = 0,
-		gradient_points = self.BACKGROUND_COLOR,
+		center = self.BACKGROUND_CENTER,
+		color = self.BACKGROUND_COLOR,
 		h = self._object:h(),
+		left = self.BACKGROUND_LEFT,
+		name = "candy_progress_bar_background",
+		right = self.BACKGROUND_RIGHT,
 		visible = false,
 		w = self._object:w(),
 	})
@@ -98,6 +105,7 @@ function RaidGUIControlListItemSkillProfile:_layout_purchasable(item_data)
 		color = self.TEXT_DISABLED_COLOR,
 		font = self.NAME_FONT,
 		font_size = self.NAME_FONT_SIZE,
+		layer = self._background:layer() + 10,
 		name = "profile_name_label",
 		text = item_data.value,
 		vertical = "center",
@@ -110,6 +118,7 @@ function RaidGUIControlListItemSkillProfile:_layout_purchasable(item_data)
 		fit_text = true,
 		font = self.PURCHASE_VALUE_FONT,
 		font_size = self.PURCHASE_VALUE_FONT_SIZE,
+		layer = self._background:layer() + 10,
 		name = "profile_name_label",
 		text = purchase_cost,
 		vertical = "center",
@@ -123,6 +132,7 @@ function RaidGUIControlListItemSkillProfile:_layout_purchasable(item_data)
 	self._gold_icon = self._object:image({
 		color = self.PURCHASE_COLOR,
 		h = 25,
+		layer = self._background:layer() + 10,
 		name = "profile_gold_icon",
 		texture = gold_amount_footer.texture,
 		texture_rect = gold_amount_footer.texture_rect,

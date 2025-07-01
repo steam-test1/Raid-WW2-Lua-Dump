@@ -697,62 +697,6 @@ function CopActionWalk._calculate_shortened_path(path)
 	end
 end
 
-local diagonals = {
-	tmp_vec1,
-	tmp_vec2,
-}
-
-function CopActionWalk._apply_padding_to_simplified_path(path)
-	local dim_mag = 212.132
-
-	mvector3.set_static(tmp_vec1, dim_mag, dim_mag, 0)
-	mvector3.set_static(tmp_vec2, dim_mag, -dim_mag, 0)
-
-	local index = 2
-	local offset = tmp_vec3
-	local to_pos = tmp_vec4
-
-	while index < #path do
-		local pos = path[index]
-
-		if pos.x then
-			for _, diagonal in ipairs(diagonals) do
-				mvec3_set(to_pos, pos)
-				mvec3_add(to_pos, diagonal)
-
-				local col_pos, trace = CopActionWalk._chk_shortcut_pos_to_pos(pos, to_pos, true)
-
-				mvec3_set(offset, trace[1])
-				mvec3_set(to_pos, pos)
-				mvec3_mul(diagonal, -1)
-				mvec3_add(to_pos, diagonal)
-
-				col_pos, trace = CopActionWalk._chk_shortcut_pos_to_pos(pos, to_pos, true)
-
-				mvec3_lerp(offset, offset, trace[1], 0.5)
-
-				local ray_fwd = CopActionWalk._chk_shortcut_pos_to_pos(offset, CopActionWalk._nav_point_pos(path[index + 1]))
-
-				if ray_fwd then
-					break
-				else
-					local ray_bwd = CopActionWalk._chk_shortcut_pos_to_pos(offset, CopActionWalk._nav_point_pos(path[index - 1]))
-
-					if ray_bwd then
-						break
-					end
-				end
-
-				mvec3_set(pos, offset)
-			end
-
-			index = index + 1
-		else
-			index = index + 2
-		end
-	end
-end
-
 local raycast_params = {}
 
 function CopActionWalk:_calculate_curved_path(path, index, curvature_factor, enter_dir)
@@ -869,6 +813,96 @@ function CopActionWalk:_calculate_curved_path(path, index, curvature_factor, ent
 	end
 
 	return curved_path
+end
+
+function CopActionWalk._calculate_simplified_path(good_pos, original_path, nr_iterations, z_test, apply_padding)
+	local simplified_path = {
+		good_pos,
+	}
+	local original_path_size = #original_path
+
+	for i_nav_point, nav_point in ipairs(original_path) do
+		if nav_point.x and i_nav_point ~= original_path_size and (i_nav_point == 1 or simplified_path[#simplified_path].x) then
+			local pos_from = simplified_path[#simplified_path]
+			local pos_to = CopActionWalk._nav_point_pos(original_path[i_nav_point + 1])
+			local add_point = z_test and math.abs(nav_point.z - pos_from.z - (nav_point.z - pos_to.z)) > 60
+
+			add_point = add_point or CopActionWalk._chk_shortcut_pos_to_pos(pos_from, pos_to)
+
+			if add_point then
+				table.insert(simplified_path, mvec3_cpy(nav_point))
+			end
+		else
+			table.insert(simplified_path, nav_point)
+		end
+	end
+
+	if apply_padding and #simplified_path > 2 then
+		CopActionWalk._apply_padding_to_simplified_path(simplified_path)
+		CopActionWalk._calculate_shortened_path(simplified_path)
+	end
+
+	if nr_iterations > 1 and #simplified_path > 2 then
+		simplified_path = CopActionWalk._calculate_simplified_path(good_pos, simplified_path, nr_iterations - 1, z_test, apply_padding)
+	end
+
+	return simplified_path
+end
+
+local diagonals = {
+	tmp_vec1,
+	tmp_vec2,
+}
+
+function CopActionWalk._apply_padding_to_simplified_path(path)
+	local dim_mag = 212.132
+
+	mvector3.set_static(tmp_vec1, dim_mag, dim_mag, 0)
+	mvector3.set_static(tmp_vec2, dim_mag, -dim_mag, 0)
+
+	local index = 2
+	local offset = tmp_vec3
+	local to_pos = tmp_vec4
+
+	while index < #path do
+		local pos = path[index]
+
+		if pos.x then
+			for _, diagonal in ipairs(diagonals) do
+				mvec3_set(to_pos, pos)
+				mvec3_add(to_pos, diagonal)
+
+				local col_pos, trace = CopActionWalk._chk_shortcut_pos_to_pos(pos, to_pos, true)
+
+				mvec3_set(offset, trace[1])
+				mvec3_set(to_pos, pos)
+				mvec3_mul(diagonal, -1)
+				mvec3_add(to_pos, diagonal)
+
+				col_pos, trace = CopActionWalk._chk_shortcut_pos_to_pos(pos, to_pos, true)
+
+				mvec3_lerp(offset, offset, trace[1], 0.5)
+
+				local ray_fwd = CopActionWalk._chk_shortcut_pos_to_pos(offset, CopActionWalk._nav_point_pos(path[index + 1]))
+
+				if ray_fwd then
+					break
+				else
+					local ray_bwd = CopActionWalk._chk_shortcut_pos_to_pos(offset, CopActionWalk._nav_point_pos(path[index - 1]))
+
+					if ray_bwd then
+						break
+					end
+				end
+
+				mvec3_set(pos, offset)
+			end
+
+			index = index + 1
+		else
+			index = index + 2
+		end
+	end
 end
 
 function CopActionWalk:on_exit()
@@ -1473,40 +1507,6 @@ function CopActionWalk._chk_shortcut_pos_to_pos(from, to, trace)
 	return res, params.trace
 end
 
-function CopActionWalk._calculate_simplified_path(good_pos, original_path, nr_iterations, z_test, apply_padding)
-	local simplified_path = {
-		good_pos,
-	}
-	local original_path_size = #original_path
-
-	for i_nav_point, nav_point in ipairs(original_path) do
-		if nav_point.x and i_nav_point ~= original_path_size and (i_nav_point == 1 or simplified_path[#simplified_path].x) then
-			local pos_from = simplified_path[#simplified_path]
-			local pos_to = CopActionWalk._nav_point_pos(original_path[i_nav_point + 1])
-			local add_point = z_test and math.abs(nav_point.z - pos_from.z - (nav_point.z - pos_to.z)) > 60
-
-			add_point = add_point or CopActionWalk._chk_shortcut_pos_to_pos(pos_from, pos_to)
-
-			if add_point then
-				table.insert(simplified_path, mvec3_cpy(nav_point))
-			end
-		else
-			table.insert(simplified_path, nav_point)
-		end
-	end
-
-	if apply_padding and #simplified_path > 2 then
-		CopActionWalk._apply_padding_to_simplified_path(simplified_path)
-		CopActionWalk._calculate_shortened_path(simplified_path)
-	end
-
-	if nr_iterations > 1 and #simplified_path > 2 then
-		simplified_path = CopActionWalk._calculate_simplified_path(good_pos, simplified_path, nr_iterations - 1, z_test, apply_padding)
-	end
-
-	return simplified_path
-end
-
 function CopActionWalk:_nav_chk_walk(t, dt, vis_state)
 	local s_path = self._simplified_path
 	local c_path = self._curve_path
@@ -1561,10 +1561,6 @@ function CopActionWalk:_nav_chk_walk(t, dt, vis_state)
 				self:_advance_simplified_path()
 
 				local next_pos = self._nav_point_pos(s_path[2])
-
-				if self._sync and not self._action_desc.path_simplified and not self._next_is_nav_link and s_path[3] and not self:_reserve_nav_pos(next_pos, self._nav_point_pos(s_path[3]), self._nav_point_pos(c_path[#c_path]), vel) then
-					-- block empty
-				end
 
 				if not s_path[1].x then
 					debug_pause_unit(self._unit, "[CopActionWalk:_nav_chk_walk] missed nav_link", self._unit, inspect(s_path))

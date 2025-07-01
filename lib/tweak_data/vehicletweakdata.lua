@@ -23,7 +23,7 @@ function VehicleTweakData:_init_data_jeep_willy()
 		vehicle_id = "kubelwagen",
 	}
 	self.jeep_willy.sound = {
-		broken_engine = "falcogini_engine_broken_loop",
+		broken_engine = "kubel_engine_break",
 		bump = "car_bumper_01",
 		bump_locator = "anim_tire_front_left",
 		bump_rtpc = "car_bump_vel",
@@ -96,6 +96,8 @@ function VehicleTweakData:_init_data_kubelwagen()
 	self.kubelwagen.unit = "units/vanilla/vehicles/fps_vehicle_kubelwagen/fps_vehicle_kubelwagen"
 	self.kubelwagen.name = "hud_vehicle_kubelwagen"
 	self.kubelwagen.hud_label_offset = 150
+	self.kubelwagen.waypoint_hud_icon = "waypoint_special_vehicle_kugelwagen"
+	self.kubelwagen.waypoint_map_icon = "map_waypoint_map_kugelwagen"
 	self.kubelwagen.animations = {
 		driver = "drive_kubelwagen_driver",
 		passenger_back_left = "drive_kubelwagen_back_left",
@@ -183,6 +185,7 @@ function VehicleTweakData:_init_data_kubelwagen()
 	}
 	self.kubelwagen.secure_loot = false
 	self.kubelwagen.loot_filter = {
+		conspiracy_board = true,
 		german_spy_body = true,
 		gold = true,
 	}
@@ -210,6 +213,8 @@ function VehicleTweakData:_init_data_truck()
 	self.truck.unit = "units/vanilla/vehicles/fps_vehicle_truck_02/fps_vehicle_truck_02"
 	self.truck.name = "hud_vehicle_truck"
 	self.truck.hud_label_offset = 250
+	self.truck.waypoint_hud_icon = "waypoint_special_vehicle_truck"
+	self.truck.waypoint_map_icon = "map_waypoint_map_truck"
 	self.truck.animations = {
 		driver = "drive_truck_driver",
 		passenger_back_left = "drive_truck_back_left",
@@ -218,7 +223,7 @@ function VehicleTweakData:_init_data_truck()
 		vehicle_id = "truck",
 	}
 	self.truck.sound = {
-		broken_engine = "falcogini_engine_broken_loop",
+		broken_engine = "kubel_engine_break",
 		bump = "car_bumper_01",
 		bump_locator = "anim_tire_front_left",
 		bump_rtpc = "TRD",

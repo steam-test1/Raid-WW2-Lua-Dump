@@ -105,15 +105,11 @@ function RaidGUIControlCardBase:init(parent, params, item_data, grid_params)
 		color = Color.black,
 		font = RaidGUIControlCardBase.TITLE_FONT,
 		font_size = math.ceil(RaidGUIControlCardBase.DESCRIPTION_TEXT_SIZE * (self._card_image:h() / 255)),
-		h = 0,
 		layer = self._card_image:layer() + 1,
 		name = "card_description",
 		text = tweak_data.challenge_cards:get_card_by_key_name(card).description,
 		visible = false,
-		w = 0,
 		wrap = true,
-		x = 0,
-		y = 0,
 	}
 
 	self._card_description = self._card_panel:label(params_card_description)
@@ -205,18 +201,13 @@ function RaidGUIControlCardBase:init(parent, params, item_data, grid_params)
 		h = self._card_amount_background:h(),
 		layer = self._card_amount_background:layer() + 1,
 		name = "card_amount_label",
-		text = "99x",
+		text = "??x",
 		vertical = "center",
 		visible = false,
 		w = self._card_amount_background:w() * 0.9,
 		x = self._card_amount_background:x(),
 		y = self._card_amount_background:y(),
 	})
-
-	if self._params and self._params.show_amount then
-		self._card_amount_background:show()
-		self._card_amount_label:show()
-	end
 
 	self._card_panel:set_visible(false)
 end
@@ -247,7 +238,7 @@ function RaidGUIControlCardBase:get_data()
 	return self._item_data
 end
 
-function RaidGUIControlCardBase:set_card(card_data)
+function RaidGUIControlCardBase:set_card(card_data, is_inventory_item)
 	self._item_data = card_data
 
 	if self._item_data then
@@ -274,7 +265,7 @@ function RaidGUIControlCardBase:set_card(card_data)
 			self._card_title:hide()
 		end
 
-		self._card_description:set_text(self:translate(self._item_data.description))
+		self._card_description:set_text("")
 		self._card_description:hide()
 
 		local bonus_xp_reward = managers.challenge_cards:get_card_xp_label(self._item_data.key_name)
@@ -332,32 +323,46 @@ function RaidGUIControlCardBase:set_card(card_data)
 		self:set_card_image(card_texture, card_texture_rect)
 		self._card_image:show()
 
-		if self._item_data.steam_instances then
-			local stack_amount = 0
+		if is_inventory_item then
+			if self._item_data.steam_instances then
+				local stack_amount = 0
 
-			for steam_inst_id, steam_data in pairs(card_data.steam_instances) do
-				stack_amount = stack_amount + (steam_data.stack_amount or 1)
-			end
-
-			if stack_amount > 1 then
-				self._card_amount_label:set_text(tostring(stack_amount) .. "x")
-				self._card_amount_label:show()
-				self._card_amount_background:show()
-
-				local stacking_texture, stacking_texture_rect = managers.challenge_cards:get_cards_stacking_texture(self._item_data)
-
-				if stacking_texture and stacking_texture_rect then
-					self._card_stackable_image:set_image(stacking_texture, unpack(stacking_texture_rect))
-					self._card_stackable_image:set_visible(true)
+				for steam_inst_id, steam_data in pairs(card_data.steam_instances) do
+					stack_amount = stack_amount + (steam_data.stack_amount or 1)
 				end
+
+				self:set_card_stack_amount(stack_amount)
 			else
-				self._card_amount_label:set_text("1x")
-				self._card_amount_label:hide()
-				self._card_amount_background:hide()
+				self:set_card_stack_amount(0)
 			end
 		end
 
 		self._card_panel:set_visible(true)
+	end
+end
+
+function RaidGUIControlCardBase:set_card_stack_amount(stack_amount)
+	if stack_amount >= 1 then
+		self._card_amount_label:set_text(tostring(stack_amount) .. "x")
+		self._card_amount_label:show()
+		self._card_amount_background:show()
+
+		local stacking_texture, stacking_texture_rect = managers.challenge_cards:get_cards_stacking_texture(self._item_data)
+
+		if stacking_texture and stacking_texture_rect then
+			self._card_stackable_image:set_image(stacking_texture, unpack(stacking_texture_rect))
+			self._card_stackable_image:set_visible(true)
+		end
+
+		self._card_image:set_color(Color.white)
+		self._object:set_alpha(1)
+	else
+		self._card_amount_label:set_text("")
+		self._card_amount_label:hide()
+		self._card_amount_background:hide()
+		self._card_stackable_image:hide()
+		self._card_image:set_color(Color(0.33, 0.33, 0.33))
+		self._object:set_alpha(0.5)
 	end
 end
 

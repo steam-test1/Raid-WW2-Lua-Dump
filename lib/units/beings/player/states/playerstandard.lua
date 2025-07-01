@@ -82,7 +82,7 @@ function PlayerStandard:init(unit)
 	self._stick_move = Vector3()
 	self._stick_look = Vector3()
 	self._cam_fwd_flat = Vector3()
-	self._walk_release_t = -100
+	self._not_moving_t = 0
 	self._last_sent_pos = unit:position()
 	self._last_sent_pos_t = 0
 	self._state_data = unit:movement()._state_data
@@ -182,10 +182,10 @@ function PlayerStandard:_enter(enter_data)
 		self._standing_nav_seg_id = self._ext_movement:nav_tracker():nav_segment()
 
 		local metadata = managers.navigation:get_nav_seg_metadata(self._standing_nav_seg_id)
-		local location_id = metadata.location_id
 
 		self._unit:base():set_suspicion_multiplier("area", metadata.suspicion_mul)
 		self._unit:base():set_detection_multiplier("area", metadata.detection_mul and 1 / metadata.detection_mul or nil)
+		managers.hud:set_map_location(metadata.location_id)
 	end
 
 	self:_upd_attention()
@@ -391,11 +391,11 @@ function PlayerStandard:_upd_nav_data()
 				self._standing_nav_seg_id = nav_seg_id
 
 				local metadata = managers.navigation:get_nav_seg_metadata(nav_seg_id)
-				local location_id = metadata.location_id
 
 				self._unit:base():set_suspicion_multiplier("area", metadata.suspicion_mul)
 				self._unit:base():set_detection_multiplier("area", metadata.detection_mul and 1 / metadata.detection_mul or nil)
 				managers.groupai:state():on_criminal_nav_seg_change(self._unit, nav_seg_id)
+				managers.hud:set_map_location(metadata.location_id)
 			end
 		end
 
@@ -455,6 +455,9 @@ function PlayerStandard:_calculate_standard_variables(t, dt)
 		end
 	end
 
+	local not_moving = mvec3_dis_sq(self._m_pos, self._pos) < 1
+
+	self._not_moving_t = not_moving and self._not_moving_t + dt or 0
 	self._setting_hold_to_run = managers.user:get_setting("hold_to_run")
 	self._setting_hold_to_duck = managers.user:get_setting("hold_to_duck")
 end
@@ -706,10 +709,6 @@ function PlayerStandard:_determine_move_direction()
 	end
 end
 
-function PlayerStandard:update_check_actions_paused(t, dt)
-	self:_update_check_actions(Application:time(), 0.1)
-end
-
 function PlayerStandard:_find_pickups(t)
 	local perseverance_active = self._ext_damage:is_perseverating()
 	local need_ammo = self._ext_inventory:need_ammo()
@@ -734,6 +733,10 @@ function PlayerStandard:_find_pickups(t)
 			end
 		end
 	end
+end
+
+function PlayerStandard:update_check_actions_paused(t, dt)
+	self:_update_check_actions(Application:time(), 0.1)
 end
 
 function PlayerStandard:_update_check_actions(t, dt)
@@ -2046,10 +2049,9 @@ function PlayerStandard:_start_action_throw_grenade(t, input, primary)
 			self._state_data.throw_grenade_allowed_t = t + (projectile_data.throw_allowed_expire_t or 0.15)
 			self._state_data.throw_grenade_cooldown = t + PlayerStandard.THROW_GRENADE_COOLDOWN
 
-			local equipped_grenade = managers.blackmarket:equipped_grenade()
-			local grenade_index = tweak_data.blackmarket:get_index_from_projectile_id(equipped_grenade)
+			local redirect_id = projectile_data.animations and projectile_data.animations.throw or PlayerStandard.IDS_GRENADE_THROW
 
-			self._ext_camera:play_redirect(PlayerStandard.IDS_GRENADE_THROW)
+			self._ext_camera:play_redirect(redirect_id)
 
 			self._unit:equipment()._cooking_start = t
 
@@ -2953,8 +2955,8 @@ function PlayerStandard:_start_action_use_item(t)
 	})
 
 	managers.hud:show_progress_timer({
+		follow_me = nil,
 		text = text,
-		vec = nil,
 	})
 
 	local post_event = managers.player:selected_equipment_sound_start()
@@ -3929,9 +3931,10 @@ function PlayerStandard:_check_action_jump(t, input)
 	local action_wanted = input.btn_jump_press
 
 	if action_wanted then
+		local angle_limit = tweak_data.player.max_floor_jump_angle[self._not_moving_t > 0.1 and "max" or "min"]
 		local action_forbidden = self._jump_t and t < self._jump_t + 0.55
 
-		action_forbidden = action_forbidden or self._gnd_angle and self._gnd_angle > tweak_data.player.max_floor_jump_angle
+		action_forbidden = action_forbidden or self._gnd_angle and angle_limit < self._gnd_angle
 		action_forbidden = action_forbidden or self._unit:base():stats_screen_visible() or self:in_air() or self:_interacting() or self:_on_zipline() or self:_does_deploying_limit_movement() or self:_is_using_bipod() or self:_is_comm_wheel_active() or self:_mantling()
 
 		if not action_forbidden then
@@ -4087,7 +4090,7 @@ function PlayerStandard:_check_action_mantle(t, input)
 
 	local max_pos = fwd_pos + self._tweak_data.movement.mantle.MAX_CHECK_HEIGHT
 	local min_pos = fwd_pos + self._tweak_data.movement.mantle.MIN_CHECK_HEIGHT
-	local max_angle = tweak_data.player.max_floor_jump_angle - angle_epsilon
+	local max_angle = tweak_data.player.max_floor_jump_angle.min - angle_epsilon
 	local ray = World:raycast("ray", max_pos, min_pos, "slot_mask", self._slotmask_gnd_ray, "ray_type", "body mover", "sphere_cast_radius", 8)
 
 	if ray and ray.distance > 0 and max_angle > ray.normal:angle(math.UP) then
@@ -5054,9 +5057,7 @@ function PlayerStandard:_interupt_action_reload(t)
 		end
 
 		if self._equipped_unit:base().can_reload and self._equipped_unit:base():can_reload() and self._equipped_unit:base().clip_empty and self._equipped_unit:base():clip_empty() then
-			managers.hud:set_prompt("hud_reload_prompt", utf8.to_upper(managers.localization:text("hint_reload", {
-				BTN_RELOAD = managers.localization:btn_macro("reload"),
-			})))
+			managers.hud:set_prompt("hud_reload_prompt", managers.localization:to_upper_text("hint_reload"))
 		end
 	end
 
@@ -5159,11 +5160,9 @@ function PlayerStandard:_start_action_equip_weapon(t)
 	managers.player:refresh_carry_elements()
 
 	if self._equipped_unit:base().out_of_ammo and self._equipped_unit:base():out_of_ammo() then
-		managers.hud:set_prompt("hud_no_ammo_prompt", utf8.to_upper(managers.localization:text("hint_no_ammo")))
+		managers.hud:set_prompt("hud_no_ammo_prompt", managers.localization:to_upper_text("hint_no_ammo"))
 	elseif self._equipped_unit:base().can_reload and self._equipped_unit:base():can_reload() and self._equipped_unit:base().clip_empty and self._equipped_unit:base():clip_empty() then
-		managers.hud:set_prompt("hud_reload_prompt", utf8.to_upper(managers.localization:text("hint_reload", {
-			BTN_RELOAD = managers.localization:btn_macro("reload"),
-		})))
+		managers.hud:set_prompt("hud_reload_prompt", managers.localization:to_upper_text("hint_reload"))
 	else
 		managers.hud:hide_prompt("hud_reload_prompt")
 		managers.hud:hide_prompt("hud_no_ammo_prompt")

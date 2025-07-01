@@ -102,7 +102,7 @@ function RaidGUIControlListItemCharacterSelect:_load_data()
 	local character_nationality
 	local character_name = "---"
 	local character_class = "---"
-	local character_flag, class_name
+	local class_name
 
 	if self._item_data.cache then
 		profile_name = self._item_data.cache.PlayerManager.character_profile_name
@@ -110,7 +110,6 @@ function RaidGUIControlListItemCharacterSelect:_load_data()
 		character_class = self._item_data.cache.SkillTreeManager.character_profile_base_class or "assault"
 		character_name = self:translate("menu_" .. character_nationality, true)
 		class_name = self:translate(tweak_data.skilltree.classes[character_class].name_id, true)
-		character_flag = tweak_data.criminals.character_nation_name[character_nationality].flag_name
 		self._customize_button = self._object:create_custom_control(RaidGUIControlListItemCharacterSelectButton, {
 			h = CharacterSelectionGui.BUTTON_H,
 			name = "customize_button",

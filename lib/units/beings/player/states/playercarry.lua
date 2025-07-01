@@ -149,13 +149,15 @@ function PlayerCarry:_check_action_run(t, input)
 	local can_run_value = tweak_data.carry.types[self._tweak_data_name].can_run
 	local can_run
 
-	if type(can_run_value) == "boolean" then
+	if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_BAGS_DONT_SLOW_PLAYERS_DOWN) then
+		can_run = true
+	elseif type(can_run_value) == "boolean" then
 		can_run = can_run_value
 	else
 		can_run = ratio <= tweak_data.carry.types[self._tweak_data_name].can_run
 	end
 
-	if can_run or managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_BAGS_DONT_SLOW_PLAYERS_DOWN) then
+	if can_run then
 		PlayerCarry.super._check_action_run(self, t, input)
 	elseif input.btn_run_press then
 		managers.notification:add_notification({

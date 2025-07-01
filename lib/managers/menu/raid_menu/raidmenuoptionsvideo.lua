@@ -392,7 +392,7 @@ function RaidMenuOptionsVideo:on_item_selected_window_mode()
 	if self._stepper_menu_window_mode:get_value() == "WINDOWED_FULLSCREEN" then
 		local resolution = Application:monitor_resolution()
 		local refresh_rates = self:_get_refresh_rates_for_resolution(resolution)
-		local refresh_rate = refresh_rates[#refresh_rates].value
+		local refresh_rate = refresh_rates and #refresh_rates > 0 and refresh_rates[#refresh_rates].value or 30
 
 		self._stepper_menu_resolution:set_value_and_render({
 			is_equal = function(self, check)
@@ -469,7 +469,7 @@ function RaidMenuOptionsVideo:_get_default_resolution()
 				y = res.value.y,
 			})
 
-			resolution = Vector3(res.value.x, res.value.y, refresh_rates[#refresh_rates].value)
+			resolution = Vector3(res.value.x, res.value.y, refresh_rates and #refresh_rates > 0 and refresh_rates[#refresh_rates].value or 30)
 		end
 	end
 

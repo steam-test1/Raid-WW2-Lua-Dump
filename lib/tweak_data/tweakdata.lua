@@ -48,6 +48,8 @@ require("lib/tweak_data/InputTweakData")
 require("lib/tweak_data/IntelTweakData")
 require("lib/tweak_data/NetworkTweakData")
 require("lib/tweak_data/LinkPrefabsTweakData")
+require("lib/tweak_data/FireTweakData")
+require("lib/tweak_data/ExplosionTweakData")
 
 function TweakData:digest_tweak_data()
 	self.digested_tables = {
@@ -258,6 +260,7 @@ function TweakData:init_common_effects_physics()
 	self.physics_effects.shotgun_push = Idstring("physic_effects/shotgun_hit")
 	self.physics_effects.molotov_throw = Idstring("physic_effects/molotov_throw")
 	self.physics_effects.no_gravity = Idstring("physic_effects/anti_gravitate")
+	self.physics_effects.damp_rotation = Idstring("physic_effects/damp_rotation")
 	self.common_effects = {}
 	self.common_effects.impact = Idstring("effects/vanilla/impacts/imp_fallback_001")
 	self.common_effects.blood_impact_1 = Idstring("effects/vanilla/impacts/imp_blood_hit_001")
@@ -370,6 +373,8 @@ function TweakData:init()
 	self.intel = IntelTweakData:new(self)
 	self.network = NetworkTweakData:new(self)
 	self.link_prefabs = LinkPrefabsTweakData:new()
+	self.fire = FireTweakData:new(self)
+	self.explosion = ExplosionTweakData:new(self)
 	self.criminals = {}
 	self.criminals.character_names = {
 		"russian",
@@ -599,6 +604,10 @@ function TweakData:init()
 		"min",
 		"on",
 		"track",
+	}
+	self.corpse_limit = {
+		max = 250,
+		min = 5,
 	}
 	self.hud = {}
 
@@ -950,7 +959,7 @@ function TweakData:init()
 
 	self.pickups = {}
 	self.pickups.equip_safe_key_chain = {
-		unit = Idstring("units/vanilla/equipment/equip_safe_key_chain/equip_safe_key_chain"),
+		unit = Idstring("units/vanilla/equipment/equip_safe_key_chain/equip_safe_key_chain_dropped"),
 	}
 	self.pickups.health_big = {
 		unit = Idstring("units/vanilla/pickups/pku_new_munitions/health/pku_health_big"),

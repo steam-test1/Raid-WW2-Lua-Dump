@@ -49,8 +49,8 @@ function RaidGUIControlCardWithSelector:init(parent, params, item_data, grid_par
 	self._sound_source = SoundDevice:create_source("challenge_card")
 end
 
-function RaidGUIControlCardWithSelector:set_card(card_data)
-	RaidGUIControlCardWithSelector.super.set_card(self, card_data)
+function RaidGUIControlCardWithSelector:set_card(card_data, is_inventory_item)
+	RaidGUIControlCardWithSelector.super.set_card(self, card_data, is_inventory_item)
 
 	if self._item_data then
 		self._card_panel:set_w(self._params.selected_marker_w)

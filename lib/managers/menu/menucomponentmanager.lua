@@ -192,18 +192,6 @@ function MenuComponentManager:init()
 	self._sound_source:post_event("close_pause_menu")
 end
 
-function MenuComponentManager:save(data)
-	return
-end
-
-function MenuComponentManager:load(data)
-	self:on_whisper_mode_changed()
-end
-
-function MenuComponentManager:on_whisper_mode_changed()
-	return
-end
-
 function MenuComponentManager:get_controller_input_bool(button)
 	if not managers.menu or not managers.menu:active_menu() then
 		return
@@ -302,57 +290,6 @@ function MenuComponentManager:set_active_components(components, node)
 	if not managers.menu:is_pc_controller() then
 		self:_setup_controller_input()
 	end
-end
-
-function MenuComponentManager:make_color_text(text_object, color)
-	local text = text_object:text()
-	local text_dissected = utf8.characters(text)
-	local idsp = Idstring("#")
-	local start_ci = {}
-	local end_ci = {}
-	local first_ci = true
-
-	for i, c in ipairs(text_dissected) do
-		if Idstring(c) == idsp then
-			local next_c = text_dissected[i + 1]
-
-			if next_c and Idstring(next_c) == idsp then
-				if first_ci then
-					table.insert(start_ci, i)
-				else
-					table.insert(end_ci, i)
-				end
-
-				first_ci = not first_ci
-			end
-		end
-	end
-
-	if #start_ci ~= #end_ci then
-		-- block empty
-	else
-		for i = 1, #start_ci do
-			start_ci[i] = start_ci[i] - ((i - 1) * 4 + 1)
-			end_ci[i] = end_ci[i] - (i * 4 - 1)
-		end
-	end
-
-	text = string.gsub(text, "##", "")
-
-	text_object:set_text(text)
-	text_object:clear_range_color(1, utf8.len(text))
-
-	if #start_ci ~= #end_ci then
-		Application:error("MenuComponentManager:make_color_text: Not even amount of ##'s in text", #start_ci, #end_ci)
-	else
-		for i = 1, #start_ci do
-			text_object:set_range_color(start_ci[i], end_ci[i], color or tweak_data.screen_colors.resource)
-		end
-	end
-end
-
-function MenuComponentManager:on_job_updated()
-	return
 end
 
 function MenuComponentManager:update(t, dt)
@@ -525,23 +462,11 @@ function MenuComponentManager:scroll_right()
 end
 
 function MenuComponentManager:next_page()
-	if self._game_chat_gui and self._game_chat_gui:input_focus() == true then
-		return true
-	end
-
-	if self._blackmarket_gui and self._blackmarket_gui:next_page() then
-		return true
-	end
+	return
 end
 
 function MenuComponentManager:previous_page()
-	if self._game_chat_gui and self._game_chat_gui:input_focus() == true then
-		return true
-	end
-
-	if self._blackmarket_gui and self._blackmarket_gui:previous_page() then
-		return true
-	end
+	return
 end
 
 function MenuComponentManager:confirm_pressed()
@@ -553,14 +478,6 @@ function MenuComponentManager:confirm_pressed()
 				return true
 			end
 		end
-	end
-
-	if self._game_chat_gui and self._game_chat_gui:input_focus() == true then
-		return true
-	end
-
-	if self._blackmarket_gui and self._blackmarket_gui:confirm_pressed() then
-		return true
 	end
 
 	if Application:production_build() and self._debug_font_gui then
@@ -578,10 +495,6 @@ function MenuComponentManager:back_pressed()
 			end
 		end
 	end
-
-	if self._game_chat_gui and self._game_chat_gui:input_focus() == true then
-		return true
-	end
 end
 
 function MenuComponentManager:special_btn_pressed(...)
@@ -598,18 +511,6 @@ function MenuComponentManager:special_btn_pressed(...)
 			end
 		end
 	end
-
-	if self._game_chat_gui and self._game_chat_gui:input_focus() == true then
-		return true
-	end
-
-	if self._game_chat_gui and self._game_chat_gui:special_btn_pressed(...) then
-		return true
-	end
-
-	if self._blackmarket_gui and self._blackmarket_gui:special_btn_pressed(...) then
-		return true
-	end
 end
 
 function MenuComponentManager:mouse_pressed(o, button, x, y)
@@ -620,105 +521,6 @@ function MenuComponentManager:mouse_pressed(o, button, x, y)
 			if handled then
 				return true
 			end
-		end
-	end
-
-	if self._game_chat_gui and self._game_chat_gui:mouse_pressed(button, x, y) then
-		return true
-	end
-
-	if self._blackmarket_gui and self._blackmarket_gui:mouse_pressed(button, x, y) then
-		return true
-	end
-
-	if self._server_info_gui then
-		if self._server_info_gui:mouse_pressed(button, x, y) then
-			return true
-		end
-
-		if button == Idstring("0") then
-			if self._server_info_gui:check_minimize(x, y) then
-				local minimized_data = {
-					help_text = "MAXIMIZE SERVER INFO WINDOW",
-					text = "SERVER INFO",
-				}
-
-				self._server_info_gui:set_minimized(true, minimized_data)
-
-				return true
-			end
-
-			if self._server_info_gui:check_grab_scroll_bar(x, y) then
-				return true
-			end
-		elseif button == Idstring("mouse wheel down") then
-			if self._server_info_gui:mouse_wheel_down(x, y) then
-				return true
-			end
-		elseif button == Idstring("mouse wheel up") and self._server_info_gui:mouse_wheel_up(x, y) then
-			return true
-		end
-	end
-
-	if self._lobby_profile_gui then
-		if self._lobby_profile_gui:mouse_pressed(button, x, y) then
-			return true
-		end
-
-		if button == Idstring("0") then
-			if self._lobby_profile_gui:check_minimize(x, y) then
-				return true
-			end
-
-			if self._lobby_profile_gui:check_grab_scroll_bar(x, y) then
-				return true
-			end
-		elseif button == Idstring("mouse wheel down") then
-			if self._lobby_profile_gui:mouse_wheel_down(x, y) then
-				return true
-			end
-		elseif button == Idstring("mouse wheel up") and self._lobby_profile_gui:mouse_wheel_up(x, y) then
-			return true
-		end
-	end
-
-	if self._view_character_profile_gui then
-		if self._view_character_profile_gui:mouse_pressed(button, x, y) then
-			return true
-		end
-
-		if button == Idstring("0") then
-			if self._view_character_profile_gui:check_minimize(x, y) then
-				return true
-			end
-
-			if self._view_character_profile_gui:check_grab_scroll_bar(x, y) then
-				return true
-			end
-		elseif button == Idstring("mouse wheel down") then
-			if self._view_character_profile_gui:mouse_wheel_down(x, y) then
-				return true
-			end
-		elseif button == Idstring("mouse wheel up") and self._view_character_profile_gui:mouse_wheel_up(x, y) then
-			return true
-		end
-	end
-
-	if self._test_profile1 then
-		if self._test_profile1:check_grab_scroll_bar(x, y) then
-			return true
-		end
-
-		if self._test_profile2:check_grab_scroll_bar(x, y) then
-			return true
-		end
-
-		if self._test_profile3:check_grab_scroll_bar(x, y) then
-			return true
-		end
-
-		if self._test_profile4:check_grab_scroll_bar(x, y) then
-			return true
 		end
 	end
 
@@ -743,10 +545,6 @@ function MenuComponentManager:mouse_clicked(o, button, x, y)
 			end
 		end
 	end
-
-	if self._blackmarket_gui then
-		return self._blackmarket_gui:mouse_clicked(o, button, x, y)
-	end
 end
 
 function MenuComponentManager:mouse_double_click(o, button, x, y)
@@ -759,10 +557,6 @@ function MenuComponentManager:mouse_double_click(o, button, x, y)
 			end
 		end
 	end
-
-	if self._blackmarket_gui then
-		return self._blackmarket_gui:mouse_double_click(o, button, x, y)
-	end
 end
 
 function MenuComponentManager:mouse_released(o, button, x, y)
@@ -773,52 +567,6 @@ function MenuComponentManager:mouse_released(o, button, x, y)
 			if handled then
 				return true
 			end
-		end
-	end
-
-	if self._game_chat_gui and self._game_chat_gui:mouse_released(o, button, x, y) then
-		return true
-	end
-
-	if self._blackmarket_gui then
-		return self._blackmarket_gui:mouse_released(button, x, y)
-	end
-
-	if self._chat_book then
-		local used, pointer = self._chat_book:release_scroll_bar()
-
-		if used then
-			return true, pointer
-		end
-	end
-
-	if self._server_info_gui and self._server_info_gui:release_scroll_bar() then
-		return true
-	end
-
-	if self._lobby_profile_gui and self._lobby_profile_gui:release_scroll_bar() then
-		return true
-	end
-
-	if self._view_character_profile_gui and self._view_character_profile_gui:release_scroll_bar() then
-		return true
-	end
-
-	if self._test_profile1 then
-		if self._test_profile1:release_scroll_bar() then
-			return true
-		end
-
-		if self._test_profile2:release_scroll_bar() then
-			return true
-		end
-
-		if self._test_profile3:release_scroll_bar() then
-			return true
-		end
-
-		if self._test_profile4:release_scroll_bar() then
-			return true
 		end
 	end
 
@@ -837,110 +585,6 @@ function MenuComponentManager:mouse_moved(o, x, y)
 			if used then
 				return true, wanted_pointer
 			end
-		end
-	end
-
-	if self._game_chat_gui then
-		local used, pointer = self._game_chat_gui:mouse_moved(x, y)
-
-		wanted_pointer = pointer or wanted_pointer
-
-		if used then
-			return true, wanted_pointer
-		end
-	end
-
-	if self._blackmarket_gui then
-		local used, pointer = self._blackmarket_gui:mouse_moved(o, x, y)
-
-		wanted_pointer = pointer or wanted_pointer
-
-		if used then
-			return true, wanted_pointer
-		end
-	end
-
-	if self._server_info_gui then
-		local used, pointer = self._server_info_gui:moved_scroll_bar(x, y)
-
-		if used then
-			return true, pointer
-		end
-
-		local used, pointer = self._server_info_gui:mouse_moved(x, y)
-
-		wanted_pointer = pointer or wanted_pointer
-
-		if used then
-			return true, wanted_pointer
-		end
-	end
-
-	if self._backdrop_gui then
-		local used, pointer = self._backdrop_gui:mouse_moved(x, y)
-
-		wanted_pointer = pointer or wanted_pointer
-
-		if used then
-			return true, wanted_pointer
-		end
-	end
-
-	if self._lobby_profile_gui then
-		local used, pointer = self._lobby_profile_gui:moved_scroll_bar(x, y)
-
-		if used then
-			return true, pointer
-		end
-
-		local used, pointer = self._lobby_profile_gui:mouse_moved(x, y)
-
-		wanted_pointer = pointer or wanted_pointer
-
-		if used then
-			return true, wanted_pointer
-		end
-	end
-
-	if self._view_character_profile_gui then
-		local used, pointer = self._view_character_profile_gui:moved_scroll_bar(x, y)
-
-		if used then
-			return true, pointer
-		end
-
-		local used, pointer = self._view_character_profile_gui:mouse_moved(x, y)
-
-		wanted_pointer = pointer or wanted_pointer
-
-		if used then
-			return true, wanted_pointer
-		end
-	end
-
-	if self._test_profile1 then
-		local used, pointer = self._test_profile1:moved_scroll_bar(x, y)
-
-		if used then
-			return true, pointer
-		end
-
-		local used, pointer = self._test_profile2:moved_scroll_bar(x, y)
-
-		if used then
-			return true, pointer
-		end
-
-		local used, pointer = self._test_profile3:moved_scroll_bar(x, y)
-
-		if used then
-			return true, pointer
-		end
-
-		local used, pointer = self._test_profile4:moved_scroll_bar(x, y)
-
-		if used then
-			return true, pointer
 		end
 	end
 
@@ -968,180 +612,6 @@ end
 
 function MenuComponentManager:on_peer_removed(peer, reason)
 	return
-end
-
-function MenuComponentManager:_create_chat_gui()
-	if IS_PC and MenuCallbackHandler:is_multiplayer() and managers.network:session() then
-		if self._game_chat_gui then
-			self:show_game_chat_gui()
-		else
-			self:add_game_chat()
-		end
-
-		self._game_chat_gui:set_params(self._saved_game_chat_params or "default")
-
-		self._saved_game_chat_params = nil
-	end
-end
-
-function MenuComponentManager:create_chat_gui()
-	self:close_chat_gui()
-
-	local config = {
-		h = 220,
-		header_type = "fit",
-		no_close_legend = true,
-		use_minimize_legend = true,
-		w = 540,
-		x = 290,
-	}
-
-	self._chat_book = BookBoxGui:new(self._ws, nil, config)
-
-	self._chat_book:set_layer(8)
-
-	local global_gui = ChatGui:new(self._ws, "Global", "")
-
-	global_gui:set_channel_id(ChatManager.GLOBAL)
-	global_gui:set_layer(self._chat_book:layer())
-	self._chat_book:add_page("Global", global_gui, false)
-	self._chat_book:set_layer(tweak_data.gui.MENU_COMPONENT_LAYER)
-end
-
-function MenuComponentManager:add_game_chat()
-	if IS_PC then
-		self._game_chat_gui = ChatGui:new(self._ws)
-
-		if self._game_chat_params then
-			self._game_chat_gui:set_params(self._game_chat_params)
-
-			self._game_chat_params = nil
-		end
-	end
-end
-
-function MenuComponentManager:set_max_lines_game_chat(max_lines)
-	if self._game_chat_gui then
-		self._game_chat_gui:set_max_lines(max_lines)
-	else
-		self._game_chat_params = self._game_chat_params or {}
-		self._game_chat_params.max_lines = max_lines
-	end
-end
-
-function MenuComponentManager:pre_set_game_chat_leftbottom(from_left, from_bottom)
-	if self._game_chat_gui then
-		self._game_chat_gui:set_leftbottom(from_left, from_bottom)
-	else
-		self._game_chat_params = self._game_chat_params or {}
-		self._game_chat_params.left = from_left
-		self._game_chat_params.bottom = from_bottom
-	end
-end
-
-function MenuComponentManager:remove_game_chat()
-	if not self._chat_book then
-		return
-	end
-
-	self._chat_book:remove_page("Game")
-end
-
-function MenuComponentManager:hide_game_chat_gui()
-	if self._game_chat_gui then
-		self._game_chat_gui:hide()
-	end
-end
-
-function MenuComponentManager:show_game_chat_gui()
-	if self._game_chat_gui then
-		self._game_chat_gui:show()
-	end
-end
-
-function MenuComponentManager:_disable_chat_gui()
-	if self._game_chat_gui then
-		self._game_chat_gui:set_enabled(false)
-	end
-end
-
-function MenuComponentManager:close_chat_gui()
-	if self._game_chat_gui then
-		self._game_chat_gui:close()
-
-		self._game_chat_gui = nil
-	end
-
-	if self._chat_book_minimized_id then
-		self:remove_minimized(self._chat_book_minimized_id)
-
-		self._chat_book_minimized_id = nil
-	end
-
-	self._game_chat_bottom = nil
-end
-
-function MenuComponentManager:create_lobby_profile_gui(peer_id, x, y)
-	self:close_lobby_profile_gui()
-
-	self._lobby_profile_gui = LobbyProfileBoxGui:new(self._ws, nil, nil, nil, {
-		h = 160,
-		x = x,
-		y = y,
-	}, peer_id)
-
-	self._lobby_profile_gui:set_title(nil)
-	self._lobby_profile_gui:set_use_minimize_legend(false)
-	table.insert(self._update_components, self._lobby_profile_gui)
-end
-
-function MenuComponentManager:close_lobby_profile_gui()
-	if self._lobby_profile_gui then
-		self:removeFromUpdateTable(self._lobby_profile_gui)
-		self._lobby_profile_gui:close()
-
-		self._lobby_profile_gui = nil
-	end
-
-	if self._lobby_profile_gui_minimized_id then
-		self:remove_minimized(self._lobby_profile_gui_minimized_id)
-
-		self._lobby_profile_gui_minimized_id = nil
-	end
-end
-
-function MenuComponentManager:create_view_character_profile_gui(user, x, y)
-	self:close_view_character_profile_gui()
-
-	self._view_character_profile_gui = ViewCharacterProfileBoxGui:new(self._ws, nil, nil, nil, {
-		h = 160,
-		w = 360,
-		x = 837,
-		y = 100,
-	}, user)
-
-	self._view_character_profile_gui:set_title(nil)
-	self._view_character_profile_gui:set_use_minimize_legend(false)
-	table.insert(self._update_components, self._view_character_profile_gui)
-end
-
-function MenuComponentManager:close_view_character_profile_gui()
-	if self._view_character_profile_gui then
-		self:removeFromUpdateTable(self._view_character_profile_gui)
-		self._view_character_profile_gui:close()
-
-		self._view_character_profile_gui = nil
-	end
-
-	if self._view_character_profile_gui_minimized_id then
-		self:remove_minimized(self._view_character_profile_gui_minimized_id)
-
-		self._view_character_profile_gui_minimized_id = nil
-	end
-end
-
-function MenuComponentManager:_maximize_weapon_box(data)
-	self:remove_minimized(data.id)
 end
 
 function MenuComponentManager:add_minimized(config)
@@ -1352,63 +822,6 @@ function MenuComponentManager:retrieve_texture(texture)
 	return TextureCache:retrieve(texture, "NORMAL")
 end
 
-function MenuComponentManager:add_colors_to_text_object(text_object, ...)
-	local text = text_object:text()
-	local unchanged_text = text
-	local colors = {
-		...,
-	}
-	local default_color = #colors == 1 and colors[1] or tweak_data.screen_colors.text
-	local start_ci, end_ci, first_ci
-	local text_dissected = utf8.characters(text)
-	local idsp = Idstring("#")
-
-	start_ci = {}
-	end_ci = {}
-	first_ci = true
-
-	for i, c in ipairs(text_dissected) do
-		if Idstring(c) == idsp then
-			local next_c = text_dissected[i + 1]
-
-			if next_c and Idstring(next_c) == idsp then
-				if first_ci then
-					table.insert(start_ci, i)
-				else
-					table.insert(end_ci, i)
-				end
-
-				first_ci = not first_ci
-			end
-		end
-	end
-
-	if #start_ci ~= #end_ci then
-		-- block empty
-	else
-		for i = 1, #start_ci do
-			start_ci[i] = start_ci[i] - ((i - 1) * 4 + 1)
-			end_ci[i] = end_ci[i] - (i * 4 - 1)
-		end
-	end
-
-	text = string.gsub(text, "##", "")
-
-	text_object:set_text(text)
-
-	if colors then
-		text_object:clear_range_color(1, utf8.len(text))
-
-		if #start_ci ~= #end_ci then
-			Application:error("[MenuComponentManager:color_text_object]: Missing '#' in text:", unchanged_text, #start_ci, #end_ci)
-		else
-			for i = 1, #start_ci do
-				text_object:set_range_color(start_ci[i], end_ci[i], colors[i] or default_color)
-			end
-		end
-	end
-end
-
 MenuComponentPostEventInstance = MenuComponentPostEventInstance or class()
 
 function MenuComponentPostEventInstance:init(sound_source)
@@ -1474,7 +887,6 @@ end
 
 function MenuComponentManager:close()
 	print("[MenuComponentManager:close]")
-	self:close_chat_gui()
 
 	if alive(self._sound_source) then
 		self._sound_source:stop()
@@ -1531,7 +943,7 @@ function MenuComponentManager:close_raid_menu_mission_selection_gui(node, compon
 	end
 
 	if self._raid_menu_mission_selection_gui then
-		self:removeFromUpdateTable(self._raid_menu_mission_selection_gui)
+		self:remove_update_component(self._raid_menu_mission_selection_gui)
 		self._raid_menu_mission_selection_gui:close()
 
 		self._raid_menu_mission_selection_gui = nil
@@ -1582,7 +994,7 @@ function MenuComponentManager:close_raid_menu_mission_unlock_gui(node, component
 	end
 
 	if self._raid_menu_mission_unlock_gui then
-		self:removeFromUpdateTable(self._raid_menu_mission_unlock_gui)
+		self:remove_update_component(self._raid_menu_mission_unlock_gui)
 		self._raid_menu_mission_unlock_gui:close()
 
 		self._raid_menu_mission_unlock_gui = nil
@@ -1771,7 +1183,7 @@ function MenuComponentManager:close_raid_menu_select_character_profile_gui(node,
 	end
 
 	if self._raid_menu_select_character_profile_gui then
-		self:removeFromUpdateTable(self._raid_menu_select_character_profile_gui)
+		self:remove_update_component(self._raid_menu_select_character_profile_gui)
 		self._raid_menu_select_character_profile_gui:close()
 
 		self._raid_menu_select_character_profile_gui = nil
@@ -1820,7 +1232,7 @@ function MenuComponentManager:close_raid_menu_create_character_profile_gui(node,
 	end
 
 	if self._raid_menu_create_character_profile_gui then
-		self:removeFromUpdateTable(self._raid_menu_create_character_profile_gui)
+		self:remove_update_component(self._raid_menu_create_character_profile_gui)
 		self._raid_menu_create_character_profile_gui:close()
 
 		self._raid_menu_create_character_profile_gui = nil
@@ -1919,7 +1331,7 @@ function MenuComponentManager:close_raid_menu_gold_asset_store_gui(node, compone
 	end
 
 	if self._raid_menu_gold_asset_store_gui then
-		self:removeFromUpdateTable(self._raid_menu_gold_asset_store_gui)
+		self:remove_update_component(self._raid_menu_gold_asset_store_gui)
 		self._raid_menu_gold_asset_store_gui:close()
 
 		self._raid_menu_gold_asset_store_gui = nil
@@ -1970,7 +1382,7 @@ function MenuComponentManager:close_raid_menu_intel_gui(node, component)
 	end
 
 	if self._raid_menu_intel_gui then
-		self:removeFromUpdateTable(self._raid_menu_intel_gui)
+		self:remove_update_component(self._raid_menu_intel_gui)
 		self._raid_menu_intel_gui:close()
 
 		self._raid_menu_intel_gui = nil
@@ -2613,7 +2025,7 @@ function MenuComponentManager:close_raid_ready_up_gui(node, component)
 	end
 
 	if self._raid_ready_up_gui then
-		self:removeFromUpdateTable(self._raid_ready_up_gui)
+		self:remove_update_component(self._raid_ready_up_gui)
 		self._raid_ready_up_gui:close()
 
 		self._raid_ready_up_gui = nil
@@ -2658,7 +2070,7 @@ function MenuComponentManager:close_raid_challenge_cards_gui(node, component)
 	end
 
 	if self._raid_challenge_cards_gui then
-		self:removeFromUpdateTable(self._raid_challenge_cards_gui)
+		self:remove_update_component(self._raid_challenge_cards_gui)
 		self._raid_challenge_cards_gui:close()
 
 		self._raid_challenge_cards_gui = nil
@@ -2672,7 +2084,7 @@ end
 function MenuComponentManager:_create_raid_challenge_cards_view_gui(node, component)
 	self:close_raid_challenge_cards_view_gui(node, component)
 
-	self._raid_challenge_cards_view_gui = ChallengeCardsViewGui:new(self._ws, self._fullscreen_ws, node, component)
+	self._raid_challenge_cards_view_gui = ChallengeCardsGui:new(self._ws, self._fullscreen_ws, node, component)
 
 	if component then
 		self._active_controls[component] = {}
@@ -2682,6 +2094,8 @@ function MenuComponentManager:_create_raid_challenge_cards_view_gui(node, compon
 		for _, control in ipairs(self._raid_challenge_cards_view_gui._root_panel._controls) do
 			self:_collect_controls(control, final_list)
 		end
+
+		final_list.card_grid = self._raid_challenge_cards_view_gui._card_grid
 	end
 
 	local active_menu = managers.menu:active_menu()
@@ -2748,7 +2162,7 @@ function MenuComponentManager:close_raid_challenge_cards_loot_reward_gui(node, c
 	end
 
 	if self._raid_challenge_cards_loot_reward_gui then
-		self:removeFromUpdateTable(self._raid_challenge_cards_loot_reward_gui)
+		self:remove_update_component(self._raid_challenge_cards_loot_reward_gui)
 		self._raid_challenge_cards_loot_reward_gui:close()
 
 		self._raid_challenge_cards_loot_reward_gui = nil
@@ -3019,7 +2433,7 @@ function MenuComponentManager:close_raid_menu_credits(node, component)
 	end
 
 	if self._raid_menu_credits_gui then
-		self:removeFromUpdateTable(self._raid_menu_credits_gui)
+		self:remove_update_component(self._raid_menu_credits_gui)
 		self._raid_menu_credits_gui:close()
 
 		self._raid_menu_credits_gui = nil
@@ -3069,26 +2483,12 @@ function MenuComponentManager:gather_controls_for_component(component_name)
 	end
 end
 
-function MenuComponentManager:debug_controls()
-	local component_controls = self._active_controls
-
-	for name, controls in pairs(component_controls) do
-		print("MenuComponentManager:debug_controls - inspecting ", name)
-
-		for name, control in pairs(controls) do
-			print("MenuComponentManager:debug_controls: ", control._type, name, control._name)
-		end
-	end
-
-	for idx, control in ipairs(self._raid_menu_mission_join_gui._root_panel._controls) do
-		Application:trace(idx, control._name)
-	end
-end
-
-function MenuComponentManager:removeFromUpdateTable(unit)
+function MenuComponentManager:remove_update_component(component)
 	for i = 1, #self._update_components do
-		if self._update_components[i] == unit then
+		if self._update_components[i] == component then
 			table.remove(self._update_components, i)
+
+			break
 		end
 	end
 end
