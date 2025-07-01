@@ -3462,6 +3462,7 @@ function InteractionTweakData:init()
 	self.place_tank_shell.equipment_consume = true
 	self.place_tank_shell.start_active = false
 	self.place_tank_shell.timer = 2
+	self.place_tank_shell.interact_dont_interupt_on_distance = true
 	self.graveyard_check_tank = {}
 	self.graveyard_check_tank.text_id = "hud_graveyard_check_tank"
 	self.graveyard_check_tank.action_text_id = "hud_action_graveyard_check_tank"
@@ -5556,6 +5557,7 @@ function InteractionTweakData:init()
 	self.load_shell.action_text_id = "hud_action_loading_shell"
 	self.load_shell.timer = 2
 	self.load_shell.start_active = false
+	self.load_shell.interact_dont_interupt_on_distance = true
 	self.load_shell_use_carry = deep_clone(self.load_shell)
 	self.load_shell_use_carry.required_carry = {
 		"flak_shell",
