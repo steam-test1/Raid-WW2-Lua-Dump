@@ -494,6 +494,8 @@ function CharacterSelectionGui:_pre_close_screen()
 	else
 		self:_extra_character_setup()
 	end
+
+	self:reset_weapon_challenges()
 end
 
 function CharacterSelectionGui:_extra_character_setup()
@@ -549,6 +551,12 @@ function CharacterSelectionGui:_pre_close_screen_loading_done()
 	managers.player:set_character_class(managers.skilltree:get_character_profile_class())
 	self:_extra_character_setup()
 	managers.network:start_matchmake_attributes_update()
+	self:reset_weapon_challenges()
+end
+
+function CharacterSelectionGui:reset_weapon_challenges()
+	managers.challenge:deactivate_all_challenges()
+	managers.weapon_skills:activate_current_challenges_for_weapon(managers.player:get_current_state()._equipped_unit:base()._name_id)
 end
 
 function CharacterSelectionGui:close()

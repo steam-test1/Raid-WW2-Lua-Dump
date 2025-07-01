@@ -192,28 +192,12 @@ function DP28RaycastWeaponBase:set_magazine_time_stamp(time)
 	data.unit:anim_set_time(Idstring(data.animations.fire), time)
 end
 
-function DP28RaycastWeaponBase:tweak_data_anim_stop(anim, fire)
-	if anim == "fire" and not fire then
+function DP28RaycastWeaponBase:tweak_data_anim_stop(anim, force_fire)
+	if anim == "fire" and not force_fire then
 		return
 	end
 
-	local data = tweak_data.weapon.factory[self._factory_id]
-
-	if data.animations and data.animations[anim] then
-		local anim_name = data.animations[anim]
-
-		self._unit:anim_stop(Idstring(anim_name))
-	end
-
-	for part_id, data in pairs(self._parts) do
-		if data.unit and data.animations and data.animations[anim] then
-			local anim_name = data.animations[anim]
-
-			data.unit:anim_stop(Idstring(anim_name))
-		end
-	end
-
-	DP28RaycastWeaponBase.super.super.tweak_data_anim_stop(self, anim)
+	DP28RaycastWeaponBase.super.tweak_data_anim_stop(self, anim)
 end
 
 function DP28RaycastWeaponBase:reset_magazine_anim_pos()

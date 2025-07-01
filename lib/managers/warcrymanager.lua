@@ -234,6 +234,18 @@ function WarcryManager:_fill_meter_by_value(value, sync)
 	end
 end
 
+function WarcryManager:add_warcry_comm_wheel_option(index)
+	local warcry_comm_wheel_option = {
+		id = "warcry",
+		text_id = "com_wheel_warcry",
+		clbk = callback(self, self, "activate_warcry"),
+		color = Color.white,
+		icon = tweak_data.warcry[self._active_warcry:get_type()].hud_icon,
+	}
+
+	managers.hud:add_comm_wheel_option(warcry_comm_wheel_option, index)
+end
+
 function WarcryManager:current_meter_percentage()
 	return self._meter_value / self._meter_max_value * 100
 end
@@ -244,16 +256,7 @@ function WarcryManager:_on_meter_full()
 	managers.hud:set_player_warcry_meter_glow(true)
 	managers.network:session():send_to_peers_synched("sync_warcry_meter_glow", true)
 	managers.hud._sound_source:post_event("warcry_available")
-
-	local warcry_comm_wheel_option = {
-		id = "warcry",
-		text_id = "com_wheel_warcry",
-		clbk = callback(self, self, "activate_warcry"),
-		color = Color.white,
-		icon = tweak_data.warcry[self._active_warcry:get_type()].hud_icon,
-	}
-
-	managers.hud:add_comm_wheel_option(warcry_comm_wheel_option, 1)
+	self:add_warcry_comm_wheel_option(1)
 
 	local prompt_text
 

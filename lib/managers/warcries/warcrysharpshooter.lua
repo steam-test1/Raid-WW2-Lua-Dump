@@ -84,13 +84,7 @@ end
 function WarcrySharpshooter:get_level_description(level)
 	level = math.clamp(level, 1, #self._tweak_data.buffs)
 
-	if level == 3 then
-		return managers.localization:text("skill_warcry_sharpshooter_level_2_desc")
-	elseif level >= 2 then
-		return managers.localization:text("skill_warcry_sharpshooter_level_" .. tostring(level) .. "_desc")
-	end
-
-	return "warcry_sharpshooter_desc"
+	return managers.localization:text("skill_warcry_sharpshooter_level_" .. tostring(level) .. "_desc")
 end
 
 function WarcrySharpshooter:_on_enemy_killed(params)

@@ -3762,6 +3762,8 @@ function PlayerManager:enter_vehicle(vehicle, locator)
 	else
 		managers.network:session():send_to_host("sync_enter_vehicle_host", vehicle, seat.name, peer_id, player)
 	end
+
+	managers.hud:remove_comm_wheel_option("warcry")
 end
 
 function PlayerManager:server_enter_vehicle(vehicle, peer_id, player, seat_name)
@@ -3845,6 +3847,11 @@ function PlayerManager:exit_vehicle()
 	local player = self:local_player()
 
 	managers.network:session():send_to_peers_synched("sync_vehicle_player", "exit", nil, peer_id, player, nil, nil)
+
+	if managers.warcry:current_meter_percentage() >= 100 then
+		managers.warcry:add_warcry_comm_wheel_option(1)
+	end
+
 	self:_exit_vehicle(peer_id, player)
 end
 

@@ -13,6 +13,7 @@ function GrenadeCluster:_setup_from_tweak_data()
 	self._effect_name = self._tweak_data.effect_name or "effects/vanilla/explosions/exp_hand_grenade_001"
 	self._curve_pow = self._tweak_data.curve_pow or 3
 	self._damage = self._tweak_data.damage
+	self._killzone_range = self._tweak_data.killzone_range or 0.1
 	self._player_damage = self._tweak_data.player_damage
 	self._alert_radius = self._tweak_data.alert_radius
 
@@ -63,6 +64,7 @@ function GrenadeCluster:_detonate(tag, unit, body, other_unit, other_body, posit
 		damage = self._damage,
 		hit_pos = pos,
 		ignore_unit = self._unit,
+		killzone_range = self._killzone_range,
 		range = range,
 		user = self._unit,
 	})

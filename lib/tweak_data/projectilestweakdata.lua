@@ -15,9 +15,10 @@ function ProjectilesTweakData:init(tweak_data)
 	self.m24.expire_t = 1.1
 	self.m24.repeat_expire_t = 1.5
 	self.m24.is_a_grenade = true
-	self.m24.damage = 500
-	self.m24.player_damage = 10
+	self.m24.damage = 750
+	self.m24.player_damage = 20
 	self.m24.range = 1000
+	self.m24.killzone_range = 0.75
 	self.m24.init_timer = 4.5
 	self.m24.animations = {}
 	self.m24.animations.equip_id = "equip_welrod"
@@ -44,9 +45,10 @@ function ProjectilesTweakData:init(tweak_data)
 	self.concrete.expire_t = 1.1
 	self.concrete.repeat_expire_t = 1.5
 	self.concrete.is_a_grenade = true
-	self.concrete.damage = 600
-	self.concrete.player_damage = 10
+	self.concrete.damage = 850
+	self.concrete.player_damage = 20
 	self.concrete.range = 750
+	self.m24.killzone_range = 0.75
 	self.concrete.init_timer = 4.5
 	self.concrete.animations = {}
 	self.concrete.animations.equip_id = "equip_welrod"
@@ -68,6 +70,7 @@ function ProjectilesTweakData:init(tweak_data)
 	self.cluster.impact_detonation = true
 	self.cluster.max_amount = 3
 	self.cluster.anim_global_param = "projectile_frag"
+	self.cluster.killzone_range = 0.15
 	self.cluster.is_a_grenade = true
 	self.cluster.damage = 250
 	self.cluster.launch_speed = 20
@@ -122,6 +125,7 @@ function ProjectilesTweakData:init(tweak_data)
 		dot_trigger_max_distance = 3000,
 	}
 	self.molotov.range = 75
+	self.molotov.killzone_range = 0
 	self.molotov.burn_duration = 20
 	self.molotov.burn_tick_period = 0.5
 	self.molotov.sound_event_impact_duration = 4
@@ -143,6 +147,7 @@ function ProjectilesTweakData:init(tweak_data)
 	self.mortar_shell.damage = 150
 	self.mortar_shell.player_damage = 10
 	self.mortar_shell.range = 1000
+	self.mortar_shell.killzone_range = 0
 	self.mortar_shell.init_timer = 15
 	self.mortar_shell.effect_name = "effects/vanilla/explosions/exp_artillery_explosion_001"
 	self.mortar_shell.sound_event = "grenade_launcher_explosion"

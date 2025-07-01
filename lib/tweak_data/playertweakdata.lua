@@ -553,8 +553,8 @@ function PlayerTweakData:_init_new_stances()
 	self.stances.thompson.crouched.vel_overshot.pitch_pos = -5
 	self.stances.sten = deep_clone(self.stances.default)
 
-	local pivot_shoulder_translation = Vector3(7.78209, 11.5549, -0.505247)
-	local pivot_shoulder_rotation = Rotation(5.02512e-05, 0.000521229, -0.000312375)
+	local pivot_shoulder_translation = Vector3(7.77455, 11.5544, -0.499107)
+	local pivot_shoulder_rotation = Rotation(-4.74979e-06, 0.00043329, -0.000178439)
 	local pivot_head_translation = Vector3(9, 15, -5.5)
 	local pivot_head_rotation = Rotation(0, 0, -12)
 

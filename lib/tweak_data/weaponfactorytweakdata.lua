@@ -604,6 +604,11 @@ function WeaponFactoryTweakData:_init_sten()
 		name_id = "bm_wp_smg_sten_fg_wooden",
 		type = "foregrip",
 		unit = "units/vanilla/weapons/wpn_fps_smg_sten_pts/wpn_fps_smg_sten_fg_wooden",
+		stance_mod = {
+			wpn_fps_smg_sten = {
+				translation = Vector3(-0.1535, 10.5846, 2.7523),
+			},
+		},
 		stats = {
 			value = 1,
 		},
@@ -1480,6 +1485,7 @@ function WeaponFactoryTweakData:_init_m1911()
 	}
 	self.parts.wpn_fps_pis_m1911_m_extended = {
 		a_obj = "a_m",
+		fps_animation_weight = "m1911_t1_mag",
 		name_id = "bm_wp_pis_m1911_m_extended",
 		third_unit = "units/vanilla/weapons/wpn_third_pis_m1911_pts/wpn_third_pis_m1911_m_extended",
 		type = "magazine",
@@ -1494,6 +1500,7 @@ function WeaponFactoryTweakData:_init_m1911()
 	}
 	self.parts.wpn_fps_pis_m1911_m_banana = {
 		a_obj = "a_m",
+		fps_animation_weight = "m1911_t2_mag",
 		name_id = "bm_wp_pis_m1911_m_banana",
 		third_unit = "units/vanilla/weapons/wpn_third_pis_m1911_pts/wpn_third_pis_m1911_m_banana",
 		type = "magazine",
@@ -1529,6 +1536,7 @@ function WeaponFactoryTweakData:_init_m1911()
 	}
 	self.parts.wpn_fps_pis_m1911_fg_tommy = {
 		a_obj = "a_body",
+		fps_animation_weight = "m1911_t2_spread",
 		name_id = "bm_wp_pis_m1911_fg_tommy",
 		third_unit = "units/vanilla/weapons/wpn_third_pis_m1911_pts/wpn_third_pis_m1911_fg_tommy",
 		type = "foregrip",
@@ -2041,6 +2049,7 @@ function WeaponFactoryTweakData:_init_tt33()
 	}
 	self.parts.wpn_fps_pis_tt33_m_extended = {
 		a_obj = "a_m",
+		fps_animation_weight = "tt33_t1_mag",
 		name_id = "bm_wp_pis_tt33_m_extended",
 		third_unit = "units/upd_001/weapons/wpn_third_pis_tt33_pts/wpn_third_pis_tt33_m_extended",
 		type = "magazine",
@@ -2055,6 +2064,7 @@ function WeaponFactoryTweakData:_init_tt33()
 	}
 	self.parts.wpn_fps_pis_tt33_m_long = {
 		a_obj = "a_m",
+		fps_animation_weight = "tt33_t2_mag",
 		name_id = "bm_wp_pis_tt33_m_long",
 		third_unit = "units/upd_001/weapons/wpn_third_pis_tt33_pts/wpn_third_pis_tt33_m_long",
 		type = "magazine",

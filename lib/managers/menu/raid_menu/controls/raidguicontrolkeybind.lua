@@ -1,6 +1,7 @@
 RaidGuiControlKeyBind = RaidGuiControlKeyBind or class(RaidGUIControl)
 RaidGuiControlKeyBind.WIDTH_SHORT = 32
-RaidGuiControlKeyBind.WIDTH_LONG = 112
+RaidGuiControlKeyBind.WIDTH_MEDIUM = 112
+RaidGuiControlKeyBind.WIDTH_LONG = 172
 RaidGuiControlKeyBind.WIDTH_VERY_LONG = 236
 RaidGuiControlKeyBind.HEIGHT = 32
 RaidGuiControlKeyBind.PADDING = 16
@@ -317,6 +318,8 @@ function RaidGuiControlKeyBind:_create_keybind_layout()
 
 	if keybind_width < RaidGuiControlKeyBind.WIDTH_SHORT then
 		keybind_width = RaidGuiControlKeyBind.WIDTH_SHORT
+	elseif keybind_width < RaidGuiControlKeyBind.WIDTH_MEDIUM then
+		keybind_width = RaidGuiControlKeyBind.WIDTH_MEDIUM
 	elseif keybind_width < RaidGuiControlKeyBind.WIDTH_LONG then
 		keybind_width = RaidGuiControlKeyBind.WIDTH_LONG
 	else

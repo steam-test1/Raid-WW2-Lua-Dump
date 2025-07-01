@@ -72,6 +72,7 @@ function ExplosionManager:detect_and_give_dmg(params)
 	local results = {}
 	local alert_radius = params.alert_radius or 10000
 	local armor_piercing = params.armor_piercing
+	local killzone_range = params.killzone_range
 
 	if params.push_units ~= nil then
 		push_units = params.push_units
@@ -227,6 +228,8 @@ function ExplosionManager:detect_and_give_dmg(params)
 			len = mvector3.direction(dir, hit_pos, dir)
 
 			if armor_piercing then
+				damage = dmg
+			elseif killzone_range and killzone_range > len / range then
 				damage = dmg
 			else
 				damage = dmg * math.pow(math.clamp(1 - len / range, 0, 1), curve_pow)

@@ -2140,6 +2140,17 @@ function CopDamage:sync_damage_explosion(attacker_unit, damage_percent, i_attack
 			self:_show_death_hint(self._unit:base()._tweak_table)
 			managers.statistics:killed(data)
 
+			local death_event_params = {}
+
+			death_event_params.damage_type = WeaponTweakData.DAMAGE_TYPE_EXPLOSION
+			death_event_params.enemy_type = tweak_data.character[self._unit:base()._tweak_table].type
+
+			if self:_dismember_condition(attack_data, true) then
+				death_event_params.dismemberment_occured = true
+			end
+
+			managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.PLAYER_KILLED_ENEMY, death_event_params)
+
 			if CopDamage.is_civilian(self._unit:base()._tweak_table) then
 				-- block empty
 			end

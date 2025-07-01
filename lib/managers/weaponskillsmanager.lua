@@ -800,6 +800,10 @@ function WeaponSkillsManager:apply_weapon_blueprint(weapon_id, weapon_category_i
 			if weapon_data.weapon_id == weapon_id then
 				Global.blackmarket_manager.crafted_items[weapon_category_name][weapon_index].blueprint = new_blueprint
 
+				local local_peer = managers.network:session():local_peer()
+
+				local_peer:set_outfit_string(managers.blackmarket:outfit_string())
+
 				break
 			end
 		end

@@ -4459,8 +4459,6 @@ function PlayerStandard:_check_stop_shooting()
 
 		if weap_base._name_id == "dp28" then
 			weap_base:weapon_parts_anim_pause()
-		else
-			weap_base:tweak_data_anim_stop("fire")
 		end
 
 		local fire_mode = weap_base:fire_mode()

@@ -1478,7 +1478,7 @@ function RaycastWeaponBase:add_ammo(ratio, add_amount_override)
 	local picked_up = true
 
 	add_amount = add_amount or self._ammo_pickup_amount
-	add_amount = math.floor(add_amount * (ratio or 1))
+	add_amount = math.ceil(add_amount * (ratio or 1))
 
 	local ammo_before_pickup = self:get_ammo_total()
 
