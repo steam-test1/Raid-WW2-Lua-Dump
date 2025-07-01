@@ -31,8 +31,8 @@ LootDropTweakData.LOOT_VALUE_TYPE_DOGTAG_AMOUNT = 1
 LootDropTweakData.LOOT_VALUE_TYPE_DOGTAG_BIG_AMOUNT = 3
 LootDropTweakData.TOTAL_LOOT_VALUE_DEFAULT = 35
 LootDropTweakData.TOTAL_DOGTAGS_DEFAULT = 25
-LootDropTweakData.BRONZE_POINT_REQUIREMENT = 0.35
-LootDropTweakData.SILVER_POINT_REQUIREMENT = 0.65
+LootDropTweakData.BRONZE_POINT_REQUIREMENT = 0.2
+LootDropTweakData.SILVER_POINT_REQUIREMENT = 0.6
 LootDropTweakData.GOLD_POINT_REQUIREMENT = 0.85
 LootDropTweakData.DROP_CONDITION_BELOW_MAX_LEVEL = "below_max_level"
 LootDropTweakData.POINT_REQUIREMENTS = {
@@ -57,29 +57,47 @@ function LootDropTweakData:init(tweak_data)
 	self:_init_groups()
 	self:_init_loot_values()
 	self:_init_dog_tag_stats()
+
+	self.difficulty_reward_multiplier = {
+		1,
+		2,
+		3,
+		4.5,
+	}
 end
 
 function LootDropTweakData:_init_xp_packs()
 	self.xp_packs = {}
+
+	local multi = 2
+	local xp = 500
+	local xp2 = xp * multi
+
 	self.xp_packs.tiny = {
-		xp_max = 1000,
-		xp_min = 500,
 		reward_type = LootDropTweakData.REWARD_XP,
+		xp_max = xp2,
+		xp_min = xp,
 	}
+	xp = xp2
+	xp2 = xp * multi
 	self.xp_packs.small = {
-		xp_max = 3000,
-		xp_min = 1200,
 		reward_type = LootDropTweakData.REWARD_XP,
+		xp_max = xp2,
+		xp_min = xp,
 	}
+	xp = xp2
+	xp2 = xp * multi
 	self.xp_packs.medium = {
-		xp_max = 6000,
-		xp_min = 3500,
 		reward_type = LootDropTweakData.REWARD_XP,
+		xp_max = xp2,
+		xp_min = xp,
 	}
+	xp = xp2
+	xp2 = xp * multi
 	self.xp_packs.large = {
-		xp_max = 9000,
-		xp_min = 7000,
 		reward_type = LootDropTweakData.REWARD_XP,
+		xp_max = xp2,
+		xp_min = xp,
 	}
 end
 
@@ -111,17 +129,16 @@ function LootDropTweakData:_init_customization_rewards()
 	}
 end
 
-function LootDropTweakData:get_month_event()
-	local tdate = os.date("*t")
-
-	return LootDropTweakData.EVENT_MONTHS[tdate.month]
-end
-
 function LootDropTweakData:_init_gold_bar_rewards()
 	self.gold_bar_rewards = {}
-	self.gold_bar_rewards.small = {
-		gold_bars_max = 5,
+	self.gold_bar_rewards.tiny = {
+		gold_bars_max = 1,
 		gold_bars_min = 1,
+		reward_type = LootDropTweakData.REWARD_GOLD_BARS,
+	}
+	self.gold_bar_rewards.small = {
+		gold_bars_max = 4,
+		gold_bars_min = 2,
 		reward_type = LootDropTweakData.REWARD_GOLD_BARS,
 	}
 	self.gold_bar_rewards.medium = {
@@ -131,7 +148,7 @@ function LootDropTweakData:_init_gold_bar_rewards()
 	}
 	self.gold_bar_rewards.large = {
 		gold_bars_max = 15,
-		gold_bars_min = 10,
+		gold_bars_min = 11,
 		reward_type = LootDropTweakData.REWARD_GOLD_BARS,
 	}
 end
@@ -158,6 +175,11 @@ function LootDropTweakData:_init_categories()
 		chance = 100,
 		value = self.xp_packs.large,
 	}
+	self.loot_categories.category_gold_tiny = {}
+	self.loot_categories.category_gold_tiny[1] = {
+		chance = 100,
+		value = self.gold_bar_rewards.tiny,
+	}
 	self.loot_categories.category_gold_low = {}
 	self.loot_categories.category_gold_low[1] = {
 		chance = 100,
@@ -180,50 +202,22 @@ function LootDropTweakData:_init_categories()
 			reward_type = LootDropTweakData.REWARD_MELEE_WEAPON,
 		},
 	}
-	self.loot_categories.category_cards_low = {}
-	self.loot_categories.category_cards_low[1] = {
+	self.loot_categories.category_cards_pack = {}
+	self.loot_categories.category_cards_pack[1] = {
 		chance = 100,
 		value = self.card_packs.regular,
 	}
-	self.loot_categories.category_cards_mid = {}
-	self.loot_categories.category_cards_mid[1] = {
-		chance = 100,
-		value = self.card_packs.regular,
-	}
-	self.loot_categories.category_cards_high = {}
-	self.loot_categories.category_cards_high[1] = {
-		chance = 100,
-		value = self.card_packs.regular,
-	}
-	self.loot_categories.category_custom_low = {}
-	self.loot_categories.category_custom_low[1] = {
-		chance = 90,
+	self.loot_categories.category_cosmetics = {}
+	self.loot_categories.category_cosmetics[1] = {
+		chance = 50,
 		value = self.customization_rewards.common,
 	}
-	self.loot_categories.category_custom_low[2] = {
-		chance = 10,
+	self.loot_categories.category_cosmetics[2] = {
+		chance = 30,
 		value = self.customization_rewards.uncommon,
 	}
-	self.loot_categories.category_custom_mid = {}
-	self.loot_categories.category_custom_mid[1] = {
-		chance = 65,
-		value = self.customization_rewards.common,
-	}
-	self.loot_categories.category_custom_mid[2] = {
-		chance = 25,
-		value = self.customization_rewards.uncommon,
-	}
-	self.loot_categories.category_custom_mid[3] = {
-		chance = 10,
-		value = self.customization_rewards.rare,
-	}
-	self.loot_categories.category_custom_high = {}
-	self.loot_categories.category_custom_high[1] = {
-		chance = 25,
-		value = self.customization_rewards.uncommon,
-	}
-	self.loot_categories.category_custom_high[2] = {
-		chance = 75,
+	self.loot_categories.category_cosmetics[3] = {
+		chance = 15,
 		value = self.customization_rewards.rare,
 	}
 	self.loot_categories.category_halloween_2017 = {}
@@ -242,213 +236,129 @@ end
 
 function LootDropTweakData:_init_groups()
 	self.loot_groups = {}
-	self.loot_groups.loot_group_basic = {}
-	self.loot_groups.loot_group_basic[1] = {
+	self.loot_groups_doubles_fallback = {}
+
+	self:_init_groups_basic()
+	self:_init_groups_bronze()
+	self:_init_groups_silver()
+	self:_init_groups_gold()
+	self:_init_groups_challenges()
+end
+
+function LootDropTweakData:_init_groups_basic()
+	self.loot_groups_doubles_fallback.loot_group_basic = {}
+
+	table.insert(self.loot_groups_doubles_fallback.loot_group_basic, {
+		chance = 30,
+		conditions = {
+			LootDropTweakData.DROP_CONDITION_BELOW_MAX_LEVEL,
+		},
+		value = self.loot_categories.category_xp_min,
+	})
+	table.insert(self.loot_groups_doubles_fallback.loot_group_basic, {
+		chance = 60,
+		value = self.loot_categories.category_gold_tiny,
+	})
+
+	self.loot_groups.loot_group_basic = deep_clone(self.loot_groups_doubles_fallback.loot_group_basic)
+end
+
+function LootDropTweakData:_init_groups_bronze()
+	self.loot_groups_doubles_fallback.loot_group_bronze = {}
+
+	table.insert(self.loot_groups_doubles_fallback.loot_group_bronze, {
 		chance = 20,
 		conditions = {
 			LootDropTweakData.DROP_CONDITION_BELOW_MAX_LEVEL,
 		},
 		value = self.loot_categories.category_xp_min,
-	}
-	self.loot_groups.loot_group_basic[2] = {
-		chance = 40,
-		value = self.loot_categories.category_cards_low,
-	}
-	self.loot_groups.loot_group_basic[3] = {
-		chance = 5,
-		value = self.loot_categories.category_custom_low,
-	}
-	self.loot_groups.loot_group_basic[4] = {
-		chance = 35,
-		value = self.loot_categories.category_gold_low,
-	}
-	self.loot_groups.loot_group_bronze = {}
-	self.loot_groups.loot_group_bronze[1] = {
+	})
+	table.insert(self.loot_groups_doubles_fallback.loot_group_bronze, {
 		chance = 20,
-		conditions = {
-			LootDropTweakData.DROP_CONDITION_BELOW_MAX_LEVEL,
-		},
 		value = self.loot_categories.category_xp_low,
-	}
-	self.loot_groups.loot_group_bronze[2] = {
-		chance = 30,
+	})
+	table.insert(self.loot_groups_doubles_fallback.loot_group_bronze, {
+		chance = 60,
 		value = self.loot_categories.category_gold_low,
-	}
-	self.loot_groups.loot_group_bronze[3] = {
-		chance = 25,
-		value = self.loot_categories.category_cards_low,
-	}
-	self.loot_groups.loot_group_bronze[4] = {
-		chance = 15,
-		value = self.loot_categories.category_cards_mid,
-	}
-	self.loot_groups.loot_group_bronze[5] = {
-		chance = 5,
-		value = self.loot_categories.category_custom_low,
-	}
-	self.loot_groups.loot_group_bronze[6] = {
-		chance = 2.5,
-		value = self.loot_categories.category_custom_mid,
-	}
-	self.loot_groups.loot_group_bronze[7] = {
-		chance = 2.5,
-		value = self.loot_categories.category_melee,
-	}
-	self.loot_groups.loot_group_silver = {}
-	self.loot_groups.loot_group_silver[1] = {
-		chance = 20,
-		conditions = {
-			LootDropTweakData.DROP_CONDITION_BELOW_MAX_LEVEL,
-		},
-		value = self.loot_categories.category_xp_mid,
-	}
-	self.loot_groups.loot_group_silver[2] = {
-		chance = 27,
+	})
+	table.insert(self.loot_groups_doubles_fallback.loot_group_bronze, {
+		chance = 60,
 		value = self.loot_categories.category_gold_mid,
-	}
-	self.loot_groups.loot_group_silver[3] = {
-		chance = 40,
-		value = self.loot_categories.category_cards_mid,
-	}
-	self.loot_groups.loot_group_silver[4] = {
-		chance = 10,
-		value = self.loot_categories.category_custom_mid,
-	}
-	self.loot_groups.loot_group_silver[5] = {
-		chance = 3,
-		value = self.loot_categories.category_melee,
-	}
-	self.loot_groups.loot_group_gold = {}
-	self.loot_groups.loot_group_gold[1] = {
-		chance = 10,
-		conditions = {
-			LootDropTweakData.DROP_CONDITION_BELOW_MAX_LEVEL,
-		},
-		value = self.loot_categories.category_xp_high,
-	}
-	self.loot_groups.loot_group_gold[2] = {
-		chance = 10,
-		value = self.loot_categories.category_gold_high,
-	}
-	self.loot_groups.loot_group_gold[3] = {
-		chance = 5,
-		value = self.loot_categories.category_cards_mid,
-	}
-	self.loot_groups.loot_group_gold[4] = {
+	})
+	table.insert(self.loot_groups_doubles_fallback.loot_group_bronze, {
 		chance = 15,
-		value = self.loot_categories.category_cards_high,
-	}
-	self.loot_groups.loot_group_gold[5] = {
-		chance = 20,
-		value = self.loot_categories.category_custom_mid,
-	}
-	self.loot_groups.loot_group_gold[6] = {
+		value = self.loot_categories.category_cards_pack,
+	})
+
+	self.loot_groups.loot_group_bronze = deep_clone(self.loot_groups_doubles_fallback.loot_group_bronze)
+end
+
+function LootDropTweakData:_init_groups_silver()
+	self.loot_groups_doubles_fallback.loot_group_silver = {}
+
+	table.insert(self.loot_groups_doubles_fallback.loot_group_silver, {
+		chance = 40,
+		value = self.loot_categories.category_xp_mid,
+	})
+	table.insert(self.loot_groups_doubles_fallback.loot_group_silver, {
+		chance = 60,
+		value = self.loot_categories.category_gold_low,
+	})
+	table.insert(self.loot_groups_doubles_fallback.loot_group_silver, {
 		chance = 30,
-		value = self.loot_categories.category_custom_high,
-	}
-	self.loot_groups.loot_group_gold[7] = {
-		chance = 5,
+		value = self.loot_categories.category_gold_mid,
+	})
+	table.insert(self.loot_groups_doubles_fallback.loot_group_silver, {
+		chance = 15,
+		value = self.loot_categories.category_cards_pack,
+	})
+
+	self.loot_groups.loot_group_silver = deep_clone(self.loot_groups_doubles_fallback.loot_group_silver)
+
+	table.insert(self.loot_groups.loot_group_silver, {
+		chance = 20,
 		value = self.loot_categories.category_melee,
-	}
+	})
+	table.insert(self.loot_groups.loot_group_silver, {
+		chance = 10,
+		value = self.loot_categories.category_cosmetics,
+	})
+end
+
+function LootDropTweakData:_init_groups_gold()
+	self.loot_groups_doubles_fallback.loot_group_gold = {}
+
+	table.insert(self.loot_groups_doubles_fallback.loot_group_gold, {
+		chance = 40,
+		value = self.loot_categories.category_xp_high,
+	})
+	table.insert(self.loot_groups_doubles_fallback.loot_group_gold, {
+		chance = 90,
+		value = self.loot_categories.category_gold_high,
+	})
+	table.insert(self.loot_groups_doubles_fallback.loot_group_gold, {
+		chance = 15,
+		value = self.loot_categories.category_cards_pack,
+	})
+
+	self.loot_groups.loot_group_gold = deep_clone(self.loot_groups_doubles_fallback.loot_group_gold)
+
+	table.insert(self.loot_groups.loot_group_gold, {
+		chance = 30,
+		value = self.loot_categories.category_melee,
+	})
+	table.insert(self.loot_groups.loot_group_gold, {
+		chance = 20,
+		value = self.loot_categories.category_cosmetics,
+	})
+end
+
+function LootDropTweakData:_init_groups_challenges()
 	self.loot_groups.loot_group_halloween_2017 = {}
 	self.loot_groups.loot_group_halloween_2017[1] = {
 		chance = 100,
 		value = self.loot_categories.category_halloween_2017,
 	}
-	self.loot_groups_doubles_fallback = {}
-	self.loot_groups_doubles_fallback.loot_group_basic = {}
-	self.loot_groups_doubles_fallback.loot_group_basic[1] = {
-		chance = 45,
-		value = self.loot_categories.category_gold_low,
-	}
-	self.loot_groups_doubles_fallback.loot_group_basic[2] = {
-		chance = 45,
-		conditions = {
-			LootDropTweakData.DROP_CONDITION_BELOW_MAX_LEVEL,
-		},
-		value = self.loot_categories.category_xp_min,
-	}
-	self.loot_groups_doubles_fallback.loot_group_basic[3] = {
-		chance = 10,
-		value = self.loot_categories.category_cards_low,
-	}
-	self.loot_groups_doubles_fallback.loot_group_bronze = {}
-	self.loot_groups_doubles_fallback.loot_group_bronze[1] = {
-		chance = 40,
-		value = self.loot_categories.category_gold_low,
-	}
-	self.loot_groups_doubles_fallback.loot_group_bronze[2] = {
-		chance = 5,
-		value = self.loot_categories.category_gold_mid,
-	}
-	self.loot_groups_doubles_fallback.loot_group_bronze[3] = {
-		chance = 15,
-		value = self.loot_categories.category_cards_low,
-	}
-	self.loot_groups_doubles_fallback.loot_group_bronze[4] = {
-		chance = 5,
-		value = self.loot_categories.category_cards_mid,
-	}
-	self.loot_groups_doubles_fallback.loot_group_bronze[5] = {
-		chance = 30,
-		conditions = {
-			LootDropTweakData.DROP_CONDITION_BELOW_MAX_LEVEL,
-		},
-		value = self.loot_categories.category_xp_low,
-	}
-	self.loot_groups_doubles_fallback.loot_group_silver = {}
-	self.loot_groups_doubles_fallback.loot_group_silver[1] = {
-		chance = 38,
-		value = self.loot_categories.category_gold_mid,
-	}
-	self.loot_groups_doubles_fallback.loot_group_silver[2] = {
-		chance = 7,
-		value = self.loot_categories.category_gold_high,
-	}
-	self.loot_groups_doubles_fallback.loot_group_silver[3] = {
-		chance = 20,
-		value = self.loot_categories.category_cards_mid,
-	}
-	self.loot_groups_doubles_fallback.loot_group_silver[4] = {
-		chance = 35,
-		conditions = {
-			LootDropTweakData.DROP_CONDITION_BELOW_MAX_LEVEL,
-		},
-		value = self.loot_categories.category_xp_mid,
-	}
-	self.loot_groups_doubles_fallback.loot_group_gold = {}
-	self.loot_groups_doubles_fallback.loot_group_gold[1] = {
-		chance = 35,
-		value = self.loot_categories.category_gold_high,
-	}
-	self.loot_groups_doubles_fallback.loot_group_gold[2] = {
-		chance = 10,
-		value = self.loot_categories.category_cards_mid,
-	}
-	self.loot_groups_doubles_fallback.loot_group_gold[3] = {
-		chance = 20,
-		value = self.loot_categories.category_cards_high,
-	}
-	self.loot_groups_doubles_fallback.loot_group_gold[4] = {
-		chance = 35,
-		conditions = {
-			LootDropTweakData.DROP_CONDITION_BELOW_MAX_LEVEL,
-		},
-		value = self.loot_categories.category_xp_high,
-	}
-
-	local season = self:get_month_event()
-
-	if season and season == LootDropTweakData.EVENT_MONTH_HALLOWEEN then
-		table.insert(self.loot_groups.loot_group_silver, {
-			chance = 10,
-			value = self.loot_categories.category_halloween_2017,
-		})
-		table.insert(self.loot_groups.loot_group_gold, {
-			chance = 100,
-			value = self.loot_categories.category_halloween_2017,
-		})
-	end
 end
 
 function LootDropTweakData:_init_loot_values()
@@ -783,4 +693,10 @@ function LootDropTweakData:get_gold_from_rarity(rarity)
 	else
 		return nil
 	end
+end
+
+function LootDropTweakData:get_month_event()
+	local tdate = os.date("*t")
+
+	return LootDropTweakData.EVENT_MONTHS[tdate.month]
 end
