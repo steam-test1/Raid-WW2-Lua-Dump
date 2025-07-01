@@ -1105,10 +1105,6 @@ function WeaponSelectionGui:_update_weapon_stats(reset_applied_stats)
 		local stability = f2s(base_stats.recoil.value) + f2s(skill_stats.recoil.value)
 		local accuracy_as_spread = false
 
-		if tweak_data.weapon[selected_weapon_data.weapon_id].category == WeaponTweakData.WEAPON_CATEGORY_SHOTGUN then
-			accuracy_as_spread = true
-		end
-
 		if reset_applied_stats then
 			self._weapon_stats:set_applied_stats({
 				accuracy_applied_value = accuracy,

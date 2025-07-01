@@ -411,7 +411,7 @@ function WeaponSkillsTweakData:_init_geco_skill_tree(tweak_data)
 				},
 			},
 			cost = 2,
-			skill_name = WeaponSkillsTweakData.SKILL_WIDER_SPREAD,
+			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 			value = 5,
 		},
 	}
@@ -436,7 +436,7 @@ function WeaponSkillsTweakData:_init_geco_skill_tree(tweak_data)
 				},
 			},
 			cost = 2,
-			skill_name = WeaponSkillsTweakData.SKILL_WIDER_SPREAD,
+			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 			value = 6,
 			weapon_parts = {
 				"wpn_fps_sho_geco_b_short",
@@ -485,7 +485,7 @@ function WeaponSkillsTweakData:_init_geco_skill_tree(tweak_data)
 				},
 			},
 			cost = 4,
-			skill_name = WeaponSkillsTweakData.SKILL_WIDER_SPREAD,
+			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 			value = 7,
 		},
 	}
@@ -557,7 +557,7 @@ function WeaponSkillsTweakData:_init_geco_skill_tree(tweak_data)
 					type = ChallengeTweakData.TASK_KILL_ENEMIES,
 				},
 			},
-			skill_name = WeaponSkillsTweakData.SKILL_WIDER_SPREAD,
+			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 			value = 8,
 		},
 	}
@@ -4260,7 +4260,7 @@ function WeaponSkillsTweakData:_init_m1912_skill_tree(tweak_data)
 				},
 			},
 			cost = 2,
-			skill_name = WeaponSkillsTweakData.SKILL_WIDER_SPREAD,
+			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 			value = 5,
 			weapon_parts = {
 				"wpn_fps_sho_m1912_fg_long",
@@ -4316,7 +4316,7 @@ function WeaponSkillsTweakData:_init_m1912_skill_tree(tweak_data)
 				},
 			},
 			cost = 2,
-			skill_name = WeaponSkillsTweakData.SKILL_WIDER_SPREAD,
+			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 			value = 6,
 			weapon_parts = {
 				"wpn_fps_sho_m1912_b_long",
@@ -4393,7 +4393,7 @@ function WeaponSkillsTweakData:_init_m1912_skill_tree(tweak_data)
 				},
 			},
 			cost = 4,
-			skill_name = WeaponSkillsTweakData.SKILL_WIDER_SPREAD,
+			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 			value = 7,
 			weapon_parts = {
 				"wpn_fps_sho_m1912_b_short",
@@ -4469,7 +4469,7 @@ function WeaponSkillsTweakData:_init_m1912_skill_tree(tweak_data)
 				},
 			},
 			cost = 4,
-			skill_name = WeaponSkillsTweakData.SKILL_WIDER_SPREAD,
+			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 			value = 8,
 			weapon_parts = {
 				"wpn_fps_sho_m1912_b_heat_shield",
@@ -4554,7 +4554,7 @@ function WeaponSkillsTweakData:_init_ithaca_skill_tree(tweak_data)
 				},
 			},
 			cost = 2,
-			skill_name = WeaponSkillsTweakData.SKILL_WIDER_SPREAD,
+			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 			value = 5,
 		},
 	}
@@ -4607,7 +4607,7 @@ function WeaponSkillsTweakData:_init_ithaca_skill_tree(tweak_data)
 				},
 			},
 			cost = 2,
-			skill_name = WeaponSkillsTweakData.SKILL_WIDER_SPREAD,
+			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 			value = 6,
 		},
 	}
@@ -4681,7 +4681,7 @@ function WeaponSkillsTweakData:_init_ithaca_skill_tree(tweak_data)
 				},
 			},
 			cost = 4,
-			skill_name = WeaponSkillsTweakData.SKILL_WIDER_SPREAD,
+			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 			value = 7,
 			weapon_parts = {
 				"wpn_fps_sho_ithaca_b_reinforced",
@@ -4757,7 +4757,7 @@ function WeaponSkillsTweakData:_init_ithaca_skill_tree(tweak_data)
 				},
 			},
 			cost = 4,
-			skill_name = WeaponSkillsTweakData.SKILL_WIDER_SPREAD,
+			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 			value = 8,
 			weapon_parts = {
 				"wpn_fps_sho_ithaca_b_heat_shield",
@@ -4842,7 +4842,7 @@ function WeaponSkillsTweakData:_init_browning_skill_tree(tweak_data)
 				},
 			},
 			cost = 2,
-			skill_name = WeaponSkillsTweakData.SKILL_WIDER_SPREAD,
+			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 			value = 5,
 		},
 	}
@@ -4895,7 +4895,7 @@ function WeaponSkillsTweakData:_init_browning_skill_tree(tweak_data)
 				},
 			},
 			cost = 2,
-			skill_name = WeaponSkillsTweakData.SKILL_WIDER_SPREAD,
+			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 			value = 6,
 		},
 	}
@@ -4992,7 +4992,7 @@ function WeaponSkillsTweakData:_init_browning_skill_tree(tweak_data)
 				},
 			},
 			cost = 4,
-			skill_name = WeaponSkillsTweakData.SKILL_WIDER_SPREAD,
+			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 			value = 7,
 			weapon_parts = {
 				"wpn_fps_sho_browning_b_reinforced",
@@ -5153,7 +5153,7 @@ function WeaponSkillsTweakData:_init_shotty_skill_tree(tweak_data)
 				},
 			},
 			cost = 1,
-			skill_name = WeaponSkillsTweakData.SKILL_WIDER_SPREAD,
+			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 			value = 5,
 		},
 	}
@@ -5199,7 +5199,7 @@ function WeaponSkillsTweakData:_init_shotty_skill_tree(tweak_data)
 				},
 			},
 			cost = 3,
-			skill_name = WeaponSkillsTweakData.SKILL_WIDER_SPREAD,
+			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
 			value = 6,
 		},
 	}

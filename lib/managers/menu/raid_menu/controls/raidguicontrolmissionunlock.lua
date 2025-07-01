@@ -192,9 +192,9 @@ function RaidGUIControlMissionUnlock:_create_folder()
 	self._folder_mission_title:set_center_y(self._mission_image:center_y() + 124)
 	self:_fit_mission_title()
 
-	if mission_tweak_data.photos and #mission_tweak_data.photos > 3 then
-		self._mission_photos = {}
+	self._mission_photos = {}
 
+	if mission_tweak_data.photos and #mission_tweak_data.photos >= 3 then
 		local mission_photos = deep_clone(mission_tweak_data.photos)
 
 		math.shuffle(mission_photos)

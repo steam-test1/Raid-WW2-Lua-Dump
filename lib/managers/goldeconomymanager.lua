@@ -424,7 +424,7 @@ function GoldEconomyManager:grant_loyalty_reward(category)
 
 	self._global.pending_loyalty_rewards[category] = nil
 
-	if table.size(self._global.pending_loyalty_rewards) == 0 then
+	if not next(self._global.pending_loyalty_rewards) then
 		self._global.pending_loyalty_rewards = nil
 	end
 

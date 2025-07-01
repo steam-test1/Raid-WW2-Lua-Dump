@@ -1567,10 +1567,10 @@ function WeaponTweakData:_init_data_tiger_main_gun_module_npc(difficulty_index)
 		main_cannon_lock_on = "tiger_npc_canon_reload",
 	}
 	self.tiger_main_gun_module.effect = {
-		DEFAULT_OFFSET = nil,
-		hidden = nil,
+		DEFAULT_KICK_OFFSET = nil,
 		main_cannon_fire = "effects/vanilla/explosions/tank_turret_fire",
 		main_cannon_fire_hit = "effects/vanilla/explosions/exp_airbomb_explosion_002",
+		standing = nil,
 	}
 	self.tiger_main_gun_module.turret = {
 		armor_piercing = true,
@@ -2145,14 +2145,14 @@ function WeaponTweakData:_init_data_player_weapons(tweak_data)
 	self:_init_data_crosshairs()
 
 	self.shotgun_spread_template = {
-		crouching = 2.5,
-		moving_crouching = 2.5,
-		moving_standing = 3,
-		moving_steelsight = 2,
+		crouching = 3.75,
+		moving_crouching = 3.25,
+		moving_standing = 3.5,
+		moving_steelsight = 2.5,
 		per_shot = 0,
 		per_shot_steelsight = 0,
-		standing = 3,
-		steelsight = 1.75,
+		standing = 4,
+		steelsight = 3,
 	}
 
 	local autohit_rifle_default, autohit_pistol_default, autohit_shotgun_default, autohit_lmg_default, autohit_snp_default, autohit_smg_default, autohit_minigun_default, aim_assist_rifle_default, aim_assist_pistol_default, aim_assist_shotgun_default, aim_assist_lmg_default, aim_assist_snp_default, aim_assist_smg_default, aim_assist_minigun_default
@@ -3747,8 +3747,8 @@ function WeaponTweakData:_init_m1912_winchester(weapon_data, tweak_data)
 		concealment = 30,
 		extra_ammo = 6,
 		recoil = 3,
-		spread = 4,
-		spread_moving = 4,
+		spread = 2,
+		spread_moving = 2,
 		suppression = 6,
 		total_ammo_mod = 21,
 		value = 1,
@@ -3876,8 +3876,8 @@ function WeaponTweakData:_init_ithaca(weapon_data, tweak_data)
 		concealment = 30,
 		extra_ammo = 6,
 		recoil = 4,
-		spread = 4,
-		spread_moving = 4,
+		spread = 2,
+		spread_moving = 2,
 		suppression = 6,
 		total_ammo_mod = 21,
 		value = 1,
@@ -4005,8 +4005,8 @@ function WeaponTweakData:_init_browning(weapon_data, tweak_data)
 		concealment = 30,
 		extra_ammo = 6,
 		recoil = 4,
-		spread = 4,
-		spread_moving = 4,
+		spread = 2,
+		spread_moving = 2,
 		suppression = 6,
 		total_ammo_mod = 21,
 		value = 1,
@@ -4277,8 +4277,8 @@ function WeaponTweakData:_init_shotty(weapon_data, tweak_data)
 		concealment = 30,
 		extra_ammo = 6,
 		recoil = 7,
-		spread = 4,
-		spread_moving = 4,
+		spread = 2,
+		spread_moving = 2,
 		suppression = 6,
 		total_ammo_mod = 21,
 		value = 1,
@@ -4410,8 +4410,8 @@ function WeaponTweakData:_init_geco(weapon_data, tweak_data)
 		concealment = 30,
 		extra_ammo = 6,
 		recoil = 8,
-		spread = 5,
-		spread_moving = 5,
+		spread = 3,
+		spread_moving = 3,
 		suppression = 6,
 		total_ammo_mod = 21,
 		value = 1,

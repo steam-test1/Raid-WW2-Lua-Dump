@@ -2146,10 +2146,10 @@ function UpgradesTweakData:_primary_weapon_definitions()
 		0.65,
 		0.55,
 		0.45,
-		1.15,
-		1.3,
-		1.4,
-		1.5,
+		0.95,
+		0.9,
+		0.85,
+		0.8,
 	}
 
 	self:_create_definition_levels("primary_weapon_spread_multiplier", UpgradesTweakData.DEF_CAT_FEATURE, "spread_multiplier", "primary_weapon", false, self.values.primary_weapon.spread_multiplier)

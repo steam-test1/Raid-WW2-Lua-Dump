@@ -104,6 +104,13 @@ function WeaponSkillsManager:_initialize_weapon_skill_challenges()
 
 			for skill_index, skills in pairs(tier_skills) do
 				local skill = skills[1]
+				local tweak_version = tweak_data.weapon_skills.skill_trees[weapon_id][tier_index][skill_index][1]
+
+				if tweak_version.skill_name and skill.skill_name ~= tweak_version.skill_name then
+					Application:warn("[WeaponSkillsManager:_initialize_weapon_skill_challenges()] Odd skills from tweak:", skill.skill_name, tweak_version.skill_name)
+
+					skill.skill_name = tweak_version.skill_name
+				end
 
 				if skill.challenge_tasks then
 					local challenge_id = get_challenge_id(weapon_id, skill.skill_name, tostring(tier_index))
