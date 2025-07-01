@@ -2320,6 +2320,7 @@ function PlayerStandard:_do_melee_damage(t, bayonet_melee, col_ray)
 
 			action_data.damage = damage * dmg_multiplier
 			action_data.damage_effect = damage_effect
+			action_data.weapon_unit = self._equipped_unit
 			action_data.attacker_unit = self._unit
 			action_data.col_ray = col_ray
 			action_data.shield_knock = false

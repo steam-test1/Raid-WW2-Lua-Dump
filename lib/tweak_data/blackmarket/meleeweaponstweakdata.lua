@@ -523,6 +523,7 @@ function BlackMarketTweakData:_init_melee_weapons()
 	self.melee_weapons.lc14b.sounds.hit_gen = "knife_hit_gen"
 	self.melee_weapons.lc14b.sounds.hit_body = "machete_hit_body"
 	self.melee_weapons.lc14b.sounds.killing_blow = "machete_killing_blow"
+	self.melee_weapons.lc14b.dismember_chance = 0.5
 	self.melee_weapons.lc14b.gui = {}
 	self.melee_weapons.lc14b.gui.rotation_offset = -10
 	self.melee_weapons.lc14b.gui.distance_offset = -80
