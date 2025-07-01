@@ -1,6 +1,6 @@
 NetworkMatchMakingSTEAM = NetworkMatchMakingSTEAM or class()
 NetworkMatchMakingSTEAM.OPEN_SLOTS = 4
-NetworkMatchMakingSTEAM._BUILD_SEARCH_INTEREST_KEY = "raid_ww2_retail_1_0_2"
+NetworkMatchMakingSTEAM._BUILD_SEARCH_INTEREST_KEY = "raid_ww2_retail_1_0_2_1"
 NetworkMatchMakingSTEAM.EMPTY_PLAYER_INFO = "-,-,-,-"
 
 function NetworkMatchMakingSTEAM:init()
@@ -8,7 +8,7 @@ function NetworkMatchMakingSTEAM:init()
 
 	self._callback_map = {}
 	self._lobby_filters = {}
-	self._distance_filter = -1
+	self._distance_filter = 2
 	self._difficulty_filter = 0
 	self._lobby_return_count = 25
 	self._try_re_enter_lobby = nil

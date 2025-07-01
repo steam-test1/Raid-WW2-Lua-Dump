@@ -215,11 +215,11 @@ function LootDropTweakData:_init_groups()
 	self.loot_groups = {}
 	self.loot_groups.loot_group_basic = {}
 	self.loot_groups.loot_group_basic[1] = {
-		chance = 75,
+		chance = 55,
 		value = self.loot_categories.category_xp_min,
 	}
 	self.loot_groups.loot_group_basic[2] = {
-		chance = 20,
+		chance = 40,
 		value = self.loot_categories.category_cards_low,
 	}
 	self.loot_groups.loot_group_basic[3] = {
@@ -228,7 +228,7 @@ function LootDropTweakData:_init_groups()
 	}
 	self.loot_groups.loot_group_bronze = {}
 	self.loot_groups.loot_group_bronze[1] = {
-		chance = 65,
+		chance = 45,
 		value = self.loot_categories.category_xp_low,
 	}
 	self.loot_groups.loot_group_bronze[2] = {
@@ -236,11 +236,11 @@ function LootDropTweakData:_init_groups()
 		value = self.loot_categories.category_gold_low,
 	}
 	self.loot_groups.loot_group_bronze[3] = {
-		chance = 12.5,
+		chance = 25,
 		value = self.loot_categories.category_cards_low,
 	}
 	self.loot_groups.loot_group_bronze[4] = {
-		chance = 7.5,
+		chance = 15,
 		value = self.loot_categories.category_cards_mid,
 	}
 	self.loot_groups.loot_group_bronze[5] = {
@@ -257,7 +257,7 @@ function LootDropTweakData:_init_groups()
 	}
 	self.loot_groups.loot_group_silver = {}
 	self.loot_groups.loot_group_silver[1] = {
-		chance = 60,
+		chance = 40,
 		value = self.loot_categories.category_xp_mid,
 	}
 	self.loot_groups.loot_group_silver[2] = {
@@ -265,7 +265,7 @@ function LootDropTweakData:_init_groups()
 		value = self.loot_categories.category_gold_mid,
 	}
 	self.loot_groups.loot_group_silver[3] = {
-		chance = 20,
+		chance = 40,
 		value = self.loot_categories.category_cards_mid,
 	}
 	self.loot_groups.loot_group_silver[4] = {
@@ -278,7 +278,7 @@ function LootDropTweakData:_init_groups()
 	}
 	self.loot_groups.loot_group_gold = {}
 	self.loot_groups.loot_group_gold[1] = {
-		chance = 35,
+		chance = 15,
 		value = self.loot_categories.category_xp_high,
 	}
 	self.loot_groups.loot_group_gold[2] = {
@@ -286,11 +286,11 @@ function LootDropTweakData:_init_groups()
 		value = self.loot_categories.category_gold_high,
 	}
 	self.loot_groups.loot_group_gold[3] = {
-		chance = 10,
+		chance = 15,
 		value = self.loot_categories.category_cards_mid,
 	}
 	self.loot_groups.loot_group_gold[4] = {
-		chance = 20,
+		chance = 35,
 		value = self.loot_categories.category_cards_high,
 	}
 	self.loot_groups.loot_group_gold[5] = {
