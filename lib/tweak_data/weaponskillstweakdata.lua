@@ -36,6 +36,7 @@ function WeaponSkillsTweakData:init()
 	self:_init_kar_98k_skill_tree()
 	self:_init_bren_skill_tree()
 	self:_init_lee_enfield_skill_tree()
+	self:_init_browning_skill_tree()
 	self:_init_shotty_skill_tree()
 	self:_init_reedem_xp_values()
 end
@@ -5070,6 +5071,260 @@ function WeaponSkillsTweakData:_init_ithaca_skill_tree()
 		"weapon_tier_unlocked",
 		"weapon_tier_unlocked",
 		"demolitions_tier_4_unlocked",
+	}
+end
+
+function WeaponSkillsTweakData:_init_browning_skill_tree()
+	self.skill_trees.browning = {}
+	self.skill_trees.browning[1] = {}
+	self.skill_trees.browning[1][1] = {
+		{
+			challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
+			challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
+			cost = 1,
+			value = 1,
+			challenge_tasks = {
+				{
+					target = 350,
+					modifiers = {
+						hip_fire = true,
+						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
+					},
+					reminders = {
+						80,
+						160,
+						220,
+					},
+					type = ChallengeTweakData.TASK_KILL_ENEMIES,
+				},
+			},
+			skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
+		},
+	}
+	self.skill_trees.browning[1][2] = {
+		{
+			challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
+			challenge_done_text_id = "weapon_skill_headshot_kill_completed",
+			cost = 2,
+			value = 5,
+			challenge_tasks = {
+				{
+					target = 75,
+					modifiers = {
+						headshot = true,
+						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
+					},
+					reminders = {
+						25,
+						40,
+					},
+					type = ChallengeTweakData.TASK_KILL_ENEMIES,
+				},
+			},
+			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
+		},
+	}
+	self.skill_trees.browning[2] = {}
+	self.skill_trees.browning[2][1] = {
+		{
+			challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
+			challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
+			cost = 2,
+			value = 2,
+			challenge_tasks = {
+				{
+					target = 455,
+					modifiers = {
+						hip_fire = true,
+						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
+					},
+					reminders = {
+						100,
+						250,
+						300,
+						400,
+					},
+					type = ChallengeTweakData.TASK_KILL_ENEMIES,
+				},
+			},
+			skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
+			weapon_parts = {
+				"wpn_fps_sho_browning_s_grip",
+			},
+		},
+	}
+	self.skill_trees.browning[2][2] = {
+		{
+			challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
+			challenge_done_text_id = "weapon_skill_headshot_kill_completed",
+			cost = 2,
+			value = 6,
+			challenge_tasks = {
+				{
+					target = 100,
+					modifiers = {
+						headshot = true,
+						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
+					},
+					reminders = {
+						40,
+						70,
+						90,
+					},
+					type = ChallengeTweakData.TASK_KILL_ENEMIES,
+				},
+			},
+			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
+		},
+	}
+	self.skill_trees.browning[2][3] = {
+		{
+			challenge_briefing_id = "weapon_skill_generic_kill_briefing",
+			challenge_done_text_id = "weapon_skill_generic_kill_completed",
+			cost = 2,
+			value = 2,
+			challenge_tasks = {
+				{
+					target = 650,
+					reminders = {
+						100,
+						200,
+						300,
+						500,
+					},
+					type = ChallengeTweakData.TASK_KILL_ENEMIES,
+				},
+			},
+			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
+		},
+	}
+	self.skill_trees.browning[2][4] = {
+		{
+			challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
+			challenge_done_text_id = "weapon_skill_collect_ammo_completed",
+			cost = 2,
+			value = 1,
+			challenge_tasks = {
+				{
+					target = 455,
+					reminders = {
+						100,
+						200,
+						350,
+					},
+					type = ChallengeTweakData.TASK_COLLECT_AMMO,
+				},
+			},
+			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
+			weapon_parts = {
+				"wpn_fps_sho_browning_m_extended",
+			},
+		},
+	}
+	self.skill_trees.browning[3] = {}
+	self.skill_trees.browning[3][1] = {
+		{
+			challenge_briefing_id = "weapon_skill_hip_fire_kill_briefing",
+			challenge_done_text_id = "weapon_skill_hip_fire_kill_completed",
+			cost = 3,
+			value = 3,
+			challenge_tasks = {
+				{
+					target = 590,
+					modifiers = {
+						hip_fire = true,
+						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
+					},
+					reminders = {
+						200,
+						400,
+						600,
+						700,
+					},
+					type = ChallengeTweakData.TASK_KILL_ENEMIES,
+				},
+			},
+			skill_name = WeaponSkillsTweakData.SKILL_DECREASE_RECOIL,
+			weapon_parts = {
+				"wpn_fps_sho_browning_pad_big",
+			},
+		},
+	}
+	self.skill_trees.browning[3][2] = {
+		{
+			challenge_briefing_id = "weapon_skill_headshot_kill_briefing",
+			challenge_done_text_id = "weapon_skill_headshot_kill_completed",
+			cost = 4,
+			value = 7,
+			challenge_tasks = {
+				{
+					target = 130,
+					modifiers = {
+						headshot = true,
+						damage_type = WeaponTweakData.DAMAGE_TYPE_BULLET,
+					},
+					reminders = {
+						50,
+						80,
+						100,
+					},
+					type = ChallengeTweakData.TASK_KILL_ENEMIES,
+				},
+			},
+			skill_name = WeaponSkillsTweakData.SKILL_TIGHTER_SPREAD,
+			weapon_parts = {
+				"wpn_fps_sho_browning_b_reinforced",
+			},
+		},
+	}
+	self.skill_trees.browning[3][3] = {
+		{
+			challenge_briefing_id = "weapon_skill_generic_kill_briefing",
+			challenge_done_text_id = "weapon_skill_generic_kill_completed",
+			cost = 4,
+			value = 3,
+			challenge_tasks = {
+				{
+					target = 845,
+					reminders = {
+						100,
+						250,
+						500,
+						750,
+					},
+					type = ChallengeTweakData.TASK_KILL_ENEMIES,
+				},
+			},
+			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_DAMAGE,
+		},
+	}
+	self.skill_trees.browning[3][4] = {
+		{
+			challenge_briefing_id = "weapon_skill_collect_ammo_briefing",
+			challenge_done_text_id = "weapon_skill_collect_ammo_completed",
+			cost = 4,
+			value = 4,
+			challenge_tasks = {
+				{
+					target = 590,
+					reminders = {
+						100,
+						200,
+						400,
+					},
+					type = ChallengeTweakData.TASK_COLLECT_AMMO,
+				},
+			},
+			skill_name = WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE,
+			weapon_parts = {
+				"wpn_fps_sho_browning_m_long",
+			},
+		},
+	}
+	self.skill_trees.browning.tier_unlock = {
+		"weapon_tier_unlocked",
+		"weapon_tier_unlocked",
+		"weapon_tier_unlocked",
 	}
 end
 

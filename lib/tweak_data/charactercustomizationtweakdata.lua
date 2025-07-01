@@ -205,6 +205,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.british_officer_001_upper.rarity = LootDropTweakData.RARITY_UNCOMMON
 	self.customizations.british_officer_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_LONG
 	self.customizations.british_officer_001_upper.droppable = true
+	self.customizations.british_officer_001_upper.gold_price = 150
 	self.customizations.british_officer_001_lower = {}
 	self.customizations.british_officer_001_lower.name = "character_customization_british_officer_001_lower_name"
 	self.customizations.british_officer_001_lower.description = "character_customization_british_officer_001_lower_desc"
@@ -219,6 +220,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.british_officer_001_lower.redeem_xp = 0
 	self.customizations.british_officer_001_lower.rarity = LootDropTweakData.RARITY_UNCOMMON
 	self.customizations.british_officer_001_lower.droppable = true
+	self.customizations.british_officer_001_lower.gold_price = 150
 	self.customizations.british_officer_002_upper = {}
 	self.customizations.british_officer_002_upper.name = "character_customization_british_officer_002_upper_name"
 	self.customizations.british_officer_002_upper.description = "character_customization_british_officer_002_upper_desc"
@@ -234,6 +236,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.british_officer_002_upper.rarity = LootDropTweakData.RARITY_RARE
 	self.customizations.british_officer_002_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
 	self.customizations.british_officer_002_upper.droppable = true
+	self.customizations.british_officer_002_upper.gold_price = 150
 	self.customizations.british_officer_002_lower = {}
 	self.customizations.british_officer_002_lower.name = "character_customization_british_officer_002_lower_name"
 	self.customizations.british_officer_002_lower.description = "character_customization_british_officer_002_lower_desc"
@@ -248,6 +251,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.british_officer_002_lower.redeem_xp = 0
 	self.customizations.british_officer_002_lower.rarity = LootDropTweakData.RARITY_RARE
 	self.customizations.british_officer_002_lower.droppable = true
+	self.customizations.british_officer_002_lower.gold_price = 150
 	self.customizations.british_casual_001_upper = {}
 	self.customizations.british_casual_001_upper.name = "character_customization_british_casual_001_upper_name"
 	self.customizations.british_casual_001_upper.description = "character_customization_british_casual_001_upper_desc"
@@ -263,6 +267,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.british_casual_001_upper.rarity = LootDropTweakData.RARITY_UNCOMMON
 	self.customizations.british_casual_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
 	self.customizations.british_casual_001_upper.droppable = true
+	self.customizations.british_casual_001_upper.gold_price = 150
 	self.customizations.british_casual_001_lower = {}
 	self.customizations.british_casual_001_lower.name = "character_customization_british_casual_001_lower_name"
 	self.customizations.british_casual_001_lower.description = "character_customization_british_casual_001_lower_desc"
@@ -277,6 +282,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.british_casual_001_lower.redeem_xp = 0
 	self.customizations.british_casual_001_lower.rarity = LootDropTweakData.RARITY_COMMON
 	self.customizations.british_casual_001_lower.droppable = true
+	self.customizations.british_casual_001_lower.gold_price = 150
 	self.customizations.british_casual_002_upper = {}
 	self.customizations.british_casual_002_upper.name = "character_customization_british_casual_002_upper_name"
 	self.customizations.british_casual_002_upper.description = "character_customization_british_casual_002_upper_desc"
@@ -292,6 +298,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.british_casual_002_upper.rarity = LootDropTweakData.RARITY_COMMON
 	self.customizations.british_casual_002_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
 	self.customizations.british_casual_002_upper.droppable = true
+	self.customizations.british_casual_002_upper.gold_price = 150
 	self.customizations.british_casual_002_lower = {}
 	self.customizations.british_casual_002_lower.name = "character_customization_british_casual_002_lower_name"
 	self.customizations.british_casual_002_lower.description = "character_customization_british_casual_002_lower_desc"
@@ -306,6 +313,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.british_casual_002_lower.redeem_xp = 0
 	self.customizations.british_casual_002_lower.rarity = LootDropTweakData.RARITY_UNCOMMON
 	self.customizations.british_casual_002_lower.droppable = true
+	self.customizations.british_casual_002_lower.gold_price = 150
 	self.customizations.british_casual_003_upper = {}
 	self.customizations.british_casual_003_upper.name = "character_customization_british_casual_003_upper_name"
 	self.customizations.british_casual_003_upper.description = "character_customization_british_casual_003_upper_desc"
@@ -321,6 +329,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.british_casual_003_upper.rarity = LootDropTweakData.RARITY_COMMON
 	self.customizations.british_casual_003_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
 	self.customizations.british_casual_003_upper.droppable = true
+	self.customizations.british_casual_003_upper.gold_price = 150
 	self.customizations.british_casual_003_lower = {}
 	self.customizations.british_casual_003_lower.name = "character_customization_british_casual_003_lower_name"
 	self.customizations.british_casual_003_lower.description = "character_customization_british_casual_003_lower_desc"
@@ -335,6 +344,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.british_casual_003_lower.redeem_xp = 0
 	self.customizations.british_casual_003_lower.rarity = LootDropTweakData.RARITY_COMMON
 	self.customizations.british_casual_003_lower.droppable = true
+	self.customizations.british_casual_003_lower.gold_price = 150
 	self.customizations.british_casual_004_upper = {}
 	self.customizations.british_casual_004_upper.name = "character_customization_british_casual_004_upper_name"
 	self.customizations.british_casual_004_upper.description = "character_customization_british_casual_004_upper_desc"
@@ -350,6 +360,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.british_casual_004_upper.rarity = LootDropTweakData.RARITY_COMMON
 	self.customizations.british_casual_004_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
 	self.customizations.british_casual_004_upper.droppable = true
+	self.customizations.british_casual_004_upper.gold_price = 150
 	self.customizations.british_casual_004_lower = {}
 	self.customizations.british_casual_004_lower.name = "character_customization_british_casual_004_lower_name"
 	self.customizations.british_casual_004_lower.description = "character_customization_british_casual_004_lower_desc"
@@ -364,6 +375,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.british_casual_004_lower.redeem_xp = 0
 	self.customizations.british_casual_004_lower.rarity = LootDropTweakData.RARITY_COMMON
 	self.customizations.british_casual_004_lower.droppable = true
+	self.customizations.british_casual_004_lower.gold_price = 150
 	self.customizations.british_gangbanger_001_upper = {}
 	self.customizations.british_gangbanger_001_upper.name = "character_customization_british_gangbanger_001_upper_name"
 	self.customizations.british_gangbanger_001_upper.description = "character_customization_british_gangbanger_001_upper_desc"
@@ -379,6 +391,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.british_gangbanger_001_upper.rarity = LootDropTweakData.RARITY_RARE
 	self.customizations.british_gangbanger_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
 	self.customizations.british_gangbanger_001_upper.droppable = true
+	self.customizations.british_gangbanger_001_upper.gold_price = 150
 	self.customizations.british_gangbanger_001_lower = {}
 	self.customizations.british_gangbanger_001_lower.name = "character_customization_british_gangbanger_001_lower_name"
 	self.customizations.british_gangbanger_001_lower.description = "character_customization_british_gangbanger_001_lower_desc"
@@ -424,6 +437,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.german_officer_001_upper.rarity = LootDropTweakData.RARITY_RARE
 	self.customizations.german_officer_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_LONG
 	self.customizations.german_officer_001_upper.droppable = true
+	self.customizations.german_officer_001_upper.gold_price = 150
 	self.customizations.german_officer_001_lower = {}
 	self.customizations.german_officer_001_lower.name = "character_customization_german_officer_001_lower_name"
 	self.customizations.german_officer_001_lower.description = "character_customization_german_officer_001_lower_desc"
@@ -438,6 +452,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.german_officer_001_lower.redeem_xp = 0
 	self.customizations.german_officer_001_lower.rarity = LootDropTweakData.RARITY_RARE
 	self.customizations.german_officer_001_lower.droppable = true
+	self.customizations.german_officer_001_lower.gold_price = 150
 	self.customizations.german_gangbanger_001_upper = {}
 	self.customizations.german_gangbanger_001_upper.name = "character_customization_german_gangbanger_001_upper_name"
 	self.customizations.german_gangbanger_001_upper.description = "character_customization_german_gangbanger_001_upper_desc"
@@ -453,6 +468,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.german_gangbanger_001_upper.rarity = LootDropTweakData.RARITY_COMMON
 	self.customizations.german_gangbanger_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
 	self.customizations.german_gangbanger_001_upper.droppable = true
+	self.customizations.german_gangbanger_001_upper.gold_price = 150
 	self.customizations.german_gangbanger_001_lower = {}
 	self.customizations.german_gangbanger_001_lower.name = "character_customization_german_gangbanger_001_lower_name"
 	self.customizations.german_gangbanger_001_lower.description = "character_customization_german_gangbanger_001_lower_desc"
@@ -467,6 +483,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.german_gangbanger_001_lower.redeem_xp = 0
 	self.customizations.german_gangbanger_001_lower.rarity = LootDropTweakData.RARITY_COMMON
 	self.customizations.german_gangbanger_001_lower.droppable = true
+	self.customizations.german_gangbanger_001_lower.gold_price = 150
 	self.customizations.german_officer_002_upper = {}
 	self.customizations.german_officer_002_upper.name = "character_customization_german_officer_002_upper_name"
 	self.customizations.german_officer_002_upper.description = "character_customization_german_officer_002_upper_desc"
@@ -482,6 +499,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.german_officer_002_upper.rarity = LootDropTweakData.RARITY_UNCOMMON
 	self.customizations.german_officer_002_upper.length = CharacterCustomizationTweakData.PART_LENGTH_LONG
 	self.customizations.german_officer_002_upper.droppable = true
+	self.customizations.german_officer_002_upper.gold_price = 150
 	self.customizations.german_officer_002_lower = {}
 	self.customizations.german_officer_002_lower.name = "character_customization_german_officer_002_lower_name"
 	self.customizations.german_officer_002_lower.description = "character_customization_german_officer_002_lower_desc"
@@ -496,6 +514,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.german_officer_002_lower.redeem_xp = 0
 	self.customizations.german_officer_002_lower.rarity = LootDropTweakData.RARITY_UNCOMMON
 	self.customizations.german_officer_002_lower.droppable = true
+	self.customizations.german_officer_002_lower.gold_price = 150
 	self.customizations.german_grunt_001_upper = {}
 	self.customizations.german_grunt_001_upper.name = "character_customization_german_grunt_001_upper_name"
 	self.customizations.german_grunt_001_upper.description = "character_customization_german_grunt_001_upper_desc"
@@ -511,6 +530,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.german_grunt_001_upper.rarity = LootDropTweakData.RARITY_COMMON
 	self.customizations.german_grunt_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_LONG
 	self.customizations.german_grunt_001_upper.droppable = true
+	self.customizations.german_grunt_001_upper.gold_price = 150
 	self.customizations.german_grunt_001_lower = {}
 	self.customizations.german_grunt_001_lower.name = "character_customization_german_grunt_001_lower_name"
 	self.customizations.german_grunt_001_lower.description = "character_customization_german_grunt_001_lower_desc"
@@ -525,6 +545,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.german_grunt_001_lower.redeem_xp = 0
 	self.customizations.german_grunt_001_lower.rarity = LootDropTweakData.RARITY_COMMON
 	self.customizations.german_grunt_001_lower.droppable = true
+	self.customizations.german_grunt_001_lower.gold_price = 150
 	self.customizations.german_grunt_002_upper = {}
 	self.customizations.german_grunt_002_upper.name = "character_customization_german_grunt_002_upper_name"
 	self.customizations.german_grunt_002_upper.description = "character_customization_german_grunt_002_upper_desc"
@@ -540,6 +561,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.german_grunt_002_upper.rarity = LootDropTweakData.RARITY_UNCOMMON
 	self.customizations.german_grunt_002_upper.length = CharacterCustomizationTweakData.PART_LENGTH_LONG
 	self.customizations.german_grunt_002_upper.droppable = true
+	self.customizations.german_grunt_002_upper.gold_price = 150
 	self.customizations.german_grunt_002_lower = {}
 	self.customizations.german_grunt_002_lower.name = "character_customization_german_grunt_002_lower_name"
 	self.customizations.german_grunt_002_lower.description = "character_customization_german_grunt_002_lower_desc"
@@ -554,6 +576,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.german_grunt_002_lower.redeem_xp = 0
 	self.customizations.german_grunt_002_lower.rarity = LootDropTweakData.RARITY_UNCOMMON
 	self.customizations.german_grunt_002_lower.droppable = true
+	self.customizations.german_grunt_002_lower.gold_price = 150
 	self.customizations.german_grunt_003_upper = {}
 	self.customizations.german_grunt_003_upper.name = "character_customization_german_grunt_003_upper_name"
 	self.customizations.german_grunt_003_upper.description = "character_customization_german_grunt_003_upper_desc"
@@ -569,6 +592,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.german_grunt_003_upper.rarity = LootDropTweakData.RARITY_COMMON
 	self.customizations.german_grunt_003_upper.length = CharacterCustomizationTweakData.PART_LENGTH_LONG
 	self.customizations.german_grunt_003_upper.droppable = true
+	self.customizations.german_grunt_003_upper.gold_price = 150
 	self.customizations.german_grunt_003_lower = {}
 	self.customizations.german_grunt_003_lower.name = "character_customization_german_grunt_003_lower_name"
 	self.customizations.german_grunt_003_lower.description = "character_customization_german_grunt_003_lower_desc"
@@ -583,6 +607,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.german_grunt_003_lower.redeem_xp = 0
 	self.customizations.german_grunt_003_lower.rarity = LootDropTweakData.RARITY_RARE
 	self.customizations.german_grunt_003_lower.droppable = true
+	self.customizations.german_grunt_003_lower.gold_price = 150
 	self.customizations.german_gold_jacket_002_upper = {}
 	self.customizations.german_gold_jacket_002_upper.name = "character_customization_german_gold_jacket_002_upper_name"
 	self.customizations.german_gold_jacket_002_upper.description = "character_customization_german_gold_jacket_002_upper_desc"
@@ -613,6 +638,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.german_gangbanger_002_upper.rarity = LootDropTweakData.RARITY_RARE
 	self.customizations.german_gangbanger_002_upper.length = CharacterCustomizationTweakData.PART_LENGTH_LONG
 	self.customizations.german_gangbanger_002_upper.droppable = true
+	self.customizations.german_gangbanger_002_upper.gold_price = 150
 	self.customizations.german_gangbanger_002_lower = {}
 	self.customizations.german_gangbanger_002_lower.name = "character_customization_german_gangbanger_002_lower_name"
 	self.customizations.german_gangbanger_002_lower.description = "character_customization_german_gangbanger_002_lower_desc"
@@ -627,6 +653,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.german_gangbanger_002_lower.redeem_xp = 0
 	self.customizations.german_gangbanger_002_lower.rarity = LootDropTweakData.RARITY_COMMON
 	self.customizations.german_gangbanger_002_lower.droppable = true
+	self.customizations.german_gangbanger_002_lower.gold_price = 150
 	self.customizations.russian_commisar_001_upper = {}
 	self.customizations.russian_commisar_001_upper.name = "character_customization_russian_commisar_001_upper_name"
 	self.customizations.russian_commisar_001_upper.description = "character_customization_russian_commisar_001_upper_desc"
@@ -642,6 +669,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.russian_commisar_001_upper.rarity = LootDropTweakData.RARITY_RARE
 	self.customizations.russian_commisar_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_LONG
 	self.customizations.russian_commisar_001_upper.droppable = true
+	self.customizations.russian_commisar_001_upper.gold_price = 150
 	self.customizations.russian_commisar_001_lower = {}
 	self.customizations.russian_commisar_001_lower.name = "character_customization_russian_commisar_001_lower_name"
 	self.customizations.russian_commisar_001_lower.description = "character_customization_russian_commisar_001_lower_desc"
@@ -656,6 +684,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.russian_commisar_001_lower.redeem_xp = 0
 	self.customizations.russian_commisar_001_lower.rarity = LootDropTweakData.RARITY_RARE
 	self.customizations.russian_commisar_001_lower.droppable = true
+	self.customizations.russian_commisar_001_lower.gold_price = 150
 	self.customizations.russian_commisar_002_upper = {}
 	self.customizations.russian_commisar_002_upper.name = "character_customization_russian_commisar_002_upper_name"
 	self.customizations.russian_commisar_002_upper.description = "character_customization_russian_commisar_002_upper_desc"
@@ -671,6 +700,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.russian_commisar_002_upper.rarity = LootDropTweakData.RARITY_RARE
 	self.customizations.russian_commisar_002_upper.length = CharacterCustomizationTweakData.PART_LENGTH_LONG
 	self.customizations.russian_commisar_002_upper.droppable = true
+	self.customizations.russian_commisar_002_upper.gold_price = 150
 	self.customizations.russian_commisar_002_lower = {}
 	self.customizations.russian_commisar_002_lower.name = "character_customization_russian_commisar_002_lower_name"
 	self.customizations.russian_commisar_002_lower.description = "character_customization_russian_commisar_002_lower_desc"
@@ -685,6 +715,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.russian_commisar_002_lower.redeem_xp = 0
 	self.customizations.russian_commisar_002_lower.rarity = LootDropTweakData.RARITY_RARE
 	self.customizations.russian_commisar_002_lower.droppable = true
+	self.customizations.russian_commisar_002_lower.gold_price = 150
 	self.customizations.russian_casual_001_upper = {}
 	self.customizations.russian_casual_001_upper.name = "character_customization_russian_casual_001_upper_name"
 	self.customizations.russian_casual_001_upper.description = "character_customization_russian_casual_001_upper_desc"
@@ -700,6 +731,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.russian_casual_001_upper.rarity = LootDropTweakData.RARITY_COMMON
 	self.customizations.russian_casual_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
 	self.customizations.russian_casual_001_upper.droppable = true
+	self.customizations.russian_casual_001_upper.gold_price = 150
 	self.customizations.russian_casual_001_lower = {}
 	self.customizations.russian_casual_001_lower.name = "character_customization_russian_casual_001_lower_name"
 	self.customizations.russian_casual_001_lower.description = "character_customization_russian_casual_001_lower_desc"
@@ -714,6 +746,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.russian_casual_001_lower.redeem_xp = 0
 	self.customizations.russian_casual_001_lower.rarity = LootDropTweakData.RARITY_UNCOMMON
 	self.customizations.russian_casual_001_lower.droppable = true
+	self.customizations.russian_casual_001_lower.gold_price = 150
 	self.customizations.russian_commisar_003_upper = {}
 	self.customizations.russian_commisar_003_upper.name = "character_customization_russian_commisar_003_upper_name"
 	self.customizations.russian_commisar_003_upper.description = "character_customization_russian_commisar_003_upper_desc"
@@ -729,6 +762,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.russian_commisar_003_upper.rarity = LootDropTweakData.RARITY_COMMON
 	self.customizations.russian_commisar_003_upper.length = CharacterCustomizationTweakData.PART_LENGTH_LONG
 	self.customizations.russian_commisar_003_upper.droppable = true
+	self.customizations.russian_commisar_003_upper.gold_price = 150
 	self.customizations.russian_commisar_003_lower = {}
 	self.customizations.russian_commisar_003_lower.name = "character_customization_russian_commisar_003_lower_name"
 	self.customizations.russian_commisar_003_lower.description = "character_customization_russian_commisar_003_lower_desc"
@@ -743,6 +777,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.russian_commisar_003_lower.redeem_xp = 0
 	self.customizations.russian_commisar_003_lower.rarity = LootDropTweakData.RARITY_COMMON
 	self.customizations.russian_commisar_003_lower.droppable = true
+	self.customizations.russian_commisar_003_lower.gold_price = 150
 	self.customizations.russian_grunt_001_upper = {}
 	self.customizations.russian_grunt_001_upper.name = "character_customization_russian_grunt_001_upper_name"
 	self.customizations.russian_grunt_001_upper.description = "character_customization_russian_grunt_001_upper_desc"
@@ -758,6 +793,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.russian_grunt_001_upper.rarity = LootDropTweakData.RARITY_COMMON
 	self.customizations.russian_grunt_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_LONG
 	self.customizations.russian_grunt_001_upper.droppable = true
+	self.customizations.russian_grunt_001_upper.gold_price = 150
 	self.customizations.russian_grunt_001_lower = {}
 	self.customizations.russian_grunt_001_lower.name = "character_customization_russian_grunt_001_lower_name"
 	self.customizations.russian_grunt_001_lower.description = "character_customization_russian_grunt_001_lower_desc"
@@ -772,6 +808,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.russian_grunt_001_lower.redeem_xp = 0
 	self.customizations.russian_grunt_001_lower.rarity = LootDropTweakData.RARITY_COMMON
 	self.customizations.russian_grunt_001_lower.droppable = true
+	self.customizations.russian_grunt_001_lower.gold_price = 150
 	self.customizations.russian_grunt_002_upper = {}
 	self.customizations.russian_grunt_002_upper.name = "character_customization_russian_grunt_002_upper_name"
 	self.customizations.russian_grunt_002_upper.description = "character_customization_russian_grunt_002_upper_desc"
@@ -787,6 +824,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.russian_grunt_002_upper.rarity = LootDropTweakData.RARITY_UNCOMMON
 	self.customizations.russian_grunt_002_upper.length = CharacterCustomizationTweakData.PART_LENGTH_LONG
 	self.customizations.russian_grunt_002_upper.droppable = true
+	self.customizations.russian_grunt_002_upper.gold_price = 150
 	self.customizations.russian_grunt_002_lower = {}
 	self.customizations.russian_grunt_002_lower.name = "character_customization_russian_grunt_002_lower_name"
 	self.customizations.russian_grunt_002_lower.description = "character_customization_russian_grunt_002_lower_desc"
@@ -801,6 +839,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.russian_grunt_002_lower.redeem_xp = 0
 	self.customizations.russian_grunt_002_lower.rarity = LootDropTweakData.RARITY_UNCOMMON
 	self.customizations.russian_grunt_002_lower.droppable = true
+	self.customizations.russian_grunt_002_lower.gold_price = 150
 	self.customizations.russian_mech_001_upper = {}
 	self.customizations.russian_mech_001_upper.name = "character_customization_russian_mech_001_upper_name"
 	self.customizations.russian_mech_001_upper.description = "character_customization_russian_mech_001_upper_desc"
@@ -816,6 +855,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.russian_mech_001_upper.rarity = LootDropTweakData.RARITY_UNCOMMON
 	self.customizations.russian_mech_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
 	self.customizations.russian_mech_001_upper.droppable = true
+	self.customizations.russian_mech_001_upper.gold_price = 150
 	self.customizations.russian_mech_001_lower = {}
 	self.customizations.russian_mech_001_lower.name = "character_customization_russian_mech_001_lower_name"
 	self.customizations.russian_mech_001_lower.description = "character_customization_russian_mech_001_lower_desc"
@@ -830,6 +870,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.russian_mech_001_lower.redeem_xp = 0
 	self.customizations.russian_mech_001_lower.rarity = LootDropTweakData.RARITY_COMMON
 	self.customizations.russian_mech_001_lower.droppable = true
+	self.customizations.russian_mech_001_lower.gold_price = 150
 	self.customizations.russian_gold_jacket_001_upper = {}
 	self.customizations.russian_gold_jacket_001_upper.name = "character_customization_russian_gold_jacket_001_upper_name"
 	self.customizations.russian_gold_jacket_001_upper.description = "character_customization_russian_gold_jacket_001_upper_desc"
@@ -860,6 +901,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.american_gangbanger_001_upper.rarity = LootDropTweakData.RARITY_RARE
 	self.customizations.american_gangbanger_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_LONG
 	self.customizations.american_gangbanger_001_upper.droppable = true
+	self.customizations.american_gangbanger_001_upper.gold_price = 150
 	self.customizations.american_gangbanger_001_lower = {}
 	self.customizations.american_gangbanger_001_lower.name = "character_customization_american_gangbanger_001_lower_name"
 	self.customizations.american_gangbanger_001_lower.description = "character_customization_american_gangbanger_001_lower_desc"
@@ -874,6 +916,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.american_gangbanger_001_lower.redeem_xp = 0
 	self.customizations.american_gangbanger_001_lower.rarity = LootDropTweakData.RARITY_UNCOMMON
 	self.customizations.american_gangbanger_001_lower.droppable = true
+	self.customizations.american_gangbanger_001_lower.gold_price = 150
 	self.customizations.american_gangbanger_002_upper = {}
 	self.customizations.american_gangbanger_002_upper.name = "character_customization_american_gangbanger_002_upper_name"
 	self.customizations.american_gangbanger_002_upper.description = "character_customization_american_gangbanger_002_upper_desc"
@@ -889,6 +932,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.american_gangbanger_002_upper.rarity = LootDropTweakData.RARITY_RARE
 	self.customizations.american_gangbanger_002_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
 	self.customizations.american_gangbanger_002_upper.droppable = true
+	self.customizations.american_gangbanger_002_upper.gold_price = 150
 	self.customizations.american_gangbanger_002_lower = {}
 	self.customizations.american_gangbanger_002_lower.name = "character_customization_american_gangbanger_002_lower_name"
 	self.customizations.american_gangbanger_002_lower.description = "character_customization_american_gangbanger_002_lower_desc"
@@ -903,6 +947,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.american_gangbanger_002_lower.redeem_xp = 0
 	self.customizations.american_gangbanger_002_lower.rarity = LootDropTweakData.RARITY_RARE
 	self.customizations.american_gangbanger_002_lower.droppable = true
+	self.customizations.american_gangbanger_002_lower.gold_price = 150
 	self.customizations.american_gangbanger_003_upper = {}
 	self.customizations.american_gangbanger_003_upper.name = "character_customization_american_gangbanger_003_upper_name"
 	self.customizations.american_gangbanger_003_upper.description = "character_customization_american_gangbanger_003_upper_desc"
@@ -918,6 +963,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.american_gangbanger_003_upper.rarity = LootDropTweakData.RARITY_UNCOMMON
 	self.customizations.american_gangbanger_003_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
 	self.customizations.american_gangbanger_003_upper.droppable = true
+	self.customizations.american_gangbanger_003_upper.gold_price = 150
 	self.customizations.american_gangbanger_003_lower = {}
 	self.customizations.american_gangbanger_003_lower.name = "character_customization_american_gangbanger_003_lower_name"
 	self.customizations.american_gangbanger_003_lower.description = "character_customization_american_gangbanger_003_lower_desc"
@@ -932,6 +978,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.american_gangbanger_003_lower.redeem_xp = 0
 	self.customizations.american_gangbanger_003_lower.rarity = LootDropTweakData.RARITY_COMMON
 	self.customizations.american_gangbanger_003_lower.droppable = true
+	self.customizations.american_gangbanger_003_lower.gold_price = 150
 	self.customizations.american_casual_001_upper = {}
 	self.customizations.american_casual_001_upper.name = "character_customization_american_casual_001_upper_name"
 	self.customizations.american_casual_001_upper.description = "character_customization_american_casual_001_upper_desc"
@@ -947,6 +994,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.american_casual_001_upper.rarity = LootDropTweakData.RARITY_COMMON
 	self.customizations.american_casual_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
 	self.customizations.american_casual_001_upper.droppable = true
+	self.customizations.american_casual_001_upper.gold_price = 150
 	self.customizations.american_casual_001_lower = {}
 	self.customizations.american_casual_001_lower.name = "character_customization_american_casual_001_lower_name"
 	self.customizations.american_casual_001_lower.description = "character_customization_american_casual_001_lower_desc"
@@ -961,6 +1009,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.american_casual_001_lower.redeem_xp = 0
 	self.customizations.american_casual_001_lower.rarity = LootDropTweakData.RARITY_UNCOMMON
 	self.customizations.american_casual_001_lower.droppable = true
+	self.customizations.american_casual_001_lower.gold_price = 150
 	self.customizations.american_officer_001_upper = {}
 	self.customizations.american_officer_001_upper.name = "character_customization_american_officer_001_upper_name"
 	self.customizations.american_officer_001_upper.description = "character_customization_american_officer_001_upper_desc"
@@ -976,6 +1025,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.american_officer_001_upper.rarity = LootDropTweakData.RARITY_COMMON
 	self.customizations.american_officer_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
 	self.customizations.american_officer_001_upper.droppable = true
+	self.customizations.american_officer_001_upper.gold_price = 150
 	self.customizations.american_officer_001_lower = {}
 	self.customizations.american_officer_001_lower.name = "character_customization_american_officer_001_lower_name"
 	self.customizations.american_officer_001_lower.description = "character_customization_american_officer_001_lower_desc"
@@ -990,6 +1040,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.american_officer_001_lower.redeem_xp = 0
 	self.customizations.american_officer_001_lower.rarity = LootDropTweakData.RARITY_COMMON
 	self.customizations.american_officer_001_lower.droppable = true
+	self.customizations.american_officer_001_lower.gold_price = 150
 	self.customizations.american_officer_002_upper = {}
 	self.customizations.american_officer_002_upper.name = "character_customization_american_officer_002_upper_name"
 	self.customizations.american_officer_002_upper.description = "character_customization_american_officer_002_upper_desc"
@@ -1005,6 +1056,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.american_officer_002_upper.rarity = LootDropTweakData.RARITY_COMMON
 	self.customizations.american_officer_002_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
 	self.customizations.american_officer_002_upper.droppable = true
+	self.customizations.american_officer_002_upper.gold_price = 150
 	self.customizations.american_officer_002_lower = {}
 	self.customizations.american_officer_002_lower.name = "character_customization_american_officer_002_lower_name"
 	self.customizations.american_officer_002_lower.description = "character_customization_american_officer_002_lower_desc"
@@ -1019,6 +1071,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.american_officer_002_lower.redeem_xp = 0
 	self.customizations.american_officer_002_lower.rarity = LootDropTweakData.RARITY_COMMON
 	self.customizations.american_officer_002_lower.droppable = true
+	self.customizations.american_officer_002_lower.gold_price = 150
 	self.customizations.american_grunt_001_upper = {}
 	self.customizations.american_grunt_001_upper.name = "character_customization_american_grunt_001_upper_name"
 	self.customizations.american_grunt_001_upper.description = "character_customization_american_grunt_001_upper_desc"
@@ -1034,6 +1087,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.american_grunt_001_upper.rarity = LootDropTweakData.RARITY_UNCOMMON
 	self.customizations.american_grunt_001_upper.length = CharacterCustomizationTweakData.PART_LENGTH_SHORT
 	self.customizations.american_grunt_001_upper.droppable = true
+	self.customizations.american_grunt_001_upper.gold_price = 150
 	self.customizations.american_grunt_001_lower = {}
 	self.customizations.american_grunt_001_lower.name = "character_customization_american_grunt_001_lower_name"
 	self.customizations.american_grunt_001_lower.description = "character_customization_american_grunt_001_lower_desc"
@@ -1048,6 +1102,7 @@ function CharacterCustomizationTweakData:initialization()
 	self.customizations.american_grunt_001_lower.redeem_xp = 0
 	self.customizations.american_grunt_001_lower.rarity = LootDropTweakData.RARITY_RARE
 	self.customizations.american_grunt_001_lower.droppable = true
+	self.customizations.american_grunt_001_lower.gold_price = 150
 	self.customizations.american_gold_jacket_001_upper = {}
 	self.customizations.american_gold_jacket_001_upper.name = "character_customization_american_gold_jacket_001_upper_name"
 	self.customizations.american_gold_jacket_001_upper.description = "character_customization_american_gold_jacket_001_upper_desc"

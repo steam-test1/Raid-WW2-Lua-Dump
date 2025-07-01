@@ -789,6 +789,38 @@ function PlayerTweakData:_init_shotgun_stances()
 	self.stances.ithaca.crouched.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
 	self.stances.ithaca.crouched.shoulders.rotation = pivot_head_rotation * pivot_shoulder_rotation:inverse()
 	self.stances.ithaca.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -25, 0)
+	self.stances.browning = deep_clone(self.stances.default)
+
+	local pivot_shoulder_translation = Vector3(11.2002, 5.61833, 3.24215)
+	local pivot_shoulder_rotation = Rotation(0.000383849, 0.000530845, -0.000579741)
+	local pivot_head_translation = Vector3(7, 18, -4)
+	local pivot_head_rotation = Rotation(0, 0, -1)
+
+	self.stances.browning.standard.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
+	self.stances.browning.standard.shoulders.rotation = pivot_head_rotation * pivot_shoulder_rotation:inverse()
+	self.stances.browning.standard.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -30, 0)
+	self.stances.browning.standard.vel_overshot.yaw_neg = 10
+	self.stances.browning.standard.vel_overshot.yaw_pos = -10
+	self.stances.browning.standard.vel_overshot.pitch_neg = -10
+	self.stances.browning.standard.vel_overshot.pitch_pos = 10
+
+	local pivot_head_translation = Vector3(0, 15, -1)
+	local pivot_head_rotation = Rotation(0, 0, 0)
+
+	self.stances.browning.steelsight.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
+	self.stances.browning.steelsight.shoulders.rotation = pivot_head_rotation * pivot_shoulder_rotation:inverse()
+	self.stances.browning.steelsight.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -18, 0)
+	self.stances.browning.steelsight.vel_overshot.yaw_neg = 10
+	self.stances.browning.steelsight.vel_overshot.yaw_pos = -10
+	self.stances.browning.steelsight.vel_overshot.pitch_neg = -10
+	self.stances.browning.steelsight.vel_overshot.pitch_pos = 10
+
+	local pivot_head_translation = Vector3(6, 17, -6)
+	local pivot_head_rotation = Rotation(0, 0, -6)
+
+	self.stances.browning.crouched.shoulders.translation = pivot_head_translation - pivot_shoulder_translation:rotate_with(pivot_shoulder_rotation:inverse()):rotate_with(pivot_head_rotation)
+	self.stances.browning.crouched.shoulders.rotation = pivot_head_rotation * pivot_shoulder_rotation:inverse()
+	self.stances.browning.crouched.vel_overshot.pivot = pivot_shoulder_translation + Vector3(0, -25, 0)
 end
 
 function PlayerTweakData:_init_new_stances()

@@ -41,6 +41,7 @@ function WeaponTweakData:init(tweak_data)
 	self:_init_data_kar_98k_npc()
 	self:_init_data_bren_npc()
 	self:_init_data_lee_enfield_npc()
+	self:_init_data_browning_npc()
 	self:_init_data_shotty_npc()
 	self:_init_data_tiger_main_gun_module_npc(difficulty_index)
 	self:_init_data_tiger_machinegun_module_npc(difficulty_index)
@@ -672,6 +673,30 @@ function WeaponTweakData:_init_data_ithaca_npc()
 	self.ithaca_npc.hold = "m1912"
 	self.ithaca_npc.alert_size = 5000
 	self.ithaca_npc.suppression = 1
+end
+
+function WeaponTweakData:_init_data_browning_npc()
+	self.browning_npc = {}
+	self.browning_npc.sounds = {}
+	self.browning_npc.use_data = {}
+	self.browning_npc.usage = "m1912"
+	self.browning_npc.usage_anim = "m1912"
+	self.browning_npc.sounds.prefix = ""
+	self.browning_npc.sounds.single = "browning_fire_npc_single"
+	self.browning_npc.sounds.autofire_start = nil
+	self.browning_npc.sounds.autofire_stop = nil
+	self.browning_npc.use_data.selection_index = 2
+	self.browning_npc.DAMAGE = 6
+	self.browning_npc.muzzleflash = "effects/vanilla/weapons/12g_auto_fps"
+	self.browning_npc.shell_ejection = "effects/vanilla/weapons/shells/shell_slug_semi"
+	self.browning_npc.CLIP_AMMO_MAX = 4
+	self.browning_npc.NR_CLIPS_MAX = 64
+	self.browning_npc.AMMO_MAX = self.browning_npc.CLIP_AMMO_MAX * self.browning_npc.NR_CLIPS_MAX
+	self.browning_npc.auto = {}
+	self.browning_npc.auto.fire_rate = 0.3
+	self.browning_npc.hold = "m1912"
+	self.browning_npc.alert_size = 5000
+	self.browning_npc.suppression = 1
 end
 
 function WeaponTweakData:_init_data_mp38_npc()
@@ -2514,6 +2539,7 @@ function WeaponTweakData:_init_new_weapons(weapon_data)
 	self:_init_kar_98k(weapon_data)
 	self:_init_bren(weapon_data)
 	self:_init_lee_enfield(weapon_data)
+	self:_init_browning(weapon_data)
 	self:_init_shotty(weapon_data)
 end
 
@@ -3498,6 +3524,156 @@ function WeaponTweakData:_init_ithaca(weapon_data)
 		extra_ammo = 6,
 		recoil = 5,
 		spread = 6,
+		spread_moving = 9,
+		suppression = 6,
+		total_ammo_mod = 21,
+		value = 1,
+		zoom = 3,
+	}
+end
+
+function WeaponTweakData:_init_browning(weapon_data)
+	self.browning = {}
+	self.browning.inventory_texture = "ui/temp/customization_temp_df"
+	self.browning.category = WeaponTweakData.WEAPON_CATEGORY_SHOTGUN
+	self.browning.use_shotgun_reload = true
+	self.browning.dismember_chance = 0.75
+	self.browning.damage_melee = 100
+	self.browning.damage_melee_effect_mul = weapon_data.damage_melee_effect_multiplier_default
+	self.browning.sounds = {}
+	self.browning.sounds.fire = "browning_fire_1p_single"
+	self.browning.sounds.dryfire = "primary_dryfire"
+	self.browning.timers = {}
+	self.browning.timers.shotgun_reload_enter = 0.5333333333333333
+	self.browning.timers.shotgun_reload_exit_empty = 0.4
+	self.browning.timers.shotgun_reload_exit_not_empty = 0.4
+	self.browning.timers.shotgun_reload_shell = 0.6666666666666666
+	self.browning.timers.shotgun_reload_first_shell_offset = 0.13333333333333333
+	self.browning.timers.unequip = 0.85
+	self.browning.timers.equip = 0.6
+	self.browning.name_id = "bm_w_browning"
+	self.browning.desc_id = "bm_w_browning_desc"
+	self.browning.description_id = "des_browning"
+	self.browning.muzzleflash = "effects/vanilla/weapons/12g_auto_fps"
+	self.browning.shell_ejection = "effects/vanilla/weapons/shells/shell_slug_semi"
+	self.browning.use_data = {}
+	self.browning.use_data.selection_index = 2
+	self.browning.use_data.align_place = "right_hand"
+	self.browning.damage_profile = {
+		{
+			damage = 220,
+			range = 1000,
+		},
+		{
+			damage = 30,
+			range = 2000,
+		},
+	}
+	self.browning.headshot_multiplier = 3
+	self.browning.rays = 12
+	self.browning.CLIP_AMMO_MAX = 5
+	self.browning.NR_CLIPS_MAX = 4
+	self.browning.AMMO_MAX = self.browning.CLIP_AMMO_MAX * self.browning.NR_CLIPS_MAX
+	self.browning.AMMO_PICKUP = self:_pickup_chance(self.browning.AMMO_MAX, 1)
+	self.browning.ammo_pickup_base = 3
+	self.browning.FIRE_MODE = "single"
+	self.browning.fire_mode_data = {}
+	self.browning.fire_mode_data.fire_rate = 0.3
+	self.browning.CAN_TOGGLE_FIREMODE = false
+	self.browning.single = {}
+	self.browning.single.fire_rate = 0.3
+	self.browning.spread = {}
+	self.browning.spread.standing = 3
+	self.browning.spread.crouching = 3
+	self.browning.spread.steelsight = 3
+	self.browning.spread.moving_standing = 3
+	self.browning.spread.moving_crouching = 3
+	self.browning.spread.moving_steelsight = 3
+	self.browning.spread.per_shot = 0
+	self.browning.spread.per_shot_steelsight = 0
+	self.browning.spread.recovery = 12
+	self.browning.spread.recovery_wait_multiplier = 0.5
+	self.browning.kick = {}
+	self.browning.kick.standing = {
+		3.6,
+		4.2,
+		-2,
+		2,
+	}
+	self.browning.kick.crouching = {
+		3.2,
+		3.8,
+		-2,
+		2,
+	}
+	self.browning.kick.steelsight = {
+		3.4,
+		3.8,
+		-2,
+		2,
+	}
+	self.browning.kick.crouching_steelsight = {
+		3.2,
+		3.4,
+		-1.8,
+		1.8,
+	}
+	self.browning.gun_kick = {}
+	self.browning.gun_kick.hip_fire = {
+		60,
+		80,
+		-55,
+		55,
+	}
+	self.browning.gun_kick.steelsight = {
+		48,
+		58,
+		-45,
+		-45,
+	}
+	self.browning.gun_kick.position_ratio = -0.075
+	self.browning.crosshair = {}
+	self.browning.crosshair.standing = {}
+	self.browning.crosshair.crouching = {}
+	self.browning.crosshair.steelsight = {}
+	self.browning.crosshair.standing.offset = 0.7
+	self.browning.crosshair.standing.moving_offset = 0.7
+	self.browning.crosshair.standing.kick_offset = 0.8
+	self.browning.crosshair.crouching.offset = 0.65
+	self.browning.crosshair.crouching.moving_offset = 0.65
+	self.browning.crosshair.crouching.kick_offset = 0.75
+	self.browning.crosshair.steelsight.hidden = true
+	self.browning.crosshair.steelsight.offset = 0
+	self.browning.crosshair.steelsight.moving_offset = 0
+	self.browning.crosshair.steelsight.kick_offset = 0
+	self.browning.shake = {}
+	self.browning.shake.fire_multiplier = 2
+	self.browning.shake.fire_steelsight_multiplier = -2
+	self.browning.autohit = weapon_data.autohit_shotgun_default
+	self.browning.aim_assist = weapon_data.aim_assist_shotgun_default
+	self.browning.weapon_hold = "browning"
+	self.browning.animations = {}
+	self.browning.animations.equip_id = "equip_browning"
+	self.browning.animations.recoil_steelsight = true
+	self.browning.panic_suppression_chance = 0.2
+	self.browning.gui = {}
+	self.browning.gui.rotation_offset = -30
+	self.browning.gui.distance_offset = 85
+	self.browning.gui.height_offset = 0
+	self.browning.gui.display_offset = -10
+	self.browning.gui.initial_rotation = {}
+	self.browning.gui.initial_rotation.yaw = -90
+	self.browning.gui.initial_rotation.pitch = 0
+	self.browning.gui.initial_rotation.roll = 0
+	self.browning.gui.icon_large = "weapon_browning_large"
+	self.browning.hud = {}
+	self.browning.hud.icon = "weapon_panel_sho_1912"
+	self.browning.stats = {
+		alert_size = 7,
+		concealment = 12,
+		extra_ammo = 6,
+		recoil = 4,
+		spread = 5,
 		spread_moving = 9,
 		suppression = 6,
 		total_ammo_mod = 21,

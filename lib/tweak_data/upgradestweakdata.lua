@@ -903,6 +903,11 @@ function UpgradesTweakData:_create_weapon_definitions()
 		factory_id = "wpn_fps_sho_ithaca",
 		weapon_id = "ithaca",
 	}
+	self.definitions.browning = {
+		category = "weapon",
+		factory_id = "wpn_fps_sho_browning",
+		weapon_id = "browning",
+	}
 	self.definitions.shotty = {
 		category = "weapon",
 		factory_id = "wpn_fps_pis_shotty",
@@ -3903,6 +3908,7 @@ function UpgradesTweakData:_old_init()
 			"kar_98k",
 			"bren",
 			"lee_enfield",
+			"browning",
 			"shotty",
 		},
 	}

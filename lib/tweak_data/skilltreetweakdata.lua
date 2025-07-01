@@ -2985,6 +2985,18 @@ function SkillTreeTweakData:_init_skill_list()
 			"ithaca",
 		},
 	}
+	self.skills.weapon_unlock_browning = {
+		desc_id = "skill_weapon_unlock_browning_desc",
+		name_id = "skill_weapon_unlock_browning_name",
+		acquires = {},
+		icon_xy = {
+			1,
+			1,
+		},
+		upgrades = {
+			"browning",
+		},
+	}
 	self.skills.weapon_unlock_shotty = {
 		desc_id = "skill_weapon_unlock_shotty_desc",
 		name_id = "skill_weapon_unlock_shotty_name",
@@ -5606,6 +5618,11 @@ function SkillTreeTweakData:_init_infiltrator_unlock_progression()
 			"weapon_unlock_mp44",
 		},
 	}
+	self.automatic_unlock_progressions.infiltrator[40] = {
+		weapons = {
+			"weapon_unlock_browning",
+		},
+	}
 	self.default_weapons.infiltrator = {}
 	self.default_weapons.infiltrator.primary = "sten"
 	self.default_weapons.infiltrator.secondary = "c96"
@@ -5697,6 +5714,11 @@ function SkillTreeTweakData:_init_demolitions_unlock_progression()
 	self.automatic_unlock_progressions.demolitions[31] = {
 		weapons = {
 			"weapon_unlock_grenade_mills",
+		},
+	}
+	self.automatic_unlock_progressions.demolitions[33] = {
+		weapons = {
+			"weapon_unlock_browning",
 		},
 	}
 	self.automatic_unlock_progressions.demolitions[35] = {

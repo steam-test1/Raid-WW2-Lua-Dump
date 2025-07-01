@@ -55,6 +55,7 @@ end
 function CharacterTweakData:_init_russian(presets)
 	self.russian = {}
 	self.russian.damage = presets.gang_member_damage
+	self.russian.damage.hurt_severity = deep_clone(presets.hurt_severities.only_explosion_hurts)
 	self.russian.weapon = deep_clone(presets.weapon.gang_member)
 	self.russian.HEALTH_INIT = 200
 	self.russian.weapon.weapons_of_choice = {
@@ -80,6 +81,7 @@ end
 function CharacterTweakData:_init_german(presets)
 	self.german = {}
 	self.german.damage = presets.gang_member_damage
+	self.german.damage.hurt_severity = deep_clone(presets.hurt_severities.only_explosion_hurts)
 	self.german.weapon = deep_clone(presets.weapon.gang_member)
 	self.german.HEALTH_INIT = 200
 	self.german.weapon.weapons_of_choice = {
@@ -104,6 +106,7 @@ end
 function CharacterTweakData:_init_british(presets)
 	self.british = {}
 	self.british.damage = presets.gang_member_damage
+	self.british.damage.hurt_severity = deep_clone(presets.hurt_severities.only_explosion_hurts)
 	self.british.weapon = deep_clone(presets.weapon.gang_member)
 	self.british.HEALTH_INIT = 200
 	self.british.weapon.weapons_of_choice = {
@@ -128,6 +131,7 @@ end
 function CharacterTweakData:_init_american(presets)
 	self.american = {}
 	self.american.damage = presets.gang_member_damage
+	self.american.damage.hurt_severity = deep_clone(presets.hurt_severities.only_explosion_hurts)
 	self.american.weapon = deep_clone(presets.weapon.gang_member)
 	self.american.HEALTH_INIT = 200
 	self.american.weapon.weapons_of_choice = {
@@ -283,6 +287,7 @@ function CharacterTweakData:_init_german_grunt_light(presets)
 	self.german_grunt_light.detection = presets.detection.normal
 	self.german_grunt_light.vision = presets.vision.easy
 	self.german_grunt_light.HEALTH_INIT = 150
+	self.german_grunt_light.BASE_HEALTH_INIT = 150
 	self.german_grunt_light.headshot_dmg_mul = 1
 	self.german_grunt_light.move_speed = presets.move_speed.fast
 	self.german_grunt_light.surrender_break_time = {
@@ -331,6 +336,7 @@ function CharacterTweakData:_init_german_grunt_mid(presets)
 	self.german_grunt_mid.detection = presets.detection.normal
 	self.german_grunt_mid.vision = presets.vision.easy
 	self.german_grunt_mid.HEALTH_INIT = 200
+	self.german_grunt_mid.BASE_HEALTH_INIT = 200
 	self.german_grunt_mid.headshot_dmg_mul = 1
 	self.german_grunt_mid.move_speed = presets.move_speed.normal
 	self.german_grunt_mid.surrender_break_time = {
@@ -379,6 +385,7 @@ function CharacterTweakData:_init_german_grunt_heavy(presets)
 	self.german_grunt_heavy.detection = presets.detection.normal
 	self.german_grunt_heavy.vision = presets.vision.easy
 	self.german_grunt_heavy.HEALTH_INIT = 250
+	self.german_grunt_heavy.BASE_HEALTH_INIT = 250
 	self.german_grunt_heavy.headshot_dmg_mul = 1
 	self.german_grunt_heavy.move_speed = presets.move_speed.normal
 	self.german_grunt_heavy.crouch_move = false
@@ -423,6 +430,7 @@ function CharacterTweakData:_init_german_gebirgsjager_light(presets)
 	self.german_gebirgsjager_light.detection = presets.detection.normal
 	self.german_gebirgsjager_light.vision = presets.vision.normal
 	self.german_gebirgsjager_light.HEALTH_INIT = 200
+	self.german_gebirgsjager_light.BASE_HEALTH_INIT = 200
 	self.german_gebirgsjager_light.headshot_dmg_mul = 1
 	self.german_gebirgsjager_light.move_speed = presets.move_speed.fast
 	self.german_gebirgsjager_light.surrender_break_time = {
@@ -471,6 +479,7 @@ function CharacterTweakData:_init_german_gebirgsjager_heavy(presets)
 	self.german_gebirgsjager_heavy.detection = presets.detection.normal
 	self.german_gebirgsjager_heavy.vision = presets.vision.normal
 	self.german_gebirgsjager_heavy.HEALTH_INIT = 250
+	self.german_gebirgsjager_heavy.BASE_HEALTH_INIT = 250
 	self.german_gebirgsjager_heavy.headshot_dmg_mul = 1
 	self.german_gebirgsjager_heavy.move_speed = presets.move_speed.normal
 	self.german_gebirgsjager_heavy.crouch_move = false
@@ -520,6 +529,7 @@ function CharacterTweakData:_init_german_light(presets)
 	self.german_light.detection = presets.detection.normal
 	self.german_light.vision = presets.vision.normal
 	self.german_light.HEALTH_INIT = 600
+	self.german_light.BASE_HEALTH_INIT = 600
 	self.german_light.headshot_dmg_mul = 1
 	self.german_light.move_speed = presets.move_speed.fast
 	self.german_light.surrender_break_time = {
@@ -566,6 +576,7 @@ function CharacterTweakData:_init_german_heavy(presets)
 	self.german_heavy.detection = presets.detection.normal
 	self.german_heavy.vision = presets.vision.normal
 	self.german_heavy.HEALTH_INIT = 700
+	self.german_heavy.BASE_HEALTH_INIT = 700
 	self.german_heavy.headshot_dmg_mul = 1
 	self.german_heavy.move_speed = presets.move_speed.normal
 	self.german_heavy.crouch_move = false
@@ -615,6 +626,7 @@ function CharacterTweakData:_init_german_fallschirmjager_light(presets)
 	self.german_fallschirmjager_light.detection = presets.detection.normal
 	self.german_fallschirmjager_light.vision = presets.vision.hard
 	self.german_fallschirmjager_light.HEALTH_INIT = 450
+	self.german_fallschirmjager_light.BASE_HEALTH_INIT = 450
 	self.german_fallschirmjager_light.headshot_dmg_mul = 1
 	self.german_fallschirmjager_light.move_speed = presets.move_speed.fast
 	self.german_fallschirmjager_light.surrender_break_time = {
@@ -663,6 +675,7 @@ function CharacterTweakData:_init_german_gasmask(presets)
 	self.german_gasmask.detection = presets.detection.normal
 	self.german_gasmask.vision = presets.vision.hard
 	self.german_gasmask.HEALTH_INIT = 500
+	self.german_gasmask.BASE_HEALTH_INIT = 500
 	self.german_gasmask.headshot_dmg_mul = 1
 	self.german_gasmask.move_speed = presets.move_speed.normal
 	self.german_gasmask.crouch_move = false
@@ -729,6 +742,7 @@ function CharacterTweakData:_init_german_fallschirmjager_heavy(presets)
 	self.german_fallschirmjager_heavy.detection = presets.detection.normal
 	self.german_fallschirmjager_heavy.vision = presets.vision.hard
 	self.german_fallschirmjager_heavy.HEALTH_INIT = 500
+	self.german_fallschirmjager_heavy.BASE_HEALTH_INIT = 500
 	self.german_fallschirmjager_heavy.headshot_dmg_mul = 1
 	self.german_fallschirmjager_heavy.move_speed = presets.move_speed.normal
 	self.german_fallschirmjager_heavy.crouch_move = false
@@ -779,6 +793,7 @@ function CharacterTweakData:_init_german_waffen_ss(presets)
 	self.german_waffen_ss.detection = presets.detection.normal
 	self.german_waffen_ss.vision = presets.vision.hard
 	self.german_waffen_ss.HEALTH_INIT = 700
+	self.german_waffen_ss.BASE_HEALTH_INIT = 700
 	self.german_waffen_ss.headshot_dmg_mul = 1
 	self.german_waffen_ss.move_speed = presets.move_speed.fast
 	self.german_waffen_ss.crouch_move = false
@@ -815,6 +830,7 @@ function CharacterTweakData:_init_german_waffen_ss(presets)
 	self.german_waffen_ss_kar98 = clone(self.german_waffen_ss)
 	self.german_waffen_ss_shotgun = clone(self.german_waffen_ss)
 	self.german_waffen_ss_shotgun.HEALTH_INIT = 420
+	self.german_waffen_ss_shotgun.BASE_HEALTH_INIT = 420
 
 	table.insert(self._enemies_list, "german_waffen_ss")
 	table.insert(self._enemies_list, "german_waffen_ss_mp38")
@@ -829,6 +845,7 @@ function CharacterTweakData:_init_german_commander(presets)
 	self.german_commander.detection = presets.detection.normal
 	self.german_commander.vision = presets.vision.commander
 	self.german_commander.HEALTH_INIT = 1000
+	self.german_commander.BASE_HEALTH_INIT = 1000
 	self.german_commander.headshot_dmg_mul = 1
 	self.german_commander.move_speed = presets.move_speed.fast
 	self.german_commander.surrender_break_time = {
@@ -875,6 +892,7 @@ function CharacterTweakData:_init_german_og_commander(presets)
 	self.german_og_commander.detection = presets.detection.normal
 	self.german_og_commander.vision = presets.vision.commander
 	self.german_og_commander.HEALTH_INIT = 1000
+	self.german_og_commander.BASE_HEALTH_INIT = 1000
 	self.german_og_commander.headshot_dmg_mul = 1
 	self.german_og_commander.move_speed = presets.move_speed.fast
 	self.german_og_commander.surrender_break_time = {
@@ -921,6 +939,7 @@ function CharacterTweakData:_init_german_officer(presets)
 	self.german_officer.detection = presets.detection.normal
 	self.german_officer.vision = presets.vision.commander
 	self.german_officer.HEALTH_INIT = 420
+	self.german_officer.BASE_HEALTH_INIT = 420
 	self.german_officer.headshot_dmg_mul = 1
 	self.german_officer.move_speed = presets.move_speed.fast
 	self.german_officer.surrender_break_time = {
@@ -963,6 +982,7 @@ function CharacterTweakData:_init_soviet_nkvd_int_security_captain(presets)
 	self.soviet_nkvd_int_security_captain.detection = presets.detection.normal
 	self.soviet_nkvd_int_security_captain.vision = presets.vision.commander
 	self.soviet_nkvd_int_security_captain.HEALTH_INIT = 100
+	self.soviet_nkvd_int_security_captain.BASE_HEALTH_INIT = 100
 	self.soviet_nkvd_int_security_captain.headshot_dmg_mul = 1
 	self.soviet_nkvd_int_security_captain.move_speed = presets.move_speed.very_fast
 	self.soviet_nkvd_int_security_captain.surrender_break_time = {
@@ -1164,6 +1184,7 @@ function CharacterTweakData:_init_german_sniper(presets)
 	self.german_sniper.detection = presets.detection.sniper
 	self.german_sniper.vision = presets.vision.easy
 	self.german_sniper.HEALTH_INIT = 160
+	self.german_sniper.BASE_HEALTH_INIT = 160
 	self.german_sniper.headshot_dmg_mul = 1
 	self.german_sniper.allowed_stances = {
 		cbt = true,
@@ -1257,6 +1278,7 @@ function CharacterTweakData:_init_german_spotter(presets)
 	self.german_spotter.detection = presets.detection.normal
 	self.german_spotter.vision = presets.vision.spotter
 	self.german_spotter.HEALTH_INIT = 80
+	self.german_spotter.BASE_HEALTH_INIT = 80
 	self.german_spotter.headshot_dmg_mul = nil
 	self.german_spotter.move_speed = presets.move_speed.slow
 	self.german_spotter.crouch_move = false
@@ -7708,7 +7730,7 @@ end
 
 function CharacterTweakData:_multiply_all_hp(hp_mul)
 	for _, name in ipairs(self._enemies_list) do
-		self[name].HEALTH_INIT = self[name].HEALTH_INIT * hp_mul
+		self[name].HEALTH_INIT = self[name].BASE_HEALTH_INIT * hp_mul
 	end
 end
 

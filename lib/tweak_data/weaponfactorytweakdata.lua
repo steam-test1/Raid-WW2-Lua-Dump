@@ -127,6 +127,7 @@ function WeaponFactoryTweakData:init()
 	self:_init_kar_98k()
 	self:_init_bren()
 	self:_init_lee_enfield()
+	self:_init_browning()
 	self:_init_shotty()
 	self:create_ammunition()
 	self:_init_content_unfinished()
@@ -3082,6 +3083,167 @@ function WeaponFactoryTweakData:_init_ithaca()
 	}
 	self.wpn_fps_sho_ithaca_npc = deep_clone(self.wpn_fps_sho_ithaca)
 	self.wpn_fps_sho_ithaca_npc.unit = "units/upd_017/weapons/wpn_fps_sho_ithaca/wpn_fps_sho_ithaca_npc"
+end
+
+function WeaponFactoryTweakData:_init_browning()
+	self.parts.wpn_fps_sho_browning_m_standard = {
+		a_obj = "a_m",
+		name_id = "bm_wp_sho_browning_m_standard",
+		third_unit = "units/upd_007/weapons/wpn_third_sho_browning_pts/wpn_third_sho_browning_m_standard",
+		type = "magazine",
+		unit = "units/upd_007/weapons/wpn_fps_sho_browning_pts/wpn_fps_sho_browning_m_standard",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_sho_browning_m_extended = {
+		a_obj = "a_m",
+		name_id = "bm_wp_sho_browning_m_extended",
+		third_unit = "units/upd_007/weapons/wpn_third_sho_browning_pts/wpn_third_sho_browning_m_extended",
+		type = "magazine",
+		unit = "units/upd_007/weapons/wpn_fps_sho_browning_pts/wpn_fps_sho_browning_m_extended",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_sho_browning_m_long = {
+		a_obj = "a_m",
+		name_id = "bm_wp_sho_browning_m_long",
+		third_unit = "units/upd_007/weapons/wpn_third_sho_browning_pts/wpn_third_sho_browning_m_long",
+		type = "magazine",
+		unit = "units/upd_007/weapons/wpn_fps_sho_browning_pts/wpn_fps_sho_browning_m_long",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_sho_browning_b_standard = {
+		a_obj = "a_b",
+		name_id = "bm_wp_sho_browning_b_standard",
+		third_unit = "units/upd_007/weapons/wpn_third_sho_browning_pts/wpn_third_sho_browning_b_standard",
+		type = "barrel",
+		unit = "units/upd_007/weapons/wpn_fps_sho_browning_pts/wpn_fps_sho_browning_b_standard",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_sho_browning_b_reinforced = {
+		a_obj = "a_b",
+		name_id = "bm_wp_sho_browning_b_reinforced",
+		third_unit = "units/upd_007/weapons/wpn_third_sho_browning_pts/wpn_third_sho_browning_b_reinforced",
+		type = "barrel",
+		unit = "units/upd_007/weapons/wpn_fps_sho_browning_pts/wpn_fps_sho_browning_b_reinforced",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_sho_browning_body_standard = {
+		a_obj = "a_body",
+		name_id = "bm_wp_sho_browning_body_standard",
+		third_unit = "units/upd_007/weapons/wpn_third_sho_browning_pts/wpn_third_sho_browning_body_standard",
+		type = "lower_receiver",
+		unit = "units/upd_007/weapons/wpn_fps_sho_browning_pts/wpn_fps_sho_browning_body_standard",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_sho_browning_dh_standard = {
+		a_obj = "a_dh",
+		name_id = "bm_wp_sho_browning_dh_standard",
+		third_unit = "units/upd_007/weapons/wpn_third_sho_browning_pts/wpn_third_sho_browning_dh_standard",
+		type = "drag_handle",
+		unit = "units/upd_007/weapons/wpn_fps_sho_browning_pts/wpn_fps_sho_browning_dh_standard",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_sho_browning_lifter = {
+		a_obj = "a_lifter",
+		name_id = "bm_wp_sho_browning_lifter_standard",
+		third_unit = "units/upd_007/weapons/wpn_third_sho_browning_pts/wpn_third_sho_browning_lifter",
+		type = "custom",
+		unit = "units/upd_007/weapons/wpn_fps_sho_browning_pts/wpn_fps_sho_browning_lifter",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_sho_browning_s_standard = {
+		a_obj = "a_s",
+		name_id = "bm_wp_sho_browning_s_standard",
+		third_unit = "units/upd_007/weapons/wpn_third_sho_browning_pts/wpn_third_sho_browning_s_standard",
+		type = "stock",
+		unit = "units/upd_007/weapons/wpn_fps_sho_browning_pts/wpn_fps_sho_browning_s_standard",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_sho_browning_s_grip = {
+		a_obj = "a_s",
+		name_id = "bm_wp_sho_browning_s_grip",
+		third_unit = "units/upd_007/weapons/wpn_third_sho_browning_pts/wpn_third_sho_browning_s_grip",
+		type = "stock",
+		unit = "units/upd_007/weapons/wpn_fps_sho_browning_pts/wpn_fps_sho_browning_s_grip",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_sho_browning_pad_big = {
+		a_obj = "a_pad",
+		name_id = "bm_wp_sho_browning_pad_big",
+		third_unit = "units/upd_007/weapons/wpn_third_sho_browning_pts/wpn_third_sho_browning_pad_big",
+		type = "stock_ext",
+		unit = "units/upd_007/weapons/wpn_fps_sho_browning_pts/wpn_fps_sho_browning_pad_big",
+		stats = {
+			value = 1,
+		},
+	}
+	self.parts.wpn_fps_sho_browning_slug = {
+		a_obj = "a_slug",
+		name_id = "bm_wp_sho_browning_slug",
+		third_unit = "units/upd_007/weapons/wpn_third_sho_browning_pts/wpn_third_sho_browning_slug",
+		type = "extra",
+		unit = "units/upd_007/weapons/wpn_fps_sho_browning_pts/wpn_fps_sho_browning_slug",
+		stats = {
+			value = 1,
+		},
+	}
+	self.wpn_fps_sho_browning = {}
+	self.wpn_fps_sho_browning.unit = "units/upd_007/weapons/wpn_fps_sho_browning/wpn_fps_sho_browning"
+	self.wpn_fps_sho_browning.animations = {
+		fire = "recoil",
+		fire_steelsight = "recoil",
+		reload_exit = "reload_exit",
+	}
+	self.wpn_fps_sho_browning.optional_types = {
+		"barrel_ext",
+		"gadget",
+		"barrel",
+		"lower_receiver",
+	}
+	self.wpn_fps_sho_browning.default_blueprint = {
+		"wpn_fps_sho_browning_m_standard",
+		"wpn_fps_sho_browning_b_standard",
+		"wpn_fps_sho_browning_body_standard",
+		"wpn_fps_sho_browning_dh_standard",
+		"wpn_fps_sho_browning_lifter",
+		"wpn_fps_sho_browning_s_standard",
+		"wpn_fps_sho_browning_slug",
+	}
+	self.wpn_fps_sho_browning.uses_parts = {
+		"wpn_fps_sho_browning_m_standard",
+		"wpn_fps_sho_browning_b_standard",
+		"wpn_fps_sho_browning_body_standard",
+		"wpn_fps_sho_browning_dh_standard",
+		"wpn_fps_sho_browning_lifter",
+		"wpn_fps_sho_browning_s_standard",
+		"wpn_fps_sho_browning_slug",
+		"wpn_fps_sho_browning_m_extended",
+		"wpn_fps_sho_browning_m_long",
+		"wpn_fps_sho_browning_b_reinforced",
+		"wpn_fps_sho_browning_s_grip",
+		"wpn_fps_sho_browning_pad_big",
+	}
+	self.wpn_fps_sho_browning_npc = deep_clone(self.wpn_fps_sho_browning)
+	self.wpn_fps_sho_browning_npc.unit = "units/upd_007/weapons/wpn_fps_sho_browning/wpn_fps_sho_browning_npc"
 end
 
 function WeaponFactoryTweakData:_init_mp38()

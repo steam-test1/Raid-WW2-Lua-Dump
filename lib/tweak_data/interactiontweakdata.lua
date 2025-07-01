@@ -4618,6 +4618,252 @@ function InteractionTweakData:init()
 			},
 		},
 	}
+	self.picklock_door = {}
+	self.picklock_door.icon = "develop"
+	self.picklock_door.text_id = "hud_picklock_door"
+	self.picklock_door.action_text_id = "hud_action_picklock_door"
+	self.picklock_door.axis = "y"
+	self.picklock_door.interact_distance = 200
+	self.picklock_door.number_of_circles = 3
+	self.picklock_door.circle_radius = {
+		self.MINIGAME_CIRCLE_RADIUS_SMALL,
+		self.MINIGAME_CIRCLE_RADIUS_MEDIUM,
+		self.MINIGAME_CIRCLE_RADIUS_BIG,
+	}
+	self.picklock_door.circle_rotation_speed = {
+		160,
+		180,
+		190,
+	}
+	self.picklock_door.circle_rotation_direction = {
+		1,
+		-1,
+		1,
+	}
+	self.picklock_door.circle_difficulty = {
+		0.9,
+		0.93,
+		0.96,
+	}
+	self.picklock_door.sounds = {
+		failed = "lock_fail",
+		success = "success",
+		circles = {
+			{
+				lock = "lock_a",
+				mechanics = "lock_mechanics_a",
+			},
+			{
+				lock = "lock_b",
+				mechanics = "lock_mechanics_b",
+			},
+			{
+				lock = "lock_c",
+				mechanics = "lock_mechanics_c",
+			},
+		},
+	}
+	self.picklock_door_easy = {}
+	self.picklock_door_easy.icon = "develop"
+	self.picklock_door_easy.text_id = "hud_picklock_door"
+	self.picklock_door_easy.action_text_id = "hud_action_picklock_door"
+	self.picklock_door_easy.axis = "y"
+	self.picklock_door_easy.interact_distance = 200
+	self.picklock_door_easy.number_of_circles = 1
+	self.picklock_door_easy.circle_radius = {
+		self.MINIGAME_CIRCLE_RADIUS_SMALL,
+	}
+	self.picklock_door_easy.circle_rotation_speed = {
+		160,
+	}
+	self.picklock_door_easy.circle_rotation_direction = {
+		1,
+	}
+	self.picklock_door_easy.circle_difficulty = {
+		0.9,
+	}
+	self.picklock_door_easy.sounds = {
+		failed = "lock_fail",
+		success = "success",
+		circles = {
+			{
+				lock = "lock_a",
+				mechanics = "lock_mechanics_a",
+			},
+			{
+				lock = "lock_b",
+				mechanics = "lock_mechanics_b",
+			},
+			{
+				lock = "lock_c",
+				mechanics = "lock_mechanics_c",
+			},
+		},
+	}
+	self.picklock_door_medium = {}
+	self.picklock_door_medium.icon = "develop"
+	self.picklock_door_medium.text_id = "hud_picklock_door"
+	self.picklock_door_medium.action_text_id = "hud_action_picklock_door"
+	self.picklock_door_medium.axis = "y"
+	self.picklock_door_medium.interact_distance = 200
+	self.picklock_door_medium.number_of_circles = 2
+	self.picklock_door_medium.circle_radius = {
+		self.MINIGAME_CIRCLE_RADIUS_SMALL,
+		self.MINIGAME_CIRCLE_RADIUS_MEDIUM,
+	}
+	self.picklock_door_medium.circle_rotation_speed = {
+		160,
+		180,
+	}
+	self.picklock_door_medium.circle_rotation_direction = {
+		1,
+		-1,
+	}
+	self.picklock_door_medium.circle_difficulty = {
+		0.9,
+		0.93,
+	}
+	self.picklock_door_medium.sounds = {
+		failed = "lock_fail",
+		success = "success",
+		circles = {
+			{
+				lock = "lock_a",
+				mechanics = "lock_mechanics_a",
+			},
+			{
+				lock = "lock_b",
+				mechanics = "lock_mechanics_b",
+			},
+			{
+				lock = "lock_c",
+				mechanics = "lock_mechanics_c",
+			},
+		},
+	}
+	self.picklock_window = {}
+	self.picklock_window.icon = "develop"
+	self.picklock_window.text_id = "hud_picklock_window"
+	self.picklock_window.action_text_id = "hud_action_picklock_window"
+	self.picklock_window.axis = "y"
+	self.picklock_window.interact_distance = 200
+	self.picklock_window.number_of_circles = 3
+	self.picklock_window.circle_radius = {
+		self.MINIGAME_CIRCLE_RADIUS_SMALL,
+		self.MINIGAME_CIRCLE_RADIUS_MEDIUM,
+		self.MINIGAME_CIRCLE_RADIUS_BIG,
+	}
+	self.picklock_window.circle_rotation_speed = {
+		160,
+		180,
+		190,
+	}
+	self.picklock_window.circle_rotation_direction = {
+		1,
+		-1,
+		1,
+	}
+	self.picklock_window.circle_difficulty = {
+		0.9,
+		0.93,
+		0.96,
+	}
+	self.picklock_window.sounds = {
+		failed = "lock_fail",
+		success = "success",
+		circles = {
+			{
+				lock = "lock_a",
+				mechanics = "lock_mechanics_a",
+			},
+			{
+				lock = "lock_b",
+				mechanics = "lock_mechanics_b",
+			},
+			{
+				lock = "lock_c",
+				mechanics = "lock_mechanics_c",
+			},
+		},
+	}
+	self.picklock_window_easy = {}
+	self.picklock_window_easy.icon = "develop"
+	self.picklock_window_easy.text_id = "hud_picklock_window"
+	self.picklock_window_easy.action_text_id = "hud_action_picklock_window"
+	self.picklock_window_easy.axis = "y"
+	self.picklock_window_easy.interact_distance = 200
+	self.picklock_window_easy.number_of_circles = 1
+	self.picklock_window_easy.circle_radius = {
+		self.MINIGAME_CIRCLE_RADIUS_SMALL,
+	}
+	self.picklock_window_easy.circle_rotation_speed = {
+		160,
+	}
+	self.picklock_window_easy.circle_rotation_direction = {
+		1,
+	}
+	self.picklock_window_easy.circle_difficulty = {
+		0.9,
+	}
+	self.picklock_window_easy.sounds = {
+		failed = "lock_fail",
+		success = "success",
+		circles = {
+			{
+				lock = "lock_a",
+				mechanics = "lock_mechanics_a",
+			},
+			{
+				lock = "lock_b",
+				mechanics = "lock_mechanics_b",
+			},
+			{
+				lock = "lock_c",
+				mechanics = "lock_mechanics_c",
+			},
+		},
+	}
+	self.picklock_window_medium = {}
+	self.picklock_window_medium.icon = "develop"
+	self.picklock_window_medium.text_id = "hud_picklock_window"
+	self.picklock_window_medium.action_text_id = "hud_action_picklock_window"
+	self.picklock_window_medium.axis = "y"
+	self.picklock_window_medium.interact_distance = 200
+	self.picklock_window_medium.number_of_circles = 2
+	self.picklock_window_medium.circle_radius = {
+		self.MINIGAME_CIRCLE_RADIUS_SMALL,
+		self.MINIGAME_CIRCLE_RADIUS_MEDIUM,
+	}
+	self.picklock_window_medium.circle_rotation_speed = {
+		160,
+		180,
+	}
+	self.picklock_window_medium.circle_rotation_direction = {
+		1,
+		-1,
+	}
+	self.picklock_window_medium.circle_difficulty = {
+		0.9,
+		0.93,
+	}
+	self.picklock_window_medium.sounds = {
+		failed = "lock_fail",
+		success = "success",
+		circles = {
+			{
+				lock = "lock_a",
+				mechanics = "lock_mechanics_a",
+			},
+			{
+				lock = "lock_b",
+				mechanics = "lock_mechanics_b",
+			},
+			{
+				lock = "lock_c",
+				mechanics = "lock_mechanics_c",
+			},
+		},
+	}
 	self.activate_burners = {}
 	self.activate_burners.icon = "develop"
 	self.activate_burners.text_id = "hud_activate_burners"
