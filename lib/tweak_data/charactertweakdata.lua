@@ -57,7 +57,7 @@ function CharacterTweakData:_init_russian(presets)
 	self.russian.damage = presets.gang_member_damage
 	self.russian.damage.hurt_severity = deep_clone(presets.hurt_severities.only_explosion_hurts)
 	self.russian.weapon = deep_clone(presets.weapon.gang_member)
-	self.russian.HEALTH_INIT = 200
+	self.russian.HEALTH_INIT = 400
 	self.russian.weapon.weapons_of_choice = {
 		primary = Idstring("units/vanilla/weapons/wpn_npc_usa_garand/wpn_npc_usa_garand"),
 		secondary = Idstring("units/vanilla/weapons/wpn_npc_usa_garand/wpn_npc_usa_garand"),
@@ -83,7 +83,7 @@ function CharacterTweakData:_init_german(presets)
 	self.german.damage = presets.gang_member_damage
 	self.german.damage.hurt_severity = deep_clone(presets.hurt_severities.only_explosion_hurts)
 	self.german.weapon = deep_clone(presets.weapon.gang_member)
-	self.german.HEALTH_INIT = 200
+	self.german.HEALTH_INIT = 400
 	self.german.weapon.weapons_of_choice = {
 		primary = Idstring("units/vanilla/weapons/wpn_npc_smg_thompson/wpn_npc_smg_thompson"),
 		secondary = Idstring("units/vanilla/weapons/wpn_npc_smg_thompson/wpn_npc_smg_thompson"),
@@ -108,7 +108,7 @@ function CharacterTweakData:_init_british(presets)
 	self.british.damage = presets.gang_member_damage
 	self.british.damage.hurt_severity = deep_clone(presets.hurt_severities.only_explosion_hurts)
 	self.british.weapon = deep_clone(presets.weapon.gang_member)
-	self.british.HEALTH_INIT = 200
+	self.british.HEALTH_INIT = 400
 	self.british.weapon.weapons_of_choice = {
 		primary = Idstring("units/vanilla/weapons/wpn_npc_usa_garand/wpn_npc_usa_garand"),
 		secondary = Idstring("units/vanilla/weapons/wpn_npc_usa_garand/wpn_npc_usa_garand"),
@@ -133,7 +133,7 @@ function CharacterTweakData:_init_american(presets)
 	self.american.damage = presets.gang_member_damage
 	self.american.damage.hurt_severity = deep_clone(presets.hurt_severities.only_explosion_hurts)
 	self.american.weapon = deep_clone(presets.weapon.gang_member)
-	self.american.HEALTH_INIT = 200
+	self.american.HEALTH_INIT = 400
 	self.american.weapon.weapons_of_choice = {
 		primary = Idstring("units/vanilla/weapons/wpn_npc_smg_thompson/wpn_npc_smg_thompson"),
 		secondary = Idstring("units/vanilla/weapons/wpn_npc_smg_thompson/wpn_npc_smg_thompson"),

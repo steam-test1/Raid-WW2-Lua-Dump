@@ -795,7 +795,7 @@ function TweakData:init()
 	self.screen = {}
 	self.screen.fadein_delay = 1
 	self.experience_manager = {}
-	self.experience_manager.level_failed_multiplier = 0.01
+	self.experience_manager.level_failed_multiplier = 0.1
 	self.experience_manager.human_player_multiplier = {
 		1,
 		1.2,
@@ -804,10 +804,10 @@ function TweakData:init()
 	}
 	self.experience_manager.level_diff_max_multiplier = 2
 	self.experience_manager.difficulty_multiplier = {}
-	self.experience_manager.difficulty_multiplier[TweakData.DIFFICULTY_1] = 1
-	self.experience_manager.difficulty_multiplier[TweakData.DIFFICULTY_2] = 2
-	self.experience_manager.difficulty_multiplier[TweakData.DIFFICULTY_3] = 5
-	self.experience_manager.difficulty_multiplier[TweakData.DIFFICULTY_4] = 10
+	self.experience_manager.difficulty_multiplier[TweakData.DIFFICULTY_1] = 2
+	self.experience_manager.difficulty_multiplier[TweakData.DIFFICULTY_2] = 4
+	self.experience_manager.difficulty_multiplier[TweakData.DIFFICULTY_3] = 8
+	self.experience_manager.difficulty_multiplier[TweakData.DIFFICULTY_4] = 15
 
 	local multiplier = 1
 	local level_xp_requirements = {}
