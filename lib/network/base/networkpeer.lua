@@ -407,6 +407,8 @@ function NetworkPeer:verify_grenade(value)
 	local max_amount = grenade_id and tweak_data.projectiles[grenade_id] and tweak_data.projectiles[grenade_id].max_amount or tweak_data.equipments.max_amount.grenades
 
 	if self._grenades and max_amount < self._grenades + value then
+		print("max grenade amount: " .. max_amount .. ", nr of grenades: " .. self._grenades + value)
+
 		if Network:is_server() then
 			self:mark_cheater(VoteManager.REASON.many_grenades, true)
 		else
@@ -415,7 +417,7 @@ function NetworkPeer:verify_grenade(value)
 
 		print("[NetworkPeer:verify_grenade]: Failed to use grenade", self:id(), self._grenades, value)
 
-		return false
+		return true
 	end
 
 	self._grenades = self._grenades and self._grenades + value or value

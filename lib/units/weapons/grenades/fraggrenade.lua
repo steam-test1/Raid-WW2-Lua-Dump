@@ -42,13 +42,22 @@ function FragGrenade:set_thrower_unit(unit)
 
 	local peer = managers.network:session():peer_by_unit(self._thrower_unit)
 
+	self.cluster_range = self._range
+	self.cluster_damage = self._damage
+
 	if peer then
 		if peer._id == managers.network:session():local_peer()._id then
 			self._clusters_to_spawn = managers.player:upgrade_value("player", "warcry_grenade_clusters", 0)
+			self.cluster_range = self.cluster_range * managers.player:upgrade_value("player", "warcry_grenade_cluster_range", self.cluster_range)
+			self.cluster_damage = self.cluster_damage * managers.player:upgrade_value("player", "warcry_grenade_cluster_damage", self.cluster_damage)
 		else
-			self._clusters_to_spawn = managers.warcry:peer_warcry_upgrade_value(peer._id, "player", "warcry_player_grenade_clusters", 0)
+			self._clusters_to_spawn = managers.warcry:peer_warcry_upgrade_value(peer._id, "player", "warcry_grenade_clusters", 0)
+			self.cluster_range = self.cluster_range * managers.warcry:peer_warcry_upgrade_value(peer._id, "player", "warcry_grenade_cluster_range", self.cluster_range)
+			self.cluster_damage = self.cluster_damage * managers.warcry:peer_warcry_upgrade_value(peer._id, "player", "warcry_grenade_cluster_damage", self.cluster_damage)
 		end
 	end
+
+	print("----------Number of Cluster grenades:" .. self._clusters_to_spawn)
 end
 
 function FragGrenade:clbk_impact(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
@@ -114,21 +123,14 @@ function FragGrenade:_detonate(tag, unit, body, other_unit, other_body, position
 			if not collision then
 				local direction = (spawn_position - unit_position):normalized()
 				local cluster = ProjectileBase.throw_projectile(index, spawn_position, direction, managers.network:session():local_peer():id(), nil, self.name_id)
-				local cluster_range = self._range
-				local cluster_damage = self._damage
 
-				if thrower_peer._id == managers.network:session():local_peer()._id then
-					cluster_range = cluster_range * managers.player:upgrade_value("player", "warcry_grenade_cluster_range", cluster_range)
-					cluster_damage = cluster_damage * managers.player:upgrade_value("player", "warcry_grenade_cluster_damage", cluster_damage)
-				else
-					cluster_range = cluster_range * managers.warcry:peer_warcry_upgrade_value(thrower_peer._id, "player", "warcry_grenade_cluster_range", cluster_range)
-					cluster_damage = cluster_damage * managers.warcry:peer_warcry_upgrade_value(thrower_peer._id, "player", "warcry_grenade_cluster_damage", cluster_damage)
-				end
-
-				cluster:base():set_range(cluster_range)
-				cluster:base():set_damage(cluster_damage)
+				cluster:base():set_range(self.cluster_range)
+				cluster:base():set_damage(self.cluster_damage)
 
 				clusters_spawned = clusters_spawned + 1
+
+				Application:debug("FragGrenade -- Spawned cluster @:" .. spawn_position .. ", start pos: " .. pos)
+				Application:debug("FragGrenade -- Cluster_range:" .. self.cluster_range .. ", cluster damage: " .. self.cluster_damage)
 			else
 				Application:debug("[FragGrenade:_detonate] Trying to spawn a cluser, but there is a collision!")
 				Application:debug("[FragGrenade:_detonate] Spawn position: \t" .. inspect(spawn_position))
