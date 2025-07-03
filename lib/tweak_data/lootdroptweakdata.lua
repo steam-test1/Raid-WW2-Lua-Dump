@@ -44,8 +44,8 @@ LootDropTweakData.RARITY_PRICES = {
 	[LootDropTweakData.RARITY_ALL] = 100,
 	[LootDropTweakData.RARITY_DEFAULT] = 100,
 	[LootDropTweakData.RARITY_COMMON] = 150,
-	[LootDropTweakData.RARITY_UNCOMMON] = 200,
-	[LootDropTweakData.RARITY_RARE] = 250,
+	[LootDropTweakData.RARITY_UNCOMMON] = 250,
+	[LootDropTweakData.RARITY_RARE] = 500,
 	[LootDropTweakData.RARITY_HALLOWEEN] = 666,
 }
 
@@ -153,8 +153,8 @@ end
 function LootDropTweakData:_init_rewards_gold_bar()
 	self.rewards_gold_bars = {
 		bounty_common = {
-			gold_bars_max = 15,
-			gold_bars_min = 15,
+			gold_bars_max = 20,
+			gold_bars_min = 20,
 			reward_type = LootDropTweakData.REWARD_GOLD_BARS,
 		},
 		bounty_rare = {

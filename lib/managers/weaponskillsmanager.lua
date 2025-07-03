@@ -14,6 +14,10 @@ WeaponSkillsManager.UPGRADE_MAP = {
 	[WeaponSkillsTweakData.SKILL_INCREASE_MAGAZINE] = "magazine_upgrade",
 }
 
+local function get_challenge_id(wep_id, skill_name, tier_idx)
+	return wep_id .. "_" .. skill_name .. "_" .. tostring(tier_idx)
+end
+
 function WeaponSkillsManager:init()
 	self:_setup()
 end
@@ -94,10 +98,6 @@ function WeaponSkillsManager:get_hide_cosmetic_part(weapon_id, weapon_part_id)
 end
 
 function WeaponSkillsManager:_initialize_weapon_skill_challenges()
-	local function get_challenge_id(wep_id, skill_name, tier_idx)
-		return wep_id .. "_" .. skill_name .. "_" .. tostring(tier_idx)
-	end
-
 	for weapon_id, skill_tree in pairs(Global.weapon_skills_manager.weapon_skills_skill_tree) do
 		for tier_index = 1, #skill_tree do
 			local tier_skills = skill_tree[tier_index]
@@ -338,33 +338,45 @@ function WeaponSkillsManager:update_weapon_challenges(weapon_id)
 
 			for skill_index, skill in pairs(tier_skills) do
 				if skill[1].challenge_id then
-					local challenge_from_manager = managers.challenge._challenges[ChallengeManager.CATEGORY_WEAPON_UPGRADE][skill[1].challenge_id]
 					local tweak_data_challenge_data = tweak_data.weapon_skills.skill_trees[weapon_id][tier_index][skill_index][1]
+					local challenge_id = get_challenge_id(weapon_id, tweak_data_challenge_data.skill_name, tier_index)
 
-					skill[1].challenge_briefing_id = tweak_data_challenge_data.challenge_briefing_id
-					skill[1].challenge_done_text_id = tweak_data_challenge_data.challenge_done_text_id
-					skill[1].weapon_parts = tweak_data_challenge_data.weapon_parts
+					if skill[1].challenge_id ~= challenge_id then
+						Application:warn("[WeaponSkillsManager:update_weapon_challenges] Fixing challenge ID to/from:", challenge_id, skill[1].challenge_id)
 
-					if challenge_from_manager._state then
-						local tweak_task_data = tweak_data_challenge_data.challenge_tasks[1]
+						skill[1].challenge_id = challenge_id
+					end
 
-						skill[1].challenge_tasks[1].target = tweak_task_data.target
-						skill[1].challenge_tasks[1].reminders = tweak_task_data.reminders
-						challenge_from_manager._tasks[1]._target = tweak_task_data.target
-						challenge_from_manager._tasks[1]._reminders = tweak_task_data.reminders
+					local challenge_from_manager = managers.challenge._challenges[ChallengeManager.CATEGORY_WEAPON_UPGRADE][skill[1].challenge_id]
 
-						if tweak_task_data.modifiers then
-							challenge_from_manager._tasks[1]._modifiers = tweak_task_data.modifiers
-							skill[1].challenge_tasks[1].modifiers = tweak_task_data.modifiers
+					if challenge_from_manager and tweak_data_challenge_data then
+						skill[1].challenge_briefing_id = tweak_data_challenge_data.challenge_briefing_id
+						skill[1].challenge_done_text_id = tweak_data_challenge_data.challenge_done_text_id
+						skill[1].weapon_parts = tweak_data_challenge_data.weapon_parts
+
+						if challenge_from_manager._state then
+							local tweak_task_data = tweak_data_challenge_data.challenge_tasks[1]
+
+							skill[1].challenge_tasks[1].target = tweak_task_data.target
+							skill[1].challenge_tasks[1].reminders = tweak_task_data.reminders
+							challenge_from_manager._tasks[1]._target = tweak_task_data.target
+							challenge_from_manager._tasks[1]._reminders = tweak_task_data.reminders
+
+							if tweak_task_data.modifiers then
+								challenge_from_manager._tasks[1]._modifiers = tweak_task_data.modifiers
+								skill[1].challenge_tasks[1].modifiers = tweak_task_data.modifiers
+							end
+
+							if challenge_from_manager._state == "completed" then
+								challenge_from_manager._tasks[1]._count = challenge_from_manager._tasks[1]._target
+							elseif challenge_from_manager._tasks[1]._count >= challenge_from_manager._tasks[1]._target then
+								challenge_from_manager._tasks[1]._count = challenge_from_manager._tasks[1]._target
+
+								challenge_from_manager:force_complete()
+							end
 						end
-
-						if challenge_from_manager._state == "completed" then
-							challenge_from_manager._tasks[1]._count = challenge_from_manager._tasks[1]._target
-						elseif challenge_from_manager._tasks[1]._count >= challenge_from_manager._tasks[1]._target then
-							challenge_from_manager._tasks[1]._count = challenge_from_manager._tasks[1]._target
-
-							challenge_from_manager:force_complete()
-						end
+					else
+						Application:warn("[WeaponSkillsManager:update_weapon_challenges] id/tier/skill/chalID", weapon_id, tier_index, skill_index, skill[1].challenge_id)
 					end
 				end
 			end
@@ -388,45 +400,57 @@ function WeaponSkillsManager:check_weapon_challenges_for_changes(weapon_id)
 					local tweak_data_challenge_data = tweak_data.weapon_skills.skill_trees[weapon_id][tier_index][skill_index][1].challenge_tasks[1]
 					local challenge_from_manager = managers.challenge._challenges[ChallengeManager.CATEGORY_WEAPON_UPGRADE][skill[1].challenge_id]
 
-					for i = 1, #tweak_data_challenge_data.reminders do
-						if skill[1].challenge_tasks[1].reminders[i] ~= tweak_data_challenge_data.reminders[i] then
-							challenges_changed = true
+					if challenge_from_manager and tweak_data_challenge_data then
+						for i = 1, #tweak_data_challenge_data.reminders do
+							if skill[1].challenge_tasks[1].reminders[i] ~= tweak_data_challenge_data.reminders[i] then
+								challenges_changed = true
+							end
+
+							if challenge_from_manager._tasks[1]._reminders[i] ~= tweak_data_challenge_data.reminders[i] then
+								challenges_changed = true
+							end
 						end
 
-						if challenge_from_manager._tasks[1]._reminders[i] ~= tweak_data_challenge_data.reminders[i] then
-							challenges_changed = true
-						end
-					end
+						if tweak_data_challenge_data.modifiers then
+							for modifier, _ in pairs(tweak_data_challenge_data.modifiers) do
+								if modifier ~= "enemy_type" then
+									if challenge_from_manager._tasks[1]._modifiers[modifier] ~= tweak_data_challenge_data.modifiers[modifier] then
+										challenges_changed = true
+									end
 
-					if tweak_data_challenge_data.modifiers then
-						for modifier, _ in pairs(tweak_data_challenge_data.modifiers) do
-							if modifier ~= "enemy_type" then
-								if challenge_from_manager._tasks[1]._modifiers[modifier] ~= tweak_data_challenge_data.modifiers[modifier] then
-									challenges_changed = true
-								end
-
-								if tweak_data_challenge_data.modifiers[modifier] and skill[1].challenge_tasks[1].modifiers and skill[1].challenge_tasks[1].modifiers[modifier] and skill[1].challenge_tasks[1].modifiers[modifier] == tweak_data_challenge_data.modifiers[modifier] then
-									-- block empty
+									if tweak_data_challenge_data.modifiers[modifier] and skill[1].challenge_tasks[1].modifiers and skill[1].challenge_tasks[1].modifiers[modifier] and skill[1].challenge_tasks[1].modifiers[modifier] == tweak_data_challenge_data.modifiers[modifier] then
+										-- block empty
+									else
+										challenges_changed = true
+									end
 								else
-									challenges_changed = true
-								end
-							else
-								if challenge_from_manager._tasks[1]._modifiers[modifier][1] ~= tweak_data_challenge_data.modifiers[modifier][1] then
-									challenges_changed = true
-								end
+									if challenge_from_manager._tasks[1]._modifiers[modifier][1] ~= tweak_data_challenge_data.modifiers[modifier][1] then
+										challenges_changed = true
+									end
 
-								if skill[1].challenge_tasks[1].modifiers[modifier][1] ~= tweak_data_challenge_data.modifiers[modifier][1] then
-									challenges_changed = true
+									if skill[1].challenge_tasks[1].modifiers[modifier][1] ~= tweak_data_challenge_data.modifiers[modifier][1] then
+										challenges_changed = true
+									end
 								end
 							end
 						end
-					end
 
-					if skill[1].challenge_tasks[1].target ~= tweak_data_challenge_data.target then
-						challenges_changed = true
-					end
+						if skill[1].challenge_tasks[1].target ~= tweak_data_challenge_data.target then
+							challenges_changed = true
+						end
 
-					if challenge_from_manager._tasks[1]._target ~= tweak_data_challenge_data.target then
+						if challenge_from_manager._tasks[1]._target ~= tweak_data_challenge_data.target then
+							challenges_changed = true
+						end
+					else
+						if not challenge_from_manager then
+							Application:warn("[WeaponSkillsManager:check_weapon_challenges_for_changes] No challenge_from_manager")
+						end
+
+						if not tweak_data_challenge_data then
+							Application:warn("[WeaponSkillsManager:check_weapon_challenges_for_changes] No tweak_data_challenge_data")
+						end
+
 						challenges_changed = true
 					end
 				end

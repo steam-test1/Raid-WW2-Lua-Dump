@@ -156,9 +156,9 @@ end
 function PlayerManager:soft_reset()
 	self._listener_holder = EventListenerHolder:new()
 	self._equipment = {
+		aquire_weapon = nil,
 		selections = {},
 		specials = {},
-		upgrade_value = nil,
 	}
 	self._global.synced_grenades = {}
 
@@ -172,9 +172,9 @@ end
 
 function PlayerManager:_setup()
 	self._equipment = {
+		aquire_weapon = nil,
 		selections = {},
 		specials = {},
-		upgrade_value = nil,
 	}
 	self._listener_holder = EventListenerHolder:new()
 	self._player_mesh_suffix = ""

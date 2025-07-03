@@ -262,7 +262,9 @@ function RaidGUIControlListItemRaids:_layout_lock_icon()
 end
 
 function RaidGUIControlListItemRaids:_get_mission_color()
-	return (self._is_consumable or self._is_bounty) and tweak_data.gui.colors.raid_gold or tweak_data.gui.colors.raid_dirty_white
+	local special = self._is_consumable or self._is_bounty
+
+	return special and tweak_data.gui.colors.raid_gold or tweak_data.gui.colors.raid_dirty_white
 end
 
 function RaidGUIControlListItemRaids:_layout_breadcrumb()

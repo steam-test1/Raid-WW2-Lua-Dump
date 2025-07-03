@@ -497,27 +497,13 @@ function ChallengeCardsManager:sync_suggested_card_from_peer(challenge_card_key,
 end
 
 function ChallengeCardsManager:remove_suggested_challenge_card()
-	local local_peer = managers.network:session():local_peer()
-	local remove_suggested_card = self._suggested_cards and self._suggested_cards[local_peer._id]
+	local peer_id = managers.network:session():local_peer()._id
+	local remove_suggested_card = self._suggested_cards and self._suggested_cards[peer_id]
 
 	if not remove_suggested_card then
 		return
 	end
 
-	local active_card = self:get_active_card()
-
-	if active_card and active_card.key_name == remove_suggested_card.key_name then
-		self:remove_active_challenge_card()
-	end
-
-	self._suggested_cards[local_peer._id] = nil
-
-	managers.network:session():send_to_peers_synched("send_remove_suggested_card_to_peers", local_peer._id)
-	managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.CHALLENGE_CARDS_SUGGESTED_CARDS_CHANGED, nil)
-end
-
-function ChallengeCardsManager:sync_remove_suggested_card_from_peer(peer_id)
-	local remove_suggested_card = self._suggested_cards[peer_id]
 	local active_card = self:get_active_card()
 
 	if active_card and remove_suggested_card.key_name == active_card.key_name then
@@ -526,6 +512,25 @@ function ChallengeCardsManager:sync_remove_suggested_card_from_peer(peer_id)
 
 	self._suggested_cards[peer_id] = nil
 
+	managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.CHALLENGE_CARDS_SUGGESTED_CARDS_CHANGED, nil)
+end
+
+function ChallengeCardsManager:sync_remove_suggested_card_from_peer(peer_id)
+	local remove_suggested_card = self._suggested_cards and self._suggested_cards[peer_id]
+
+	if not remove_suggested_card then
+		return
+	end
+
+	local active_card = self:get_active_card()
+
+	if active_card and remove_suggested_card.key_name == active_card.key_name then
+		self:remove_active_challenge_card()
+	end
+
+	self._suggested_cards[peer_id] = nil
+
+	managers.network:session():send_to_peers_synched("send_remove_suggested_card_to_peers", peer_id)
 	managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.CHALLENGE_CARDS_SUGGESTED_CARDS_CHANGED, nil)
 end
 

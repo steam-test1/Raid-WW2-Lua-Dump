@@ -46,14 +46,12 @@ function RaidGUIControlIntelImageGrid:_create_photos(only_first_n_events)
 	self._photos = {}
 
 	for i = 1, #self._mission_photos do
-		local photo_params = {
+		local photo = self._inner_panel:create_custom_control(RaidGUIControlIntelImage, {
 			layer = 1,
 			on_click_callback = callback(self, self, "_on_photo_clicked", i),
 			photo = self._mission_photos[i].photo,
-			x = 0,
 			y = y,
-		}
-		local photo = self._inner_panel:create_custom_control(RaidGUIControlIntelImage, photo_params)
+		})
 
 		table.insert(self._photos, photo)
 
@@ -100,6 +98,10 @@ function RaidGUIControlIntelImageGrid:_on_photo_clicked(photo_index)
 			end
 		end
 	end
+end
+
+function RaidGUIControlIntelImageGrid:num_photos()
+	return #self._photos
 end
 
 function RaidGUIControlIntelImageGrid:set_data(data)

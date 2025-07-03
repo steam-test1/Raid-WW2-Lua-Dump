@@ -319,26 +319,28 @@ function MenuInput:focus(focus)
 end
 
 function MenuInput:controller_hotswap_triggered()
-	self._controller = nil
-
+	self:destroy_controller()
 	self:create_controller()
 end
 
 function MenuInput:create_controller()
-	if not self._controller then
-		local controller = managers.controller:create_controller("menu_input", nil, false)
-
-		controller:add_trigger("cancel", callback(self, self, "back"))
-		controller:set_enabled(true)
-
-		self._controller = controller
-
-		managers.controller:add_hotswap_callback("menu_input", callback(self, self, "controller_hotswap_triggered"))
+	if self._controller then
+		return
 	end
+
+	local controller = managers.controller:create_controller("menu_input", nil, false)
+
+	controller:add_trigger("cancel", callback(self, self, "back"))
+	controller:set_enabled(true)
+
+	self._controller = controller
+
+	managers.controller:add_hotswap_callback("menu_input", callback(self, self, "controller_hotswap_triggered"))
 end
 
 function MenuInput:destroy_controller()
 	if self._controller then
+		managers.controller:remove_hotswap_callback("menu_input")
 		self._controller:destroy()
 
 		self._controller = nil

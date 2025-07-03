@@ -34,30 +34,43 @@ function RaidGUIControlListSeparated:_create_item(item_class, item_params, item_
 		item_params.special_action_callback = self._special_action_callback
 	end
 
-	if #self._list_items == 0 then
-		self:_create_separator()
-	end
-
 	local item = RaidGUIControlListSeparated.super._create_item(self, item_class, item_params, item_data)
 
 	if item then
-		self:_create_separator(item)
+		self:_create_separators(self._object, item, self._separator_items)
 	end
 
 	return item
 end
 
-function RaidGUIControlListSeparated:_create_separator(parent_item)
-	local separator = self._object:three_cut_bitmap({
+function RaidGUIControlListSeparated:_create_separators(panel, parent_item, separator_items)
+	if separator_items[#separator_items] then
+		parent_item.separator_top = separator_items[#separator_items]
+	else
+		parent_item.separator_top = panel:three_cut_bitmap({
+			center = self.SEPARATOR_CENTER,
+			color = self.SEPARATOR_UNSELECTED_COLOR,
+			h = self._list_params.separator_height,
+			layer = parent_item:layer() + 60,
+			left = self.SEPARATOR_LEFT,
+			right = self.SEPARATOR_RIGHT,
+			y = parent_item:top() - 1,
+		})
+
+		table.insert(separator_items, parent_item.separator_top)
+	end
+
+	parent_item.separator_bottom = panel:three_cut_bitmap({
 		center = self.SEPARATOR_CENTER,
 		color = self.SEPARATOR_UNSELECTED_COLOR,
 		h = self._list_params.separator_height,
+		layer = parent_item:layer() + 60,
 		left = self.SEPARATOR_LEFT,
 		right = self.SEPARATOR_RIGHT,
-		y = parent_item and parent_item:bottom(),
+		y = parent_item:bottom(),
 	})
 
-	table.insert(self._separator_items, separator)
+	table.insert(separator_items, parent_item.separator_bottom)
 end
 
 function RaidGUIControlListSeparated:set_selected(value, dont_trigger_selected_callback)
@@ -91,38 +104,19 @@ function RaidGUIControlListSeparated:set_selected(value, dont_trigger_selected_c
 		if self._unselected_callback then
 			self._unselected_callback()
 		end
-
-		self._highlighted_item_idx = nil
 	end
 end
 
 function RaidGUIControlListSeparated:_select_item(item, dont_trigger_selected_callback)
 	RaidGUIControlListSeparated.super._select_item(self, item, dont_trigger_selected_callback)
 
-	self._highlighted_item_idx = self._selected_item_idx
-
-	self:_highlight_separators()
-end
-
-function RaidGUIControlListSeparated:on_mouse_enter(button, data)
-	RaidGUIControlListSeparated.super.on_mouse_enter(self, button, data)
-
-	local index = data.key
-
-	if index then
-		self._highlighted_item_idx = index
+	if item:enabled() then
+		self:_highlight_separators()
 	end
-
-	self:_highlight_separators()
 end
 
 function RaidGUIControlListSeparated:on_mouse_exit(button, data)
-	local index = data.key
-
-	if index and index == self._highlighted_item_idx then
-		self._highlighted_item_idx = nil
-	end
-
+	RaidGUIControlListSeparated.super.on_mouse_exit(self, button, data)
 	self:_highlight_separators()
 end
 
@@ -134,10 +128,8 @@ end
 function RaidGUIControlListSeparated:_animate_highlight()
 	local duration = 0.12
 	local t = 0
-	local top_idx = self._highlighted_item_idx or -1
-	local bottom_idx = top_idx + 1
 	local selected_color = self.SEPARATOR_SELECTED_COLOR
-	local item = self._list_items[self._highlighted_item_idx]
+	local item = self._selected_item
 
 	if item and item.data then
 		local data = item:data()
@@ -145,10 +137,21 @@ function RaidGUIControlListSeparated:_animate_highlight()
 		selected_color = data.separator_highlight_color or selected_color
 	end
 
-	local start_colors = {}
+	local separator_colors = {}
 
 	for _, separator in ipairs(self._separator_items) do
-		table.insert(start_colors, separator:color())
+		local current_color = separator:color()
+		local target_color = item and item:highlighted() and (separator == item.separator_top or separator == item.separator_bottom) and selected_color or self.SEPARATOR_UNSELECTED_COLOR
+
+		if current_color ~= target_color then
+			local color = {
+				item = separator,
+				start = current_color,
+				target = target_color,
+			}
+
+			table.insert(separator_colors, color)
+		end
 	end
 
 	while t < duration do
@@ -158,17 +161,14 @@ function RaidGUIControlListSeparated:_animate_highlight()
 
 		local progress = Easing.quadratic_out(t, 0, 1, duration)
 
-		for i, separator in ipairs(self._separator_items) do
-			local target_color = (i == top_idx or i == bottom_idx) and selected_color or self.SEPARATOR_UNSELECTED_COLOR
-			local current_color = math.lerp(start_colors[i], target_color, progress)
+		for _, data in ipairs(separator_colors) do
+			local current_color = math.lerp(data.start, data.target, progress)
 
-			separator:set_color(current_color)
+			data.item:set_color(current_color)
 		end
 	end
 
-	for i, separator in ipairs(self._separator_items) do
-		local target_color = (i == top_idx or i == bottom_idx) and selected_color or self.SEPARATOR_UNSELECTED_COLOR
-
-		separator:set_color(target_color)
+	for _, data in ipairs(separator_colors) do
+		data.item:set_color(data.target)
 	end
 end

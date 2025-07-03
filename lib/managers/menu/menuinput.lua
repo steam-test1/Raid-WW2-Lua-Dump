@@ -193,20 +193,17 @@ function MenuInput:mouse_moved(o, x, y, mouse_ws)
 	if node_gui and managers.menu_component:input_focus() ~= true then
 		local inside_item_panel_parent = node_gui:item_panel_parent():inside(x, y)
 
-		for _, row_item in pairs(node_gui.row_items) do
-			if row_item.item:parameters().pd2_corner then
-				if row_item.gui_text:inside(x, y) and self._logic:get_item(row_item.name).TYPE ~= "divider" then
-					select_item = row_item.name
-					select_row_item = row_item
-				end
-			elseif inside_item_panel_parent and row_item.gui_panel:inside(x, y) then
-				local item = self._logic:get_item(row_item.name)
+		if inside_item_panel_parent then
+			for _, row_item in pairs(node_gui.row_items) do
+				if row_item.gui_panel:inside(x, y) then
+					local item = self._logic:get_item(row_item.name)
 
-				if item and item.TYPE ~= "divider" then
-					select_item = row_item.name
-					select_row_item = row_item
-				elseif not item then
-					Application:error("[MenuInput:mouse_moved] Item not found in Menu Logic", row_item.name)
+					if item and item.TYPE ~= "divider" then
+						select_item = row_item.name
+						select_row_item = row_item
+					elseif not item then
+						Application:error("[MenuInput:mouse_moved] Item not found in Menu Logic", row_item.name)
+					end
 				end
 			end
 		end
@@ -437,6 +434,8 @@ function MenuInput:mouse_double_click(o, button, x, y)
 	return managers.menu:active_menu().renderer:mouse_double_click(o, button, x, y)
 end
 
+local ids_chat = Idstring("toggle_chat")
+
 function MenuInput:update(t, dt)
 	if self._menu_plane then
 		self._menu_plane:set_rotation(Rotation(math.sin(t * 60) * 40, math.sin(t * 50) * 30, 0))
@@ -550,62 +549,32 @@ function MenuInput:update(t, dt)
 				end
 			end
 
-			if self._controller then
+			local renderer = managers.menu:active_menu().renderer
+
+			if managers.menu:active_menu() and renderer then
 				for _, button in ipairs(MenuInput.special_buttons) do
-					if self._accept_input and self._controller and self._controller:get_input_pressed(button) and managers.menu_component:special_btn_pressed(Idstring(button)) then
-						if managers.menu:active_menu() then
-							managers.menu:active_menu().renderer:disable_input(0.2)
-						end
+					if self._controller and self._accept_input and self._controller:get_input_pressed(button) and managers.menu_component:special_btn_pressed(Idstring(button)) then
+						renderer:disable_input(0.2)
 
 						break
 					end
 				end
-			end
 
-			if self._accept_input and self._controller and self._controller:get_input_pressed("confirm") and managers.menu:active_menu().renderer:confirm_pressed() and managers.menu:active_menu() then
-				managers.menu:active_menu().renderer:disable_input(0.2)
-			end
-
-			if self._accept_input and self._controller and self._controller:get_input_pressed("back") and managers.menu:active_menu().renderer:back_pressed() and managers.menu:active_menu() then
-				managers.menu:active_menu().renderer:disable_input(0.2)
-			end
-
-			if self._accept_input and self._controller and self._controller:get_input_pressed("cancel") and managers.menu:active_menu().renderer:back_pressed() and managers.menu:active_menu() then
-				managers.menu:active_menu().renderer:disable_input(0.2)
-			end
-
-			if self._controller then
-				local special_btns = {
-					"menu_toggle_voice_message",
-					"menu_respec_tree",
-					"menu_switch_skillset",
-					"menu_modify_item",
-					"menu_preview_item",
-					"menu_remove_item",
-					"menu_preview_item_alt",
-					"menu_toggle_legends",
-					"menu_toggle_filters",
-					"menu_toggle_ready",
-					"toggle_chat",
-					"menu_toggle_pp_drawboard",
-					"menu_toggle_pp_breakdown",
-					"trigger_left",
-					"trigger_right",
-					"menu_challenge_claim",
-					"menu_tab_left",
-					"menu_tab_right",
-					"menu_mission_selection_start",
-				}
-
-				for _, button in ipairs(special_btns) do
-					if self._accept_input and self._controller:get_input_pressed(button) and managers.menu:active_menu().renderer:special_btn_pressed(Idstring(button)) then
-						if managers.menu:active_menu() then
-							managers.menu:active_menu().renderer:disable_input(0.2)
-						end
-
-						break
-					end
+				if self._controller and self._accept_input and self._controller:get_input_pressed("confirm") and renderer:confirm_pressed() then
+					renderer:disable_input(0.2)
 				end
+
+				if self._controller and self._accept_input and self._controller:get_input_pressed("back") and renderer:back_pressed() then
+					renderer:disable_input(0.2)
+				end
+
+				if self._controller and self._accept_input and self._controller:get_input_pressed("cancel") and renderer:back_pressed() then
+					renderer:disable_input(0.2)
+				end
+			end
+
+			if self._controller and self._accept_input and self._controller:get_input_pressed("toggle_chat") and renderer:special_btn_pressed(ids_chat) then
+				renderer:disable_input(0.2)
 			end
 		end
 	end
@@ -618,35 +587,35 @@ function MenuInput:update(t, dt)
 end
 
 function MenuInput:menu_axis_move()
+	if self._controller then
+		local move = self._controller:get_input_axis("menu_move")
+
+		if move then
+			return move
+		end
+	end
+
 	local axis_moved = {
 		x = 0,
 		y = 0,
 	}
 
-	if self._controller then
-		local move = self._controller:get_input_axis("menu_move")
-
-		if move then
-			axis_moved = move
-		end
-	end
-
 	return axis_moved
 end
 
 function MenuInput:menu_axis_scroll()
-	local axis_scrolled = {
-		x = 0,
-		y = 0,
-	}
-
 	if self._controller then
 		local scroll = self._controller:get_input_axis("menu_scroll")
 
 		if scroll then
-			axis_scrolled = scroll
+			return scroll
 		end
 	end
+
+	local axis_scrolled = {
+		x = 0,
+		y = 0,
+	}
 
 	return axis_scrolled
 end

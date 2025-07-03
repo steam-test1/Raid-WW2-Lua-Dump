@@ -1056,7 +1056,7 @@ function EnemyManager:_upd_corpse_disposal()
 					to_dispose[u_key] = true
 					nr_found = nr_found + 1
 
-					if nr_found == disposals_needed then
+					if disposals_needed <= nr_found then
 						break
 					end
 				end
@@ -1072,7 +1072,7 @@ function EnemyManager:_upd_corpse_disposal()
 				to_dispose[u_key] = true
 				nr_found = nr_found + 1
 
-				if nr_found == disposals_needed then
+				if disposals_needed <= nr_found then
 					break
 				end
 			end
@@ -1277,19 +1277,11 @@ function EnemyManager:is_commander_active()
 end
 
 function EnemyManager:is_spawn_group_allowed(group_type)
-	local allowed = true
-
-	if not managers.enemy:is_commander_active() then
-		for i, v in ipairs(tweak_data.group_ai.commander_backup_groups) do
-			if group_type == v then
-				allowed = false
-
-				break
-			end
-		end
+	if self:is_commander_active() then
+		return true
 	end
 
-	return allowed
+	return not tweak_data.group_ai.commander_backup_groups[group_type]
 end
 
 function EnemyManager:register_commander(add_diff)

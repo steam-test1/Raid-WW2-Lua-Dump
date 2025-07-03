@@ -400,18 +400,14 @@ function MissionSelectionGui:_layout_operation_tutorialization()
 		x = self._right_panel:x(),
 		y = self._right_panel:y(),
 	})
-	self._operation_tutorialization_title = self._operation_tutorialization_panel:text({
+	self._operation_tutorialization_title = self._operation_tutorialization_panel:label({
 		color = tweak_data.gui.colors.raid_dirty_white,
+		fit_text = true,
 		font = tweak_data.gui.fonts.din_compressed,
 		font_size = tweak_data.gui.font_sizes.size_38,
-		h = 40,
 		halign = "left",
 		text = self:translate("operations_tutorialization_title", true),
-		vertical = "center",
 	})
-
-	self._operation_tutorialization_title:set_center_y(16)
-
 	self._operation_tutorialization_desc = self._operation_tutorialization_panel:text({
 		color = tweak_data.gui.colors.raid_grey,
 		font = tweak_data.gui.fonts.lato,
@@ -419,7 +415,7 @@ function MissionSelectionGui:_layout_operation_tutorialization()
 		halign = "left",
 		text = self:translate("operations_tutorialization_description", false),
 		wrap = true,
-		y = 64,
+		y = self._operation_tutorialization_title:bottom() + 24,
 	})
 end
 
@@ -1610,6 +1606,7 @@ function MissionSelectionGui:_on_operation_selected(operation_data)
 	self._selected_job_data = mission_data
 
 	self:_update_soe_stamp(self._selected_job_id)
+	self:_prepare_intel_image_for_selected_job()
 	self._front_page_title:stop()
 	self._front_page_title:animate(callback(self, self, "_animate_hide_front_page"))
 
@@ -1618,8 +1615,10 @@ function MissionSelectionGui:_on_operation_selected(operation_data)
 		self._secondary_paper:animate(callback(self, self, "_animate_hide_secondary_paper"))
 	end
 
+	local show_intel = self._intel_image_grid:num_photos() > 0
+
 	self:_on_info_clicked(nil, true)
-	self:_update_information_buttons(true, true, true)
+	self:_update_information_buttons(true, show_intel, true)
 	self:_set_settings_enabled(true)
 
 	local operation_tweak_data = tweak_data.operations:mission_data(mission_id)
@@ -1718,7 +1717,7 @@ function MissionSelectionGui:_on_slot_clicked(slot_data)
 		self._continue_slot_selected = nil
 
 		self._front_page_icon:stop()
-		self._front_page_icon:animate(callback(self, self, "_animate_change_front_page_data"), "op_blank_hd", "menu_mission_selected_mission_type_operation", "folder_mission_op", tweak_data.gui.colors.raid_light_gold)
+		self._front_page_icon:animate(callback(self, self, "_animate_change_front_page_data"), "op_blank_hd", "xp_events_missions_operations_category", "menu_mission_selected_mission_type_operation", "folder_mission_op", tweak_data.gui.colors.raid_light_gold)
 		self._front_page_title:stop()
 		self._front_page_title:animate(callback(self, self, "_animate_show_front_page"))
 		self._operation_tutorialization_panel:get_engine_panel():stop()

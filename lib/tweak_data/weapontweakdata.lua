@@ -1620,9 +1620,10 @@ function WeaponTweakData:_init_data_tiger_main_gun_module_npc(difficulty_index)
 		main_cannon_lock_on = "tiger_npc_canon_reload",
 	}
 	self.tiger_main_gun_module.effect = {
-		all_fps_animation_weights = nil,
+		lmg_dp28 = nil,
 		main_cannon_fire = "effects/vanilla/explosions/tank_turret_fire",
 		main_cannon_fire_hit = "effects/vanilla/explosions/exp_airbomb_explosion_002",
+		style = nil,
 	}
 	self.tiger_main_gun_module.turret = {
 		armor_piercing = true,
@@ -3482,7 +3483,7 @@ function WeaponTweakData:_init_georg(weapon_data, tweak_data)
 			extra_ammo = 6,
 			recoil = 4,
 			spread = 5,
-			spread_moving = 3,
+			spread_moving = 4,
 			suppression = 14,
 			total_ammo_mod = 21,
 			value = 1,
@@ -3502,10 +3503,10 @@ function WeaponTweakData:_init_georg(weapon_data, tweak_data)
 	}
 	self.georg.AMMO_MAX = self.georg.CLIP_AMMO_MAX * self.georg.NR_CLIPS_MAX
 	self.georg.spread = {
-		per_shot = 1.27,
-		recovery = 9.5,
-		recovery_wait_multiplier = 2.1,
-		standing = 1.9,
+		per_shot = 1.17,
+		recovery = 9.2,
+		recovery_wait_multiplier = 2,
+		standing = 1.8,
 	}
 	self.georg.spread.crouching = self.georg.spread.standing - 0.25
 	self.georg.spread.steelsight = self.georg.spread.standing - 1.25

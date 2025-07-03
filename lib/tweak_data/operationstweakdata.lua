@@ -3,9 +3,13 @@ OperationsTweakData.JOB_TYPE_RAID = 1
 OperationsTweakData.JOB_TYPE_OPERATION = 2
 OperationsTweakData.PROGRESSION_GROUP_SHORT = "short"
 OperationsTweakData.PROGRESSION_GROUP_STANDARD = "standard"
-OperationsTweakData.PROGRESSION_GROUP_INITIAL = "initial"
+OperationsTweakData.PROGRESSION_GROUP_INITIAL_LONG = "initial_long"
+OperationsTweakData.PROGRESSION_GROUP_INITIAL_MEDIUM = "initial_medium"
+OperationsTweakData.PROGRESSION_GROUP_INITIAL_SHORT = "initial_short"
 OperationsTweakData.PROGRESSION_GROUPS = {
-	OperationsTweakData.PROGRESSION_GROUP_INITIAL,
+	OperationsTweakData.PROGRESSION_GROUP_INITIAL_LONG,
+	OperationsTweakData.PROGRESSION_GROUP_INITIAL_MEDIUM,
+	OperationsTweakData.PROGRESSION_GROUP_INITIAL_SHORT,
 	OperationsTweakData.PROGRESSION_GROUP_SHORT,
 	OperationsTweakData.PROGRESSION_GROUP_STANDARD,
 }
@@ -47,9 +51,10 @@ function OperationsTweakData:_init_progression_data()
 	self.progression.final_unlock_cycle_duration = 1000
 	self.progression.operations_unlock_level = 10
 	self.progression.initial_mission_unlock_blueprint = {
-		OperationsTweakData.PROGRESSION_GROUP_INITIAL,
-		OperationsTweakData.PROGRESSION_GROUP_SHORT,
-		OperationsTweakData.PROGRESSION_GROUP_SHORT,
+		OperationsTweakData.PROGRESSION_GROUP_INITIAL_LONG,
+		OperationsTweakData.PROGRESSION_GROUP_INITIAL_MEDIUM,
+		OperationsTweakData.PROGRESSION_GROUP_INITIAL_SHORT,
+		OperationsTweakData.PROGRESSION_GROUP_INITIAL_SHORT,
 	}
 	self.progression.regular_mission_unlock_blueprint = {
 		OperationsTweakData.PROGRESSION_GROUP_STANDARD,
@@ -348,7 +353,7 @@ function OperationsTweakData:_init_raids()
 	}
 	self.missions.flakturm.job_type = OperationsTweakData.JOB_TYPE_RAID
 	self.missions.flakturm.progression_groups = {
-		OperationsTweakData.PROGRESSION_GROUP_INITIAL,
+		OperationsTweakData.PROGRESSION_GROUP_INITIAL_LONG,
 		OperationsTweakData.PROGRESSION_GROUP_STANDARD,
 	}
 	self.missions.flakturm.icon_menu_big = "xp_events_missions_raid_flaktower"
@@ -491,7 +496,8 @@ function OperationsTweakData:_init_raids()
 	self.missions.train_yard.mission_flag = "level_raid_train_yard"
 	self.missions.train_yard.job_type = OperationsTweakData.JOB_TYPE_RAID
 	self.missions.train_yard.progression_groups = {
-		OperationsTweakData.PROGRESSION_GROUP_STANDARD,
+		self.PROGRESSION_GROUP_INITIAL_MEDIUM,
+		self.PROGRESSION_GROUP_STANDARD,
 	}
 	self.missions.train_yard.icon_menu_big = "xp_events_mission_raid_railyard"
 	self.missions.train_yard.icon_menu = "mission_raid_railyard_menu"
@@ -605,13 +611,13 @@ function OperationsTweakData:_init_raids()
 	self.missions.ger_bridge.short_audio_briefing_id = "bridge_brief_short"
 	self.missions.ger_bridge.region = "germany"
 	self.missions.ger_bridge.music_id = "ger_bridge"
-	self.missions.ger_bridge.mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED
-	self.missions.ger_bridge.stealth_description = OperationsTweakData.RAID_NOT_STEALTHABLE
+	self.missions.ger_bridge.mission_state = self.STATE_LOCATION_MISSION_SELECTED
+	self.missions.ger_bridge.stealth_description = self.RAID_NOT_STEALTHABLE
 	self.missions.ger_bridge.mission_flag = "level_raid_bridge"
-	self.missions.ger_bridge.job_type = OperationsTweakData.JOB_TYPE_RAID
+	self.missions.ger_bridge.job_type = self.JOB_TYPE_RAID
 	self.missions.ger_bridge.progression_groups = {
-		OperationsTweakData.PROGRESSION_GROUP_INITIAL,
-		OperationsTweakData.PROGRESSION_GROUP_STANDARD,
+		self.PROGRESSION_GROUP_INITIAL_MEDIUM,
+		self.PROGRESSION_GROUP_STANDARD,
 	}
 	self.missions.ger_bridge.xp = 3600
 	self.missions.ger_bridge.dogtags = self.dogtag_types.small
@@ -671,7 +677,7 @@ function OperationsTweakData:_init_raids()
 	self.missions.settlement.short_audio_briefing_id = "castle_brief_short"
 	self.missions.settlement.region = "germany"
 	self.missions.settlement.music_id = "castle"
-	self.missions.settlement.stealth_description = OperationsTweakData.RAID_NOT_STEALTHABLE
+	self.missions.settlement.stealth_description = self.RAID_NOT_STEALTHABLE
 	self.missions.settlement.xp = 5000
 	self.missions.settlement.bounty_filters = {
 		forbid_buffs = {
@@ -688,12 +694,12 @@ function OperationsTweakData:_init_raids()
 		max = 1800,
 		min = 1200,
 	}
-	self.missions.settlement.mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED
+	self.missions.settlement.mission_state = self.STATE_LOCATION_MISSION_SELECTED
 	self.missions.settlement.mission_flag = "level_raid_castle"
-	self.missions.settlement.job_type = OperationsTweakData.JOB_TYPE_RAID
+	self.missions.settlement.job_type = self.JOB_TYPE_RAID
 	self.missions.settlement.progression_groups = {
-		OperationsTweakData.PROGRESSION_GROUP_INITIAL,
-		OperationsTweakData.PROGRESSION_GROUP_STANDARD,
+		self.PROGRESSION_GROUP_INITIAL_LONG,
+		self.PROGRESSION_GROUP_STANDARD,
 	}
 	self.missions.settlement.icon_menu_big = "xp_events_missions_raid_castle"
 	self.missions.settlement.icon_menu = "missions_raid_castle_menu"
@@ -798,11 +804,12 @@ function OperationsTweakData:_init_raids()
 		max = 900,
 		min = 600,
 	}
-	self.missions.bunker_test.mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED
+	self.missions.bunker_test.mission_state = self.STATE_LOCATION_MISSION_SELECTED
 	self.missions.bunker_test.mission_flag = "level_raid_bunker_test"
-	self.missions.bunker_test.job_type = OperationsTweakData.JOB_TYPE_RAID
+	self.missions.bunker_test.job_type = self.JOB_TYPE_RAID
 	self.missions.bunker_test.progression_groups = {
-		OperationsTweakData.PROGRESSION_GROUP_SHORT,
+		self.PROGRESSION_GROUP_INITIAL_SHORT,
+		self.PROGRESSION_GROUP_SHORT,
 	}
 	self.missions.bunker_test.icon_menu_big = "xp_events_missions_bunkers"
 	self.missions.bunker_test.icon_menu = "missions_bunkers"
@@ -818,7 +825,7 @@ function OperationsTweakData:_init_raids()
 		text = "loading_bunker_test",
 	}
 	self.missions.bunker_test.start_in_stealth = true
-	self.missions.bunker_test.stealth_description = OperationsTweakData.RAID_STARTS_STEALTHABLE
+	self.missions.bunker_test.stealth_description = self.RAID_STARTS_STEALTHABLE
 	self.missions.bunker_test.photos = {
 		{
 			description_id = "bunker_mission_photo_1_description",
@@ -909,7 +916,7 @@ function OperationsTweakData:_init_raids()
 	self.missions.hunters.short_audio_briefing_id = "mrs_white_hunters_briefing_short"
 	self.missions.hunters.music_id = "radio_defense"
 	self.missions.hunters.region = "germany"
-	self.missions.hunters.stealth_description = OperationsTweakData.RAID_COMPLETELY_STEALTHABLE
+	self.missions.hunters.stealth_description = self.RAID_COMPLETELY_STEALTHABLE
 	self.missions.hunters.xp = 2500
 	self.missions.hunters.bounty_filters = {
 		forbid_buffs = {
@@ -926,11 +933,11 @@ function OperationsTweakData:_init_raids()
 		max = 2400,
 		min = 1700,
 	}
-	self.missions.hunters.mission_state = OperationsTweakData.STATE_LOCATION_MISSION_SELECTED
+	self.missions.hunters.mission_state = self.STATE_LOCATION_MISSION_SELECTED
 	self.missions.hunters.mission_flag = "level_raid_hunters"
-	self.missions.hunters.job_type = OperationsTweakData.JOB_TYPE_RAID
+	self.missions.hunters.job_type = self.JOB_TYPE_RAID
 	self.missions.hunters.progression_groups = {
-		OperationsTweakData.PROGRESSION_GROUP_SHORT,
+		self.PROGRESSION_GROUP_SHORT,
 	}
 	self.missions.hunters.icon_menu_big = "xp_events_missions_hunters"
 	self.missions.hunters.icon_menu = "missions_hunters"
@@ -1050,7 +1057,8 @@ function OperationsTweakData:_init_raids()
 	self.missions.spies_test.mission_flag = "level_raid_spies_test"
 	self.missions.spies_test.job_type = OperationsTweakData.JOB_TYPE_RAID
 	self.missions.spies_test.progression_groups = {
-		OperationsTweakData.PROGRESSION_GROUP_SHORT,
+		self.PROGRESSION_GROUP_INITIAL_SHORT,
+		self.PROGRESSION_GROUP_SHORT,
 	}
 	self.missions.spies_test.icon_menu_big = "xp_events_missions_spies"
 	self.missions.spies_test.icon_menu = "missions_spies"

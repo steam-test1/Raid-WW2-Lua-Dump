@@ -187,6 +187,10 @@ function RaidGUIControlListItemSkillProfile:highlight_off()
 	self._played_mouse_over_sound = nil
 end
 
+function RaidGUIControlListItemSkillProfile:highlighted()
+	return self._highlighted
+end
+
 function RaidGUIControlListItemSkillProfile:_animate_select()
 	local duration = 0.12
 	local t = self._background:alpha() * duration

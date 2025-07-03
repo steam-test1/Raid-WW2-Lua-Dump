@@ -139,7 +139,7 @@ function EquipmentsTweakData:init()
 		text_id = "hud_tank_shell",
 	}
 	self.specials.radio_parts = {
-		icon = "pd2_c4",
+		icon = "equipment_panel_sps_interaction_key",
 		max_quantity = 10,
 		quantity = 1,
 		sync_possession = true,
@@ -147,7 +147,7 @@ function EquipmentsTweakData:init()
 		transfer_quantity = 10,
 	}
 	self.specials.blacksmith_tong = {
-		icon = "pd2_c4",
+		icon = "equipment_panel_sps_interaction_key",
 		sync_possession = true,
 		text_id = "hud_equipment_blacksmith_tong",
 	}
@@ -157,32 +157,32 @@ function EquipmentsTweakData:init()
 		text_id = "hud_equipment_gold_bar",
 	}
 	self.specials.radio_crystals = {
-		icon = "pd2_c4",
+		icon = "equipment_panel_sps_interaction_key",
 		sync_possession = true,
 		text_id = "hud_equipment_radio_crystals",
 	}
 	self.specials.radio_reciever = {
-		icon = "pd2_c4",
+		icon = "equipment_panel_sps_interaction_key",
 		sync_possession = true,
 		text_id = "hud_equipment_radio_reciever",
 	}
 	self.specials.radio_transmiter = {
-		icon = "pd2_c4",
+		icon = "equipment_panel_sps_interaction_key",
 		sync_possession = true,
 		text_id = "hud_equipment_radio_transmiter",
 	}
 	self.specials.radio_pipes = {
-		icon = "pd2_c4",
+		icon = "equipment_panel_sps_interaction_key",
 		sync_possession = true,
 		text_id = "hud_equipment_radio_pipes",
 	}
 	self.specials.radio_antena = {
-		icon = "pd2_c4",
+		icon = "equipment_panel_sps_interaction_key",
 		sync_possession = true,
 		text_id = "hud_equipment_radio_antena",
 	}
 	self.specials.radio_microphone = {
-		icon = "pd2_c4",
+		icon = "equipment_panel_sps_interaction_key",
 		sync_possession = true,
 		text_id = "hud_equipment_radio_microphone",
 	}

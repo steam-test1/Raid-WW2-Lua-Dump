@@ -36,10 +36,10 @@ function GroupAITweakData:init(tweak_data)
 	self:_init_enemy_spawn_groups(difficulty_index)
 
 	self.commander_backup_groups = {
-		"commander_squad",
-		"ss_flankers",
-		"ss_rifle_range",
-		"ss_chargers",
+		commander_squad = true,
+		ss_chargers = true,
+		ss_flankers = true,
+		ss_rifle_range = true,
 	}
 end
 
@@ -514,7 +514,7 @@ function GroupAITweakData:_init_unit_categories_german(difficulty_index)
 	self.unit_categories.german.german_fallschirmjager_heavy_stg44 = {
 		access = access_type_walk_only,
 		units = {
-			Idstring("units/vanilla/characters/enemies/models/german_fallschirmjager_heavy/german_fallschirmjager_heavy_kar98"),
+			Idstring("units/vanilla/characters/enemies/models/german_fallschirmjager_heavy/german_fallschirmjager_heavy_stg44"),
 		},
 	}
 	self.unit_categories.german.german_fallschirmjager_heavy_shotgun = {

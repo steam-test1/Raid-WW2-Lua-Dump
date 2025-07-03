@@ -277,6 +277,7 @@ function WeaponSelectionGui:_layout_weapon_stats()
 	local weapon_stats_params = {
 		label_class = RaidGUIControlLabelNamedValueWithDelta,
 		name = "weapon_stats",
+		on_item_clicked_callback = nil,
 		selection_enabled = false,
 		tab_height = 60,
 		tab_width = 160,
@@ -289,6 +290,7 @@ function WeaponSelectionGui:_layout_weapon_stats()
 	local melee_weapon_stats_params = {
 		label_class = RaidGUIControlLabelNamedValue,
 		name = "melee_weapon_stats",
+		on_item_clicked_callback = nil,
 		selection_enabled = false,
 		tab_height = 60,
 		tab_width = 200,
@@ -301,6 +303,7 @@ function WeaponSelectionGui:_layout_weapon_stats()
 	local grenade_weapon_stats_params = {
 		label_class = RaidGUIControlLabelNamedValue,
 		name = "grenade_weapon_stats",
+		on_item_clicked_callback = nil,
 		selection_enabled = false,
 		tab_height = 60,
 		tab_width = 180,
@@ -346,7 +349,7 @@ end
 function WeaponSelectionGui:_layout_skins_panel()
 	self._weapon_skins_list = self._weapon_skins_panel:create_custom_control(RaidGUIControlListSeparated, {
 		data_source_callback = callback(self, self, "_weapon_skins_data_source"),
-		item_class = RaidGUIControlListItemModern,
+		item_class = MenuListItemPurchasable,
 		loop_items = true,
 		name = "weapon_skins_list",
 		on_item_clicked_callback = callback(self, self, "on_weapon_skin_clicked"),
@@ -900,7 +903,6 @@ function WeaponSelectionGui:_weapon_skins_data_source()
 					challenge = skin_data.challenge,
 					dlc = skin_data.dlc,
 					gold_price = skin_data.gold_price,
-					key = 1 + i,
 					skin_id = skin_id,
 					unlocked = owned,
 					value = managers.localization:text(name_id),

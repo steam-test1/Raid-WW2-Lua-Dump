@@ -267,13 +267,6 @@ function GlobalStateManager:get_all_global_states()
 	local global_states = {}
 
 	for id, data in pairs(self._states.global_init) do
-		local state = {
-			{
-				id = id,
-				value = data.value,
-			},
-		}
-
 		table.insert(global_states, {
 			id = id,
 			value = data.value,

@@ -249,26 +249,37 @@ function DropLootTweakData:_init_hard_enemy()
 end
 
 function DropLootTweakData:_init_special_enemy()
-	self.special_enemy = {}
-	self.special_enemy.units = {}
-	self.special_enemy.buff_effects_applied = {}
-	self.special_enemy.buff_effects_applied[BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_CHANCE] = true
-	self.special_enemy.buff_table_override = {
-		[BuffEffectManager.EFFECT_TRICK_OR_TREAT] = "candy_enemy",
-	}
-	self.special_enemy.units.health = {}
-	self.special_enemy.units.health.drop_rate = 65
-	self.special_enemy.units.health.subtypes = {}
-	self.special_enemy.units.health.subtypes.medium = {
-		drop_rate = 100,
-		unit = "health_medium_beam",
-	}
-	self.special_enemy.units.ammo = {}
-	self.special_enemy.units.ammo.drop_rate = 35
-	self.special_enemy.units.ammo.subtypes = {}
-	self.special_enemy.units.ammo.subtypes.medium = {
-		drop_rate = 100,
-		unit = "ammo_medium_beam",
+	self.special_enemy = {
+		buff_effects_applied = {
+			[BuffEffectManager.EFFECT_ENEMY_LOOT_DROP_CHANCE] = true,
+		},
+		buff_table_override = {
+			[BuffEffectManager.EFFECT_TRICK_OR_TREAT] = "candy_enemy",
+		},
+		units = {
+			ammo = {
+				drop_rate = 35,
+				subtypes = {
+					medium = {
+						drop_rate = 100,
+						unit = "ammo_medium_beam",
+					},
+				},
+			},
+			health = {
+				drop_rate = 65,
+				subtypes = {
+					large = {
+						drop_rate = 5,
+						unit = "health_big_beam",
+					},
+					medium = {
+						drop_rate = 95,
+						unit = "health_medium_beam",
+					},
+				},
+			},
+		},
 	}
 end
 
@@ -298,11 +309,11 @@ function DropLootTweakData:_init_flamer_enemy()
 				drop_rate = 60,
 				subtypes = {
 					large = {
-						drop_rate = 15,
+						drop_rate = 20,
 						unit = "health_big_beam",
 					},
 					medium = {
-						drop_rate = 85,
+						drop_rate = 80,
 						unit = "health_medium_beam",
 					},
 				},

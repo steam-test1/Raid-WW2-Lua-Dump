@@ -654,11 +654,7 @@ function MenuManager:push_to_talk(enabled)
 end
 
 function MenuManager:toggle_chatinput()
-	if Global.game_settings.single_player or Application:editor() then
-		return
-	end
-
-	if not IS_PC then
+	if not IS_PC or Application:editor() then
 		return
 	end
 
@@ -670,11 +666,13 @@ function MenuManager:toggle_chatinput()
 		return
 	end
 
-	if managers.hud then
-		managers.hud:toggle_chatinput()
-
-		return true
+	if not managers.hud then
+		return
 	end
+
+	managers.hud:toggle_chatinput()
+
+	return true
 end
 
 function MenuManager:toggle_hud_state()

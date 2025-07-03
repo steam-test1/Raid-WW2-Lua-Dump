@@ -965,7 +965,7 @@ function SkillTreeManager:purchase_skill_profile(index)
 end
 
 function SkillTreeManager:is_skill_profile_purchased(index)
-	return self._global.main_profile_purchased_profiles[index]
+	return self._global.main_profile_purchased_profiles[index] or false
 end
 
 function SkillTreeManager:get_skill_profile(index)

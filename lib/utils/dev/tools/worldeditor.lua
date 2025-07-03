@@ -163,6 +163,7 @@ function WorldEditor:project_prestart_up(with_mission)
 		managers.global_state:set_flag(mission_flag)
 	end
 
+	managers.global_state:set_flag("system_start_simulation")
 	managers.navigation:on_simulation_started()
 	managers.groupai:on_simulation_started()
 	managers.enemy:on_simulation_started()

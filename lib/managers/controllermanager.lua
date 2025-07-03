@@ -33,6 +33,11 @@ function ControllerManager:update(t, dt)
 	end
 end
 
+function ControllerManager:paused_update(t, dt)
+	ControllerManager.super.paused_update(self, t, dt)
+	self:_poll_reconnected_controller()
+end
+
 function ControllerManager:is_using_controller()
 	return self:is_controller_present() and not managers.menu:is_pc_controller()
 end

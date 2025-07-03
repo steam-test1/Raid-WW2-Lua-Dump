@@ -479,8 +479,8 @@ function GroupAIStateBesiege:_begin_assault_task(assault_areas)
 	end
 
 	managers.dialog:queue_dialog("player_gen_incoming_wave", {
+		ai_task = nil,
 		skip_idle_check = true,
-		u_data = nil,
 	})
 
 	if self._draw_drama then

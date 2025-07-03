@@ -15,27 +15,6 @@ MenuNodeBaseGui.button_highlighted_color = tweak_data.screen_colors.button_stage
 MenuNodeBaseGui.button_selected_color = tweak_data.screen_colors.button_stage_1
 MenuNodeBaseGui.is_win32 = IS_PC
 
-function MenuNodeBaseGui.make_fine_text(text)
-	local x, y, w, h = text:text_rect()
-
-	text:set_size(w, h)
-	text:set_position(math.round(text:x()), math.round(text:y()))
-
-	return text:x(), text:y(), w, h
-end
-
-function MenuNodeBaseGui.rec_round_object(object)
-	if object.children then
-		for i, d in ipairs(object:children()) do
-			MenuNodeBaseGui.rec_round_object(d)
-		end
-	end
-
-	local x, y = object:position()
-
-	object:set_position(math.round(x), math.round(y))
-end
-
 function MenuNodeBaseGui:init(node, layer, parameters)
 	MenuNodeBaseGui.super.init(self, node, layer, parameters)
 	self:setup()
@@ -46,122 +25,6 @@ function MenuNodeBaseGui:setup()
 	self._gui_boxes = {}
 	self._text_buttons = {}
 	self.is_pc_controller = managers.menu:is_pc_controller()
-end
-
-function MenuNodeBaseGui:create_text_button(params)
-	local left = params.left or params.x
-	local right = params.right
-	local top = params.top or params.y
-	local bottom = params.bottom
-	local text = params.text or params.text_id and managers.localization:text(params.text_id) or ""
-
-	if params.text_to_upper then
-		text = utf8.to_upper(text)
-	end
-
-	local clbk = params.clbk
-	local layer = params.layer or self.layers.items
-	local hide_blur = params.hide_blur
-	local disabled = params.disabled
-	local font = params.font or self.small_font
-	local font_size = params.font_size or self.small_font_size
-	local button_panel = self.safe_rect_panel:panel({
-		layer = layer,
-		visible = not disabled,
-		x = left,
-		y = top,
-	})
-	local gui_blur = button_panel:bitmap({
-		layer = -1,
-		name = "button_blur",
-		render_template = "VertexColorTexturedBlur3D",
-		texture = "guis/textures/test_blur_df",
-		visible = not hide_blur,
-	})
-	local gui_text = button_panel:text({
-		blend_mode = "add",
-		color = self.is_win32 and self.button_default_color or self.text_color,
-		font = font,
-		font_size = font_size,
-		layer = 0,
-		name = "button_text",
-		text = text,
-	})
-
-	self.make_fine_text(gui_text)
-	button_panel:set_size(gui_text:size())
-	gui_blur:set_size(button_panel:size())
-
-	if right then
-		button_panel:set_right(right)
-	end
-
-	if bottom then
-		button_panel:set_bottom(bottom)
-	end
-
-	local left, right, top, bottom
-
-	for _, button in ipairs(self._text_buttons) do
-		if alive(button.text) then
-			left = button_panel:left() < button.panel:right()
-			right = button_panel:right() > button.panel:left()
-			top = button_panel:top() < button.panel:bottom()
-			bottom = button_panel:bottom() > button.panel:top()
-
-			if left and right and top and bottom then
-				if button.panel:visible() and button_panel:visible() then
-					Application:error("[MenuNodeBaseGui:create_text_button] Text button intersects with another text button", text, button.text:text())
-				else
-					Application:debug("[MenuNodeBaseGui:create_text_button] Text button intersects with another text button", text, button_panel:visible(), button.text:text(), button.panel:visible())
-				end
-			end
-		end
-	end
-
-	table.insert(self._text_buttons, {
-		blur = gui_blur,
-		clbk = clbk,
-		highlighted = false,
-		image = nil,
-		legend_text = nil,
-		panel = button_panel,
-		params = params.params,
-		text = gui_text,
-	})
-
-	return button_panel
-end
-
-function MenuNodeBaseGui:create_gui_box(panel, params)
-	if not alive(panel) then
-		return
-	end
-
-	local box = BoxGuiObject:new(panel, params or {
-		sides = {
-			1,
-			1,
-			1,
-			1,
-		},
-	})
-	local name = params and params.name or panel:name()
-
-	if name and name ~= "" then
-		if self._gui_boxes[name] then
-			Application:error("[MenuNodeBaseGui:create_gui_box] GUI Box with that name already exists", name)
-			table.insert(self._gui_boxes, box)
-		else
-			self._gui_boxes[name] = box
-		end
-	else
-		table.insert(self._gui_boxes, box)
-	end
-end
-
-function MenuNodeBaseGui:update_info(button)
-	return
 end
 
 function MenuNodeBaseGui:mouse_moved(o, x, y)
@@ -184,8 +47,6 @@ function MenuNodeBaseGui:mouse_moved(o, x, y)
 					end
 				end
 
-				self:update_info(button)
-
 				used, icon = true, "link"
 			elseif button.highlighted then
 				button.highlighted = false
@@ -199,10 +60,6 @@ function MenuNodeBaseGui:mouse_moved(o, x, y)
 				end
 			end
 		end
-	end
-
-	if not used then
-		self:update_info()
 	end
 
 	return used, icon

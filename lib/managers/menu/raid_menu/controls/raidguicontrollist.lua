@@ -228,10 +228,6 @@ function RaidGUIControlList:_select_item(item, dont_trigger_selected_callback)
 
 	item:select(dont_trigger_selected_callback)
 
-	if self._on_item_selected_callback then
-		-- block empty
-	end
-
 	for list_item_idx, list_item in ipairs(self._list_items) do
 		if item == list_item then
 			self._selected_item_idx = list_item_idx
@@ -290,10 +286,6 @@ function RaidGUIControlList:select_item_by_index(item_index, dont_trigger_select
 
 		self._selected_item_idx = item_index
 	end
-
-	if self._on_item_selected_callback then
-		-- block empty
-	end
 end
 
 function RaidGUIControlList:select_item_by_value(item_value)
@@ -311,10 +303,6 @@ function RaidGUIControlList:select_item_by_value(item_value)
 				self._selected_item_idx = item_index
 
 				self:_reposition_selected_item()
-
-				if self._on_item_selected_callback then
-					-- block empty
-				end
 
 				return
 			end
@@ -544,7 +532,5 @@ end
 RaidGUIControlSingleSelectList = RaidGUIControlSingleSelectList or class(RaidGUIControlList)
 
 function RaidGUIControlSingleSelectList:on_mouse_enter(item, data)
-	if self._selected_item and self._selected_item ~= item then
-		self:_select_item(item, false)
-	end
+	self:_select_item(item, false)
 end

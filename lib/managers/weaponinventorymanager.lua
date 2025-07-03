@@ -492,6 +492,8 @@ function WeaponInventoryManager:is_weapon_skin_owned(skin_id)
 
 		return challenge and challenge:completed()
 	end
+
+	return false
 end
 
 function WeaponInventoryManager:set_weapons_skin(weapon_id, skin_id)

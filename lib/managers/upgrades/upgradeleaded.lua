@@ -48,6 +48,10 @@ function UpgradeLeaded:_on_damage_taken(attack_data)
 				weapon_base:set_ammo_remaining_in_clip(ammo_in_clip + 1)
 			end
 
+			if weapon_base.clip_empty and not weapon_base:clip_empty() then
+				weapon_base:tweak_data_anim_stop("magazine_empty")
+			end
+
 			managers.hud:set_ammo_amount(weapon_base:selection_index(), weapon_base:ammo_info())
 
 			if weapon_base:can_reload() then

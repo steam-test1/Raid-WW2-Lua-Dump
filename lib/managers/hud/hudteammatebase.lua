@@ -158,6 +158,10 @@ function HUDTeammateBase:_clear_states()
 	self:_add_active_state(self._displayed_state.id)
 end
 
+function HUDTeammateBase:has_active_state(state_id)
+	return self._active_states[state_id] or false
+end
+
 function HUDTeammateBase:set_condition(icon_data, text)
 	return
 end

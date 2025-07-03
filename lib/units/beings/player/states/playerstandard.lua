@@ -2953,8 +2953,8 @@ function PlayerStandard:_start_action_use_item(t)
 	})
 
 	managers.hud:show_progress_timer({
-		follow_me = nil,
 		text = text,
+		u_key = nil,
 	})
 
 	local post_event = managers.player:selected_equipment_sound_start()
@@ -4044,6 +4044,9 @@ function PlayerStandard:_check_action_mantle(t, input)
 			end
 
 			local hit_end_pos = hit_pos + math.DOWN * self._tweak_data.damage.FALL_DAMAGE_BLEEDOUT_HEIGHT
+
+			mvec3_add(hit_end_pos, fwd_vect * 5)
+
 			local fall_ray = World:raycast("ray", hit_pos, hit_end_pos, "slot_mask", self._slotmask_gnd_ray, "ray_type", "body mover", "report")
 
 			if fall_ray then
@@ -5254,9 +5257,20 @@ function PlayerStandard:inventory_clbk_listener(unit, event)
 			self._camera_unit:anim_state_machine():set_global(self._weapon_hold, 0)
 		end
 
+		if self._state_data.steelsight_weight then
+			self._camera_unit:anim_state_machine():set_global("steelsight_weight", 0)
+
+			self._state_data.steelsight_weight = nil
+			self._state_data.steelsight_weight_target = nil
+		end
+
 		self._weapon_hold = weap_base.weapon_hold and weap_base:weapon_hold() or weap_base:get_name_id()
 
 		self._camera_unit:anim_state_machine():set_global(self._weapon_hold, 1)
+
+		if weap_base.run_ads_sequence then
+			weap_base:run_ads_sequence(false, true)
+		end
 
 		self._equipped_unit = weapon
 

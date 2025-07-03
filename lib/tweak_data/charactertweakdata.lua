@@ -72,51 +72,51 @@ end
 function CharacterTweakData:_init_npc_loadouts(tweak_data)
 	self.npc_loadouts = {}
 	self.npc_loadouts.ger_handgun = {
-		german_grunt_light_kar98 = nil,
+		[""] = nil,
 		secondary = Idstring("units/vanilla/weapons/wpn_npc_ger_luger/wpn_npc_ger_luger"),
 	}
 	self.npc_loadouts.ger_rifle = {
-		german_grunt_light_kar98 = nil,
-		normal = nil,
+		[""] = nil,
+		german_grunt_heavy_kar98 = nil,
 		primary = Idstring("units/vanilla/weapons/wpn_npc_ger_k98/wpn_npc_ger_k98"),
 		secondary = Idstring("units/vanilla/weapons/wpn_npc_ger_luger/wpn_npc_ger_luger"),
 	}
 	self.npc_loadouts.ger_assault_rifle = {
-		german_grunt_light_kar98 = nil,
-		normal = nil,
+		[""] = nil,
+		german_grunt_heavy_kar98 = nil,
 		primary = Idstring("units/vanilla/weapons/wpn_npc_ger_stg44/wpn_npc_ger_stg44"),
 		secondary = Idstring("units/vanilla/weapons/wpn_npc_ger_luger/wpn_npc_ger_luger"),
 	}
 	self.npc_loadouts.ger_smg = {
-		german_grunt_light_kar98 = nil,
-		normal = nil,
+		[""] = nil,
+		german_grunt_heavy_kar98 = nil,
 		primary = Idstring("units/vanilla/weapons/wpn_npc_ger_mp38/wpn_npc_ger_mp38"),
 		secondary = Idstring("units/vanilla/weapons/wpn_npc_ger_luger/wpn_npc_ger_luger"),
 	}
 	self.npc_loadouts.ger_shotgun = {
-		german_grunt_light_kar98 = nil,
-		normal = nil,
+		[""] = nil,
+		german_grunt_heavy_kar98 = nil,
 		primary = Idstring("units/vanilla/weapons/wpn_npc_ger_geco/wpn_npc_ger_geco"),
 		secondary = Idstring("units/vanilla/weapons/wpn_npc_ger_luger/wpn_npc_ger_luger"),
 	}
 	self.npc_loadouts.unarmed = {
-		german_grunt_light_kar98 = nil,
-		normal = nil,
+		[""] = nil,
+		german_grunt_heavy_kar98 = nil,
 	}
 	self.npc_loadouts.special_commander = {
-		german_grunt_light_kar98 = nil,
+		[""] = nil,
 		secondary = Idstring("units/vanilla/weapons/wpn_npc_ger_luger/wpn_npc_ger_luger_fancy"),
 	}
 	self.npc_loadouts.special_flamethrower = {
-		german_grunt_light_kar98 = nil,
+		[""] = nil,
 		primary = Idstring("units/vanilla/weapons/wpn_npc_spc_m42_flammenwerfer/wpn_npc_spc_m42_flammenwerfer"),
 	}
 	self.npc_loadouts.special_sniper = {
-		german_grunt_light_kar98 = nil,
+		[""] = nil,
 		primary = Idstring("units/vanilla/weapons/wpn_npc_ger_k98/wpn_npc_ger_k98_sniper"),
 	}
 	self.npc_loadouts.special_spotter = {
-		german_grunt_light_kar98 = nil,
+		[""] = nil,
 		primary = Idstring("units/vanilla/weapons/wpn_npc_binocular/wpn_npc_binocular"),
 	}
 end
@@ -1816,6 +1816,10 @@ function CharacterTweakData:_presets(tweak_data)
 	local pistol_aim_delay = {
 		0.1,
 		0.3,
+	}
+	local team_ai_aim_delay = {
+		0.05,
+		0.05,
 	}
 
 	presets.weapon = {}
@@ -5028,8 +5032,8 @@ function CharacterTweakData:_presets(tweak_data)
 		usa_m1911_npc = {},
 		usa_m1912_npc = {},
 	}
-	presets.weapon.gang_member.ger_luger_npc.aim_delay = pistol_aim_delay
-	presets.weapon.gang_member.ger_luger_npc.focus_delay = 1
+	presets.weapon.gang_member.ger_luger_npc.aim_delay = team_ai_aim_delay
+	presets.weapon.gang_member.ger_luger_npc.focus_delay = 0.1
 	presets.weapon.gang_member.ger_luger_npc.focus_dis = 2000
 	presets.weapon.gang_member.ger_luger_npc.spread = 25
 	presets.weapon.gang_member.ger_luger_npc.miss_dis = 20
@@ -5051,7 +5055,7 @@ function CharacterTweakData:_presets(tweak_data)
 				0,
 				0,
 			},
-			r = 300,
+			r = 1000,
 			recoil = {
 				0.25,
 				0.45,
@@ -5062,7 +5066,7 @@ function CharacterTweakData:_presets(tweak_data)
 				0.1,
 				0.6,
 			},
-			dmg_mul = 1,
+			dmg_mul = 1.5,
 			mode = {
 				1,
 				0,
@@ -5094,8 +5098,8 @@ function CharacterTweakData:_presets(tweak_data)
 			},
 		},
 	}
-	presets.weapon.gang_member.ger_mp38_npc.aim_delay = smg_aim_delay
-	presets.weapon.gang_member.ger_mp38_npc.focus_delay = 3
+	presets.weapon.gang_member.ger_mp38_npc.aim_delay = team_ai_aim_delay
+	presets.weapon.gang_member.ger_mp38_npc.focus_delay = 0.18
 	presets.weapon.gang_member.ger_mp38_npc.focus_dis = 3000
 	presets.weapon.gang_member.ger_mp38_npc.spread = 25
 	presets.weapon.gang_member.ger_mp38_npc.miss_dis = 10
@@ -5122,7 +5126,7 @@ function CharacterTweakData:_presets(tweak_data)
 				4,
 				7,
 			},
-			r = 300,
+			r = 1000,
 			recoil = {
 				0.25,
 				0.45,
@@ -5133,7 +5137,7 @@ function CharacterTweakData:_presets(tweak_data)
 				0.1,
 				0.6,
 			},
-			dmg_mul = 0.5,
+			dmg_mul = 2.5,
 			mode = {
 				2,
 				2,
@@ -5151,7 +5155,7 @@ function CharacterTweakData:_presets(tweak_data)
 				0,
 				0.15,
 			},
-			dmg_mul = 0.5,
+			dmg_mul = 1,
 			mode = {
 				2,
 				1,
@@ -5165,8 +5169,8 @@ function CharacterTweakData:_presets(tweak_data)
 			},
 		},
 	}
-	presets.weapon.gang_member.ger_stg44_npc.aim_delay = rifle_aim_delay
-	presets.weapon.gang_member.ger_stg44_npc.focus_delay = 1
+	presets.weapon.gang_member.ger_stg44_npc.aim_delay = team_ai_aim_delay
+	presets.weapon.gang_member.ger_stg44_npc.focus_delay = 0.2
 	presets.weapon.gang_member.ger_stg44_npc.focus_dis = 3000
 	presets.weapon.gang_member.ger_stg44_npc.spread = 25
 	presets.weapon.gang_member.ger_stg44_npc.miss_dis = 10
@@ -5186,14 +5190,14 @@ function CharacterTweakData:_presets(tweak_data)
 				0.7,
 				1,
 			},
-			dmg_mul = 3.5,
+			dmg_mul = 4,
 			mode = {
 				0.1,
 				0.3,
 				4,
 				7,
 			},
-			r = 300,
+			r = 1000,
 			recoil = {
 				0.25,
 				0.45,
@@ -5204,7 +5208,7 @@ function CharacterTweakData:_presets(tweak_data)
 				0.1,
 				0.6,
 			},
-			dmg_mul = 0.5,
+			dmg_mul = 2,
 			mode = {
 				2,
 				2,
@@ -5222,7 +5226,7 @@ function CharacterTweakData:_presets(tweak_data)
 				0,
 				0.15,
 			},
-			dmg_mul = 0.5,
+			dmg_mul = 1,
 			mode = {
 				2,
 				1,
@@ -5236,7 +5240,7 @@ function CharacterTweakData:_presets(tweak_data)
 			},
 		},
 	}
-	presets.weapon.gang_member.usa_garand_npc.aim_delay = rifle_aim_delay
+	presets.weapon.gang_member.usa_garand_npc.aim_delay = team_ai_aim_delay
 	presets.weapon.gang_member.usa_garand_npc.focus_delay = 0.15
 	presets.weapon.gang_member.usa_garand_npc.focus_dis = 3000
 	presets.weapon.gang_member.usa_garand_npc.spread = 9
@@ -5257,17 +5261,17 @@ function CharacterTweakData:_presets(tweak_data)
 				0.9,
 				1,
 			},
-			dmg_mul = 2,
+			dmg_mul = 4,
 			mode = {
 				1,
 				0,
 				0,
 				0,
 			},
-			r = 300,
+			r = 1000,
 			recoil = {
 				0.15,
-				0.25,
+				15,
 			},
 		},
 		{
@@ -5275,7 +5279,7 @@ function CharacterTweakData:_presets(tweak_data)
 				0.9,
 				1,
 			},
-			dmg_mul = 1,
+			dmg_mul = 3.5,
 			mode = {
 				1,
 				0,
@@ -5293,7 +5297,7 @@ function CharacterTweakData:_presets(tweak_data)
 				0.9,
 				1,
 			},
-			dmg_mul = 0.5,
+			dmg_mul = 2,
 			mode = {
 				1,
 				0,
@@ -5307,7 +5311,7 @@ function CharacterTweakData:_presets(tweak_data)
 			},
 		},
 	}
-	presets.weapon.gang_member.usa_m1911_npc.aim_delay = pistol_aim_delay
+	presets.weapon.gang_member.usa_m1911_npc.aim_delay = team_ai_aim_delay
 	presets.weapon.gang_member.usa_m1911_npc.focus_delay = 0.25
 	presets.weapon.gang_member.usa_m1911_npc.focus_dis = 2000
 	presets.weapon.gang_member.usa_m1911_npc.spread = 1
@@ -5330,10 +5334,10 @@ function CharacterTweakData:_presets(tweak_data)
 				0,
 				0,
 			},
-			r = 300,
+			r = 1000,
 			recoil = {
 				0.25,
-				0.45,
+				0.25,
 			},
 		},
 		{
@@ -5341,7 +5345,7 @@ function CharacterTweakData:_presets(tweak_data)
 				0.7,
 				1,
 			},
-			dmg_mul = 2,
+			dmg_mul = 3,
 			mode = {
 				1,
 				0,
@@ -5373,8 +5377,8 @@ function CharacterTweakData:_presets(tweak_data)
 			},
 		},
 	}
-	presets.weapon.gang_member.usa_m1912_npc.aim_delay = shotgun_aim_delay
-	presets.weapon.gang_member.usa_m1912_npc.focus_delay = 2
+	presets.weapon.gang_member.usa_m1912_npc.aim_delay = team_ai_aim_delay
+	presets.weapon.gang_member.usa_m1912_npc.focus_delay = 0.2
 	presets.weapon.gang_member.usa_m1912_npc.focus_dis = 200
 	presets.weapon.gang_member.usa_m1912_npc.spread = 15
 	presets.weapon.gang_member.usa_m1912_npc.miss_dis = 20
@@ -5393,7 +5397,7 @@ function CharacterTweakData:_presets(tweak_data)
 				0.9,
 				1,
 			},
-			dmg_mul = 5,
+			dmg_mul = 5.5,
 			mode = {
 				1,
 				0,
@@ -5411,7 +5415,7 @@ function CharacterTweakData:_presets(tweak_data)
 				0.5,
 				0.9,
 			},
-			dmg_mul = 2.5,
+			dmg_mul = 3,
 			mode = {
 				1,
 				0,
@@ -5429,7 +5433,7 @@ function CharacterTweakData:_presets(tweak_data)
 				0.25,
 				0.65,
 			},
-			dmg_mul = 2,
+			dmg_mul = 2.5,
 			mode = {
 				1,
 				0,
@@ -5447,7 +5451,7 @@ function CharacterTweakData:_presets(tweak_data)
 				0.15,
 				0.35,
 			},
-			dmg_mul = 1,
+			dmg_mul = 1.5,
 			mode = {
 				1,
 				0,
@@ -5461,7 +5465,7 @@ function CharacterTweakData:_presets(tweak_data)
 			},
 		},
 	}
-	presets.weapon.gang_member.thompson_npc.aim_delay = smg_aim_delay
+	presets.weapon.gang_member.thompson_npc.aim_delay = team_ai_aim_delay
 	presets.weapon.gang_member.thompson_npc.focus_delay = 0.1
 	presets.weapon.gang_member.thompson_npc.focus_dis = 3000
 	presets.weapon.gang_member.thompson_npc.spread = 2
@@ -5488,17 +5492,17 @@ function CharacterTweakData:_presets(tweak_data)
 				0.9,
 				1,
 			},
-			dmg_mul = 1,
+			dmg_mul = 4,
 			mode = {
 				0.1,
 				0.3,
 				4,
 				7,
 			},
-			r = 300,
+			r = 1000,
 			recoil = {
 				0.25,
-				0.45,
+				0.25,
 			},
 		},
 		{
@@ -5506,7 +5510,7 @@ function CharacterTweakData:_presets(tweak_data)
 				0.9,
 				1,
 			},
-			dmg_mul = 0.5,
+			dmg_mul = 3,
 			mode = {
 				2,
 				2,
@@ -5524,7 +5528,7 @@ function CharacterTweakData:_presets(tweak_data)
 				0.9,
 				1,
 			},
-			dmg_mul = 0.25,
+			dmg_mul = 2.5,
 			mode = {
 				2,
 				1,
@@ -6726,57 +6730,57 @@ function CharacterTweakData:_presets(tweak_data)
 			crouch = {
 				run = {
 					cbt = {
-						bwd = 268,
-						fwd = 312,
-						strafe = 282,
+						bwd = 350,
+						fwd = 350,
+						strafe = 350,
 					},
 					hos = {
-						bwd = 268,
+						bwd = 350,
 						fwd = 350,
-						strafe = 282,
+						strafe = 350,
 					},
 				},
 				walk = {
 					cbt = {
-						bwd = 190,
-						fwd = 255,
-						strafe = 190,
+						bwd = 285,
+						fwd = 285,
+						strafe = 285,
 					},
 					hos = {
-						bwd = 190,
-						fwd = 245,
-						strafe = 210,
+						bwd = 285,
+						fwd = 285,
+						strafe = 285,
 					},
 				},
 			},
 			stand = {
 				run = {
 					cbt = {
-						bwd = 300,
-						fwd = 475,
-						strafe = 325,
+						bwd = 540,
+						fwd = 550,
+						strafe = 550,
 					},
 					hos = {
-						bwd = 325,
-						fwd = 580,
-						strafe = 340,
+						bwd = 540,
+						fwd = 550,
+						strafe = 550,
 					},
 				},
 				walk = {
 					cbt = {
-						bwd = 215,
+						bwd = 270,
 						fwd = 285,
-						strafe = 225,
+						strafe = 285,
 					},
 					hos = {
-						bwd = 215,
+						bwd = 270,
 						fwd = 285,
-						strafe = 225,
+						strafe = 285,
 					},
 					ntl = {
-						bwd = 120,
+						bwd = 145,
 						fwd = 145,
-						strafe = 120,
+						strafe = 145,
 					},
 				},
 			},

@@ -1506,13 +1506,26 @@ function NewRaycastWeaponBase:set_timer(timer, ...)
 	end
 end
 
-function NewRaycastWeaponBase:run_ads_sequence(steelsight_state)
+function NewRaycastWeaponBase:run_ads_sequence(steelsight_state, instant)
 	if not self:has_scope() then
 		return
 	end
 
 	local seq = steelsight_state and "state_ads_entered" or "state_ads_exited"
+
+	if instant then
+		self:play_weapon_sequence(seq)
+
+		return
+	end
+
 	local delay = tweak_data.player.TRANSITION_DURATION
+
+	delay = delay + (self:transition_duration() or 0)
+
+	local delay_multiplier = steelsight_state and 1 / self:enter_steelsight_speed_multiplier() or 1
+
+	delay = delay * delay_multiplier
 
 	if steelsight_state then
 		delay = delay * 0.665

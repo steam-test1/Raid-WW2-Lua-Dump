@@ -286,7 +286,6 @@ function LevelsTweakData:init()
 		"gold_rush",
 		"train_yard",
 		"ger_bridge",
-		"ger_bridge_operation",
 		"radio_defense",
 		"settlement",
 		"forest_gumpy",

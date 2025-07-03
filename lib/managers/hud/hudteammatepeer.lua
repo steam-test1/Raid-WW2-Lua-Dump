@@ -668,6 +668,10 @@ function HUDTeammatePeer:deactivate_warcry()
 end
 
 function HUDTeammatePeer:set_warcry_ready(value)
+	if value == self:has_active_state("warcry") then
+		return
+	end
+
 	if alive(self._warcry_icon) then
 		self._warcry_icon:stop()
 

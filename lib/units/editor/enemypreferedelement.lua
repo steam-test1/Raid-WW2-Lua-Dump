@@ -2,11 +2,13 @@ EnemyPreferedAddUnitElement = EnemyPreferedAddUnitElement or class(MissionElemen
 EnemyPreferedAddUnitElement.LINK_VALUES = {
 	{
 		output = true,
-		table_value = "spawn_group",
+		table_value = "spawn_groups",
+		type = "spawn_group",
 	},
 	{
 		output = true,
-		table_value = "spawn_point",
+		table_value = "spawn_points",
+		type = "spawn_point",
 	},
 }
 EnemyPreferedAddUnitElement.SAVE_UNIT_POSITION = false

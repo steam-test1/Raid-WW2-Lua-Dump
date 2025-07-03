@@ -478,20 +478,18 @@ function NavFieldBuilder:_destroy_vis_group(i_vis_group)
 end
 
 function NavFieldBuilder:start_build_nav_segment(build_settings, segment_index)
-	self:_create_build_progress_bar("Building Navigation Segments", 6)
-
 	local build_seg = build_settings[segment_index]
+	local nav_segment_id = build_seg.id
+	local prog_bar_title = "Build Nav Segment ID " .. build_seg.id .. " / Remaining: " .. #build_settings - segment_index
+
+	self:_create_build_progress_bar(prog_bar_title, 6)
+	print("[NavFieldBuilder]  Building navigation segment: " .. nav_segment_id)
 
 	self._building = {}
 	self._building.build_settings = build_settings
 	self._building.segment_index = segment_index
 	self._building.task_clbk = self._commence_nav_field_build
 	self._building.stage = 1
-
-	print("[NavFieldBuilder]  Building navigation segment:  ", build_seg.id)
-
-	local nav_segment_id = build_seg.id
-
 	self._building.id = nav_segment_id
 	self._new_blockers = {}
 	self._helper_blockers = self._helper_blockers or {}
