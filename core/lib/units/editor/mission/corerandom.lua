@@ -32,7 +32,7 @@ function CoreRandomUnitElement:update_editing()
 end
 
 function CoreRandomUnitElement:draw_links(t, dt, selected_unit, all_units)
-	CoreRandomUnitElement.super.draw_links(self, t, dt, selected_unit)
+	CoreRandomUnitElement.super.draw_links(self, t, dt, selected_unit, all_units)
 
 	if self._hed.counter_id then
 		local unit = all_units[self._hed.counter_id]

@@ -12,6 +12,7 @@ function GlobalStateTriggerElement:init(unit)
 	self._hed.flag = ""
 	self._hed.on_set = false
 	self._hed.on_clear = false
+	self._hed.check_type = "none"
 
 	table.insert(self._save_values, "flag")
 	table.insert(self._save_values, "on_set")
@@ -21,7 +22,7 @@ function GlobalStateTriggerElement:init(unit)
 	table.insert(self._save_values, "check_type")
 	table.insert(self._save_values, "value")
 
-	self._flags = managers.global_state:flag_names()
+	self._flags = tweak_data.operations:get_all_mission_flags()
 
 	table.sort(self._flags)
 end
@@ -42,13 +43,17 @@ function GlobalStateTriggerElement:_build_panel(panel, panel_sizer)
 	self:_build_value_checkbox(panel, flag_sizer, "on_event", "On Event")
 	self:_build_value_checkbox(panel, flag_sizer, "on_value", "On Value")
 	panel_sizer:add(flag_sizer, 0, 0, "EXPAND,LEFT")
-	self:_build_value_combobox(panel, panel_sizer, "check_type", {
+
+	local check_type_options = {
+		"none",
 		"equal",
 		"less_than",
 		"greater_than",
 		"less_or_equal",
 		"greater_or_equal",
-	}, "Select which check operation to perform")
+	}
+
+	self:_build_value_combobox(panel, panel_sizer, "check_type", check_type_options, "Select which check operation to perform")
 
 	local value_sizer = EWS:BoxSizer("HORIZONTAL")
 

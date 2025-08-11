@@ -1,10 +1,6 @@
 PlayerTurret = PlayerTurret or class(PlayerStandard)
 PlayerTurret.IDS_FPS_VIEW = Idstring("first_person_view")
 
-function PlayerTurret:init(unit)
-	PlayerTurret.super.init(self, unit)
-end
-
 function PlayerTurret:enter(state_data, enter_data)
 	PlayerTurret.super.enter(self, state_data, enter_data)
 

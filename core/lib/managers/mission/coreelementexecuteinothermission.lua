@@ -3,10 +3,6 @@ core:import("CoreMissionScriptElement")
 
 ElementExecuteInOtherMission = ElementExecuteInOtherMission or class(CoreMissionScriptElement.MissionScriptElement)
 
-function ElementExecuteInOtherMission:init(...)
-	ElementExecuteInOtherMission.super.init(self, ...)
-end
-
 function ElementExecuteInOtherMission:client_on_executed(...)
 	self:on_executed(...)
 end

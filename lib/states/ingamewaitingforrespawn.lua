@@ -228,12 +228,6 @@ function IngameWaitingForRespawnState:update(t, dt)
 		end
 	end
 
-	if self._play_too_long_line_t and t > self._play_too_long_line_t and managers.groupai:state():bain_state() then
-		self._play_too_long_line_t = nil
-
-		managers.dialog:queue_dialog("Play_ban_h38x", {})
-	end
-
 	self:_upd_watch(t, dt)
 end
 
@@ -430,7 +424,6 @@ function IngameWaitingForRespawnState:at_enter()
 
 	self._player_state_change_needed = true
 	self._respawn_delay = nil
-	self._play_too_long_line_t = nil
 
 	if not managers.hud:exists(self.GUI_SPECTATOR_FULLSCREEN) then
 		managers.hud:load_hud(self.GUI_SPECTATOR_FULLSCREEN, false, false, false, {})
@@ -622,27 +615,6 @@ function IngameWaitingForRespawnState:trade_death(respawn_delay)
 	end
 end
 
-function IngameWaitingForRespawnState:finish_trade()
+function IngameWaitingForRespawnState:force_respawn()
 	self:_begin_game_enter_transition()
-end
-
-function IngameWaitingForRespawnState:begin_trade()
-	local crims = {}
-
-	for k, d in pairs(managers.groupai:state():all_char_criminals()) do
-		crims[k] = d
-	end
-
-	if not managers.groupai:state():bain_state() or not next(crims) or table.size(crims) > 1 then
-		-- block empty
-	else
-		local _, data = next(crims)
-		local char_code = managers.criminals:character_static_data_by_unit(data.unit).ssuffix
-	end
-
-	self._play_too_long_line_t = Application:time() + 60
-end
-
-function IngameWaitingForRespawnState:cancel_trade()
-	return
 end

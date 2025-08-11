@@ -4,10 +4,6 @@ core:import("CoreMissionScriptElement")
 ElementDebug = ElementDebug or class(CoreMissionScriptElement.MissionScriptElement)
 ElementDebug._PRINT = false
 
-function ElementDebug:init(...)
-	ElementDebug.super.init(self, ...)
-end
-
 function ElementDebug:client_on_executed(...)
 	self:on_executed(...)
 end

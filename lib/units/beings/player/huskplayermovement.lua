@@ -1990,9 +1990,18 @@ function HuskPlayerMovement:_upd_move_turret(t, dt)
 
 	local peer_id = managers.network:session():peer_by_unit(self._unit):id()
 	local husk_turret_data = managers.player:get_turret_data_for_peer(peer_id)
+
+	if not husk_turret_data then
+		Application:info("[HuskPlayerMovement:_upd_move_turret] Missing husk_turret_data")
+
+		return
+	end
+
 	local turret_unit = husk_turret_data.turret_unit
 
 	if not alive(turret_unit) or not turret_unit.weapon then
+		Application:info("[HuskPlayerMovement:_upd_move_turret] Bad turret_unit")
+
 		return
 	end
 

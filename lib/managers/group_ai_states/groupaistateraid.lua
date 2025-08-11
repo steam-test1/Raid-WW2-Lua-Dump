@@ -1,8 +1,6 @@
 GroupAIStateRaid = GroupAIStateRaid or class(GroupAIStateBesiege)
 
-function GroupAIStateRaid:init()
-	GroupAIStateRaid.super.init(self)
-
+function GroupAIStateRaid:on_tweak_data_reloaded()
 	self._tweak_data = tweak_data.group_ai.raid
 end
 

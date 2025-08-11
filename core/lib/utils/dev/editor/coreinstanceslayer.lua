@@ -43,8 +43,8 @@ function InstancesLayer:_load_predefined_instances()
 	end
 end
 
-function InstancesLayer:load(world_holder, offset)
-	world_holder:create_world("world", self._save_name, offset)
+function InstancesLayer:load(world_holder)
+	world_holder:create_world("world", self._save_name)
 	self:_update_instances_listbox()
 	self:_update_overlay_gui()
 end

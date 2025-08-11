@@ -18,9 +18,9 @@ function ElementAreaMinPoliceForce:on_executed(instigator)
 end
 
 function ElementAreaMinPoliceForce:operation_add()
-	managers.groupai:state():set_area_min_police_force(self._id, self._values.amount, self._values.position)
+	managers.groupai:state():set_area_reenforce(self._id, self._values.amount, self._values.position)
 end
 
 function ElementAreaMinPoliceForce:operation_remove()
-	managers.groupai:state():set_area_min_police_force(self._id)
+	managers.groupai:state():set_area_reenforce(self._id)
 end

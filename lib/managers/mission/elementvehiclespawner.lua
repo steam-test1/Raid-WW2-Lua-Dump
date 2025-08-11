@@ -2,6 +2,8 @@ core:import("CoreMissionScriptElement")
 
 ElementVehicleSpawner = ElementVehicleSpawner or class(CoreMissionScriptElement.MissionScriptElement)
 
+local is_editor = Application:editor()
+
 function ElementVehicleSpawner:init(...)
 	ElementVehicleSpawner.super.init(self, ...)
 
@@ -31,11 +33,34 @@ function ElementVehicleSpawner:on_executed(instigator)
 		return
 	end
 
-	local vehicle = safe_spawn_unit(self._vehicles[self._values.vehicle], self._values.position, self._values.rotation)
+	local vehicle
+	local vehicle_id = self._values.vehicle
 
-	table.insert(self._vehicle_units, vehicle)
-	print("[ElementVehicleSpawner] Spawned vehicle", vehicle)
-	ElementVehicleSpawner.super.on_executed(self, self._unit or instigator)
+	if vehicle_id == "spawn_starting_vehicle" then
+		local job_data
+
+		if is_editor and managers.editor then
+			-- block empty
+		else
+			job_data = managers.raid_job:current_job()
+		end
+
+		vehicle_id = job_data and job_data.starting_vehicle or "kubelwagen"
+
+		Application:info("[ElementVehicleSpawner] spawn_starting_vehicle", vehicle_id)
+	end
+
+	if vehicle_id and self._vehicles[vehicle_id] then
+		Application:info("[ElementVehicleSpawner] Spawned vehicle", vehicle_id, "<--", self._values.vehicle)
+
+		vehicle = safe_spawn_unit(self._vehicles[vehicle_id], self._values.position, self._values.rotation)
+
+		if vehicle then
+			table.insert(self._vehicle_units, vehicle)
+		end
+	end
+
+	ElementVehicleSpawner.super.on_executed(self, vehicle or instigator)
 end
 
 function ElementVehicleSpawner:unspawn_all_units()
@@ -44,6 +69,16 @@ function ElementVehicleSpawner:unspawn_all_units()
 			managers.vehicle:remove_vehicle(vehicle_unit)
 		end
 	end
+end
+
+function ElementVehicleSpawner:is_vehicle_unit_mine(instigator)
+	for _, vehicle_unit in ipairs(self._vehicle_units) do
+		if alive(vehicle_unit) and alive(instigator) and instigator == vehicle_unit then
+			return true
+		end
+	end
+
+	return false
 end
 
 function ElementVehicleSpawner:stop_simulation(...)

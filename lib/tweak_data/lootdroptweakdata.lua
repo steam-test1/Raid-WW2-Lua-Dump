@@ -328,7 +328,17 @@ function LootDropTweakData:_init_categories()
 			value = self.rewards_customization.rare,
 		},
 	}
-	self.loot_categories.category_skins = {
+	self.loot_categories.category_skins_med = {
+		{
+			chance = 5,
+			value = self.rewards_weapon_skin.common,
+		},
+		{
+			chance = 3,
+			value = self.rewards_weapon_skin.uncommon,
+		},
+	}
+	self.loot_categories.category_skins_high = {
 		{
 			chance = 5,
 			value = self.rewards_weapon_skin.common,
@@ -530,7 +540,7 @@ function LootDropTweakData:_init_groups_silver()
 			conditions = {
 				self.conditions.wants_weapon_skin,
 			},
-			value = self.loot_categories.category_skins,
+			value = self.loot_categories.category_skins_med,
 		},
 		max_loot_value = LootDropTweakData.GOLD_POINT_REQUIREMENT,
 		min_loot_value = LootDropTweakData.SILVER_POINT_REQUIREMENT,
@@ -586,7 +596,7 @@ function LootDropTweakData:_init_groups_gold()
 			conditions = {
 				self.conditions.wants_weapon_skin,
 			},
-			value = self.loot_categories.category_skins,
+			value = self.loot_categories.category_skins_high,
 		},
 		max_loot_value = 1000000,
 		min_loot_value = LootDropTweakData.GOLD_POINT_REQUIREMENT,
@@ -655,6 +665,13 @@ function LootDropTweakData:_init_groups_challenges()
 			},
 			value = self.loot_categories.category_cosmetics,
 		},
+		{
+			chance = 1,
+			conditions = {
+				self.conditions.wants_weapon_skin,
+			},
+			value = self.loot_categories.category_skins_high,
+		},
 		challenge_reward = true,
 	}
 	self.loot_groups.loot_group_bounty_rare = {
@@ -688,7 +705,7 @@ function LootDropTweakData:_init_groups_challenges()
 			conditions = {
 				self.conditions.wants_weapon_skin,
 			},
-			value = self.loot_categories.category_skins,
+			value = self.loot_categories.category_skins_high,
 		},
 		challenge_reward = true,
 	}

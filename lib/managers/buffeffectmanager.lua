@@ -254,9 +254,14 @@ end
 
 function BuffEffectManager:fail_effect(failed_effect_name, peer_id)
 	local active_card = managers.challenge_cards:get_active_card()
+
+	if not active_card then
+		return
+	end
+
 	local active_card_status = managers.challenge_cards:get_active_card_status()
 
-	if active_card and active_card_status ~= ChallengeCardsManager.CARD_STATUS_ACTIVE then
+	if active_card_status ~= ChallengeCardsManager.CARD_STATUS_ACTIVE then
 		return
 	end
 

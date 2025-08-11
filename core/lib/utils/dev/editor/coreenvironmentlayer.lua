@@ -13,9 +13,6 @@ function EnvironmentLayer:init(owner)
 	EnvironmentLayer.super.init(self, owner, "environment", {
 		"environment",
 	}, "environment_layer")
-
-	self._environment_values = {}
-
 	self:reset_environment_values()
 
 	self._wind_pen = Draw:pen("green")
@@ -104,25 +101,27 @@ function EnvironmentLayer:get_layer_name()
 	return "Environment"
 end
 
-function EnvironmentLayer:load(world_holder, offset)
-	local environment = world_holder:create_world("world", self._save_name, offset)
+function EnvironmentLayer:load(world_holder)
+	local environment = world_holder:create_world("world", self._save_name)
 
-	if not self:old_load(environment) then
-		self._environment_values = environment.environment_values
+	self._loading_layer = true
+	self._environment_values.environment = environment.environment_values.environment
+	self._environment_values.dome_occ_resolution = environment.environment_values.dome_occ_resolution
 
-		CoreEws.change_combobox_value(self._environments_combobox, self._environment_values.environment)
-		self._dome_occ_resolution_ctrlr:set_value(self._environment_values.dome_occ_resolution)
-		self:_load_wind(environment.wind)
-		self:_load_effects(environment.effects)
-		self:_load_environment_areas()
-		self:_load_dome_occ_shapes(environment.dome_occ_shapes)
+	CoreEws.change_combobox_value(self._environments_combobox, self._environment_values.environment)
+	self._dome_occ_resolution_ctrlr:set_value(self._environment_values.dome_occ_resolution)
+	self:_load_wind(environment.wind)
+	self:_load_effects(environment.effects)
+	self:_load_environment_areas()
+	self:_load_dome_occ_shapes(environment.dome_occ_shapes)
 
-		for _, unit in ipairs(environment.units) do
-			self:set_up_name_id(unit)
-			self._owner:register_unit_id(unit)
-			table.insert(self._created_units, unit)
-		end
+	for _, unit in ipairs(environment.units) do
+		self:set_up_name_id(unit)
+		self._owner:register_unit_id(unit)
+		table.insert(self._created_units, unit)
 	end
+
+	self._loading_layer = false
 
 	self:clear_selected_units()
 
@@ -160,7 +159,7 @@ end
 
 function EnvironmentLayer:_load_environment_areas()
 	for _, area in ipairs(managers.environment_area:areas()) do
-		local unit = EnvironmentLayer.super.do_spawn_unit(self, self._environment_area_unit, area:position(), area:rotation(), nil, nil, true)
+		local unit = self:do_spawn_unit(self._environment_area_unit, area:position(), area:rotation(), nil, nil, true)
 
 		unit:unit_data().environment_area = area
 
@@ -178,75 +177,12 @@ function EnvironmentLayer:_load_dome_occ_shapes(dome_occ_shapes)
 	end
 
 	for _, dome_occ_shape in ipairs(dome_occ_shapes) do
-		local unit = EnvironmentLayer.super.do_spawn_unit(self, self._dome_occ_shape_unit, dome_occ_shape.position, dome_occ_shape.rotation, nil, nil, true)
+		local unit = self:do_spawn_unit(self._dome_occ_shape_unit, dome_occ_shape.position, dome_occ_shape.rotation, nil, nil, true)
 
 		unit:unit_data().occ_shape = CoreShapeManager.ShapeBox:new(dome_occ_shape)
 
 		unit:unit_data().occ_shape:set_unit(unit)
 	end
-end
-
-function EnvironmentLayer:old_load(environment)
-	if not environment._values then
-		return false
-	end
-
-	for name, value in pairs(environment._values) do
-		self._environment_values[name] = value
-	end
-
-	CoreEws.change_combobox_value(self._environments_combobox, self._environment_values.environment)
-
-	if environment._wind then
-		local wind_angle = environment._wind.wind_angle
-		local wind_tilt = environment._wind.wind_tilt
-
-		self._wind_rot = Rotation(wind_angle, 0, wind_tilt)
-		self._wind_dir_var = environment._wind.wind_dir_var
-		self._wind_tilt_var = environment._wind.wind_tilt_var
-		self._wind_speed = environment._wind.wind_speed or self._wind_speed
-		self._wind_speed_variation = environment._wind.wind_speed_variation or self._wind_speed_variation
-
-		self._wind_ctrls.wind_speed:set_value(self._wind_speed * 10)
-		self._wind_ctrls.wind_speed_variation:set_value(self._wind_speed_variation * 10)
-		self:update_wind_speed_labels()
-		self._wind_ctrls.wind_direction:set_value(wind_angle)
-		self._wind_ctrls.wind_variation:set_value(self._wind_dir_var)
-		self._wind_ctrls.tilt_angle:set_value(wind_tilt)
-		self._wind_ctrls.tilt_variation:set_value(self._wind_tilt_var)
-		self:set_wind()
-	end
-
-	if environment._unit_effects then
-		for _, effect in ipairs(environment._unit_effects) do
-			local unit = self:do_spawn_unit(self._effect_unit, effect.pos, effect.rot, nil, nil, true)
-
-			self:play_effect(unit, effect.name)
-		end
-	end
-
-	for _, area in ipairs(managers.environment_area:areas()) do
-		local unit = EnvironmentLayer.super.do_spawn_unit(self, self._environment_area_unit, area:position(), area:rotation(), nil, nil, true)
-
-		unit:unit_data().environment_area = area
-
-		local new_name_id = unit:unit_data().environment_area:set_unit(unit)
-
-		if new_name_id then
-			self:set_name_id(unit, new_name_id)
-		end
-	end
-
-	if environment._units then
-		for _, unit in ipairs(environment._units) do
-			self:set_up_name_id(unit)
-			table.insert(self._created_units, unit)
-		end
-	end
-
-	self:clear_selected_units()
-
-	return environment
 end
 
 function EnvironmentLayer:save()
@@ -829,36 +765,34 @@ function EnvironmentLayer:unit_ok(unit)
 	return unit:name() == Idstring(self._effect_unit) or unit:name() == Idstring(self._cubemap_unit) or unit:name() == Idstring(self._environment_area_unit) or unit:name() == Idstring(self._dome_occ_shape_unit)
 end
 
-function EnvironmentLayer:do_spawn_unit(...)
-	local unit = EnvironmentLayer.super.do_spawn_unit(self, ...)
-
-	if alive(unit) then
-		if unit:name() == Idstring(self._environment_area_unit) then
-			if not unit:unit_data().environment_area then
-				unit:unit_data().environment_area = managers.environment_area:add_area({})
-
-				unit:unit_data().environment_area:set_unit(unit)
-
-				self._current_shape_panel = unit:unit_data().environment_area:panel(self._env_panel, self._environment_sizer)
-			end
-
-			self:set_environment_area_parameters()
-		end
-
-		if unit:name() == Idstring(self._dome_occ_shape_unit) then
-			if not unit:unit_data().occ_shape then
-				unit:unit_data().occ_shape = CoreShapeManager.ShapeBox:new({})
-
-				unit:unit_data().occ_shape:set_unit(unit)
-
-				self._current_shape_panel = unit:unit_data().occ_shape:panel(self._env_panel, self._dome_occ_sizer)
-			end
-
-			self:set_environment_area_parameters()
-		end
+function EnvironmentLayer:_on_unit_created(unit)
+	if not alive(unit) or self._loading_layer then
+		return
 	end
 
-	return unit
+	if unit:name() == Idstring(self._environment_area_unit) then
+		if not unit:unit_data().environment_area then
+			unit:unit_data().environment_area = managers.environment_area:add_area({})
+
+			unit:unit_data().environment_area:set_unit(unit)
+
+			self._current_shape_panel = unit:unit_data().environment_area:panel(self._env_panel, self._environment_sizer)
+		end
+
+		self:set_environment_area_parameters()
+	elseif unit:name() == Idstring(self._dome_occ_shape_unit) then
+		if not unit:unit_data().occ_shape then
+			unit:unit_data().occ_shape = CoreShapeManager.ShapeBox:new({})
+
+			unit:unit_data().occ_shape:set_unit(unit)
+
+			self._current_shape_panel = unit:unit_data().occ_shape:panel(self._env_panel, self._dome_occ_sizer)
+		end
+
+		self:set_environment_area_parameters()
+	end
+
+	EnvironmentLayer.super._on_unit_created(self, unit)
 end
 
 function EnvironmentLayer:clone_edited_values(unit, source)
@@ -877,14 +811,12 @@ function EnvironmentLayer:clone_edited_values(unit, source)
 		area:set_property("width", source_area:property("width"))
 		area:set_property("depth", source_area:property("depth"))
 		area:set_property("height", source_area:property("height"))
-	end
-
-	if unit:name() == Idstring(self._effect_unit) then
+	elseif unit:name() == Idstring(self._effect_unit) and source:unit_data().effect then
 		self:play_effect(unit, source:unit_data().effect)
 	end
 end
 
-function EnvironmentLayer:delete_unit(unit)
+function EnvironmentLayer:on_unit_deleted(unit)
 	self:kill_effect(unit)
 
 	if unit:name() == Idstring(self._environment_area_unit) then
@@ -898,9 +830,7 @@ function EnvironmentLayer:delete_unit(unit)
 			unit:unit_data().environment_area:panel():destroy()
 			self._env_panel:layout()
 		end
-	end
-
-	if unit:name() == Idstring(self._dome_occ_shape_unit) and unit:unit_data().occ_shape:panel() then
+	elseif unit:name() == Idstring(self._dome_occ_shape_unit) and unit:unit_data().occ_shape:panel() then
 		if self._current_shape_panel == unit:unit_data().occ_shape:panel() then
 			self._current_shape_panel = nil
 		end
@@ -909,7 +839,7 @@ function EnvironmentLayer:delete_unit(unit)
 		self._env_panel:layout()
 	end
 
-	EnvironmentLayer.super.delete_unit(self, unit)
+	EnvironmentLayer.super.on_unit_deleted(self, unit)
 end
 
 function EnvironmentLayer:play_effect(unit, effect)
@@ -1023,11 +953,10 @@ function EnvironmentLayer:wind_beaufort(speed)
 end
 
 function EnvironmentLayer:reset_environment_values()
-	self._environment_values.environment = managers.viewport:game_default_environment()
-
-	managers.viewport:update_global_environment_value(CoreEnvironmentFeeder.SkyRotationFeeder.DATA_PATH_KEY)
-
-	self._environment_values.dome_occ_resolution = 256
+	self._environment_values = {
+		dome_occ_resolution = 256,
+		environment = managers.viewport:game_default_environment(),
+	}
 end
 
 function EnvironmentLayer:clear()

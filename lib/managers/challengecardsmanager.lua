@@ -12,7 +12,7 @@ ChallengeCardsManager.CARD_STATUS_NORMAL = "normal"
 ChallengeCardsManager.CARD_STATUS_ACTIVE = "active"
 ChallengeCardsManager.CARD_STATUS_FAILED = "failed"
 ChallengeCardsManager.CARD_STATUS_SUCCESS = "success"
-ChallengeCardsManager.INV_CAT_CHALCARD = "challenge_card"
+ChallengeCardsManager.INV_CAT_CARD = "challenge_card"
 ChallengeCardsManager.CARD_PASS_KEY_NAME = "empty"
 ChallengeCardsManager.CARD_PASS_TEXTURE = "ui/main_menu/textures/cards_atlas"
 ChallengeCardsManager.READYUP_INVENTORY_LOAD_FREQUENCY = 10
@@ -36,7 +36,7 @@ function ChallengeCardsManager:init()
 		CoreSystemEventListenerManager.SystemEventListenerManager.EVENT_STEAM_INVENTORY_LOADED,
 	}, callback(self, self, "_steam_challenge_cards_inventory_loaded"))
 
-	self._readyup_card_cache = {}
+	self._inventory = {}
 	self._readyup_inventory_load_frequency_counter = 0
 
 	if Global.challenge_cards_manager.dropin_card then
@@ -75,27 +75,27 @@ function ChallengeCardsManager:set_automatic_steam_inventory_refresh(flag)
 	self._automatic_steam_inventory_refresh = flag
 end
 
-function ChallengeCardsManager:get_readyup_card_cache()
-	return self._readyup_card_cache
+function ChallengeCardsManager:get_inventory()
+	return self._inventory
 end
 
-function ChallengeCardsManager:set_readyup_card_cache(card_list)
-	self._readyup_card_cache = card_list
+function ChallengeCardsManager:set_inventory_cache(card_list)
+	self._inventory = card_list
 end
 
-function ChallengeCardsManager:_process_fresh_steam_inventory(params)
-	local cards_list = params.cards
+function ChallengeCardsManager:_process_fresh_steam_inventory(inventory)
+	local cards_list = inventory
 
 	if cards_list then
-		if #cards_list ~= #self:get_readyup_card_cache() then
+		if #cards_list ~= #self:get_inventory() then
 			Application:trace("[ChallengeCardsManager:_process_fresh_steam_inventory] new list has different number of elements ")
-			self:set_readyup_card_cache(cards_list)
-			managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.EVENT_STEAM_INVENTORY_PROCESSED, params)
+			self:set_inventory_cache(inventory)
+			managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.EVENT_STEAM_INVENTORY_PROCESSED, inventory)
 
 			return
 		end
 
-		local cached_cards = self:get_readyup_card_cache()
+		local cached_cards = self:get_inventory()
 
 		table.sort(cached_cards, function(a, b)
 			return a.key_name < b.key_name
@@ -110,16 +110,16 @@ function ChallengeCardsManager:_process_fresh_steam_inventory(params)
 
 			if cached_card_data.key_name ~= steam_card_data.key_name then
 				Application:trace("[ChallengeCardsManager:_process_fresh_steam_inventory] missmatch (Keyname) in cached and fresh list index ", card_index)
-				self:set_readyup_card_cache(cards_list)
-				managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.EVENT_STEAM_INVENTORY_PROCESSED, params)
+				self:set_inventory_cache(cards_list)
+				managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.EVENT_STEAM_INVENTORY_PROCESSED, inventory)
 
 				return
 			end
 
 			if cached_card_data.key_name == steam_card_data.key_name and cached_card_data.stack_amount ~= steam_card_data.stack_amount then
 				Application:trace("[ChallengeCardsManager:_process_fresh_steam_inventory] missmatch (Amount) in cached and fresh list index ", card_index)
-				self:set_readyup_card_cache(cards_list)
-				managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.EVENT_STEAM_INVENTORY_PROCESSED, params)
+				self:set_inventory_cache(cards_list)
+				managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.EVENT_STEAM_INVENTORY_PROCESSED, inventory)
 
 				return
 			end
@@ -864,8 +864,8 @@ function ChallengeCardsManager:_generate_bounty_card_effects(card_data)
 			card_data._difficulty = card_data._difficulty + effect_negative_stats[i].difficulty
 		end
 
-		if effect_negative_stats.added_forbids then
-			for _, forbid in ipairs(effect_negative_stats.added_forbids) do
+		if effect_negative_stats[i].added_forbids then
+			for _, forbid in ipairs(effect_negative_stats[i].added_forbids) do
 				table.insert(effect_forbids, forbid)
 			end
 		end
@@ -923,4 +923,6 @@ function ChallengeCardsManager:_generate_bounty_card_effects(card_data)
 		desc_id = effect_positive_data.descriptions[ChallengeCardsTweakData.EFFECT_TYPE_POSITIVE],
 		desc_params = effect_positive_desc_params,
 	}
+
+	Application:debug("[BOUNTY] final data", inspect(card_data))
 end

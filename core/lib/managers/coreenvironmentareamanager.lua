@@ -69,9 +69,7 @@ function EnvironmentAreaManager:get_area_by_name(name)
 end
 
 function EnvironmentAreaManager:add_area(area_params, world_id)
-	local area = EnvironmentArea:new(area_params)
-
-	area._world_id = world_id
+	local area = EnvironmentArea:new(area_params, world_id)
 
 	table.insert(self._areas, area)
 	self:prio_order_areas()
@@ -143,7 +141,7 @@ end
 
 EnvironmentArea = EnvironmentArea or class(CoreShapeManager.ShapeBox)
 
-function EnvironmentArea:init(params)
+function EnvironmentArea:init(params, world_id)
 	params.type = "box"
 
 	EnvironmentArea.super.init(self, params)
@@ -155,6 +153,7 @@ function EnvironmentArea:init(params)
 	self._properties.bezier_curve = params.bezier_curve or managers.environment_area:default_bezier_curve()
 	self._properties.filter_list = managers.environment_area:default_filter_list()
 	self._properties.prio = params.prio or managers.environment_area:default_prio()
+	self._world_id = world_id
 
 	self:_generate_id()
 end

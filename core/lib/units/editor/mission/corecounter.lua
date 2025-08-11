@@ -405,7 +405,16 @@ function CoreCounterTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_build_value_number(panel, panel_sizer, "amount", {
 		floats = 0,
 	}, "Specify value to trigger on.")
-	self:_add_help_text("This element is a trigger to logic_counter element.")
+
+	local help_txt = "This element is a trigger to logic_counter element.\n"
+
+	help_txt = help_txt .. "Value: On value changed to this amount through any method.\n"
+	help_txt = help_txt .. "Add: When an addition is made, amount ignored.\n"
+	help_txt = help_txt .. "Subtract: When a subtraction is made, amount ignored.\n"
+	help_txt = help_txt .. "Reset: On value changed through a reset operation.\n"
+	help_txt = help_txt .. "Set: On value changed through a set operation."
+
+	self:_add_help_text(help_txt)
 end
 
 CoreCounterFilterUnitElement = CoreCounterFilterUnitElement or class(MissionElement)

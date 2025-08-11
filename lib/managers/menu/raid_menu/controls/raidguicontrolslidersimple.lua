@@ -145,13 +145,7 @@ end
 function RaidGUIControlSliderSimple:set_value_by_x_coord(selected_coord_x)
 	local value = selected_coord_x / self._slider_line_panel:w() * 100
 
-	if value < 0 then
-		value = 0
-	end
-
-	if value > 100 then
-		value = 100
-	end
+	value = math.clamp(value, 0, 100)
 
 	self:set_value_and_render(value)
 end

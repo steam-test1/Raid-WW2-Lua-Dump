@@ -41,7 +41,6 @@ require("lib/managers/mission/ElementCarry")
 require("lib/managers/mission/ElementLootBag")
 require("lib/managers/mission/ElementJobValue")
 require("lib/managers/mission/ElementNavObstacle")
-require("lib/managers/mission/ElementSpawnDeployable")
 require("lib/managers/mission/ElementFleePoint")
 require("lib/managers/mission/ElementInstigator")
 require("lib/managers/mission/ElementInstigatorRule")
@@ -190,6 +189,8 @@ function MissionManager:init(...)
 		"pku_baptismal_font",
 		"pku_religious_figurine",
 		"pku_explosives",
+		"pku_barrel_of_fuel",
+		"pku_barrel_of_fuel_empty",
 	})
 
 	self._mission_filter = {}
@@ -279,10 +280,6 @@ function MissionManager:default_instigator()
 	return managers.player:player_unit()
 end
 
-function MissionManager:activate_script(...)
-	MissionManager.super.activate_script(self, ...)
-end
-
 function MissionManager:_get_mission_manager(mission_id)
 	local mission
 
@@ -303,18 +300,18 @@ function MissionManager:client_run_mission_element(mission_id, id, unit, orienta
 	local mission = self:_get_mission_manager(mission_id)
 
 	if not mission then
-		Application:error("[MissionManager:client_run_mission_element] skip mission execution (missionId, id)", mission_id, id)
+		Application:error("[MissionManager:client_run_mission_element] skip mission execution (mission_id, id)", mission_id, id)
 
 		return
 	end
 
-	for name, data in pairs(mission._scripts) do
+	for _, data in pairs(mission._scripts) do
 		if data:element(id) then
 			if data:element(id).client_on_executed then
 				data:element(id):set_synced_orientation_element_index(orientation_element_index)
 				data:element(id):client_on_executed(unit)
 			else
-				debug_pause("[MissionManager:client_run_mission_element] Trying to run client_on_executed on an element that doesn't implement it: ", data:element(id):editor_name(), mission_id, id, inspect(unit), orientation_element_index)
+				debug_pause("[MissionManager:client_run_mission_element] Trying to run client_on_executed on an element that doesn't implement it:", data:element(id):editor_name(), mission_id, id, inspect(unit), orientation_element_index)
 			end
 
 			return

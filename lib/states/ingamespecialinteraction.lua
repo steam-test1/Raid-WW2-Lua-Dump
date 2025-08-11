@@ -13,13 +13,20 @@ function IngameSpecialInteraction:_setup_controller()
 	managers.menu:get_controller():disable()
 
 	self._controller = managers.controller:create_controller("ingame_special_interaction", managers.controller:get_default_wrapper_index(), false)
-	self._cb_table = {
-		interact = callback(self, self, "cb_interact"),
-		jump = callback(self, self, "cb_leave"),
+	self._press_cb_table = {
+		interact = callback(self, self, "cb_interact_press"),
+		jump = callback(self, self, "cb_leave_press"),
+	}
+	self._release_cb_table = {
+		interact = callback(self, self, "cb_interact_release"),
 	}
 
-	for k, cb in pairs(self._cb_table) do
+	for k, cb in pairs(self._press_cb_table) do
 		self._controller:add_trigger(k, cb)
+	end
+
+	for k, cb in pairs(self._release_cb_table) do
+		self._controller:add_release_trigger(k, cb)
 	end
 
 	self._controller:set_enabled(true)
@@ -33,8 +40,12 @@ function IngameSpecialInteraction:_clear_controller()
 	end
 
 	if self._controller then
-		for k, cb in pairs(self._cb_table) do
+		for k, cb in pairs(self._press_cb_table) do
 			self._controller:remove_trigger(k, cb)
+		end
+
+		for k, cb in pairs(self._release_cb_table) do
+			self._controller:remove_release_trigger(k, cb)
 		end
 
 		self._controller:set_enabled(false)
@@ -50,8 +61,8 @@ function IngameSpecialInteraction:set_controller_enabled(enabled)
 	end
 end
 
-function IngameSpecialInteraction:cb_leave()
-	Application:debug("[IngameSpecialInteraction:cb_leave]")
+function IngameSpecialInteraction:cb_leave_press()
+	Application:debug("[IngameSpecialInteraction:cb_leave_press]")
 
 	if self._hud:cooldown() or self._completed then
 		return
@@ -62,8 +73,8 @@ function IngameSpecialInteraction:cb_leave()
 	end
 end
 
-function IngameSpecialInteraction:cb_interact()
-	Application:debug("[IngameSpecialInteraction:cb_interact]")
+function IngameSpecialInteraction:cb_interact_press()
+	Application:debug("[IngameSpecialInteraction:cb_interact_press]")
 
 	if self._hud:cooldown() or self._completed then
 		return
@@ -71,6 +82,11 @@ function IngameSpecialInteraction:cb_interact()
 
 	self:_check_interact()
 	self:_check_all_complete()
+end
+
+function IngameSpecialInteraction:cb_interact_release()
+	Application:debug("[IngameSpecialInteraction:cb_interact_release]")
+	self._hud:check_interact_release()
 end
 
 function IngameSpecialInteraction:on_destroyed()

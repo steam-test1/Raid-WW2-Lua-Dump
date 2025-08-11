@@ -2,6 +2,9 @@ core:import("CoreMissionScriptElement")
 
 ElementFilter = ElementFilter or class(CoreMissionScriptElement.MissionScriptElement)
 
+local IDS_PC = Idstring("PC")
+local IDS_CONSOLE = Idstring("CONSOLE")
+
 function ElementFilter:init(...)
 	ElementFilter.super.init(self, ...)
 end
@@ -35,18 +38,15 @@ function ElementFilter:on_executed(instigator)
 		return
 	end
 
-	ElementFilter.super.on_executed(self, instigator)
+	ElementFilter.super.on_executed(self, instigator, nil, false)
 end
-
-local pc_only = Idstring("PC")
-local console_only = Idstring("CONSOLE")
 
 function ElementFilter:_check_platform()
 	local simulation_platform = Global.running_simulation and Idstring(managers.editor:mission_platform())
 
 	if self._values.platform_win32 then
 		if simulation_platform then
-			if simulation_platform == pc_only then
+			if simulation_platform == IDS_PC then
 				return true
 			end
 		elseif IS_PC then
@@ -56,7 +56,7 @@ function ElementFilter:_check_platform()
 
 	if self._values.platform_console then
 		if simulation_platform then
-			if simulation_platform == console_only then
+			if simulation_platform == IDS_CONSOLE then
 				return true
 			end
 		elseif IS_CONSOLE then
@@ -123,11 +123,13 @@ function ElementFilter:_check_mode()
 		return true
 	end
 
-	if managers.groupai:state():get_assault_mode() and self._values.mode_assault then
+	local assault_mode = managers.groupai:state():get_assault_mode()
+
+	if self._values.mode_assault and assault_mode then
 		return true
 	end
 
-	if not managers.groupai:state():get_assault_mode() and self._values.mode_control then
+	if self._values.mode_control and not assault_mode then
 		return true
 	end
 
@@ -135,11 +137,11 @@ function ElementFilter:_check_mode()
 end
 
 function ElementFilter:_check_alarm()
-	local alarm = managers.worldcollection:get_alarm_for_world(self._sync_id)
-
 	if self._values.alarm_on == nil or self._values.alarm_off == nil then
 		return true
 	end
+
+	local alarm = managers.worldcollection:get_alarm_for_world(self._sync_id)
 
 	if alarm and self._values.alarm_on then
 		return true
@@ -148,4 +150,6 @@ function ElementFilter:_check_alarm()
 	if not alarm and self._values.alarm_off then
 		return true
 	end
+
+	return false
 end

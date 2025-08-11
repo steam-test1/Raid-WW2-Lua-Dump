@@ -11,20 +11,8 @@ function ElementWorldOutputEvent:on_script_activated()
 	end
 end
 
-function ElementWorldOutputEvent:on_created()
-	return
-end
-
 function ElementWorldOutputEvent:client_on_executed(...)
 	return
-end
-
-function ElementWorldOutputEvent:on_executed(instigator)
-	if not self._values.enabled then
-		return
-	end
-
-	ElementWorldOutputEvent.super.on_executed(self, instigator)
 end
 
 function ElementWorldOutputEvent:destroy()
@@ -40,8 +28,6 @@ function ElementWorldOutput:client_on_executed(...)
 end
 
 function ElementWorldOutput:on_created()
-	Application:debug("[ElementWorldOutput:on_created()]", self._sync_id, self._values.event)
-
 	self._output_elements = managers.worldcollection:get_output_elements_for_world(self._sync_id, self._values.event)
 end
 
@@ -143,11 +129,11 @@ function ElementWorldPoint:on_script_activated()
 end
 
 function ElementWorldPoint:on_executed(instigator)
-	Application:debug("[ElementWorldPoint:on_executed] on_executed world name:", self._values.world, "enable:", self._values.enabled, "IDX:", self._world_id, "Action:", self._action)
-
 	if not self._values.enabled then
 		return
 	end
+
+	Application:debug("[ElementWorldPoint:on_executed] on_executed world name:", self._values.world, "enable:", self._values.enabled, "IDX:", self._world_id, "Action:", self._action)
 
 	self._action = self._action or "spawn"
 
@@ -312,20 +298,18 @@ function ElementWorldPoint:load(data)
 	self:set_enabled(data.enabled)
 end
 
-function ElementWorldPoint:stop_simulation(...)
-	return
-end
-
 function ElementWorldPoint:execute_action(action, operation_world_id)
 	Application:debug("[ElementWorldPoint:execute_action]", action, operation_world_id)
 
 	self._action = action
 
-	if action == "set_world_id" and operation_world_id ~= "" then
+	if operation_world_id ~= "" and action == "spawn" or action == "set_world_id" then
+		Application:debug("[ElementWorldPoint:execute_action] Set a new world ID", action, operation_world_id)
+
 		self._values.world = operation_world_id
 	end
 
-	self:on_executed(nil)
+	self:on_executed(nil, nil, false)
 end
 
 function ElementWorldPoint:destroy()

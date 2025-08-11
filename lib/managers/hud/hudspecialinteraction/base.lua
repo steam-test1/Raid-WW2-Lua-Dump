@@ -215,6 +215,10 @@ function HUDSpecialInteraction:check_interact()
 	return true
 end
 
+function HUDSpecialInteraction:check_interact_release()
+	return true
+end
+
 function HUDSpecialInteraction:on_leave()
 	return true
 end

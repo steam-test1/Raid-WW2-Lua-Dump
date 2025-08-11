@@ -27,6 +27,23 @@ function ElementGlobalStateOperator:on_executed(instigator)
 		managers.global_state:fire_event(flag)
 	elseif action == "set_value" then
 		managers.global_state:set_value_flag(flag, value)
+	elseif action == "add_value" then
+		managers.global_state:add_value_flag(flag, value)
+	elseif action == "sub_value" then
+		managers.global_state:add_value_flag(flag, -value)
+	elseif action == "links_set_value" then
+		local elements = self._values.elements or {}
+		local flag_value = managers.global_state:flag_value(flag)
+
+		for _, id in ipairs(elements) do
+			local element = self:get_mission_element(id)
+
+			if element then
+				element:apply_custom_value(flag_value)
+			end
+		end
+	else
+		managers.editor:output_error("Element " .. self:editor_name() .. " doesn't have an action '" .. action .. "' function implemented.")
 	end
 
 	ElementGlobalStateOperator.super.on_executed(self, instigator)

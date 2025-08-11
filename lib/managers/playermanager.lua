@@ -156,7 +156,7 @@ end
 function PlayerManager:soft_reset()
 	self._listener_holder = EventListenerHolder:new()
 	self._equipment = {
-		aquire_weapon = nil,
+		aquire_grenade = nil,
 		selections = {},
 		specials = {},
 	}
@@ -172,7 +172,7 @@ end
 
 function PlayerManager:_setup()
 	self._equipment = {
-		aquire_weapon = nil,
+		aquire_grenade = nil,
 		selections = {},
 		specials = {},
 	}
@@ -523,61 +523,62 @@ function PlayerManager:_internal_load()
 	local wheel_params = tweak_data.interaction:get_interaction("com_wheel")
 
 	managers.hud:set_comm_wheel_options(wheel_params.options)
+	self:_add_level_equipment(player)
 
-	if self._respawn then
-		self:_add_level_equipment(player)
+	for i, name in ipairs(self._global.default_kit.special_equipment_slots) do
+		local ok_name = self._global.equipment[name] and name
 
-		for i, name in ipairs(self._global.default_kit.special_equipment_slots) do
-			local ok_name = self._global.equipment[name] and name
+		if ok_name then
+			local upgrade = tweak_data.upgrades.definitions[ok_name]
 
-			if ok_name then
-				local upgrade = tweak_data.upgrades.definitions[ok_name]
+			if upgrade and (upgrade.slot and upgrade.slot < 2 or not upgrade.slot) then
+				self:add_equipment({
+					equipment = upgrade.equipment_id,
+					silent = true,
+				})
+			end
+		end
+	end
 
-				if upgrade and (upgrade.slot and upgrade.slot < 2 or not upgrade.slot) then
-					self:add_equipment({
-						equipment = upgrade.equipment_id,
-						silent = true,
-					})
-				end
+	for i, name in ipairs(self._global.kit.equipment_slots) do
+		local ok_name = self._global.equipment[name] and name or self._global.default_kit.equipment_slots[i]
+
+		if ok_name then
+			local upgrade = tweak_data.upgrades.definitions[ok_name]
+
+			if upgrade and (upgrade.slot and upgrade.slot < 2 or not upgrade.slot) then
+				self:add_equipment({
+					equipment = upgrade.equipment_id,
+					silent = true,
+				})
 			end
 		end
 
-		for i, name in ipairs(self._global.kit.equipment_slots) do
-			local ok_name = self._global.equipment[name] and name or self._global.default_kit.equipment_slots[i]
-
-			if ok_name then
-				local upgrade = tweak_data.upgrades.definitions[ok_name]
-
-				if upgrade and (upgrade.slot and upgrade.slot < 2 or not upgrade.slot) then
-					self:add_equipment({
-						equipment = upgrade.equipment_id,
-						silent = true,
-					})
-				end
-			end
-
-			break
-		end
+		break
 	end
 end
 
 function PlayerManager:_add_level_equipment(player)
-	Application:debug("[PlayerManager:_add_level_equipment] Player", player)
+	Application:debug("[PlayerManager:_add_level_equipment]")
 
-	local id = Global.running_simulation and managers.editor:layer("Level Settings"):get_setting("simulation_level_id")
+	local equipment
 
-	id = id ~= "none" and id
-	id = id or Global.level_data.level_id
+	if Global.running_simulation then
+		local id = Global.running_simulation and managers.editor:layer("Level Settings"):get_setting("simulation_level_id")
 
-	if not id then
-		return
+		id = id ~= "none" and id or Global.level_data.level_id
+		equipment = id and tweak_data.operations[id] and clone(tweak_data.operations.missions[id].equipment) or {}
+	else
+		local job_data = managers.raid_job:current_job()
+
+		equipment = job_data and job_data.equipment or {}
 	end
-
-	local equipment = tweak_data.operations[id] and tweak_data.operations[id].equipment or {}
 
 	if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_PLAYER_EQUIP_CROWBAR) and managers.buff_effect:get_effect_value(BuffEffectManager.EFFECT_PLAYER_EQUIP_CROWBAR) == true then
 		table.insert(equipment, "crowbar")
 	end
+
+	Application:debug("[PlayerManager:_add_level_equipment] equipment", inspect(equipment))
 
 	if not equipment then
 		return
@@ -818,15 +819,18 @@ function PlayerManager:on_out_of_world()
 		end
 	end
 
+	closest_pos = closest_pos or player_unit:position()
+
 	if closest_pos then
-		managers.player:warp_to(closest_pos, player_unit:rotation())
+		local nav_tracker = managers.navigation:create_nav_tracker(closest_pos)
+		local warp_pos = nav_tracker and nav_tracker:field_position() or math.UP
 
-		return
+		managers.player:warp_to(warp_pos, player_unit:rotation())
+
+		if nav_tracker then
+			managers.navigation:destroy_nav_tracker(nav_tracker)
+		end
 	end
-
-	local pos = player_unit:movement():nav_tracker() and player_unit:movement():nav_tracker():field_position() or Vector3(0, 0, 25)
-
-	managers.player:warp_to(pos, player_unit:rotation())
 end
 
 function PlayerManager:aquire_weapon(upgrade, id)
@@ -1110,10 +1114,6 @@ function PlayerManager:sync_upgrades()
 	player:network():send("set_active_warcry", active_warcry, warcry_meter_percentage, player:id())
 end
 
-function PlayerManager:list_level_rewards(dlcs)
-	return managers.upgrades:list_level_rewards(dlcs)
-end
-
 function PlayerManager:activate_temporary_upgrade(category, upgrade)
 	local upgrade_value = self:upgrade_value(category, upgrade)
 
@@ -1351,8 +1351,6 @@ end
 
 function PlayerManager:body_armor_skill_addend(override_armor)
 	local addend = 0
-
-	addend = addend + self:upgrade_value("player", tostring(override_armor or managers.blackmarket:equipped_armor(true, true)) .. "_armor_addend", 0)
 
 	return addend
 end
@@ -2253,18 +2251,6 @@ end
 
 function PlayerManager:get_all_synced_carry()
 	return self._global.synced_carry
-end
-
-function PlayerManager:from_server_interaction_reply(status)
-	self:player_unit():movement():set_carry_restriction(false)
-
-	if not status then
-		local carry_data = self:get_my_carry_data()
-
-		if carry_data then
-			self:remove_carry(#carry_data)
-		end
-	end
 end
 
 function PlayerManager:aquire_team_upgrade(upgrade)
@@ -3409,28 +3395,30 @@ function PlayerManager:add_carry(carry_id, carry_multiplier)
 end
 
 function PlayerManager:remove_carry_id(carry_id)
-	if self:is_carrying() then
-		local my_carry_data = self:get_my_carry_data()
-		local carry_index = 1
-		local t = type(carry_id)
-
-		if t == "table" then
-			for _, lists_carry_id in ipairs(carry_id) do
-				local i = self.get_index_carry_id(my_carry_data, lists_carry_id)
-
-				if i then
-					carry_index = i
-
-					break
-				end
-			end
-		elseif t == "string" then
-			carry_index = self.get_index_carry_id(my_carry_data, carry_id)
-		end
-
-		Application:debug("[PlayerManager:remove_carry_id] carry_id:", carry_id, inspect(my_carry_data))
-		self:remove_carry(carry_index)
+	if not self:is_carrying() then
+		return
 	end
+
+	local my_carry_data = self:get_my_carry_data()
+	local carry_index = 1
+	local t = type(carry_id)
+
+	if t == "table" then
+		for _, lists_carry_id in ipairs(carry_id) do
+			local i = self.get_index_carry_id(my_carry_data, lists_carry_id)
+
+			if i then
+				carry_index = i
+
+				break
+			end
+		end
+	elseif t == "string" then
+		carry_index = self.get_index_carry_id(my_carry_data, carry_id)
+	end
+
+	Application:debug("[PlayerManager:remove_carry_id] carry_id:", carry_id, inspect(my_carry_data))
+	self:remove_carry(carry_index)
 end
 
 function PlayerManager:remove_carry(carry_index)
@@ -3443,7 +3431,6 @@ function PlayerManager:remove_carry(carry_index)
 	end
 
 	local carry_data = self:get_my_carry_data()
-	local carry_id = carry_data[carry_index].carry_id
 
 	if carry_index > #carry_data then
 		Application:error("[PlayerManager:remove_carry] Tried to use an index that was too high!", carry_index, "/", #carry_data)
@@ -3451,6 +3438,7 @@ function PlayerManager:remove_carry(carry_index)
 		return
 	end
 
+	local carry_id = carry_data[carry_index].carry_id
 	local carry_tweak = tweak_data.carry[carry_id]
 
 	if not carry_tweak then
@@ -3828,11 +3816,7 @@ end
 function PlayerManager:is_carrying()
 	local cd = self:get_my_carry_data()
 
-	if cd and not table.empty(cd) then
-		return true
-	end
-
-	return false
+	return cd and next(cd)
 end
 
 function PlayerManager:is_carrying_cannot_stack()
@@ -4113,9 +4097,9 @@ function PlayerManager:_enter_vehicle(vehicle, peer_id, player, seat_name)
 		self:set_player_state("driving")
 	end
 
+	managers.vehicle:on_player_entered_vehicle(vehicle, player)
 	managers.hud:update_vehicle_label_by_id(vehicle:unit_data().name_label_id, vehicle_ext:_number_in_the_vehicle())
 	managers.hud:peer_enter_vehicle(peer_id, vehicle)
-	managers.vehicle:on_player_entered_vehicle(vehicle, player)
 end
 
 function PlayerManager:get_vehicle()
@@ -4175,6 +4159,7 @@ function PlayerManager:_exit_vehicle(peer_id, player)
 
 		vehicle_ext:exit_vehicle(player)
 		managers.hud:update_vehicle_label_by_id(vehicle_data.vehicle_unit:unit_data().name_label_id, vehicle_ext:_number_in_the_vehicle())
+		managers.vehicle:on_player_exited_vehicle(vehicle_data.vehicle_unit, player)
 	else
 		Application:info("[PlayerManager:_exit_vehicle] Vehicle unit already destroyed!")
 	end
@@ -4182,7 +4167,6 @@ function PlayerManager:_exit_vehicle(peer_id, player)
 	self._global.synced_vehicle_data[peer_id] = nil
 
 	managers.hud:peer_exit_vehicle(peer_id)
-	managers.vehicle:on_player_exited_vehicle(vehicle_data.vehicle, player)
 end
 
 function PlayerManager:move_to_next_seat(vehicle)

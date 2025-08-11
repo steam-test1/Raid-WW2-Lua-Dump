@@ -34,7 +34,7 @@ end
 
 function CoreEffectPropertyContainer:validate_properties()
 	local ret = {
-		combo = nil,
+		connect = nil,
 		message = "",
 		valid = true,
 	}
@@ -217,7 +217,7 @@ end
 
 function CoreEffectProperty:validate()
 	local ret = {
-		combo = nil,
+		connect = nil,
 		message = "",
 		valid = true,
 	}

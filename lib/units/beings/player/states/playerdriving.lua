@@ -11,6 +11,9 @@ PlayerDriving.EXIT_VEHICLE_TIMER = 0.4
 PlayerDriving.STANCE_NORMAL = 0
 PlayerDriving.STANCE_SHOOTING = 1
 
+local IDS_AG_SPEEDOMETER = Idstring("ag_speedometer")
+local IDS_AG_RPM_METER = Idstring("ag_rpm_meter")
+
 function PlayerDriving:init(unit)
 	PlayerDriving.super.init(self, unit)
 
@@ -48,17 +51,15 @@ function PlayerDriving:_enter(enter_data)
 		return
 	end
 
-	local idstr_ag_speedometer = Idstring("ag_speedometer")
-	local idstr_ag_rpm_meter = Idstring("ag_rpm_meter")
 	local anims = self._vehicle_unit:anim_groups()
 
 	if anims then
 		for _, v in pairs(anims) do
-			if v == idstr_ag_speedometer then
+			if v == IDS_AG_SPEEDOMETER then
 				self._has_speedometer = true
 
 				Application:debug("[PlayerDriving:_enter] has speedometer")
-			elseif v == idstr_ag_rpm_meter then
+			elseif v == IDS_AG_RPM_METER then
 				self._has_rpmmeter = true
 
 				Application:debug("[PlayerDriving:_enter] has rpmmeter")
@@ -681,11 +682,11 @@ function PlayerDriving:_update_input(dt)
 	end
 
 	if self._has_speedometer then
-		local speed_anim_length = self._vehicle_unit:anim_length(Idstring("ag_speedometer"))
+		local speed_anim_length = self._vehicle_unit:anim_length(IDS_AG_SPEEDOMETER)
 		local rpm_anim_length = 1
 
 		if self._has_rpmmeter then
-			rpm_anim_length = self._vehicle_unit:anim_length(Idstring("ag_rpm_meter"))
+			rpm_anim_length = self._vehicle_unit:anim_length(IDS_AG_RPM_METER)
 		end
 
 		local speed = vehicle_state:get_speed() * 3.6
@@ -711,12 +712,12 @@ function PlayerDriving:_update_input(dt)
 
 		relative_rpm = relative_rpm * rpm_anim_length
 
-		self._vehicle_unit:anim_set_time(Idstring("ag_speedometer"), relative_speed)
-		self._vehicle_unit:anim_play(Idstring("ag_speedometer"))
+		self._vehicle_unit:anim_set_time(IDS_AG_SPEEDOMETER, relative_speed)
+		self._vehicle_unit:anim_play(IDS_AG_SPEEDOMETER)
 
 		if self._has_rpmmeter then
-			self._vehicle_unit:anim_set_time(Idstring("ag_rpm_meter"), relative_rpm)
-			self._vehicle_unit:anim_play(Idstring("ag_rpm_meter"))
+			self._vehicle_unit:anim_set_time(IDS_AG_RPM_METER, relative_rpm)
+			self._vehicle_unit:anim_play(IDS_AG_RPM_METER)
 		end
 	end
 

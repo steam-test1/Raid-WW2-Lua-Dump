@@ -59,7 +59,7 @@ function MineGrenade:_award_achievement_multi_kill(thrower_peer_id)
 end
 
 function MineGrenade:_dyn_update(dt)
-	local body = self._unit:body("body_dynamic")
+	local body = self._unit:body("dynamic_body")
 
 	if body and body:enabled() then
 		local unit_vel = body:velocity()
@@ -79,7 +79,7 @@ function MineGrenade:_dyn_update(dt)
 end
 
 function MineGrenade:_attempt_arm()
-	local body = self._unit:body("body_dynamic")
+	local body = self._unit:body("dynamic_body")
 
 	if body and body:enabled() then
 		local unit_vel = body:velocity()
@@ -105,7 +105,7 @@ function MineGrenade:_attempt_arm()
 end
 
 function MineGrenade:_force_arm()
-	local body = self._unit:body("body_dynamic")
+	local body = self._unit:body("dynamic_body")
 
 	if body and body:enabled() then
 		self._timer = nil
@@ -145,7 +145,7 @@ function MineGrenade:_launch()
 
 	self._detonation_delay = self._tweak_data.enemy_proximity_delay or 0.4
 
-	local body = self._unit:body("body_dynamic")
+	local body = self._unit:body("dynamic_body")
 
 	body:set_velocity(Vector3(0, 0, self._tweak_data.jumpmine_velocity or 500))
 end

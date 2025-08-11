@@ -180,13 +180,16 @@ end
 
 function InstanceEventUnitElement:_add_instance_by_name(instance_name)
 	local events = self:_get_events(instance_name)
-	local event_list_data = {
-		event = events[1],
-		instance = instance_name,
-	}
 
-	table.insert(self._hed.event_list, event_list_data)
-	self:_add_instance_gui(instance_name, events, event_list_data)
+	if events then
+		local event_list_data = {
+			event = events[1],
+			instance = instance_name,
+		}
+
+		table.insert(self._hed.event_list, event_list_data)
+		self:_add_instance_gui(instance_name, events, event_list_data)
+	end
 end
 
 function InstanceEventUnitElement:_add_instance_gui(instance_name, events, event_list_data)
@@ -368,6 +371,7 @@ function InstancePointUnitElement:init(...)
 	InstancePointUnitElement.super.init(self, ...)
 
 	self._hed.instance = nil
+	self._hed.trigger_times = 1
 
 	table.insert(self._save_values, "instance")
 end

@@ -8,6 +8,7 @@ function EnvironmentEffectsManager:init()
 	self._current_effects = {}
 	self._mission_effects = {}
 	self._repeat_mission_effects = {}
+	self._effect_manager = World:effect_manager()
 end
 
 function EnvironmentEffectsManager:add_effect(name, effect)
@@ -83,7 +84,7 @@ function EnvironmentEffectsManager:update(t, dt)
 
 		if params.next_time <= 0 then
 			params.next_time = params.base_time + math.rand(params.random_time)
-			params.effect_id = World:effect_manager():spawn(params)
+			params.effect_id = self._effect_manager:spawn(params)
 
 			if params.max_amount then
 				params.max_amount = params.max_amount - 1
@@ -103,40 +104,46 @@ function EnvironmentEffectsManager:gravity_and_wind_dir()
 end
 
 function EnvironmentEffectsManager:spawn_mission_effect(name, params, world_id)
-	if params.base_time > 0 or params.random_time > 0 then
+	if params.base_time and params.base_time > 0 or params.random_time and params.random_time > 0 then
 		if self._repeat_mission_effects[name] then
 			self:kill_mission_effect(name)
 		end
 
 		params.next_time = 0
 		params.effect_id = nil
+		params.world_id = world_id
 		self._repeat_mission_effects[name] = params
 
 		return
 	end
 
-	params.effect_id = World:effect_manager():spawn(params)
-	params.world_id = world_id
-	self._mission_effects[name] = self._mission_effects[name] or {}
+	if self._mission_effects[name] and self._mission_effects[name].world_id ~= world_id then
+		_G.debug_pause("[EnvironmentEffectsManager:spawn_mission_effect] inconsistent world id for effect", name, world_id)
+
+		return
+	end
+
+	params.effect_id = self._effect_manager:spawn(params)
+	self._mission_effects[name] = self._mission_effects[name] or {
+		world_id = world_id,
+	}
 
 	table.insert(self._mission_effects[name], params)
 end
 
 function EnvironmentEffectsManager:kill_world_mission_effects(world_id)
 	for name, params in pairs(self._repeat_mission_effects) do
-		if params.effect_id and params.world_id == world then
-			World:effect_manager():kill(params.effect_id)
+		if params.effect_id and params.world_id == world_id then
+			self._effect_manager:kill(params.effect_id)
 
 			self._repeat_mission_effects[name] = nil
 		end
 	end
 
-	self._repeat_mission_effects = {}
-
 	for name, effects in pairs(self._mission_effects) do
-		if effects.world_id == world then
+		if effects.world_id == world_id then
 			for _, params in ipairs(effects) do
-				World:effect_manager():kill(params.effect_id)
+				self._effect_manager:kill(params.effect_id)
 			end
 
 			self._mission_effects[name] = nil
@@ -147,18 +154,17 @@ end
 function EnvironmentEffectsManager:kill_all_mission_effects()
 	for _, params in pairs(self._repeat_mission_effects) do
 		if params.effect_id then
-			World:effect_manager():kill(params.effect_id)
+			self._effect_manager:kill(params.effect_id)
+		end
+	end
+
+	for _, effects in pairs(self._mission_effects) do
+		for _, params in ipairs(effects) do
+			self._effect_manager:kill(params.effect_id)
 		end
 	end
 
 	self._repeat_mission_effects = {}
-
-	for _, effects in pairs(self._mission_effects) do
-		for _, params in ipairs(effects) do
-			World:effect_manager():kill(params.effect_id)
-		end
-	end
-
 	self._mission_effects = {}
 end
 
@@ -171,7 +177,7 @@ function EnvironmentEffectsManager:fade_kill_mission_effect(name)
 end
 
 function EnvironmentEffectsManager:_kill_mission_effect(name, type)
-	local kill = callback(World:effect_manager(), World:effect_manager(), type)
+	local kill = callback(self._effect_manager, self._effect_manager, type)
 	local params = self._repeat_mission_effects[name]
 
 	if params then
@@ -203,12 +209,18 @@ function EnvironmentEffectsManager:save(data)
 	}
 
 	for name, effects in pairs(self._mission_effects) do
-		state.mission_effects[name] = {}
+		state.mission_effects[name] = {
+			world_id = effects.world_id,
+		}
 
-		for _, params in pairs(effects) do
-			if World:effect_manager():alive(params.effect_id) then
+		for _, params in ipairs(effects) do
+			if params.sync and self._effect_manager:alive(params.effect_id) then
 				table.insert(state.mission_effects[name], params)
 			end
+		end
+
+		if #state.mission_effects[name] == 0 then
+			state.mission_effects[name] = nil
 		end
 	end
 
@@ -218,9 +230,11 @@ end
 function EnvironmentEffectsManager:load(data)
 	local state = data.EnvironmentEffectsManager
 
-	for name, effects in pairs(state.mission_effects) do
-		for _, params in ipairs(effects) do
-			self:spawn_mission_effect(name, params)
+	if state and state.mission_effects then
+		for name, effects in pairs(state.mission_effects) do
+			for _, params in ipairs(effects) do
+				self:spawn_mission_effect(name, params, effects.world_id)
+			end
 		end
 	end
 end

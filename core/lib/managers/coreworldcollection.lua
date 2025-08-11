@@ -278,7 +278,7 @@ function CoreWorldCollection:create(index, nav_graph_loaded)
 	self._motion_paths[index] = MotionPathManager:new(index)
 	definition.create_called = true
 
-	definition:create("all", Vector3(), true, nav_graph_loaded)
+	definition:create("all", true, nav_graph_loaded)
 
 	self._missions[index] = MissionManager:new()
 	self._mission_params[index] = {
@@ -841,13 +841,15 @@ function CoreWorldCollection:on_simulation_ended()
 	self._atleast_one_world_loaded = false
 	self._world_id_counter = 1
 
-	managers.portal:kill_all_effects()
 	managers.portal:clear()
 	managers.environment_controller:set_downed_value(0)
 
 	if managers.worlddefinition then
 		MassUnitManager:delete_all_units()
-		managers.worlddefinition:_create_massunit(managers.worlddefinition._definition.brush, Vector3(0, 0, 0))
+		managers.worlddefinition:_create_massunit(managers.worlddefinition._definition.brush, {
+			pos = Vector3(),
+			rot = Rotation(),
+		})
 	end
 end
 
@@ -855,7 +857,6 @@ function CoreWorldCollection:clear()
 	self:on_simulation_ended()
 	MassUnitManager:delete_all_units()
 	managers.sound_environment:destroy()
-	managers.portal:kill_all_effects()
 	managers.environment_area:remove_all_areas()
 	managers.portal:clear()
 	managers.world_instance:clear()

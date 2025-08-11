@@ -966,6 +966,7 @@ function HUDManager:add_waypoint(id, data)
 		show_on_screen = data.show_on_screen or data.show_on_screen == nil and true,
 		state = data.state or HUDManager.WP_STATE_PRESENT,
 		suspect = data.suspect,
+		text = data.text or nil,
 		texture_rect = texture_rect,
 		unit = data.unit,
 		waypoint_color = data.waypoint_color,

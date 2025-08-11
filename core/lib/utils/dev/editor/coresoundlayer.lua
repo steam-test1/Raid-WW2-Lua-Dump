@@ -12,22 +12,27 @@ function SoundLayer:init(owner)
 
 	self._muted = false
 	self._environment_unit = "core/units/sound_environment/sound_environment"
+	self._ids_environment_unit = Idstring(self._environment_unit)
 	self._emitter_unit = "core/units/sound_emitter/sound_emitter"
+	self._ids_emitter_unit = Idstring(self._emitter_unit)
 	self._area_emitter_unit = "core/units/sound_area_emitter/sound_area_emitter"
+	self._ids_area_emitter_unit = Idstring(self._area_emitter_unit)
 	self._ignore_global_select = true
 	self._position_as_slot_mask = self._position_as_slot_mask + managers.slot:get_mask("statics")
 end
 
-function SoundLayer:load(world_holder, offset)
-	local sound = world_holder:create_world("world", self._save_name, offset)
+function SoundLayer:load(world_holder)
+	local sound = world_holder:create_world("world", self._save_name)
 
 	CoreEws.change_combobox_value(self._default_ambience, managers.sound_environment:default_ambience())
 	CoreEws.change_combobox_value(self._default_environment, managers.sound_environment:default_environment())
 	self._ambience_enabled:set_value(managers.sound_environment:ambience_enabled())
 	CoreEws.change_combobox_value(self._default_occasional, managers.sound_environment:default_occasional())
 
+	self._loading_layer = true
+
 	for _, area in ipairs(managers.sound_environment:areas()) do
-		local unit = SoundLayer.super.do_spawn_unit(self, self._environment_unit, area:position(), area:rotation(), nil, nil, true)
+		local unit = self:do_spawn_unit(self._environment_unit, area:position(), area:rotation(), nil, nil, true)
 
 		if area:name() then
 			self:set_name_id(unit, area:name())
@@ -39,7 +44,7 @@ function SoundLayer:load(world_holder, offset)
 	end
 
 	for _, emitter in ipairs(managers.sound_environment:emitters()) do
-		local unit = SoundLayer.super.do_spawn_unit(self, self._emitter_unit, emitter:position(), emitter:rotation(), nil, nil, true)
+		local unit = self:do_spawn_unit(self._emitter_unit, emitter:position(), emitter:rotation(), nil, nil, true)
 
 		if emitter:name() then
 			self:set_name_id(unit, emitter:name())
@@ -51,7 +56,7 @@ function SoundLayer:load(world_holder, offset)
 	end
 
 	for _, emitter in ipairs(managers.sound_environment:area_emitters()) do
-		local unit = SoundLayer.super.do_spawn_unit(self, self._area_emitter_unit, emitter:position(), emitter:rotation(), nil, nil, true)
+		local unit = self:do_spawn_unit(self._area_emitter_unit, emitter:position(), emitter:rotation(), nil, nil, true)
 
 		if emitter:name() and emitter:name() ~= "" then
 			self:set_name_id(unit, emitter:name())
@@ -61,6 +66,8 @@ function SoundLayer:load(world_holder, offset)
 
 		unit:sound_data().emitter:set_unit(unit)
 	end
+
+	self._loading_layer = false
 
 	self:set_select_unit(nil)
 end
@@ -82,7 +89,9 @@ function SoundLayer:save(save_params)
 	local sound_area_emitters = {}
 
 	for _, unit in ipairs(self._created_units) do
-		if unit:name() == Idstring(self._environment_unit) then
+		local ids_unit = unit:name()
+
+		if ids_unit == self._ids_environment_unit then
 			local area = unit:sound_data().environment_area
 			local shape_table = area:save_level_data()
 
@@ -101,7 +110,7 @@ function SoundLayer:save(save_params)
 			})
 		end
 
-		if unit:name() == Idstring(self._emitter_unit) then
+		if ids_unit == self._ids_emitter_unit then
 			local emitter = unit:sound_data().emitter
 
 			table.insert(sound_emitters, {
@@ -116,7 +125,7 @@ function SoundLayer:save(save_params)
 			})
 		end
 
-		if unit:name() == Idstring(self._area_emitter_unit) then
+		if ids_unit == self._ids_area_emitter_unit then
 			local area_emitter = unit:sound_data().emitter
 			local shape_table = area_emitter:save_level_data()
 
@@ -175,7 +184,9 @@ function SoundLayer:update(t, dt)
 	SoundLayer.super.update(self, t, dt)
 
 	for _, unit in ipairs(self._created_units) do
-		if unit:name() == Idstring(self._emitter_unit) then
+		local ids_unit = unit:name()
+
+		if ids_unit == self._ids_emitter_unit and unit:sound_data().emitter then
 			local r, g, b = 0.6, 0.6, 0
 
 			if table.contains(self._selected_units, unit) then
@@ -183,9 +194,7 @@ function SoundLayer:update(t, dt)
 			end
 
 			unit:sound_data().emitter:draw(t, dt, r, g, b)
-		end
-
-		if unit:name() == Idstring(self._environment_unit) then
+		elseif ids_unit == self._ids_environment_unit and unit:sound_data().environment_area then
 			Application:draw(unit, 1, 1, 1)
 
 			local r, g, b = 0, 0, 0.8
@@ -195,9 +204,7 @@ function SoundLayer:update(t, dt)
 			end
 
 			unit:sound_data().environment_area:draw(t, dt, r, g, b)
-		end
-
-		if unit:name() == Idstring(self._area_emitter_unit) then
+		elseif ids_unit == self._ids_area_emitter_unit and unit:sound_data().emitter then
 			Application:draw(unit, 1, 1, 1)
 
 			local r, g, b = 0, 0, 0.8
@@ -557,7 +564,9 @@ end
 
 function SoundLayer:on_restart_emitters()
 	for _, unit in ipairs(self._created_units) do
-		if unit:name() == Idstring(self._emitter_unit) or unit:name() == Idstring(self._area_emitter_unit) then
+		local ids_unit = unit:name()
+
+		if ids_unit == self._ids_emitter_unit or ids_unit == self._ids_area_emitter_unit then
 			unit:sound_data().emitter:restart()
 		end
 	end
@@ -571,15 +580,13 @@ function SoundLayer:clear()
 	self._ambience_enabled:set_value(managers.sound_environment:ambience_enabled())
 
 	for _, unit in ipairs(self._created_units) do
-		if unit:name() == Idstring(self._environment_unit) then
+		local ids_unit = unit:name()
+
+		if ids_unit == self._ids_environment_unit then
 			managers.sound_environment:remove_area(unit:sound_data().environment_area)
-		end
-
-		if unit:name() == Idstring(self._emitter_unit) then
+		elseif ids_unit == self._ids_emitter_unit then
 			managers.sound_environment:remove_emitter(unit:sound_data().emitter)
-		end
-
-		if unit:name() == Idstring(self._area_emitter_unit) then
+		elseif ids_unit == self._ids_area_emitter_unit then
 			managers.sound_environment:remove_area_emitter(unit:sound_data().emitter)
 		end
 	end
@@ -588,60 +595,66 @@ function SoundLayer:clear()
 	self:set_sound_environment_parameters()
 end
 
-function SoundLayer:do_spawn_unit(...)
-	local unit = SoundLayer.super.do_spawn_unit(self, ...)
-
-	if alive(unit) then
-		if unit:name() == Idstring(self._emitter_unit) then
-			if not unit:sound_data().emitter then
-				unit:sound_data().emitter = managers.sound_environment:add_emitter({})
-
-				unit:sound_data().emitter:set_unit(unit)
-			end
-
-			self:set_sound_emitter_parameters()
-		elseif unit:name() == Idstring(self._area_emitter_unit) then
-			if not unit:sound_data().emitter then
-				unit:sound_data().emitter = managers.sound_environment:add_area_emitter({})
-
-				unit:sound_data().emitter:set_unit(unit)
-
-				self._current_shape_panel = unit:sound_data().emitter:panel(self._sound_panel, self._sound_emitter_sizer)
-
-				self._sound_panel:layout()
-			end
-
-			self:set_sound_emitter_parameters()
-		elseif unit:name() == Idstring(self._environment_unit) then
-			if not unit:sound_data().environment_area then
-				unit:sound_data().environment_area = managers.sound_environment:add_area({})
-
-				unit:sound_data().environment_area:set_unit(unit)
-
-				self._current_shape_panel = unit:sound_data().environment_area:panel(self._sound_panel, self._sound_environment_sizer)
-
-				self._sound_panel:layout()
-			end
-
-			self:set_sound_environment_parameters()
-		end
+function SoundLayer:_on_unit_created(unit)
+	if not alive(unit) or self._loading_layer then
+		return
 	end
 
-	return unit
+	local ids_unit = unit:name()
+
+	if ids_unit == self._ids_emitter_unit then
+		if not unit:sound_data().emitter then
+			unit:sound_data().emitter = managers.sound_environment:add_emitter({})
+
+			unit:sound_data().emitter:set_unit(unit)
+		end
+
+		self:set_sound_emitter_parameters()
+	elseif ids_unit == self._ids_area_emitter_unit then
+		if not unit:sound_data().emitter then
+			unit:sound_data().emitter = managers.sound_environment:add_area_emitter({})
+
+			unit:sound_data().emitter:set_unit(unit)
+
+			self._current_shape_panel = unit:sound_data().emitter:panel(self._sound_panel, self._sound_emitter_sizer)
+
+			self._sound_panel:layout()
+		end
+
+		self:set_sound_emitter_parameters()
+	elseif ids_unit == self._ids_environment_unit then
+		if not unit:sound_data().environment_area then
+			unit:sound_data().environment_area = managers.sound_environment:add_area({})
+
+			unit:sound_data().environment_area:set_unit(unit)
+
+			self._current_shape_panel = unit:sound_data().environment_area:panel(self._sound_panel, self._sound_environment_sizer)
+
+			self._sound_panel:layout()
+		end
+
+		self:set_sound_environment_parameters()
+	end
+
+	SoundLayer.super._on_unit_created(self, unit)
 end
 
 function SoundLayer:select_unit_ray_authorised(ray)
 	local unit = ray and ray.unit
 
 	if unit then
-		return unit:name() == Idstring(self._emitter_unit) or unit:name() == Idstring(self._environment_unit) or unit:name() == Idstring(self._area_emitter_unit)
+		local ids_unit = unit:name()
+
+		return ids_unit == self._ids_emitter_unit or ids_unit == self._ids_environment_unit or ids_unit == self._ids_area_emitter_unit
 	end
 end
 
 function SoundLayer:clone_edited_values(unit, source)
 	SoundLayer.super.clone_edited_values(self, unit, source)
 
-	if unit:name() == Idstring(self._environment_unit) then
+	local ids_unit = unit:name()
+
+	if ids_unit == self._ids_environment_unit then
 		local area = unit:sound_data().environment_area
 		local source_area = source:sound_data().environment_area
 
@@ -650,9 +663,7 @@ function SoundLayer:clone_edited_values(unit, source)
 		area:set_width(source_area:width())
 		area:set_depth(source_area:depth())
 		area:set_height(source_area:height())
-	end
-
-	if unit:name() == Idstring(self._emitter_unit) or unit:name() == Idstring(self._area_emitter_unit) then
+	elseif ids_unit == self._ids_emitter_unit or ids_unit == self._ids_area_emitter_unit then
 		local emitter = unit:sound_data().emitter
 		local source_emitter = source:sound_data().emitter
 
@@ -660,8 +671,10 @@ function SoundLayer:clone_edited_values(unit, source)
 	end
 end
 
-function SoundLayer:delete_unit(unit)
-	if unit:name() == Idstring(self._environment_unit) then
+function SoundLayer:on_unit_deleted(unit)
+	local ids_unit = unit:name()
+
+	if ids_unit == self._ids_environment_unit then
 		managers.sound_environment:remove_area(unit:sound_data().environment_area)
 
 		if unit:sound_data().environment_area:panel() then
@@ -672,17 +685,13 @@ function SoundLayer:delete_unit(unit)
 			unit:sound_data().environment_area:panel():destroy()
 			self._sound_panel:layout()
 		end
-	end
-
-	if unit:name() == Idstring(self._emitter_unit) then
+	elseif ids_unit == self._ids_emitter_unit then
 		managers.sound_environment:remove_emitter(unit:sound_data().emitter)
-	end
-
-	if unit:name() == Idstring(self._area_emitter_unit) then
+	elseif ids_unit == self._ids_area_emitter_unit then
 		managers.sound_environment:remove_area_emitter(unit:sound_data().emitter)
 	end
 
-	SoundLayer.super.delete_unit(self, unit)
+	SoundLayer.super.on_unit_deleted(self, unit)
 end
 
 function SoundLayer:update_unit_settings()
@@ -705,7 +714,7 @@ function SoundLayer:set_sound_environment_parameters()
 	self._use_ambience:set_enabled(false)
 	self._use_occasional:set_enabled(false)
 
-	if alive(self._selected_unit) and self._selected_unit:name() == Idstring(self._environment_unit) then
+	if alive(self._selected_unit) and self._selected_unit:name() == self._ids_environment_unit then
 		local area = self._selected_unit:sound_data().environment_area
 
 		if area then
@@ -737,7 +746,7 @@ function SoundLayer:set_sound_emitter_parameters()
 	self._emitter_events_combobox.ctrlr:set_enabled(false)
 	self._emitter_events_combobox.toolbar:set_enabled(false)
 
-	if alive(self._selected_unit) and (self._selected_unit:name() == Idstring(self._emitter_unit) or self._selected_unit:name() == Idstring(self._area_emitter_unit)) then
+	if alive(self._selected_unit) and (self._selected_unit:name() == self._ids_emitter_unit or self._selected_unit:name() == self._ids_area_emitter_unit) then
 		local emitter = self._selected_unit:sound_data().emitter
 
 		if emitter then
@@ -749,7 +758,7 @@ function SoundLayer:set_sound_emitter_parameters()
 			CoreEws.change_combobox_value(self._emitter_events_combobox, emitter:emitter_event())
 		end
 
-		if self._selected_unit:name() == Idstring(self._area_emitter_unit) then
+		if self._selected_unit:name() == self._ids_area_emitter_unit then
 			local area = self._selected_unit:sound_data().emitter
 
 			if area then

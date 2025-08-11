@@ -112,8 +112,8 @@ function CoreEditorGroups:save()
 	end
 end
 
-function CoreEditorGroups:load(world_holder, offset)
-	local load_data = world_holder:create_world("world", "editor_groups", offset)
+function CoreEditorGroups:load(world_holder)
+	local load_data = world_holder:create_world("world", "editor_groups")
 	local group_names = load_data.group_names
 	local groups = {}
 

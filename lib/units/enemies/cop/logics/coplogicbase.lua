@@ -1444,11 +1444,8 @@ function CopLogicBase.on_alert_completed(cop, params)
 			return
 		end
 
-		local group_state = managers.groupai:state()
-		local cop_type = tostring(group_state.blame_triggers[cop:movement()._ext_base._tweak_table])
-
 		managers.groupai:state():on_criminal_suspicion_progress(nil, cop, "called")
-		group_state:on_police_called(cop:movement():coolness_giveaway())
+		managers.groupai:state():on_police_called(cop:movement():coolness_giveaway())
 	end
 end
 
@@ -1788,7 +1785,7 @@ function CopLogicBase._chk_relocate(data)
 	elseif data.objective.type == "hunt" then
 		local area = data.objective.area
 
-		if area and not next(area.criminal.units) then
+		if area and area.criminal.amount == 0 then
 			local found_areas = {
 				[area] = true,
 			}
@@ -1800,7 +1797,7 @@ function CopLogicBase._chk_relocate(data)
 			while next(areas_to_search) do
 				local current_area = table.remove(areas_to_search)
 
-				if next(current_area.criminal.units) then
+				if area.criminal.amount > 0 then
 					target_area = current_area
 
 					break

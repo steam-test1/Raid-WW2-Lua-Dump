@@ -43,8 +43,8 @@ function BrushLayer:init(owner, dont_load_unit_map)
 	self:load_brushes()
 end
 
-function BrushLayer:load(world_holder, offset)
-	world_holder:create_world("world", self._save_name, offset)
+function BrushLayer:load(world_holder)
+	world_holder:create_world("world", self._save_name)
 
 	self._amount_dirty = true
 end

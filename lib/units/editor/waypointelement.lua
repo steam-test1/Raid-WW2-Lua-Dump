@@ -47,6 +47,10 @@ function WaypointUnitElement:_add_wp_options()
 	self._text_options = {
 		"debug_none",
 	}
+
+	for _, text in ipairs(tweak_data.gui.waypoint_text) do
+		table.insert(self._text_options, text)
+	end
 end
 
 function WaypointUnitElement:_set_text()

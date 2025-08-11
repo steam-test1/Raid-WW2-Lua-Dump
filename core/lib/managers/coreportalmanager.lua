@@ -162,44 +162,6 @@ function PortalManager:change_effect_visibility(effect, i)
 	end
 end
 
-function PortalManager:restart_effects()
-	for _, portal in ipairs(self._portal_shapes) do
-		portal:clear_effects()
-	end
-
-	local restart = {}
-
-	for e, n in pairs(self._all_effects) do
-		restart[e] = n
-	end
-
-	self._all_effects = {}
-
-	for effect, _ in pairs(restart) do
-		if effect.id then
-			self.EFFECT_MANAGER:kill(effect.id)
-		end
-
-		self:add_effect(effect)
-	end
-
-	restart = nil
-end
-
-function PortalManager:kill_all_effects()
-	for _, portal in ipairs(self._portal_shapes) do
-		portal:clear_effects()
-	end
-
-	for effect, _ in pairs(self._all_effects) do
-		if effect.id then
-			self.EFFECT_MANAGER:kill(effect.id)
-		end
-	end
-
-	self._all_effects = {}
-end
-
 function PortalManager:render()
 	local t = TimerManager:wall():time()
 	local dt = TimerManager:wall():delta_time()

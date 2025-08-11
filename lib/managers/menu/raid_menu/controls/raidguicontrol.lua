@@ -1,5 +1,7 @@
 RaidGUIControl = RaidGUIControl or class()
 RaidGUIControl.ID = 1
+RaidGUIControl.IDS_MOUSE_0 = Idstring("0")
+RaidGUIControl.IDS_MOUSE_1 = Idstring("1")
 
 function RaidGUIControl:init(parent, params)
 	self._type = self._type or "raid_gui_control"
@@ -35,116 +37,6 @@ function RaidGUIControl:set_param_value(param_name, param_value)
 	self._params[param_name] = param_value
 end
 
-function RaidGUIControl:create_border()
-	if not self._object then
-		return
-	end
-
-	local border_thickness = 1.6
-	local x = self._object:x()
-	local y = self._object:y()
-	local w = self._object:w()
-	local h = self._object:h()
-
-	self._border_left = self._parent_panel:gradient({
-		h = h,
-		layer = 2,
-		name = "border_left",
-		orientation = "vertical",
-		w = border_thickness,
-		x = x,
-		y = y,
-	})
-
-	self._border_left:set_gradient_points({
-		0,
-		Color(0.19215686274509805, 0.23529411764705882, 0.25098039215686274),
-		1,
-		Color(0.3137254901960784, 0.40784313725490196, 0.35294117647058826),
-	})
-
-	self._border_right = self._parent_panel:gradient({
-		h = h,
-		layer = 2,
-		name = "border_right",
-		orientation = "vertical",
-		w = border_thickness,
-		x = x + w - border_thickness,
-		y = y,
-	})
-
-	self._border_right:set_gradient_points({
-		0,
-		Color(0.3058823529411765, 0.40784313725490196, 0.36470588235294116),
-		1,
-		Color(0.3411764705882353, 0.35294117647058826, 0.3176470588235294),
-	})
-
-	self._border_up = self._parent_panel:gradient({
-		h = border_thickness,
-		layer = 2,
-		name = "border_up",
-		orientation = "horizontal",
-		w = w,
-		x = x,
-		y = y,
-	})
-
-	self._border_up:set_gradient_points({
-		0,
-		Color(0.19215686274509805, 0.23529411764705882, 0.25098039215686274),
-		0.38,
-		Color(0.34901960784313724, 0.34901960784313724, 0.3411764705882353),
-		0.544,
-		Color(0.596078431372549, 0.6274509803921569, 0.5843137254901961),
-		0.77,
-		Color(0.34901960784313724, 0.34901960784313724, 0.3411764705882353),
-		1,
-		Color(0.3058823529411765, 0.40784313725490196, 0.36470588235294116),
-	})
-
-	self._border_down = self._parent_panel:gradient({
-		h = border_thickness,
-		layer = 2,
-		name = "border_down",
-		orientation = "horizontal",
-		w = w,
-		x = x,
-		y = y + h - border_thickness,
-	})
-
-	self._border_down:set_gradient_points({
-		0,
-		Color(0.3137254901960784, 0.40784313725490196, 0.35294117647058826),
-		0.3,
-		Color(0.596078431372549, 0.615686274509804, 0.592156862745098),
-		0.69,
-		Color(0.6039215686274509, 0.615686274509804, 0.5882352941176471),
-		1,
-		Color(0.3411764705882353, 0.35294117647058826, 0.3176470588235294),
-	})
-end
-
-function RaidGUIControl:remove_border()
-	if self._object then
-		self._border_left:parent():remove(self._border_left)
-
-		self._border_left = nil
-
-		self._border_right:parent():remove(self._border_right)
-
-		self._border_right = nil
-
-		self._border_down:parent():remove(self._border_down)
-
-		self._border_down = nil
-
-		self._border_up:parent():remove(self._border_up)
-
-		self._border_up = nil
-	end
-end
-
 function RaidGUIControl:close()
 	return
 end
@@ -169,26 +61,6 @@ function RaidGUIControl:translate(text, upper_case_flag, additional_macros)
 	end
 
 	return result
-end
-
-function RaidGUIControl:_show_dialog_error_msg(error_title, error_msg)
-	local dialog_data = {}
-
-	dialog_data.title = error_title
-	dialog_data.text = error_msg
-
-	local ok_button = {}
-
-	ok_button.text = managers.localization:text("dialog_ok")
-	dialog_data.button_list = {
-		ok_button,
-	}
-
-	function ok_button.callback_func()
-		return
-	end
-
-	managers.system_menu:show(dialog_data)
 end
 
 function RaidGUIControl:inside(x, y)
@@ -326,55 +198,75 @@ function RaidGUIControl:highlight_off()
 end
 
 function RaidGUIControl:show()
-	self._object:show()
+	if self._object then
+		self._object:show()
+	end
 end
 
 function RaidGUIControl:hide()
-	self._object:hide()
+	if self._object then
+		self._object:hide()
+	end
 end
 
 function RaidGUIControl:center_x()
-	return self._object:center_x()
+	if self._object then
+		return self._object:center_x()
+	end
 end
 
 function RaidGUIControl:center_y()
-	return self._object:center_y()
+	if self._object then
+		return self._object:center_y()
+	end
 end
 
 function RaidGUIControl:set_center_x(x)
-	self._object:set_center_x(x)
+	if self._object then
+		self._object:set_center_x(x)
+	end
 end
 
 function RaidGUIControl:set_center_y(y)
-	self._object:set_center_y(y)
+	if self._object then
+		self._object:set_center_y(y)
+	end
 end
 
 function RaidGUIControl:set_center(x, y)
-	self._object:set_center(x, y)
+	if self._object then
+		self._object:set_center(x, y)
+	end
 end
 
 function RaidGUIControl:rotate(angle)
-	self._object:rotate(angle)
+	if self._object then
+		self._object:rotate(angle)
+	end
 end
 
 function RaidGUIControl:set_rotation(angle)
-	self._object:set_rotation(angle)
+	if self._object then
+		self._object:set_rotation(angle)
+	end
 end
 
 function RaidGUIControl:rotation()
-	return self._object:rotation()
+	return self._object and self._object:rotation()
 end
 
 function RaidGUIControl:set_visible(visible)
-	self._object:set_visible(visible)
+	if self._object then
+		self._object:set_visible(visible)
+	end
 end
 
 function RaidGUIControl:visible()
-	if self._object.alive then
-		return self._object.alive and alive(self._object) and self._object:visible()
-	else
-		return self._object:visible()
+	if self._object and self._object.alive then
+		return alive(self._object) and self._object:visible()
 	end
+
+	return self._object:visible()
 end
 
 function RaidGUIControl:set_selectable(value)
@@ -386,13 +278,13 @@ function RaidGUIControl:selectable()
 end
 
 function RaidGUIControl:set_alpha(alpha)
-	if self._object.set_alpha then
+	if self._object and self._object.set_alpha then
 		self._object:set_alpha(alpha)
 	end
 end
 
 function RaidGUIControl:alpha()
-	if self._object.alpha then
+	if self._object and self._object.alpha then
 		return self._object:alpha()
 	end
 
@@ -400,83 +292,101 @@ function RaidGUIControl:alpha()
 end
 
 function RaidGUIControl:set_x(x)
-	self._object:set_x(x)
+	if self._object then
+		self._object:set_x(x)
+	end
 end
 
 function RaidGUIControl:set_top(value)
-	self._object:set_top(value)
+	if self._object then
+		self._object:set_top(value)
+	end
 end
 
 function RaidGUIControl:set_bottom(value)
-	self._object:set_bottom(value)
+	if self._object then
+		self._object:set_bottom(value)
+	end
 end
 
 function RaidGUIControl:set_right(value)
-	self._object:set_right(value)
+	if self._object then
+		self._object:set_right(value)
+	end
 end
 
 function RaidGUIControl:set_left(value)
-	self._object:set_left(value)
+	if self._object then
+		self._object:set_left(value)
+	end
 end
 
 function RaidGUIControl:set_y(y)
-	self._object:set_y(y)
+	if self._object then
+		self._object:set_y(y)
+	end
 end
 
 function RaidGUIControl:set_w(w)
-	self._object:set_w(w)
+	if self._object then
+		self._object:set_w(w)
+	end
 end
 
 function RaidGUIControl:set_h(h)
-	self._object:set_h(h)
+	if self._object then
+		self._object:set_h(h)
+	end
 end
 
 function RaidGUIControl:w()
-	return self._object:w()
+	return self._object and self._object:w()
 end
 
 function RaidGUIControl:h()
-	return self._object:h()
+	return self._object and self._object:h()
 end
 
 function RaidGUIControl:x()
-	return self._object:x()
+	return self._object and self._object:x()
 end
 
 function RaidGUIControl:y()
-	return self._object:y()
+	return self._object and self._object:y()
 end
 
 function RaidGUIControl:world_x()
-	return self._object:world_x()
+	return self._object and self._object:world_x()
 end
 
 function RaidGUIControl:world_y()
-	return self._object:world_y()
+	return self._object and self._object:world_y()
 end
 
 function RaidGUIControl:layer()
-	return self._object:layer()
+	return self._object and self._object:layer() or self._params.layer
 end
 
 function RaidGUIControl:set_layer(layer)
-	return self._object._engine_panel:set_layer(layer)
+	if self._object then
+		return self._object._engine_panel:set_layer(layer)
+	end
 end
 
 function RaidGUIControl:left()
-	return self._object:left()
+	return self._object and self._object:left()
 end
 
 function RaidGUIControl:right()
-	return self._object:right()
+	return self._object and self._object:right()
 end
 
 function RaidGUIControl:top()
-	return self._object:top()
+	return self._object and self._object:top()
 end
 
 function RaidGUIControl:bottom()
-	return self._object:bottom()
+	return self._object and self._object:bottom()
 end
 
 function RaidGUIControl:set_selected(value)

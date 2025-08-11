@@ -750,7 +750,7 @@ function DBPickDialog:init(editor, p, name, pick_type)
 end
 
 function DBPickDialog:on_path_button()
-	local path = managers.database:open_file_dialog(self._parent, "Textures (*.dds)|*.dds")
+	local path = managers.database:open_file_dialog(self._parent, "Textures (*.dds)|*.dds", self._path)
 
 	if path then
 		self:set_value(managers.database:entry_path(path))

@@ -1,5 +1,5 @@
 RaidGUIControlListSeparated = RaidGUIControlListSeparated or class(RaidGUIControlSingleSelectList)
-RaidGUIControlListSeparated.SEPARATOR_HEIGHT = 1
+RaidGUIControlListSeparated.SEPARATOR_HEIGHT = 2
 RaidGUIControlListSeparated.SEPARATOR_UNSELECTED_COLOR = tweak_data.gui.colors.raid_dirty_white
 RaidGUIControlListSeparated.SEPARATOR_SELECTED_COLOR = tweak_data.gui.colors.raid_red
 RaidGUIControlListSeparated.SEPARATOR_LEFT = "list_separator_left"

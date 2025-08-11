@@ -20,7 +20,7 @@ function ElementGlobalStateTrigger:execute(flag, state, event)
 				self:on_executed()
 			end
 		elseif self._values.on_value then
-			if managers.global_state:check_flag_value(self._values.check_type, self._values.value, state) then
+			if self._values.check_type and self._values.check_type ~= "none" and managers.global_state:check_flag_value(self._values.check_type, self._values.value, state) then
 				self:on_executed()
 			end
 		elseif self._values.on_set and state or self._values.on_clear and not state then

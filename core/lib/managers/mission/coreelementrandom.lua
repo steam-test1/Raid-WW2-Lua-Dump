@@ -27,15 +27,17 @@ function ElementRandom:on_executed(instigator)
 		end
 	end
 
-	self._values.on_executed = {}
-
-	local amount = self:_calc_amount()
+	local amount
 
 	if self._values.counter_id then
 		local element = self:get_mission_element(self._values.counter_id)
 
 		amount = element:counter_value()
+	else
+		amount = self:_calc_amount()
 	end
+
+	self._values.on_executed = {}
 
 	for i = 1, math.min(amount, #self._original_on_executed) do
 		table.insert(self._values.on_executed, self._original_on_executed[self:_get_random_elements()])

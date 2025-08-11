@@ -1,20 +1,6 @@
 EquipmentsTweakData = EquipmentsTweakData or class()
 
 function EquipmentsTweakData:init()
-	self.first_aid_kit = {
-		deploy_time = 1,
-		description_id = "des_first_aid_kit",
-		dummy_unit = "units/pd2_dlc_old_hoxton/equipment/gen_equipment_first_aid_kit/gen_equipment_first_aid_kit_dummy",
-		icon = "equipment_first_aid_kit",
-		quantity = 4,
-		text_id = "debug_equipment_first_aid_kit",
-		upgrade_deploy_time_multiplier = {
-			category = "player",
-			upgrade = "first_aid_kit_deploy_time_multiplier",
-		},
-		use_function_name = "use_first_aid_kit",
-		visual_object = "g_firstaidbag",
-	}
 	self.specials = {}
 	self.specials.planks = {
 		icon = "equipment_planks",
@@ -301,10 +287,5 @@ function EquipmentsTweakData:init()
 		grenades = 4,
 		sentry_gun = 2,
 		trip_mine = 6,
-	}
-	self.class_name_to_deployable_id = {
-		AmmoBagBase = "ammo_bag",
-		DoctorBagBase = "doctor_bag",
-		FirstAidKitBase = "first_aid_kit",
 	}
 end

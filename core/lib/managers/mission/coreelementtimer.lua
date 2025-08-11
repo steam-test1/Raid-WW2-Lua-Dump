@@ -12,26 +12,19 @@ end
 
 function ElementTimer:on_script_activated()
 	self._timer = self:value("timer")
-	self._monitor_timer = self:value("timer")
+	self._monitor_timer = self._timer
 
-	if not Network:is_server() then
+	if Network:is_client() then
 		return
 	end
 
 	if self._values.digital_gui_unit_ids then
 		for _, id in ipairs(self._values.digital_gui_unit_ids) do
-			if false then
-				local unit = managers.editor:unit_with_id(id)
+			local unit = self._mission_script:worlddefinition():get_unit_on_load(id, callback(self, self, "_load_unit"))
 
+			if unit then
 				table.insert(self._digital_gui_units, unit)
 				unit:digital_gui():timer_set(self._timer)
-			else
-				local unit = self._mission_script:worlddefinition():get_unit_on_load(id, callback(self, self, "_load_unit"))
-
-				if unit then
-					table.insert(self._digital_gui_units, unit)
-					unit:digital_gui():timer_set(self._timer)
-				end
 			end
 		end
 	end
@@ -42,16 +35,12 @@ function ElementTimer:on_script_activated()
 		self.monitor_element = mission:get_element_by_id(self._values.output_monitor_id)
 	end
 
-	self:monitor_output_change()
+	self:_monitor_output_change()
 end
 
 function ElementTimer:_load_unit(unit)
 	table.insert(self._digital_gui_units, unit)
 	unit:digital_gui():timer_set(self._timer)
-end
-
-function ElementTimer:set_enabled(enabled)
-	ElementTimer.super.set_enabled(self, enabled)
 end
 
 function ElementTimer:add_updator()
@@ -77,13 +66,15 @@ end
 function ElementTimer:update_timer(t, dt)
 	self._timer = self._timer - dt
 
-	if self._monitor_timer - self._timer > 1 then
+	if math.abs(self._monitor_timer - self._timer) > 1 then
 		self._monitor_timer = self._timer
 
-		self:monitor_output_change()
+		self:_monitor_output_change()
 	end
 
 	if self._timer <= 0 then
+		self._timer = 0
+
 		self:remove_updator()
 		self:on_executed()
 	end
@@ -100,52 +91,44 @@ function ElementTimer:client_on_executed(...)
 	return
 end
 
-function ElementTimer:on_executed(instigator)
-	if not self._values.enabled then
-		return
-	end
-
-	ElementTimer.super.on_executed(self, instigator)
-end
-
 function ElementTimer:timer_operation_pause()
 	self:remove_updator()
 	self:_pause_digital_guis()
-	self:monitor_output_change("... paused")
+	self:_monitor_output_change("... paused")
 end
 
 function ElementTimer:timer_operation_start()
 	self:add_updator()
 	self:_start_digital_guis_count_down()
-	self:monitor_output_change("... started")
+	self:_monitor_output_change("... started")
 end
 
 function ElementTimer:timer_operation_add_time(time)
 	self._timer = self._timer + time
 
 	self:_update_digital_guis_timer()
-	self:monitor_output_change("... add (" .. time .. ")")
+	self:_monitor_output_change("... add (" .. time .. ")")
 end
 
 function ElementTimer:timer_operation_subtract_time(time)
 	self._timer = self._timer - time
 
 	self:_update_digital_guis_timer()
-	self:monitor_output_change("... subtract (" .. time .. ")")
+	self:_monitor_output_change("... subtract (" .. time .. ")")
 end
 
 function ElementTimer:timer_operation_reset()
 	self._timer = self._values.timer
 
 	self:_update_digital_guis_timer()
-	self:monitor_output_change("... reset")
+	self:_monitor_output_change("... reset")
 end
 
 function ElementTimer:timer_operation_set_time(time)
 	self._timer = time
 
 	self:_update_digital_guis_timer()
-	self:monitor_output_change("... set (" .. time .. ")")
+	self:_monitor_output_change("... set (" .. time .. ")")
 end
 
 function ElementTimer:_update_digital_guis_timer()
@@ -191,7 +174,7 @@ function ElementTimer:remove_trigger(id)
 	self._triggers[id] = nil
 end
 
-function ElementTimer:monitor_output_change(output)
+function ElementTimer:_monitor_output_change(output)
 	if self.monitor_element then
 		local output_string = "time: " .. math.round(self._timer) .. " " .. (output or "")
 
@@ -201,18 +184,21 @@ end
 
 ElementTimerHud = ElementTimerHud or class(ElementTimer)
 
+local HUD_TIMER_NEXT_SYNC_DELAY = 9
+
 function ElementTimerHud:init(...)
 	ElementTimerHud.super.init(self, ...)
 
 	self._show_hud_timer = false
 	self._total_timer_value = self._values.timer
-	self._hud_timer_next_sync = Application:time() + 9
+	self._hud_timer_next_sync = Application:time() + HUD_TIMER_NEXT_SYNC_DELAY
 end
 
 function ElementTimerHud:on_script_activated()
 	self._timer = self:value("timer")
+	self._monitor_timer = self._timer
 
-	if not Network:is_server() then
+	if Network:is_client() then
 		return
 	end
 
@@ -260,7 +246,15 @@ end
 function ElementTimerHud:update_timer(t, dt)
 	self._timer = self._timer - dt
 
+	if math.abs(self._monitor_timer - self._timer) > 1 then
+		self._monitor_timer = self._timer
+
+		self:_monitor_output_change()
+	end
+
 	if self._timer <= 0 then
+		self._timer = 0
+
 		self:remove_updator()
 		self:on_executed()
 
@@ -283,7 +277,7 @@ function ElementTimerHud:update_timer(t, dt)
 		managers.hud:set_objectives_timer_hud_value(self._total_timer_value - self._timer, self._total_timer_value, self._timer)
 
 		if Network:is_server() and self._hud_timer_next_sync < Application:time() then
-			self._hud_timer_next_sync = Application:time() + 9
+			self._hud_timer_next_sync = Application:time() + HUD_TIMER_NEXT_SYNC_DELAY
 
 			for peer_id, peer in pairs(managers.network:session():peers()) do
 				local sync_time = math.min(100000, self._timer + Network:qos(peer:rpc()).ping / 1000)
@@ -344,21 +338,25 @@ end
 
 function ElementTimerHud:_timer_add_time(time)
 	self._timer = self._timer + time
+	self._monitor_timer = self._timer
 	self._total_timer_value = self._total_timer_value + time
 end
 
 function ElementTimerHud:_timer_subtract_time(time)
 	self._timer = self._timer - time
+	self._monitor_timer = self._timer
 	self._total_timer_value = self._total_timer_value - time
 end
 
 function ElementTimerHud:_timer_reset()
 	self._timer = self._values.timer
+	self._monitor_timer = self._values.timer
 	self._total_timer_value = self._values.timer
 end
 
 function ElementTimerHud:_timer_set_time(time)
 	self._timer = time
+	self._monitor_timer = time
 	self._total_timer_value = time
 end
 
@@ -410,17 +408,11 @@ end
 
 ElementTimerOperator = ElementTimerOperator or class(CoreMissionScriptElement.MissionScriptElement)
 
-function ElementTimerOperator:init(...)
-	ElementTimerOperator.super.init(self, ...)
-end
-
 function ElementTimerOperator:client_on_executed(...)
-	Application:trace("[ElementTimerOperator:client_on_executed]")
+	return
 end
 
 function ElementTimerOperator:on_executed(instigator)
-	Application:trace("[ElementTimerOperator:on_executed]")
-
 	if not self._values.enabled then
 		return
 	end
@@ -454,10 +446,6 @@ end
 
 ElementTimerTrigger = ElementTimerTrigger or class(CoreMissionScriptElement.MissionScriptElement)
 
-function ElementTimerTrigger:init(...)
-	ElementTimerTrigger.super.init(self, ...)
-end
-
 function ElementTimerTrigger:on_script_activated()
 	self:activate_trigger()
 end
@@ -466,12 +454,12 @@ function ElementTimerTrigger:client_on_executed(...)
 	return
 end
 
-function ElementTimerTrigger:on_executed(instigator)
-	if not self._values.enabled then
-		return
+function ElementTimerTrigger:on_toggle()
+	if self:enabled() then
+		self:activate_trigger()
+	else
+		self:deactivate_trigger()
 	end
-
-	ElementTimerTrigger.super.on_executed(self, instigator)
 end
 
 function ElementTimerTrigger:activate_trigger()
@@ -482,6 +470,20 @@ function ElementTimerTrigger:activate_trigger()
 	end
 end
 
+function ElementTimerTrigger:deactivate_trigger()
+	for _, id in ipairs(self._values.elements) do
+		local element = self:get_mission_element(id)
+
+		element:remove_trigger(self._id)
+	end
+end
+
 function ElementTimerTrigger:operation_add()
+	Application:warn("[ElementTimerTrigger] operation_add was called, we want to not use this for trigger activations!")
 	self:activate_trigger()
+end
+
+function ElementTimerTrigger:operation_remove()
+	Application:warn("[ElementTimerTrigger] operation_remove was called, we want to not use this for trigger activations!")
+	self:deactivate_trigger()
 end

@@ -106,7 +106,7 @@ function ImpactHurt:clbk_impact(tag, unit, body, other_unit, other_body, positio
 		end
 	end
 
-	if self._unit:damage() then
+	if self._is_pickup and self._unit:damage() then
 		self._unit:damage():has_then_run_sequence_simple("show_pickup")
 	end
 end

@@ -28,7 +28,9 @@ function ElementPlayerSpawner:client_on_executed(...)
 		return
 	end
 
-	managers.player:set_player_state(self._values.state or managers.player:default_player_state())
+	local player_state = self._values.state or managers.player:default_player_state()
+
+	managers.player:set_player_state(player_state)
 	self:_end_transition(true)
 end
 
@@ -37,8 +39,10 @@ function ElementPlayerSpawner:on_executed(instigator)
 		return
 	end
 
-	managers.player:set_player_state(self._values.state or managers.player:default_player_state())
-	managers.groupai:state():on_player_spawn_state_set(self._values.state or managers.player:default_player_state())
+	local player_state = self._values.state or managers.player:default_player_state()
+
+	managers.player:set_player_state(player_state)
+	managers.groupai:state():on_player_spawn_state_set(player_state)
 	managers.network:register_spawn_point(self:_unique_string_id(), {
 		position = self._values.position,
 		rotation = self._values.rotation,

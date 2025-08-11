@@ -42,7 +42,7 @@ function RaycastWeaponBase:init(unit)
 	self._autohit_data = tweak_data.weapon[self._name_id].autohit
 	self._autohit_current = self._autohit_data.INIT_RATIO
 	self._shoot_through_data = {
-		acos = nil,
+		SYNCH_MAX = nil,
 		from = Vector3(),
 		kills = 0,
 	}

@@ -17,6 +17,11 @@ SpecialObjectiveGroupElement.LINK_VALUES = {
 	},
 }
 
+local LINK_COLORS = {
+	ElementSpecialObjective = Color(1, 0.25, 0.25),
+	ElementSpecialObjectiveGroup = Color(0.75, 0.5, 1),
+}
+
 function SpecialObjectiveGroupElement:init(unit)
 	SpecialObjectiveGroupElement.super.init(self, unit)
 
@@ -52,14 +57,15 @@ function SpecialObjectiveGroupElement:draw_links(t, dt, selected_unit, all_units
 
 					unit_data._patrol_group = true
 
+					local color = LINK_COLORS[unit_data.element_class] or Color.red
 					local draw = not selected_unit or unit == selected_unit or self._unit == selected_unit
 
 					if draw then
 						self:_draw_link({
-							b = 0.75,
+							b = color.b,
 							from_unit = self._unit,
-							g = 0,
-							r = 0,
+							g = color.g,
+							r = color.r,
 							to_unit = unit,
 						})
 					end
@@ -91,6 +97,10 @@ function SpecialObjectiveGroupElement:update_selected(t, dt, selected_unit, all_
 			end
 		end
 	end
+end
+
+function SpecialObjectiveGroupElement:_draw_follow_up(selected_unit, all_units)
+	SpecialObjectiveUnitElement._draw_follow_up(self, selected_unit, all_units)
 end
 
 function SpecialObjectiveGroupElement:update_unselected(t, dt, selected_unit, all_units)
@@ -140,10 +150,6 @@ function SpecialObjectiveGroupElement:_remove_deleted_units(all_units)
 			i = i - 1
 		end
 	end
-end
-
-function SpecialObjectiveGroupElement:_draw_follow_up(selected_unit, all_units)
-	SpecialObjectiveUnitElement._draw_follow_up(self, selected_unit, all_units)
 end
 
 function SpecialObjectiveGroupElement:update_editing()
@@ -211,11 +217,11 @@ function SpecialObjectiveGroupElement:_element_type(element_id)
 end
 
 function SpecialObjectiveGroupElement:_clear_followups(element_id)
-	local pso = managers.editor:unit_with_id(element_id)
-	local pso_med = pso:mission_element_data()
+	local patrol_so = managers.editor:unit_with_id(element_id)
+	local patrol_so_med = patrol_so:mission_element_data()
 
-	pso_med.followup_elements = {}
-	pso_med._patrol_group = true
+	patrol_so_med.followup_elements = {}
+	patrol_so_med._patrol_group = true
 end
 
 function SpecialObjectiveGroupElement:_relink_patrol_followups()
@@ -231,11 +237,11 @@ function SpecialObjectiveGroupElement:_relink_patrol_followups()
 
 	for _, patrol_element_data in ipairs(self._hed.followup_patrol_elements) do
 		if patrol_element_data.type == "point_special_objective" then
-			local pso = managers.editor:unit_with_id(patrol_element_data.id)
-			local pso_med = pso:mission_element_data()
+			local patrol_so = managers.editor:unit_with_id(patrol_element_data.id)
+			local patrol_so_med = patrol_so:mission_element_data()
 
 			for _, group_id in ipairs(ai_so_group_targets) do
-				table.insert(pso_med.followup_elements, group_id)
+				table.insert(patrol_so_med.followup_elements, group_id)
 			end
 		end
 	end

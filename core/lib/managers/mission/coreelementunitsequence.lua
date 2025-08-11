@@ -21,7 +21,7 @@ function ElementUnitSequence:client_on_executed(...)
 	self:on_executed(...)
 end
 
-function ElementUnitSequence:on_executed(instigator)
+function ElementUnitSequence:on_executed(instigator, ...)
 	if not self._values.enabled or not alive(self._unit) then
 		return
 	end
@@ -31,7 +31,7 @@ function ElementUnitSequence:on_executed(instigator)
 	end
 
 	self._unit:damage():run_sequence_simple("run_sequence")
-	ElementUnitSequence.super.on_executed(self, instigator)
+	ElementUnitSequence.super.on_executed(self, instigator, ...)
 end
 
 function ElementUnitSequence:destroy()

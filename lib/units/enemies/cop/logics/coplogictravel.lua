@@ -1458,18 +1458,19 @@ function CopLogicTravel._check_start_path_ahead(data)
 end
 
 function CopLogicTravel.get_pathing_prio(data)
-	local prio
 	local objective = data.objective
 
-	if objective and (objective.follow_unit and (objective.follow_unit:base().is_local_player or objective.follow_unit:base().is_husk_player) or objective.type == "phalanx") then
-		prio = 4
+	if objective and objective.follow_unit then
+		local player_team = tweak_data.levels:get_default_team_ID("player")
 
-		if data.team.id == tweak_data.levels:get_default_team_ID("player") then
-			prio = prio + 1
+		if data.team.id == player_team then
+			return 5
 		end
+
+		return 4
 	end
 
-	return prio
+	return 0
 end
 
 function CopLogicTravel._get_exact_move_pos(data, nav_index)

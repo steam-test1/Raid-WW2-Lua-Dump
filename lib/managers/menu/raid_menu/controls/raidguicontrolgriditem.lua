@@ -255,22 +255,10 @@ function RaidGUIControlGridItem:get_data()
 	return self._item_data
 end
 
-function RaidGUIControlGridItem:mouse_released(o, button, x, y)
-	self:on_mouse_released(button)
-
-	return true
-end
-
 function RaidGUIControlGridItem:on_mouse_released(button)
 	if self._on_click_callback then
 		self._on_click_callback(self._item_data, self._params.key_value_field)
 	end
-end
-
-function RaidGUIControlGridItem:mouse_double_click(o, button, x, y)
-	self:on_mouse_double_click(button)
-
-	return true
 end
 
 function RaidGUIControlGridItem:on_mouse_double_click(button)

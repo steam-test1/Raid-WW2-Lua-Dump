@@ -14,12 +14,10 @@ function CoreWorldInstanceManager:start_offset_index()
 	return self._start_offset_index
 end
 
-function CoreWorldInstanceManager:add_instance_data(data)
-	table.insert(self._instance_data, data)
-end
-
 function CoreWorldInstanceManager:get_instance_data_by_name(name, worlddefinition_id)
-	for _, instance_data in ipairs(self._instance_data) do
+	local t = self:instance_data()
+
+	for _, instance_data in ipairs(t) do
 		if instance_data.name == name and ((not worlddefinition_id or worlddefinition_id == 0) and not instance_data.worlddefinition_id or instance_data.worlddefinition_id == worlddefinition_id) then
 			return instance_data
 		end
@@ -29,15 +27,19 @@ function CoreWorldInstanceManager:get_instance_data_by_name(name, worlddefinitio
 end
 
 function CoreWorldInstanceManager:remove_instances_for_world(worlddefinition_id)
-	for i = #self._instance_data, 1, -1 do
-		if self._instance_data[i].worlddefinition_id == worlddefinition_id then
-			table.remove(self._instance_data, i)
+	local t = self:instance_data()
+
+	for i = #t, 1, -1 do
+		if t[i].worlddefinition_id == worlddefinition_id then
+			table.remove(t, i)
 		end
 	end
 end
 
 function CoreWorldInstanceManager:has_instance(name)
-	for _, instance_data in ipairs(self._instance_data) do
+	local t = self:instance_data()
+
+	for _, instance_data in ipairs(t) do
 		if instance_data.name == name then
 			return true
 		end
@@ -71,7 +73,7 @@ function CoreWorldInstanceManager:get_safe_name(instance_name, name)
 
 	local names = {}
 
-	for _, instance_data in ipairs(self._instance_data) do
+	for _, instance_data in ipairs(self:instance_data()) do
 		names[instance_data.name] = true
 	end
 
@@ -89,7 +91,7 @@ end
 function CoreWorldInstanceManager:get_safe_start_index(index_size, continent, dry_run)
 	local start_indices = {}
 	local end_indices = {}
-	local t = self._instance_data
+	local t = self:instance_data()
 
 	if dry_run then
 		t = self._instance_data_dry_run
@@ -127,7 +129,7 @@ end
 function CoreWorldInstanceManager:_safety_check_start_index()
 	local indicies_ranges = {}
 	local names_list = {}
-	local t = self._instance_data
+	local t = self:instance_data()
 	local highest = -1
 
 	for _, instance_data in ipairs(t) do
@@ -170,7 +172,7 @@ function CoreWorldInstanceManager:get_used_indices(continent)
 	local start_indices = {}
 	local end_indices = {}
 
-	for _, instance_data in ipairs(self._instance_data) do
+	for _, instance_data in ipairs(self:instance_data()) do
 		if instance_data.continent == continent then
 			table.insert(start_indices, instance_data.start_index)
 			table.insert(end_indices, instance_data.start_index + (instance_data.index_size or 600) - 1)
@@ -193,6 +195,10 @@ function CoreWorldInstanceManager:rename_instance(name, new_name)
 	end
 end
 
+function CoreWorldInstanceManager:add_instance_data(data)
+	table.insert(self:instance_data(), data)
+end
+
 function CoreWorldInstanceManager:instance_data()
 	return self._instance_data
 end
@@ -200,7 +206,7 @@ end
 function CoreWorldInstanceManager:instance_save_data()
 	local data = {}
 
-	for i, instance_data in ipairs(self._instance_data) do
+	for i, instance_data in ipairs(self:instance_data()) do
 		data[i] = {}
 
 		for name, value in pairs(instance_data) do
@@ -220,7 +226,7 @@ function CoreWorldInstanceManager:debug_recalculate_instance_size(ignore_not_fou
 
 	local dry_run_ok = true
 
-	for i, instance_data in ipairs(self._instance_data) do
+	for i, instance_data in ipairs(self:instance_data()) do
 		local found = false
 		local predef = instance_data.predef
 
@@ -246,7 +252,7 @@ function CoreWorldInstanceManager:debug_recalculate_instance_size(ignore_not_fou
 
 		self._instance_data_dry_run = {}
 
-		for i, instance_data in ipairs(self._instance_data) do
+		for i, instance_data in ipairs(self:instance_data()) do
 			if not instance_data.predef then
 				local predef = self:_parse_instance_name_from_folder(instance_data.folder)
 
@@ -281,7 +287,7 @@ end
 function CoreWorldInstanceManager:instance_names_by_script(script)
 	local names = {}
 
-	for _, instance_data in ipairs(self._instance_data) do
+	for _, instance_data in ipairs(self:instance_data()) do
 		if instance_data.script == script then
 			table.insert(names, instance_data.name)
 		end
@@ -295,7 +301,7 @@ end
 function CoreWorldInstanceManager:instance_names(continent)
 	local names = {}
 
-	for _, instance_data in ipairs(self._instance_data) do
+	for _, instance_data in ipairs(self:instance_data()) do
 		if not continent or instance_data.continent == continent then
 			table.insert(names, instance_data.name)
 		end
@@ -309,7 +315,7 @@ end
 function CoreWorldInstanceManager:instances_data_by_continent(continent)
 	local instances = {}
 
-	for _, instance_data in ipairs(self._instance_data) do
+	for _, instance_data in ipairs(self:instance_data()) do
 		if not continent or instance_data.continent == continent then
 			table.insert(instances, instance_data)
 		end
@@ -320,12 +326,14 @@ end
 
 function CoreWorldInstanceManager:packages_by_instance(instance)
 	local folder = instance.folder
+	local real_package = folder
 	local package = folder .. "/" .. CoreWorldInstanceManager.DEFAULT_CONTINENT_NAME
 	local init_package = folder .. "/" .. "world_init"
 
 	return {
 		init_package = init_package,
 		package = package,
+		real_package = real_package,
 	}
 end
 
@@ -333,18 +341,20 @@ function CoreWorldInstanceManager:custom_create_instance(instance_name, worlddef
 	local worlddefinition = worlddefinition_id ~= 0 and managers.worldcollection:worlddefinition_by_id(worlddefinition_id)
 	local instance = self:get_instance_data_by_name(instance_name, worlddefinition_id)
 
+	Application:debug("[CoreWorldInstanceManager:custom_create_instance]", instance_name, inspect(instance))
+
 	worlddefinition = worlddefinition or managers.worlddefinition
 	instance.position = custom_data.position or Vector3()
 	instance.rotation = custom_data.rotation or Rotation()
 
 	local continent_data = worlddefinition._continents[instance.continent]
-	local prepared_unit_data = managers.world_instance:prepare_unit_data(instance, continent_data, worlddefinition)
+	local prepared_unit_data = self:prepare_unit_data(instance, continent_data, worlddefinition)
 
 	if prepared_unit_data.statics then
 		local world_in_world = worlddefinition_id ~= 0 and true or false
 
 		for _, static in ipairs(prepared_unit_data.statics) do
-			local unit = worlddefinition:_create_statics_unit(static, Vector3(), world_in_world)
+			local unit = worlddefinition:_create_statics_unit(static, world_in_world)
 
 			if Application:editor() and unit then
 				managers.editor:layer("Statics"):add_unit_to_created_units(unit, true)
@@ -354,12 +364,24 @@ function CoreWorldInstanceManager:custom_create_instance(instance_name, worlddef
 
 	if prepared_unit_data.dynamics then
 		for _, entry in ipairs(prepared_unit_data.dynamics) do
-			local unit = worlddefinition:_create_dynamics_unit(entry, Vector3(), world_in_world)
+			local unit = worlddefinition:_create_dynamics_unit(entry, world_in_world)
 
 			if Application:editor() and unit then
 				managers.editor:layer("Dynamics"):add_unit_to_created_units(unit, true)
 			end
 		end
+	end
+
+	if not Application:editor() then
+		local world_massunit_file = string.gsub(instance.folder, "/world", "/massunit")
+
+		managers.worlddefinition:_create_massunit({
+			file = "massunit",
+			world_file = world_massunit_file,
+		}, {
+			pos = instance.position,
+			rot = instance.rotation,
+		})
 	end
 
 	local prepare_mission_data = self:prepare_mission_data_by_name(instance_name, worlddefinition_id)

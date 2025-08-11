@@ -27,8 +27,8 @@ function GenericUserManager:init()
 	if not self:is_global_initialized() then
 		Global.user_manager = {
 			initializing = true,
-			is_in_loading_sequence = nil,
 			setting_map = {},
+			user_data = nil,
 			user_map = {},
 		}
 		self._global = Global.user_manager

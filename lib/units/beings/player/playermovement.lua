@@ -55,9 +55,9 @@ function PlayerMovement:init(unit)
 	self._m_com = math.lerp(self._m_pos, self._m_stand_pos, 0.5)
 	self._kill_overlay_t = managers.player:player_timer():time() + 5
 	self._state_data = {
-		[""] = nil,
 		ducking = false,
 		in_air = false,
+		other_players_in_foxhole = nil,
 	}
 	self._synced_suspicion = false
 	self._suspicion_ratio = false

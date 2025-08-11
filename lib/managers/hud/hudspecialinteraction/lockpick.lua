@@ -378,7 +378,7 @@ function HUDSpecialInteractionLockPick:_animate_hide()
 		self._legend_interact_text:set_alpha(progress)
 	end
 
-	self._remove_circles()
+	self:_remove_circles()
 	self._object:set_visible(false)
 	self._bg_panel:set_visible(false)
 	self._object:set_alpha(0)
@@ -433,7 +433,7 @@ function HUDSpecialInteractionLockPick:_animate_interaction_complete()
 		self._legend_interact_text:set_alpha(progress)
 	end
 
-	self._remove_circles()
+	self:_remove_circles()
 	self._object:set_visible(false)
 	self._bg_panel:set_visible(false)
 	self._object:set_alpha(0)

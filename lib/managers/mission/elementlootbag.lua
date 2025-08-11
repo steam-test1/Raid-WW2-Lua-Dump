@@ -31,8 +31,6 @@ function ElementLootBag:on_executed(instigator)
 			local dir = self._values.push_multiplier and self._values.spawn_dir * self._values.push_multiplier or Vector3(0, 0, 0)
 
 			unit = managers.player:server_drop_carry(loot.carry_id, loot.multiplier, pos, rot, dir, 0, nil, nil)
-		else
-			print("NO MORE LOOT TO RESPAWN")
 		end
 	else
 		local loot = managers.loot:get_distribute()
@@ -41,8 +39,6 @@ function ElementLootBag:on_executed(instigator)
 			local dir = self._values.push_multiplier and self._values.spawn_dir * self._values.push_multiplier or Vector3(0, 0, 0)
 
 			unit = managers.player:server_drop_carry(loot.carry_id, loot.multiplier, pos, rot, dir, 0, nil, nil)
-		else
-			print("NO MORE LOOT TO DISTRIBUTE")
 		end
 	end
 

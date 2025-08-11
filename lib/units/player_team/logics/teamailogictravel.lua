@@ -407,7 +407,7 @@ function TeamAILogicTravel._determine_destination_occupation(data, objective)
 		local is_local_player = objective.follow_unit:base().is_local_player
 		local revive_u_mv = objective.follow_unit:movement()
 		local revive_u_tracker = revive_u_mv:nav_tracker()
-		local revive_u_rot = is_local_player and Rotation(0, 0, 0) or revive_u_mv:m_rot()
+		local revive_u_rot = is_local_player and Rotation() or revive_u_mv:m_rot()
 		local revive_u_fwd = revive_u_rot:y()
 		local revive_u_right = revive_u_rot:x()
 		local revive_u_pos = revive_u_tracker:lost() and revive_u_tracker:field_position() or revive_u_mv:m_pos()
@@ -474,8 +474,8 @@ function TeamAILogicTravel._determine_destination_occupation(data, objective)
 		end
 
 		local revive_rot = revive_u_pos - revive_pos
-		local revive_rot = Rotation(revive_rot, math.UP)
 
+		revive_rot = Rotation(revive_rot, math.UP)
 		occupation = {
 			pos = revive_pos,
 			rot = revive_rot,

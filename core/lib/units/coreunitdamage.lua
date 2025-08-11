@@ -4,7 +4,7 @@ CoreUnitDamage = CoreUnitDamage or class()
 CoreUnitDamage.ALL_TRIGGERS = "*"
 UnitDamage = UnitDamage or class(CoreUnitDamage)
 
-local ids_damage = Idstring("damage")
+local IDS_DAMAGE = Idstring("damage")
 
 function CoreUnitDamage:init(unit, default_body_extension_class, body_extension_class_map, ignore_body_collisions, ignore_mover_collisions, mover_collision_ignore_duration)
 	self._unit = unit
@@ -15,7 +15,7 @@ function CoreUnitDamage:init(unit, default_body_extension_class, body_extension_
 		self._variables = clone(self._unit_element._set_variables)
 	end
 
-	self._unit:set_extension_update_enabled(ids_damage, self._update_func_map ~= nil)
+	self._unit:set_extension_update_enabled(IDS_DAMAGE, self._update_func_map ~= nil)
 
 	for name, element in pairs(self._unit_element:get_proximity_element_map()) do
 		local data = {}
@@ -167,7 +167,7 @@ function CoreUnitDamage:update(unit, t, dt)
 		end
 	else
 		Application:error("Some scripter tried to enable the damage extension on unit \"" .. tostring(unit:name()) .. "\" or an artist have specified more than one damage-extension in the unit xml. This would have resulted in a crash, so fix it!")
-		self._unit:set_extension_update_enabled(ids_damage, false)
+		self._unit:set_extension_update_enabled(IDS_DAMAGE, false)
 	end
 end
 
@@ -179,7 +179,7 @@ function CoreUnitDamage:set_update_callback(func_name, data)
 			if not self._update_func_count then
 				self._update_func_count = 0
 
-				self._unit:set_extension_update_enabled(ids_damage, true)
+				self._unit:set_extension_update_enabled(IDS_DAMAGE, true)
 			end
 
 			self._update_func_count = self._update_func_count + 1
@@ -191,7 +191,7 @@ function CoreUnitDamage:set_update_callback(func_name, data)
 		self._update_func_map[func_name] = nil
 
 		if self._update_func_count == 0 then
-			self._unit:set_extension_update_enabled(ids_damage, false)
+			self._unit:set_extension_update_enabled(IDS_DAMAGE, false)
 
 			self._update_func_map = nil
 			self._update_func_count = nil
@@ -1687,9 +1687,9 @@ function CoreUnitDamage:has_sequence(sequence_name)
 	return self._unit_element and self._unit_element:has_sequence(sequence_name)
 end
 
-function CoreUnitDamage:has_then_run_sequence_simple(sequence_name)
+function CoreUnitDamage:has_then_run_sequence_simple(sequence_name, params)
 	if self:has_sequence(sequence_name) then
-		self:run_sequence_simple(sequence_name)
+		self:run_sequence_simple(sequence_name, params)
 	end
 end
 

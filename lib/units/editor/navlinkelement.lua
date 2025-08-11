@@ -96,8 +96,6 @@ function NavLinkUnitElement:post_init(...)
 end
 
 function NavLinkUnitElement:test_element()
-	Application:trace("NavLinkUnitElement:test_element: ")
-
 	if not managers.navigation:is_data_ready() then
 		EWS:message_box(Global.frame_panel, "Can't test spawn unit without ready navigation data (AI-graph)", "Spawn", "OK,ICON_ERROR", Vector3(-1, -1, 0))
 
@@ -191,15 +189,30 @@ function NavLinkUnitElement:update_selected(t, dt, selected_unit, all_units)
 	local brush = Draw:brush()
 
 	brush:set_color(Color(0.15, 1, 1, 1))
-
-	local pen = Draw:pen(Color(0.15, 0.5, 0.5, 0.5))
-
 	brush:sphere(self._hed.search_position, 0, 4)
-	pen:sphere(self._hed.search_position, 0)
 	brush:sphere(self._hed.search_position, 10, 4)
 	Application:draw_line(self._hed.search_position, self._unit:position(), 0, 1, 0)
 	self:_draw_follow_up(selected_unit, all_units)
 	self:_highlight_if_outside_the_nav_field(t)
+end
+
+function NavLinkUnitElement:_draw_follow_up(selected_unit, all_units)
+	if self._hed.followup_elements then
+		for _, element_id in ipairs(self._hed.followup_elements) do
+			local unit = all_units[element_id]
+			local draw = not selected_unit or unit == selected_unit or self._unit == selected_unit
+
+			if draw then
+				self:_draw_link({
+					b = 0,
+					from_unit = self._unit,
+					g = 0.75,
+					r = 0,
+					to_unit = unit,
+				})
+			end
+		end
+	end
 end
 
 function NavLinkUnitElement:_highlight_if_outside_the_nav_field(t)
@@ -246,25 +259,6 @@ function NavLinkUnitElement:update_unselected(t, dt, selected_unit, all_units)
 
 		if not next(followup_elements) then
 			self._hed.followup_elements = nil
-		end
-	end
-end
-
-function NavLinkUnitElement:_draw_follow_up(selected_unit, all_units)
-	if self._hed.followup_elements then
-		for _, element_id in ipairs(self._hed.followup_elements) do
-			local unit = all_units[element_id]
-			local draw = not selected_unit or unit == selected_unit or self._unit == selected_unit
-
-			if draw then
-				self:_draw_link({
-					b = 0,
-					from_unit = self._unit,
-					g = 0.75,
-					r = 0,
-					to_unit = unit,
-				})
-			end
 		end
 	end
 end

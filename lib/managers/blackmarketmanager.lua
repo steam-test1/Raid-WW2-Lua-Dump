@@ -88,14 +88,8 @@ function BlackMarketManager:_setup_grenades()
 				amount = 0,
 				equipped = false,
 				level = 0,
-				skill_based = false,
 				unlocked = true,
 			}
-
-			local is_default, weapon_level = managers.upgrades:get_value(grenade_id, self._defaults.grenade)
-
-			grenades[grenade_id].level = weapon_level
-			grenades[grenade_id].skill_based = not is_default and weapon_level == 0 and not tweak_data.projectiles[grenade_id].dlc
 		end
 	end
 
@@ -115,7 +109,6 @@ function BlackMarketManager:_setup_melee_weapons()
 			equipped = false,
 			level = 0,
 			owned = true,
-			skill_based = false,
 			unlocked = true,
 		}
 	end
@@ -123,7 +116,6 @@ function BlackMarketManager:_setup_melee_weapons()
 	melee_weapons[self._defaults.melee_weapon].unlocked = true
 	melee_weapons[self._defaults.melee_weapon].equipped = true
 	melee_weapons[self._defaults.melee_weapon].owned = true
-	melee_weapons[self._defaults.melee_weapon].level = 0
 end
 
 function BlackMarketManager:_setup_characters()
@@ -180,11 +172,6 @@ function BlackMarketManager:_setup_weapons()
 				selection_index = selection_index,
 				unlocked = true,
 			}
-
-			local is_default, weapon_level, got_parent = managers.upgrades:get_value(weapon)
-
-			weapons[weapon].level = weapon_level
-			weapons[weapon].skill_based = got_parent or not is_default and weapon_level == 0 and not tweak_data.weapon[weapon].global_value
 		end
 	end
 end
@@ -198,18 +185,6 @@ function BlackMarketManager:weapon_unlocked_by_crafted(category, slot)
 	local weapon_id = crafted.weapon_id
 
 	return self:weapon_unlocked(weapon_id)
-end
-
-function BlackMarketManager:weapon_level(weapon_id)
-	for level, level_data in pairs(tweak_data.upgrades.level_tree) do
-		for _, upgrade in ipairs(level_data.upgrades) do
-			if upgrade == weapon_id then
-				return level
-			end
-		end
-	end
-
-	return 0
 end
 
 function BlackMarketManager:equipped_item(category)
@@ -1707,7 +1682,6 @@ function BlackMarketManager:load(data)
 	end
 
 	for grenade, data in pairs(self._global.grenades) do
-		self._global.grenades[grenade].skill_based = false
 		self._global.grenades[grenade].equipped = grenade == equipped_grenade_id
 	end
 
@@ -1718,10 +1692,6 @@ function BlackMarketManager:load(data)
 	self._global.melee_weapons = default_global.melee_weapons or {}
 
 	for melee_weapon, data in pairs(self._global.melee_weapons) do
-		local is_default, melee_weapon_level = managers.upgrades:get_value(melee_weapon)
-
-		self._global.melee_weapons[melee_weapon].level = melee_weapon_level
-		self._global.melee_weapons[melee_weapon].skill_based = not is_default and melee_weapon_level == 0 and not tweak_data.blackmarket.melee_weapons[melee_weapon].dlc and not tweak_data.blackmarket.melee_weapons[melee_weapon].free
 		self._global.melee_weapons[melee_weapon].equipped = melee_weapon == equipped_melee_id
 	end
 
@@ -1741,13 +1711,6 @@ function BlackMarketManager:load(data)
 				unlocked = false,
 			}
 		end
-	end
-
-	for weapon, data in pairs(self._global.weapons) do
-		local is_default, weapon_level, got_parent = managers.upgrades:get_value(weapon)
-
-		self._global.weapons[weapon].level = weapon_level
-		self._global.weapons[weapon].skill_based = got_parent or not is_default and weapon_level == 0 and not tweak_data.weapon[weapon].global_value
 	end
 
 	self._global._preferred_character = self._global._preferred_character or self._defaults.preferred_character

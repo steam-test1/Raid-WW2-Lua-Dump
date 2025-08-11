@@ -3,10 +3,6 @@ core:import("CoreMissionScriptElement")
 
 ElementPlaySound = ElementPlaySound or class(CoreMissionScriptElement.MissionScriptElement)
 
-function ElementPlaySound:init(...)
-	ElementPlaySound.super.init(self, ...)
-end
-
 function ElementPlaySound:client_on_executed(...)
 	self:on_executed(...)
 end

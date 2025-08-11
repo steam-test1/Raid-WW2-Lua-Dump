@@ -5003,6 +5003,58 @@ function WeaponFactoryTweakData:_init_weapon_skins()
 	self.parts.wpn_fps_pis_georg_stock_wooden_skin2 = deep_clone(self.parts.wpn_fps_pis_georg_stock_wooden)
 	self.parts.wpn_fps_pis_georg_stock_wooden_skin2.materials_fps = materials_fps
 	self.parts.wpn_fps_pis_georg_stock_wooden_skin2.materials_tps = materials_tps
+
+	local materials_fps_bigben = {
+		mat_body = {
+			bump_normal_texture = "units/upd_skins/skins/georg_bigben/body_nm",
+			diffuse_texture = "units/upd_skins/skins/georg_bigben/body_df",
+			material_texture = "units/upd_skins/skins/georg_bigben/body_gsm",
+			reflection_texture = "environments/vanilla/cubemaps/cubemap_gold",
+		},
+		mat_body_addons = {
+			bump_normal_texture = "units/upd_skins/skins/georg_bigben/body_addons_nm",
+			diffuse_texture = "units/upd_skins/skins/georg_bigben/body_addons_df",
+			material_texture = "units/upd_skins/skins/georg_bigben/body_addons_gsm",
+			reflection_texture = "environments/vanilla/cubemaps/cubemap_gold",
+		},
+	}
+	local materials_tps_bigben = materials_fps_bigben
+
+	table.insert(self.wpn_fps_pis_georg.uses_parts, "wpn_fps_pis_georg_body_default_bigben")
+
+	self.parts.wpn_fps_pis_georg_body_default_bigben = deep_clone(self.parts.wpn_fps_pis_georg_body_default)
+	self.parts.wpn_fps_pis_georg_body_default_bigben.materials_fps = materials_fps_bigben
+	self.parts.wpn_fps_pis_georg_body_default_bigben.materials_tps = materials_tps_bigben
+
+	table.insert(self.wpn_fps_pis_georg.uses_parts, "wpn_fps_pis_georg_slide_default_bigben")
+
+	self.parts.wpn_fps_pis_georg_slide_default_bigben = deep_clone(self.parts.wpn_fps_pis_georg_slide_default)
+	self.parts.wpn_fps_pis_georg_slide_default_bigben.materials_fps = materials_fps_bigben
+	self.parts.wpn_fps_pis_georg_slide_default_bigben.materials_tps = materials_tps_bigben
+
+	table.insert(self.wpn_fps_pis_georg.uses_parts, "wpn_fps_pis_georg_barrel_short_bigben")
+
+	self.parts.wpn_fps_pis_georg_barrel_short_bigben = deep_clone(self.parts.wpn_fps_pis_georg_barrel_short)
+	self.parts.wpn_fps_pis_georg_barrel_short_bigben.materials_fps = materials_fps_bigben
+	self.parts.wpn_fps_pis_georg_barrel_short_bigben.materials_tps = materials_tps_bigben
+
+	table.insert(self.wpn_fps_pis_georg.uses_parts, "wpn_fps_pis_georg_barrel_long_bigben")
+
+	self.parts.wpn_fps_pis_georg_barrel_long_bigben = deep_clone(self.parts.wpn_fps_pis_georg_barrel_long)
+	self.parts.wpn_fps_pis_georg_barrel_long_bigben.materials_fps = materials_fps_bigben
+	self.parts.wpn_fps_pis_georg_barrel_long_bigben.materials_tps = materials_tps_bigben
+
+	table.insert(self.wpn_fps_pis_georg.uses_parts, "wpn_fps_pis_georg_mag_default_bigben")
+
+	self.parts.wpn_fps_pis_georg_mag_default_bigben = deep_clone(self.parts.wpn_fps_pis_georg_mag_default)
+	self.parts.wpn_fps_pis_georg_mag_default_bigben.materials_fps = materials_fps_bigben
+	self.parts.wpn_fps_pis_georg_mag_default_bigben.materials_tps = materials_tps_bigben
+
+	table.insert(self.wpn_fps_pis_georg.uses_parts, "wpn_fps_pis_georg_stock_wooden_bigben")
+
+	self.parts.wpn_fps_pis_georg_stock_wooden_bigben = deep_clone(self.parts.wpn_fps_pis_georg_stock_wooden)
+	self.parts.wpn_fps_pis_georg_stock_wooden_bigben.materials_fps = materials_fps_bigben
+	self.parts.wpn_fps_pis_georg_stock_wooden_bigben.materials_tps = materials_tps_bigben
 end
 
 function WeaponFactoryTweakData:is_part_internal(part_id)

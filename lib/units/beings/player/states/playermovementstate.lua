@@ -2,14 +2,15 @@ PlayerMovementState = PlayerMovementState or class()
 
 function PlayerMovementState:init(unit)
 	self._unit = unit
+	self._enabled = false
 end
 
 function PlayerMovementState:enter(state_data, enter_data)
-	return
+	self._enabled = true
 end
 
 function PlayerMovementState:exit(state_data)
-	return
+	self._enabled = false
 end
 
 function PlayerMovementState:update(t, dt)

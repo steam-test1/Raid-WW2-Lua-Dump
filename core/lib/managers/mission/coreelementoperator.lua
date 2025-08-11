@@ -3,10 +3,6 @@ core:import("CoreMissionScriptElement")
 
 ElementOperator = ElementOperator or class(CoreMissionScriptElement.MissionScriptElement)
 
-function ElementOperator:init(...)
-	ElementOperator.super.init(self, ...)
-end
-
 function ElementOperator:client_on_executed(...)
 	self:on_executed(...)
 end

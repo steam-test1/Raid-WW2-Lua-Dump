@@ -1045,10 +1045,6 @@ function SkillTreeManager:_update_skill_profile_set()
 	end
 end
 
-function SkillTreeManager:_verify_loaded_data(points_aquired_during_load)
-	return
-end
-
 function SkillTreeManager:digest_value(value, digest, default)
 	if type(value) == "boolean" then
 		return default or 0

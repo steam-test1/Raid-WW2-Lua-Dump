@@ -121,7 +121,7 @@ function ElementApplyJobValue:on_executed(instigator)
 		local element = self:get_mission_element(id)
 
 		if element then
-			element:apply_job_value(value)
+			element:apply_custom_value(value)
 		end
 	end
 

@@ -746,10 +746,6 @@ function CivilianLogicFlee.on_new_objective(data, old_objective)
 	CivilianLogicIdle.on_new_objective(data, old_objective)
 end
 
-function CivilianLogicFlee.on_rescue_allowed_state(data, state)
-	return
-end
-
 function CivilianLogicFlee._get_all_paths(data)
 	return {
 		flee_path = data.internal_data.flee_path,

@@ -9,6 +9,36 @@ CoreShapeUnitElement.LINK_VALUES = {
 		type = "shape",
 	},
 }
+CoreShapeUnitElement._SHAPE_SETTINGS = {
+	box = {
+		depth = true,
+		grow = false,
+		height = true,
+		radius = false,
+		width = true,
+	},
+	cylinder = {
+		depth = false,
+		grow = false,
+		height = true,
+		radius = true,
+		width = false,
+	},
+	sphere = {
+		depth = false,
+		grow = false,
+		height = false,
+		radius = true,
+		width = false,
+	},
+	unit = {
+		depth = false,
+		grow = true,
+		height = false,
+		radius = false,
+		width = false,
+	},
+}
 ShapeUnitElement = ShapeUnitElement or class(CoreShapeUnitElement)
 
 function ShapeUnitElement:init(...)
@@ -46,52 +76,26 @@ function CoreShapeUnitElement:update_selected(t, dt, selected_unit, all_units)
 	end
 end
 
-function CoreShapeUnitElement:get_shape()
-	if not self._shape then
-		self:_create_shapes()
-	end
-
-	return self._hed.shape_type == "box" and self._shape or self._hed.shape_type == "cylinder" and self._cylinder_shape
-end
-
-function CoreShapeUnitElement:set_shape_property(params)
-	self._shape:set_property(params.property, self._hed[params.value])
-	self._cylinder_shape:set_property(params.property, self._hed[params.value])
-end
+CoreShapeUnitElement.get_shape = CoreAreaTriggerUnitElement.get_shape
+CoreShapeUnitElement.set_shape_property = CoreAreaTriggerUnitElement.set_shape_property
 
 function CoreShapeUnitElement:_set_shape_type()
-	local is_box = self._hed.shape_type == "box"
-	local is_cylinder = self._hed.shape_type == "cylinder"
-	local is_unit = self._hed.shape_type == "unit"
+	local uses_external = self._hed.use_shape_element_ids
+	local shape_type_settings = self._SHAPE_SETTINGS[self._hed.shape_type]
 
-	self._depth_params.number_ctrlr:set_enabled(is_box)
-	self._width_params.number_ctrlr:set_enabled(is_box)
-	self._height_params.number_ctrlr:set_enabled(is_box or is_cylinder)
-	self._radius_params.number_ctrlr:set_enabled(is_cylinder)
-	self._grow_params.number_ctrlr:set_enabled(is_unit)
-	self._sliders.depth:set_enabled(is_box)
-	self._sliders.width:set_enabled(is_box)
-	self._sliders.height:set_enabled(is_box or is_cylinder)
-	self._sliders.radius:set_enabled(is_cylinder)
-	self._sliders.grow:set_enabled(is_unit)
+	self._depth_params.number_ctrlr:set_enabled(shape_type_settings.depth)
+	self._width_params.number_ctrlr:set_enabled(shape_type_settings.width)
+	self._height_params.number_ctrlr:set_enabled(shape_type_settings.height)
+	self._radius_params.number_ctrlr:set_enabled(shape_type_settings.radius)
+	self._grow_params.number_ctrlr:set_enabled(shape_type_settings.grow)
+	self._sliders.depth:set_enabled(shape_type_settings.depth)
+	self._sliders.width:set_enabled(shape_type_settings.width)
+	self._sliders.height:set_enabled(shape_type_settings.height)
+	self._sliders.radius:set_enabled(shape_type_settings.radius)
+	self._sliders.grow:set_enabled(shape_type_settings.grow)
 end
 
-function CoreShapeUnitElement:_create_shapes()
-	self._shape = CoreShapeManager.ShapeBoxMiddle:new({
-		depth = self._hed.depth,
-		height = self._hed.height,
-		width = self._hed.width,
-	})
-
-	self._shape:set_unit(self._unit)
-
-	self._cylinder_shape = CoreShapeManager.ShapeCylinderMiddle:new({
-		height = self._hed.height,
-		radius = self._hed.radius,
-	})
-
-	self._cylinder_shape:set_unit(self._unit)
-end
+CoreShapeUnitElement._create_shapes = CoreAreaTriggerUnitElement._create_shapes
 
 function CoreShapeUnitElement:set_element_data(params, ...)
 	CoreShapeUnitElement.super.set_element_data(self, params, ...)
@@ -107,13 +111,9 @@ function CoreShapeUnitElement:_build_panel(panel, panel_sizer)
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
 
-	self:_build_value_combobox(panel, panel_sizer, "shape_type", {
-		"box",
-		"cylinder",
-		"unit",
-	}, "Select shape for area")
+	self:_build_value_combobox(panel, panel_sizer, "shape_type", table.map_keys(self._SHAPE_SETTINGS), "Select shape for area")
 
-	if not self._shape then
+	if not self._created_shapes then
 		self:_create_shapes()
 	end
 
@@ -202,7 +202,7 @@ function CoreShapeUnitElement:_build_panel(panel, panel_sizer)
 	self:scale_slider(panel, panel_sizer, depth_params, "depth", "Depth scale:")
 	self:scale_slider(panel, panel_sizer, height_params, "height", "Height scale:")
 	self:scale_slider(panel, panel_sizer, radius_params, "radius", "Radius scale:")
-	self:scale_slider(panel, panel_sizer, grow_params, "grow", "Grow OOBB:")
+	self:scale_slider(panel, panel_sizer, grow_params, "grow", "Grow scale:")
 	self:_set_shape_type()
 end
 
@@ -240,19 +240,8 @@ function CoreShapeUnitElement:scale_slider(panel, sizer, number_ctrlr_params, va
 	self._sliders[value] = slider
 end
 
-function CoreShapeUnitElement:set_size(params)
-	local value = self._hed[params.value] * params.ctrlr:get_value() / 100
-
-	self._shape:set_property(params.value, value)
-	self._cylinder_shape:set_property(params.value, value)
-	CoreEWS.change_entered_number(params.number_ctrlr_params, value)
-end
-
-function CoreShapeUnitElement:size_release(params)
-	self._hed[params.value] = params.number_ctrlr_params.value
-
-	params.ctrlr:set_value(100)
-end
+CoreShapeUnitElement.set_size = CoreAreaTriggerUnitElement.set_size
+CoreShapeUnitElement.size_release = CoreAreaTriggerUnitElement.size_release
 
 function CoreShapeUnitElement:draw_links(t, dt, selected_unit, all_units)
 	MissionElement.draw_links(self, t, dt, selected_unit, all_units)

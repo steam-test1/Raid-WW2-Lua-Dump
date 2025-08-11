@@ -314,7 +314,7 @@ function PlayerTased:call_teammate(line, t, no_gesture, skip_alert)
 			queue_name = "s07x_sin"
 
 			if managers.player:has_category_upgrade("player", "special_enemy_highlight") then
-				prime_target.unit:contour():add(managers.player:has_category_upgrade("player", "marked_enemy_extra_damage") and "mark_enemy_damage_bonus" or "mark_enemy", true, managers.player:upgrade_value("player", "mark_enemy_time_multiplier", 1))
+				prime_target.unit:contour():add("mark_enemy", true, managers.player:upgrade_value("player", "mark_enemy_time_multiplier", 1))
 			end
 		end
 	end

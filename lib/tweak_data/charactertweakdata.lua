@@ -72,51 +72,51 @@ end
 function CharacterTweakData:_init_npc_loadouts(tweak_data)
 	self.npc_loadouts = {}
 	self.npc_loadouts.ger_handgun = {
-		[""] = nil,
+		german_grunt_mid_shotgun = nil,
 		secondary = Idstring("units/vanilla/weapons/wpn_npc_ger_luger/wpn_npc_ger_luger"),
 	}
 	self.npc_loadouts.ger_rifle = {
-		[""] = nil,
-		german_grunt_heavy_kar98 = nil,
+		german_grunt_mid_shotgun = nil,
+		normal = nil,
 		primary = Idstring("units/vanilla/weapons/wpn_npc_ger_k98/wpn_npc_ger_k98"),
 		secondary = Idstring("units/vanilla/weapons/wpn_npc_ger_luger/wpn_npc_ger_luger"),
 	}
 	self.npc_loadouts.ger_assault_rifle = {
-		[""] = nil,
-		german_grunt_heavy_kar98 = nil,
+		german_grunt_mid_shotgun = nil,
+		normal = nil,
 		primary = Idstring("units/vanilla/weapons/wpn_npc_ger_stg44/wpn_npc_ger_stg44"),
 		secondary = Idstring("units/vanilla/weapons/wpn_npc_ger_luger/wpn_npc_ger_luger"),
 	}
 	self.npc_loadouts.ger_smg = {
-		[""] = nil,
-		german_grunt_heavy_kar98 = nil,
+		german_grunt_mid_shotgun = nil,
+		normal = nil,
 		primary = Idstring("units/vanilla/weapons/wpn_npc_ger_mp38/wpn_npc_ger_mp38"),
 		secondary = Idstring("units/vanilla/weapons/wpn_npc_ger_luger/wpn_npc_ger_luger"),
 	}
 	self.npc_loadouts.ger_shotgun = {
-		[""] = nil,
-		german_grunt_heavy_kar98 = nil,
+		german_grunt_mid_shotgun = nil,
+		normal = nil,
 		primary = Idstring("units/vanilla/weapons/wpn_npc_ger_geco/wpn_npc_ger_geco"),
 		secondary = Idstring("units/vanilla/weapons/wpn_npc_ger_luger/wpn_npc_ger_luger"),
 	}
 	self.npc_loadouts.unarmed = {
-		[""] = nil,
-		german_grunt_heavy_kar98 = nil,
+		german_grunt_mid_shotgun = nil,
+		normal = nil,
 	}
 	self.npc_loadouts.special_commander = {
-		[""] = nil,
+		german_grunt_mid_shotgun = nil,
 		secondary = Idstring("units/vanilla/weapons/wpn_npc_ger_luger/wpn_npc_ger_luger_fancy"),
 	}
 	self.npc_loadouts.special_flamethrower = {
-		[""] = nil,
+		german_grunt_mid_shotgun = nil,
 		primary = Idstring("units/vanilla/weapons/wpn_npc_spc_m42_flammenwerfer/wpn_npc_spc_m42_flammenwerfer"),
 	}
 	self.npc_loadouts.special_sniper = {
-		[""] = nil,
+		german_grunt_mid_shotgun = nil,
 		primary = Idstring("units/vanilla/weapons/wpn_npc_ger_k98/wpn_npc_ger_k98_sniper"),
 	}
 	self.npc_loadouts.special_spotter = {
-		[""] = nil,
+		german_grunt_mid_shotgun = nil,
 		primary = Idstring("units/vanilla/weapons/wpn_npc_binocular/wpn_npc_binocular"),
 	}
 end
@@ -1763,7 +1763,6 @@ function CharacterTweakData:_presets(tweak_data)
 	presets.base.submission_intimidate = 15
 	presets.base.speech_prefix = "po"
 	presets.base.speech_prefix_count = 1
-	presets.base.use_radio = nil
 	presets.base.dodge = nil
 	presets.base.challenges = {
 		type = "law",

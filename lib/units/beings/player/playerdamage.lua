@@ -1087,6 +1087,18 @@ function PlayerDamage:_check_bleed_out(ignore_upgrades, ignore_movement_state)
 				})
 			end
 
+			local carry_data = managers.player:get_my_carry_data()
+
+			if carry_data then
+				for i, carry_item in ipairs(carry_data) do
+					local carry_tweak = tweak_data.carry[carry_item.carry_id]
+
+					if carry_tweak.is_corpse then
+						managers.player:drop_carry(carry_item.carry_id)
+					end
+				end
+			end
+
 			self._bleed_out = true
 
 			managers.player:set_player_state("bleed_out")

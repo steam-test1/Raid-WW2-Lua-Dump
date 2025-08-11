@@ -1276,14 +1276,6 @@ function EnemyManager:is_commander_active()
 	return self._commander_active > 0
 end
 
-function EnemyManager:is_spawn_group_allowed(group_type)
-	if self:is_commander_active() then
-		return true
-	end
-
-	return not tweak_data.group_ai.commander_backup_groups[group_type]
-end
-
 function EnemyManager:register_commander(add_diff)
 	self._commander_active = self._commander_active + 1
 
@@ -1299,6 +1291,8 @@ function EnemyManager:register_commander(add_diff)
 			managers.groupai:state():set_difficulty(new_diff)
 		end
 
+		managers.groupai:state():activate_spawn_group_override("commander")
+
 		local count = managers.statistics._global.killed.german_commander.count + managers.statistics._global.killed.german_og_commander.count
 
 		if count < 5 then
@@ -1306,7 +1300,7 @@ function EnemyManager:register_commander(add_diff)
 				description = managers.localization:text("hint_commander_arrived_desc"),
 				duration = 5,
 				id = "commander_arrived",
-				title = utf8.to_upper(managers.localization:text("hint_commander_arrived")),
+				title = managers.localization:to_upper_text("hint_commander_arrived"),
 			})
 		end
 	elseif self:is_commander_active() then
@@ -1317,14 +1311,19 @@ end
 function EnemyManager:unregister_commander()
 	self._commander_active = math.max(self._commander_active - 1, 0)
 
-	if not self:is_commander_active() and self._difficulty_difference > 0 then
-		local old_diff = managers.groupai:state():get_difficulty()
-		local new_diff = old_diff - self._difficulty_difference
+	if not self:is_commander_active() then
+		if self._difficulty_difference > 0 then
+			local old_diff = managers.groupai:state():get_difficulty()
+			local new_diff = old_diff - self._difficulty_difference
 
-		new_diff = math.max(new_diff, 0)
-		self._difficulty_difference = 0
+			new_diff = math.max(new_diff, 0)
+			self._difficulty_difference = 0
 
-		Application:debug("[EnemyManager:unregister_commander()] setting new intensity value (old,new)", old_diff, new_diff)
-		managers.groupai:state():set_difficulty(new_diff)
+			Application:debug("[EnemyManager:unregister_commander()] setting new intensity value (old,new)", old_diff, new_diff)
+			managers.groupai:state():set_difficulty(new_diff)
+		end
+
+		managers.groupai:state():deactivate_spawn_group_override()
+		managers.groupai:state():add_special_cooldown("commander")
 	end
 end

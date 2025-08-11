@@ -1513,11 +1513,8 @@ end
 
 function CopMovement:anim_clbk_police_called(unit)
 	if Network:is_server() then
-		local group_state = managers.groupai:state()
-		local cop_type = tostring(group_state.blame_triggers[self._ext_base._tweak_table])
-
 		managers.groupai:state():on_criminal_suspicion_progress(nil, self._unit, "called")
-		group_state:on_police_called(self:coolness_giveaway())
+		managers.groupai:state():on_police_called(self:coolness_giveaway())
 	end
 end
 

@@ -15,22 +15,23 @@ function AiLayer:init(owner)
 	self._graph_types = {
 		surface = "surface",
 	}
-	self._unit_graph_types = {}
-	self._unit_graph_types.surface = Idstring("core/units/nav_surface/nav_surface")
+	self._unit_graph_types = {
+		surface = Idstring("core/units/nav_surface/nav_surface"),
+	}
 	self._nav_surface_unit = Idstring("core/units/nav_surface/nav_surface")
 
 	self:_init_ai_settings()
 	self:_init_mop_settings()
 
-	self._default_values = {}
-	self._default_values.all_visible = true
+	self._default_values = {
+		all_visible = true,
+	}
 end
 
-function AiLayer:load(world_holder, offset)
-	Application:debug("[AiLayer:load]")
-	AiLayer.super.load(self, world_holder, offset)
+function AiLayer:load(world_holder)
+	AiLayer.super.load(self, world_holder)
 
-	local ai_settings = world_holder:create_world("world", "ai_settings", offset)
+	local ai_settings = world_holder:create_world("world", "ai_settings")
 
 	for name, value in pairs(ai_settings or {}) do
 		self._ai_settings[name] = value
@@ -762,6 +763,22 @@ function AiLayer:_clear_selected_nav_segment()
 	for _, unit in ipairs(units) do
 		print("deleting", unit:unit_data().unit_id)
 		managers.navigation:delete_nav_segment(unit:unit_data().unit_id)
+	end
+end
+
+function AiLayer:clone_edited_values(unit, source)
+	AiLayer.super.clone_edited_values(self, unit, source)
+
+	if unit:name() == self._nav_surface_unit then
+		local source_data = source:ai_editor_data()
+		local target_data = unit:ai_editor_data()
+
+		target_data.barrage_allowed = source_data.barrage_allowed
+		target_data.detection_mul = source_data.detection_mul
+		target_data.location_id = source_data.location_id
+		target_data.suspicion_mul = source_data.suspicion_mul
+		target_data.visibilty_exlude_filter = CoreTable.clone(source_data.visibilty_exlude_filter)
+		target_data.visibilty_include_filter = CoreTable.clone(source_data.visibilty_include_filter)
 	end
 end
 

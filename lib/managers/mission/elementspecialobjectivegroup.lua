@@ -11,11 +11,7 @@ function ElementSpecialObjectiveGroup:init(...)
 		local access_filter_version = self._values.access_flag_version or 1
 
 		if access_filter_version ~= managers.navigation.ACCESS_FLAGS_VERSION then
-			print("[ElementSpecialObjectiveGroup:init] converting access flag", access_filter_version, self._values.SO_access)
-
 			self._values.SO_access = managers.navigation:upgrade_access_filter(tonumber(self._values.SO_access), access_filter_version)
-
-			print("[ElementSpecialObjectiveGroup:init] converted to", self._values.SO_access)
 		else
 			self._values.SO_access = tonumber(self._values.SO_access)
 		end
@@ -177,9 +173,7 @@ function ElementSpecialObjectiveGroup:get_random_SO(receiver_unit)
 		return
 	end
 
-	local objective = random_SO_element:get_objective(receiver_unit)
-
-	return objective
+	return random_SO_element:get_objective(receiver_unit)
 end
 
 function ElementSpecialObjectiveGroup:get_SO_spawn_group_types()

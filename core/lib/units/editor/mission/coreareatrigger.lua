@@ -21,6 +21,26 @@ CoreAreaTriggerUnitElement.LINK_VALUES = {
 		type = "rule",
 	},
 }
+CoreAreaTriggerUnitElement._SHAPE_SETTINGS = {
+	box = {
+		depth = true,
+		height = true,
+		radius = false,
+		width = true,
+	},
+	cylinder = {
+		depth = false,
+		height = true,
+		radius = true,
+		width = false,
+	},
+	sphere = {
+		depth = false,
+		height = false,
+		radius = true,
+		width = false,
+	},
+}
 AreaTriggerUnitElement = AreaTriggerUnitElement or class(CoreAreaTriggerUnitElement)
 
 function AreaTriggerUnitElement:init(...)
@@ -283,16 +303,17 @@ function CoreAreaTriggerUnitElement:update_selected(t, dt, selected_unit, all_un
 end
 
 function CoreAreaTriggerUnitElement:get_shape()
-	if not self._shape then
+	if not self._created_shapes then
 		self:_create_shapes()
 	end
 
-	return self._hed.shape_type == "box" and self._shape or self._hed.shape_type == "cylinder" and self._cylinder_shape
+	return self._hed.shape_type == "box" and self._shape_box_middle or self._hed.shape_type == "cylinder" and self._shape_cylinder or self._hed.shape_type == "sphere" and self._shape_sphere
 end
 
 function CoreAreaTriggerUnitElement:set_shape_property(params)
-	self._shape:set_property(params.property, self._hed[params.value])
-	self._cylinder_shape:set_property(params.property, self._hed[params.value])
+	self._shape_box_middle:set_property(params.property, self._hed[params.value])
+	self._shape_cylinder:set_property(params.property, self._hed[params.value])
+	self._shape_sphere:set_property(params.property, self._hed[params.value])
 end
 
 function CoreAreaTriggerUnitElement:add_triggers(vc)
@@ -300,45 +321,50 @@ function CoreAreaTriggerUnitElement:add_triggers(vc)
 end
 
 function CoreAreaTriggerUnitElement:_set_shape_type()
-	local is_box = self._hed.shape_type == "box"
-	local is_cylinder = self._hed.shape_type == "cylinder"
 	local uses_external = self._hed.use_shape_element_ids
+	local shape_type_settings = self._SHAPE_SETTINGS[self._hed.shape_type]
 
-	is_box = not uses_external and is_box
-	is_cylinder = not uses_external and is_cylinder
-
-	self._depth_params.number_ctrlr:set_enabled(is_box)
-	self._width_params.number_ctrlr:set_enabled(is_box)
-	self._height_params.number_ctrlr:set_enabled(is_box or is_cylinder)
-	self._radius_params.number_ctrlr:set_enabled(is_cylinder)
 	self._shape_type_params.ctrlr:set_enabled(not uses_external)
 	self._use_disabled_shapes:set_enabled(uses_external)
-	self._sliders.depth:set_enabled(is_box)
-	self._sliders.width:set_enabled(is_box)
-	self._sliders.height:set_enabled(is_box or is_cylinder)
-	self._sliders.radius:set_enabled(is_cylinder)
+	self._depth_params.number_ctrlr:set_enabled(shape_type_settings.depth)
+	self._width_params.number_ctrlr:set_enabled(shape_type_settings.width)
+	self._height_params.number_ctrlr:set_enabled(shape_type_settings.height)
+	self._radius_params.number_ctrlr:set_enabled(shape_type_settings.radius)
+	self._sliders.depth:set_enabled(shape_type_settings.depth)
+	self._sliders.width:set_enabled(shape_type_settings.width)
+	self._sliders.height:set_enabled(shape_type_settings.height)
+	self._sliders.radius:set_enabled(shape_type_settings.radius)
 end
 
 function CoreAreaTriggerUnitElement:_create_shapes()
-	self._shape = CoreShapeManager.ShapeBoxMiddle:new({
+	self._created_shapes = true
+	self._shape_box_middle = CoreShapeManager.ShapeBoxMiddle:new({
 		depth = self._hed.depth,
 		height = self._hed.height,
 		width = self._hed.width,
 	})
 
-	self._shape:set_unit(self._unit)
+	self._shape_box_middle:set_unit(self._unit)
 
-	self._cylinder_shape = CoreShapeManager.ShapeCylinderMiddle:new({
+	self._shape_cylinder = CoreShapeManager.ShapeCylinderMiddle:new({
 		height = self._hed.height,
 		radius = self._hed.radius,
 	})
 
-	self._cylinder_shape:set_unit(self._unit)
+	self._shape_cylinder:set_unit(self._unit)
+
+	self._shape_sphere = CoreShapeManager.ShapeSphere:new({
+		radius = self._hed.radius,
+	})
+
+	self._shape_sphere:set_unit(self._unit)
 end
 
 function CoreAreaTriggerUnitElement:_recreate_shapes()
-	self._shape = nil
-	self._cylinder_shape = nil
+	self._shape_box_middle = nil
+	self._shape_cylinder = nil
+	self._shape_sphere = nil
+	self._created_shapes = nil
 
 	self:_create_shapes()
 end
@@ -400,14 +426,11 @@ function CoreAreaTriggerUnitElement:_build_panel(panel, panel_sizer, disable_par
 
 	self:create_values_ctrlrs(panel, panel_sizer, disable_params)
 
-	local _, shape_type_params = self:_build_value_combobox(panel, panel_sizer, "shape_type", {
-		"box",
-		"cylinder",
-	}, "Select shape for area")
+	local _, shape_type_params = self:_build_value_combobox(panel, panel_sizer, "shape_type", table.map_keys(AreaTriggerUnitElement._SHAPE_SETTINGS), "Select shape for area")
 
 	self._shape_type_params = shape_type_params
 
-	if not self._shape then
+	if not self._created_shapes then
 		self:_create_shapes()
 	end
 
@@ -526,8 +549,9 @@ end
 function CoreAreaTriggerUnitElement:set_size(params)
 	local value = self._hed[params.value] * params.ctrlr:get_value() / 100
 
-	self._shape:set_property(params.value, value)
-	self._cylinder_shape:set_property(params.value, value)
+	self._shape_box_middle:set_property(params.value, value)
+	self._shape_cylinder:set_property(params.value, value)
+	self._shape_sphere:set_property(params.value, value)
 	CoreEWS.change_entered_number(params.number_ctrlr_params, value)
 end
 

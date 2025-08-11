@@ -14,7 +14,7 @@ function ElementGlobalStateFilter:on_executed(instigator)
 	end
 
 	if self._values.flag and self._values.state then
-		local flag_state = managers.global_state:flag(self._values.flag)
+		local flag_state = managers.global_state:flag_value(self._values.flag)
 
 		if self._values.state == "value" then
 			if managers.global_state:check_flag_value(self._values.check_type, self._values.value, flag_state) then

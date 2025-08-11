@@ -128,7 +128,7 @@ function NetworkAccountPSN:_verify_filter_cards(card_list)
 
 	if card_list then
 		for _, cc_steamdata in pairs(card_list) do
-			if cc_steamdata.category == ChallengeCardsManager.INV_CAT_CHALCARD then
+			if cc_steamdata.category == ChallengeCardsManager.INV_CAT_CARD then
 				local cc_tweakdata = managers.challenge_cards:get_challenge_card_data(cc_steamdata.entry)
 
 				if cc_tweakdata then

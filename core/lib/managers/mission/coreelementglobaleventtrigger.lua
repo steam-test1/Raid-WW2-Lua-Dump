@@ -8,10 +8,6 @@ function ElementGlobalEventTrigger:client_on_executed(...)
 	return
 end
 
-function ElementGlobalEventTrigger:init(...)
-	ElementGlobalEventTrigger.super.init(self, ...)
-end
-
 function ElementGlobalEventTrigger:on_script_activated()
 	managers.mission:add_global_event_listener(self:_unique_string_id(), {
 		self._values.global_event,

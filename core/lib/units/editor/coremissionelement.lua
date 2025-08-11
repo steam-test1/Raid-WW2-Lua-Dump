@@ -159,11 +159,11 @@ function CoreMissionElement:build_default_gui(panel, sizer)
 	self:_build_value_number(panel, sizer, "execute_on_startup_priority", {
 		floats = 0,
 		min = 0,
-	}, "Specifies priority if this element is executed on startup (lower number means faster execution)")
+	}, "Startup order priority for cases with multiple startup elements. Lower is higher priority!")
 	self:_build_value_number(panel, sizer, "trigger_times", {
 		floats = 0,
 		min = 0,
-	}, "Specifies how many time this element can be executed (0 mean unlimited times)")
+	}, "How many time this element can be executed. 0 is unlimited.")
 
 	local base_delay_sizer = EWS:BoxSizer("HORIZONTAL")
 
@@ -218,8 +218,11 @@ function CoreMissionElement:build_default_gui(panel, sizer)
 	self._elements_toolbar:realize()
 	element_sizer:add(self._elements_toolbar, 0, 1, "EXPAND,LEFT")
 
-	if not self.ON_EXECUTED_ALTERNATIVES and self._create_dynamic_on_executed_alternatives then
-		self:_create_dynamic_on_executed_alternatives()
+	if self:execution_changes_instigator() then
+		local text_ctrlr = EWS:StaticText(panel, "[HOVER INFO]", "", "ALIGN_LEFT")
+
+		text_ctrlr:set_tool_tip("Instigators may change through execution of this element!")
+		element_sizer:add(text_ctrlr, 0, text_ctrlr:get_size().x, "ALIGN_LEFT,ALIGN_CENTER_VERTICAL,RIGHT")
 	end
 
 	if self.ON_EXECUTED_ALTERNATIVES then
@@ -681,7 +684,7 @@ function CoreMissionElement:draw_links_selected(t, dt, selected_unit)
 	if alive(unit) then
 		local r, g, b = 1, 1, 1
 
-		if self._iconcolor and managers.editor:layer("Mission"):use_colored_links() then
+		if self._iconcolor then
 			r = self._iconcolor_c.r
 			g = self._iconcolor_c.g
 			b = self._iconcolor_c.b
@@ -792,6 +795,10 @@ function CoreMissionElement:_remove_instigator_rule_unit_id(id)
 	table.delete(self._hed.rules_elements, id)
 
 	self._hed.rules_elements = #self._hed.rules_elements > 0 and self._hed.rules_elements or nil
+end
+
+function CoreMissionElement:execution_changes_instigator()
+	return self.EXECUTE_CHANGES_INSTIGATOR or false
 end
 
 function CoreMissionElement:clear_triggers()
@@ -926,7 +933,7 @@ end
 function CoreMissionElement:get_link_color(unit)
 	local r, g, b = 1, 1, 1
 
-	if self._iconcolor and managers.editor:layer("Mission"):use_colored_links() then
+	if self._iconcolor then
 		r = self._iconcolor_c.r
 		g = self._iconcolor_c.g
 		b = self._iconcolor_c.b
@@ -953,14 +960,19 @@ function CoreMissionElement:draw_link_on_executed(t, dt, selected_unit)
 
 			if self._distance_to_camera < 1000000 then
 				local element = self:_get_on_executed(unit:unit_data().unit_id)
-				local text = self:_get_delay_string(element)
-				local alternative = element.alternative
 
-				if alternative then
-					text = text .. " - " .. alternative .. ""
+				if not element then
+					Application:error("[CoreMissionElement:draw_link_on_executed] Bad element?", element, unit:unit_data().unit_id)
+				else
+					local text = self:_get_delay_string(element)
+					local alternative = element.alternative
+
+					if alternative then
+						text = text .. " - " .. alternative .. ""
+					end
+
+					CoreMissionElement.editor_link_brush:center_text(self._unit:position() + dir, text, managers.editor:camera_rotation():x(), -managers.editor:camera_rotation():z())
 				end
-
-				CoreMissionElement.editor_link_brush:center_text(self._unit:position() + dir, text, managers.editor:camera_rotation():x(), -managers.editor:camera_rotation():z())
 			end
 
 			local r, g, b = self:get_link_color()

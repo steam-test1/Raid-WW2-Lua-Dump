@@ -90,7 +90,6 @@ function VehicleDrivingExt:init(unit)
 	self.inertia_modifier = self.inertia_modifier or 1
 	self._old_speed = Vector3()
 
-	managers.vehicle:add_vehicle(self._unit)
 	self._unit:set_body_collision_callback(callback(self, self, "collision_callback"))
 	self:set_tweak_data(tweak_data.vehicle[self.tweak_data])
 
@@ -124,6 +123,8 @@ function VehicleDrivingExt:init(unit)
 	self._hud_waypoint_data = nil
 	self._waypoint_hud_icon = self._tweak_data.waypoint_hud_icon or "map_waypoint_pov_in"
 	self._waypoint_map_icon = self._tweak_data.waypoint_map_icon or "map_waypoint_pov_in"
+
+	managers.vehicle:add_vehicle(self._unit)
 end
 
 function VehicleDrivingExt:_setup_sound()
@@ -260,9 +261,9 @@ function VehicleDrivingExt:set_tweak_data(data)
 end
 
 function VehicleDrivingExt:set_skin(skin_name)
-	self._unit:damage():run_sequence_simple(skin_name)
-
-	self._skin_sequence = skin_name
+	if self._unit:damage():has_then_run_sequence_simple(skin_name) then
+		self._skin_sequence = skin_name
+	end
 end
 
 function VehicleDrivingExt:get_view()
@@ -520,6 +521,10 @@ function VehicleDrivingExt:block()
 	self:set_state(VehicleDrivingExt.STATE_BLOCKED)
 end
 
+function VehicleDrivingExt:remove_from_world()
+	Application:debug("[VehicleDrivingExt:remove_from_world]")
+end
+
 function VehicleDrivingExt:add_loot(carry_id, multiplier)
 	Application:debug("[VehicleDrivingExt:add_loot] START:", carry_id, multiplier)
 
@@ -557,6 +562,8 @@ function VehicleDrivingExt:add_loot(carry_id, multiplier)
 		Application:trace("[VehicleDrivingExt:add_loot] secure the loot", carry_id, multiplier, silent)
 		managers.loot:secure(carry_id, multiplier, silent)
 	end
+
+	managers.vehicle:on_add_loot(self._unit)
 end
 
 function VehicleDrivingExt:sync_loot(carry_id, multiplier)
@@ -621,6 +628,7 @@ function VehicleDrivingExt:remove_loot(carry_id, multiplier)
 			self._max_loot = carry_tweak_data.is_corpse and 1 or self._tweak_data.max_loot_bags
 
 			managers.hud:set_vehicle_loot_info(self._unit, self._loot, #self._loot, self._max_loot)
+			managers.vehicle:on_remove_loot(self._unit)
 
 			return true
 		end
@@ -839,9 +847,9 @@ function VehicleDrivingExt:_catch_loot()
 	for _, loot_point in pairs(self._loot_points) do
 		if loot_point.object then
 			local pos = loot_point.object:position()
-			local equipement = World:find_units_quick("sphere", pos, 150, 14)
+			local caught_units = World:find_units_quick("sphere", pos, 150, 14)
 
-			for _, unit in ipairs(equipement) do
+			for _, unit in ipairs(caught_units) do
 				local carry_data = unit:carry_data()
 
 				if carry_data and carry_data:can_secure() and self:_loot_filter_func(carry_data) then
@@ -1038,6 +1046,16 @@ function VehicleDrivingExt:is_hud_waypoint_enabled()
 	return self._hud_waypoint_enabled
 end
 
+function VehicleDrivingExt:spawn_radio_finder()
+	Application:trace("[VehicleDrivingExt][spawn_radio_finder]")
+
+	if Network:is_server() and not self._has_radio_finder then
+		self._unit:damage():has_then_run_sequence_simple("action_spawn_radio_finder")
+
+		self._has_radio_finder = true
+	end
+end
+
 function VehicleDrivingExt:enable_securing_loot()
 	Application:trace("[VehicleDrivingExt][enable_securing_loot] Securing loot enabled")
 
@@ -1125,6 +1143,10 @@ function VehicleDrivingExt:reserve_seat(player, position, seat_name)
 end
 
 function VehicleDrivingExt:place_player_on_seat(player, seat_name, move, previous_seat)
+	if not player then
+		debug_pause_unit(self._unit, "Player is invalid!", unit, "when trying to move from", seat_name, "move, previous seat", move, previous_seat)
+	end
+
 	local number_of_seats = 0
 
 	for _, seat in pairs(self._seats) do
@@ -1702,7 +1724,7 @@ function VehicleDrivingExt:activate_vehicle()
 		self._unit:damage():run_sequence_simple("driving")
 		self._vehicle:set_active(true)
 		self:set_state(VehicleDrivingExt.STATE_DRIVING)
-		self._engine_soundsource:post_event(self._tweak_data.sound.engine_sound_event)
+		self:_start_engine_sound()
 	end
 
 	self._last_drop_position = self._unit:get_object(Idstring(self._tweak_data.loot_drop_point)):position()
@@ -1801,7 +1823,10 @@ function VehicleDrivingExt:_wake_nearby_dynamics()
 
 	for _, unit in pairs(units) do
 		if unit:damage() then
-			unit:damage():has_then_run_sequence_simple("car_destructable")
+			unit:damage():has_then_run_sequence_simple("car_destructable", {
+				unit = self._unit,
+				vehicle = self._vehicle,
+			})
 		end
 	end
 end

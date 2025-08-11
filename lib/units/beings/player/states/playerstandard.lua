@@ -259,12 +259,7 @@ function PlayerStandard:exit(state_data, new_state_name)
 		self:set_running(false)
 	end
 
-	if self._shooting then
-		self._shooting = false
-
-		self._equipped_unit:base():stop_shooting()
-		self._camera_unit:base():stop_shooting()
-	end
+	self:_check_stop_shooting()
 
 	self._headbob = 0
 	self._target_headbob = 0
@@ -318,6 +313,10 @@ end
 local tmp_vec1 = Vector3()
 
 function PlayerStandard:update(t, dt)
+	if not self._enabled then
+		return
+	end
+
 	if managers.menu.loading_screen_visible or managers.system_menu:is_active() then
 		return
 	end
@@ -735,6 +734,10 @@ function PlayerStandard:update_check_actions_paused(t, dt)
 end
 
 function PlayerStandard:_update_check_actions(t, dt)
+	if not self._enabled then
+		return
+	end
+
 	local input = self:_get_input(t, dt)
 
 	self:_determine_move_direction()
@@ -769,6 +772,11 @@ function PlayerStandard:_update_check_actions(t, dt)
 	self:_update_foley(t, input)
 
 	local new_action
+
+	if not self._enabled then
+		return
+	end
+
 	local anim_data = self._ext_anim
 
 	new_action = new_action or self:_check_action_weapon_gadget(t, input)
@@ -1527,19 +1535,19 @@ function PlayerStandard:_start_action_running(t)
 
 	self:set_running(true)
 
-	self._end_running_expire_t = nil
-	self._start_running_t = t
-
-	if (not self._run_and_reload or not self:_is_reloading()) and not self:_is_meleeing() and not self._delay_running_expire_t then
-		self._ext_camera:play_redirect(self._run_and_shoot and self.IDS_IDLE or self.IDS_START_RUNNING)
-	end
-
 	if not self._run_and_reload then
 		self:_interupt_action_reload(t)
 	end
 
 	self:_interupt_action_steelsight(t)
 	self:_interupt_action_ducking(t)
+
+	self._end_running_expire_t = nil
+	self._start_running_t = t
+
+	if (not self._run_and_reload or not self:_is_reloading()) and not self:_is_meleeing() and not self._delay_running_expire_t then
+		self._ext_camera:play_redirect(self._run_and_shoot and self.IDS_IDLE or self.IDS_START_RUNNING)
+	end
 end
 
 function PlayerStandard:_interupt_action_running(t)
@@ -2233,7 +2241,7 @@ end
 function PlayerStandard:_update_interaction_timers(t)
 	if self._interact_expire_t then
 		if not alive(self._interact_params.object) then
-			self:_interupt_action_interact(t, nil, nil, true)
+			self:_interupt_action_interact(t, nil, nil, false)
 		elseif self._interact_params.object ~= managers.interaction:active_unit() then
 			self:_interupt_action_interact(t, nil, nil, false)
 		elseif self._interact_params.tweak_data ~= self._interact_params.object:interaction().tweak_data then
@@ -2953,8 +2961,8 @@ function PlayerStandard:_start_action_use_item(t)
 	})
 
 	managers.hud:show_progress_timer({
+		result = nil,
 		text = text,
-		u_key = nil,
 	})
 
 	local post_event = managers.player:selected_equipment_sound_start()
@@ -4888,26 +4896,27 @@ function PlayerStandard:_check_action_primary_attack(t, input)
 end
 
 function PlayerStandard:_check_stop_shooting()
-	if self._shooting then
-		self._ext_network:send("sync_stop_auto_fire_sound")
-		self._equipped_unit:base():stop_shooting()
-		self._camera_unit:base():stop_shooting(self._equipped_unit:base():recoil_wait())
-
-		local weap_base = self._equipped_unit:base()
-
-		if weap_base._name_id == "dp28" then
-			weap_base:weapon_parts_anim_pause()
-		end
-
-		local fire_mode = weap_base:fire_mode()
-		local use_recoil_anim = true
-
-		if use_recoil_anim and fire_mode == "auto" and not self:_is_reloading() and not self:_is_meleeing() then
-			self._unit:camera():play_redirect(self.IDS_RECOIL_EXIT)
-		end
-
-		self._shooting = false
+	if not self._shooting then
+		return
 	end
+
+	self._ext_network:send("sync_stop_auto_fire_sound")
+	self._equipped_unit:base():stop_shooting()
+	self._camera_unit:base():stop_shooting(self._equipped_unit:base():recoil_wait())
+
+	local weap_base = self._equipped_unit:base()
+
+	if weap_base._name_id == "dp28" then
+		weap_base:weapon_parts_anim_pause()
+	end
+
+	local fire_mode = weap_base:fire_mode()
+
+	if fire_mode == "auto" and not self:_is_reloading() and not self:_is_meleeing() then
+		self._unit:camera():play_redirect(self.IDS_RECOIL_EXIT)
+	end
+
+	self._shooting = false
 end
 
 function PlayerStandard:_start_action_charging_weapon(t)
@@ -5039,6 +5048,7 @@ function PlayerStandard:_interupt_action_reload(t)
 	if alive(self._equipped_unit) then
 		local weapon_base = self._equipped_unit:base()
 
+		self._ext_camera:play_redirect(self.IDS_IDLE)
 		weapon_base:tweak_data_anim_stop("reload_enter")
 		weapon_base:tweak_data_anim_stop("reload")
 		weapon_base:tweak_data_anim_stop("reload_not_empty")
@@ -5112,6 +5122,10 @@ end
 
 function PlayerStandard:_start_action_unequip_weapon(t, data)
 	if not self._unequip_weapon_expire_t then
+		self:_interupt_action_charging_weapon(t)
+		self:_interupt_action_reload(t)
+		self:_interupt_action_steelsight(t)
+
 		local speed_multiplier = self:_get_swap_speed_multiplier()
 		local weapon_tweak = self._equipped_unit:base():weapon_tweak_data()
 
@@ -5124,9 +5138,6 @@ function PlayerStandard:_start_action_unequip_weapon(t, data)
 
 		local result = self._ext_camera:play_redirect(self.IDS_UNEQUIP, speed_multiplier)
 
-		self:_interupt_action_charging_weapon(t)
-		self:_interupt_action_reload(t)
-		self:_interupt_action_steelsight(t)
 		managers.hud:set_crosshair_fade(false)
 	end
 
@@ -5149,7 +5160,6 @@ function PlayerStandard:_start_action_equip_weapon(t)
 	end
 
 	self:_start_action_equip()
-	managers.upgrades:setup_current_weapon()
 	managers.player:refresh_carry_elements()
 
 	if self._equipped_unit:base().out_of_ammo and self._equipped_unit:base():out_of_ammo() then
@@ -5248,8 +5258,6 @@ end
 
 function PlayerStandard:inventory_clbk_listener(unit, event)
 	if event == "equip" then
-		self:_interupt_action_reload()
-
 		local weapon = self._ext_inventory:equipped_unit()
 		local weap_base = weapon:base()
 
@@ -5393,7 +5401,7 @@ function PlayerStandard:call_teammate(line, t, no_gesture, skip_alert, skip_mark
 			interact_type = "cmd_point"
 
 			if managers.player:has_category_upgrade("player", "special_enemy_highlight") then
-				prime_target.unit:contour():add(managers.player:has_category_upgrade("player", "marked_enemy_extra_damage") and "mark_enemy_damage_bonus" or "mark_enemy", true, managers.player:upgrade_value("player", "mark_enemy_time_multiplier", 1))
+				prime_target.unit:contour():add("mark_enemy", true, managers.player:upgrade_value("player", "mark_enemy_time_multiplier", 1))
 			end
 		end
 	end

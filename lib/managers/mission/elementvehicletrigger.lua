@@ -12,16 +12,20 @@ function ElementVehicleTrigger:on_script_activated()
 	end
 end
 
-function ElementVehicleTrigger:on_enter(instigator)
-	self:on_executed(instigator)
-end
+function ElementVehicleTrigger:is_valid_instigator(vehicle_unit)
+	if self._values.elements then
+		for _, id in ipairs(self._values.elements) do
+			local element = self:get_mission_element(id)
 
-function ElementVehicleTrigger:on_exit(instigator)
-	self:on_executed(instigator)
-end
+			if element:is_vehicle_unit_mine(vehicle_unit) then
+				return true
+			end
+		end
 
-function ElementVehicleTrigger:on_all_inside(instigator)
-	self:on_executed(instigator)
+		return false
+	end
+
+	return true
 end
 
 function ElementVehicleTrigger:send_to_host(instigator)
@@ -35,7 +39,9 @@ function ElementVehicleTrigger:on_executed(instigator)
 		return
 	end
 
-	ElementVehicleTrigger.super.on_executed(self, self._unit or instigator)
+	if self:is_valid_instigator(instigator) then
+		ElementVehicleTrigger.super.on_executed(self, self._unit or instigator)
+	end
 end
 
 function ElementVehicleTrigger:destroy()

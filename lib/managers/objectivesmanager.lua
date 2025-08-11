@@ -11,7 +11,6 @@ function ObjectivesManager:init()
 	self._completed_objectives = {}
 	self._completed_objectives_ordered = {}
 	self._read_objectives = {}
-	self._objectives_level_id = {}
 
 	self:_parse_objectives()
 end
@@ -34,16 +33,6 @@ function ObjectivesManager:on_level_transition()
 	self._objectives = deep_clone(self._parsed_objectives)
 end
 
-function ObjectivesManager:table_invert(t)
-	local s = {}
-
-	for k, v in pairs(t) do
-		s[v] = k
-	end
-
-	return s
-end
-
 function ObjectivesManager:_get_difficulty_amount_from_objective_subobjective(data)
 	local current_difficulty_name = Global.game_settings.difficulty
 	local difficulty_amount = data.difficulty_amount
@@ -51,7 +40,7 @@ function ObjectivesManager:_get_difficulty_amount_from_objective_subobjective(da
 
 	if current_difficulty_name and difficulty_amount then
 		local difficulty_amount_table = string.split(difficulty_amount, ",")
-		local current_difficulty_id = self:table_invert(tweak_data.difficulties)[current_difficulty_name]
+		local current_difficulty_id = table.flip_copy(tweak_data.difficulties)[current_difficulty_name]
 
 		difficulty_amount_total = tonumber(difficulty_amount_table[current_difficulty_id])
 	end
@@ -78,7 +67,7 @@ function ObjectivesManager:_parse_objective(data)
 		amount = self:_get_difficulty_amount_from_objective_subobjective(data)
 	end
 
-	self._objectives[id] = {
+	local t = {
 		amount = amount,
 		amount_text = amount_text,
 		current_amount = amount and 0 or nil,
@@ -89,6 +78,8 @@ function ObjectivesManager:_parse_objective(data)
 		sub_objectives = {},
 		text = text,
 	}
+
+	self._objectives[id] = t
 
 	for _, sub in ipairs(data) do
 		local sub_text = managers.localization:text(sub.text)
@@ -109,10 +100,6 @@ function ObjectivesManager:_parse_objective(data)
 			self._objectives[id].sub_objectives[sub.id].amount = self:_get_difficulty_amount_from_objective_subobjective(sub)
 			self._objectives[id].sub_objectives[sub.id].current_amount = 0
 		end
-	end
-
-	if level_id then
-		self._objectives_level_id[level_id] = self._objectives_level_id[level_id] or {}
 	end
 end
 
@@ -182,7 +169,7 @@ end
 function ObjectivesManager:complete_and_activate_objective(id, load_data, data, world_id)
 	local delay_presentation = next(self._active_objectives) and true or nil
 
-	for name, data in pairs(clone(self._active_objectives)) do
+	for name, _ in pairs(self._active_objectives) do
 		self:complete_objective(name)
 	end
 
@@ -254,7 +241,7 @@ function ObjectivesManager:activate_objective(id, load_data, data, world_id, ski
 
 	if not skip_toast then
 		managers.hud:present_mid_text({
-			objective_map = nil,
+			icon = nil,
 			text = text,
 			time = 4.5,
 			title = title_message,
@@ -358,27 +345,31 @@ function ObjectivesManager:complete_objective(id, load_data)
 		})
 
 		if objective.current_amount < objective.amount then
-			return
+			-- block empty
+		else
+			objective.completed = true
 		end
-
-		objective.current_amount = 0
+	else
+		objective.completed = true
 	end
 
-	managers.hud:complete_objective({
-		id = id,
-		text = objective.text,
-	})
-	managers.statistics:objective_completed()
+	if objective.completed then
+		managers.hud:complete_objective({
+			id = id,
+			text = objective.text,
+		})
+		managers.statistics:objective_completed()
 
-	self._completed_objectives[id] = objective
+		self._completed_objectives[id] = objective
 
-	table.insert(self._completed_objectives_ordered, 1, id)
+		table.insert(self._completed_objectives_ordered, 1, id)
 
-	self._active_objectives[id] = nil
-	self._remind_objectives[id] = nil
+		self._active_objectives[id] = nil
+		self._remind_objectives[id] = nil
 
-	if self._delayed_presentation and self._delayed_presentation.activate_params.id == id then
-		self._delayed_presentation = nil
+		if self._delayed_presentation and self._delayed_presentation.activate_params.id == id then
+			self._delayed_presentation = nil
+		end
 	end
 end
 
@@ -580,7 +571,9 @@ function ObjectivesManager:objectives_by_name()
 				table.insert(t, name)
 			end
 		end
-	else
+	end
+
+	if table.empty(t) then
 		for name, _ in pairs(self._objectives) do
 			table.insert(t, name)
 		end

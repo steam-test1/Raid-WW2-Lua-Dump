@@ -5950,7 +5950,11 @@ function SlotElement:check_frustum_delay(frustum_close_radius, frustum_extension
 	local body = data._bodies[data._body_index]
 	local pos = body:position()
 
-	if World:in_view_with_options(pos, frustum_close_radius or 0, frustum_extension or 350, frustum_far_clip or 150000) == visible then
+	frustum_close_radius = frustum_close_radius or 0
+	frustum_extension = frustum_extension or 350
+	frustum_far_clip = frustum_far_clip or 150000
+
+	if World:in_view_with_options(pos, frustum_close_radius, frustum_extension, frustum_far_clip) == visible then
 		self:hide_objects(body:root_object())
 		table.remove(data._bodies, data._body_index)
 

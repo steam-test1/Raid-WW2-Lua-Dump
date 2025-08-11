@@ -1,11 +1,28 @@
-local tmp_vec1 = Vector3()
-
 core:module("CoreElementArea")
 core:import("CoreShapeManager")
 core:import("CoreMissionScriptElement")
 core:import("CoreTable")
 
 ElementAreaTrigger = ElementAreaTrigger or class(CoreMissionScriptElement.MissionScriptElement)
+
+local TMP_VEC1 = Vector3()
+
+function ElementAreaTrigger:save(data)
+	data.enabled = self._values.enabled
+	data.interval = self._values.interval
+	data.use_disabled_shapes = self._values.use_disabled_shapes
+end
+
+function ElementAreaTrigger:load(data)
+	if not self._on_script_activated_done then
+		self:on_script_activated()
+	end
+
+	self:set_enabled(data.enabled)
+	self:operation_set_interval(data.interval)
+
+	self._values.use_disabled_shapes = data.use_disabled_shapes
+end
 
 function ElementAreaTrigger:init(...)
 	ElementAreaTrigger.super.init(self, ...)
@@ -16,21 +33,33 @@ function ElementAreaTrigger:init(...)
 	self._rules_elements = {}
 
 	if not self._values.use_shape_element_ids then
+		local new_shape
+
 		if not self._values.shape_type or self._values.shape_type == "box" then
-			self:_add_shape(CoreShapeManager.ShapeBoxMiddle:new({
+			new_shape = CoreShapeManager.ShapeBoxMiddle:new({
 				depth = self._values.depth,
 				height = self._values.height,
 				position = self._values.position,
 				rotation = self._values.rotation,
 				width = self._values.width,
-			}))
+			})
 		elseif self._values.shape_type == "cylinder" then
-			self:_add_shape(CoreShapeManager.ShapeCylinderMiddle:new({
+			new_shape = CoreShapeManager.ShapeCylinderMiddle:new({
 				height = self._values.height,
 				position = self._values.position,
 				radius = self._values.radius,
 				rotation = self._values.rotation,
-			}))
+			})
+		elseif self._values.shape_type == "sphere" then
+			new_shape = CoreShapeManager.ShapeSphere:new({
+				position = self._values.position,
+				radius = self._values.radius,
+				rotation = self._values.rotation,
+			})
+		end
+
+		if new_shape then
+			self:_add_shape(new_shape)
 		end
 	end
 
@@ -44,22 +73,30 @@ function ElementAreaTrigger:on_script_activated()
 		for _, id in ipairs(self._values.use_shape_element_ids) do
 			local element = self:get_mission_element(id)
 
-			table.insert(self._shape_elements, element)
+			if element then
+				table.insert(self._shape_elements, element)
+			end
 		end
 	end
 
-	if self._values.rules_element_ids then
-		for _, id in ipairs(self._values.rules_element_ids) do
-			local element = self:get_mission_element(id)
-
-			table.insert(self._rules_elements, element)
-		end
-	end
-
-	self._mission_script:add_save_state_cb(self._id)
+	ElementAreaTrigger.super.on_script_activated(self)
 
 	if self._values.enabled then
 		self:add_callback()
+	end
+end
+
+function ElementAreaTrigger:add_callback()
+	if not self._callback then
+		self._callback = self._mission_script:add(callback(self, self, "update_area"), self._values.interval)
+	end
+end
+
+function ElementAreaTrigger:remove_callback()
+	if self._callback then
+		self._mission_script:remove(self._callback)
+
+		self._callback = nil
 	end
 end
 
@@ -71,7 +108,7 @@ function ElementAreaTrigger:get_shapes()
 	return self._shapes
 end
 
-function ElementAreaTrigger:is_inside(pos)
+function ElementAreaTrigger:is_inside_shape(pos)
 	for _, shape in ipairs(self._shapes) do
 		if shape:is_inside(pos) then
 			return true
@@ -81,15 +118,15 @@ function ElementAreaTrigger:is_inside(pos)
 	return false
 end
 
-function ElementAreaTrigger:_is_inside(pos)
-	if self:is_inside(pos) then
+function ElementAreaTrigger:_is_inside_shape(pos)
+	if self:is_inside_shape(pos) then
 		return true
 	end
 
 	for _, element in ipairs(self._shape_elements) do
-		local use = self._values.use_disabled_shapes or element:enabled()
+		local can_use = self._values.use_disabled_shapes or element:enabled()
 
-		if use and element:is_inside(pos) then
+		if can_use and element:is_inside_shape(pos) then
 			return true
 		end
 	end
@@ -115,20 +152,6 @@ function ElementAreaTrigger:set_enabled(enabled)
 	end
 end
 
-function ElementAreaTrigger:add_callback()
-	if not self._callback then
-		self._callback = self._mission_script:add(callback(self, self, "update_area"), self._values.interval)
-	end
-end
-
-function ElementAreaTrigger:remove_callback()
-	if self._callback then
-		self._mission_script:remove(self._callback)
-
-		self._callback = nil
-	end
-end
-
 function ElementAreaTrigger:on_executed(instigator, ...)
 	if not self._values.enabled then
 		return
@@ -147,7 +170,13 @@ function ElementAreaTrigger:instigators()
 
 		if Network:is_server() then
 			for _, id in ipairs(self._values.unit_ids) do
-				local unit = Application:editor() and managers.editor:layer("Statics"):created_units_pairs()[id] or self._mission_script:worlddefinition():get_unit_by_id(id)
+				local unit
+
+				if Application:editor() then
+					unit = managers.editor:layer("Statics"):created_units_pairs()[id]
+				else
+					unit = self._mission_script:worlddefinition():get_unit_by_id(id)
+				end
 
 				if alive(unit) then
 					table.insert(instigators, unit)
@@ -299,11 +328,11 @@ function ElementAreaTrigger:_should_trigger(unit)
 		local inside
 
 		if unit:movement() then
-			inside = self:_is_inside(unit:movement():m_pos())
+			inside = self:_is_inside_shape(unit:movement():m_pos())
 		else
-			unit:m_position(tmp_vec1)
+			unit:m_position(TMP_VEC1)
 
-			inside = self:_is_inside(tmp_vec1)
+			inside = self:_is_inside_shape(TMP_VEC1)
 		end
 
 		if table.contains(self._inside, unit) then
@@ -366,7 +395,7 @@ end
 
 function ElementAreaTrigger:_client_check_state(unit)
 	local rule_ok = self:_check_instigator_rules(unit)
-	local inside = self:_is_inside(unit:position())
+	local inside = self:_is_inside_shape(unit:position())
 
 	if table.contains(self._inside, unit) then
 		if not inside or not rule_ok then
@@ -397,23 +426,6 @@ end
 
 function ElementAreaTrigger:operation_clear_inside()
 	self._inside = {}
-end
-
-function ElementAreaTrigger:save(data)
-	data.enabled = self._values.enabled
-	data.interval = self._values.interval
-	data.use_disabled_shapes = self._values.use_disabled_shapes
-end
-
-function ElementAreaTrigger:load(data)
-	if not self._on_script_activated_done then
-		self:on_script_activated()
-	end
-
-	self:set_enabled(data.enabled)
-	self:operation_set_interval(data.interval)
-
-	self._values.use_disabled_shapes = data.use_disabled_shapes
 end
 
 ElementAreaOperator = ElementAreaOperator or class(CoreMissionScriptElement.MissionScriptElement)
@@ -484,11 +496,11 @@ function ElementAreaReportTrigger:_check_state(unit)
 		local inside
 
 		if unit:movement() then
-			inside = self:_is_inside(unit:movement():m_pos())
+			inside = self:_is_inside_shape(unit:movement():m_pos())
 		else
-			unit:m_position(tmp_vec1)
+			unit:m_position(TMP_VEC1)
 
-			inside = self:_is_inside(tmp_vec1)
+			inside = self:_is_inside_shape(TMP_VEC1)
 		end
 
 		if inside and not rule_ok then
@@ -595,7 +607,7 @@ end
 
 function ElementAreaReportTrigger:_client_check_state(unit)
 	local rule_ok = self:_check_instigator_rules(unit)
-	local inside = self:_is_inside(unit:position())
+	local inside = self:_is_inside_shape(unit:position())
 
 	if table.contains(self._inside, unit) then
 		if not inside or not rule_ok then

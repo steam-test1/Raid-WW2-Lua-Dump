@@ -8,6 +8,11 @@ core:import("CoreClass")
 
 MissionLayer = MissionLayer or class(CoreStaticLayer.StaticLayer)
 
+local LOD_DRAW_DISTANCE = math.sqrt(100000)
+local NAME_MAX_RANGE = 2250000
+local NAME_MID_RANGE = 1000000
+local NAME_MIN_RANGE = 250000
+
 function MissionLayer:init(owner)
 	local types = CoreEditorUtils.layer_type("mission") or {
 		"mission_element",
@@ -21,7 +26,6 @@ function MissionLayer:init(owner)
 	self._simulate_with_current_script = false
 	self._only_draw_selected_connections = true
 	self._visualize_flow = false
-	self._use_colored_links = true
 	self._show_all_scripts = false
 	self._uses_continents = true
 	self._name_brush = Draw:brush()
@@ -39,8 +43,8 @@ function MissionLayer:init(owner)
 	self._disabled_brush:set_color(Color(0.15, 1, 0, 0))
 end
 
-function MissionLayer:load(world_holder, offset)
-	local data = world_holder:create_world("world", "mission_scripts", offset)
+function MissionLayer:load(world_holder)
+	local data = world_holder:create_world("world", "mission_scripts")
 
 	self._scripts = data.scripts or self._scripts
 
@@ -48,7 +52,7 @@ function MissionLayer:load(world_holder, offset)
 		values.continent = values.continent or managers.editor:current_continent():name()
 	end
 
-	local world_units = MissionLayer.super.load(self, world_holder, offset)
+	local world_units = MissionLayer.super.load(self, world_holder)
 
 	if world_units then
 		for _, unit in ipairs(world_units) do
@@ -357,12 +361,9 @@ function MissionLayer:update(time, rel_time)
 	local cam_pos = managers.editor:camera():position()
 	local cam_up = managers.editor:camera_rotation():z()
 	local cam_right = managers.editor:camera_rotation():x()
-	local lod_draw_distance = 100000
-
-	lod_draw_distance = lod_draw_distance * lod_draw_distance
 
 	for _, unit in ipairs(self._created_units) do
-		if unit:mission_element_data().script == current_script and not current_continent_locked or self._show_all_scripts then
+		if unit:visible() and unit:mission_element_data().script == current_script and not current_continent_locked or self._show_all_scripts then
 			local distance = mvector3.distance_sq(unit:position(), cam_pos)
 			local element = unit:mission_element()
 
@@ -376,22 +377,30 @@ function MissionLayer:update(time, rel_time)
 				end
 
 				local update_selected = self._update_all or update_selected_on
-				local selected_unit = unit == self._selected_unit
+				local only_draw_selected_connections_unit = self._only_draw_selected_connections and self._selected_unit
+				local unit_is_selected
+				local selected_multiple = #self._selected_units > 1
 
-				if update_selected or selected_unit then
-					element:update_selected(time, rel_time, self._only_draw_selected_connections and self._selected_unit, all_units)
-				elseif self._override_lod_draw or self._only_draw_selected_connections and alive(self._selected_unit) or distance < lod_draw_distance then
-					element:update_unselected(time, rel_time, self._only_draw_selected_connections and self._selected_unit, all_units)
+				if selected_multiple then
+					unit_is_selected = table.contains(self._selected_units, unit)
+				else
+					unit_is_selected = unit == self._selected_unit
+				end
+
+				if update_selected or unit_is_selected or unit_is_selected and selected_multiple then
+					element:update_selected(time, rel_time, only_draw_selected_connections_unit, all_units)
+				elseif self._override_lod_draw or self._only_draw_selected_connections and alive(unit) or distance < LOD_DRAW_DISTANCE then
+					element:update_unselected(time, rel_time, only_draw_selected_connections_unit, all_units)
 
 					if not self._only_draw_selected_connections or not self._selected_unit then
-						element:draw_links_unselected(time, rel_time, self._only_draw_selected_connections and self._selected_unit, all_units)
+						element:draw_links_unselected(time, rel_time, only_draw_selected_connections_unit, all_units)
 					end
 				end
 
-				element:draw_links(time, rel_time, self._only_draw_selected_connections and self._selected_unit, all_units)
+				element:draw_links(time, rel_time, only_draw_selected_connections_unit, all_units)
 
-				if selected_unit then
-					element:draw_links_selected(time, rel_time, self._only_draw_selected_connections and self._selected_unit)
+				if unit_is_selected or unit_is_selected and selected_multiple then
+					element:draw_links_selected(time, rel_time, only_draw_selected_connections_unit)
 
 					if self._editing_mission_element and element.update_editing then
 						element:update_editing(time, rel_time, self._current_pos)
@@ -403,9 +412,9 @@ function MissionLayer:update(time, rel_time)
 				self._disabled_brush:unit(unit)
 			end
 
-			if distance < 2250000 then
-				local a = distance < 1000000 and 1 or (2250000 - distance) / 250000 / 5
-				local color = selected_unit and Color(a, 0, 1, 0) or Color(a, 1, 1, 1)
+			if distance < NAME_MAX_RANGE then
+				local alpha = distance < NAME_MID_RANGE and 1 or (NAME_MAX_RANGE - distance) / NAME_MIN_RANGE / 5
+				local color = unit_is_selected and Color(alpha, 0, 1, 0) or Color(alpha, 1, 1, 1)
 
 				self._name_brush:set_color(color)
 
@@ -563,7 +572,7 @@ function MissionLayer:build_panel(notebook)
 	self._element_toolbar:add_check_tool("EDIT_ELEMENT", "Edit Element [insert]", CoreEws.image_path("world_editor\\he_edit_element_16x16.png"), "Edit Element [insert]")
 	self._element_toolbar:set_tool_state("EDIT_ELEMENT", self._editing_mission_element)
 	self._element_toolbar:connect("EDIT_ELEMENT", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "toolbar_toggle"), {
-		_ = nil,
+		NO = nil,
 		class = self,
 		toolbar = "_element_toolbar",
 		value = "_editing_mission_element",
@@ -628,7 +637,7 @@ function MissionLayer:_build_scripts()
 	self._scripts_right_toolbar:add_check_tool("SIMULATE_WITH_CURRENT_SCRIPT", "If used, run simulation will start the current script", CoreEws.image_path("world_editor\\script_simulate_with_current_16x16.png"), "If used, run simulation will start the current script")
 	self._scripts_right_toolbar:set_tool_state("SIMULATE_WITH_CURRENT_SCRIPT", self._simulate_with_current_script)
 	self._scripts_right_toolbar:connect("SIMULATE_WITH_CURRENT_SCRIPT", "EVT_COMMAND_MENU_SELECTED", callback(nil, CoreEditorUtils, "toolbar_toggle"), {
-		_ = nil,
+		NO = nil,
 		class = self,
 		toolbar = "_scripts_right_toolbar",
 		value = "_simulate_with_current_script",
@@ -644,15 +653,15 @@ function MissionLayer:add_btns_to_toolbar(...)
 	self._btn_toolbar:add_check_tool("DRAW_SELECTED_CONNECTIONS_ONLY", "Only draw selected connections", CoreEws.image_path("world_editor\\layer_hubs_only_draw_selected.png"), "Only draw selected connections")
 	self._btn_toolbar:set_tool_state("DRAW_SELECTED_CONNECTIONS_ONLY", self._only_draw_selected_connections)
 	self._btn_toolbar:connect("DRAW_SELECTED_CONNECTIONS_ONLY", "EVT_COMMAND_MENU_SELECTED", callback(nil, CoreEditorUtils, "toolbar_toggle"), {
-		_ = nil,
+		NO = nil,
 		class = self,
 		toolbar = "_btn_toolbar",
 		value = "_only_draw_selected_connections",
 	})
-	self._btn_toolbar:add_check_tool("UPDATE_SELECTED_ALL", "Draws all element as if they where selected", CoreEws.image_path("world_editor\\layer_hubs_update_selected_all.png"), "Draws all element as if they where selected")
+	self._btn_toolbar:add_check_tool("UPDATE_SELECTED_ALL", "Draw elements as selected", CoreEws.image_path("world_editor\\layer_hubs_update_selected_all.png"), "Draw all elements as if they were selected, showing links.")
 	self._btn_toolbar:set_tool_state("UPDATE_SELECTED_ALL", self._update_all)
 	self._btn_toolbar:connect("UPDATE_SELECTED_ALL", "EVT_COMMAND_MENU_SELECTED", callback(nil, CoreEditorUtils, "toolbar_toggle"), {
-		_ = nil,
+		NO = nil,
 		class = self,
 		toolbar = "_btn_toolbar",
 		value = "_update_all",
@@ -665,18 +674,10 @@ function MissionLayer:add_btns_to_toolbar(...)
 	self._btn_toolbar:add_check_tool("VISUALIZE_FLOW", "Visualize flow", CoreEws.image_path("toolbar\\find_16x16.png"), "Visualize flow")
 	self._btn_toolbar:set_tool_state("VISUALIZE_FLOW", self._visualize_flow)
 	self._btn_toolbar:connect("VISUALIZE_FLOW", "EVT_COMMAND_MENU_SELECTED", callback(nil, CoreEditorUtils, "toolbar_toggle"), {
-		_ = nil,
+		NO = nil,
 		class = self,
 		toolbar = "_btn_toolbar",
 		value = "_visualize_flow",
-	})
-	self._btn_toolbar:add_check_tool("USE_COLORED_LINKS", "Use colored links", CoreEws.image_path("toolbar\\color_16x16.png"), "Use colored links")
-	self._btn_toolbar:set_tool_state("USE_COLORED_LINKS", self._use_colored_links)
-	self._btn_toolbar:connect("USE_COLORED_LINKS", "EVT_COMMAND_MENU_SELECTED", callback(nil, CoreEditorUtils, "toolbar_toggle"), {
-		_ = nil,
-		class = self,
-		toolbar = "_btn_toolbar",
-		value = "_use_colored_links",
 	})
 	self._btn_toolbar:add_separator()
 end
@@ -964,10 +965,6 @@ end
 
 function MissionLayer:visualize_flow()
 	return self._visualize_flow
-end
-
-function MissionLayer:use_colored_links()
-	return self._use_colored_links
 end
 
 function MissionLayer:clear()

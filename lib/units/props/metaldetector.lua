@@ -1,5 +1,5 @@
 MetalDetector = MetalDetector or class()
-MetalDetector.DEFAULT_RANGE = 5000
+MetalDetector.DEFAULT_RANGE = 3500
 MetalDetector.DEFAULT_SOUND_START = "transmission_sound"
 MetalDetector.DEFAULT_SOUND_STOP = "transmission_sound_stop"
 MetalDetector.DEFAULT_RTPC = "distance"

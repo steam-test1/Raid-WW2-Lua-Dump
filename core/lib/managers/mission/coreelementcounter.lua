@@ -11,21 +11,11 @@ function ElementCounter:init(...)
 	self._triggers = {}
 end
 
-function ElementCounter:client_on_executed(...)
-	self:on_executed(...)
-end
-
 function ElementCounter:on_script_activated()
 	self._values.counter_target = self:value("counter_target")
 	self._original_value = self._values.counter_target
 
-	if self._values.output_monitor_id then
-		local mission = self._sync_id ~= 0 and managers.worldcollection:mission_by_id(self._sync_id) or managers.mission
-
-		self.monitor_element = mission:get_element_by_id(self._values.output_monitor_id)
-	end
-
-	if not Network:is_server() then
+	if Network:is_client() then
 		return
 	end
 
@@ -47,7 +37,13 @@ function ElementCounter:on_script_activated()
 		end
 	end
 
-	self:monitor_output_change()
+	if self._values.output_monitor_id then
+		local mission = self._sync_id ~= 0 and managers.worldcollection:mission_by_id(self._sync_id) or managers.mission
+
+		self.monitor_element = mission:get_element_by_id(self._values.output_monitor_id)
+	end
+
+	self:_monitor_output_change()
 	self._mission_script:add_save_state_cb(self._id)
 end
 
@@ -77,14 +73,14 @@ function ElementCounter:on_executed(instigator)
 		self._mission_script:debug_output("Counter " .. self._editor_name .. ": already exhausted!", Color(1, 0, 0.75, 0))
 	end
 
-	self:monitor_output_change()
+	self:_monitor_output_change()
 end
 
 function ElementCounter:reset_counter_target(counter_target)
 	self._values.counter_target = counter_target
 
 	self:_update_digital_guis_number()
-	self:monitor_output_change()
+	self:_monitor_output_change()
 end
 
 function ElementCounter:counter_operation_add(amount)
@@ -93,7 +89,7 @@ function ElementCounter:counter_operation_add(amount)
 	self:_update_digital_guis_number()
 	self:_check_triggers("add")
 	self:_check_triggers("value")
-	self:monitor_output_change()
+	self:_monitor_output_change()
 end
 
 function ElementCounter:counter_operation_subtract(amount)
@@ -102,7 +98,7 @@ function ElementCounter:counter_operation_subtract(amount)
 	self:_update_digital_guis_number()
 	self:_check_triggers("subtract")
 	self:_check_triggers("value")
-	self:monitor_output_change()
+	self:_monitor_output_change()
 end
 
 function ElementCounter:counter_operation_reset(amount)
@@ -111,7 +107,7 @@ function ElementCounter:counter_operation_reset(amount)
 	self:_update_digital_guis_number()
 	self:_check_triggers("reset")
 	self:_check_triggers("value")
-	self:monitor_output_change()
+	self:_monitor_output_change()
 end
 
 function ElementCounter:counter_operation_set(amount)
@@ -120,19 +116,19 @@ function ElementCounter:counter_operation_set(amount)
 	self:_update_digital_guis_number()
 	self:_check_triggers("set")
 	self:_check_triggers("value")
-	self:monitor_output_change()
+	self:_monitor_output_change()
 end
 
-function ElementCounter:apply_job_value(amount)
-	local type = CoreClass.type_name(amount)
+function ElementCounter:apply_custom_value(new_value)
+	local type = CoreClass.type_name(new_value)
 
 	if type ~= "number" then
-		Application:error("[ElementCounter:apply_job_value] " .. self._id .. "(" .. self._editor_name .. ") Can't apply job value of type " .. type)
+		Application:error("[ElementCounter:apply_custom_value] " .. self._id .. "(" .. self._editor_name .. ") Can't apply custom value of type " .. type)
 
 		return
 	end
 
-	self:counter_operation_set(amount)
+	self:counter_operation_set(new_value)
 end
 
 function ElementCounter:add_trigger(id, type, amount, callback)
@@ -171,7 +167,7 @@ function ElementCounter:_check_triggers(type)
 	end
 end
 
-function ElementCounter:monitor_output_change()
+function ElementCounter:_monitor_output_change()
 	if self.monitor_element then
 		local output_string = self._values.counter_target
 
@@ -197,14 +193,6 @@ end
 
 ElementCounterReset = ElementCounterReset or class(CoreMissionScriptElement.MissionScriptElement)
 
-function ElementCounterReset:client_on_executed(...)
-	self:on_executed(...)
-end
-
-function ElementCounterReset:init(...)
-	ElementCounterReset.super.init(self, ...)
-end
-
 function ElementCounterReset:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -226,14 +214,6 @@ function ElementCounterReset:on_executed(instigator)
 end
 
 ElementCounterOperator = ElementCounterOperator or class(CoreMissionScriptElement.MissionScriptElement)
-
-function ElementCounterOperator:init(...)
-	ElementCounterOperator.super.init(self, ...)
-end
-
-function ElementCounterOperator:client_on_executed(...)
-	self:on_executed(...)
-end
 
 function ElementCounterOperator:on_executed(instigator)
 	if not self._values.enabled then
@@ -267,10 +247,6 @@ end
 
 ElementCounterTrigger = ElementCounterTrigger or class(CoreMissionScriptElement.MissionScriptElement)
 
-function ElementCounterTrigger:init(...)
-	ElementCounterTrigger.super.init(self, ...)
-end
-
 function ElementCounterTrigger:on_script_activated()
 	if Network:is_server() then
 		for _, id in ipairs(self._values.elements) do
@@ -294,14 +270,6 @@ function ElementCounterTrigger:on_executed(instigator)
 end
 
 ElementCounterFilter = ElementCounterFilter or class(CoreMissionScriptElement.MissionScriptElement)
-
-function ElementCounterFilter:init(...)
-	ElementCounterFilter.super.init(self, ...)
-end
-
-function ElementCounterFilter:on_script_activated()
-	return
-end
 
 function ElementCounterFilter:client_on_executed(...)
 	return

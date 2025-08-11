@@ -335,6 +335,23 @@ function WeaponTweakData:_init_data_weapon_skins()
 		weapon_desc_id = "ws_georg_uber_desc",
 		weapon_id = "georg",
 	}
+	self.weapon_skins.georg_bigben = {
+		droppable = true,
+		icon_large = "ws_georg_bigben_large",
+		name_id = "ws_georg_bigben",
+		rarity = LootDropTweakData.RARITY_RARE,
+		replaces_parts = {
+			wpn_fps_pis_georg_barrel_long = "wpn_fps_pis_georg_barrel_long_bigben",
+			wpn_fps_pis_georg_barrel_short = "wpn_fps_pis_georg_barrel_short_bigben",
+			wpn_fps_pis_georg_barrel_tank = "wpn_fps_pis_georg_barrel_tank_bigben",
+			wpn_fps_pis_georg_body_default = "wpn_fps_pis_georg_body_default_bigben",
+			wpn_fps_pis_georg_mag_default = "wpn_fps_pis_georg_mag_default_bigben",
+			wpn_fps_pis_georg_slide_default = "wpn_fps_pis_georg_slide_default_bigben",
+			wpn_fps_pis_georg_stock_wooden = "wpn_fps_pis_georg_stock_wooden_bigben",
+		},
+		weapon_desc_id = "ws_georg_bigben_desc",
+		weapon_id = "georg",
+	}
 
 	for _, skin in pairs(self.weapon_skins) do
 		local locked = skin.dlc or skin.challenge or skin.gold_price
@@ -1620,10 +1637,10 @@ function WeaponTweakData:_init_data_tiger_main_gun_module_npc(difficulty_index)
 		main_cannon_lock_on = "tiger_npc_canon_reload",
 	}
 	self.tiger_main_gun_module.effect = {
-		lmg_dp28 = nil,
+		all_fps_animation_weights = nil,
 		main_cannon_fire = "effects/vanilla/explosions/tank_turret_fire",
 		main_cannon_fire_hit = "effects/vanilla/explosions/exp_airbomb_explosion_002",
-		style = nil,
+		shotgun_db = nil,
 	}
 	self.tiger_main_gun_module.turret = {
 		armor_piercing = true,

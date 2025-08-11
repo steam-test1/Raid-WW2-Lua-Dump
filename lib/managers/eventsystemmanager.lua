@@ -250,12 +250,12 @@ local __SEED_LIMIT = 2000000000
 local __SEED_A = 92836596
 local __SEED_B = 767
 
-function EventSystemManager:bounty_seed(custom_date)
-	if self._sync_bounty_seed and Network:is_client() then
+function EventSystemManager:bounty_seed(custom_date, ignore_sync)
+	if self._sync_bounty_seed and not ignore_sync and Network:is_client() then
 		return self._sync_bounty_seed % __SEED_LIMIT
 	end
 
-	local date_str = "!%m%d%Y"
+	local date_str = "!%d%m%d%Y"
 	local date_time = custom_date or os.date(date_str)
 
 	return math.abs(math.floor(tonumber(date_time) * __SEED_A / __SEED_B)) % __SEED_LIMIT

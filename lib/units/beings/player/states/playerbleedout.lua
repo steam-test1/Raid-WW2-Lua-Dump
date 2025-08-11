@@ -56,18 +56,6 @@ function PlayerBleedOut:enter(state_data, enter_data)
 		managers.hud:set_ammo_amount(selection_wanted, weapon:base():ammo_info())
 	end
 
-	local carry_data = managers.player:get_my_carry_data()
-
-	if carry_data then
-		for i, carry_item in ipairs(carry_data) do
-			local carry_tweak = tweak_data.carry[carry_item.carry_id]
-
-			if carry_tweak.is_corpse then
-				managers.player:drop_carry(carry_item.carry_id)
-			end
-		end
-	end
-
 	self._unit:camera():play_shaker("player_bleedout_land")
 	managers.groupai:state():on_criminal_disabled(self._unit)
 
@@ -82,7 +70,6 @@ function PlayerBleedOut:enter(state_data, enter_data)
 	self:_interupt_action_throw_grenade(t)
 	self:_interupt_action_melee(t)
 	self:_interupt_action_ladder(t)
-	managers.groupai:state():report_criminal_downed(self._unit)
 	managers.network:session():send_to_peers_synched("sync_contour_state", self._unit, -1, table.index_of(ContourExt.indexed_types, "teammate_downed"), true, 1, 1)
 end
 
@@ -151,7 +138,6 @@ function PlayerBleedOut:exit(state_data, new_state_name)
 	local t = managers.player:player_timer():time()
 
 	self:_end_action_bleedout(t)
-	self:_interupt_action_reload(t)
 	self._camera_unit:base():set_target_tilt(0)
 
 	self._tilt_blend_t = nil
@@ -478,6 +464,8 @@ function PlayerBleedOut:_start_action_bleedout(t)
 end
 
 function PlayerBleedOut:_end_action_bleedout(t)
+	self:interupt_all_actions()
+
 	if not self:_can_stand() then
 		return
 	end

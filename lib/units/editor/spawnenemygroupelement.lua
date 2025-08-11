@@ -11,6 +11,12 @@ SpawnEnemyGroupUnitElement.LINK_VALUES = {
 		type = "spawn_point",
 	},
 }
+SpawnEnemyGroupUnitElement.INSTANCE_VAR_NAMES = {
+	{
+		type = "number",
+		value = "interval",
+	},
+}
 
 function SpawnEnemyGroupUnitElement:init(unit)
 	MissionElement.init(self, unit)

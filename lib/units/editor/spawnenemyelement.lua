@@ -1,6 +1,7 @@
 core:import("CoreEditorUtils")
 
 SpawnEnemyUnitElement = SpawnEnemyUnitElement or class(MissionElement)
+SpawnEnemyUnitElement.EXECUTE_CHANGES_INSTIGATOR = true
 SpawnEnemyUnitElement.USES_POINT_ORIENTATION = true
 SpawnEnemyUnitElement.INSTANCE_VAR_NAMES = {
 	{
@@ -113,6 +114,10 @@ function SpawnEnemyUnitElement:_reload_unit_list_btn()
 			self:_get_enemy(),
 		}, true, true)
 	end
+end
+
+function SpawnEnemyUnitElement:update_editing()
+	return
 end
 
 function SpawnEnemyUnitElement:_build_panel(panel, panel_sizer)

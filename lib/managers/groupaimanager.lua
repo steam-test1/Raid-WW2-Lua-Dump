@@ -74,7 +74,7 @@ function GroupAIManager:set_current_state(name, world_id)
 
 	self._state_name = name
 
-	self._state:_queue_police_upd_task()
+	self._state:on_tweak_data_reloaded()
 end
 
 function GroupAIManager:unload_nav_data(world_id, all_nav_segs)

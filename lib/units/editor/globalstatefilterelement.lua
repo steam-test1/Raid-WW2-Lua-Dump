@@ -17,7 +17,7 @@ function GlobalStateFilterElement:init(unit)
 	table.insert(self._save_values, "check_type")
 	table.insert(self._save_values, "value")
 
-	self._flags = managers.global_state:flag_names()
+	self._flags = tweak_data.operations:get_all_mission_flags()
 
 	table.sort(self._flags)
 end
@@ -30,13 +30,17 @@ function GlobalStateFilterElement:_build_panel(panel, panel_sizer)
 
 	self:_build_value_combobox(panel, panel_sizer, "flag", self._flags, "Select a flag to test")
 	self:_build_value_combobox(panel, panel_sizer, "state", GlobalStateFilterElement.STATES, "What state of the flag to test")
-	self:_build_value_combobox(panel, panel_sizer, "check_type", {
+
+	local check_type_options = {
 		"equal",
+		"not_equal",
 		"less_than",
 		"greater_than",
 		"less_or_equal",
 		"greater_or_equal",
-	}, "Select which check operation to perform")
+	}
+
+	self:_build_value_combobox(panel, panel_sizer, "check_type", check_type_options, "Select which check operation to perform")
 
 	local value_sizer = EWS:BoxSizer("HORIZONTAL")
 
@@ -62,5 +66,5 @@ function GlobalStateFilterElement:_build_panel(panel, panel_sizer)
 
 	toolbar:realize()
 	panel_sizer:add(toolbar, 0, 1, "EXPAND,LEFT")
-	self:_add_help_text("Filter will execute depending filter condition and global state flags. Check type is applicable only on value global states.")
+	self:_add_help_text("This filter element will execute depending on the filter conditions for the chosen flag.\nSet and Cleared are equal to True and False.\n'Check Type' option only applies to flags that use number values!")
 end

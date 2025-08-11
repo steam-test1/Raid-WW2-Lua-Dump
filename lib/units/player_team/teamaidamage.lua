@@ -433,11 +433,6 @@ function TeamAIDamage:_check_bleed_out()
 	end
 
 	managers.groupai:state():on_criminal_disabled(self._unit)
-
-	if Network:is_server() then
-		managers.groupai:state():report_criminal_downed(self._unit)
-	end
-
 	self._unit:interaction():set_tweak_data("revive")
 	self._unit:interaction():set_active(true, false)
 	managers.hud:on_teammate_downed(self._unit:unit_data().teammate_panel_id, self._unit:unit_data().name_label_id)

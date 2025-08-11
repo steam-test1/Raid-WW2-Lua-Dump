@@ -85,8 +85,8 @@ function NetworkPeer:init(name, rpc, id, loading, synced, in_lobby, character, u
 	end
 
 	self._profile = {
+		math = nil,
 		outfit_string = "",
-		size = nil,
 	}
 	self._handshakes = {}
 	self._streaming_status = 0
@@ -1665,7 +1665,6 @@ function NetworkPeer:sync_lobby_data(peer)
 
 	local level = managers.experience:current_level()
 	local character = self:character()
-	local progress = managers.upgrades:progress()
 	local menu_state = managers.menu:get_peer_state(self:id())
 	local menu_state_index = tweak_data:menu_sync_state_to_index(menu_state)
 
@@ -1977,16 +1976,4 @@ function NetworkPeer:unit_delete()
 	end
 
 	self._unit = nil
-end
-
-function NetworkPeer:update_character_sequence(character_switch_sequence)
-	if not alive(self._unit) then
-		return
-	end
-
-	print("[NetworkPeer:_update_character]", "character_switch_sequence", character_switch_sequence)
-
-	if character_switch_sequence and self._unit:damage() and self._unit:damage():has_sequence(character_switch_sequence) then
-		self._unit:damage():run_sequence_simple(character_switch_sequence)
-	end
 end

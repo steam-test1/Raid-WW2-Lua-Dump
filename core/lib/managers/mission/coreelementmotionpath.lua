@@ -3,10 +3,6 @@ core:import("CoreMissionScriptElement")
 
 ElementMotionPathOperator = ElementMotionPathOperator or class(CoreMissionScriptElement.MissionScriptElement)
 
-function ElementMotionPathOperator:init(...)
-	ElementMotionPathOperator.super.init(self, ...)
-end
-
 function ElementMotionPathOperator:client_on_executed(...)
 	self:on_executed(...)
 end
@@ -58,10 +54,6 @@ function ElementMotionPathOperator:on_executed(instigator)
 end
 
 ElementMotionPathTrigger = ElementMotionPathTrigger or class(CoreMissionScriptElement.MissionScriptElement)
-
-function ElementMotionPathTrigger:init(...)
-	ElementMotionPathTrigger.super.init(self, ...)
-end
 
 function ElementMotionPathTrigger:on_script_activated()
 	for _, id in ipairs(self._values.elements) do

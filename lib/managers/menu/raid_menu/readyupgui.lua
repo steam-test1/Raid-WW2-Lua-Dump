@@ -8,6 +8,8 @@ function ReadyUpGui:init(ws, fullscreen_ws, node, component_name)
 		self._synced_document_spawn_chance_to_host = false
 	end
 
+	managers.groupai:state():set_allow_dropin(false)
+
 	self._card_control_set_nil = false
 	self._continuing_mission = managers.raid_job:current_job() ~= nil
 
@@ -481,7 +483,7 @@ function ReadyUpGui:_get_character_spawn_index(control_list_index)
 end
 
 function ReadyUpGui:_set_card_selection_controls()
-	self._raid_card_count, self._operation_card_count = managers.challenge_cards:get_cards_count_per_type(managers.challenge_cards:get_readyup_card_cache())
+	self._raid_card_count, self._operation_card_count = managers.challenge_cards:get_cards_count_per_type(managers.challenge_cards:get_inventory())
 
 	if not managers.raid_menu:is_pc_controller() then
 		self:bind_controller_inputs(self._current_peer == managers.network:session():local_peer(), true)

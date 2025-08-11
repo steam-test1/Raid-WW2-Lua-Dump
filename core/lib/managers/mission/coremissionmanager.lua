@@ -29,14 +29,13 @@ function MissionManager:_resolution_changed()
 	managers.gui_data:layout_corner_saferect_workspace(self._workspace)
 end
 
-function MissionManager:parse(params, stage_name, offset, file_type)
+function MissionManager:parse(params, stage_name, file_type)
 	local file_path, activate_mission
 
 	if CoreClass.type_name(params) == "table" then
 		file_path = params.file_path
 		file_type = params.file_type or "mission"
 		activate_mission = params.activate_mission
-		offset = params.offset
 		self._worlddefinition = params.worlddefinition
 		self._sync_id = params.sync_id
 	else
@@ -303,7 +302,6 @@ function MissionManager:add_persistent_debug_output(debug, color)
 		return
 	end
 
-	Application:debug("[MissionManager:add_persistent_debug_output]", debug)
 	self._persistent_debug_output:script().log(debug, color)
 end
 

@@ -447,6 +447,7 @@ function Setup:on_tweak_data_reloaded()
 	managers.dlc:on_tweak_data_reloaded()
 	managers.voice_over:on_tweak_data_reloaded()
 	managers.fire:on_tweak_data_reloaded()
+	managers.upgrades:on_tweak_data_reloaded()
 	managers.raid_job:generate_bounty_job()
 end
 

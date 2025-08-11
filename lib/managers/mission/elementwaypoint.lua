@@ -30,6 +30,11 @@ function ElementWaypoint:on_executed(instigator)
 		return
 	end
 
+	self:_add_waypoint()
+	ElementWaypoint.super.on_executed(self, instigator)
+end
+
+function ElementWaypoint:_add_waypoint()
 	Application:debug("[ElementWaypoint] self._values.icon", inspect(self._values))
 
 	local text = managers.localization:text(self._values.text_id)
@@ -57,8 +62,10 @@ function ElementWaypoint:on_executed(instigator)
 	})
 
 	self._waypoint_shown = true
+end
 
-	ElementWaypoint.super.on_executed(self, instigator)
+function ElementWaypoint:operation_add()
+	self:_add_waypoint()
 end
 
 function ElementWaypoint:operation_remove()

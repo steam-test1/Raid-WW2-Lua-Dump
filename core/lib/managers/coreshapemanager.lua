@@ -589,6 +589,8 @@ function ShapeSphere:is_inside(pos)
 end
 
 function ShapeSphere:draw(t, dt, r, g, b)
+	print("draw sphere")
+
 	local brush = Draw:brush()
 
 	brush:set_color(Color(0.5, r, g, b))

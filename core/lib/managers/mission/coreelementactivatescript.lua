@@ -3,10 +3,6 @@ core:import("CoreMissionScriptElement")
 
 ElementActivateScript = ElementActivateScript or class(CoreMissionScriptElement.MissionScriptElement)
 
-function ElementActivateScript:init(...)
-	ElementActivateScript.super.init(self, ...)
-end
-
 function ElementActivateScript:client_on_executed(...)
 	self:on_executed(...)
 end

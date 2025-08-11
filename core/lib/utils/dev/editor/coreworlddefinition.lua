@@ -103,7 +103,7 @@ function WorldDefinition:init(params)
 
 					values.unit_data.package = values.unit_data.package or self._definition.package
 
-					local unit = self:_create_statics_unit(values, self._offset, true)
+					local unit = self:_create_statics_unit(values, true)
 
 					coroutine.yield()
 				end
@@ -125,7 +125,7 @@ function WorldDefinition:init(params)
 						counter = counter + 1
 						values.unit_data.package = values.unit_data.package or continent.package
 
-						local unit = self:_create_statics_unit(values, self._offset, true, name)
+						local unit = self:_create_statics_unit(values, true, name)
 
 						if counter == WorldDefinition.LOAD_UNITS_PER_FRAME_HEAVY then
 							counter = 1
@@ -161,7 +161,7 @@ function WorldDefinition:init(params)
 						counter = counter + 1
 						values.unit_data.package = values.unit_data.package or continent.package
 
-						local unit = self:_create_dynamics_unit(values, offset)
+						local unit = self:_create_dynamics_unit(values)
 
 						if counter == WorldDefinition.LOAD_UNITS_PER_FRAME_HEAVY then
 							counter = 1
@@ -178,7 +178,6 @@ function WorldDefinition:init(params)
 		end)
 	end
 
-	self._offset = nil
 	self._return_data = nil
 
 	if self.is_streamed_world and not WorldDefinition.ASYNC_CALLBACKS then
@@ -444,7 +443,7 @@ function WorldDefinition:on_continent_package_loaded(params, package)
 end
 
 function WorldDefinition:on_instance_package_loaded(params, package)
-	Application:debug("[WorldDefinition:on_instance_package_loaded()] INSTANCE PACKAGE LOADED", package, inspect(params))
+	Application:debug("[WorldDefinition:on_instance_package_loaded] INSTANCE PACKAGE LOADED", package, inspect(params))
 
 	local instance = self._package_load_params[params.key].instance
 	local pkg = self._package_load_params[params.key].pkg
@@ -455,7 +454,7 @@ function WorldDefinition:on_instance_package_loaded(params, package)
 	end
 
 	if instance and dep_loaded and not self._package_load_params[params.key].loaded then
-		Application:debug("[WorldDefinition:on_instance_package_loaded()] Finishing up instance load", params.key, pkg)
+		Application:debug("[WorldDefinition:on_instance_package_loaded] Finishing up instance load", params.key, pkg)
 		self:_do_instance_loaded(params.key)
 
 		self._package_load_params[params.key].loaded = true
@@ -463,7 +462,7 @@ function WorldDefinition:on_instance_package_loaded(params, package)
 end
 
 function WorldDefinition:_do_instance_loaded(key)
-	Application:debug("WorldDefinition:_do_instance_loaded(key)", key, inspect(self._package_load_params[key]))
+	Application:debug("[WorldDefinition:_do_instance_loaded]", key, inspect(self._package_load_params[key]))
 
 	local instance = self._package_load_params[key].instance
 	local data = self._package_load_params[key].data
@@ -471,6 +470,8 @@ function WorldDefinition:_do_instance_loaded(key)
 	if self._created_by_editor or not instance.mission_placed then
 		local package_data = managers.world_instance:packages_by_instance(instance)
 		local prepared_unit_data = managers.world_instance:prepare_unit_data(instance, self._continents[instance.continent], self._translation and self)
+
+		Application:debug("[WorldDefinition:_do_instance_loaded] Non-(Editor/MissionPlaced) instance", inspect(prepared_unit_data))
 
 		if prepared_unit_data.statics then
 			for _, static in ipairs(prepared_unit_data.statics) do
@@ -490,6 +491,7 @@ function WorldDefinition:_do_instance_loaded(key)
 			end
 		end
 	else
+		Application:debug("[WorldDefinition:_do_instance_loaded] prepare_serialized_instance_data", inspect(instance))
 		managers.world_instance:prepare_serialized_instance_data(instance)
 	end
 end
@@ -671,7 +673,7 @@ function WorldDefinition:_get_new_id(old_id, base_id)
 	return new_id
 end
 
-function WorldDefinition:_get_new_instance_id(old_id, offset)
+function WorldDefinition:_get_new_instance_id(old_id)
 	local new_id = self:get_next_unique_instance_id(old_id)
 
 	self._id_converter.old_to_new[old_id] = new_id
@@ -716,6 +718,7 @@ function WorldDefinition:_insert_instances()
 
 					self:_load_continent_init_package(package_data.init_package, "on_instance_package_loaded", pkg_key)
 					self:_load_continent_package(package_data.package, "on_instance_package_loaded", pkg_key)
+					self:_load_continent_package(package_data.real_package, "on_instance_package_loaded", pkg_key)
 
 					if not self.is_streamed_world or not WorldDefinition.ASYNC_CALLBACKS then
 						if self._created_by_editor or not instance.mission_placed then
@@ -760,17 +763,15 @@ function WorldDefinition:init_done()
 	self.is_created = true
 end
 
-function WorldDefinition:create(layer, offset, world_in_world, nav_graph_loaded)
-	Application:debug("[WorldDefinition:create]", layer, offset, world_in_world, nav_graph_loaded)
+function WorldDefinition:create(layer, world_in_world, nav_graph_loaded)
+	Application:debug("[WorldDefinition:create]", layer, world_in_world, nav_graph_loaded)
 	Application:check_termination()
 	self:_measure_lap_time("start create")
-
-	offset = offset or Vector3(0, 0, 0)
 
 	local return_data = {}
 
 	if (layer == "level_settings" or layer == "all") and self._definition.level_settings then
-		self:_load_level_settings(self._definition.level_settings.settings, offset)
+		self:_load_level_settings(self._definition.level_settings.settings)
 
 		return_data = self._definition.level_settings.settings
 	end
@@ -808,6 +809,19 @@ function WorldDefinition:create(layer, offset, world_in_world, nav_graph_loaded)
 					end
 
 					managers.world_instance:add_instance_data(data)
+
+					if not Application:editor() then
+						local world_massunit_file = string.gsub(data.folder, "/world", "/massunit")
+
+						self:_create_massunit({
+							file = "massunit",
+							world_file = world_massunit_file,
+						}, {
+							pos = data.position,
+							rot = data.rotation,
+						})
+					end
+
 					table.insert(return_data, data)
 				end
 			end
@@ -819,7 +833,7 @@ function WorldDefinition:create(layer, offset, world_in_world, nav_graph_loaded)
 
 	if layer == "ai" and self._definition.ai then
 		for _, values in ipairs(self._definition.ai) do
-			local unit = self:_create_ai_editor_unit(values, offset)
+			local unit = self:_create_ai_editor_unit(values)
 
 			if unit then
 				table.insert(return_data, unit)
@@ -833,14 +847,14 @@ function WorldDefinition:create(layer, offset, world_in_world, nav_graph_loaded)
 		if self._definition.ai_nav_graphs and not nav_graph_loaded then
 			local path = self:world_dir() .. self._definition.ai_nav_graphs.file
 
-			self:_load_ai_nav_graphs(path, offset)
+			self:_load_ai_nav_graphs(path)
 			Application:cleanup_thread_garbage()
 		end
 
 		self:_measure_lap_time("nav")
 
 		if self._definition.ai_mop_graphs then
-			self:_load_ai_mop_graphs(self._definition.ai_mop_graphs, offset)
+			self:_load_ai_mop_graphs(self._definition.ai_mop_graphs)
 			Application:cleanup_thread_garbage()
 		end
 
@@ -853,14 +867,14 @@ function WorldDefinition:create(layer, offset, world_in_world, nav_graph_loaded)
 		Application:debug("[WorldDefinition:create] loading AI settengs")
 
 		if self._definition.ai_settings then
-			return_data = self:_load_ai_settings(self._definition.ai_settings, offset)
+			return_data = self:_load_ai_settings(self._definition.ai_settings)
 		end
 	end
 
 	Application:check_termination()
 
 	if (layer == "portal" or layer == "all") and self._definition.portal then
-		self:_create_portal(self._definition.portal, offset)
+		self:_create_portal(self._definition.portal)
 
 		return_data = self._definition.portal
 	end
@@ -902,14 +916,14 @@ function WorldDefinition:create(layer, offset, world_in_world, nav_graph_loaded)
 	if layer == "mission" then
 		if self._definition.mission then
 			for _, values in ipairs(self._definition.mission) do
-				table.insert(return_data, self:_create_mission_unit(values, offset))
+				table.insert(return_data, self:_create_mission_unit(values))
 			end
 		end
 
 		for name, continent in pairs(self._continent_definitions) do
 			if continent.mission then
 				for _, values in ipairs(continent.mission) do
-					table.insert(return_data, self:_create_mission_unit(values, offset))
+					table.insert(return_data, self:_create_mission_unit(values))
 				end
 			end
 		end
@@ -918,7 +932,7 @@ function WorldDefinition:create(layer, offset, world_in_world, nav_graph_loaded)
 	self:_measure_lap_time("mission")
 
 	if (layer == "brush" or layer == "all") and self._definition.brush then
-		self:_create_massunit(self._definition.brush, offset)
+		self:_create_massunit(self._definition.brush)
 	end
 
 	self:_measure_lap_time("brush")
@@ -927,7 +941,7 @@ function WorldDefinition:create(layer, offset, world_in_world, nav_graph_loaded)
 	if layer == "environment" or layer == "all" then
 		local environment = self._definition.environment
 
-		self:_create_environment(environment, offset, world_in_world)
+		self:_create_environment(environment, world_in_world)
 
 		return_data = CoreTable.deep_clone(environment)
 	end
@@ -940,16 +954,25 @@ function WorldDefinition:create(layer, offset, world_in_world, nav_graph_loaded)
 
 	self:_measure_lap_time("world_camera")
 
-	if (layer == "wires" or layer == "all") and self._definition.wires then
-		for _, values in ipairs(self._definition.wires) do
-			table.insert(return_data, self:_create_wires_unit(values, offset))
+	if layer == "wires" or layer == "all" then
+		if self._definition.wires then
+			for _, values in ipairs(self._definition.wires) do
+				table.insert(return_data, self:_create_wires_unit(values))
+			end
+		end
+
+		for name, continent in pairs(self._continent_definitions) do
+			if continent.wires then
+				for _, values in ipairs(continent.wires) do
+					table.insert(return_data, self:_create_wires_unit(values))
+				end
+			end
 		end
 	end
 
 	self:_measure_lap_time("wires")
 
 	self.load_statics_done = false
-	self._offset = offset
 	self._return_data = return_data
 
 	if (layer == "statics" or layer == "all") and not world_in_world then
@@ -957,7 +980,7 @@ function WorldDefinition:create(layer, offset, world_in_world, nav_graph_loaded)
 			for _, values in ipairs(self._definition.statics) do
 				values.unit_data.package = values.unit_data.package or self._definition.package
 
-				local unit = self:_create_statics_unit(values, offset)
+				local unit = self:_create_statics_unit(values)
 
 				if unit then
 					table.insert(return_data, unit)
@@ -970,7 +993,7 @@ function WorldDefinition:create(layer, offset, world_in_world, nav_graph_loaded)
 				for _, values in ipairs(continent.statics) do
 					values.unit_data.package = values.unit_data.package or continent.package
 
-					local unit = self:_create_statics_unit(values, offset)
+					local unit = self:_create_statics_unit(values)
 
 					if unit then
 						table.insert(return_data, unit)
@@ -987,7 +1010,7 @@ function WorldDefinition:create(layer, offset, world_in_world, nav_graph_loaded)
 			for _, values in ipairs(self._definition.dynamics) do
 				values.unit_data.package = values.unit_data.package or self._definition.package
 
-				table.insert(return_data, self:_create_dynamics_unit(values, offset))
+				table.insert(return_data, self:_create_dynamics_unit(values))
 			end
 		end
 
@@ -996,7 +1019,7 @@ function WorldDefinition:create(layer, offset, world_in_world, nav_graph_loaded)
 				for _, values in ipairs(continent.dynamics) do
 					values.unit_data.package = values.unit_data.package or continent.package
 
-					local unit = self:_create_dynamics_unit(values, offset)
+					local unit = self:_create_dynamics_unit(values)
 
 					if unit then
 						table.insert(return_data, unit)
@@ -1026,11 +1049,11 @@ function WorldDefinition:destroy()
 	self.destroyed = true
 end
 
-function WorldDefinition:_load_level_settings(data, offset)
+function WorldDefinition:_load_level_settings(data)
 	return
 end
 
-function WorldDefinition:_load_ai_nav_graphs(path, offset)
+function WorldDefinition:_load_ai_nav_graphs(path)
 	Application:debug("[WorldDefinition] _load_ai_nav_graphs: Loading nav data file '" .. path .. ".nav_data'. ")
 
 	if not DB:has("nav_data", path) then
@@ -1050,8 +1073,8 @@ function WorldDefinition:_load_ai_nav_graphs(path, offset)
 	self:_measure_lap_time("_load_ai_nav_graphs LOAD")
 end
 
-function WorldDefinition:_load_ai_mop_graphs(data, offset)
-	local path = self:world_dir() .. data.file
+function WorldDefinition:_load_ai_mop_graphs(data)
+	local path = data.world_file or self:world_dir() .. data.file
 
 	if not DB:has("mop_data", path) then
 		Application:error("The specified mop data file '" .. path .. ".mop_data' was not found for this level! ", path, "Motion paths will not be loaded!")
@@ -1070,20 +1093,20 @@ function WorldDefinition:_load_ai_mop_graphs(data, offset)
 	values = nil
 end
 
-function WorldDefinition:_load_ai_settings(data, offset)
+function WorldDefinition:_load_ai_settings(data)
 	managers.groupai:set_state(data.ai_settings.group_state, self._world_id)
 	managers.ai_data:load_data(data.ai_data)
 
 	return data.ai_settings
 end
 
-function WorldDefinition:_create_portal(data, offset)
+function WorldDefinition:_create_portal(data)
 	if not Application:editor() then
 		for _, portal in ipairs(data.portals) do
 			local t = {}
 
 			for _, point in ipairs(portal.points) do
-				table.insert(t, point.position + offset)
+				table.insert(t, point.position)
 			end
 
 			local top = portal.top
@@ -1177,7 +1200,7 @@ function WorldDefinition:get_cover_data()
 end
 
 function WorldDefinition:_create_sounds(data)
-	local path = self:world_dir() .. data.file
+	local path = data.world_file or self:world_dir() .. data.file
 
 	if not DB:has("world_sounds", path) then
 		Application:error("The specified sound file '" .. path .. ".world_sounds' was not found for this level! ", path, "No sound will be loaded!")
@@ -1206,10 +1229,8 @@ function WorldDefinition:_create_sounds(data)
 	end
 end
 
-local zero_rot = Rotation()
-
-function WorldDefinition:_create_massunit(data, offset)
-	local path = self:world_dir() .. data.file
+function WorldDefinition:_create_massunit(data, translation)
+	local path = data.world_file or self:world_dir() .. data.file
 	local spawn_mass = true
 
 	if Application:editor() then
@@ -1232,47 +1253,27 @@ function WorldDefinition:_create_massunit(data, offset)
 		end
 	end
 
+	Application:debug("[WorldDefinition:_create_massunit] spawning?", spawn_mass, path)
+
 	if spawn_mass then
-		local rotation = self._translation and self._translation.rotation or zero_rot
+		local position = translation and translation.pos or self._translation and self._translation.position or Vector3()
+		local rotation = translation and translation.rot or self._translation and self._translation.rotation or Rotation()
 
-		if self._translation then
-			offset = self._translation.position
-		end
-
-		MassUnitManager:delete_all_units()
-		MassUnitManager:load(path:id(), offset, rotation, self._massunit_replace_names)
-	end
-end
-
-local function check_is_environment_vanilla(environment_name)
-	local vanilla_env_path = "environments/vanilla"
-
-	if environment_name:sub(0, vanilla_env_path:len()) ~= vanilla_env_path then
-		Application:error("[NOT VANILLA][Environment] Loading environment outside of vanilla folder: ", environment_name)
+		MassUnitManager:load(path:id(), position, rotation, self._massunit_replace_names)
 	end
 end
 
 function WorldDefinition:_set_environment(environment_name)
-	check_is_environment_vanilla(environment_name)
-
-	if Global.game_settings.level_id then
-		local env_params = self.level_data and self.level_data.env_params
-
-		environment_name = env_params and env_params.environment or environment_name
-	end
-
 	if environment_name ~= "none" then
 		managers.viewport:preload_environment(environment_name)
 		managers.viewport:set_default_environment(environment_name, nil, nil)
 	end
 end
 
-function WorldDefinition:_create_environment(data, offset, world_in_world)
+function WorldDefinition:_create_environment(data, world_in_world)
 	if not world_in_world or self.level_data and self.level_data.load_env then
 		self:_set_environment(data.environment_values.environment)
 	end
-
-	offset = 0
 
 	local wind = data.wind
 
@@ -1282,21 +1283,23 @@ function WorldDefinition:_create_environment(data, offset, world_in_world)
 	Wind:set_enabled(true)
 
 	if not self._created_by_editor then
-		for _, unit_effect in ipairs(data.effects) do
+		for i, unit_effect in ipairs(data.effects) do
 			local name = Idstring(unit_effect.name)
 
 			if DB:has("effect", name) then
-				managers.portal:add_effect({
+				local unique_name = self._world_id .. "_" .. unit_effect.name_id
+				local params = {
 					effect = name,
 					position = unit_effect.position,
 					rotation = unit_effect.rotation,
-				})
+				}
+
+				managers.environment_effects:spawn_mission_effect(unique_name, params, self._world_id)
 			end
 		end
 	end
 
 	for _, environment_area in ipairs(data.environment_areas) do
-		check_is_environment_vanilla(environment_area.environment)
 		managers.viewport:preload_environment(environment_area.environment)
 		managers.environment_area:add_area(environment_area, self._world_id)
 	end
@@ -1305,7 +1308,7 @@ function WorldDefinition:_create_environment(data, offset, world_in_world)
 		local units = {}
 
 		for _, gizmo in ipairs(data.cubemap_gizmos) do
-			local unit = self:make_unit(gizmo, offset)
+			local unit = self:make_unit(gizmo)
 
 			table.insert(units, unit)
 		end
@@ -1362,10 +1365,10 @@ function WorldDefinition:_create_world_cameras(data, translation)
 	managers.worldcamera:load(values, self._world_id, world_translation, world_rotation_yaw)
 end
 
-function WorldDefinition:_create_mission_unit(data, offset)
+function WorldDefinition:_create_mission_unit(data)
 	self:preload_unit(data.unit_data.name)
 
-	local unit = self:make_unit(data.unit_data, offset)
+	local unit = self:make_unit(data.unit_data)
 
 	if unit then
 		unit:mission_element_data().script = data.script
@@ -1382,10 +1385,10 @@ function WorldDefinition:_create_mission_unit(data, offset)
 	return unit
 end
 
-function WorldDefinition:_create_wires_unit(data, offset)
+function WorldDefinition:_create_wires_unit(data)
 	self:preload_unit(data.unit_data.name)
 
-	local unit = self:make_unit(data.unit_data, offset)
+	local unit = self:make_unit(data.unit_data)
 
 	if unit then
 		unit:wire_data().slack = data.wire_data.slack
@@ -1401,20 +1404,20 @@ function WorldDefinition:_create_wires_unit(data, offset)
 	return unit
 end
 
-function WorldDefinition:_create_statics_unit(data, offset, world_in_world, continent_name)
+function WorldDefinition:_create_statics_unit(data, world_in_world, continent_name)
 	self:preload_unit(data.unit_data.name)
 
-	return self:make_unit(data.unit_data, offset, world_in_world, continent_name)
+	return self:make_unit(data.unit_data, world_in_world, continent_name)
 end
 
-function WorldDefinition:_create_dynamics_unit(data, offset)
+function WorldDefinition:_create_dynamics_unit(data)
 	self:preload_unit(data.unit_data.name)
 
-	return self:make_unit(data.unit_data, offset)
+	return self:make_unit(data.unit_data)
 end
 
-function WorldDefinition:_create_ai_editor_unit(data, offset)
-	local unit = self:_create_statics_unit(data, offset)
+function WorldDefinition:_create_ai_editor_unit(data)
+	local unit = self:_create_statics_unit(data)
 
 	if data.ai_editor_data then
 		for name, value in pairs(data.ai_editor_data) do
@@ -1448,7 +1451,7 @@ function WorldDefinition:preload_unit(name)
 	end
 end
 
-function WorldDefinition:make_unit(data, offset, world_in_world, continent_name)
+function WorldDefinition:make_unit(data, world_in_world, continent_name)
 	local name = data.name
 
 	if self._ignore_spawn_list[Idstring(name):key()] then
@@ -1496,7 +1499,7 @@ function WorldDefinition:make_unit(data, offset, world_in_world, continent_name)
 	end
 
 	if MassUnitManager:can_spawn_unit(Idstring(name)) and not is_editor then
-		unit = MassUnitManager:spawn_unit(Idstring(name), data.position + offset, data.rotation)
+		unit = MassUnitManager:spawn_unit(Idstring(name), data.position, data.rotation)
 	elseif data.package then
 		unit = CoreUnit.safe_spawn_unit_from_package(name, data.package, data.position, data.rotation)
 	else

@@ -134,9 +134,9 @@ function WorldHolder:status()
 	return self._worldfile_generation
 end
 
-function WorldHolder:create_world(world, layer, offset)
+function WorldHolder:create_world(world, layer)
 	if self._definition then
-		local return_data = self._definition:create(layer, offset)
+		local return_data = self._definition:create(layer)
 
 		if not Application:editor() and (layer == "statics" or layer == "all") and not Global.running_slave then
 			World:occlusion_manager():merge_occluders(5)
@@ -148,7 +148,7 @@ function WorldHolder:create_world(world, layer, offset)
 	local c_world = self._worlds[world]
 
 	if c_world then
-		local return_data = c_world:create(layer, offset)
+		local return_data = c_world:create(layer)
 
 		if not Application:editor() and (layer == "statics" or layer == "all") and not Global.running_slave then
 			World:culling_octree():build_tree()
@@ -165,11 +165,11 @@ function WorldHolder:create_world(world, layer, offset)
 	end
 end
 
-function WorldHolder:get_player_data(world, layer, offset)
+function WorldHolder:get_player_data(world, layer)
 	local c_world = self._worlds[world]
 
 	if c_world then
-		return c_world:get_player_data(offset)
+		return c_world:get_player_data()
 	else
 		Application:error("WorldHolder:create_world :: Could not create world", world, "for layer", layer)
 	end
@@ -496,125 +496,26 @@ function CoreOldWorldDefinition:add_editor_group_unit(name, id)
 	table.insert(self._old_groups.groups[name].units, id)
 end
 
-function CoreOldWorldDefinition:parse_brush(node)
-	if node:has_parameter("path") then
-		self._massunit_path = node:parameter("path")
-	elseif node:has_parameter("file") then
-		self._massunit_path = node:parameter("file")
-
-		if not DB:has("massunit", self._massunit_path) then
-			self._massunit_path = self:world_dir() .. self._massunit_path
-		end
-	end
-end
-
-function CoreOldWorldDefinition:parse_sounds(node, t)
-	local path
-
-	if node:has_parameter("path") then
-		path = node:parameter("path")
-	elseif node:has_parameter("file") then
-		path = node:parameter("file")
-
-		if not DB:has("world_sounds", path) then
-			path = self:world_dir() .. path
-		end
-	end
-
-	if not DB:has("world_sounds", path) then
-		Application:error("The specified sound file '" .. path .. ".world_sounds' was not found for this level! ", path, "No sound will be loaded!")
-
-		return
-	end
-
-	local node = self:_load_node("world_sounds", path)
-
-	self._sounds = CoreWDSoundEnvironment:new(node)
-end
-
-function CoreOldWorldDefinition:parse_mission_scripts(node, t)
-	if not Application:editor() then
-		return
-	end
-
-	t.scripts = t.scripts or {}
-
-	local values = parse_values_node(node)
-
-	for name, data in pairs(values._scripts) do
-		t.scripts[name] = data
-	end
-end
-
-function CoreOldWorldDefinition:parse_mission(node, t)
-	if Application:editor() then
-		local MissionClass = rawget(_G, "MissionElementUnit") or rawget(_G, "CoreMissionElementUnit")
-
-		for child in node:children() do
-			table.insert(t, MissionClass:new(child))
-		end
-	end
-end
-
-function CoreOldWorldDefinition:parse_environment(node)
-	self._environment = CoreEnvironment:new(node)
-end
-
-function CoreOldWorldDefinition:parse_world_camera(node)
-	if node:has_parameter("path") then
-		self._world_camera_path = node:parameter("path")
-	elseif node:has_parameter("file") then
-		self._world_camera_path = node:parameter("file")
-
-		if not DB:has("world_cameras", self._world_camera_path) then
-			self._world_camera_path = self:world_dir() .. self._world_camera_path
-		end
-	end
-end
-
-function CoreOldWorldDefinition:parse_portal(node)
-	self._portal = CorePortal:new(node)
-end
-
-function CoreOldWorldDefinition:parse_wires(node, t)
-	for child in node:children() do
-		table.insert(t, CoreWire:new(child))
-	end
-end
-
-function CoreOldWorldDefinition:parse_statics(node, t)
-	for child in node:children() do
-		table.insert(t, CoreStaticUnit:new(child))
-	end
-end
-
-function CoreOldWorldDefinition:parse_dynamics(node, t)
-	for child in node:children() do
-		table.insert(t, CoreDynamicUnit:new(child))
-	end
-end
-
 function CoreOldWorldDefinition:clear_definitions()
 	self._definitions = nil
 end
 
-function CoreOldWorldDefinition:create(layer, offset)
+function CoreOldWorldDefinition:create(layer)
 	if self._level_file then
 		self:create_from_level_file({
 			layer = layer,
 			level_file = self._level_file,
-			offset = offset,
 		})
-		self:_create_continent_level(layer, offset)
+		self:_create_continent_level(layer)
 		self._level_file:destroy()
 
 		return true
 	else
-		return self:create_units(layer, offset)
+		return self:create_units(layer)
 	end
 end
 
-function CoreOldWorldDefinition:_create_continent_level(layer, offset)
+function CoreOldWorldDefinition:_create_continent_level(layer)
 	if not self._level_file:data(Idstring("continents")) then
 		Application:error("No continent data saved to level file, please resave.")
 
@@ -650,7 +551,6 @@ function CoreOldWorldDefinition:_create_continent_level(layer, offset)
 					self:create_from_level_file({
 						layer = layer,
 						level_file = level_file,
-						offset = offset,
 					})
 					level_file:destroy()
 				else
@@ -661,7 +561,7 @@ function CoreOldWorldDefinition:_create_continent_level(layer, offset)
 	end
 end
 
-function CoreOldWorldDefinition:create_units(layer, offset)
+function CoreOldWorldDefinition:create_units(layer)
 	if layer ~= "all" and not self._definitions[layer] then
 		return {}
 	end
@@ -685,7 +585,7 @@ function CoreOldWorldDefinition:create_units(layer, offset)
 	end
 
 	if (layer == "portal" or layer == "all") and self._portal then
-		self._portal:create(offset)
+		self._portal:create()
 
 		return_data = self._portal
 	end
@@ -702,39 +602,39 @@ function CoreOldWorldDefinition:create_units(layer, offset)
 
 	if layer == "mission" then
 		for _, unit in ipairs(self._definitions.mission) do
-			table.insert(return_data, unit:create_unit(offset))
+			table.insert(return_data, unit:create_unit())
 		end
 	end
 
 	if (layer == "brush" or layer == "all") and self._massunit_path then
-		self:load_massunit(self._massunit_path, offset)
+		self:load_massunit(self._massunit_path)
 	end
 
 	if (layer == "environment" or layer == "all") and self._environment then
-		self._environment:create(offset)
+		self._environment:create()
 
 		return_data = self._environment
 	end
 
 	if (layer == "world_camera" or layer == "all") and self._world_camera_path then
-		managers.worldcamera:load(self._world_camera_path, offset)
+		managers.worldcamera:load(self._world_camera_path)
 	end
 
 	if (layer == "wires" or layer == "all") and self._definitions.wires then
 		for _, unit in ipairs(self._definitions.wires) do
-			table.insert(return_data, unit:create_unit(offset))
+			table.insert(return_data, unit:create_unit())
 		end
 	end
 
 	if layer == "statics" or layer == "all" then
 		for _, unit in ipairs(self._definitions.statics) do
-			table.insert(return_data, unit:create_unit(offset))
+			table.insert(return_data, unit:create_unit())
 		end
 	end
 
 	if layer == "dynamics" or layer == "all" then
 		for _, unit in ipairs(self._definitions.dynamics) do
-			table.insert(return_data, unit:create_unit(offset))
+			table.insert(return_data, unit:create_unit())
 		end
 	end
 
@@ -743,39 +643,38 @@ end
 
 function CoreOldWorldDefinition:create_from_level_file(params)
 	local layer = params.layer
-	local offset = params.offset
 	local level_file = params.level_file
 
 	if (layer == "portal" or layer == "all") and not Application:editor() and level_file:data(Idstring("portal")) then
-		self:create_portals(level_file:data(Idstring("portal")).portals, offset)
-		self:create_portal_unit_groups(level_file:data(Idstring("portal")).unit_groups, offset)
+		self:create_portals(level_file:data(Idstring("portal")).portals)
+		self:create_portal_unit_groups(level_file:data(Idstring("portal")).unit_groups)
 	end
 
 	if (layer == "sounds" or layer == "all") and level_file:data(Idstring("sounds")) then
 		if level_file:data(Idstring("sounds")).path then
-			self:create_sounds(level_file:data(Idstring("sounds")).path, offset)
+			self:create_sounds(level_file:data(Idstring("sounds")).path)
 		elseif level_file:data(Idstring("sounds")).file then
-			self:create_sounds(self:world_dir() .. level_file:data(Idstring("sounds")).file, offset)
+			self:create_sounds(self:world_dir() .. level_file:data(Idstring("sounds")).file)
 		end
 	end
 
 	if (layer == "brush" or layer == "all") and level_file:data(Idstring("brush")) then
 		if level_file:data(Idstring("brush")).path then
-			self:load_massunit(level_file:data(Idstring("brush")).path, offset)
+			self:load_massunit(level_file:data(Idstring("brush")).path)
 		elseif level_file:data(Idstring("brush")).file then
-			self:load_massunit(self:world_dir() .. level_file:data(Idstring("brush")).file, offset)
+			self:load_massunit(self:world_dir() .. level_file:data(Idstring("brush")).file)
 		end
 	end
 
 	if (layer == "environment" or layer == "all") and level_file:data(Idstring("environment")) then
-		self:create_environment(level_file:data(Idstring("environment")), offset)
+		self:create_environment(level_file:data(Idstring("environment")))
 	end
 
 	if (layer == "world_camera" or layer == "all") and level_file:data(Idstring("world_camera")) then
 		if level_file:data(Idstring("world_camera")).path then
-			managers.worldcamera:load(level_file:data(Idstring("world_camera")).path, offset)
+			managers.worldcamera:load(level_file:data(Idstring("world_camera")).path)
 		elseif level_file:data(Idstring("world_camera")).file then
-			managers.worldcamera:load(self:world_dir() .. level_file:data(Idstring("world_camera")).file, offset)
+			managers.worldcamera:load(self:world_dir() .. level_file:data(Idstring("world_camera")).file)
 		end
 	end
 
@@ -783,7 +682,6 @@ function CoreOldWorldDefinition:create_from_level_file(params)
 		local t = self:create_level_units({
 			layer = "wires",
 			level_file = level_file,
-			offset = offset,
 		})
 
 		for _, d in ipairs(t) do
@@ -806,7 +704,6 @@ function CoreOldWorldDefinition:create_from_level_file(params)
 		self:create_level_units({
 			layer = "statics",
 			level_file = level_file,
-			offset = offset,
 		})
 	end
 
@@ -814,14 +711,12 @@ function CoreOldWorldDefinition:create_from_level_file(params)
 		self:create_level_units({
 			layer = "dynamics",
 			level_file = level_file,
-			offset = offset,
 		})
 	end
 end
 
 function CoreOldWorldDefinition:create_level_units(params)
 	local layer = params.layer
-	local offset = params.offset
 	local level_file = params.level_file
 	local t = level_file:create(layer)
 
@@ -836,12 +731,12 @@ function CoreOldWorldDefinition:create_level_units(params)
 	return t
 end
 
-function CoreOldWorldDefinition:create_portals(portals, offset)
+function CoreOldWorldDefinition:create_portals(portals)
 	for _, portal in ipairs(portals) do
 		local t = {}
 
 		for _, point in ipairs(portal.points) do
-			table.insert(t, point.position + offset)
+			table.insert(t, point.position)
 		end
 
 		local top = portal.top
@@ -856,7 +751,7 @@ function CoreOldWorldDefinition:create_portals(portals, offset)
 	end
 end
 
-function CoreOldWorldDefinition:create_portal_unit_groups(unit_groups, offset)
+function CoreOldWorldDefinition:create_portal_unit_groups(unit_groups)
 	if not unit_groups then
 		return
 	end
@@ -895,7 +790,7 @@ function CoreOldWorldDefinition:create_sounds(path)
 	sounds_level:destroy()
 end
 
-function CoreOldWorldDefinition:create_environment(data, offset)
+function CoreOldWorldDefinition:create_environment(data)
 	managers.viewport:set_default_environment(data.environment, nil, nil)
 
 	local wind = data.wind
@@ -924,7 +819,7 @@ function CoreOldWorldDefinition:create_environment(data, offset)
 	end
 end
 
-function CoreOldWorldDefinition:load_massunit(path, offset)
+function CoreOldWorldDefinition:load_massunit(path)
 	if Application:editor() then
 		local l = MassUnitManager:list(path:id())
 
@@ -950,7 +845,7 @@ function CoreOldWorldDefinition:load_massunit(path, offset)
 	end
 
 	MassUnitManager:delete_all_units()
-	MassUnitManager:load(path:id(), offset, Rotation(), self._massunit_replace_names)
+	MassUnitManager:load(path:id(), Vector3(), Rotation(), self._massunit_replace_names)
 end
 
 function CoreOldWorldDefinition:parse_replace_unit()
@@ -997,7 +892,7 @@ function CoreOldWorldDefinition:preload_unit(name)
 	end
 end
 
-function CoreOldWorldDefinition:make_unit(name, data, offset)
+function CoreOldWorldDefinition:make_unit(name, data)
 	local is_editor = Application:editor()
 
 	if table.has(self._replace_names, name) then
@@ -1008,9 +903,9 @@ function CoreOldWorldDefinition:make_unit(name, data, offset)
 
 	if name then
 		if MassUnitManager:can_spawn_unit(Idstring(name)) and not is_editor then
-			unit = MassUnitManager:spawn_unit(Idstring(name), data._position + offset, data._rotation)
+			unit = MassUnitManager:spawn_unit(Idstring(name), data._position, data._rotation)
 		else
-			unit = safe_spawn_unit(name, data._position + offset, data._rotation)
+			unit = safe_spawn_unit(name, data._position, data._rotation)
 		end
 
 		if unit then
@@ -1412,7 +1307,7 @@ function CoreEnvironment:parse_unit(node)
 	table.insert(self._units_data, t)
 end
 
-function CoreEnvironment:create(offset)
+function CoreEnvironment:create()
 	if self._values.environment ~= "none" then
 		managers.viewport:set_default_environment(self._values.environment, nil, nil)
 	end
@@ -1443,7 +1338,7 @@ function CoreEnvironment:create(offset)
 	end
 
 	for _, data in ipairs(self._units_data) do
-		local unit = managers.worlddefinition:make_unit(data.name, data.generic, offset)
+		local unit = managers.worlddefinition:make_unit(data.name, data.generic)
 
 		table.insert(self._units, unit)
 	end
@@ -1496,13 +1391,13 @@ function CorePortal:parse_unit_group(node)
 	self._unit_groups[name] = shapes
 end
 
-function CorePortal:create(offset)
+function CorePortal:create()
 	if not Application:editor() then
 		for name, portal in pairs(self._portal_shapes) do
 			local t = {}
 
 			for _, data in ipairs(portal.portal) do
-				table.insert(t, data.pos + offset)
+				table.insert(t, data.pos)
 			end
 
 			local top = portal.top
@@ -1547,8 +1442,8 @@ function CoreWire:parse_wire(node)
 	self._slack = tonumber(node:parameter("slack"))
 end
 
-function CoreWire:create_unit(offset)
-	self._unit = managers.worlddefinition:make_unit(self._unit_name, self._generic, offset)
+function CoreWire:create_unit()
+	self._unit = managers.worlddefinition:make_unit(self._unit_name, self._generic)
 
 	if self._unit then
 		self._unit:wire_data().slack = self._slack
@@ -1576,8 +1471,8 @@ function CoreStaticUnit:init(node)
 	self._generic:continent_upgrade_nil_to_world()
 end
 
-function CoreStaticUnit:create_unit(offset)
-	self._unit = managers.worlddefinition:make_unit(self._unit_name, self._generic, offset)
+function CoreStaticUnit:create_unit()
+	self._unit = managers.worlddefinition:make_unit(self._unit_name, self._generic)
 
 	return self._unit
 end
@@ -1594,8 +1489,8 @@ function CoreDynamicUnit:init(node)
 	self._generic:continent_upgrade_nil_to_world()
 end
 
-function CoreDynamicUnit:create_unit(offset)
-	self._unit = managers.worlddefinition:make_unit(self._unit_name, self._generic, offset)
+function CoreDynamicUnit:create_unit()
+	self._unit = managers.worlddefinition:make_unit(self._unit_name, self._generic)
 
 	return self._unit
 end
@@ -1619,8 +1514,8 @@ function CoreMissionElementUnit:parse_values(node)
 	self._values = MissionElementValues:new(node)
 end
 
-function CoreMissionElementUnit:create_unit(offset)
-	self._unit = managers.worlddefinition:make_unit(self._unit_name, self._generic, offset)
+function CoreMissionElementUnit:create_unit()
+	self._unit = managers.worlddefinition:make_unit(self._unit_name, self._generic)
 
 	if self._unit then
 		self._unit:mission_element_data().script = self._script

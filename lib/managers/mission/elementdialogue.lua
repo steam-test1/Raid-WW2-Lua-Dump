@@ -20,7 +20,7 @@ function ElementDialogue:on_executed(instigator)
 
 		local interval = self._values.repeat_interval or 35
 
-		self._reminder_cb = self._mission_script:add(callback(self, self, "_queue_dialog", instigator), interval)
+		self._reminder_cb = self._mission_script:add(callback(self, self, "_queue_dialog", instigator or nil), interval)
 	else
 		self:_queue_dialog(instigator)
 	end
@@ -29,7 +29,16 @@ function ElementDialogue:on_executed(instigator)
 end
 
 function ElementDialogue:_queue_dialog(instigator)
-	local char = self._values.use_instigator and alive(instigator) and managers.criminals:character_name_by_unit(instigator)
+	local char
+
+	if self._values.use_instigator and alive(instigator) then
+		if instigator:carry_data() then
+			char = managers.criminals:character_name_by_peer_id(instigator:carry_data():latest_peer_id())
+		else
+			char = managers.criminals:character_name_by_unit(instigator)
+		end
+	end
+
 	local done_cbk = self._values.execute_on_executed_when_done and callback(self, self, "_done_callback", instigator)
 	local queue_dialog_unit = {
 		done_cbk = done_cbk,

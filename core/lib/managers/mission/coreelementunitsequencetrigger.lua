@@ -47,14 +47,6 @@ function ElementUnitSequenceTrigger:client_on_executed(...)
 	return
 end
 
-function ElementUnitSequenceTrigger:on_executed(instigator)
-	if not self._values.enabled then
-		return
-	end
-
-	ElementUnitSequenceTrigger.super.on_executed(self, instigator)
-end
-
 function ElementUnitSequenceTrigger:save(data)
 	data.enabled = self._values.enabled
 	data.save_me = true

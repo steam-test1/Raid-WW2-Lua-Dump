@@ -3,14 +3,15 @@ core:import("CoreEngineAccess")
 core:import("CoreMissionScriptElement")
 
 ElementPlayEffect = ElementPlayEffect or class(CoreMissionScriptElement.MissionScriptElement)
-ElementPlayEffect.IDS_EFFECT = Idstring("effect")
+
+local IDS_EFFECT = Idstring("effect")
 
 function ElementPlayEffect:init(...)
 	ElementPlayEffect.super.init(self, ...)
 
 	if Application:editor() then
 		if self._values.effect ~= "none" then
-			CoreEngineAccess._editor_load(self.IDS_EFFECT, self._values.effect:id())
+			CoreEngineAccess._editor_load(IDS_EFFECT, self._values.effect:id())
 		else
 			managers.editor:output_error("Cant load effect named \"none\" [" .. self._editor_name .. "]")
 		end
@@ -43,6 +44,7 @@ function ElementPlayEffect:play_effect(instigator)
 		params.base_time = self._values.base_time or 0
 		params.random_time = self._values.random_time or 0
 		params.max_amount = self._values.max_amount ~= 0 and self._values.max_amount or nil
+		params.sync = true
 
 		managers.environment_effects:spawn_mission_effect(self:_unique_string_id(), params, self._sync_id)
 	elseif Application:editor() then
@@ -59,10 +61,6 @@ function ElementPlayEffect:fade_kill()
 end
 
 ElementStopEffect = ElementStopEffect or class(CoreMissionScriptElement.MissionScriptElement)
-
-function ElementStopEffect:init(...)
-	ElementStopEffect.super.init(self, ...)
-end
 
 function ElementStopEffect:client_on_executed(...)
 	self:on_executed(...)

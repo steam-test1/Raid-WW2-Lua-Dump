@@ -72,24 +72,31 @@ function ElementObjective:on_executed(instigator)
 	ElementObjective.super.on_executed(self, instigator)
 end
 
-function ElementObjective:apply_job_value(amount)
-	local type = CoreClass.type_name(amount)
+function ElementObjective:apply_custom_value(new_value)
+	local type = CoreClass.type_name(new_value)
 
-	if type ~= "number" then
-		Application:error("[ElementObjective:apply_job_value] " .. self._id .. "(" .. self._editor_name .. ") Can't apply job value of type " .. type)
+	Application:debug("[ElementObjective] apply_custom_value:", new_value, type)
 
-		return
+	if type == "number" then
+		self._values.amount = new_value
+		self.custom_value_applied = true
+	elseif type == "string" then
+		self._values.objective = new_value
+		self.custom_value_applied = true
 	end
-
-	self._values.amount = amount
 end
 
 function ElementObjective:save(data)
 	data.enabled = self._values.enabled
-	data.amount = self._values.amount
+
+	if self.custom_value_applied then
+		data.amount = self._values.amount
+		data.objective = self._values.objective
+	end
 end
 
 function ElementObjective:load(data)
 	self._values.enabled = data.enabled
 	self._values.amount = data.amount
+	self._values.objective = data.objective
 end

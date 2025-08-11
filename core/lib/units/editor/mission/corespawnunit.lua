@@ -1,4 +1,11 @@
 CoreSpawnUnitUnitElement = CoreSpawnUnitUnitElement or class(MissionElement)
+CoreSpawnUnitUnitElement.USES_POINT_ORIENTATION = true
+CoreSpawnUnitUnitElement.LINK_VALUES = {
+	{
+		type = "counter",
+		value = "counter_id",
+	},
+}
 SpawnUnitUnitElement = SpawnUnitUnitElement or class(CoreSpawnUnitUnitElement)
 
 function SpawnUnitUnitElement:init(...)
@@ -9,24 +16,98 @@ function CoreSpawnUnitUnitElement:init(unit)
 	MissionElement.init(self, unit)
 
 	self._hed.unit_name = "none"
+	self._hed.unit_spawn_settled = false
+	self._hed.unit_spawn_amount = 1
 	self._hed.unit_spawn_velocity = 0
 	self._hed.unit_spawn_mass = 0
 	self._hed.unit_spawn_dir = Vector3(0, 0, 1)
+	self._hed.counter_id = nil
 
 	table.insert(self._save_values, "unit_name")
+	table.insert(self._save_values, "unit_spawn_settled")
+	table.insert(self._save_values, "unit_spawn_amount")
 	table.insert(self._save_values, "unit_spawn_velocity")
 	table.insert(self._save_values, "unit_spawn_mass")
 	table.insert(self._save_values, "unit_spawn_dir")
+	table.insert(self._save_values, "counter_id")
 
 	self._test_units = {}
 end
 
+function CoreSpawnUnitUnitElement:update_editing()
+	return
+end
+
+function CoreSpawnUnitUnitElement:draw_links(t, dt, selected_unit, all_units)
+	CoreSpawnUnitUnitElement.super.draw_links(self, t, dt, selected_unit, all_units)
+
+	if self._hed.counter_id then
+		local unit = all_units[self._hed.counter_id]
+		local draw = not selected_unit or unit == selected_unit or self._unit == selected_unit
+
+		if draw then
+			self:_draw_link({
+				b = 0.25,
+				from_unit = unit,
+				g = 0.85,
+				r = 0.85,
+				to_unit = self._unit,
+			})
+		end
+	end
+end
+
+function CoreSpawnUnitUnitElement:add_element()
+	local ray = managers.editor:unit_by_raycast({
+		mask = 10,
+		ray_type = "editor",
+	})
+
+	if ray and ray.unit and ray.unit:name() == Idstring("core/units/mission_elements/logic_counter/logic_counter") then
+		local id = ray.unit:unit_data().unit_id
+
+		if self._hed.counter_id == id then
+			self._hed.counter_id = nil
+		else
+			self._hed.counter_id = id
+		end
+	end
+end
+
+function CoreSpawnUnitUnitElement:add_triggers(vc)
+	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
+end
+
+function CoreSpawnUnitUnitElement:remove_links(unit)
+	if self._hed.counter_id and self._hed.counter_id == unit:unit_data().unit_id then
+		self._hed.counter_id = nil
+	end
+end
+
+function CoreSpawnUnitUnitElement:_add_counter_filter(unit)
+	return unit:name() == Idstring("core/units/mission_elements/logic_counter/logic_counter")
+end
+
+function CoreSpawnUnitUnitElement:_set_counter_id(unit)
+	self._hed.counter_id = unit:unit_data().unit_id
+end
+
+function CoreSpawnUnitUnitElement:_remove_counter_filter(unit)
+	return self._hed.counter_id == unit:unit_data().unit_id
+end
+
+function CoreSpawnUnitUnitElement:_remove_counter_id(unit)
+	self._hed.counter_id = nil
+end
+
 function CoreSpawnUnitUnitElement:test_element()
 	if self._hed.unit_name ~= "none" then
-		local unit = safe_spawn_unit(self._hed.unit_name, self._unit:position(), self._unit:rotation())
+		for i = 1, self._hed.unit_spawn_amount do
+			local unit = safe_spawn_unit(self._hed.unit_name, self._unit:position(), self._unit:rotation())
 
-		table.insert(self._test_units, unit)
-		unit:push(self._hed.unit_spawn_mass, self._hed.unit_spawn_dir * self._hed.unit_spawn_velocity)
+			table.insert(self._test_units, unit)
+			unit:push(self._hed.unit_spawn_mass, self._hed.unit_spawn_dir * self._hed.unit_spawn_velocity)
+		end
 	end
 end
 
@@ -91,7 +172,23 @@ function CoreSpawnUnitUnitElement:_build_panel(panel, panel_sizer)
 		table.insert(unit_options, managers.editor:get_real_name(name))
 	end
 
+	for name, _ in pairs(managers.editor:layers().Statics:get_unit_map()) do
+		table.insert(unit_options, managers.editor:get_real_name(name))
+	end
+
+	self:_build_add_remove_static_unit_from_list(panel, panel_sizer, {
+		add_filter = callback(self, self, "_add_counter_filter"),
+		add_result = callback(self, self, "_set_counter_id"),
+		remove_filter = callback(self, self, "_remove_counter_filter"),
+		remove_result = callback(self, self, "_remove_counter_id"),
+		single = true,
+	})
 	self:_build_value_combobox(panel, panel_sizer, "unit_name", unit_options, "Select a unit from the combobox")
+	self:_build_value_checkbox(panel, panel_sizer, "unit_spawn_settled", "Will attempt to settle to the ground directly below it.")
+	self:_build_value_number(panel, panel_sizer, "unit_spawn_amount", {
+		floats = 0,
+		min = 1,
+	}, "How many rabbits will come out of this hat.")
 	self:_build_value_number(panel, panel_sizer, "unit_spawn_velocity", {
 		floats = 0,
 		min = 0,

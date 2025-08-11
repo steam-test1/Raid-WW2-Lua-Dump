@@ -31,8 +31,8 @@ function LevelSettingsLayer:get_mission_filter()
 	return t
 end
 
-function LevelSettingsLayer:load(world_holder, offset)
-	self._settings = world_holder:create_world("world", self._save_name, offset)
+function LevelSettingsLayer:load(world_holder)
+	self._settings = world_holder:create_world("world", self._save_name)
 
 	for id, setting in pairs(self._settings_ctrlrs) do
 		if setting.type == "combobox" then

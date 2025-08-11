@@ -2,20 +2,6 @@ BaseInteractionExt = BaseInteractionExt or class()
 BaseInteractionExt.EVENT_IDS = {}
 BaseInteractionExt.EVENT_IDS.at_interact_start = 1
 BaseInteractionExt.EVENT_IDS.at_interact_interupt = 2
-BaseInteractionExt.SKILL_IDS = {}
-BaseInteractionExt.SKILL_IDS.none = 1
-BaseInteractionExt.SKILL_IDS.basic = 2
-BaseInteractionExt.SKILL_IDS.aced = 3
-BaseInteractionExt.INFO_IDS = {
-	1,
-	2,
-	4,
-	8,
-	16,
-	32,
-	64,
-	128,
-}
 BaseInteractionExt.INTERACTION_TYPE = {}
 BaseInteractionExt.INTERACTION_TYPE.locator_based = "locator_based"
 BaseInteractionExt.MIN_TIMER = 0.1
@@ -1127,7 +1113,7 @@ function AmmoPickupInteractionExt:selected(player)
 		return
 	end
 
-	if player ~= nil and not player:inventory():need_ammo() then
+	if player ~= nil and self:_interact_blocked(player) then
 		self._hide_interaction_prompt = true
 	end
 
@@ -1144,7 +1130,11 @@ function AmmoPickupInteractionExt:unselect()
 end
 
 function AmmoPickupInteractionExt:_interact_blocked(player)
-	return not player:inventory():need_ammo()
+	if managers.buff_effect:is_effect_active(BuffEffectManager.EFFECT_AMMO_PICKUPS_REFIL_GRENADES) then
+		return not player:inventory():need_ammo() and managers.player:got_max_grenades()
+	else
+		return not player:inventory():need_ammo()
+	end
 end
 
 function AmmoPickupInteractionExt:interact(player)
@@ -2007,8 +1997,11 @@ function CarryInteractionExt:interact(player)
 	Application:warn("[CarryInteractionExt:interact] player", player)
 	CarryInteractionExt.super.super.interact(self, player)
 	self._unit:carry_data():on_pickup()
-	managers.player:add_carry(self._unit:carry_data():carry_id(), self._unit:carry_data():multiplier())
-	managers.network:session():send_to_peers_synched("sync_interacted", self._unit, self._unit:id(), self.tweak_data, 1)
+
+	local carry_id = self._unit:carry_data():carry_id()
+
+	managers.player:add_carry(carry_id, self._unit:carry_data():multiplier())
+	managers.network:session():send_to_peers_synched("sync_carry_interacted", self._unit, self._unit:id(), self.tweak_data, carry_id)
 	self:sync_interacted(nil, player)
 
 	if Network:is_client() then
@@ -2018,7 +2011,7 @@ function CarryInteractionExt:interact(player)
 	return true
 end
 
-function CarryInteractionExt:sync_interacted(peer, player, status, skip_alive_check)
+function CarryInteractionExt:sync_interacted(peer, player, skip_alive_check)
 	player = player or peer:unit()
 
 	if self._unit:damage() and self._unit:damage():has_sequence("interact") then

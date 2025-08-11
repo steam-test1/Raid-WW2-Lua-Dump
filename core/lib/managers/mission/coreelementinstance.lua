@@ -25,10 +25,6 @@ end
 
 ElementInstanceOutput = ElementInstanceOutput or class(CoreMissionScriptElement.MissionScriptElement)
 
-function ElementInstanceOutput:init(...)
-	ElementInstanceOutput.super.init(self, ...)
-end
-
 function ElementInstanceOutput:on_created()
 	self._output_elements = managers.world_instance:get_registered_output_event_elements(self._sync_id, self._values.instance_name, self._values.event)
 end
@@ -52,14 +48,6 @@ function ElementInstanceOutput:on_executed(instigator)
 end
 
 ElementInstanceInputEvent = ElementInstanceInputEvent or class(CoreMissionScriptElement.MissionScriptElement)
-
-function ElementInstanceInputEvent:init(...)
-	ElementInstanceInputEvent.super.init(self, ...)
-end
-
-function ElementInstanceInputEvent:on_created()
-	return
-end
 
 function ElementInstanceInputEvent:client_on_executed(...)
 	return
@@ -165,16 +153,17 @@ function ElementInstancePoint:_create()
 end
 
 function ElementInstancePoint:save(data)
+	ElementInstancePoint.super.save(self, data)
+
 	data.has_created = self._has_created
-	data.enabled = self._values.enabled
 end
 
 function ElementInstancePoint:load(data)
+	ElementInstancePoint.super.load(self, data)
+
 	if data.has_created then
 		self:_create()
 	end
-
-	self:set_enabled(data.enabled)
 end
 
 ElementInstanceParams = ElementInstanceParams or class(CoreMissionScriptElement.MissionScriptElement)

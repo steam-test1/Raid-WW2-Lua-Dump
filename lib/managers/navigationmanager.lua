@@ -1396,23 +1396,15 @@ end
 
 function NavigationManager:_execute_coarce_search(search_data)
 	local search_id = search_data.id
-	local i = 0
+	local t = TimerManager:game():time()
+	local all_nav_segments = self._nav_segments
 
-	while true do
-		if i == 500 then
-			debug_pause("[NavigationManager:_execute_coarce_search] endless loop", inspect(search_data))
-
-			return false
-		else
-			i = i + 1
-		end
-
+	for i = 1, 500 do
 		local next_search_seg = search_data.seg_to_search[#search_data.seg_to_search]
 		local next_search_i_seg = next_search_seg.i_seg
 
 		table.remove(search_data.seg_to_search)
 
-		local all_nav_segments = self._nav_segments
 		local neighbours = all_nav_segments[next_search_i_seg].neighbours
 
 		if neighbours[search_data.end_i_seg] then
@@ -1423,7 +1415,7 @@ function NavigationManager:_execute_coarce_search(search_data)
 					entry_found = true
 
 					break
-				elseif TimerManager:game():time() > door:delay_time() and door:check_access(search_data.access_pos, search_data.access_neg) then
+				elseif t > door:delay_time() and door:check_access(search_data.access_pos, search_data.access_neg) then
 					entry_found = true
 
 					break
@@ -1440,13 +1432,12 @@ function NavigationManager:_execute_coarce_search(search_data)
 						search_data.to_pos,
 					},
 				}
+				local searched = search_data.seg_searched
 
 				table.insert(path, 1, {
 					next_search_i_seg,
 					next_search_seg.pos,
 				})
-
-				local searched = search_data.seg_searched
 
 				while this_seg.from do
 					i_seg = this_seg.from
@@ -1464,10 +1455,9 @@ function NavigationManager:_execute_coarce_search(search_data)
 
 		local to_pos = search_data.to_pos
 		local new_segments = self:_sort_nav_segs_after_pos(to_pos, next_search_i_seg, search_data.discovered_seg, search_data.verify_clbk, search_data.access_pos, search_data.access_neg)
+		local to_search = search_data.seg_to_search
 
 		if new_segments then
-			local to_search = search_data.seg_to_search
-
 			for i_seg, seg_data in pairs(new_segments) do
 				local new_seg_weight = seg_data.weight
 				local search_index = #to_search
@@ -1480,96 +1470,59 @@ function NavigationManager:_execute_coarce_search(search_data)
 			end
 		end
 
-		local nr_seg_to_search = #search_data.seg_to_search
-
-		if nr_seg_to_search == 0 then
+		if #to_search == 0 then
 			return false
-		else
-			search_data.seg_searched[next_search_i_seg] = next_search_seg
 		end
+
+		search_data.seg_searched[next_search_i_seg] = next_search_seg
 	end
+
+	debug_pause("[NavigationManager:_execute_coarce_search] endless loop", inspect(search_data))
+
+	return false
 end
 
 function NavigationManager:_sort_nav_segs_after_pos(to_pos, i_seg, ignore_seg, verify_clbk, access_pos, access_neg)
 	local all_segs = self._nav_segments
 	local all_rooms = self._rooms
+	local t = TimerManager:game():time()
 	local seg = all_segs[i_seg]
 	local neighbours = seg.neighbours
 	local found_segs
+
+	local function check_segment(neighbour_seg_id, end_pos)
+		local weight = mvec3_dis(end_pos, to_pos)
+		local segment_data = {
+			from = i_seg,
+			i_seg = neighbour_seg_id,
+			pos = end_pos,
+			weight = weight,
+		}
+
+		if found_segs and found_segs[neighbour_seg_id] then
+			if weight < found_segs[neighbour_seg_id].weight then
+				found_segs[neighbour_seg_id] = segment_data
+			end
+		else
+			found_segs = found_segs or {}
+			found_segs[neighbour_seg_id] = segment_data
+			ignore_seg[neighbour_seg_id] = true
+		end
+	end
 
 	for neighbour_seg_id, door_list in pairs(neighbours) do
 		if not ignore_seg[neighbour_seg_id] and not all_segs[neighbour_seg_id].disabled and (not verify_clbk or verify_clbk(neighbour_seg_id)) then
 			for _, door in ipairs(door_list) do
 				if door.x then
-					local door_pos = door
-					local weight = mvec3_dis(door_pos, to_pos)
+					local end_pos = door
 
-					if found_segs then
-						if found_segs[neighbour_seg_id] then
-							if weight < found_segs[neighbour_seg_id].weight then
-								found_segs[neighbour_seg_id] = {
-									from = i_seg,
-									i_seg = neighbour_seg_id,
-									pos = door_pos,
-									weight = weight,
-								}
-							end
-						else
-							found_segs[neighbour_seg_id] = {
-								from = i_seg,
-								i_seg = neighbour_seg_id,
-								pos = door_pos,
-								weight = weight,
-							}
-							ignore_seg[neighbour_seg_id] = true
-						end
-					else
-						found_segs = {
-							[neighbour_seg_id] = {
-								from = i_seg,
-								i_seg = neighbour_seg_id,
-								pos = door_pos,
-								weight = weight,
-							},
-						}
-						ignore_seg[neighbour_seg_id] = true
-					end
+					check_segment(neighbour_seg_id, end_pos)
 				elseif not alive(door) then
 					debug_pause("[NavigationManager:_sort_nav_segs_after_pos] dead nav_link! between NavSegments", i_seg, "-", neighbour_seg_id)
-				elseif not door:is_obstructed() and TimerManager:game():time() > door:delay_time() and door:check_access(access_pos, access_neg) then
+				elseif not door:is_obstructed() and t > door:delay_time() and door:check_access(access_pos, access_neg) then
 					local end_pos = door:script_data().element:nav_link_end_pos()
-					local my_weight = mvec3_dis(end_pos, to_pos)
 
-					if found_segs then
-						if found_segs[neighbour_seg_id] then
-							if my_weight < found_segs[neighbour_seg_id].weight then
-								found_segs[neighbour_seg_id] = {
-									from = i_seg,
-									i_seg = neighbour_seg_id,
-									pos = end_pos,
-									weight = my_weight,
-								}
-							end
-						else
-							found_segs[neighbour_seg_id] = {
-								from = i_seg,
-								i_seg = neighbour_seg_id,
-								pos = end_pos,
-								weight = my_weight,
-							}
-							ignore_seg[neighbour_seg_id] = true
-						end
-					else
-						found_segs = {
-							[neighbour_seg_id] = {
-								from = i_seg,
-								i_seg = neighbour_seg_id,
-								pos = end_pos,
-								weight = my_weight,
-							},
-						}
-						ignore_seg[neighbour_seg_id] = true
-					end
+					check_segment(neighbour_seg_id, end_pos)
 				end
 			end
 		end
@@ -2244,12 +2197,10 @@ function NavigationManager:remove_obstacle(obstacle_unit, obstacle_obj_name)
 	local removed
 
 	for i, obs_data in ipairs(self._obstacles) do
-		Application:debug("[NavigationManager:remove_obstacle] Inspecting obstacles:", i, inspect(obs_data))
-
 		removed = false
 
 		if not alive(obs_data.unit) then
-			Application:debug("[NavigationManager:remove_obstacle] Found dead unit in obstalce list, removing it:", inspect(obs_data))
+			Application:debug("[NavigationManager:remove_obstacle] Found dead unit in obstalce list, removing it:", i)
 
 			removed = true
 		elseif obs_data.unit:key() == obstacle_unit:key() and obs_data.obstacle_obj_name == obstacle_obj_name then
@@ -2263,6 +2214,8 @@ function NavigationManager:remove_obstacle(obstacle_unit, obstacle_obj_name)
 			table.insert(temp_array, self._obstacles[i])
 		end
 	end
+
+	Application:debug("[NavigationManager:remove_obstacle] Inspecting obstacles removed:", removed, removed and inspect(temp_array))
 
 	self._obstacles = temp_array
 end

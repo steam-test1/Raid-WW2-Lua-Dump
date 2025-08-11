@@ -38,17 +38,6 @@ function Layer:init(owner, save_name)
 	self._ignore_global_select = false
 	self._marker_sphere_size = 25
 	self._uses_continents = false
-
-	self:_init_unit_highlighter()
-end
-
-function Layer:_init_unit_highlighter()
-	self._unit_highlighter = World:unit_manager():unit_highlighter()
-
-	self._unit_highlighter:add_config("highlight", "highlight", "highlight_skinned")
-	self._unit_highlighter:set_config_name_filter("highlight", "g_*", "gfx_*")
-
-	self._highlighted_units = {}
 end
 
 function Layer:created_units()
@@ -75,8 +64,8 @@ function Layer:uses_continents()
 	return self._uses_continents
 end
 
-function Layer:load(world_holder, offset)
-	local world_units = world_holder:create_world("world", self._save_name, offset)
+function Layer:load(world_holder)
+	local world_units = world_holder:create_world("world", self._save_name)
 
 	if world_units then
 		for _, unit in ipairs(world_units) do
@@ -1198,25 +1187,7 @@ function Layer:select_release()
 	end
 end
 
-function Layer:add_highlighted_unit(unit, config)
-	if not unit then
-		return
-	end
-end
-
-function Layer:remove_highlighted_unit(unit)
-	return
-end
-
-function Layer:clear_highlighted_units()
-	for _, unit in ipairs(self._selected_units) do
-		self:remove_highlighted_unit(unit)
-	end
-end
-
 function Layer:clear_selected_units_table()
-	self:clear_highlighted_units()
-
 	self._selected_units = {}
 end
 
@@ -1247,14 +1218,9 @@ function Layer:set_selected_units(units)
 end
 
 function Layer:select_group(group)
-	self:clear_highlighted_units()
 	self:set_reference_unit(group:reference())
 
 	self._selected_units = CoreTable.clone(group:units())
-
-	for _, unit in ipairs(self._selected_units) do
-		self:add_highlighted_unit(unit, "highlight")
-	end
 
 	managers.editor:group_selected(group)
 	self:recalc_all_locals()
@@ -1360,7 +1326,6 @@ function Layer:set_select_unit(unit)
 	else
 		self:clear_selected_units_table()
 		self:set_reference_unit(unit)
-		self:add_highlighted_unit(unit, "highlight")
 		table.insert(self._selected_units, unit)
 	end
 
@@ -1381,14 +1346,12 @@ function Layer:add_select_unit(unit)
 	if unit then
 		if not table.contains(self._selected_units, unit) then
 			table.insert(self._selected_units, unit)
-			self:add_highlighted_unit(unit, "highlight")
 
 			if self._selected_unit then
 				self:recalc_locals(unit, self._selected_unit)
 			end
 		elseif not self._selecting_many_units then
 			table.delete(self._selected_units, unit)
-			self:remove_highlighted_unit(unit)
 		end
 	end
 end
@@ -1396,7 +1359,6 @@ end
 function Layer:remove_select_unit(unit)
 	if table.contains(self._selected_units, unit) then
 		table.delete(self._selected_units, unit)
-		self:remove_highlighted_unit(unit)
 	end
 end
 
@@ -1506,7 +1468,6 @@ end
 
 function Layer:remove_unit(unit)
 	table.delete(self._selected_units, unit)
-	self:remove_highlighted_unit(unit)
 	self:remove_name_id(unit)
 	managers.editor:remove_unit_id(unit)
 	managers.editor:deleted_unit(unit)

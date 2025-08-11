@@ -44,18 +44,29 @@ function InteractionElement:init(node, unit_element)
 	InteractionElement.super.init(self, node, unit_element)
 
 	self._enabled = self:get("enabled")
+	self._id = self:get("id")
 end
 
 function InteractionElement:activate_callback(env)
 	local enabled = self:run_parsed_func(env, self._enabled)
+	local id = self:run_parsed_func(env, self._id)
+	local interaction = env.dest_unit:interaction()
 
-	if env.dest_unit:interaction() then
-		env.dest_unit:interaction():set_active(enabled)
+	if interaction then
+		if enabled ~= nil then
+			interaction:set_active(enabled)
+		end
+
+		if id ~= nil then
+			interaction:set_tweak_data(id)
+		end
 	end
 end
 
 AlertElement = AlertElement or class(CoreSequenceManager.BaseElement)
 AlertElement.NAME = "alert"
+
+local AlertElement_RANGE_DEFAULT = 1200
 
 function AlertElement:init(node, unit_element)
 	AlertElement.super.init(self, node, unit_element)
@@ -78,7 +89,7 @@ function AlertElement:activate_callback(env)
 	local new_alert = {
 		"aggression",
 		pos,
-		self._range or 1200,
+		self._range or AlertElement_RANGE_DEFAULT,
 		managers.groupai:state():get_unit_type_filter("civilians_enemies"),
 		env.dest_unit,
 	}

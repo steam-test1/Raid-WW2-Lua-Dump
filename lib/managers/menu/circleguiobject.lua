@@ -101,9 +101,6 @@ function CircleBitmapGuiObject:current()
 end
 
 function CircleBitmapGuiObject:set_current(current)
-	local j = math.mod(math.floor(current), 8)
-	local i = math.floor(current / 8)
-
 	self._circle:set_position_z(current)
 end
 

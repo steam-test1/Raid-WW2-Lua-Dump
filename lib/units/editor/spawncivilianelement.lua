@@ -2,6 +2,7 @@ core:import("CoreEditorUtils")
 core:import("CoreUnit")
 
 SpawnCivilianUnitElement = SpawnCivilianUnitElement or class(MissionElement)
+SpawnCivilianUnitElement.EXECUTE_CHANGES_INSTIGATOR = true
 SpawnCivilianUnitElement.USES_POINT_ORIENTATION = true
 SpawnCivilianUnitElement.INSTANCE_VAR_NAMES = {
 	{

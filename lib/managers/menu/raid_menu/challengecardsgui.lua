@@ -322,9 +322,7 @@ function ChallengeCardsGui:_layout()
 	self:bind_controller_inputs()
 	managers.challenge_cards:set_automatic_steam_inventory_refresh(true)
 	managers.network.account:inventory_load()
-	self:_players_inventory_processed({
-		list = managers.challenge_cards:get_readyup_card_cache(),
-	})
+	self:_players_inventory_processed()
 	self:_auto_select_first_card_in_grid()
 end
 
@@ -567,8 +565,8 @@ function ChallengeCardsGui:_players_inventory_loaded(params)
 	end
 end
 
-function ChallengeCardsGui:_players_inventory_processed(params)
-	self._challenge_cards_steam_data_source = managers.challenge_cards:get_readyup_card_cache()
+function ChallengeCardsGui:_players_inventory_processed()
+	self._challenge_cards_steam_data_source = managers.challenge_cards:get_inventory()
 	self._challenge_cards_data_source = clone(self._challenge_cards_steam_data_source)
 
 	self:reload_filtered_data()

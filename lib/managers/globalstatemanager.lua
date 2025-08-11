@@ -10,8 +10,11 @@ GlobalStateManager.EVENT_END_TUTORIAL = "system_end_tutorial"
 GlobalStateManager.EVENT_LEVEL_LOADED = "system_level_loaded"
 GlobalStateManager.EVENT_RESTART_CAMP = "system_restart_camp"
 GlobalStateManager.EVENT_CHARACTER_CREATED = "system_character_created"
-GlobalStateManager.TYPE_BOOL = "bool"
-GlobalStateManager.TYPE_VALUE = "value"
+
+local TYPE_BOOL = "bool"
+local TYPE_VALUE = "value"
+local GRP_TEMPORARY = "temporary"
+local GRP_OPERATION = "operation"
 
 function GlobalStateManager:init()
 	self._triggers = {}
@@ -91,36 +94,45 @@ function GlobalStateManager:unregister_trigger(trigger, flag)
 	end
 end
 
-function GlobalStateManager:flag_names()
+function GlobalStateManager:flag_names(state_name)
 	local flag_names = {}
 
-	for name, value in pairs(self._states[GlobalStateManager.GLOBAL_STATE_NAME]) do
+	for name, value in pairs(self._states[state_name or GlobalStateManager.GLOBAL_STATE_NAME]) do
 		table.insert(flag_names, name)
 	end
 
 	return flag_names
 end
 
-function GlobalStateManager:flag(flag_name)
-	local flag = self._states[GlobalStateManager.GLOBAL_STATE_NAME][flag_name]
+function GlobalStateManager:flag_value(flag_name, state_name)
+	local flag = self._states[state_name or GlobalStateManager.GLOBAL_STATE_NAME][flag_name]
 
 	if not flag then
-		debug_pause("[GlobalStateManager:set_flag] Trying to get a flag that is not defined, check and resave level, or add it to global_state.state. Flag:", flag_name)
-
-		return
+		return false
 	end
 
 	return flag.value
 end
 
-function GlobalStateManager:set_flag(flag_name)
-	local flag = self._states[GlobalStateManager.GLOBAL_STATE_NAME][flag_name]
+function GlobalStateManager:_set_temporary_flag(flag_name, state_name)
+	Application:warn("[GlobalStateManager] Creating a temporary flag, this may be unreliable and is WIP!", flag_name, state_name)
 
-	if not flag then
-		debug_pause("[GlobalStateManager:set_flag] Trying to set a flag that is not defined, check and resave level, or add it to global_state.state. Flag:", flag_name)
+	local states = self._states[state_name or GlobalStateManager.GLOBAL_STATE_NAME]
+	local flag = {
+		group = GRP_TEMPORARY,
+		value = nil,
+	}
 
-		return
-	end
+	states[flag_name] = flag
+
+	return flag
+end
+
+function GlobalStateManager:set_flag(flag_name, state_name)
+	local states = self._states[state_name or GlobalStateManager.GLOBAL_STATE_NAME]
+	local flag = states[flag_name]
+
+	flag = flag or self:_set_temporary_flag(flag_name, state_name)
 
 	local old_state = flag.value
 
@@ -129,38 +141,11 @@ function GlobalStateManager:set_flag(flag_name)
 	self:_fire_triggers(flag_name, old_state, true)
 end
 
-function GlobalStateManager:set_value_flag(flag_name, value)
-	local flag = self._states[GlobalStateManager.GLOBAL_STATE_NAME][flag_name]
+function GlobalStateManager:clear_flag(flag_name, state_name)
+	local states = self._states[state_name or GlobalStateManager.GLOBAL_STATE_NAME]
+	local flag = states[flag_name]
 
-	if not flag then
-		debug_pause("[GlobalStateManager:set_flag] Trying to set a flag that is not defined, check and resave level, or add it to global_state.state. Flag:", flag_name)
-
-		return
-	end
-
-	local old_state = flag.value
-
-	flag.value = value
-
-	self:_fire_triggers(flag_name, old_state, value)
-end
-
-function GlobalStateManager:set_implicit_flag(flag_name)
-	self:_fire_triggers(flag_name, false, true)
-end
-
-function GlobalStateManager:clear_implicit_flag(flag_name)
-	self:_fire_triggers(flag_name, true, false)
-end
-
-function GlobalStateManager:clear_flag(flag_name)
-	local flag = self._states[GlobalStateManager.GLOBAL_STATE_NAME][flag_name]
-
-	if not flag then
-		debug_pause("[GlobalStateManager:set_flag] Trying to set a flag that is not defined, check and resave level, or add it to global_state.state. Flag:", flag_name)
-
-		return
-	end
+	flag = flag or self:_set_temporary_flag(flag_name, state_name)
 
 	local old_state = flag.value
 
@@ -169,7 +154,66 @@ function GlobalStateManager:clear_flag(flag_name)
 	self:_fire_triggers(flag_name, old_state, false)
 end
 
-function GlobalStateManager:fire_event(flag_name)
+function GlobalStateManager:set_value_flag(flag_name, value, state_name)
+	local states = self._states[state_name or GlobalStateManager.GLOBAL_STATE_NAME]
+	local flag = states[flag_name]
+
+	flag = flag or self:_set_temporary_flag(flag_name, state_name)
+
+	local old_state = flag.value
+
+	flag.value = value
+
+	self:_fire_triggers(flag_name, old_state, value)
+end
+
+function GlobalStateManager:add_value_flag(flag_name, value, state_name)
+	local states = self._states[state_name or GlobalStateManager.GLOBAL_STATE_NAME]
+	local flag = states[flag_name]
+
+	flag = flag or self:_set_temporary_flag(flag_name, state_name)
+
+	local old_value = flag.value
+
+	if type(old_value) == "number" then
+		flag.value = math.max(0, old_value + value)
+	else
+		debug_pause("[GlobalStateManager:add_value_flag] Trying to add to a flag that is not a number value. Flag/Value:", flag_name, old_value)
+	end
+
+	self:_fire_triggers(flag_name, old_value, flag.value)
+end
+
+function GlobalStateManager:set_to_default(flag_name, state_name)
+	local states = self._states[state_name or GlobalStateManager.GLOBAL_STATE_NAME]
+	local flag = states[flag_name]
+
+	if flag.group == GRP_TEMPORARY then
+		states[flag_name] = nil
+	else
+		flag.value = flag.default
+	end
+end
+
+function GlobalStateManager:reset_flags_for_group(group, state_name)
+	local states = self._states[state_name or GlobalStateManager.GLOBAL_STATE_NAME]
+
+	for flag_name, flag in pairs(states) do
+		if flag.group == group then
+			self:set_to_default(flag_name, state_name)
+		end
+	end
+end
+
+function GlobalStateManager:reset_all_flags(state_name)
+	local states = self._states[state_name or GlobalStateManager.GLOBAL_STATE_NAME]
+
+	for flag_name, flag in pairs(states) do
+		self:set_to_default(flag_name, state_name)
+	end
+end
+
+function GlobalStateManager:fire_event(flag_name, state_name)
 	if flag_name == GlobalStateManager.EVENT_START_RAID then
 		managers.raid_menu:set_pause_menu_enabled(false)
 	end
@@ -208,7 +252,7 @@ function GlobalStateManager:fire_event(flag_name)
 		return
 	end
 
-	local flag = self._states[GlobalStateManager.GLOBAL_STATE_NAME][flag_name]
+	local flag = self._states[state_name or GlobalStateManager.GLOBAL_STATE_NAME][flag_name]
 
 	if not flag then
 		debug_pause("[GlobalStateManager:set_flag] Trying to set a flag that is not defined, check and resave level, or add it to global_state.state. Flag:", flag_name)
@@ -226,24 +270,6 @@ function GlobalStateManager:fire_event(flag_name)
 
 	for _, trigger in ipairs(self._triggers[flag_name]) do
 		trigger:execute(flag_name, nil, true)
-	end
-end
-
-function GlobalStateManager:set_to_default(flag_name)
-	self._states[GlobalStateManager.GLOBAL_STATE_NAME][flag_name].value = self._states[GlobalStateManager.GLOBAL_STATE_NAME][flag_name].default
-end
-
-function GlobalStateManager:reset_flags_for_job(job_id)
-	for name, flag in pairs(self._states[GlobalStateManager.GLOBAL_STATE_NAME]) do
-		if flag.job_id == job_id then
-			flag.value = flag.default
-		end
-	end
-end
-
-function GlobalStateManager:reset_all_flags()
-	for name, flag in pairs(self._states[GlobalStateManager.GLOBAL_STATE_NAME]) do
-		flag.value = flag.default
 	end
 end
 
@@ -278,38 +304,75 @@ end
 
 function GlobalStateManager:set_global_states(states)
 	for i = 1, #states do
-		if states[i] and states[i].value then
-			self._states.global_init[states[i].id].value = states[i].value
+		if states[i] and states[i].value ~= nil then
+			local flag_name = states[i].id
+			local flag = self._states.global_init[flag_name]
+
+			flag = flag or self:_set_temporary_flag(flag_name)
+			flag.value = states[i].value
 		else
-			Application:warn("[GlobalStateManager:set_global_states] no states value for", i)
+			Application:warn("[GlobalStateManager:set_global_states] no states value for", i, inspect(states[i] or {}))
 		end
 	end
 end
 
-function GlobalStateManager:save_game(data)
+function GlobalStateManager:sync_global_states()
+	if managers.network:session() then
+		local global_state_string = managers.global_state:get_modified_flags_longstring()
+
+		Application:info("[GlobalStateManager:sync_global_states] Sending peers state string:", global_state_string)
+		managers.network:session():send_to_peers_synched("sync_global_state", global_state_string)
+	end
+end
+
+function GlobalStateManager:get_modified_flags_longstring()
+	local longstring = ""
+	local global_states = self:get_modified_flags()
+
+	for _, data in ipairs(global_states) do
+		longstring = longstring .. tostring(data.id) .. "|" .. tostring(data.value) .. "|"
+	end
+
+	return longstring
+end
+
+function GlobalStateManager:get_modified_flags()
 	local global_states = {}
 
 	for id, data in pairs(self._states.global_init) do
-		local state = {
-			{
+		if data.group == GRP_TEMPORARY or data.value ~= data.default then
+			table.insert(global_states, {
+				group = data.group,
 				id = id,
 				value = data.value,
-			},
-		}
-
-		table.insert(global_states, {
-			id = id,
-			value = data.value,
-		})
+			})
+		end
 	end
+
+	return global_states
+end
+
+function GlobalStateManager:save_game(data)
+	local global_states = self:get_modified_flags()
+
+	Application:info("[GlobalStateManager:save_game] Saving these IDs", inspect(global_states))
 
 	data.global_state = global_states
 end
 
 function GlobalStateManager:load_game(data)
 	if data.global_state then
+		self:reset_all_flags()
+		Application:info("[GlobalStateManager:load_game] Loading these IDs", inspect(data.global_state))
+
 		for i = 1, #data.global_state do
-			self._states.global_init[data.global_state[i].id].value = data.global_state[i].value
+			local sav_id = data.global_state[i].id
+
+			if self._states.global_init[sav_id] then
+				local sav_value = data.global_state[i].value
+
+				self._states.global_init[sav_id].value = sav_value
+			end
 		end
 	end
 end
@@ -322,28 +385,29 @@ function GlobalStateManager:on_simulation_ended()
 end
 
 function GlobalStateManager:check_flag_value(check_type, value1, value2)
+	local type_matches = type(value1) == type(value2)
+	local type_numbers = type(value1) == "number" and type(value2) == "number"
+
 	if check_type == "equal" then
-		return value1 == value2
+		return type_matches and value2 == value1
+	elseif check_type == "not_equal" then
+		return type_matches and value2 ~= value1
+	elseif check_type == "less_or_equal" then
+		return type_numbers and value2 <= value1
+	elseif check_type == "greater_or_equal" then
+		return type_numbers and value1 <= value2
+	elseif check_type == "less_than" then
+		return type_numbers and value2 < value1
+	elseif check_type == "greater_than" then
+		return type_numbers and value1 < value2
 	end
 
-	if check_type == "less_or_equal" then
-		return value2 <= value1
-	end
-
-	if check_type == "greater_or_equal" then
-		return value1 <= value2
-	end
-
-	if check_type == "less_than" then
-		return value2 < value1
-	end
-
-	if check_type == "greater_than" then
-		return value1 < value2
-	end
+	Application:error("[GlobalStateManager:check_flag_value] check_type was not applicable. Bad check_type:", check_type, value1, value2)
 end
 
 function GlobalStateManager:_parse_states()
+	Application:info("[GlobalStateManager] Parsing...", self.FILE_EXTENSION:id(), self.PATH:id())
+
 	local list = PackageManager:script_data(self.FILE_EXTENSION:id(), self.PATH:id())
 	local states = list.states
 
@@ -353,10 +417,13 @@ function GlobalStateManager:_parse_states()
 				self._states = self._states or {}
 				self._states[state.id] = self._states[state.id] or {}
 				self._states[state.id][flag.id] = self._states[state.id][flag.id] or {}
-				self._states[state.id][flag.id].job_id = flag.job_id
-				self._states[state.id][flag.id].data_type = flag.data_type or GlobalStateManager.TYPE_BOOL
-				self._states[state.id][flag.id].value = self:_parse_value(flag.value, self._states[state.id][flag.id].data_type)
-				self._states[state.id][flag.id].default = self:_parse_value(flag.value, self._states[state.id][flag.id].data_type)
+
+				local state = self._states[state.id][flag.id]
+
+				state.group = flag.group
+				state.data_type = flag.data_type or TYPE_BOOL
+				state.value = self:_parse_value(flag.value, state.data_type)
+				state.default = self:_parse_value(flag.value, state.data_type)
 			else
 				Application:error("Unknown node \"" .. tostring(data._meta) .. "\" in \"" .. self.FULL_PATH .. "\". Expected \"flag\" node.")
 			end
@@ -365,7 +432,7 @@ function GlobalStateManager:_parse_states()
 end
 
 function GlobalStateManager:_parse_value(value, data_type)
-	if data_type == GlobalStateManager.TYPE_VALUE then
+	if data_type == TYPE_VALUE then
 		return value
 	elseif value == "set" then
 		return true
@@ -375,6 +442,8 @@ function GlobalStateManager:_parse_value(value, data_type)
 end
 
 function GlobalStateManager:_fire_triggers(flag, old_state, new_state)
+	Application:info("[GlobalStateManager:_fire_triggers] flag, old, new", flag, old_state, new_state)
+
 	if old_state == new_state then
 		return
 	end

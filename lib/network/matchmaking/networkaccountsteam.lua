@@ -420,47 +420,51 @@ function NetworkAccountSTEAM:_clbk_inventory_load(error, list)
 		Application:error("[NetworkAccountSTEAM:_clbk_inventory_load] Failed to update tradable inventory (" .. tostring(error) .. ")")
 	end
 
-	local filtered_cards = self:_verify_filter_cards(list)
+	local filtered_list = self:_verify_filter_inventory(list)
 
-	managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.EVENT_STEAM_INVENTORY_LOADED, {
-		cards = filtered_cards,
-		error = error,
-	})
+	filtered_list.error = error
+
+	managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.EVENT_STEAM_INVENTORY_LOADED, filtered_list)
 end
 
-function NetworkAccountSTEAM:_verify_filter_cards(card_list)
-	local filtered_list = {}
+function NetworkAccountSTEAM:_verify_filter_inventory(inventory_list)
 	local result = {}
+	local filtered_items = {}
 
-	if card_list then
-		for _, cc_steamdata in pairs(card_list) do
-			if cc_steamdata.category == ChallengeCardsManager.INV_CAT_CHALCARD then
-				local cc_tweakdata = managers.challenge_cards:get_challenge_card_data(cc_steamdata.entry)
-
-				if cc_tweakdata then
-					if not filtered_list[cc_tweakdata.key_name] then
-						filtered_list[cc_tweakdata.key_name] = cc_tweakdata
-						filtered_list[cc_tweakdata.key_name].steam_instances = {}
-					end
-
-					local instance_id = cc_steamdata.instance_id or #filtered_list[cc_tweakdata.key_name].steam_instances
-
-					table.insert(filtered_list[cc_tweakdata.key_name].steam_instances, {
-						instance_id = tostring(instance_id),
-						stack_amount = cc_steamdata.amount or 1,
-					})
-				end
+	if inventory_list then
+		for _, steam_item in pairs(inventory_list) do
+			if steam_item.category == ChallengeCardsManager.INV_CAT_CARD then
+				self:_verify_filter_card(steam_item, filtered_items)
 			end
 		end
 	end
 
-	if filtered_list then
-		for card_key_name, card_data in pairs(filtered_list) do
-			table.insert(result, card_data)
-		end
+	for _, card_data in pairs(filtered_items) do
+		table.insert(result, card_data)
 	end
 
 	return result
+end
+
+function NetworkAccountSTEAM:_verify_filter_card(steam_item, filtered_cards)
+	local card_tweak = managers.challenge_cards:get_challenge_card_data(steam_item.entry)
+
+	if not card_tweak then
+		return
+	end
+
+	if not filtered_cards[card_tweak.key_name] then
+		filtered_cards[card_tweak.key_name] = card_tweak
+		filtered_cards[card_tweak.key_name].steam_instances = {}
+	end
+
+	local instance_id = steam_item.instance_id or #filtered_cards[card_tweak.key_name].steam_instances
+	local instance_data = {
+		instance_id = tostring(instance_id),
+		stack_amount = steam_item.amount or 1,
+	}
+
+	table.insert(filtered_cards[card_tweak.key_name].steam_instances, instance_data)
 end
 
 function NetworkAccountSTEAM:inventory_is_loading()

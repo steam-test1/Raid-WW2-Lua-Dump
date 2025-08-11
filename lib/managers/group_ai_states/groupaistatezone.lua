@@ -1,8 +1,6 @@
 GroupAIStateZone = GroupAIStateZone or class(GroupAIStateRaid)
 
-function GroupAIStateZone:init()
-	GroupAIStateZone.super.init(self)
-
+function GroupAIStateZone:on_tweak_data_reloaded()
 	self._tweak_data = tweak_data.group_ai.zone
 end
 

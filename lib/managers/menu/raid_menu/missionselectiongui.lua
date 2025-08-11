@@ -60,7 +60,7 @@ function MissionSelectionGui:_set_initial_data()
 	self._settings_selected.permission = Global.game_settings.permission
 	self._settings_selected.drop_in_allowed = Global.game_settings.drop_in_allowed
 	self._settings_selected.team_ai = Global.game_settings.selected_team_ai
-	self._bounty_completed = managers.raid_job:is_bounty_completed()
+	self._bounty_completed = managers.raid_job:daily_bounty_completed()
 end
 
 function MissionSelectionGui:close()
@@ -2594,7 +2594,7 @@ end
 
 function MissionSelectionGui:_continue_operation()
 	if self._continue_slot_selected then
-		managers.raid_job:continue_operation(self._continue_slot_selected)
+		managers.raid_job:server_continue_operation(self._continue_slot_selected)
 	end
 
 	managers.raid_menu:close_all_menus()

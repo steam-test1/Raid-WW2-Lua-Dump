@@ -208,7 +208,7 @@ function BuffEffectCandy:_activate_sugar_high(effect)
 	elseif game_state_machine:current_state_name() == "ingame_waiting_for_respawn" then
 		chosen_buff = "undead"
 
-		game_state_machine:current_state():finish_trade()
+		game_state_machine:current_state():force_respawn()
 	end
 
 	local effects = {

@@ -1,10 +1,11 @@
 ObjectInteractionManager = ObjectInteractionManager or class()
 ObjectInteractionManager.FRAMES_TO_COMPLETE = 15
 
-local tmp_vec1 = Vector3()
+local mvec1 = Vector3()
 local m_obj_pos = Vector3()
 local mvec3_dir = mvector3.direction
 local mvec3_add = mvector3.add
+local DEFAULT_RAY_TYPE = "bag body"
 
 function ObjectInteractionManager:init()
 	self._interactive_units = {}
@@ -93,9 +94,6 @@ function ObjectInteractionManager:remove_unit(unit)
 	end
 end
 
-local mvec1 = Vector3()
-local index_table = {}
-
 function ObjectInteractionManager:_update_targeted(player_pos, player_unit)
 	local mvec3_dis = mvector3.distance
 
@@ -173,8 +171,10 @@ function ObjectInteractionManager:_update_targeted(player_pos, player_unit)
 
 				current_dot = current_dot or dot_limit
 
-				if unit:interaction():ray_objects() and (unit:vehicle_driving() or unit:interaction().interaction_type == BaseInteractionExt.INTERACTION_TYPE.locator_based) then
-					for _, locator in pairs(unit:interaction():ray_objects()) do
+				local int_ray_objects = unit:interaction():ray_objects()
+
+				if int_ray_objects and (unit:vehicle_driving() or unit:interaction().interaction_type == BaseInteractionExt.INTERACTION_TYPE.locator_based) then
+					for _, locator in pairs(int_ray_objects) do
 						mvector3.set(mvec1, locator:position())
 						mvector3.subtract(mvec1, camera_pos)
 						mvector3.normalize(mvec1)
@@ -259,9 +259,9 @@ function ObjectInteractionManager:_update_targeted(player_pos, player_unit)
 		self._active_unit = active_unit
 		self._current_dot = current_dot
 	else
-		self._active_unit = nil
-
 		self:_hide_bracket_indicator(self._active_unit)
+
+		self._active_unit = nil
 	end
 
 	if alive(last_active) and not self._active_unit then
@@ -273,7 +273,7 @@ function ObjectInteractionManager:_update_targeted(player_pos, player_unit)
 end
 
 function ObjectInteractionManager:_hide_bracket_indicator(unit)
-	if unit and alive(unit) then
+	if alive(unit) then
 		local bracket_locator = unit:get_object(Idstring("g_bracket"))
 
 		if bracket_locator and unit:damage() and unit:damage():has_sequence("hide_bracket") then
@@ -284,7 +284,7 @@ end
 
 function ObjectInteractionManager:_raycheck_ok(unit, camera_pos, locator)
 	if locator then
-		local obstructed = World:raycast("ray", locator:position(), camera_pos, "ray_type", "bag body", "slot_mask", self._slotmask_interaction_obstruction, "report")
+		local obstructed = World:raycast("ray", locator:position(), camera_pos, "ray_type", DEFAULT_RAY_TYPE, "slot_mask", self._slotmask_interaction_obstruction, "report")
 
 		if not obstructed then
 			return true
@@ -298,16 +298,11 @@ function ObjectInteractionManager:_raycheck_ok(unit, camera_pos, locator)
 
 		for _, object in ipairs(check_objects) do
 			object:m_position(m_obj_pos)
-			mvec3_dir(tmp_vec1, m_obj_pos, camera_pos)
-			mvec3_add(m_obj_pos, tmp_vec1 * 5)
+			mvec3_dir(mvec1, m_obj_pos, camera_pos)
+			mvec3_add(m_obj_pos, mvec1 * 5)
 
-			local obstructed = false
-
-			if unit:interaction():self_blocking() then
-				obstructed = World:raycast("ray", m_obj_pos, camera_pos, "ray_type", "bag body", "slot_mask", self._slotmask_interaction_obstruction, "report")
-			else
-				obstructed = unit:raycast("ray", m_obj_pos, camera_pos, "ray_type", "bag body", "slot_mask", self._slotmask_interaction_obstruction, "report")
-			end
+			local raycaster = unit:interaction():self_blocking() and World or unit
+			local obstructed = raycaster:raycast("ray", m_obj_pos, camera_pos, "ray_type", DEFAULT_RAY_TYPE, "slot_mask", self._slotmask_interaction_obstruction, "report")
 
 			if not obstructed then
 				return true

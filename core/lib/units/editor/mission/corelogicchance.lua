@@ -1,10 +1,6 @@
 CoreLogicChanceUnitElement = CoreLogicChanceUnitElement or class(MissionElement)
 LogicChanceUnitElement = LogicChanceUnitElement or class(CoreLogicChanceUnitElement)
 
-function LogicChanceUnitElement:init(...)
-	CoreLogicChanceUnitElement.init(self, ...)
-end
-
 function CoreLogicChanceUnitElement:init(unit)
 	MissionElement.init(self, unit)
 
@@ -21,11 +17,14 @@ function CoreLogicChanceUnitElement:_build_panel(panel, panel_sizer)
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
 
-	self:_build_value_number(panel, panel_sizer, "chance", {
+	local chance_value_min_max = {
 		floats = 0,
 		max = 100,
 		min = 0,
-	}, "Specifies chance that this element will call its on executed elements (in percent)")
+	}
+	local chance_value_hint = "Specifies chance that this element will call its on executed elements (in percent)"
+
+	self:_build_value_number(panel, panel_sizer, "chance", chance_value_min_max, chance_value_hint)
 end
 
 function CoreLogicChanceUnitElement:register_debug_output_unit(output_monitor_id)
@@ -37,6 +36,7 @@ function CoreLogicChanceUnitElement:unregister_debug_output_unit()
 end
 
 CoreLogicChanceOperatorUnitElement = CoreLogicChanceOperatorUnitElement or class(MissionElement)
+LogicChanceOperatorUnitElement = LogicChanceOperatorUnitElement or class(CoreLogicChanceOperatorUnitElement)
 CoreLogicChanceOperatorUnitElement.LINK_VALUES = {
 	{
 		output = true,
@@ -44,7 +44,6 @@ CoreLogicChanceOperatorUnitElement.LINK_VALUES = {
 		type = "operator",
 	},
 }
-LogicChanceOperatorUnitElement = LogicChanceOperatorUnitElement or class(CoreLogicChanceOperatorUnitElement)
 
 function LogicChanceOperatorUnitElement:init(...)
 	LogicChanceOperatorUnitElement.super.init(self, ...)
@@ -141,17 +140,13 @@ function CoreLogicChanceOperatorUnitElement:_build_panel(panel, panel_sizer)
 end
 
 CoreLogicChanceTriggerUnitElement = CoreLogicChanceTriggerUnitElement or class(MissionElement)
+LogicChanceTriggerUnitElement = LogicChanceTriggerUnitElement or class(CoreLogicChanceTriggerUnitElement)
 CoreLogicChanceTriggerUnitElement.LINK_VALUES = {
 	{
 		table_value = "elements",
 		type = "trigger",
 	},
 }
-LogicChanceTriggerUnitElement = LogicChanceTriggerUnitElement or class(CoreLogicChanceTriggerUnitElement)
-
-function LogicChanceTriggerUnitElement:init(...)
-	LogicChanceTriggerUnitElement.super.init(self, ...)
-end
 
 function CoreLogicChanceTriggerUnitElement:init(unit)
 	CoreLogicChanceTriggerUnitElement.super.init(self, unit)

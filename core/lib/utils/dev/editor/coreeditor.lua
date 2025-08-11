@@ -4309,9 +4309,11 @@ function CoreEditor:delete_unit(unit, not_undoable)
 
 	if layer then
 		layer:delete_unit(unit, not_undoable)
-	else
+	elseif alive(unit) then
 		Application:error("[CoreEditor:delete_unit] Unit was not in layer, destroying!", unit)
 		unit:set_slot(0)
+	else
+		Application:error("[CoreEditor:delete_unit] Unit was not alive.", unit)
 	end
 
 	if self._element_flow and self._element_flow:visible() then

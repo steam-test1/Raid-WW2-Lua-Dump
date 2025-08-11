@@ -494,14 +494,6 @@ function XB1DLCManager:chk_content_updated()
 
 	if not managers.blackmarket:currently_customizing_mask() and self:_verify_dlcs() then
 		print("[XB1DLCManager:chk_content_updated] content updated")
-
-		if managers.experience and managers.upgrades then
-			for level = 1, managers.experience:current_level() do
-				managers.upgrades:aquire_from_level_tree(level, true)
-				managers.upgrades:verify_level_tree(level, true)
-			end
-		end
-
 		self:give_dlc_and_verify_blackmarket()
 	end
 end

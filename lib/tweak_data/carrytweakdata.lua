@@ -67,9 +67,6 @@ function CarryTweakData:init(tweak_data)
 	self.painting_sto.visual_unit_name = unit_painting_bag_acc
 	self.painting_sto.unit_static = unit_painting_bag_static
 	self.painting_sto.visual_unit_root_joint = "body_bag_spawn"
-	self.painting_sto.AI_carry = {
-		SO_category = "enemies",
-	}
 	self.painting_sto.hud_icon = "carry_painting"
 	self.painting_sto.throw_rotations = Rotation(0, 0, 66)
 	self.painting_sto.upgrade_throw_multiplier = self.THROW_MULTIPLIERS_GENERIC
@@ -94,9 +91,6 @@ function CarryTweakData:init(tweak_data)
 	self.wine_crate.loot_greed_value = tweak_data.greed.item_value.carry_high_end
 	self.wine_crate.unit = "units/vanilla/starbreeze_units/cvy_units/pickups/pku_crate_wine_bag/pku_crate_wine_bag"
 	self.wine_crate.skip_exit_secure = true
-	self.wine_crate.AI_carry = {
-		SO_category = "enemies",
-	}
 	self.wine_crate.upgrade_throw_multiplier = self.THROW_MULTIPLIERS_GENERIC
 	self.wine_crate.weight = 3
 	self.wine_crate.hud_icon = "carry_artefact"
@@ -114,9 +108,6 @@ function CarryTweakData:init(tweak_data)
 	self.chocolate_box.loot_greed_value = tweak_data.greed.item_value.carry_mid_end
 	self.chocolate_box.unit = "units/vanilla/starbreeze_units/cvy_units/pickups/pku_chocolate_box_bag/pku_chocolate_box_bag"
 	self.chocolate_box.skip_exit_secure = true
-	self.chocolate_box.AI_carry = {
-		SO_category = "enemies",
-	}
 	self.chocolate_box.upgrade_throw_multiplier = self.THROW_MULTIPLIERS_GENERIC
 	self.chocolate_box.weight = 2
 	self.chocolate_box.hud_icon = "carry_artefact"
@@ -199,9 +190,6 @@ function CarryTweakData:init(tweak_data)
 	self.gold_bar.unit = "units/vanilla/pickups/pku_gold_bar_bag/pku_gold_bar_bag"
 	self.gold_bar.unit_static = "units/vanilla/pickups/pku_gold_bar_bag/pku_gold_bar_bag_static"
 	self.gold_bar.hud_icon = "carry_gold"
-	self.gold_bar.AI_carry = {
-		SO_category = "enemies",
-	}
 	self.gold_bar.throw_rotations = Rotation(2, 40, 8)
 	self.gold_bar.upgrade_throw_multiplier = self.THROW_MULTIPLIERS_GENERIC
 	self.gold_bar.weight = 1
@@ -214,9 +202,6 @@ function CarryTweakData:init(tweak_data)
 	self.gold.unit = "units/vanilla/pickups/pku_gold_crate_bag/pku_gold_crate_bag"
 	self.gold.unit_static = "units/vanilla/pickups/pku_gold_crate_bag/pku_gold_crate_bag_static"
 	self.gold.hud_icon = "carry_gold"
-	self.gold.AI_carry = {
-		SO_category = "enemies",
-	}
 	self.gold.throw_rotations = Rotation(0, 20, 0)
 	self.gold.upgrade_throw_multiplier = self.THROW_MULTIPLIERS_GENERIC
 	self.gold.weight = self.gold_bar.weight * 3
@@ -289,9 +274,6 @@ function CarryTweakData:init(tweak_data)
 	self.dev_pku_carry_light.loot_value = 3
 	self.dev_pku_carry_light.loot_outlaw_value = 1
 	self.dev_pku_carry_light.loot_greed_value = 1
-	self.dev_pku_carry_light.AI_carry = {
-		SO_category = "enemies",
-	}
 	self.dev_pku_carry_light.weight = 1
 	self.dev_pku_carry_medium = {}
 	self.dev_pku_carry_medium.type = "normal"
@@ -300,9 +282,6 @@ function CarryTweakData:init(tweak_data)
 	self.dev_pku_carry_medium.loot_value = 2
 	self.dev_pku_carry_medium.loot_outlaw_value = 1
 	self.dev_pku_carry_medium.loot_greed_value = 1
-	self.dev_pku_carry_medium.AI_carry = {
-		SO_category = "enemies",
-	}
 	self.dev_pku_carry_medium.weight = 2
 	self.dev_pku_carry_heavy = {}
 	self.dev_pku_carry_heavy.type = "normal"
@@ -311,34 +290,22 @@ function CarryTweakData:init(tweak_data)
 	self.dev_pku_carry_heavy.loot_value = 1
 	self.dev_pku_carry_heavy.loot_outlaw_value = 1
 	self.dev_pku_carry_heavy.loot_greed_value = 1
-	self.dev_pku_carry_heavy.AI_carry = {
-		SO_category = "enemies",
-	}
 	self.dev_pku_carry_heavy.weight = 3
 	self.crate_of_fuel_canisters = {}
 	self.crate_of_fuel_canisters.type = "normal"
 	self.crate_of_fuel_canisters.name_id = "hud_carry_crate_of_fuel_canisters"
 	self.crate_of_fuel_canisters.skip_exit_secure = false
-	self.crate_of_fuel_canisters.AI_carry = {
-		SO_category = "enemies",
-	}
 	self.crate_of_fuel_canisters.weight = 3
 	self.spiked_wine_barrel = {}
 	self.spiked_wine_barrel.type = "normal"
 	self.spiked_wine_barrel.name_id = "hud_carry_spiked_wine"
 	self.spiked_wine_barrel.unit = "units/vanilla/pickups/pku_barrel_bag/pku_barrel_bag"
 	self.spiked_wine_barrel.skip_exit_secure = true
-	self.spiked_wine_barrel.AI_carry = {
-		SO_category = "enemies",
-	}
 	self.spiked_wine_barrel.weight = 3
 	self.bonds_stack = {}
 	self.bonds_stack.type = "normal"
 	self.bonds_stack.name_id = "hud_carry_bonds"
 	self.bonds_stack.loot_value = 2
-	self.bonds_stack.AI_carry = {
-		SO_category = "enemies",
-	}
 	self.bonds_stack.weight = 2
 	self.torch_tank = {}
 	self.torch_tank.type = "normal"

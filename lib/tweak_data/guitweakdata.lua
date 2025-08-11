@@ -33,6 +33,7 @@ function GuiTweakData:init()
 	self:_setup_paper_icons()
 	self:_setup_standalone_op_icons()
 	self:_setup_nine_rect_icons()
+	self:_setup_waypoint_texts()
 	self:_setup_old_tweak_data()
 end
 
@@ -2114,30 +2115,6 @@ function GuiTweakData:_setup_icons()
 		48,
 		48,
 	}
-	self.icons.list_separator_left = {}
-	self.icons.list_separator_left.texture = "ui/atlas/menu/raid_atlas_menu_2"
-	self.icons.list_separator_left.texture_rect = {
-		64,
-		150,
-		30,
-		2,
-	}
-	self.icons.list_separator_right = {}
-	self.icons.list_separator_right.texture = "ui/atlas/menu/raid_atlas_menu_2"
-	self.icons.list_separator_right.texture_rect = {
-		98,
-		150,
-		30,
-		2,
-	}
-	self.icons.list_separator_center = {}
-	self.icons.list_separator_center.texture = "ui/atlas/menu/raid_atlas_menu_2"
-	self.icons.list_separator_center.texture_rect = {
-		94,
-		150,
-		4,
-		2,
-	}
 	self.icons.arrow_down = {}
 	self.icons.arrow_down.texture = "ui/atlas/menu/raid_atlas_menu_2"
 	self.icons.arrow_down.texture_rect = {
@@ -2310,7 +2287,7 @@ function GuiTweakData:_setup_icons()
 		texture = "ui/atlas/menu/raid_atlas_buttons",
 		texture_rect = {
 			0,
-			0,
+			7,
 			480,
 			64,
 		},
@@ -2319,7 +2296,7 @@ function GuiTweakData:_setup_icons()
 		texture = "ui/atlas/menu/raid_atlas_buttons",
 		texture_rect = {
 			0,
-			68,
+			76,
 			96,
 			64,
 		},
@@ -2328,8 +2305,8 @@ function GuiTweakData:_setup_icons()
 		texture = "ui/atlas/menu/raid_atlas_buttons",
 		texture_rect = {
 			96,
-			68,
-			96,
+			76,
+			288,
 			64,
 		},
 	}
@@ -2337,9 +2314,36 @@ function GuiTweakData:_setup_icons()
 		texture = "ui/atlas/menu/raid_atlas_buttons",
 		texture_rect = {
 			384,
-			68,
+			76,
 			96,
 			64,
+		},
+	}
+	self.icons.list_separator_left = {
+		texture = "ui/atlas/menu/raid_atlas_buttons",
+		texture_rect = {
+			0,
+			0,
+			96,
+			2,
+		},
+	}
+	self.icons.list_separator_center = {
+		texture = "ui/atlas/menu/raid_atlas_buttons",
+		texture_rect = {
+			96,
+			0,
+			288,
+			2,
+		},
+	}
+	self.icons.list_separator_right = {
+		texture = "ui/atlas/menu/raid_atlas_buttons",
+		texture_rect = {
+			384,
+			0,
+			96,
+			2,
 		},
 	}
 
@@ -3403,6 +3407,60 @@ function GuiTweakData:_setup_radial_icons()
 		0,
 		256,
 		256,
+	}
+	self.icons.interact_radio_bg = {
+		texture = "ui/icons/radial/interact_radio_bg_hud",
+		texture_rect = {
+			0,
+			0,
+			512,
+			512,
+		},
+	}
+	self.icons.interact_radio_fg = {
+		texture = "ui/icons/radial/interact_radio_fg_hud",
+		texture_rect = {
+			0,
+			0,
+			512,
+			512,
+		},
+	}
+	self.icons.interact_radio_circle_1 = {
+		texture = "ui/icons/radial/interact_radio_circle_1_hud",
+		texture_rect = {
+			0,
+			0,
+			512,
+			512,
+		},
+	}
+	self.icons.interact_radio_circle_2 = {
+		texture = "ui/icons/radial/interact_radio_circle_2_hud",
+		texture_rect = {
+			0,
+			0,
+			512,
+			512,
+		},
+	}
+	self.icons.interact_radio_tool = {
+		texture = "ui/icons/interact_radio_tool_hud",
+		texture_rect = {
+			0,
+			0,
+			64,
+			512,
+		},
+	}
+	self.icons.interact_radio_dial = {
+		texture = "ui/icons/interact_radio_dial_hud",
+		texture_rect = {
+			0,
+			0,
+			256,
+			256,
+		},
 	}
 	self.icons.interact_rewire_bg = {}
 	self.icons.interact_rewire_bg.texture = "ui/icons/radial/interact_rewire_bg_hud"
@@ -6544,6 +6602,15 @@ function GuiTweakData:_setup_skill_big_icons()
 			256,
 		},
 	}
+	self.icons.ws_georg_bigben_large = {
+		texture = "ui/updates/upd_georg/ws_georg_bigben_large",
+		texture_rect = {
+			0,
+			0,
+			512,
+			256,
+		},
+	}
 	self.icons.weapon_pis_webley_large = {}
 	self.icons.weapon_pis_webley_large.texture = "ui/atlas/skilltree/raid_atlas_experience"
 	self.icons.weapon_pis_webley_large.texture_rect = {
@@ -8400,6 +8467,20 @@ function GuiTweakData:_setup_nine_rect_icons()
 		48,
 		48,
 	}, 16)
+end
+
+function GuiTweakData:_setup_waypoint_texts()
+	self.waypoint_text = {
+		"wp_txt_gen_defend",
+		"wp_txt_gen_fix",
+		"wp_txt_gen_search_area",
+		"wp_txt_gen_kill_enemies",
+		"wp_txt_gen_kill_target",
+		"wp_txt_fuel_cans",
+		"wp_txt_generator_refuel",
+		"wp_txt_generator_refuel_empty",
+		"wp_txt_generator_start",
+	}
 end
 
 function GuiTweakData:_setup_old_tweak_data()

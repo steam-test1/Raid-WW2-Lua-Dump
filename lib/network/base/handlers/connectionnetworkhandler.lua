@@ -353,30 +353,6 @@ function ConnectionNetworkHandler:lobby_info(level, character, sender)
 	end
 end
 
-function ConnectionNetworkHandler:begin_trade()
-	if not self._verify_gamestate(self._gamestate_filter.waiting_for_respawn) then
-		return
-	end
-
-	game_state_machine:current_state():begin_trade()
-end
-
-function ConnectionNetworkHandler:cancel_trade()
-	if not self._verify_gamestate(self._gamestate_filter.waiting_for_respawn) then
-		return
-	end
-
-	game_state_machine:current_state():cancel_trade()
-end
-
-function ConnectionNetworkHandler:finish_trade()
-	if not self._verify_gamestate(self._gamestate_filter.waiting_for_respawn) then
-		return
-	end
-
-	game_state_machine:current_state():finish_trade()
-end
-
 function ConnectionNetworkHandler:request_spawn_member(sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -763,14 +739,6 @@ function ConnectionNetworkHandler:propagate_alert(type, position, range, filter,
 	})
 end
 
-function ConnectionNetworkHandler:set_auto_assault_ai_trade(character_name, time)
-	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
-		return
-	end
-
-	managers.trade:sync_set_auto_assault_ai_trade(character_name, time)
-end
-
 function ConnectionNetworkHandler:sync_prepare_world(world_id, peer, stage, sender)
 	if not self._verify_sender(sender) then
 		return
@@ -1071,6 +1039,22 @@ function ConnectionNetworkHandler:sync_external_end_mission(restart_camp, failed
 
 	managers.raid_job:set_stage_success(not failed)
 	managers.raid_job:do_external_end_mission(restart_camp)
+end
+
+function ConnectionNetworkHandler:sync_global_state(global_state_string, sender)
+	if not self._verify_sender(sender) then
+		return
+	end
+
+	managers.global_state:reset_all_flags()
+
+	local global_state_items = string.split(global_state_string, "|")
+
+	Application:debug("[ConnectionNetworkHandler:sync_global_state] global_state_string, global_state_items, sender", global_state_string, inspect(global_state_items), sender)
+
+	for i = 1, #global_state_items, 2 do
+		managers.global_state:set_value_flag(global_state_items[i], global_state_items[i + 1])
+	end
 end
 
 function ConnectionNetworkHandler:restart(sender)

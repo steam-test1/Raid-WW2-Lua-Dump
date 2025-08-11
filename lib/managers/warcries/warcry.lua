@@ -159,20 +159,6 @@ function Warcry:deactivate()
 	end
 end
 
-function Warcry:_get_upgrade_definition_name(upgrade_definition_name)
-	if tweak_data.upgrades:upgrade_has_levels(upgrade_definition_name) then
-		local upgrade_level = self._level
-
-		while not tweak_data.upgrades.definitions[upgrade_definition_name .. "_" .. tostring(upgrade_level)] do
-			upgrade_level = upgrade_level - 1
-		end
-
-		upgrade_definition_name = upgrade_definition_name .. "_" .. tostring(upgrade_level)
-	end
-
-	return upgrade_definition_name
-end
-
 function Warcry:_fill_charge_on_enemy_killed(params)
 	local player = managers.player:player_unit()
 

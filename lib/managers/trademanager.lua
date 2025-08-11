@@ -434,73 +434,7 @@ function TradeManager:remove_all_criminals_to_respawn()
 	self._criminals_to_respawn = {}
 end
 
-function TradeManager:_send_finish_trade(criminal, respawn_delay)
-	if criminal.ai == true then
-		return
-	end
-
-	local peer_id = managers.criminals:character_peer_id_by_name(criminal.id)
-
-	if peer_id == 1 then
-		if game_state_machine:current_state_name() == "ingame_waiting_for_respawn" then
-			game_state_machine:current_state():finish_trade()
-		end
-	else
-		local peer = managers.network:session():peer(peer_id)
-
-		if peer then
-			peer:send_queued_sync("finish_trade")
-		end
-	end
-end
-
-function TradeManager:_send_begin_trade(criminal)
-	if criminal.ai == true then
-		return
-	end
-
-	local peer_id = managers.criminals:character_peer_id_by_name(criminal.id)
-
-	if peer_id == 1 then
-		if game_state_machine:current_state_name() == "ingame_waiting_for_respawn" then
-			game_state_machine:current_state():begin_trade()
-		end
-	else
-		local peer = managers.network:session():peer(peer_id)
-
-		if peer then
-			peer:send_queued_sync("begin_trade")
-		end
-	end
-end
-
-function TradeManager:_send_cancel_trade(criminal)
-	if criminal.ai == true then
-		return
-	end
-
-	local peer_id = managers.criminals:character_peer_id_by_name(criminal.id)
-
-	if peer_id == managers.network:session():local_peer():id() then
-		if game_state_machine:current_state_name() == "ingame_waiting_for_respawn" then
-			game_state_machine:current_state():cancel_trade()
-		end
-	else
-		local peer = managers.network:session():peer(peer_id)
-
-		if peer then
-			peer:send_queued_sync("cancel_trade")
-		end
-	end
-end
-
 function TradeManager:cancel_trade()
-	local criminal = self:get_criminal_to_trade()
-
-	if criminal then
-		self:_send_cancel_trade(criminal)
-	end
-
 	managers.groupai:state():check_gameover_conditions()
 end
 
@@ -575,33 +509,6 @@ function TradeManager:sync_teammate_helped_hint(helped_unit, helping_unit, hint)
 			text = notification_text,
 		})
 	end
-end
-
-function TradeManager:get_min_criminal_to_trade()
-	local min_crim
-
-	for _, crim in ipairs(self._criminals_to_respawn) do
-		if not crim.ai and (not min_crim or min_crim.respawn_penalty > crim.respawn_penalty) then
-			min_crim = crim
-		end
-	end
-
-	return min_crim
-end
-
-function TradeManager:_set_auto_assault_ai_trade(character_name, time)
-	if self._auto_assault_ai_trade_criminal_name ~= character_name then
-		self._auto_assault_ai_trade_criminal_name = character_name
-
-		if managers.network and not Global.game_settings.single_player then
-			managers.network:session():send_to_peers_synched("set_auto_assault_ai_trade", character_name, time)
-		end
-	end
-end
-
-function TradeManager:sync_set_auto_assault_ai_trade(character_name, time)
-	self._auto_assault_ai_trade_criminal_name = character_name
-	self._auto_assault_ai_trade_t = time
 end
 
 function TradeManager:on_simulation_ended()

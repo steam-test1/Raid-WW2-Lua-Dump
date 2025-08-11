@@ -6,7 +6,7 @@ core:import("CorePortalManager")
 
 PortalLayer = PortalLayer or class(CoreStaticLayer.StaticLayer)
 
-local portal_brush_alpha = 0.04
+local portal_brush_alpha = 0.22
 
 function PortalLayer:init(owner)
 	PortalLayer.super.init(self, owner, "portal", {
@@ -22,15 +22,17 @@ function PortalLayer:init(owner)
 	self._dont_draw_units = false
 	self._portal_brush = Draw:brush()
 	self._portal_point_unit = "core/units/portal_point/portal_point"
+	self._ids_portal_point_unit = Idstring(self._portal_point_unit)
 	self._portal_shape_unit = "core/units/portal_shape/portal_shape"
+	self._ids_portal_shape_unit = Idstring(self._portal_shape_unit)
 end
 
 function PortalLayer:get_layer_name()
 	return "Portal"
 end
 
-function PortalLayer:load(world_holder, offset)
-	local portal_data = world_holder:create_world("world", self._save_name, offset)
+function PortalLayer:load(world_holder)
+	local portal_data = world_holder:create_world("world", self._save_name)
 
 	if not self:_old_load(portal_data) then
 		for _, portal in ipairs(portal_data.portals) do
@@ -623,9 +625,11 @@ function PortalLayer:do_spawn_unit(name, pos, rot)
 	local unit = PortalLayer.super.do_spawn_unit(self, name, pos, rot)
 
 	if alive(unit) then
-		if unit:name() == Idstring(self._portal_point_unit) then
+		local ids_unit = unit:name()
+
+		if ids_unit == self._ids_portal_point_unit then
 			self:create_portal_point(unit, pos)
-		elseif unit:name() == Idstring(self._portal_shape_unit) then
+		elseif ids_unit == self._ids_portal_shape_unit then
 			local shape = self._current_group:add_shape({})
 
 			unit:unit_data().portal_group_shape = shape
@@ -646,7 +650,7 @@ function PortalLayer:set_portal_shape_gui()
 		self._current_shape_panel:set_visible(false)
 	end
 
-	if alive(self._selected_unit) and self._selected_unit:name() == Idstring(self._portal_shape_unit) then
+	if alive(self._selected_unit) and self._selected_unit:name() == self._ids_portal_shape_unit then
 		local shape = self._selected_unit:unit_data().portal_group_shape
 
 		if shape then
@@ -910,20 +914,20 @@ function PortalLayer:set_selection_groups_listbox(name)
 	end
 end
 
-function PortalLayer:delete_unit(unit)
-	if unit:name() == Idstring(self._portal_point_unit) then
+function PortalLayer:on_unit_deleted(unit)
+	local ids_unit = unit:name()
+
+	if ids_unit == self._ids_portal_point_unit then
 		for name, shape in pairs(self._portal_shapes) do
 			table.delete(shape.portal, unit)
 		end
-	end
-
-	if unit:name() == Idstring(self._portal_shape_unit) and unit:unit_data().portal_group_shape then
+	elseif ids_unit == self._ids_portal_shape_unit and unit:unit_data().portal_group_shape then
 		local group = managers.portal:unit_group_on_shape(unit:unit_data().portal_group_shape)
 
 		group:remove_shape(unit:unit_data().portal_group_shape)
 	end
 
-	PortalLayer.super.delete_unit(self, unit)
+	PortalLayer.super.on_unit_deleted(self, unit)
 end
 
 function PortalLayer:calc_mid_point()
@@ -931,7 +935,7 @@ function PortalLayer:calc_mid_point()
 		return
 	end
 
-	if alive(self._selected_unit) and self._selected_unit:name() == Idstring(self._portal_point_unit) then
+	if alive(self._selected_unit) and self._selected_unit:name() == self._ids_portal_point_unit then
 		local i = table.get_vector_index(self._current_portal, self._selected_unit)
 
 		if i < #self._current_portal then
@@ -946,7 +950,7 @@ function PortalLayer:calc_mid_point()
 end
 
 function PortalLayer:insert()
-	if not alive(self._selected_unit) or self._selected_unit:name() ~= Idstring(self._portal_point_unit) then
+	if not alive(self._selected_unit) or self._selected_unit:name() ~= self._ids_portal_point_unit then
 		return
 	end
 

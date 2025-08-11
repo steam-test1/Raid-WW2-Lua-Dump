@@ -214,8 +214,8 @@ function CopBrain:set_spawn_ai(spawn_ai)
 	end
 end
 
-function CopBrain:set_spawn_entry(spawn_entry, tactics_map)
-	self._logic_data.tactics = tactics_map
+function CopBrain:set_spawn_entry(spawn_entry, tactics)
+	self._logic_data.tactics = tactics
 	self._logic_data.rank = spawn_entry.rank
 end
 
@@ -634,12 +634,6 @@ function CopBrain:on_reload()
 	self._logics = self:_get_logic_variant(self._unit:base()._tweak_table)
 	self._current_logic = self._logics[self._current_logic_name]
 	self._logic_data.char_tweak = tweak_data.character[self._unit:base()._tweak_table]
-end
-
-function CopBrain:on_rescue_allowed_state(state)
-	if self._current_logic.on_rescue_allowed_state then
-		self._current_logic.on_rescue_allowed_state(self._logic_data, state)
-	end
 end
 
 function CopBrain:on_objective_unit_destroyed(unit)

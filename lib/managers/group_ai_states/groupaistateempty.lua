@@ -8,7 +8,7 @@ function GroupAIStateEmpty:flee_point(start_nav_seg)
 	return
 end
 
-function GroupAIStateEmpty:set_area_min_police_force(id, force, pos)
+function GroupAIStateEmpty:set_area_reenforce(id, force, pos)
 	return
 end
 

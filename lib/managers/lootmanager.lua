@@ -118,10 +118,6 @@ function LootManager:sync_secure_loot(carry_id, multiplier_level, silent)
 	})
 	self:_check_triggers("report_only")
 
-	if not silent then
-		-- block empty
-	end
-
 	if managers.raid_job:current_job() and not managers.raid_job:current_job().consumable then
 		managers.greed:secure_greed_carry_loot(carry_id, multiplier)
 	end
@@ -154,7 +150,11 @@ end
 function LootManager:sync_load(data)
 	self._global = data.LootManager
 
-	for _, secured in ipairs(self._global.secured) do
-		secured.multiplier = math.min(secured.multiplier, 2)
+	if self._global.secured then
+		for _, secured in ipairs(self._global.secured) do
+			secured.multiplier = math.min(secured.multiplier, 2)
+		end
+
+		managers.experience:mission_xp_award("tiny_loot_bonus", #self._global.secured)
 	end
 end

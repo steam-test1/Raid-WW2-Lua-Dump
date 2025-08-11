@@ -47,11 +47,14 @@ function VehicleManager:remove_listener(key)
 end
 
 function VehicleManager:add_vehicle(vehicle)
+	Application:debug("[VehicleManager] Trigger event add_vehicle", vehicle)
 	self:_set_vehicle_from_key(vehicle:key(), vehicle)
+	self._listener_holder:call("on_spawn", vehicle)
 end
 
 function VehicleManager:remove_vehicle(vehicle)
-	Application:debug("[VehicleManager:remove_vehicle]", vehicle)
+	Application:debug("[VehicleManager] Trigger event remove_vehicle", vehicle)
+	self._listener_holder:call("on_despawn", vehicle)
 	self:_set_vehicle_from_key(vehicle:key(), nil)
 end
 
@@ -88,10 +91,12 @@ function VehicleManager:get_vehicle(animation_id)
 end
 
 function VehicleManager:on_player_entered_vehicle(vehicle_unit, player)
-	self._listener_holder:call("on_enter", player)
+	Application:debug("[VehicleManager] Trigger event on_player_entered_vehicle", vehicle_unit)
+	self._listener_holder:call("on_enter", vehicle_unit)
 
 	if self:all_players_in_vehicles() then
-		self._listener_holder:call("on_all_inside", player)
+		Application:debug("[VehicleManager] Trigger event on_all_inside")
+		self._listener_holder:call("on_all_inside", vehicle_unit)
 	end
 end
 
@@ -111,7 +116,18 @@ function VehicleManager:all_players_in_vehicles()
 end
 
 function VehicleManager:on_player_exited_vehicle(vehicle_unit, player)
-	self._listener_holder:call("on_exit", player)
+	Application:debug("[VehicleManager] on_player_exited_vehicle", vehicle_unit, player)
+	self._listener_holder:call("on_exit", vehicle_unit)
+end
+
+function VehicleManager:on_add_loot(vehicle_unit)
+	Application:debug("[VehicleManager] on_add_loot", vehicle_unit)
+	self._listener_holder:call("on_loot_added", vehicle_unit)
+end
+
+function VehicleManager:on_remove_loot(vehicle_unit)
+	Application:debug("[VehicleManager] on_remove_loot", vehicle_unit)
+	self._listener_holder:call("on_loot_removed", vehicle_unit)
 end
 
 function VehicleManager:remove_player_from_all_vehicles(player)

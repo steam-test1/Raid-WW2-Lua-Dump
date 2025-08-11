@@ -44,16 +44,6 @@ function GamePlayCentralManager:init()
 	}
 end
 
-function GamePlayCentralManager:restart_portal_effects()
-	if not self._portal_effects_restarted then
-		self._portal_effects_restarted = true
-
-		if Network:is_client() then
-			managers.portal:restart_effects()
-		end
-	end
-end
-
 function GamePlayCentralManager:_init_impact_sources()
 	self._impact_sounds = {
 		index = 1,
@@ -209,6 +199,11 @@ function GamePlayCentralManager:spawn_pickup(params)
 	end
 
 	local unit_name = tweak_data.pickups[params.name].unit
+
+	if not unit_name then
+		return debug_pause("[GamePlayCentralManager:spawn_pickup] Could not spawn pickup!", params and inspect(params))
+	end
+
 	local unit = World:spawn_unit(unit_name, params.position, params.rotation)
 
 	if Application:editor() then
@@ -508,14 +503,18 @@ function GamePlayCentralManager:mission_enable_unit(unit)
 end
 
 function GamePlayCentralManager:_set_unit_mission_enabled(unit, state)
-	unit:set_enabled(state)
+	if alive(unit) then
+		unit:set_enabled(state)
 
-	for _, ext_name in ipairs(unit:extensions()) do
-		local extension = unit[ext_name](unit)
+		for _, ext_name in ipairs(unit:extensions()) do
+			local extension = unit[ext_name](unit)
 
-		if extension.on_unit_set_enabled then
-			extension:on_unit_set_enabled(state)
+			if extension.on_unit_set_enabled then
+				extension:on_unit_set_enabled(state)
+			end
 		end
+	else
+		Application:error("[GamePlayCentralManager] Cannot set a unit mission state on a non-unit. Unit/State:", unit, state)
 	end
 end
 

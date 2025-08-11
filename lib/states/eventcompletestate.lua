@@ -248,7 +248,7 @@ function EventCompleteState:at_enter(old_state, params)
 			end
 		end
 
-		if self:is_success() and self:job_data().bounty then
+		if self:is_success() and (self:job_data().bounty or self:job_data().bounty_filters) then
 			if Network:is_server() then
 				managers.raid_job:set_bounty_completed_seed(self:job_data().seed)
 			else

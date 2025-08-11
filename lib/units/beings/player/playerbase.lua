@@ -20,7 +20,6 @@ function PlayerBase:init(unit)
 	self._stats_screen_visible = false
 	self.is_player = true
 
-	managers.game_play_central:restart_portal_effects()
 	managers.occlusion:remove_occlusion(self._unit)
 end
 

@@ -675,7 +675,23 @@ function UnitNetworkHandler:sync_body_damage_melee(body, attacker, normal, posit
 	body:extension().damage:damage_melee(attacker, normal, position, direction, damage)
 end
 
-function UnitNetworkHandler:sync_interacted(unit, unit_id, tweak_setting, status, sender)
+function UnitNetworkHandler:sync_interacted(unit, unit_id, tweak_id, status, sender)
+	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
+		return
+	end
+
+	local peer = self._verify_sender(sender)
+
+	if not peer then
+		return
+	end
+
+	if alive(unit) then
+		unit:interaction():sync_interacted(peer, nil, status)
+	end
+end
+
+function UnitNetworkHandler:sync_carry_interacted(unit, unit_id, tweak_id, carry_id, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
 	end
@@ -687,17 +703,39 @@ function UnitNetworkHandler:sync_interacted(unit, unit_id, tweak_setting, status
 	end
 
 	if Network:is_server() and unit_id ~= -2 then
-		if alive(unit) and unit:interaction().tweak_data == tweak_setting and unit:interaction():active() then
-			sender:sync_interaction_reply(true)
+		if alive(unit) and unit:interaction().tweak_data == tweak_id and unit:interaction():active() then
+			sender:carry_interaction_reply(true, carry_id)
 		else
-			sender:sync_interaction_reply(false)
+			sender:carry_interaction_reply(false, carry_id)
 
 			return
 		end
 	end
 
 	if alive(unit) then
-		unit:interaction():sync_interacted(peer, nil, status)
+		unit:interaction():sync_interacted(peer)
+	end
+end
+
+function UnitNetworkHandler:carry_interaction_reply(status, carry_id)
+	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
+		return
+	end
+
+	local player_unit = managers.player:player_unit()
+
+	if alive(player_unit) then
+		player_unit:movement():set_carry_restriction(false)
+	end
+
+	if not status then
+		if carry_id then
+			managers.player:remove_carry_id(carry_id)
+		else
+			local carry_data = managers.player:get_my_carry_data()
+
+			managers.player:remove_carry(#carry_data)
+		end
 	end
 end
 
@@ -717,48 +755,22 @@ function UnitNetworkHandler:sync_multiple_equipment_bag_interacted(unit, amount_
 	end
 end
 
-function UnitNetworkHandler:sync_interaction_info_id(unit, info_id, sender)
-	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
-		return
-	end
-
-	local peer = self._verify_sender(sender)
-
-	if not peer then
-		return
-	end
-
-	if alive(unit) and unit:interaction().set_info_id then
-		unit:interaction():set_info_id(info_id)
-	end
-end
-
-function UnitNetworkHandler:sync_interacted_by_id(unit_id, tweak_setting, sender)
+function UnitNetworkHandler:sync_interacted_by_id(unit_id, tweak_id, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) and not self._verify_sender(sender) then
 		return
 	end
 
 	local u_data = managers.enemy:get_corpse_unit_data_from_id(unit_id)
 
-	if not u_data then
-		sender:sync_interaction_reply(false)
+	if u_data then
+		sender:carry_interaction_reply(true, nil)
+	else
+		sender:carry_interaction_reply(false, nil)
 
 		return
 	end
 
-	self:sync_interacted(u_data.unit, unit_id, tweak_setting, 1, sender)
-end
-
-function UnitNetworkHandler:sync_interaction_reply(status)
-	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
-		return
-	end
-
-	if not alive(managers.player:player_unit()) then
-		return
-	end
-
-	managers.player:from_server_interaction_reply(status)
+	self:sync_interacted(u_data.unit, unit_id, tweak_id, 1, sender)
 end
 
 function UnitNetworkHandler:interaction_set_active(unit, u_id, active, tweak_data, flash, sender)
@@ -1357,17 +1369,6 @@ function UnitNetworkHandler:from_server_sentry_gun_place_result(owner_peer_id, e
 	sentry_gun_unit:weapon():setup(setup_data, 1)
 end
 
-function UnitNetworkHandler:place_ammo_bag(pos, rot, ammo_upgrade_lvl, rpc)
-	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(rpc) then
-		return
-	end
-
-	local peer = self._verify_sender(rpc)
-	local unit = AmmoBagBase.spawn(pos, rot, ammo_upgrade_lvl)
-
-	unit:base():set_server_information(peer:id())
-end
-
 function UnitNetworkHandler:special_interaction_done(unit)
 	Application:trace("[UnitNetworkHandler:special_interaction_done] unit ", unit)
 
@@ -1520,28 +1521,6 @@ function UnitNetworkHandler:sync_grenade_crate_grenade_taken(unit, amount, sende
 	unit:base():sync_grenade_taken(amount)
 end
 
-function UnitNetworkHandler:place_deployable_bag(class_name, pos, rot, upgrade_lvl, rpc)
-	local peer = self._verify_sender(rpc)
-
-	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not peer then
-		return
-	end
-
-	local class_name_to_deployable_id = tweak_data.equipments.class_name_to_deployable_id
-
-	if not managers.player:verify_equipment(peer:id(), class_name_to_deployable_id[class_name]) then
-		return
-	end
-
-	local class = CoreSerialize.string_to_classtable(class_name)
-
-	if class then
-		local unit = class.spawn(pos, rot, upgrade_lvl, peer:id())
-
-		unit:base():set_server_information(peer:id())
-	end
-end
-
 function UnitNetworkHandler:used_deployable(rpc)
 	local peer = self._verify_sender(rpc)
 
@@ -1550,22 +1529,6 @@ function UnitNetworkHandler:used_deployable(rpc)
 	end
 
 	peer:set_used_deployable(true)
-end
-
-function UnitNetworkHandler:sync_doctor_bag_taken(unit, amount, sender)
-	if not alive(unit) or not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
-		return
-	end
-
-	unit:base():sync_taken(amount)
-end
-
-function UnitNetworkHandler:sync_money_wrap_money_taken(unit, sender)
-	if not alive(unit) or not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
-		return
-	end
-
-	unit:base():sync_money_taken()
 end
 
 function UnitNetworkHandler:sync_pickup(unit, sender)
@@ -2451,16 +2414,6 @@ function UnitNetworkHandler:sync_statistics_result(top_stat_1_id, top_stat_1_pee
 	managers.statistics:set_bottom_stats(bottom_stat_1_id, bottom_stat_1_peer_id, bottom_stat_1_peer_name, bottom_stat_1_score, bottom_stat_2_id, bottom_stat_2_peer_id, bottom_stat_2_peer_name, bottom_stat_2_score, bottom_stat_3_id, bottom_stat_3_peer_id, bottom_stat_3_peer_name, bottom_stat_3_score)
 	managers.statistics:set_downed_stats(total_downs, all_players_downed)
 	managers.system_event_listener:call_listeners(CoreSystemEventListenerManager.SystemEventListenerManager.TOP_STATS_READY)
-end
-
-function UnitNetworkHandler:bain_comment(bain_line, sender)
-	if not self._verify_sender(sender) then
-		return
-	end
-
-	if managers.dialog and managers.groupai and managers.groupai:state():bain_state() then
-		managers.dialog:queue_dialog(bain_line, {})
-	end
 end
 
 function UnitNetworkHandler:is_inside_point_of_no_return(is_inside, sender)
@@ -3481,53 +3434,6 @@ function UnitNetworkHandler:ammo_bag_pickup_response(ammo_bag_unit, picked_up, s
 	end
 end
 
-local function warcry_dmg_func(peer_name, data)
-	local percent = Utl.mul_to_string_percent(data)
-	local notification_data = {
-		duration = 5,
-		force = true,
-		icon = "test_icon",
-		id = "skill_ammo_warcry_from",
-		notification_type = HUDNotification.ICON,
-		priority = 1,
-		text = managers.localization:text("skill_ammo_warcry_from", {
-			NAME = peer_name,
-			PERCENT = percent,
-		}),
-	}
-
-	managers.notification:add_notification(notification_data)
-end
-
-local gui_notification = {
-	warcry_dmg_func,
-}
-
-function UnitNetworkHandler:sync_warcry(source_unit, radius_idx, effect_name_idx, effect_data_idx, time_idx, gui_notification_idx, sender)
-	if alive(source_unit) then
-		local pm = managers.player
-		local player_unit = pm:player_unit()
-
-		if player_unit and alive(player_unit) then
-			local source_pos = source_unit:position()
-			local player_pos = player_unit:position()
-			local radius = UpgradesTweakData.WARCRY_RADIUS[radius_idx]
-
-			if mvector3.distance_sq(source_pos, player_pos) < radius * radius then
-				local effect_name = UpgradesTweakData.WARCRY_EFFECT_NAME[effect_name_idx]
-				local effect_data = UpgradesTweakData.WARCRY_EFFECT_DATA[effect_data_idx]
-				local time = UpgradesTweakData.WARCRY_TIME[time_idx]
-
-				pm:activate_temporary_property(effect_name, time, effect_data)
-
-				local peer = self._verify_sender(sender)
-
-				gui_notification[gui_notification_idx](peer:name(), effect_data)
-			end
-		end
-	end
-end
-
 function UnitNetworkHandler:sync_unit_spawn(parent_unit, spawn_unit, align_obj_name, unit_id, parent_extension_name, offset_position, offset_rotation)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -3741,7 +3647,7 @@ function UnitNetworkHandler:sync_attach_projectile(unit, instant_dynamic_pickup,
 		managers.network:session():send_to_peers_synched("sync_attach_projectile", unit, instant_dynamic_pickup, parent_alive and parent_unit or nil, parent_alive and parent_body or nil, parent_alive and parent_object or nil, local_pos, dir, projectile_type_index, peer_id, cosmetic_id)
 	end
 
-	if unit then
+	if alive(unit) then
 		local projectile_type = tweak_data.blackmarket:get_projectile_name_from_index(projectile_type_index)
 
 		unit:set_position(world_position)

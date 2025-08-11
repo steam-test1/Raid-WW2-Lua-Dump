@@ -2421,6 +2421,7 @@ function OperationsTweakData:mission_data(mission_id)
 	local mission_data = deep_clone(self.missions[mission_id])
 
 	mission_data.job_id = mission_id
+	mission_data.starting_vehicle = mission_data.starting_vehicle or "none"
 
 	return mission_data
 end
@@ -2596,15 +2597,43 @@ function OperationsTweakData:get_random_unowned_consumable_raid()
 end
 
 function OperationsTweakData:get_all_mission_flags()
-	local mission_flags = {}
+	local mission_flags = managers.global_state:flag_names()
 
 	for _, mission in pairs(self.missions) do
-		local flag = mission.mission_flag
+		local flags = mission.mission_flag and self:dismantle_mission_flags(mission.mission_flag)
 
-		if flag and not table.contains(mission_flags, flag) then
-			table.insert(mission_flags, flag)
+		if flags then
+			for _, flag in ipairs(flags) do
+				if not table.contains(mission_flags, flag) then
+					table.insert(mission_flags, flag)
+				end
+			end
 		end
 	end
 
+	table.sort(mission_flags)
+
 	return mission_flags
+end
+
+function OperationsTweakData:dismantle_mission_flags(data)
+	if type(data) == "string" then
+		return {
+			data,
+		}
+	end
+
+	if type(data) == "table" then
+		local t = {}
+
+		for flag, _ in pairs(data) do
+			table.insert(t, flag)
+		end
+
+		return t
+	end
+
+	Application:error("[RaidJobManager:_activate_job_flags] Invalid type for data:", type(data), data)
+
+	return {}
 end

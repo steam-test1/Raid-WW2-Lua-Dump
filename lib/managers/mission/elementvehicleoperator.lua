@@ -40,7 +40,7 @@ function ElementVehicleOperator:on_executed(instigator)
 	end
 
 	if self._values.use_instigator then
-		if instigator then
+		if alive(instigator) then
 			self:_apply_operator(instigator)
 		end
 	else

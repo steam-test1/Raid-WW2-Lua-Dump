@@ -6,6 +6,7 @@ VehicleOperatorUnitElement.ACTIONS = {
 	"secure",
 	"break_down",
 	"destroy_explode",
+	"remove_from_world",
 	"repair",
 	"damage",
 	"activate",
@@ -22,6 +23,7 @@ VehicleOperatorUnitElement.ACTIONS = {
 	"disable_map_waypoint",
 	"enable_hud_waypoint",
 	"disable_hud_waypoint",
+	"spawn_radio_finder",
 }
 VehicleOperatorUnitElement.LINK_VALUES = {
 	{

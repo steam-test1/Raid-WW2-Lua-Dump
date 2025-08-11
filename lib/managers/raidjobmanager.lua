@@ -36,6 +36,7 @@ function RaidJobManager:set_selected_job(job_id, job_data)
 	end
 
 	Application:debug("[RaidJobManager:set_selected_job]", job_id, job_data, job_data and inspect(job_data))
+	managers.global_state:reset_all_flags()
 
 	job_id = job_id or job_data.job_id
 	job_data = job_data or tweak_data.operations:mission_data(job_id)
@@ -77,12 +78,13 @@ function RaidJobManager:local_set_selected_job(job_id, job_data)
 	end
 
 	managers.loot:reset()
-	managers.global_state:reset_all_flags()
 
-	local mission_flag = mission_data.current_event_data and mission_data.current_event_data.mission_flag or mission_data.mission_flag
+	if Network:is_server() then
+		local mission_flag = mission_data.current_event_data and mission_data.current_event_data.mission_flag or mission_data.mission_flag
 
-	if mission_flag then
-		managers.global_state:set_flag(mission_flag)
+		if mission_flag then
+			self:_server_activate_job_flags(mission_flag)
+		end
 	end
 
 	if self._selected_job.job_type == OperationsTweakData.JOB_TYPE_RAID then
@@ -108,24 +110,29 @@ function RaidJobManager:_select_raid()
 
 	self._current_save_slot = nil
 
-	managers.global_state:set_flag(self._selected_job.mission_state)
+	if self._selected_job and self._selected_job.mission_state then
+		managers.global_state:set_flag(self._selected_job.mission_state)
+	end
 end
 
 function RaidJobManager:_select_operation()
 	Application:debug("[RaidJobManager:_select_operation]", inspect(self._selected_job))
 
-	self._current_save_slot = self:get_available_save_slot()
+	if self._selected_job then
+		self._current_save_slot = self:get_available_save_slot()
 
-	self:set_current_event(self._selected_job, 1)
+		self:set_current_event(self._selected_job, 1)
 
-	if Network:is_server() then
-		self:_goto_operation_objective()
+		if Network:is_server() then
+			self:_goto_operation_objective()
+		end
+
+		Application:info("[RaidJobManager:_select_operation]", inspect(self._selected_job.current_event_data))
+
+		if self._selected_job.current_event_data and self._selected_job.current_event_data.mission_state then
+			managers.global_state:set_flag(self._selected_job.current_event_data.mission_state)
+		end
 	end
-
-	Application:info("[RaidJobManager:_select_operation]", inspect(self._selected_job.current_event_data))
-	managers.global_state:set_flag(self._selected_job.current_event_data.mission_state)
-
-	self._initial_global_states = managers.global_state:get_all_global_states()
 end
 
 function RaidJobManager:_goto_operation_objective()
@@ -202,16 +209,6 @@ function RaidJobManager:_select_job_dynamic_objectives(obj_id, sub_id_list, sub_
 	end
 
 	managers.objectives:generate_dynamic_objective(obj_data)
-end
-
-function RaidJobManager:set_current_event(operation, index)
-	Application:info("[RaidJobManager:set_current_event]", index, operation and operation.events_index and inspect(operation.events_index))
-
-	operation.current_event = index
-
-	local event_id = operation.events_index[index]
-
-	operation.current_event_data = operation.events[event_id]
 end
 
 function RaidJobManager:start_selected_job()
@@ -309,7 +306,7 @@ function RaidJobManager:start_selected_operation()
 	if Network:is_server() then
 		self:save_progress()
 
-		self._initial_global_states = nil
+		self._current_job = self._save_slots[self._current_save_slot].current_job or self._current_job
 	end
 end
 
@@ -404,8 +401,6 @@ function RaidJobManager:do_external_start_mission(mission, event_index)
 
 	local data = {}
 
-	managers.global_state:reset_flags_for_job("level_flag")
-
 	if mission.job_type == OperationsTweakData.JOB_TYPE_RAID then
 		self:start_selected_raid()
 
@@ -413,7 +408,9 @@ function RaidJobManager:do_external_start_mission(mission, event_index)
 		data.loading_text = mission.loading.text
 		data.mission = mission
 
-		managers.global_state:set_flag(mission.mission_flag)
+		if Network:is_server() then
+			self:_server_activate_job_flags(mission.mission_flag)
+		end
 	elseif mission.job_type == OperationsTweakData.JOB_TYPE_OPERATION then
 		if event_index <= 1 and self._selected_job then
 			self:start_selected_operation()
@@ -428,7 +425,9 @@ function RaidJobManager:do_external_start_mission(mission, event_index)
 		data.mission.operation_name_id = mission.name_id
 		data.mission.operation_icon = mission.icon_menu
 
-		managers.global_state:set_flag(mission.current_event_data.mission_flag)
+		if Network:is_server() then
+			self:_server_activate_job_flags(mission.current_event_data.mission_flag)
+		end
 	else
 		Application:error("[RaidJobManager:external_start_mission()] Missing job_type in tweak data for", mission.level_id)
 
@@ -438,6 +437,71 @@ function RaidJobManager:do_external_start_mission(mission, event_index)
 	managers.consumable_missions:on_mission_started()
 	managers.menu:show_loading_screen(data)
 	managers.queued_tasks:queue(nil, self.external_start_mission_clbk, self, nil, 0.6, nil, true)
+end
+
+function RaidJobManager:_server_activate_job_flags(data)
+	if Network:is_server() then
+		if type(data) == "string" then
+			managers.global_state:set_flag(data)
+		elseif type(data) == "table" then
+			local function table_value_scale(tbl, value_scale)
+				local index = #tbl
+
+				if value_scale == "difficulty_index" then
+					local difficulty = Global.game_settings and Global.game_settings.difficulty or Global.DEFAULT_DIFFICULTY
+
+					index = tweak_data:difficulty_to_index(difficulty)
+				elseif value_scale == "player_count" then
+					index = managers.network:session():amount_of_players()
+				elseif value_scale == "alive_players" then
+					index = managers.network:session():amount_of_alive_players()
+				end
+
+				return tbl[math.min(#tbl, index)]
+			end
+
+			for flag, v in pairs(data) do
+				local value
+
+				if type(v) == "table" then
+					value = v.value or false
+
+					local value_rand = v.random or nil
+					local rounding = v.rounding or nil
+					local value_scale = v.value_scale or nil
+
+					if type(value) == "table" and value_scale then
+						value = table_value_scale(value, value_scale)
+
+						if value_rand then
+							if type(value_rand) == "table" then
+								value_rand = table_value_scale(value_rand, value_scale)
+							end
+
+							value = value + value_rand * math.random()
+						end
+					end
+
+					if type(value) == "number" and rounding then
+						value = math.round(value, rounding)
+					end
+				else
+					value = v
+				end
+
+				Application:info("[RaidJobManager:_server_activate_job_flags] flag,value", flag, value)
+				managers.global_state:set_value_flag(flag, value)
+			end
+		else
+			Application:error("[RaidJobManager:_server_activate_job_flags] Invalid type for data:", data)
+
+			return
+		end
+
+		managers.global_state:sync_global_states()
+	else
+		Application:warn("[RaidJobManager:_server_activate_job_flags] The server is the one in charge of picking these flags!")
+	end
 end
 
 function RaidJobManager:external_start_mission_clbk()
@@ -521,16 +585,15 @@ function RaidJobManager:external_end_mission(restart_camp, is_failed)
 	managers.game_play_central:set_restarting(true)
 
 	restart_camp = restart_camp or false
+	self.restart_to_camp = restart_camp
 
 	local failed = is_failed or false
-
-	self.restart_to_camp = restart_camp
 
 	self:set_stage_success(not failed)
 
 	if Network:is_server() then
-		Application:debug("[RaidJobManager:external_end_mission()]")
-		managers.network:session():send_to_peers_synched("sync_external_end_mission", restart_camp, failed or false)
+		Application:debug("[RaidJobManager] external_end_mission")
+		managers.network:session():send_to_peers_synched("sync_external_end_mission", restart_camp, failed)
 		self:do_external_end_mission(restart_camp)
 	end
 end
@@ -897,18 +960,26 @@ function RaidJobManager:current_operation_event()
 end
 
 function RaidJobManager:start_next_event()
+	if not Network:is_server() then
+		Application:error("[RaidJobManager:start_next_event] Client attempted to start next event in the operation!")
+
+		self._stage_success = nil
+
+		return
+	end
+
 	if not self._current_job then
+		Application:info("[RaidJobManager:start_next_event] No current stage, success over. - self._stage_success was:", self._stage_success)
+
 		self._stage_success = nil
 
 		return
 	end
 
 	if self._current_job.current_event then
-		if self._stage_success then
-			self:start_event(self._current_job.current_event + 1)
-		else
-			self:start_event(self._current_job.current_event)
-		end
+		local cjce = self._current_job.current_event
+
+		self:_start_event(self._stage_success and cjce + 1 or cjce)
 	elseif self._current_job.job_type == OperationsTweakData.JOB_TYPE_RAID then
 		self:complete_job()
 	end
@@ -916,30 +987,39 @@ function RaidJobManager:start_next_event()
 	self._stage_success = nil
 end
 
-function RaidJobManager:start_event(event_id)
+function RaidJobManager:_start_event(event_id)
 	Application:debug("[RaidJobManager:start_event]", event_id)
 
 	if not self._current_job then
+		Application:error("[RaidJobManager:start_event] No current job to start!")
+
 		return
 	end
 
 	self:set_current_event(self._current_job, event_id)
 
-	if self._current_job.job_type == OperationsTweakData.JOB_TYPE_RAID or self._current_job.current_event > #self._current_job.events_index then
+	if self._current_job.job_type == OperationsTweakData.JOB_TYPE_RAID or not self._current_job.events_index or #self._current_job.events_index < self._current_job.current_event then
 		self:complete_job()
 
 		return
 	end
 
-	if Network:is_server() and self._current_job.job_type == OperationsTweakData.JOB_TYPE_OPERATION then
+	if self._current_job.job_type == OperationsTweakData.JOB_TYPE_OPERATION then
 		self:_goto_operation_objective()
 	end
 
-	managers.network:session():send_to_peers_synched("sync_current_event_index", self._current_job.current_event)
-	managers.global_state:reset_flags_for_job("sys_location")
-	managers.global_state:set_flag(self._current_job.current_event_data.mission_state)
-	managers.global_state:reset_flags_for_job("level_flag")
-	managers.global_state:set_flag(self._current_job.current_event_data.mission_flag)
+	if managers.network:session() then
+		managers.network:session():send_to_peers_synched("sync_current_event_index", self._current_job.current_event)
+	end
+
+	managers.global_state:reset_flags_for_group("temporary")
+	managers.global_state:reset_flags_for_group("sys_location")
+
+	if self._current_job.current_event_data.mission_state then
+		managers.global_state:set_flag(self._current_job.current_event_data.mission_state)
+	end
+
+	self:_server_activate_job_flags(self._current_job.current_event_data.mission_flag)
 	managers.statistics:start_session({
 		drop_in = false,
 		from_beginning = false,
@@ -947,6 +1027,20 @@ function RaidJobManager:start_event(event_id)
 	managers.network:session():send_to_peers_synched("start_statistics_session", false, false)
 	managers.lootdrop:reset_loot_value_counters()
 	self:on_mission_started()
+end
+
+function RaidJobManager:set_current_event(operation, index)
+	Application:info("[RaidJobManager:set_current_event]", index, operation and operation.events_index and inspect(operation.events_index))
+
+	if operation and index then
+		operation.current_event = index
+
+		local event_id = operation.events_index[index]
+
+		operation.current_event_data = operation.events[event_id]
+	else
+		Application:error("[RaidJobManager:set_current_event] Cannot set an event index without an operation and index present. op/idx", operation, index)
+	end
 end
 
 function RaidJobManager:complete_job()
@@ -976,11 +1070,17 @@ function RaidJobManager:complete_job()
 	managers.lootdrop:reset_loot_value_counters()
 end
 
-function RaidJobManager:continue_operation(slot)
+function RaidJobManager:server_continue_operation(slot)
+	if not Network:is_server() then
+		Application:error("[RaidJobManager:server_continue_operation] Non-server users cannot continue operations!")
+
+		return
+	end
+
 	local save_slot = self._save_slots[slot]
 
 	if not save_slot then
-		Application:error("[RaidJobManager:continue_operation] Cannot continue nil slot! Slot", slot, save_slot)
+		Application:error("[RaidJobManager:server_continue_operation] Cannot continue nil slot! Slot", slot, save_slot)
 
 		return
 	end
@@ -988,6 +1088,7 @@ function RaidJobManager:continue_operation(slot)
 	managers.loot:reset()
 	managers.global_state:reset_all_flags()
 	managers.global_state:set_global_states(save_slot.global_states)
+	managers.global_state:sync_global_states()
 
 	self._current_job = save_slot.current_job
 	self._current_job.events_index = save_slot.events_index
@@ -1038,7 +1139,7 @@ function RaidJobManager:continue_operation(slot)
 
 	self._selected_job = current_event == 1 and self._current_job
 
-	self:start_event(current_event)
+	self:_start_event(current_event)
 end
 
 function RaidJobManager:clear_operations_save_slots()
@@ -1052,8 +1153,11 @@ function RaidJobManager:clear_operations_save_slots()
 end
 
 function RaidJobManager:delete_save(slot)
+	if self._current_save_slot == slot then
+		self._current_save_slot = nil
+	end
+
 	self._save_slots[slot] = nil
-	self._current_save_slot = nil
 
 	managers.savefile:save_game(SavefileManager.SETTING_SLOT)
 end
@@ -1089,28 +1193,38 @@ function RaidJobManager:get_save_slot_downs(save_slot)
 end
 
 function RaidJobManager:save_progress()
-	if self._current_job then
-		if self._current_job.job_type == OperationsTweakData.JOB_TYPE_OPERATION or self._current_job.bounty then
-			Application:info("[RaidJobManager:save_progress] Needs to save!")
+	Application:info("[RaidJobManager:save_progress] Needs to save!")
 
-			self._need_to_save = true
+	self._need_to_save = true
 
-			managers.savefile:save_game(SavefileManager.SETTING_SLOT)
-		end
-	else
-		Application:warn("[RaidJobManager:save_progress] Cant save, no current job")
-	end
+	managers.savefile:save_game(SavefileManager.SETTING_SLOT)
 end
 
 function RaidJobManager:on_challenge_card_failed()
-	if self._current_job then
-		if self._current_job.job_type == OperationsTweakData.JOB_TYPE_OPERATION then
-			self._save_slots[self._current_save_slot].active_card.status = ChallengeCardsManager.CARD_STATUS_FAILED
+	Application:info("[RaidJobManager:on_challenge_card_failed] Job/SaveSlot:", self._current_job, self._current_save_slot)
 
-			managers.savefile:save_game(SavefileManager.SETTING_SLOT)
-		end
-	else
+	if not self._current_job then
 		Application:warn("[RaidJobManager:on_challenge_card_failed] Cant save, no current job")
+
+		return
+	end
+
+	if self._current_job.job_type == OperationsTweakData.JOB_TYPE_OPERATION then
+		if not self._save_slots[self._current_save_slot] then
+			Application:warn("[RaidJobManager:on_challenge_card_failed] Cant save, no current save slot", self._save_slots[self._current_save_slot])
+
+			return
+		end
+
+		if not self._save_slots[self._current_save_slot].active_card then
+			Application:warn("[RaidJobManager:on_challenge_card_failed] Cant save, no current save slot", self._save_slots[self._current_save_slot])
+
+			return
+		end
+
+		self._save_slots[self._current_save_slot].active_card.status = ChallengeCardsManager.CARD_STATUS_FAILED
+
+		managers.savefile:save_game(SavefileManager.SETTING_SLOT)
 	end
 end
 
@@ -1153,7 +1267,7 @@ function RaidJobManager:save_game(data)
 		if Network:is_server() and self._current_save_slot and self._current_job then
 			local save_data = {}
 
-			save_data.global_states = self._initial_global_states or managers.global_state:get_all_global_states()
+			save_data.global_states = managers.global_state:get_modified_flags()
 
 			local current_job = deep_clone(self._current_job)
 
@@ -1423,7 +1537,7 @@ function RaidJobManager:generate_bounty_job(seed)
 	base_job_data.icon_menu = is_raid and "missions_raid_bounty_menu" or is_operation and "missions_operation_bounty_menu" or base_job_data.icon_menu
 	base_job_data.seed = seed
 	base_job_data.bounty = true
-	base_job_data.bounty_completed = self:is_bounty_completed()
+	base_job_data.bounty_completed = self:daily_bounty_completed()
 	base_job_data.dogtags = nil
 	base_job_data.trophy = nil
 	base_job_data.consumable = nil
@@ -1450,11 +1564,17 @@ function RaidJobManager:bounty_completed_seed()
 end
 
 function RaidJobManager:set_bounty_completed_seed(seed)
+	if seed ~= managers.event_system:bounty_seed(nil, true) then
+		Application:info("[BOUNTY] set_bounty_complete_flag, will not complete this seed:", seed)
+
+		return
+	end
+
 	Application:info("[BOUNTY] set_bounty_complete_flag: Completed seed", seed)
 
 	self._bounty_completed_seed = seed
 end
 
-function RaidJobManager:is_bounty_completed()
-	return managers.event_system:bounty_seed() == self._bounty_completed_seed
+function RaidJobManager:daily_bounty_completed()
+	return managers.event_system:bounty_seed(nil, true) == self._bounty_completed_seed
 end

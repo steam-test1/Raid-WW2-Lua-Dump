@@ -3,10 +3,6 @@ core:import("CoreMissionScriptElement")
 
 ElementRopeOperator = ElementRopeOperator or class(CoreMissionScriptElement.MissionScriptElement)
 
-function ElementRopeOperator:init(...)
-	ElementRopeOperator.super.init(self, ...)
-end
-
 function ElementRopeOperator:client_on_executed(...)
 	self:on_executed(...)
 end
@@ -63,10 +59,6 @@ end
 
 ElementRopeTrigger = ElementRopeTrigger or class(CoreMissionScriptElement.MissionScriptElement)
 
-function ElementRopeTrigger:init(...)
-	ElementRopeTrigger.super.init(self, ...)
-end
-
 function ElementRopeTrigger:on_script_activated()
 	for _, id in ipairs(self._values.elements) do
 		local element = self:get_mission_element(id)
@@ -77,12 +69,4 @@ end
 
 function ElementRopeTrigger:client_on_executed(...)
 	return
-end
-
-function ElementRopeTrigger:on_executed(instigator)
-	if not self._values.enabled then
-		return
-	end
-
-	ElementRopeTrigger.super.on_executed(self, instigator)
 end

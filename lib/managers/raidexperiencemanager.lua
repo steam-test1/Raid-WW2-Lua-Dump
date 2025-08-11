@@ -121,9 +121,14 @@ function RaidExperienceManager:next_level_data()
 	}
 end
 
-function RaidExperienceManager:mission_xp_award(event)
-	table.insert(self._global.mission_xp, event)
-	Application:debug("[MissionXPAwards] Added event '" .. event .. "' list size:", #self._global.mission_xp)
+function RaidExperienceManager:mission_xp_award(event, amount)
+	amount = amount or 1
+
+	for _ = 1, amount do
+		table.insert(self._global.mission_xp, event)
+	end
+
+	Application:debug("[MissionXPAwards] Added event '" .. event .. "' x" .. amount .. " list size:", #self._global.mission_xp)
 end
 
 function RaidExperienceManager:clear_mission_xp()

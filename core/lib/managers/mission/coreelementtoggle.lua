@@ -3,10 +3,6 @@ core:import("CoreMissionScriptElement")
 
 ElementToggle = ElementToggle or class(CoreMissionScriptElement.MissionScriptElement)
 
-function ElementToggle:init(...)
-	ElementToggle.super.init(self, ...)
-end
-
 function ElementToggle:client_on_executed(...)
 	self:on_executed(...)
 end
@@ -32,7 +28,7 @@ function ElementToggle:on_executed(instigator)
 				element:set_enabled(not element:value("enabled"))
 			end
 
-			element:on_toggle(element:value("enabled"))
+			element:on_toggle()
 		end
 	end
 

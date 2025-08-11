@@ -10,10 +10,10 @@ function DramaTweakData:init()
 		criminal_hurt_minimum = 0.02,
 	}
 	self.decay_period = 60
+	self.commander_decay_mul = 0.35
 	self.max_dis = 12000
 	self.max_dis_mul = 0.8
 	self.low = 0.15
 	self.peak = 0.95
 	self.assault_fade_end = 0.25
-	self.commander_decay_multi = 0.35
 end

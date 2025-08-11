@@ -2091,6 +2091,9 @@ function InteractionTweakData:_init_carry()
 	self.carry_drop_barrel = deep_clone(self.carry_drop_flak_shell)
 	self.carry_drop_barrel.text_id = "hud_take_barrel"
 	self.carry_drop_barrel.action_text_id = "hud_action_taking_barrel"
+	self.carry_drop_barrel_empty = deep_clone(self.carry_drop_barrel)
+	self.carry_drop_barrel_empty.text_id = "hud_take_barrel_empty"
+	self.carry_drop_barrel_empty.action_text_id = "hud_action_taking_barrel_empty"
 	self.take_ladder = {}
 	self.take_ladder.text_id = "hud_take_ladder"
 	self.take_ladder.action_text_id = "hud_action_taking_ladder"

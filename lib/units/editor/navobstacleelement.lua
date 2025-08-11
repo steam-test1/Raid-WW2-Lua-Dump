@@ -242,6 +242,10 @@ function NavObstacleElement:_add_unit(unit, all_object_names, obstacle_list_data
 	h_sizer:add(toolbar, 0, 1, "EXPAND,LEFT")
 	obj_names:connect("EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "set_obj_name_data"), self._guis_id)
 	panel:layout()
+
+	if default_obj_idstr then
+		self:set_obj_name_data(self._guis_id)
+	end
 end
 
 function NavObstacleElement:set_obj_name_data(guis_id)
@@ -250,6 +254,8 @@ function NavObstacleElement:set_obj_name_data(guis_id)
 	for i, entry in pairs(self._hed.obstacle_list) do
 		if entry.guis_id == guis_id then
 			entry.obj_name = Idstring(self._unindent_obj_name(obj_name))
+
+			print("AAA entry.obj_name", entry.obj_name)
 
 			break
 		end
