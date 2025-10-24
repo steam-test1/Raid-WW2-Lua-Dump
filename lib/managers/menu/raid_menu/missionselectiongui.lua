@@ -1298,10 +1298,6 @@ function MissionSelectionGui:_select_raids_tab()
 	self._raid_list_panel:set_alpha(1)
 	self._slot_list_panel:set_visible(false)
 	self._slot_list_panel:set_alpha(0)
-
-	if self._event_display then
-		self._event_display:set_visible(true)
-	end
 end
 
 function MissionSelectionGui:_select_operations_tab()
@@ -1470,8 +1466,16 @@ function MissionSelectionGui:_on_raid_clicked(raid_data)
 		self._active_card_details:set_card_details(mission_data.active_card, false)
 		self._active_card_details:set_control_mode(RaidGUIControlCardDetails.MODE_VIEW_ONLY)
 		self._active_card_panel:show()
+
+		if self._event_display then
+			self._event_display:hide()
+		end
 	else
 		self._active_card_panel:hide()
+
+		if self._event_display then
+			self._event_display:show()
+		end
 	end
 
 	self:_stop_mission_briefing_audio()
@@ -2610,7 +2614,7 @@ function MissionSelectionGui:_start_job(job_id, job_data)
 	local team_ai = self._team_ai_checkbox:get_value()
 	local event_enabled = self._event_display and self._event_display:get_value()
 
-	if job_data.job_type == OperationsTweakData.JOB_TYPE_OPERATION then
+	if job_data.active_card or job_data.job_type == OperationsTweakData.JOB_TYPE_OPERATION then
 		event_enabled = false
 	end
 
@@ -2637,10 +2641,6 @@ function MissionSelectionGui:_start_job(job_id, job_data)
 	if Network:is_server() then
 		managers.network:session():chk_server_joinable_state()
 		managers.network:update_matchmake_attributes()
-
-		if event_enabled then
-			managers.event_system:activate_current_event()
-		end
 
 		if self._settings_selected.difficulty ~= Global.game_settings.difficulty or self._settings_selected.permission ~= Global.game_settings.permission or self._settings_selected.drop_in_allowed ~= Global.game_settings.drop_in_allowed or self._settings_selected.team_ai ~= Global.game_settings.team_ai then
 			managers.savefile:save_game(managers.savefile:get_save_progress_slot())

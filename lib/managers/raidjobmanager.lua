@@ -74,7 +74,11 @@ function RaidJobManager:local_set_selected_job(job_id, job_data)
 	self._loot_data = {}
 
 	if Network:is_server() then
-		managers.challenge_cards:set_active_card(mission_data.active_card or nil)
+		if Global.game_settings.event_enabled then
+			managers.event_system:activate_current_event()
+		else
+			managers.challenge_cards:set_active_card(mission_data.active_card or nil)
+		end
 	end
 
 	managers.loot:reset()

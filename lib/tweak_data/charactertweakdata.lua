@@ -72,51 +72,51 @@ end
 function CharacterTweakData:_init_npc_loadouts(tweak_data)
 	self.npc_loadouts = {}
 	self.npc_loadouts.ger_handgun = {
-		german_grunt_mid_shotgun = nil,
+		german_grunt_light_kar98 = nil,
 		secondary = Idstring("units/vanilla/weapons/wpn_npc_ger_luger/wpn_npc_ger_luger"),
 	}
 	self.npc_loadouts.ger_rifle = {
-		german_grunt_mid_shotgun = nil,
-		normal = nil,
+		ears = nil,
+		german_grunt_light_kar98 = nil,
 		primary = Idstring("units/vanilla/weapons/wpn_npc_ger_k98/wpn_npc_ger_k98"),
 		secondary = Idstring("units/vanilla/weapons/wpn_npc_ger_luger/wpn_npc_ger_luger"),
 	}
 	self.npc_loadouts.ger_assault_rifle = {
-		german_grunt_mid_shotgun = nil,
-		normal = nil,
+		ears = nil,
+		german_grunt_light_kar98 = nil,
 		primary = Idstring("units/vanilla/weapons/wpn_npc_ger_stg44/wpn_npc_ger_stg44"),
 		secondary = Idstring("units/vanilla/weapons/wpn_npc_ger_luger/wpn_npc_ger_luger"),
 	}
 	self.npc_loadouts.ger_smg = {
-		german_grunt_mid_shotgun = nil,
-		normal = nil,
+		ears = nil,
+		german_grunt_light_kar98 = nil,
 		primary = Idstring("units/vanilla/weapons/wpn_npc_ger_mp38/wpn_npc_ger_mp38"),
 		secondary = Idstring("units/vanilla/weapons/wpn_npc_ger_luger/wpn_npc_ger_luger"),
 	}
 	self.npc_loadouts.ger_shotgun = {
-		german_grunt_mid_shotgun = nil,
-		normal = nil,
+		ears = nil,
+		german_grunt_light_kar98 = nil,
 		primary = Idstring("units/vanilla/weapons/wpn_npc_ger_geco/wpn_npc_ger_geco"),
 		secondary = Idstring("units/vanilla/weapons/wpn_npc_ger_luger/wpn_npc_ger_luger"),
 	}
 	self.npc_loadouts.unarmed = {
-		german_grunt_mid_shotgun = nil,
-		normal = nil,
+		ears = nil,
+		german_grunt_light_kar98 = nil,
 	}
 	self.npc_loadouts.special_commander = {
-		german_grunt_mid_shotgun = nil,
+		german_grunt_light_kar98 = nil,
 		secondary = Idstring("units/vanilla/weapons/wpn_npc_ger_luger/wpn_npc_ger_luger_fancy"),
 	}
 	self.npc_loadouts.special_flamethrower = {
-		german_grunt_mid_shotgun = nil,
+		german_grunt_light_kar98 = nil,
 		primary = Idstring("units/vanilla/weapons/wpn_npc_spc_m42_flammenwerfer/wpn_npc_spc_m42_flammenwerfer"),
 	}
 	self.npc_loadouts.special_sniper = {
-		german_grunt_mid_shotgun = nil,
+		german_grunt_light_kar98 = nil,
 		primary = Idstring("units/vanilla/weapons/wpn_npc_ger_k98/wpn_npc_ger_k98_sniper"),
 	}
 	self.npc_loadouts.special_spotter = {
-		german_grunt_mid_shotgun = nil,
+		german_grunt_light_kar98 = nil,
 		primary = Idstring("units/vanilla/weapons/wpn_npc_binocular/wpn_npc_binocular"),
 	}
 end

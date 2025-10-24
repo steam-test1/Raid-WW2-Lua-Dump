@@ -2961,8 +2961,8 @@ function PlayerStandard:_start_action_use_item(t)
 	})
 
 	managers.hud:show_progress_timer({
-		result = nil,
 		text = text,
+		yes = nil,
 	})
 
 	local post_event = managers.player:selected_equipment_sound_start()

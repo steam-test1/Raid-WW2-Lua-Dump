@@ -156,7 +156,7 @@ end
 function PlayerManager:soft_reset()
 	self._listener_holder = EventListenerHolder:new()
 	self._equipment = {
-		aquire_grenade = nil,
+		add_to_property = nil,
 		selections = {},
 		specials = {},
 	}
@@ -172,7 +172,7 @@ end
 
 function PlayerManager:_setup()
 	self._equipment = {
-		aquire_grenade = nil,
+		add_to_property = nil,
 		selections = {},
 		specials = {},
 	}

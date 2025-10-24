@@ -52,8 +52,8 @@ function SavefileManager:init()
 
 	if not Global.savefile_manager then
 		Global.savefile_manager = {
-			debug_get_task_name = nil,
 			meta_data_list = {},
+			progress_wrong_user = nil,
 		}
 	end
 

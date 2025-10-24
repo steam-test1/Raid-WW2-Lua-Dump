@@ -241,7 +241,7 @@ function ObjectivesManager:activate_objective(id, load_data, data, world_id, ski
 
 	if not skip_toast then
 		managers.hud:present_mid_text({
-			icon = nil,
+			[""] = nil,
 			text = text,
 			time = 4.5,
 			title = title_message,

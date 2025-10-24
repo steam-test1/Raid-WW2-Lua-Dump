@@ -26,9 +26,9 @@ function GenericUserManager:init()
 
 	if not self:is_global_initialized() then
 		Global.user_manager = {
+			["[UserManager] Active user changed."] = nil,
 			initializing = true,
 			setting_map = {},
-			user_data = nil,
 			user_map = {},
 		}
 		self._global = Global.user_manager
