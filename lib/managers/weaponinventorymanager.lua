@@ -116,12 +116,13 @@ function WeaponInventoryManager:_setup_weapon_challenges()
 				local tasks = challenge:tasks()
 
 				challenge:set_data(challenge_data)
+				challenge:set_completion_callback(nil)
 
 				if not tasks or #tasks == 0 then
 					challenge:set_tasks(challenge_tasks)
 				end
 			else
-				managers.challenge:create_challenge(skin_data.challenge.category, skin_data.challenge.id, skin_data.challenge, challenge_tasks, nil, challenge_data)
+				managers.challenge:create_challenge(skin_data.challenge.category, skin_data.challenge.id, challenge_tasks, nil, challenge_data)
 			end
 		end
 	end

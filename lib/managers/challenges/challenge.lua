@@ -91,6 +91,10 @@ function Challenge:data()
 	return self._data
 end
 
+function Challenge:set_completion_callback(clbk)
+	self.completion_callback = clbk
+end
+
 function Challenge:completed()
 	return self._state == Challenge.STATE_COMPLETED and true or false
 end
