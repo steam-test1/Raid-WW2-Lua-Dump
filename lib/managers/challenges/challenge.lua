@@ -92,7 +92,7 @@ function Challenge:data()
 end
 
 function Challenge:set_completion_callback(clbk)
-	self.completion_callback = clbk
+	self._completion_callback = clbk
 end
 
 function Challenge:completed()
